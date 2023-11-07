@@ -1,5 +1,6 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
@@ -63,6 +64,16 @@ export const products: Product[] = [
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
+  },
+  {
+    component: AllvueSystemsPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'allvue-systems',
+    name: 'Allvue Systems',
+    origin: $localize`United States`,
+    slogan: 'Investment Software Suite'
   },
   {
     component: AltooPageComponent,
@@ -270,6 +281,7 @@ export const products: Product[] = [
   {
     component: MonarchMoneyPageComponent,
     founded: 2019,
+    hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monarch-money',
     name: 'Monarch Money',
@@ -468,6 +480,7 @@ export const products: Product[] = [
   {
     component: YnabPageComponent,
     founded: 2004,
+    hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'ynab',
     name: 'YNAB (You Need a Budget)',
