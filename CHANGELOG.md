@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the import of historical market data in the admin control panel
 - Removed the account type from the `Account` database schema
 
 ## 2.19.0 - 2023-11-06
