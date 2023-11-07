@@ -19,6 +19,7 @@ import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
+import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
@@ -264,6 +265,16 @@ export const products: Product[] = [
     pricingPerYear: '$145',
     region: $localize`United States`,
     slogan: 'Your financial future, in your control'
+  },
+  {
+    component: MonarchMoneyPageComponent,
+    founded: 2019,
+    hasSelfHostingAbility: false,
+    key: 'monarch-money',
+    name: 'Monarch Money',
+    origin: $localize`United States`,
+    pricingPerYear: '$99.99',
+    slogan: 'The modern way to manage your money'
   },
   {
     component: MonsePageComponent,
