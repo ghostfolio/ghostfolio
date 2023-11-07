@@ -20,6 +20,12 @@ Use `*ngIf="user?.settings?.isExperimentalFeatures"` in HTML template
 
 ## Dependencies
 
+### Angular
+
+#### Upgrade (minor versions)
+
+1. Run `npx npm-check-updates --upgrade --target "minor" --filter "/@angular.*/"`
+
 ### Nx
 
 #### Upgrade

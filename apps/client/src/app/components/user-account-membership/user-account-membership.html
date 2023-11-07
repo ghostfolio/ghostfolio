@@ -1,6 +1,5 @@
-<div class="container">
-  <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Membership</h1>
-  <div class="row">
+<div class="align-items-center container d-flex h-100 justify-content-center">
+  <div class="row w-100">
     <div class="col">
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
@@ -34,7 +33,7 @@
               >&nbsp;<span i18n>per year</span>
             </div>
           </ng-container>
-          <div class="align-items-center d-flex justfiy-content-center mt-4">
+          <div class="align-items-center d-flex justify-content-center mt-4">
             <a
               *ngIf="!user?.subscription?.expiresAt"
               class="mx-1"

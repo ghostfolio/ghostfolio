@@ -7,8 +7,10 @@ import { CapMonPageComponent } from './products/capmon-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
+import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
+import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
@@ -23,6 +25,7 @@ import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
+import { RocketMoneyPageComponent } from './products/rocket-money-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -31,6 +34,7 @@ import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 
@@ -132,6 +136,15 @@ export const products: Product[] = [
     slogan: 'Your personal Dividend Calendar'
   },
   {
+    alias: '8figures',
+    component: EightFiguresPageComponent,
+    founded: 2022,
+    key: 'eightfigures',
+    name: '8FIGURES',
+    origin: $localize`United States`,
+    slogan: 'Portfolio Tracker Designed by Professional Investors'
+  },
+  {
     component: ExirioPageComponent,
     founded: 2020,
     hasFreePlan: true,
@@ -150,6 +163,16 @@ export const products: Product[] = [
     name: 'Finary',
     origin: $localize`United States`,
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+  },
+  {
+    component: FinWisePageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    key: 'finwise',
+    name: 'FinWise',
+    origin: $localize`South Africa`,
+    pricingPerYear: '€69.99',
+    slogan: 'Personal finances, simplified'
   },
   {
     component: FolisharePageComponent,
@@ -308,6 +331,15 @@ export const products: Product[] = [
     slogan: 'Build Financial Plans You Love.'
   },
   {
+    component: RocketMoneyPageComponent,
+    founded: 2015,
+    hasSelfHostingAbility: false,
+    key: 'rocket-money',
+    name: 'Rocket Money',
+    origin: $localize`United States`,
+    slogan: 'Track your net worth'
+  },
+  {
     component: SeekingAlphaPageComponent,
     founded: 2004,
     hasFreePlan: false,
@@ -388,6 +420,16 @@ export const products: Product[] = [
     pricingPerYear: '$300',
     slogan: 'Your Portfolio. Revealed.',
     useAnonymously: true
+  },
+  {
+    component: VyzerPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    key: 'vyzer',
+    name: 'Vyzer',
+    origin: $localize`United States`,
+    pricingPerYear: '$348',
+    slogan: 'Virtual Family Office for Smart Wealth Management'
   },
   {
     component: WealthicaPageComponent,

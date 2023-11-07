@@ -10,6 +10,7 @@ import {
   Prisma,
   SymbolProfile
 } from '@prisma/client';
+import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
 import yahooFinance from 'yahoo-finance2';
 import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
@@ -156,7 +157,20 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     const response: Partial<SymbolProfile> = {};
 
     try {
-      const symbol = this.convertToYahooFinanceSymbol(aSymbol);
+      let symbol = aSymbol;
+
+      if (isISIN(symbol)) {
+        try {
+          const { quotes } = await yahooFinance.search(symbol);
+
+          if (quotes.length === 1) {
+            symbol = quotes[0].symbol;
+          }
+        } catch {}
+      } else {
+        symbol = this.convertToYahooFinanceSymbol(symbol);
+      }
+
       const assetProfile = await yahooFinance.quoteSummary(symbol, {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
@@ -176,7 +190,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         shortName: assetProfile.price.shortName,
         symbol: assetProfile.price.symbol
       });
-      response.symbol = aSymbol;
+      response.symbol = assetProfile.price.symbol;
 
       if (assetSubClass === AssetSubClass.MUTUALFUND) {
         response.sectors = [];

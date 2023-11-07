@@ -1,4 +1,5 @@
 export interface Product {
+  alias?: string;
   component: any;
   founded?: number;
   hasFreePlan?: boolean;

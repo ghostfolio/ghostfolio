@@ -152,7 +152,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, DEFAULT_REQUEST_TIMEOUT);
 
-      const response = await got(
+      const quotes = await got(
         `${this.URL}/simple/price?ids=${symbols.join(
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
@@ -162,16 +162,14 @@ export class CoinGeckoService implements DataProviderInterface {
         }
       ).json<any>();
 
-      for (const symbol in response) {
-        if (Object.prototype.hasOwnProperty.call(response, symbol)) {
-          response[symbol] = {
-            currency: DEFAULT_CURRENCY,
-            dataProviderInfo: this.getDataProviderInfo(),
-            dataSource: DataSource.COINGECKO,
-            marketPrice: response[symbol][DEFAULT_CURRENCY.toLowerCase()],
-            marketState: 'open'
-          };
-        }
+      for (const symbol in quotes) {
+        response[symbol] = {
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: DataSource.COINGECKO,
+          marketPrice: quotes[symbol][DEFAULT_CURRENCY.toLowerCase()],
+          marketState: 'open'
+        };
       }
     } catch (error) {
       Logger.error(error, 'CoinGeckoService');

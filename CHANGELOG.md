@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.19.0 - 2023-11-06
+
+### Added
+
+- Added a data migration to set `accountType` to `NULL` in the account database table
+
+### Changed
+
+- Improved the language localization for the _Fear & Greed Index_ (market mood)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the handling of derived currencies (`GBp`, `ILA`, `ZAc`)
+
+## 2.18.0 - 2023-11-05
+
+### Added
+
+- Added support to import activities by `isin` in the _Yahoo Finance_ service
+- Added a new tag with the major version to the docker image on _Docker Hub_
+- Added a blog post: _Hacktoberfest 2023 Debriefing_
+
+### Changed
+
+- Upgraded `angular` from version `16.2.1` to `16.2.12`
+
+### Fixed
+
+- Fixed an issue to get quotes in the _CoinGecko_ service
+- Loosened the validation in the activities import (expects values greater than or equal to 0 for `fee`, `quantity` and `unitPrice`)
+- Handled an issue with a failing database query (`account.findMany()`) related to activities without account
+
 ## 2.17.0 - 2023-11-02
 
 ### Added
