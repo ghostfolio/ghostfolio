@@ -189,20 +189,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           symbol: this.data.symbol
         })
         .pipe(
-          takeUntil(this.unsubscribeSubject),
           catchError(({ error, message }) => {
             this.snackBar.open(`${error}: ${message[0]}`, undefined, {
               duration: 3000
             });
             return EMPTY;
-          })
+          }),
+          takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
           this.initialize();
         });
     } catch {
       this.snackBar.open(
-        $localize`Oops! Could not parse historical data`,
+        $localize`Oops! Could not parse historical data.`,
         undefined,
         { duration: 3000 }
       );

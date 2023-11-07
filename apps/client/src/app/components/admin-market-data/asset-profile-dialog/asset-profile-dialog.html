@@ -73,7 +73,7 @@
         color="accent"
         mat-flat-button
         type="button"
-        [disabled]="assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
+        [disabled]="!assetProfileForm.controls['historicalData']?.controls['csvString'].touched || assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
         (click)="onImportHistoricalData()"
       >
         <ng-container i18n>Import</ng-container>
@@ -178,13 +178,13 @@
       </ng-container>
     </div>
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
-      <mat-form-field appearance="outline" class="w-100">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Name</mat-label>
         <input formControlName="name" matInput type="text" />
       </mat-form-field>
     </div>
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
-      <mat-form-field appearance="outline" class="w-100">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null"></mat-option>
@@ -197,7 +197,7 @@
       </mat-form-field>
     </div>
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
-      <mat-form-field appearance="outline" class="w-100">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null"></mat-option>
