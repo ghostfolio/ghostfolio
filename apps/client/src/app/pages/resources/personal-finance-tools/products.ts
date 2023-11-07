@@ -1,5 +1,6 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
@@ -19,6 +20,7 @@ import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
+import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
@@ -37,6 +39,7 @@ import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { YnabPageComponent } from './products/ynab-page.component';
 
 export const products: Product[] = [
   {
@@ -61,6 +64,16 @@ export const products: Product[] = [
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
+  },
+  {
+    component: AllvueSystemsPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'allvue-systems',
+    name: 'Allvue Systems',
+    origin: $localize`United States`,
+    slogan: 'Investment Software Suite'
   },
   {
     component: AltooPageComponent,
@@ -266,6 +279,17 @@ export const products: Product[] = [
     slogan: 'Your financial future, in your control'
   },
   {
+    component: MonarchMoneyPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'monarch-money',
+    name: 'Monarch Money',
+    origin: $localize`United States`,
+    pricingPerYear: '$99.99',
+    slogan: 'The modern way to manage your money'
+  },
+  {
     component: MonsePageComponent,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -452,5 +476,16 @@ export const products: Product[] = [
     origin: $localize`Switzerland`,
     region: $localize`Switzerland`,
     slogan: 'Connect. Share. Invest.'
+  },
+  {
+    component: YnabPageComponent,
+    founded: 2004,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'ynab',
+    name: 'YNAB (You Need a Budget)',
+    origin: $localize`United States`,
+    pricingPerYear: '$99',
+    slogan: 'Change Your Relationship With Money'
   }
 ];
