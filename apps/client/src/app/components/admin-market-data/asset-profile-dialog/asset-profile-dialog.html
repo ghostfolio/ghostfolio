@@ -73,7 +73,7 @@
         color="accent"
         mat-flat-button
         type="button"
-        [disabled]="assetProfileForm.controls['symbolMapping']?.value === ''"
+        [disabled]="assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
         (click)="onImportHistoricalData()"
       >
         <ng-container i18n>Import</ng-container>

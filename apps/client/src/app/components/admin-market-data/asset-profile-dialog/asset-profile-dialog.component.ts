@@ -26,8 +26,8 @@ import {
 } from '@prisma/client';
 import { format } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
 
@@ -51,12 +51,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
-    name: ['', Validators.required],
-    scraperConfiguration: '',
-    symbolMapping: '',
     historicalData: this.formBuilder.group({
       csvString: ''
-    })
+    }),
+    name: ['', Validators.required],
+    scraperConfiguration: '',
+    symbolMapping: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -132,14 +132,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetClass: this.assetProfile.assetClass ?? null,
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
+          historicalData: {
+            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+          },
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
-          historicalData: {
-            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
-          }
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
         this.assetProfileForm.markAsPristine();
@@ -188,12 +188,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           },
           symbol: this.data.symbol
         })
-        .pipe(takeUntil(this.unsubscribeSubject))
+        .pipe(
+          takeUntil(this.unsubscribeSubject),
+          catchError(({ error, message }) => {
+            this.snackBar.open(`${error}: ${message[0]}`, undefined, {
+              duration: 3000
+            });
+            return EMPTY;
+          })
+        )
         .subscribe(() => {
           this.initialize();
         });
-    } catch (err) {
-      this.snackBar.open('Unable to parse data', undefined, { duration: 3000 });
+    } catch {
+      this.snackBar.open(
+        $localize`Oops! Could not parse historical data`,
+        undefined,
+        { duration: 3000 }
+      );
     }
   }
 
