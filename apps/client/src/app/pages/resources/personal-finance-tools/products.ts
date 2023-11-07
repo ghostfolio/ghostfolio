@@ -38,6 +38,7 @@ import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { YnabPageComponent } from './products/ynab-page.component';
 
 export const products: Product[] = [
   {
@@ -463,5 +464,15 @@ export const products: Product[] = [
     origin: $localize`Switzerland`,
     region: $localize`Switzerland`,
     slogan: 'Connect. Share. Invest.'
+  },
+  {
+    component: YnabPageComponent,
+    founded: 2004,
+    hasSelfHostingAbility: false,
+    key: 'ynab',
+    name: 'YNAB (You Need a Budget)',
+    origin: $localize`United States`,
+    pricingPerYear: '$99',
+    slogan: 'Change Your Relationship With Money'
   }
 ];
