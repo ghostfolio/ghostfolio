@@ -298,28 +298,32 @@ export class OrderService {
     }
 
     if (filtersByTag?.length > 0) {
-      where.OR = [
+      where.AND = [
         {
-          tags: {
-            some: {
-              OR: filtersByTag.map(({ id }) => {
-                return {
-                  id: id
-                };
-              })
-            }
-          }
-        },
-        {
-          SymbolProfile: {
-            tags: {
-              some: {
-                OR: filtersByTag.map(({ id }) => {
-                  return { id };
-                })
+          OR: [
+            {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return {
+                      id: id
+                    };
+                  })
+                }
+              }
+            },
+            {
+              SymbolProfile: {
+                tags: {
+                  some: {
+                    OR: filtersByTag.map(({ id }) => {
+                      return { id };
+                    })
+                  }
+                }
               }
             }
-          }
+          ]
         }
       ];
     }
