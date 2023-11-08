@@ -37,8 +37,10 @@ export interface DataProviderInterface {
   getName(): DataSource;
 
   getQuotes({
+    requestTimeout,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
