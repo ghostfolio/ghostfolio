@@ -25,10 +25,11 @@ import { MarketDataPreset } from '@ghostfolio/common/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AssetSubClass,
-  DataSource,
   Prisma,
   Property,
-  SymbolProfile
+  SymbolProfile,
+  DataSource,
+  Tag
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
@@ -218,7 +219,8 @@ export class AdminService {
           },
           scraperConfiguration: true,
           sectors: true,
-          symbol: true
+          symbol: true,
+          tags: true
         }
       }),
       this.prismaService.symbolProfile.count({ where })
@@ -236,7 +238,8 @@ export class AdminService {
         name,
         Order,
         sectors,
-        symbol
+        symbol,
+        tags
       }) => {
         const countriesCount = countries ? Object.keys(countries).length : 0;
         const marketDataItemCount =
@@ -260,7 +263,8 @@ export class AdminService {
           marketDataItemCount,
           sectorsCount,
           activitiesCount: _count.Order,
-          date: Order?.[0]?.date
+          date: Order?.[0]?.date,
+          tags
         };
       }
     );
@@ -322,6 +326,7 @@ export class AdminService {
     comment,
     dataSource,
     name,
+    tags,
     scraperConfiguration,
     symbol,
     symbolMapping
@@ -332,6 +337,7 @@ export class AdminService {
       comment,
       dataSource,
       name,
+      tags,
       scraperConfiguration,
       symbol,
       symbolMapping
@@ -390,7 +396,8 @@ export class AdminService {
           countriesCount: 0,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
           name: symbol,
-          sectorsCount: 0
+          sectorsCount: 0,
+          tags: []
         };
       });
 
