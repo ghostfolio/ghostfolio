@@ -33,6 +33,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public showDetails = false;
+  public unit: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -68,6 +69,10 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
+
+        this.unit = this.hasImpersonationId
+          ? '%'
+          : this.user?.settings?.baseCurrency;
 
         this.changeDetectorRef.markForCheck();
       });

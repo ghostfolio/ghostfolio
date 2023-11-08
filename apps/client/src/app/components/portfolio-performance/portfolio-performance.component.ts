@@ -25,7 +25,6 @@ import { isNumber } from 'lodash';
   styleUrls: ['./portfolio-performance.component.scss']
 })
 export class PortfolioPerformanceComponent implements OnChanges, OnInit {
-  @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
   @Input() isAllTimeHigh: boolean;
@@ -34,10 +33,9 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() locale: string;
   @Input() performance: PortfolioPerformance;
   @Input() showDetails: boolean;
+  @Input() unit: string;
 
   @ViewChild('value') value: ElementRef;
-
-  public unit: string;
 
   public constructor() {}
 
@@ -50,8 +48,6 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
       }
     } else {
       if (isNumber(this.performance?.currentValue)) {
-        this.unit = this.baseCurrency;
-
         new CountUp('value', this.performance?.currentValue, {
           decimal: getNumberFormatDecimal(this.locale),
           decimalPlaces:
@@ -63,8 +59,6 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           separator: getNumberFormatGroup(this.locale)
         }).start();
       } else if (this.performance?.currentValue === null) {
-        this.unit = '%';
-
         new CountUp(
           'value',
           this.performance?.currentNetPerformancePercent * 100,
