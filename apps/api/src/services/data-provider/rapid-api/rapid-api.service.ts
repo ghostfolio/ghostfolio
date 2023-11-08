@@ -88,8 +88,10 @@ export class RapidApiService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (symbols.length <= 0) {

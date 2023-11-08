@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the import of historical market data in the admin control panel
+- Increased the timeout in the health check endpoint for data enhancers
+- Increased the timeout in the health check endpoint for data providers
 - Removed the account type from the `Account` database schema
 
 ## 2.19.0 - 2023-11-06
@@ -368,7 +370,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added health check endpoints for data enhancers
+- Added a health check endpoint for data enhancers
 
 ### Changed
 
@@ -544,7 +546,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the login dialog
-- Disabled the caching in the health check endpoints for data providers
+- Disabled the caching in the health check endpoint for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
 
@@ -932,7 +934,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a fallback to historical market data if a data provider does not provide live data
 - Added a general health check endpoint
-- Added health check endpoints for data providers
+- Added a health check endpoint for data providers
 
 ### Changed
 
