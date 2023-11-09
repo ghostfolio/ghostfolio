@@ -17,6 +17,5 @@ export interface InfoItem {
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptions: { [offer in SubscriptionOffer]: Subscription };
-  systemMessage?: string;
   tags: Tag[];
 }

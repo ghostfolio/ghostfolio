@@ -115,8 +115,8 @@
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
             <div class="w-50" i18n>System Message</div>
             <div class="w-50">
-              <div *ngIf="info?.systemMessage">
-                <span>{{ info.systemMessage }}</span>
+              <div *ngIf="systemMessage" class="align-items-center d-flex">
+                <div class="text-truncate">{{ systemMessage | json }}</div>
                 <button
                   class="h-100 mx-1 no-min-width px-2"
                   mat-button
@@ -127,6 +127,7 @@
               </div>
               <button
                 *ngIf="!info?.systemMessage"
+                class="mt-2"
                 color="accent"
                 mat-flat-button
                 (click)="onSetSystemMessage()"

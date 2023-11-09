@@ -7,9 +7,14 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_SYSTEM_MESSAGE,
   locale
 } from '@ghostfolio/common/config';
-import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  User as IUser,
+  SystemMessage,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
@@ -48,6 +53,17 @@ export class UserService {
       orderBy: { alias: 'asc' },
       where: { GranteeUser: { id } }
     });
+
+    let systemMessage: SystemMessage;
+
+    const systemMessageProperty = (await this.propertyService.getByKey(
+      PROPERTY_SYSTEM_MESSAGE
+    )) as SystemMessage;
+
+    if (systemMessageProperty?.targetGroups?.includes(subscription.type)) {
+      systemMessage = systemMessageProperty;
+    }
+
     let tags = await this.tagService.getByUser(id);
 
     if (
@@ -61,6 +77,7 @@ export class UserService {
       id,
       permissions,
       subscription,
+      systemMessage,
       tags,
       access: access.map((accessItem) => {
         return {
