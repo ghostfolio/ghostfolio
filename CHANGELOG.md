@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extended the system message
+
 ### Fixed
 
 - Fixed the unit for the _Zen Mode_ in the overview tab of the home page

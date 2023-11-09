@@ -15,7 +15,6 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
-  PROPERTY_SYSTEM_MESSAGE,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -58,7 +57,6 @@ export class InfoService {
     const platforms = await this.platformService.getPlatforms({
       orderBy: { name: 'asc' }
     });
-    let systemMessage: string;
 
     const globalPermissions: string[] = [];
 
@@ -104,10 +102,6 @@ export class InfoService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {
       globalPermissions.push(permissions.enableSystemMessage);
-
-      systemMessage = (await this.propertyService.getByKey(
-        PROPERTY_SYSTEM_MESSAGE
-      )) as string;
     }
 
     const isUserSignupEnabled =
@@ -135,7 +129,6 @@ export class InfoService {
       platforms,
       statistics,
       subscriptions,
-      systemMessage,
       tags,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()

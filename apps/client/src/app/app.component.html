@@ -1,6 +1,6 @@
 <header>
   <div
-    *ngIf="canCreateAccount || (info?.systemMessage && user)"
+    *ngIf="canCreateAccount || user?.systemMessage"
     class="info-message-container"
   >
     <div class="info-message-inner-container position-fixed w-100">
@@ -19,11 +19,11 @@
           </div></a
         >
         <div
-          *ngIf="!canCreateAccount && info?.systemMessage && user"
+          *ngIf="!canCreateAccount && user?.systemMessage"
           class="cursor-pointer d-inline-block info-message text-truncate"
-          (click)="onShowSystemMessage()"
+          (click)="onClickSystemMessage()"
         >
-          {{ info.systemMessage }}
+          {{ user.systemMessage.message }}
         </div>
       </div>
     </div>
