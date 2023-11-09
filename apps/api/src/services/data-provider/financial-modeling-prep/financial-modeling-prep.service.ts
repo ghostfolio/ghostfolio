@@ -133,7 +133,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
-      const response = await got(
+      const quotes = await got(
         `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
@@ -141,7 +141,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         }
       ).json<any>();
 
-      for (const { price, symbol } of response) {
+      for (const { price, symbol } of quotes) {
         response[symbol] = {
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),
