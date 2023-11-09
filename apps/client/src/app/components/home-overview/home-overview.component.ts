@@ -70,10 +70,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
 
-        this.unit = this.hasImpersonationId
-          ? '%'
-          : this.user?.settings?.baseCurrency;
-
         this.changeDetectorRef.markForCheck();
       });
 
@@ -81,6 +77,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       !this.hasImpersonationId &&
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
+
+    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
   }
 
   public onChangeDateRange(dateRange: DateRange) {
