@@ -127,7 +127,9 @@ export class UserService {
       updatedAt
     } = await this.prismaService.user.findUnique({
       include: {
-        Account: true,
+        Account: {
+          include: { Platform: true }
+        },
         Analytics: true,
         Settings: true,
         Subscription: true
@@ -250,8 +252,8 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.Account = sortBy(user.Account, (account) => {
-      return account.name;
+    user.Account = sortBy(user.Account, ({ name }) => {
+      return name.toLowerCase();
     });
     user.permissions = currentPermissions.sort();
 
