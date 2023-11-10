@@ -18,6 +18,7 @@ import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
+import { MagnifiPageComponent } from './products/magnifi-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
@@ -251,6 +252,17 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$150',
     slogan: 'The Time Machine for your Net Worth'
+  },
+  {
+    component: MagnifiPageComponent,
+    founded: 2018,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'magnifi',
+    name: 'Magnifi',
+    origin: $localize`United States`,
+    pricingPerYear: '$132',
+    slogan: 'AI Investing Assistant'
   },
   {
     component: MarketsShPageComponent,
