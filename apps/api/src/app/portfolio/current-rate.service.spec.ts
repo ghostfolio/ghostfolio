@@ -2,6 +2,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
@@ -25,30 +26,30 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
         getRange: ({
           dateRangeEnd,
           dateRangeStart,
-          symbols
+          uniqueAssets
         }: {
           dateRangeEnd: Date;
           dateRangeStart: Date;
-          symbols: string[];
+          uniqueAssets: UniqueAsset[];
         }) => {
           return Promise.resolve<MarketData[]>([
             {
               createdAt: dateRangeStart,
-              dataSource: DataSource.YAHOO,
+              dataSource: uniqueAssets[0].dataSource,
               date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
               state: 'CLOSE',
-              symbol: symbols[0]
+              symbol: uniqueAssets[0].symbol
             },
             {
               createdAt: dateRangeEnd,
-              dataSource: DataSource.YAHOO,
+              dataSource: uniqueAssets[0].dataSource,
               date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
               state: 'CLOSE',
-              symbol: symbols[0]
+              symbol: uniqueAssets[0].symbol
             }
           ]);
         }
@@ -134,6 +135,7 @@ describe('CurrentRateService', () => {
       errors: [],
       values: [
         {
+          dataSource: 'YAHOO',
           date: undefined,
           marketPriceInBaseCurrency: 1841.823902,
           symbol: 'AMZN'
