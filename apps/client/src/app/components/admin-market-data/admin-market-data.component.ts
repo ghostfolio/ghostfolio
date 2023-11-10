@@ -20,6 +20,7 @@ import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -83,7 +84,7 @@ export class AdminMarketDataComponent
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns = [
-    'symbol',
+    'nameWithSymbol',
     'dataSource',
     'assetClass',
     'assetSubClass',
@@ -97,6 +98,7 @@ export class AdminMarketDataComponent
   ];
   public filters$ = new Subject<Filter[]>();
   public isLoading = false;
+  public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
   public totalItems = 0;
