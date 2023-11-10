@@ -2,6 +2,7 @@ import { Product } from '@ghostfolio/common/interfaces';
 
 import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
+import { BasilFinancePageComponent } from './products/basil-finance-page.component';
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
@@ -84,6 +85,15 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: BasilFinancePageComponent,
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'basil-finance',
+    name: 'Basil Finance',
+    slogan: 'The ultimate solution for tracking and managing your investments'
   },
   {
     component: BeanvestPageComponent,
