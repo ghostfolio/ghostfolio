@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the platform icon to the account selectors in the cash balance transfer from one to another account
 - Added the platform icon to the account selector of the create or edit activity dialog
 
+### Changed
+
+- Harmonized the name column in the historical market data table of the admin control panel
+
 ## 2.21.0 - 2023-11-09
 
 ### Changed
