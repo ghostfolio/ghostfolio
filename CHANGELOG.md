@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the style of the carousel component on mobile for the testimonial section on the landing page
 - Harmonized the name column in the historical market data table of the admin control panel
 
 ## 2.21.0 - 2023-11-09
