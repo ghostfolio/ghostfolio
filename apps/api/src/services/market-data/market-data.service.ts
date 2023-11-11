@@ -74,15 +74,17 @@ export class MarketDataService {
         }
       ],
       where: {
-        OR: uniqueAssets.map(({ dataSource, symbol }) => ({
-          AND: [
-            {
-              dataSource,
-              symbol,
-              date: dateQuery
-            }
-          ]
-        }))
+        OR: uniqueAssets.map(({ dataSource, symbol }) => {
+          return {
+            AND: [
+              {
+                dataSource,
+                symbol,
+                date: dateQuery
+              }
+            ]
+          };
+        })
       }
     });
   }
