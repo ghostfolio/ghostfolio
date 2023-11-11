@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized the style of the carousel component on mobile for the testimonial section on the landing page
 - Introduced action menus in the overview of the admin control panel
 - Harmonized the name column in the historical market data table of the admin control panel
+- Refactored the implementation of the data range functionality (`getRange()`) in the market data service
 
 ## 2.21.0 - 2023-11-09
 
