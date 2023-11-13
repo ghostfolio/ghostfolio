@@ -1,5 +1,5 @@
 -- AlterEnum
-ALTER TYPE "Type" ADD VALUE IF NOT EXISTS  'STAKE';
+ALTER TYPE "Type" ADD VALUE IF NOT EXISTS 'STAKE';
 
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "_SymbolProfileToTag" (
