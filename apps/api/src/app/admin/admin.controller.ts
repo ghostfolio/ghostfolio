@@ -448,7 +448,7 @@ export class AdminController {
       );
     }
 
-    if (dataSource == 'MANUAL') {
+    if (dataSource === 'MANUAL') {
       await this.adminService.patchAssetProfileData({
         dataSource,
         symbol,
