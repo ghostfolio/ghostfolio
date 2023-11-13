@@ -78,9 +78,20 @@
             *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
             [value]="null"
           ></mat-option>
-          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
-            >{{ account.name }}</mat-option
+          <mat-option
+            *ngFor="let account of data.accounts"
+            [value]="account.id"
           >
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

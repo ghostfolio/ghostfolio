@@ -6,7 +6,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -157,8 +160,10 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};

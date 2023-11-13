@@ -15,9 +15,11 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
   ) {}
 
   public async enhance({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     response,
     symbol
   }: {
+    requestTimeout?: number;
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
@@ -45,7 +47,7 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
 
     setTimeout(() => {
       abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
+    }, requestTimeout);
 
     const mappings = await got
       .post(`${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`, {

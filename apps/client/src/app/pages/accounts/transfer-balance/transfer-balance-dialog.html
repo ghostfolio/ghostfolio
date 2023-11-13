@@ -10,9 +10,17 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>From</mat-label>
         <mat-select formControlName="fromAccount">
-          <mat-option *ngFor="let account of accounts" [value]="account.id"
-            >{{ account.name }}</mat-option
-          >
+          <mat-option *ngFor="let account of accounts" [value]="account.id">
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -20,9 +28,17 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>To</mat-label>
         <mat-select formControlName="toAccount">
-          <mat-option *ngFor="let account of accounts" [value]="account.id"
-            >{{ account.name }}</mat-option
-          >
+          <mat-option *ngFor="let account of accounts" [value]="account.id">
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

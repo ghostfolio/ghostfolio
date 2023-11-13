@@ -448,24 +448,45 @@ export class AdminController {
       );
     }
 
-    await this.adminService.patchAssetProfileData({
-      dataSource,
-      symbol,
-      tags: {
-        set: []
-      }
-    });
+    if (dataSource === 'MANUAL') {
+      await this.adminService.patchAssetProfileData({
+        dataSource,
+        symbol,
+        tags: {
+          set: []
+        }
+      });
 
-    return this.adminService.patchAssetProfileData({
-      ...assetProfileData,
-      dataSource,
-      symbol,
-      tags: {
-        connect: assetProfileData.tags?.map(({ id }) => {
-          return { id };
-        })
-      }
-    });
+      return this.adminService.patchAssetProfileData({
+        ...assetProfileData,
+        dataSource,
+        symbol,
+        tags: {
+          connect: assetProfileData.tags?.map(({ id }) => {
+            return { id };
+          })
+        }
+      });
+    } else {
+      await this.adminService.patchAssetProfileData({
+        dataSource,
+        symbol,
+        tags: {
+          set: []
+        }
+      });
+
+      return this.adminService.patchAssetProfileData({
+        ...assetProfileData,
+        dataSource,
+        symbol,
+        tags: {
+          connect: assetProfileData.tags?.map(({ id }) => {
+            return { id };
+          })
+        }
+      });
+    }
   }
 
   @Put('settings/:key')

@@ -114,8 +114,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
@@ -129,9 +131,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, requestTimeout);
 
-      const response = await got(
+      const quotes = await got(
         `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
@@ -139,7 +141,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         }
       ).json<any>();
 
-      for (const { price, symbol } of response) {
+      for (const { price, symbol } of quotes) {
         response[symbol] = {
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),

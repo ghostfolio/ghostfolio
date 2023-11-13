@@ -7,9 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.7.0` to `2.8.3`
+
+## 2.22.0 - 2023-11-11
+
+### Added
+
+- Added the platform icon to the account selectors in the cash balance transfer from one to another account
+- Added the platform icon to the account selector of the create or edit activity dialog
+
+### Changed
+
+- Optimized the style of the carousel component on mobile for the testimonial section on the landing page
+- Introduced action menus in the overview of the admin control panel
+- Harmonized the name column in the historical market data table of the admin control panel
+- Refactored the implementation of the data range functionality (`getRange()`) in the market data service
+
+## 2.21.0 - 2023-11-09
+
+### Changed
+
+- Extended the system message
+
+### Fixed
+
+- Fixed the unit for the _Zen Mode_ in the overview tab of the home page
+- Fixed an issue to get quotes in the _Financial Modeling Prep_ service
+
+## 2.20.0 - 2023-11-08
+
+### Changed
+
+- Removed the loading indicator of the unit in the overview tab of the home page
+- Improved the import of historical market data in the admin control panel
+- Increased the timeout in the health check endpoint for data enhancers
+- Increased the timeout in the health check endpoint for data providers
+- Removed the account type from the `Account` database schema
+
+## 2.19.0 - 2023-11-06
+
 ### Added
 
 - Added a data migration to set `accountType` to `NULL` in the account database table
+
+### Changed
+
+- Improved the language localization for the _Fear & Greed Index_ (market mood)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the handling of derived currencies (`GBp`, `ILA`, `ZAc`)
 
 ## 2.18.0 - 2023-11-05
 
@@ -352,7 +403,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added health check endpoints for data enhancers
+- Added a health check endpoint for data enhancers
 
 ### Changed
 
@@ -528,7 +579,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the login dialog
-- Disabled the caching in the health check endpoints for data providers
+- Disabled the caching in the health check endpoint for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
 
@@ -916,7 +967,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a fallback to historical market data if a data provider does not provide live data
 - Added a general health check endpoint
-- Added health check endpoints for data providers
+- Added a health check endpoint for data providers
 
 ### Changed
 

@@ -59,10 +59,10 @@ export class MarketDataService {
 
   public async getRange({
     dateQuery,
-    symbols
+    uniqueAssets
   }: {
     dateQuery: DateQuery;
-    symbols: string[];
+    uniqueAssets: UniqueAsset[];
   }): Promise<MarketData[]> {
     return await this.prismaService.marketData.findMany({
       orderBy: [
@@ -74,10 +74,17 @@ export class MarketDataService {
         }
       ],
       where: {
-        date: dateQuery,
-        symbol: {
-          in: symbols
-        }
+        OR: uniqueAssets.map(({ dataSource, symbol }) => {
+          return {
+            AND: [
+              {
+                dataSource,
+                symbol,
+                date: dateQuery
+              }
+            ]
+          };
+        })
       }
     });
   }

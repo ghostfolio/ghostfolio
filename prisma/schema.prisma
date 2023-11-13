@@ -21,7 +21,6 @@ model Access {
 }
 
 model Account {
-  accountType AccountType?
   balance     Float            @default(0)
   balances    AccountBalance[]
   comment     String?

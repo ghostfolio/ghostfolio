@@ -33,6 +33,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public showDetails = false;
+  public unit: string;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -76,6 +77,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       !this.hasImpersonationId &&
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
+
+    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
   }
 
   public onChangeDateRange(dateRange: DateRange) {

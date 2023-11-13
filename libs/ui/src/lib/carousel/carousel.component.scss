@@ -12,13 +12,14 @@
   button {
     top: 50%;
     transform: translateY(-50%);
+    z-index: 1;
 
     &.carousel-nav-prev {
-      left: -50px;
+      left: -0.5rem;
     }
 
     &.carousel-nav-next {
-      right: -50px;
+      right: -0.5rem;
     }
   }
 

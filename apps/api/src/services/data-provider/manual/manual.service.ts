@@ -134,8 +134,10 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};

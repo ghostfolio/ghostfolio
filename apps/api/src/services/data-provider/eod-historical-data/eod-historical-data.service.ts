@@ -132,8 +132,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     let response: { [symbol: string]: IDataProviderResponse } = {};
@@ -151,7 +153,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, requestTimeout);
 
       const realTimeResponse = await got(
         `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
