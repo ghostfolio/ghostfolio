@@ -6,7 +6,7 @@ import { addYears, format, getYear, parse } from 'date-fns';
 export class CustomDateAdapter extends NativeDateAdapter {
   public constructor(
     @Inject(MAT_DATE_LOCALE) public locale: string,
-    @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string,
+    @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string
   ) {
     super(matDateLocale);
   }
