@@ -283,6 +283,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         return id !== aTag.id;
       })
     );
+    this.assetProfileForm.markAsDirty();
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
@@ -293,6 +294,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
     ]);
     this.tagInput.nativeElement.value = '';
+    this.assetProfileForm.markAsDirty();
   }
 
   public ngOnDestroy() {
