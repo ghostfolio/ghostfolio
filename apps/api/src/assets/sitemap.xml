@@ -1093,6 +1093,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/pl</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/pt</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
