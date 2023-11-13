@@ -13,6 +13,7 @@ import { Module } from '@nestjs/common';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { QueueModule } from './queue/queue.module';
+import { SymbolProfileOverwriteModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile-overwrite.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { QueueModule } from './queue/queue.module';
     PropertyModule,
     QueueModule,
     SubscriptionModule,
-    SymbolProfileModule
+    SymbolProfileModule,
+    SymbolProfileOverwriteModule
   ],
   controllers: [AdminController],
   providers: [AdminService],
