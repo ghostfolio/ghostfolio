@@ -28,6 +28,24 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="nameWithSymbol">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="symbol"
+          >
+            <ng-container i18n>Name</ng-container>
+          </th>
+          <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+            <div class="text-truncate">{{ element.name }}</div>
+            <div *ngIf="!isUUID(element.symbol)">
+              <small class="text-muted">{{ element.symbol | gfSymbol }}</small>
+            </div>
+          </td>
+          <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+        </ng-container>
+
         <ng-container matColumnDef="dataSource">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Data Source</ng-container>

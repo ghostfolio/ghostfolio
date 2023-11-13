@@ -6,6 +6,7 @@ import {
   OnInit
 } from '@angular/core';
 import { resolveFearAndGreedIndex } from '@ghostfolio/common/helper';
+import { translate } from '@ghostfolio/ui/i18n';
 
 @Component({
   selector: 'gf-fear-and-greed-index',
@@ -24,9 +25,9 @@ export class FearAndGreedIndexComponent implements OnChanges, OnInit {
   public ngOnInit() {}
 
   public ngOnChanges() {
-    const { emoji, text } = resolveFearAndGreedIndex(this.fearAndGreedIndex);
+    const { emoji, key } = resolveFearAndGreedIndex(this.fearAndGreedIndex);
 
     this.fearAndGreedIndexEmoji = emoji;
-    this.fearAndGreedIndexText = text;
+    this.fearAndGreedIndexText = translate(key);
   }
 }

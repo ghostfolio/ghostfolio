@@ -5,6 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
@@ -106,8 +107,10 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
   }: {
+    requestTimeout?: number;
     symbols: string[];
   }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     return {};

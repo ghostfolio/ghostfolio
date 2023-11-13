@@ -86,7 +86,6 @@
       <div class="col">
         <gf-portfolio-performance
           class="pb-4"
-          [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
           [errors]="errors"
           [isAllTimeHigh]="isAllTimeHigh"
@@ -95,6 +94,7 @@
           [locale]="user?.settings?.locale"
           [performance]="performance"
           [showDetails]="showDetails"
+          [unit]="unit"
         ></gf-portfolio-performance>
         <div *ngIf="showDetails" class="text-center">
           <gf-toggle

@@ -2,7 +2,11 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
-import { DataProviderInfo, ResponseError } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  ResponseError,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
@@ -52,6 +56,7 @@ export class CurrentRateService {
 
               if (dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice) {
                 result.push({
+                  dataSource: dataGatheringItem.dataSource,
                   date: today,
                   marketPriceInBaseCurrency:
                     this.exchangeRateDataService.toCurrency(
@@ -75,27 +80,30 @@ export class CurrentRateService {
       );
     }
 
-    const symbols = dataGatheringItems.map((dataGatheringItem) => {
-      return dataGatheringItem.symbol;
-    });
+    const uniqueAssets: UniqueAsset[] = dataGatheringItems.map(
+      ({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }
+    );
 
     promises.push(
       this.marketDataService
         .getRange({
           dateQuery,
-          symbols
+          uniqueAssets
         })
         .then((data) => {
-          return data.map((marketDataItem) => {
+          return data.map(({ dataSource, date, marketPrice, symbol }) => {
             return {
-              date: marketDataItem.date,
+              dataSource,
+              date,
+              symbol,
               marketPriceInBaseCurrency:
                 this.exchangeRateDataService.toCurrency(
-                  marketDataItem.marketPrice,
-                  currencies[marketDataItem.symbol],
+                  marketPrice,
+                  currencies[symbol],
                   userCurrency
-                ),
-              symbol: marketDataItem.symbol
+                )
             };
           });
         })
@@ -112,7 +120,7 @@ export class CurrentRateService {
     };
 
     if (!isEmpty(quoteErrors)) {
-      for (const { symbol } of quoteErrors) {
+      for (const { dataSource, symbol } of quoteErrors) {
         try {
           // If missing quote, fallback to the latest available historical market price
           let value: GetValueObject = response.values.find((currentValue) => {
@@ -121,6 +129,7 @@ export class CurrentRateService {
 
           if (!value) {
             value = {
+              dataSource,
               symbol,
               date: today,
               marketPriceInBaseCurrency: 0

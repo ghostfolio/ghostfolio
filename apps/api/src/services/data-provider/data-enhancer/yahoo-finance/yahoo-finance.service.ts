@@ -1,6 +1,10 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { DEFAULT_CURRENCY, UNKNOWN_KEY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import { isCurrency } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -72,9 +76,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   }
 
   public async enhance({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     response,
     symbol
   }: {
+    requestTimeout?: number;
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {

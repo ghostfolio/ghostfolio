@@ -311,15 +311,15 @@ export function resetHours(aDate: Date) {
 
 export function resolveFearAndGreedIndex(aValue: number) {
   if (aValue <= 25) {
-    return { emoji: '🥵', text: 'Extreme Fear' };
+    return { emoji: '🥵', key: 'EXTREME_FEAR', text: 'Extreme Fear' };
   } else if (aValue <= 45) {
-    return { emoji: '😨', text: 'Fear' };
+    return { emoji: '😨', key: 'FEAR', text: 'Fear' };
   } else if (aValue <= 55) {
-    return { emoji: '😐', text: 'Neutral' };
+    return { emoji: '😐', key: 'NEUTRAL', text: 'Neutral' };
   } else if (aValue < 75) {
-    return { emoji: '😜', text: 'Greed' };
+    return { emoji: '😜', key: 'GREED', text: 'Greed' };
   } else {
-    return { emoji: '🤪', text: 'Extreme Greed' };
+    return { emoji: '🤪', key: 'EXTREME_GREED', text: 'Extreme Greed' };
   }
 }
 

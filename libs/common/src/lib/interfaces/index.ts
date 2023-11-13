@@ -42,6 +42,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
+import { SystemMessage } from './system-message.interface';
 import { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
 import type { UniqueAsset } from './unique-asset.interface';
@@ -90,6 +91,7 @@ export {
   ResponseError,
   ScraperConfiguration,
   Statistics,
+  SystemMessage,
   Subscription,
   TabConfiguration,
   TimelinePosition,

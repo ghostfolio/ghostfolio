@@ -1,6 +1,8 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
+import { BasilFinancePageComponent } from './products/basil-finance-page.component';
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
@@ -17,8 +19,10 @@ import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
+import { MagnifiPageComponent } from './products/magnifi-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
+import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
@@ -37,6 +41,7 @@ import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { YnabPageComponent } from './products/ynab-page.component';
 
 export const products: Product[] = [
   {
@@ -63,6 +68,16 @@ export const products: Product[] = [
     useAnonymously: true
   },
   {
+    component: AllvueSystemsPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'allvue-systems',
+    name: 'Allvue Systems',
+    origin: $localize`United States`,
+    slogan: 'Investment Software Suite'
+  },
+  {
     component: AltooPageComponent,
     founded: 2017,
     hasSelfHostingAbility: false,
@@ -70,6 +85,15 @@ export const products: Product[] = [
     name: 'Altoo Wealth Platform',
     origin: $localize`Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    component: BasilFinancePageComponent,
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'basil-finance',
+    name: 'Basil Finance',
+    slogan: 'The ultimate solution for tracking and managing your investments'
   },
   {
     component: BeanvestPageComponent,
@@ -240,6 +264,17 @@ export const products: Product[] = [
     slogan: 'The Time Machine for your Net Worth'
   },
   {
+    component: MagnifiPageComponent,
+    founded: 2018,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'magnifi',
+    name: 'Magnifi',
+    origin: $localize`United States`,
+    pricingPerYear: '$132',
+    slogan: 'AI Investing Assistant'
+  },
+  {
     component: MarketsShPageComponent,
     founded: 2022,
     hasFreePlan: true,
@@ -264,6 +299,17 @@ export const products: Product[] = [
     pricingPerYear: '$145',
     region: $localize`United States`,
     slogan: 'Your financial future, in your control'
+  },
+  {
+    component: MonarchMoneyPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'monarch-money',
+    name: 'Monarch Money',
+    origin: $localize`United States`,
+    pricingPerYear: '$99.99',
+    slogan: 'The modern way to manage your money'
   },
   {
     component: MonsePageComponent,
@@ -452,5 +498,16 @@ export const products: Product[] = [
     origin: $localize`Switzerland`,
     region: $localize`Switzerland`,
     slogan: 'Connect. Share. Invest.'
+  },
+  {
+    component: YnabPageComponent,
+    founded: 2004,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'ynab',
+    name: 'YNAB (You Need a Budget)',
+    origin: $localize`United States`,
+    pricingPerYear: '$99',
+    slogan: 'Change Your Relationship With Money'
   }
 ];
