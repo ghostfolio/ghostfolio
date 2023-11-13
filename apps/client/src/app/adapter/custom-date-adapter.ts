@@ -1,4 +1,3 @@
-import { Platform } from '@angular/cdk/platform';
 import { Inject, forwardRef } from '@angular/core';
 import { MAT_DATE_LOCALE, NativeDateAdapter } from '@angular/material/core';
 import { getDateFormatString } from '@ghostfolio/common/helper';
@@ -8,9 +7,8 @@ export class CustomDateAdapter extends NativeDateAdapter {
   public constructor(
     @Inject(MAT_DATE_LOCALE) public locale: string,
     @Inject(forwardRef(() => MAT_DATE_LOCALE)) matDateLocale: string,
-    platform: Platform
   ) {
-    super(matDateLocale, platform);
+    super(matDateLocale);
   }
 
   /**
