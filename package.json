@@ -139,7 +139,7 @@
     "@angular-eslint/eslint-plugin": "17.0.1",
     "@angular-eslint/eslint-plugin-template": "17.0.1",
     "@angular-eslint/template-parser": "17.0.1",
-    "@angular/cli": "16.2.9",
+    "@angular/cli": "17.0.0",
     "@angular/compiler-cli": "17.0.2",
     "@angular/language-service": "17.0.2",
     "@angular/localize": "17.0.2",
