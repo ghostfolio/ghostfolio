@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - '*.*.*'
-  pull_request:
-    branches:
-      - 'dockerpush'
 
 jobs:
   build_and_push:
