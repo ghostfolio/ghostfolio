@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the benchmarks in the markets overview by 50-Day and 200-Day trends (experimental)
 - Set up the language localization for Polski (`pl`)
 
 ### Changed
@@ -197,7 +198,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to transfer a part of the cash balance from one to another account
-- Extended the markets overview by benchmarks (date of last all time high)
+- Extended the benchmarks in the markets overview by the date of the last all time high
 - Added support to import historical market data in the admin control panel
 
 ### Changed
@@ -2437,7 +2438,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the _Ghostfolio_ trailer to the landing page
-- Extended the markets overview by benchmarks (current change to the all time high)
+- Extended the benchmarks in the markets overview by the current change to the all time high
 
 ## 1.151.0 - 24.05.2022
 
