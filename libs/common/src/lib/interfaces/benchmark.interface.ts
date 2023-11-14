@@ -1,4 +1,5 @@
-import { BenchmarkTrend } from '../types/benchmark-trend-type.type';
+import { BenchmarkTrend } from '@ghostfolio/common/types/';
+
 import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 
 export interface Benchmark {

@@ -19,7 +19,7 @@ import {
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { BenchmarkTrend } from '@ghostfolio/common/types/benchmark-trend-type.type';
+import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -49,29 +49,28 @@ export class BenchmarkService {
     return 0;
   }
 
-  public async getBenchMarkTrends(dataSource: DataSource, symbol: string) {
-    return this.marketDataService
-      .marketDataItems({
-        orderBy: {
-          date: 'desc'
-        },
-        select: {
-          date: true,
-          marketPrice: true
-        },
-        where: {
-          dataSource,
-          symbol,
-          date: { gte: subDays(new Date(), 400) }
-        }
-      })
-      .then((historicalData) => {
-        const fiftyDayAvg = calculateBenchmarkTrend(historicalData, 50);
-        const twoHundrredDayAvg = calculateBenchmarkTrend(historicalData, 200);
-        Logger.debug(`50d: ${fiftyDayAvg} and 200d: ${twoHundrredDayAvg}`);
+  public async getBenchmarkTrends({ dataSource, symbol }: UniqueAsset) {
+    const historicalData = await this.marketDataService.marketDataItems({
+      orderBy: {
+        date: 'desc'
+      },
+      where: {
+        dataSource,
+        symbol,
+        date: { gte: subDays(new Date(), 400) }
+      }
+    });
 
-        return { trend200d: twoHundrredDayAvg, trend50d: fiftyDayAvg };
-      });
+    const fiftyDayAverage = calculateBenchmarkTrend({
+      historicalData,
+      days: 50
+    });
+    const twoHundredDayAverage = calculateBenchmarkTrend({
+      historicalData,
+      days: 200
+    });
+
+    return { trend50d: fiftyDayAverage, trend200d: twoHundredDayAverage };
   }
 
   public async getBenchmarks({ useCache = true } = {}): Promise<
@@ -94,7 +93,7 @@ export class BenchmarkService {
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
 
     const promises: Promise<{ date: Date; marketPrice: number }>[] = [];
-    const movingAvgPromises: Promise<{
+    const movingAveragePromises: Promise<{
       trend50d: BenchmarkTrend;
       trend200d: BenchmarkTrend;
     }>[] = [];
@@ -107,12 +106,14 @@ export class BenchmarkService {
 
     for (const { dataSource, symbol } of benchmarkAssetProfiles) {
       promises.push(this.marketDataService.getMax({ dataSource, symbol }));
-      movingAvgPromises.push(this.getBenchMarkTrends(dataSource, symbol));
+      movingAveragePromises.push(
+        this.getBenchmarkTrends({ dataSource, symbol })
+      );
     }
 
     const [allTimeHighs, benchmarkTrends] = await Promise.all([
       Promise.all(promises),
-      Promise.all(movingAvgPromises)
+      Promise.all(movingAveragePromises)
     ]);
     let storeInCache = true;
 

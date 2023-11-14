@@ -1,6 +1,7 @@
 import type { AccessWithGranteeUser } from './access-with-grantee-user.type';
 import type { AccountWithPlatform } from './account-with-platform.type';
 import type { AccountWithValue } from './account-with-value.type';
+import type { BenchmarkTrend } from './benchmark-trend.type';
 import type { ColorScheme } from './color-scheme.type';
 import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
@@ -20,6 +21,7 @@ export type {
   AccessWithGranteeUser,
   AccountWithPlatform,
   AccountWithValue,
+  BenchmarkTrend,
   ColorScheme,
   DateRange,
   Granularity,

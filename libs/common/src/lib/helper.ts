@@ -14,8 +14,7 @@ import { de, es, fr, it, nl, pl, pt, tr } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark, UniqueAsset } from './interfaces';
-import { ColorScheme } from './types';
-import { BenchmarkTrend } from './types/benchmark-trend-type.type';
+import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
@@ -23,32 +22,50 @@ export const DATE_FORMAT_YEARLY = 'yyyy';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
-export function calculateBenchmarkTrend(
-  historicalData: MarketData[],
-  days: number
-): BenchmarkTrend {
+export function calculateBenchmarkTrend({
+  days,
+  historicalData
+}: {
+  days: number;
+  historicalData: MarketData[];
+}): BenchmarkTrend {
   const hasEnoughData = historicalData.length >= 2 * days;
-  if (!hasEnoughData) return null;
-  const latestDataAvg = calculateMovingAverage(
-    historicalData.slice(0, days).map((hData) => new Big(hData.marketPrice)),
-    days
-  );
-  const oldDataAvg = calculateMovingAverage(
-    historicalData
-      .slice(days, 2 * days)
-      .map((hData) => new Big(hData.marketPrice)),
-    days
-  );
-  return latestDataAvg > oldDataAvg
+
+  if (!hasEnoughData) {
+    return null;
+  }
+
+  const latestDataAverage = calculateMovingAverage({
+    days,
+    prices: historicalData.slice(0, days).map(({ marketPrice }) => {
+      return new Big(marketPrice);
+    })
+  });
+  const oldDataAverage = calculateMovingAverage({
+    days,
+    prices: historicalData.slice(days, 2 * days).map(({ marketPrice }) => {
+      return new Big(marketPrice);
+    })
+  });
+
+  return latestDataAverage > oldDataAverage
     ? 'UP'
-    : latestDataAvg < oldDataAvg
+    : latestDataAverage < oldDataAverage
       ? 'DOWN'
       : 'NEUTRAL';
 }
 
-export function calculateMovingAverage(prices: Big[], days: number) {
+export function calculateMovingAverage({
+  days,
+  prices
+}: {
+  days: number;
+  prices: Big[];
+}) {
   return prices
-    .reduce((prev, curr) => prev.add(curr), new Big(0))
+    .reduce((previous, current) => {
+      return previous.add(current);
+    }, new Big(0))
     .div(days)
     .toNumber();
 }
