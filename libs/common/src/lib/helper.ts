@@ -32,27 +32,32 @@ export function calculateBenchmarkTrend({
   const hasEnoughData = historicalData.length >= 2 * days;
 
   if (!hasEnoughData) {
-    return null;
+    return 'UNKNOWN';
   }
 
-  const latestDataAverage = calculateMovingAverage({
+  const recentPeriodAverage = calculateMovingAverage({
     days,
     prices: historicalData.slice(0, days).map(({ marketPrice }) => {
       return new Big(marketPrice);
     })
   });
-  const oldDataAverage = calculateMovingAverage({
+
+  const pastPeriodAverage = calculateMovingAverage({
     days,
     prices: historicalData.slice(days, 2 * days).map(({ marketPrice }) => {
       return new Big(marketPrice);
     })
   });
 
-  return latestDataAverage > oldDataAverage
-    ? 'UP'
-    : latestDataAverage < oldDataAverage
-      ? 'DOWN'
-      : 'NEUTRAL';
+  if (recentPeriodAverage > pastPeriodAverage) {
+    return 'UP';
+  }
+
+  if (recentPeriodAverage < pastPeriodAverage) {
+    return 'DOWN';
+  }
+
+  return 'NEUTRAL';
 }
 
 export function calculateMovingAverage({

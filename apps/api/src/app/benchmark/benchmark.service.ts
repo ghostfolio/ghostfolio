@@ -140,11 +140,11 @@ export class BenchmarkService {
         performances: {
           allTimeHigh: {
             date: allTimeHigh?.date || new Date(),
-            performancePercent: performancePercentFromAllTimeHigh,
-            trend50d: benchmarkTrends[index].trend50d,
-            trend200d: benchmarkTrends[index].trend200d
+            performancePercent: performancePercentFromAllTimeHigh
           }
-        }
+        },
+        trend50d: benchmarkTrends[index].trend50d,
+        trend200d: benchmarkTrends[index].trend200d
       };
     });
 

@@ -9,8 +9,8 @@ export interface Benchmark {
     allTimeHigh: {
       date: Date;
       performancePercent: number;
-      trend50d: BenchmarkTrend;
-      trend200d: BenchmarkTrend;
     };
   };
+  trend50d: BenchmarkTrend;
+  trend200d: BenchmarkTrend;
 }
