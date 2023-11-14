@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the data source validation in the activities import
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.7.0` to `2.8.3`
 - Upgraded `prettier` from version `3.0.3` to `3.1.0`

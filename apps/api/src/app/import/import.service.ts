@@ -8,6 +8,7 @@ import {
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -33,6 +34,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -570,6 +572,12 @@ export class ImportService {
       index,
       { currency, dataSource, symbol }
     ] of uniqueActivitiesDto.entries()) {
+      if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
+        throw new Error(
+          `activities.${index}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
       if (dataSource !== 'MANUAL') {
         const assetProfile = (
           await this.dataProviderService.getAssetProfiles([
