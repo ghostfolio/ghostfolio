@@ -215,6 +215,7 @@ export class PortfolioCalculator {
       await this.currentRateService.getValues({
         currencies,
         dataGatheringItems,
+        // TODO Refactor in to lte & gte
         dateQuery: {
           in: dates
         },
@@ -402,6 +403,7 @@ export class PortfolioCalculator {
     } = await this.currentRateService.getValues({
       currencies,
       dataGatheringItems,
+      // TODO Refactor to lte & gte
       dateQuery: {
         in: dates
       },
