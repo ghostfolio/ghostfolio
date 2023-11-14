@@ -74,6 +74,7 @@ export class MarketDataService {
         }
       ],
       where: {
+        //TODO Chunk!
         OR: uniqueAssets.map(({ dataSource, symbol }) => {
           return {
             AND: [

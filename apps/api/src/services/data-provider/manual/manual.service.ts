@@ -161,6 +161,7 @@ export class ManualService implements DataProviderInterface {
         take: symbols.length,
         where: {
           symbol: {
+            // TODO Chunk!
             in: symbols
           }
         }
