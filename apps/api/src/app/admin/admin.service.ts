@@ -369,13 +369,13 @@ export class AdminService {
           symbolProfileId
         });
       } else {
-        symbolProfileId = await this.symbolProfileService.getSymbolProfiles([
+        let profiles = await this.symbolProfileService.getSymbolProfiles([
           {
             dataSource,
             symbol
           }
-        ])[0];
-
+        ]);
+        symbolProfileId = profiles[0].id;
         await this.symbolProfileOverwriteService.add({
           SymbolProfile: {
             connect: {

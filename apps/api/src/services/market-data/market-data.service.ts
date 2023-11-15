@@ -3,6 +3,7 @@ import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.i
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
+import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import {
@@ -11,10 +12,13 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
+import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 
 @Injectable()
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
+
+  private dateQueryHelper = new DateQueryHelper();
 
   public async deleteMany({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.marketData.deleteMany({
@@ -64,29 +68,41 @@ export class MarketDataService {
     dateQuery: DateQuery;
     uniqueAssets: UniqueAsset[];
   }): Promise<MarketData[]> {
-    return await this.prismaService.marketData.findMany({
-      orderBy: [
-        {
-          date: 'asc'
-        },
-        {
-          symbol: 'asc'
-        }
-      ],
-      where: {
-        OR: uniqueAssets.map(({ dataSource, symbol }) => {
-          return {
-            AND: [
-              {
-                dataSource,
-                symbol,
-                date: dateQuery
-              }
-            ]
-          };
+    const batch = new BatchPrismaClient(this.prismaService);
+    let { query, dates } = this.dateQueryHelper.handleDateQueryIn(dateQuery);
+    let marketData = await batch
+      .over(uniqueAssets)
+      .with((prisma, _assets) =>
+        prisma.marketData.findMany({
+          orderBy: [
+            {
+              date: 'asc'
+            },
+            {
+              symbol: 'asc'
+            }
+          ],
+          where: {
+            OR: _assets.map(({ dataSource, symbol }) => {
+              return {
+                AND: [
+                  {
+                    dataSource,
+                    symbol,
+                    date: query
+                  }
+                ]
+              };
+            })
+          }
         })
-      }
-    });
+      )
+      .then((data) => data.flat());
+    return marketData.filter(
+      (m) =>
+        dates?.length === 0 ||
+        dates.some((d) => m.date.getTime() === d.getTime())
+    );
   }
 
   public async marketDataItems(params: {
@@ -97,7 +113,6 @@ export class MarketDataService {
     orderBy?: Prisma.MarketDataOrderByWithRelationInput;
   }): Promise<MarketData[]> {
     const { skip, take, cursor, where, orderBy } = params;
-
     return this.prismaService.marketData.findMany({
       cursor,
       orderBy,
