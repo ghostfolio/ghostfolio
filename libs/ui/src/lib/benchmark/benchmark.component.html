@@ -20,9 +20,9 @@
           *ngIf="element?.trend50d !== 'UNKNOWN'"
           [value]="
             element?.trend50d === 'UP'
-              ? 1
+              ? 0.001
               : element?.trend50d === 'DOWN'
-                ? -1
+                ? -0.001
                 : 0
           "
         ></gf-trend-indicator>
@@ -44,9 +44,9 @@
           *ngIf="element?.trend200d !== 'UNKNOWN'"
           [value]="
             element?.trend200d === 'UP'
-              ? 1
+              ? 0.001
               : element?.trend200d === 'DOWN'
-                ? -1
+                ? -0.001
                 : 0
           "
         ></gf-trend-indicator>
