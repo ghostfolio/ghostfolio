@@ -73,9 +73,10 @@ export class BenchmarkService {
     return { trend50d: fiftyDayAverage, trend200d: twoHundredDayAverage };
   }
 
-  public async getBenchmarks({ useCache = true } = {}): Promise<
-    BenchmarkResponse['benchmarks']
-  > {
+  public async getBenchmarks({
+    enableSharing = false,
+    useCache = true
+  } = {}): Promise<BenchmarkResponse['benchmarks']> {
     let benchmarks: BenchmarkResponse['benchmarks'];
 
     if (useCache) {
@@ -90,7 +91,9 @@ export class BenchmarkService {
       } catch {}
     }
 
-    const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
+    const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles({
+      enableSharing
+    });
 
     const promisesAllTimeHighs: Promise<{ date: Date; marketPrice: number }>[] =
       [];
@@ -162,14 +165,24 @@ export class BenchmarkService {
     return benchmarks;
   }
 
-  public async getBenchmarkAssetProfiles(): Promise<Partial<SymbolProfile>[]> {
+  public async getBenchmarkAssetProfiles({
+    enableSharing = false
+  } = {}): Promise<Partial<SymbolProfile>[]> {
     const symbolProfileIds: string[] = (
       ((await this.propertyService.getByKey(
         PROPERTY_BENCHMARKS
       )) as BenchmarkProperty[]) ?? []
-    ).map(({ symbolProfileId }) => {
-      return symbolProfileId;
-    });
+    )
+      .filter((benchmark) => {
+        if (enableSharing) {
+          return benchmark.enableSharing;
+        }
+
+        return true;
+      })
+      .map(({ symbolProfileId }) => {
+        return symbolProfileId;
+      });
 
     const assetProfiles =
       await this.symbolProfileService.getSymbolProfilesByIds(symbolProfileIds);
