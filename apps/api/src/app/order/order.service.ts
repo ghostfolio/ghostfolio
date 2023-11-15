@@ -274,7 +274,6 @@ export class OrderService {
           {
             AND: [
               {
-                // TODO Chunk?
                 OR: filtersByAssetClass.map(({ id }) => {
                   return { assetClass: AssetClass[id] };
                 })
@@ -289,7 +288,6 @@ export class OrderService {
           },
           {
             SymbolProfileOverrides: {
-              // TODO Chunk?
               OR: filtersByAssetClass.map(({ id }) => {
                 return { assetClass: AssetClass[id] };
               })
@@ -306,7 +304,6 @@ export class OrderService {
             {
               tags: {
                 some: {
-                  // TODO Chunk?
                   OR: filtersByTag.map(({ id }) => {
                     return {
                       id: id
@@ -319,7 +316,6 @@ export class OrderService {
               SymbolProfile: {
                 tags: {
                   some: {
-                    // TODO Chunk?
                     OR: filtersByTag.map(({ id }) => {
                       return { id };
                     })
@@ -333,7 +329,6 @@ export class OrderService {
     }
 
     if (types) {
-      // TODO Chunk?
       where.OR = types.map((type) => {
         return {
           type: {

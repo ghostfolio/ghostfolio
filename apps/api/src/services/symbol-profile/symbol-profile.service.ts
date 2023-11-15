@@ -58,7 +58,6 @@ export class SymbolProfileService {
           SymbolProfileOverrides: true
         },
         where: {
-          // TODO: CHUNK !
           OR: aUniqueAssets.map(({ dataSource, symbol }) => {
             return {
               dataSource,
@@ -84,7 +83,6 @@ export class SymbolProfileService {
         },
         where: {
           id: {
-            //TODO CHUNK!!!!
             in: symbolProfileIds.map((symbolProfileId) => {
               return symbolProfileId;
             })
