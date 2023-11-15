@@ -20,8 +20,8 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
-import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
+import { Injectable } from '@nestjs/common';
+import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format, subDays } from 'date-fns';
 import { uniqBy } from 'lodash';
@@ -92,8 +92,9 @@ export class BenchmarkService {
 
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles();
 
-    const promises: Promise<{ date: Date; marketPrice: number }>[] = [];
-    const movingAveragePromises: Promise<{
+    const promisesAllTimeHighs: Promise<{ date: Date; marketPrice: number }>[] =
+      [];
+    const promisesBenchmarkTrends: Promise<{
       trend50d: BenchmarkTrend;
       trend200d: BenchmarkTrend;
     }>[] = [];
@@ -105,15 +106,17 @@ export class BenchmarkService {
     });
 
     for (const { dataSource, symbol } of benchmarkAssetProfiles) {
-      promises.push(this.marketDataService.getMax({ dataSource, symbol }));
-      movingAveragePromises.push(
+      promisesAllTimeHighs.push(
+        this.marketDataService.getMax({ dataSource, symbol })
+      );
+      promisesBenchmarkTrends.push(
         this.getBenchmarkTrends({ dataSource, symbol })
       );
     }
 
     const [allTimeHighs, benchmarkTrends] = await Promise.all([
-      Promise.all(promises),
-      Promise.all(movingAveragePromises)
+      Promise.all(promisesAllTimeHighs),
+      Promise.all(promisesBenchmarkTrends)
     ]);
     let storeInCache = true;
 
@@ -139,7 +142,7 @@ export class BenchmarkService {
         name: benchmarkAssetProfiles[index].name,
         performances: {
           allTimeHigh: {
-            date: allTimeHigh?.date || new Date(),
+            date: allTimeHigh?.date,
             performancePercent: performancePercentFromAllTimeHigh
           }
         },
