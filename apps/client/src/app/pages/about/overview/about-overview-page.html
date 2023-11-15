@@ -55,7 +55,7 @@
           community, tweet to
           <a
             href="https://twitter.com/ghostfolio_"
-            title="Tweet to Ghostfolio on Twitter"
+            title="Post to Ghostfolio on X (formerly Twitter)"
             >@ghostfolio_</a
           ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
             >, send an e-mail to
@@ -70,14 +70,14 @@
             >GitHub</a
           >.
         </p>
-        <p class="text-center">
+        <p class="align-items-center d-flex justify-content-center">
           <a
             class="mx-2"
             href="https://twitter.com/ghostfolio_"
             mat-icon-button
-            title="Follow Ghostfolio on Twitter"
+            title="Follow Ghostfolio on X (formerly Twitter)"
           >
-            <ion-icon name="logo-twitter"></ion-icon>
+            <span class="line-height-1 text-center w-100">𝕏</span>
           </a>
           <a
             *ngIf="user?.subscription?.type === 'Premium'"
