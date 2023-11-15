@@ -13,10 +13,13 @@ import {
   Prisma
 } from '@prisma/client';
 import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
+import AwaitLock from 'await-lock';
 
 @Injectable()
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
+
+  lock = new AwaitLock();
 
   private dateQueryHelper = new DateQueryHelper();
 
@@ -129,18 +132,22 @@ export class MarketDataService {
     where: Prisma.MarketDataWhereUniqueInput;
   }): Promise<MarketData> {
     const { data, where } = params;
-
-    return this.prismaService.marketData.upsert({
-      where,
-      create: {
-        dataSource: where.dataSource_date_symbol.dataSource,
-        date: where.dataSource_date_symbol.date,
-        marketPrice: data.marketPrice,
-        state: data.state,
-        symbol: where.dataSource_date_symbol.symbol
-      },
-      update: { marketPrice: data.marketPrice, state: data.state }
-    });
+    await this.lock.acquireAsync();
+    try {
+      return this.prismaService.marketData.upsert({
+        where,
+        create: {
+          dataSource: where.dataSource_date_symbol.dataSource,
+          date: where.dataSource_date_symbol.date,
+          marketPrice: data.marketPrice,
+          state: data.state,
+          symbol: where.dataSource_date_symbol.symbol
+        },
+        update: { marketPrice: data.marketPrice, state: data.state }
+      });
+    } finally {
+      this.lock.release();
+    }
   }
 
   /**
@@ -153,30 +160,34 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
-      ({ dataSource, date, marketPrice, symbol, state }) => {
-        return this.prismaService.marketData.upsert({
-          create: {
-            dataSource: <DataSource>dataSource,
-            date: <Date>date,
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state,
-            symbol: <string>symbol
-          },
-          update: {
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state
-          },
-          where: {
-            dataSource_date_symbol: {
+      async ({ dataSource, date, marketPrice, symbol, state }) => {
+        await this.lock.acquireAsync();
+        try {
+          return this.prismaService.marketData.upsert({
+            create: {
               dataSource: <DataSource>dataSource,
               date: <Date>date,
+              marketPrice: <number>marketPrice,
+              state: <MarketDataState>state,
               symbol: <string>symbol
+            },
+            update: {
+              marketPrice: <number>marketPrice,
+              state: <MarketDataState>state
+            },
+            where: {
+              dataSource_date_symbol: {
+                dataSource: <DataSource>dataSource,
+                date: <Date>date,
+                symbol: <string>symbol
+              }
             }
-          }
-        });
+          });
+        } finally {
+          this.lock.release();
+        }
       }
     );
-
-    return this.prismaService.$transaction(upsertPromises);
+    return await Promise.all(upsertPromises);
   }
 }

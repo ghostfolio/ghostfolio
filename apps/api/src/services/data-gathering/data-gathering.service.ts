@@ -24,6 +24,7 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
+import { Lock } from 'async-lock';
 
 @Injectable()
 export class DataGatheringService {
@@ -89,6 +90,7 @@ export class DataGatheringService {
     date: Date;
     symbol: string;
   }) {
+    const lock = new Lock();
     try {
       const historicalData = await this.dataProviderService.getHistoricalRaw(
         [{ dataSource, symbol }],
@@ -100,15 +102,17 @@ export class DataGatheringService {
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
       if (marketPrice) {
-        return await this.prismaService.marketData.upsert({
-          create: {
-            dataSource,
-            date,
-            marketPrice,
-            symbol
-          },
-          update: { marketPrice },
-          where: { dataSource_date_symbol: { dataSource, date, symbol } }
+        return await lock.acquire('marketData', async function () {
+          return await this.prismaService.marketData.upsert({
+            create: {
+              dataSource,
+              date,
+              marketPrice,
+              symbol
+            },
+            update: { marketPrice },
+            where: { dataSource_date_symbol: { dataSource, date, symbol } }
+          });
         });
       }
     } catch (error) {
