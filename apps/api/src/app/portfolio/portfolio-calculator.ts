@@ -740,7 +740,7 @@ export class PortfolioCalculator {
 
       totalInvestment = totalInvestment.plus(currentPosition.investment);
 
-      if (currentPosition.grossPerformance) {
+      if (currentPosition.grossPerformance !== null) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
@@ -750,7 +750,7 @@ export class PortfolioCalculator {
         hasErrors = true;
       }
 
-      if (currentPosition.grossPerformancePercentage) {
+      if (currentPosition.grossPerformancePercentage !== null) {
         // Use the average from the initial value and the current investment as
         // a weight
         const weight = (initialValues[currentPosition.symbol] ?? new Big(0))
@@ -1191,6 +1191,11 @@ export class PortfolioCalculator {
           initialValue = valueOfInvestmentBeforeTransaction;
         } else if (transactionInvestment.gt(0)) {
           initialValue = transactionInvestment;
+        } else if (order.type === 'STAKE') {
+          // For Parachain Rewards or Stock SpinOffs, first transactionInvestment might be 0 if the symbol has been acquired for free
+          initialValue = order.quantity.mul(
+            marketSymbolMap[order.date]?.[order.symbol] ?? new Big(0)
+          );
         }
       }
 
