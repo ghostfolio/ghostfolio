@@ -24,7 +24,6 @@ import { DataSource } from '@prisma/client';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
-import AwaitLock from 'await-lock';
 
 @Injectable()
 export class DataGatheringService {
@@ -40,8 +39,6 @@ export class DataGatheringService {
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
-
-  lock = new AwaitLock();
 
   public async addJobToQueue({
     data,
@@ -103,21 +100,16 @@ export class DataGatheringService {
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
       if (marketPrice) {
-        await this.lock.acquireAsync();
-        try {
-          return await this.prismaService.marketData.upsert({
-            create: {
-              dataSource,
-              date,
-              marketPrice,
-              symbol
-            },
-            update: { marketPrice },
-            where: { dataSource_date_symbol: { dataSource, date, symbol } }
-          });
-        } finally {
-          this.lock.release();
-        }
+        return await this.prismaService.marketData.upsert({
+          create: {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          },
+          update: { marketPrice },
+          where: { dataSource_date_symbol: { dataSource, date, symbol } }
+        });
       }
     } catch (error) {
       Logger.error(error, 'DataGatheringService');
