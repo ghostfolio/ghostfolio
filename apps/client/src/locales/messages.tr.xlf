@@ -1314,7 +1314,7 @@
         <target state="translated">Alım satımda kayıp riski büyük boyutta olabilir. Kısa vadede ihtiyaç duyabileceğiniz parayla yatırım yapmak tavsiye edilmez.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
-          <context context-type="linenumber">179</context>
+          <context context-type="linenumber">182</context>
         </context-group>
       </trans-unit>
       <trans-unit id="fbaaeb297e70b9a800acf841b9d26c19d60651ef" datatype="html">
@@ -11757,7 +11757,7 @@
         <target state="new">Change from All Time High</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4bbe89749f1580cdca7f9238cb67ba2bd6968126" datatype="html">
@@ -11765,7 +11765,7 @@
         <target state="new">from ATH</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b74406fd93207c23bb840732ad2760ce0efaa2c5" datatype="html">
@@ -12565,7 +12565,7 @@
         <target state="new">Last All Time High</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a3db2898b85fed425f03294b839a98cef247a2dc" datatype="html">
@@ -12834,6 +12834,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">159</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d762c43328624b5dd81f3c6a3023203ae9a7553f" datatype="html">
+        <source>50-Day Trend</source>
+        <target state="new">50-Day Trend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7cca44e647a4b3a6deff49cd29055e21e245f5ee" datatype="html">
+        <source>200-Day Trend</source>
+        <target state="new">200-Day Trend</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
     </body>
