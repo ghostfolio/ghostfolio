@@ -72,6 +72,7 @@ import {
   set,
   setDayOfYear,
   subDays,
+  subMonths,
   subYears
 } from 'date-fns';
 import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
@@ -1624,6 +1625,28 @@ export class PortfolioService {
           setDayOfYear(new Date().setHours(0, 0, 0, 0), 1)
         ]);
         break;
+
+      case '1w':
+        portfolioStart = max([
+          portfolioStart,
+          subDays(new Date().setHours(0, 0, 0, 0), 7)
+        ]);
+        break;
+
+      case '1m':
+        portfolioStart = max([
+          portfolioStart,
+          subMonths(new Date().setHours(0, 0, 0, 0), 1)
+        ]);
+        break;
+
+      case '3m':
+        portfolioStart = max([
+          portfolioStart,
+          subMonths(new Date().setHours(0, 0, 0, 0), 3)
+        ]);
+        break;
+
       case '1y':
         portfolioStart = max([
           portfolioStart,
