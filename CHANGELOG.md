@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a blog post: _Black Friday 2023_
 
+### Changed
+
+- Upgraded `http-status-codes` from version `2.2.0` to `2.3.0`
+
 ## 2.24.0 - 2023-11-16
 
 ### Changed
