@@ -118,8 +118,12 @@ export class PortfolioService {
   }): Promise<AccountWithValue[]> {
     const where: Prisma.AccountWhereInput = { userId: userId };
 
-    if (filters?.[0].id && filters?.[0].type === 'ACCOUNT') {
-      where.id = filters[0].id;
+    const accountFilter = filters?.find(({ type }) => {
+      return type === 'ACCOUNT';
+    });
+
+    if (accountFilter) {
+      where.id = accountFilter.id;
     }
 
     const [accounts, details] = await Promise.all([
@@ -1132,15 +1136,12 @@ export class PortfolioService {
     const userCurrency = this.getUserCurrency(user);
 
     const accountBalances = await this.accountBalanceService.getAccountBalances(
-      {
-        userId
-      }
+      { filters, user }
     );
 
     const accountBalanceItems: HistoricalDataItem[] =
-      accountBalances.balances.map(({ date, value }) => {
-        // TODO: convert value to user currency
-        return { value, date: format(date, DATE_FORMAT) };
+      accountBalances.balances.map(({ date, valueInBaseCurrency }) => {
+        return { date: format(date, DATE_FORMAT), value: valueInBaseCurrency };
       });
 
     const { portfolioOrders, transactionPoints } =
