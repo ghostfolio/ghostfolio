@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `http-status-codes` from version `2.2.0` to `2.3.0`
 
+### Fixed
+
+- Handled reading items from missing transaction point while getting the position (`getPosition()`) in portfolio service
+
 ## 2.24.0 - 2023-11-16
 
 ### Changed
