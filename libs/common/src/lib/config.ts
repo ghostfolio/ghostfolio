@@ -101,6 +101,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'fr',
   'it',
   'nl',
+  'pl',
   'pt',
   'tr'
 ];

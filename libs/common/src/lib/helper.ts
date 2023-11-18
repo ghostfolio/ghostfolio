@@ -1,5 +1,5 @@
 import * as currencies from '@dinero.js/currencies';
-import { DataSource } from '@prisma/client';
+import { DataSource, MarketData } from '@prisma/client';
 import Big from 'big.js';
 import {
   getDate,
@@ -10,17 +10,70 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { de, es, fr, it, nl, pt, tr } from 'date-fns/locale';
+import { de, es, fr, it, nl, pl, pt, tr } from 'date-fns/locale';
 
 import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
 import { Benchmark, UniqueAsset } from './interfaces';
-import { ColorScheme } from './types';
+import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
 
 const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
+
+export function calculateBenchmarkTrend({
+  days,
+  historicalData
+}: {
+  days: number;
+  historicalData: MarketData[];
+}): BenchmarkTrend {
+  const hasEnoughData = historicalData.length >= 2 * days;
+
+  if (!hasEnoughData) {
+    return 'UNKNOWN';
+  }
+
+  const recentPeriodAverage = calculateMovingAverage({
+    days,
+    prices: historicalData.slice(0, days).map(({ marketPrice }) => {
+      return new Big(marketPrice);
+    })
+  });
+
+  const pastPeriodAverage = calculateMovingAverage({
+    days,
+    prices: historicalData.slice(days, 2 * days).map(({ marketPrice }) => {
+      return new Big(marketPrice);
+    })
+  });
+
+  if (recentPeriodAverage > pastPeriodAverage) {
+    return 'UP';
+  }
+
+  if (recentPeriodAverage < pastPeriodAverage) {
+    return 'DOWN';
+  }
+
+  return 'NEUTRAL';
+}
+
+export function calculateMovingAverage({
+  days,
+  prices
+}: {
+  days: number;
+  prices: Big[];
+}) {
+  return prices
+    .reduce((previous, current) => {
+      return previous.add(current);
+    }, new Big(0))
+    .div(days)
+    .toNumber();
+}
 
 export function capitalize(aString: string) {
   return aString.charAt(0).toUpperCase() + aString.slice(1).toLowerCase();
@@ -106,6 +159,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return it;
   } else if (aLanguageCode === 'nl') {
     return nl;
+  } else if (aLanguageCode === 'pl') {
+    return pl;
   } else if (aLanguageCode === 'pt') {
     return pt;
   } else if (aLanguageCode === 'tr') {

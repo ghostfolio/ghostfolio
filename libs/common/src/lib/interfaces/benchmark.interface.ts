@@ -1,3 +1,5 @@
+import { BenchmarkTrend } from '@ghostfolio/common/types/';
+
 import { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 
 export interface Benchmark {
@@ -9,4 +11,6 @@ export interface Benchmark {
       performancePercent: number;
     };
   };
+  trend50d: BenchmarkTrend;
+  trend200d: BenchmarkTrend;
 }

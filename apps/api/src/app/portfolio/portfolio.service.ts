@@ -967,7 +967,7 @@ export class PortfolioService {
           let currentAveragePrice = 0;
           let currentQuantity = 0;
 
-          const currentSymbol = transactionPoints[j].items.find(
+          const currentSymbol = transactionPoints[j]?.items.find(
             ({ symbol }) => {
               return symbol === aSymbol;
             }

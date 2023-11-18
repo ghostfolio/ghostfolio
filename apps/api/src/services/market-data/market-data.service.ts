@@ -71,52 +71,43 @@ export class MarketDataService {
     dateQuery: DateQuery;
     uniqueAssets: UniqueAsset[];
   }): Promise<MarketData[]> {
-    const batch = new BatchPrismaClient(this.prismaService);
-    let { query, dates } = this.dateQueryHelper.handleDateQueryIn(dateQuery);
-    let marketData = await batch
-      .over(uniqueAssets)
-      .with((prisma, _assets) =>
-        prisma.marketData.findMany({
-          orderBy: [
-            {
-              date: 'asc'
-            },
-            {
-              symbol: 'asc'
-            }
-          ],
-          where: {
-            OR: _assets.map(({ dataSource, symbol }) => {
-              return {
-                AND: [
-                  {
-                    dataSource,
-                    symbol,
-                    date: query
-                  }
-                ]
-              };
-            })
-          }
-        })
-      )
-      .then((data) => data.flat());
-    return marketData.filter(
-      (m) =>
-        dates?.length === 0 ||
-        dates.some((d) => m.date.getTime() === d.getTime())
-    );
+    return this.prismaService.marketData.findMany({
+      orderBy: [
+        {
+          date: 'asc'
+        },
+        {
+          symbol: 'asc'
+        }
+      ],
+      where: {
+        dataSource: {
+          in: uniqueAssets.map(({ dataSource }) => {
+            return dataSource;
+          })
+        },
+        date: dateQuery,
+        symbol: {
+          in: uniqueAssets.map(({ symbol }) => {
+            return symbol;
+          })
+        }
+      }
+    });
   }
 
   public async marketDataItems(params: {
+    select?: Prisma.MarketDataSelectScalar;
     skip?: number;
     take?: number;
     cursor?: Prisma.MarketDataWhereUniqueInput;
     where?: Prisma.MarketDataWhereInput;
     orderBy?: Prisma.MarketDataOrderByWithRelationInput;
   }): Promise<MarketData[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { select, skip, take, cursor, where, orderBy } = params;
+
     return this.prismaService.marketData.findMany({
+      select,
       cursor,
       orderBy,
       skip,
