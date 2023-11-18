@@ -1,9 +1,9 @@
-name: Docker image CD
+name: Docker image CD - DEV
 
 on:
   push:
-    tags:
-      - '*.*.*'
+    branches:
+      - 'dockerpush'
 
 jobs:
   build_and_push:
@@ -41,7 +41,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: dandevaud/ghostfolio:beta
           labels: ${{ steps.meta.output.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

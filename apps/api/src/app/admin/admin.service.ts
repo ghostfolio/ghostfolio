@@ -6,6 +6,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SymbolProfileOverwriteService } from '@ghostfolio/api/services/symbol-profile/symbol-profile-overwrite.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -25,10 +26,12 @@ import { MarketDataPreset } from '@ghostfolio/common/types';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AssetSubClass,
-  DataSource,
   Prisma,
   Property,
-  SymbolProfile
+  SymbolProfile,
+  DataSource,
+  Tag,
+  SymbolProfileOverrides
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
@@ -43,7 +46,8 @@ export class AdminService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly symbolProfileOverwriteService: SymbolProfileOverwriteService
   ) {}
 
   public async addAssetProfile({
@@ -218,7 +222,8 @@ export class AdminService {
           },
           scraperConfiguration: true,
           sectors: true,
-          symbol: true
+          symbol: true,
+          tags: true
         }
       }),
       this.prismaService.symbolProfile.count({ where })
@@ -236,7 +241,8 @@ export class AdminService {
         name,
         Order,
         sectors,
-        symbol
+        symbol,
+        tags
       }) => {
         const countriesCount = countries ? Object.keys(countries).length : 0;
         const marketDataItemCount =
@@ -260,7 +266,8 @@ export class AdminService {
           marketDataItemCount,
           sectorsCount,
           activitiesCount: _count.Order,
-          date: Order?.[0]?.date
+          date: Order?.[0]?.date,
+          tags
         };
       }
     );
@@ -322,20 +329,70 @@ export class AdminService {
     comment,
     dataSource,
     name,
+    tags,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
-    await this.symbolProfileService.updateSymbolProfile({
-      assetClass,
-      assetSubClass,
-      comment,
-      dataSource,
-      name,
-      scraperConfiguration,
-      symbol,
-      symbolMapping
-    });
+    if (dataSource === 'MANUAL') {
+      await this.symbolProfileService.updateSymbolProfile({
+        assetClass,
+        assetSubClass,
+        comment,
+        dataSource,
+        name,
+        tags,
+        scraperConfiguration,
+        symbol,
+        symbolMapping
+      });
+    } else {
+      await this.symbolProfileService.updateSymbolProfile({
+        comment,
+        dataSource,
+        name,
+        tags,
+        scraperConfiguration,
+        symbol,
+        symbolMapping
+      });
+
+      let symbolProfileId =
+        await this.symbolProfileOverwriteService.GetSymbolProfileId(
+          symbol,
+          dataSource
+        );
+      if (symbolProfileId) {
+        await this.symbolProfileOverwriteService.updateSymbolProfileOverrides({
+          assetClass,
+          assetSubClass,
+          symbolProfileId
+        });
+      } else {
+        let profiles = await this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource,
+            symbol
+          }
+        ]);
+        symbolProfileId = profiles[0].id;
+        await this.symbolProfileOverwriteService.add({
+          SymbolProfile: {
+            connect: {
+              dataSource_symbol: {
+                dataSource,
+                symbol
+              }
+            }
+          }
+        });
+        await this.symbolProfileOverwriteService.updateSymbolProfileOverrides({
+          assetClass,
+          assetSubClass,
+          symbolProfileId
+        });
+      }
+    }
 
     const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       {
@@ -390,7 +447,8 @@ export class AdminService {
           countriesCount: 0,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
           name: symbol,
-          sectorsCount: 0
+          sectorsCount: 0,
+          tags: []
         };
       });
 

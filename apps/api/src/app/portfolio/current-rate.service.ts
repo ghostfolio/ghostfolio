@@ -14,9 +14,12 @@ import { flatten, isEmpty, uniqBy } from 'lodash';
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
+import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 
 @Injectable()
 export class CurrentRateService {
+  private dateQueryHelper = new DateQueryHelper();
+
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -34,7 +37,7 @@ export class CurrentRateService {
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
       (!dateQuery.in || this.containsToday(dateQuery.in));
-
+    let { query, dates } = this.dateQueryHelper.handleDateQueryIn(dateQuery);
     const promises: Promise<GetValueObject[]>[] = [];
     const quoteErrors: ResponseError['errors'] = [];
     const today = resetHours(new Date());
@@ -89,7 +92,7 @@ export class CurrentRateService {
     promises.push(
       this.marketDataService
         .getRange({
-          dateQuery,
+          dateQuery: query,
           uniqueAssets
         })
         .then((data) => {
@@ -116,9 +119,12 @@ export class CurrentRateService {
       errors: quoteErrors.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
       }),
-      values: uniqBy(values, ({ date, symbol }) => `${date}-${symbol}`)
+      values: uniqBy(values, ({ date, symbol }) => `${date}-${symbol}`).filter(
+        (v) =>
+          dates?.length === 0 ||
+          dates.some((d: Date) => d.getTime() === v.date.getTime())
+      )
     };
-
     if (!isEmpty(quoteErrors)) {
       for (const { dataSource, symbol } of quoteErrors) {
         try {

@@ -14,6 +14,8 @@ import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-propo
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { AssetProfileDialog } from './asset-profile-dialog.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [AssetProfileDialog],
@@ -22,6 +24,8 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     FormsModule,
     GfAdminMarketDataDetailModule,
     GfPortfolioProportionChartModule,
+    MatAutocompleteModule,
+    MatChipsModule,
     GfValueModule,
     MatButtonModule,
     MatCheckboxModule,

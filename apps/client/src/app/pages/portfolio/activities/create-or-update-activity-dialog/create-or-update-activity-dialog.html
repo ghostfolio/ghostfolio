@@ -12,9 +12,8 @@
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-select-trigger
-            >{{ typesTranslationMap[activityForm.controls['type'].value]
-            }}</mat-select-trigger
-          >
+            >{{ typesTranslationMap[activityForm.controls['type'].value] }}
+          </mat-select-trigger>
           <mat-option value="BUY">
             <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
@@ -37,6 +36,13 @@
             <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Revenue for lending out money</small
+            >
+          </mat-option>
+          <mat-option class="line-height-1" value="STAKE">
+            <span><b>{{ typesTranslationMap['STAKE'] }}</b></span
+            ><br />
+            <small class="text-muted text-nowrap" i18n
+              >Stake rewards, stock dividends, free/gifted stocks</small
             >
           </mat-option>
           <mat-option value="LIABILITY">
@@ -158,7 +164,10 @@
       class="mb-3"
       [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
     >
-      <div class="align-items-start d-flex">
+      <div
+        *ngIf="activityForm.controls['type']?.value !== 'STAKE'"
+        class="align-items-start d-flex"
+      >
         <mat-form-field appearance="outline" class="w-100">
           <mat-label
             ><ng-container [ngSwitch]="activityForm.controls['type']?.value">

@@ -29,9 +29,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (
-      !(response.assetClass === 'EQUITY' && response.assetSubClass === 'ETF')
-    ) {
+    if (!(response.assetSubClass === 'ETF')) {
       return response;
     }
 
@@ -113,8 +111,8 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           });
       });
 
-    if (holdings?.weight < 0.95) {
-      // Skip if data is inaccurate
+    if (holdings?.weight < 1 - Math.min(holdings?.count * 0.000015, 0.95)) {
+      // Skip if data is inaccurate, dependent on holdings count there might be rounding issues
       return response;
     }
 
