@@ -76,9 +76,9 @@ const locales = {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2023.png',
     title: `Hacktoberfest 2023 - ${title}`
   },
-  '/en/blog/2023/11/black-friday-2023': {
-    featureGraphicPath: 'assets/images/blog/black-friday-2023.png',
-    title: `Black Friday 2023 - ${title}`
+  '/en/blog/2023/11/black-week-2023': {
+    featureGraphicPath: 'assets/images/blog/black-week-2023.png',
+    title: `Black Week 2023 - ${title}`
   },
   '/en/blog/2023/11/hacktoberfest-2023-debriefing': {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2023.png',
