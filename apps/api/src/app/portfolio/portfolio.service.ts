@@ -1139,10 +1139,26 @@ export class PortfolioService {
       { filters, user }
     );
 
-    const accountBalanceItems: HistoricalDataItem[] =
-      accountBalances.balances.map(({ date, valueInBaseCurrency }) => {
-        return { date: format(date, DATE_FORMAT), value: valueInBaseCurrency };
-      });
+    let accountBalanceItems: HistoricalDataItem[] = Object.values(
+      // Reduce the array to a map with unique dates as keys
+      accountBalances.balances.reduce(
+        (
+          map: { [date: string]: HistoricalDataItem },
+          { date, valueInBaseCurrency }
+        ) => {
+          const formattedDate = format(date, DATE_FORMAT);
+
+          // Store the item in the map, overwriting if the date already exists
+          map[formattedDate] = {
+            date: formattedDate,
+            value: valueInBaseCurrency
+          };
+
+          return map;
+        },
+        {}
+      )
+    );
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -1220,6 +1236,10 @@ export class PortfolioService {
         itemOfToday.netPerformanceInPercentage
       ).div(100);
     }
+
+    accountBalanceItems = accountBalanceItems.filter(({ date }) => {
+      return !isBefore(parseDate(date), startDate);
+    });
 
     const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
       accountBalanceItems,
@@ -2016,17 +2036,28 @@ export class PortfolioService {
   }
 
   private mergeHistoricalDataItems(
-    array1: HistoricalDataItem[],
-    array2: HistoricalDataItem[]
+    accountBalanceItems: HistoricalDataItem[],
+    performanceChartItems: HistoricalDataItem[]
   ): HistoricalDataItem[] {
     const historicalDataItemsMap: { [date: string]: HistoricalDataItem } = {};
+    let latestAccountBalance = 0;
 
-    for (const item of array1.concat(array2)) {
+    for (const item of accountBalanceItems.concat(performanceChartItems)) {
+      const isAccountBalanceItem = accountBalanceItems.includes(item);
+
+      const totalAccountBalance = isAccountBalanceItem
+        ? item.value
+        : latestAccountBalance;
+
       historicalDataItemsMap[item.date] = {
         ...item,
-        netWorth: (historicalDataItemsMap[item.date]?.value ?? 0) + item.value,
-        totalAccountBalance: 0 // TODO: if from array1, then take value, otherwise 0
+        totalAccountBalance,
+        netWorth: (isAccountBalanceItem ? 0 : item.value) + totalAccountBalance
       };
+
+      if (isAccountBalanceItem) {
+        latestAccountBalance = item.value;
+      }
     }
 
     // Convert to an array and sort by date in ascending order
