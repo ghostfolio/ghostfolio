@@ -77,7 +77,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -1183,6 +1183,7 @@ export class PortfolioService {
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
           currentNetPerformancePercent: 0,
+          currentNetWorth: 0,
           currentValue: 0,
           totalInvestment: 0
         }
@@ -1246,18 +1247,22 @@ export class PortfolioService {
       items
     );
 
+    const currentHistoricalDataItem = last(mergedHistoricalDataItems);
+    const currentNetWorth = currentHistoricalDataItem?.netWorth ?? 0;
+
     return {
       errors,
       hasErrors,
       chart: mergedHistoricalDataItems,
       firstOrderDate: parseDate(items[0]?.date),
       performance: {
-        currentValue: currentValue.toNumber(),
+        currentNetWorth,
         currentGrossPerformance: currentGrossPerformance.toNumber(),
         currentGrossPerformancePercent:
           currentGrossPerformancePercent.toNumber(),
         currentNetPerformance: currentNetPerformance.toNumber(),
         currentNetPerformancePercent: currentNetPerformancePercent.toNumber(),
+        currentValue: currentValue.toNumber(),
         totalInvestment: totalInvestment.toNumber()
       }
     };
@@ -2045,18 +2050,20 @@ export class PortfolioService {
     for (const item of accountBalanceItems.concat(performanceChartItems)) {
       const isAccountBalanceItem = accountBalanceItems.includes(item);
 
+      // TODO: Still zero if no account balance item has been tracked yet
       const totalAccountBalance = isAccountBalanceItem
         ? item.value
         : latestAccountBalance;
 
-      historicalDataItemsMap[item.date] = {
-        ...item,
-        totalAccountBalance,
-        netWorth: (isAccountBalanceItem ? 0 : item.value) + totalAccountBalance
-      };
-
-      if (isAccountBalanceItem) {
+      if (isAccountBalanceItem && performanceChartItems.length > 0) {
         latestAccountBalance = item.value;
+      } else {
+        historicalDataItemsMap[item.date] = {
+          ...item,
+          totalAccountBalance,
+          netWorth:
+            (isAccountBalanceItem ? 0 : item.value) + totalAccountBalance
+        };
       }
     }
 
