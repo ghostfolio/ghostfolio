@@ -175,12 +175,12 @@ const routes: Routes = [
   },
   {
     canActivate: [AuthGuard],
-    path: '2023/11/black-friday-2023',
+    path: '2023/11/black-week-2023',
     loadComponent: () =>
-      import(
-        './2023/11/black-friday-2023/black-friday-2023-page.component'
-      ).then((c) => c.BlackFriday2023PageComponent),
-    title: 'Black Friday 2023'
+      import('./2023/11/black-week-2023/black-week-2023-page.component').then(
+        (c) => c.BlackWeek2023PageComponent
+      ),
+    title: 'Black Week 2023'
   }
 ];
 
