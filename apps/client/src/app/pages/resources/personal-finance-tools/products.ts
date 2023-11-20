@@ -6,6 +6,7 @@ import { BasilFinancePageComponent } from './products/basil-finance-page.compone
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
+import { CompoundPlanningPageComponent } from './products/compound-planning-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
@@ -124,6 +125,14 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     note: 'CapMon.org has discontinued in 2023',
     slogan: 'Next Generation Assets Tracking'
+  },
+  {
+    component: CompoundPlanningPageComponent,
+    founded: 2019,
+    key: 'compound-planning',
+    name: 'Compound Planning',
+    origin: $localize`United States`,
+    slogan: 'Modern Wealth & Investment Management'
   },
   {
     component: CopilotMoneyPageComponent,
