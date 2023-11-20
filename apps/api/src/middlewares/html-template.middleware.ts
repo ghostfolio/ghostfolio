@@ -92,6 +92,9 @@ const isFileRequest = (filename: string) => {
   } else if (
     filename.includes('auth/ey') ||
     filename.includes(
+      'personal-finance-tools/open-source-alternative-to-de.fi'
+    ) ||
+    filename.includes(
       'personal-finance-tools/open-source-alternative-to-markets.sh'
     )
   ) {

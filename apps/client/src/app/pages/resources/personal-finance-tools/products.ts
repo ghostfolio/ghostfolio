@@ -8,6 +8,7 @@ import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
 import { CompoundPlanningPageComponent } from './products/compound-planning-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
+import { DeFiPageComponent } from './products/de.fi-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
@@ -145,6 +146,14 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    component: DeFiPageComponent,
+    founded: 2020,
+    key: 'de.fi',
+    languages: ['English'],
+    name: 'De.Fi',
+    slogan: 'DeFi Portfolio Tracker'
   },
   {
     component: DeltaPageComponent,
