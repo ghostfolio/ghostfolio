@@ -41,6 +41,7 @@ import { SumioPageComponent } from './products/sumio-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
+import { WhalPageComponent } from './products/whal-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 import { YnabPageComponent } from './products/ynab-page.component';
 
@@ -497,6 +498,13 @@ export const products: Product[] = [
     origin: $localize`Canada`,
     pricingPerYear: '$50',
     slogan: 'See all your investments in one place'
+  },
+  {
+    component: WhalPageComponent,
+    key: 'whal',
+    name: 'Whal',
+    origin: $localize`United States`,
+    slogan: 'Manage your investments in one place'
   },
   {
     component: YeekateePageComponent,
