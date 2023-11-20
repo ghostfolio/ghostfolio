@@ -12,6 +12,7 @@ import { DeFiPageComponent } from './products/de.fi-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
+import { EmpowerPageComponent } from './products/empower-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FinWisePageComponent } from './products/finwise-page.component';
@@ -178,6 +179,16 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar'
+  },
+  {
+    component: EmpowerPageComponent,
+    founded: 2009,
+    hasSelfHostingAbility: false,
+    key: 'empower',
+    name: 'Empower',
+    note: 'Originally named as Personal Capital',
+    origin: $localize`United States`,
+    slogan: 'Get answers to your money questions'
   },
   {
     alias: '8figures',
