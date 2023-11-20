@@ -211,6 +211,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-tiller</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-utluna</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -534,6 +538,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-sumio</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-tiller</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -883,6 +891,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-tiller</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-utluna</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -1072,6 +1084,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-sumio</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-tiller</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>

@@ -39,6 +39,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
+import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
@@ -473,6 +474,17 @@ export const products: Product[] = [
     origin: $localize`Czech Republic`,
     pricingPerYear: '$20',
     slogan: 'Sum up and build your wealth.'
+  },
+  {
+    component: TillerPageComponent,
+    founded: 2016,
+    hasFreePlan: false,
+    key: 'tiller',
+    name: 'Tiller',
+    origin: $localize`United States`,
+    pricingPerYear: '$79',
+    slogan:
+      'Your financial life in a spreadsheet, automatically updated each day'
   },
   {
     component: UtlunaPageComponent,
