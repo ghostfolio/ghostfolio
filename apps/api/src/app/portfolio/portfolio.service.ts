@@ -837,8 +837,9 @@ export class PortfolioService {
           })
       );
 
-      const dividendYieldInPercent =
-        (dividendInBaseCurrency.toNumber() * 100) / marketPrice;
+      const dividendYieldInPercent = dividendInBaseCurrency
+        .mul(100)
+        .div(marketPrice);
 
       // Convert investment, gross and net performance to currency of user
       const investment = this.exchangeRateDataService.toCurrency(
@@ -934,7 +935,7 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
-        dividendYieldInPercent: dividendYieldInPercent,
+        dividendYieldInPercent: dividendYieldInPercent.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
