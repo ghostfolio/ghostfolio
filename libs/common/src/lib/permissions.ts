@@ -35,7 +35,7 @@ export const permissions = {
   updateTag: 'updateTag',
   updateUserSettings: 'updateUserSettings',
   updateViewMode: 'updateViewMode'
-};
+} as const;
 
 export function getPermissions(aRole: Role): string[] {
   switch (aRole) {
