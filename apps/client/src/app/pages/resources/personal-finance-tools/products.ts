@@ -541,11 +541,13 @@ export const products: Product[] = [
   {
     component: YeekateePageComponent,
     founded: 2021,
+    hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'yeekatee',
+    languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
     origin: $localize`Switzerland`,
-    region: $localize`Switzerland`,
+    region: $localize`Global`,
     slogan: 'Connect. Share. Invest.'
   },
   {
