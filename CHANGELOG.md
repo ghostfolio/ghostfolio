@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `prisma` from version `5.5.2` to `5.6.0`
 - Upgraded `yahoo-finance2` from version `2.8.1` to `2.9.0`
 
 ## 2.25.1 - 2023-11-19
