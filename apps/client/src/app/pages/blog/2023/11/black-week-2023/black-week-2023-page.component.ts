@@ -6,11 +6,11 @@ import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 @Component({
   host: { class: 'page' },
   imports: [GfPremiumIndicatorModule, MatButtonModule, RouterModule],
-  selector: 'gf-black-friday-2023-page',
+  selector: 'gf-black-week-2023-page',
   standalone: true,
-  templateUrl: './black-friday-2023-page.html'
+  templateUrl: './black-week-2023-page.html'
 })
-export class BlackFriday2023PageComponent {
+export class BlackWeek2023PageComponent {
   public routerLinkFeatures = ['/' + $localize`features`];
   public routerLinkPricing = ['/' + $localize`pricing`];
 }
