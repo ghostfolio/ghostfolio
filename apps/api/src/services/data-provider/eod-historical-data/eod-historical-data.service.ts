@@ -229,7 +229,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'EodHistoricalDataService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'EodHistoricalDataService');
     }
 
     return {};
@@ -382,7 +388,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
         }
       );
     } catch (error) {
-      Logger.error(error, 'EodHistoricalDataService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'EodHistoricalDataService');
     }
 
     return searchResult;
