@@ -67,7 +67,6 @@ export const products: Product[] = [
     ],
     name: 'Ghostfolio',
     origin: $localize`Switzerland`,
-    pricingPerYear: '$24',
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
