@@ -163,7 +163,13 @@ export class RapidApiService implements DataProviderInterface {
 
       return fgi;
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'RapidApiService');
 
       return undefined;
     }

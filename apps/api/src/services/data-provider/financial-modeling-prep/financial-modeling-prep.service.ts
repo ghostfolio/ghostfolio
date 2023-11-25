@@ -151,7 +151,13 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'FinancialModelingPrepService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'FinancialModelingPrepService');
     }
 
     return response;
@@ -196,7 +202,13 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         };
       });
     } catch (error) {
-      Logger.error(error, 'FinancialModelingPrepService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'FinancialModelingPrepService');
     }
 
     return { items };
