@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-10-21T00:00:00.000Z",
+  "createdAt": "2023-11-17T00:00:00.000Z",
   "data": [
     {
       "name": "BoxyHQ",
@@ -97,6 +97,11 @@
       "href": "https://requestly.io"
     },
     {
+      "name": "Revert",
+      "description": "The open-source unified API to build B2B integrations remarkably fast",
+      "href": "https://revert.dev"
+    },
+    {
       "name": "Rivet",
       "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
       "href": "https://rivet.gg"
@@ -135,6 +140,11 @@
       "name": "Typebot",
       "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
       "href": "https://typebot.io"
+    },
+    {
+      "name": "Unkey",
+      "description": "An API authentication and authorization platform for scaling user facing APIs. Create, verify, and manage low latency API keys in seconds.",
+      "href": "https://unkey.dev"
     },
     {
       "name": "Webiny",

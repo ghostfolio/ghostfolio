@@ -6,10 +6,13 @@ import { BasilFinancePageComponent } from './products/basil-finance-page.compone
 import { BeanvestPageComponent } from './products/beanvest-page.component';
 import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
+import { CompoundPlanningPageComponent } from './products/compound-planning-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
+import { DeFiPageComponent } from './products/de.fi-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
+import { EmpowerPageComponent } from './products/empower-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FinWisePageComponent } from './products/finwise-page.component';
@@ -37,9 +40,11 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
+import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
+import { WhalPageComponent } from './products/whal-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
 import { YnabPageComponent } from './products/ynab-page.component';
 
@@ -126,6 +131,14 @@ export const products: Product[] = [
     slogan: 'Next Generation Assets Tracking'
   },
   {
+    component: CompoundPlanningPageComponent,
+    founded: 2019,
+    key: 'compound-planning',
+    name: 'Compound Planning',
+    origin: $localize`United States`,
+    slogan: 'Modern Wealth & Investment Management'
+  },
+  {
     component: CopilotMoneyPageComponent,
     founded: 2019,
     hasFreePlan: false,
@@ -135,6 +148,14 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    component: DeFiPageComponent,
+    founded: 2020,
+    key: 'de.fi',
+    languages: ['English'],
+    name: 'De.Fi',
+    slogan: 'DeFi Portfolio Tracker'
   },
   {
     component: DeltaPageComponent,
@@ -158,6 +179,16 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     pricingPerYear: '€65',
     slogan: 'Your personal Dividend Calendar'
+  },
+  {
+    component: EmpowerPageComponent,
+    founded: 2009,
+    hasSelfHostingAbility: false,
+    key: 'empower',
+    name: 'Empower',
+    note: 'Originally named as Personal Capital',
+    origin: $localize`United States`,
+    slogan: 'Get answers to your money questions'
   },
   {
     alias: '8figures',
@@ -456,6 +487,17 @@ export const products: Product[] = [
     slogan: 'Sum up and build your wealth.'
   },
   {
+    component: TillerPageComponent,
+    founded: 2016,
+    hasFreePlan: false,
+    key: 'tiller',
+    name: 'Tiller',
+    origin: $localize`United States`,
+    pricingPerYear: '$79',
+    slogan:
+      'Your financial life in a spreadsheet, automatically updated each day'
+  },
+  {
     component: UtlunaPageComponent,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -490,13 +532,22 @@ export const products: Product[] = [
     slogan: 'See all your investments in one place'
   },
   {
+    component: WhalPageComponent,
+    key: 'whal',
+    name: 'Whal',
+    origin: $localize`United States`,
+    slogan: 'Manage your investments in one place'
+  },
+  {
     component: YeekateePageComponent,
     founded: 2021,
+    hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'yeekatee',
+    languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
     origin: $localize`Switzerland`,
-    region: $localize`Switzerland`,
+    region: $localize`Global`,
     slogan: 'Connect. Share. Invest.'
   },
   {

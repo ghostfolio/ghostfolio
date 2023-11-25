@@ -172,6 +172,15 @@ const routes: Routes = [
         './2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component'
       ).then((c) => c.Hacktoberfest2023DebriefingPageComponent),
     title: 'Hacktoberfest 2023 Debriefing'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2023/11/black-week-2023',
+    loadComponent: () =>
+      import('./2023/11/black-week-2023/black-week-2023-page.component').then(
+        (c) => c.BlackWeek2023PageComponent
+      ),
+    title: 'Black Week 2023'
   }
 ];
 

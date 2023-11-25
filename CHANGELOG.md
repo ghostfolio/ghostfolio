@@ -5,11 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.26.0 - 2023-11-24
+
+### Changed
+
+- Upgraded `prisma` from version `5.5.2` to `5.6.0`
+- Upgraded `yahoo-finance2` from version `2.8.1` to `2.9.0`
+
+## 2.25.1 - 2023-11-19
+
+### Added
+
+- Added a blog post: _Black Friday 2023_
 
 ### Changed
 
 - Upgraded `http-status-codes` from version `2.2.0` to `2.3.0`
+
+### Fixed
+
+- Handled reading items from missing transaction point while getting the position (`getPosition()`) in portfolio service
 
 ## 2.24.0 - 2023-11-16
 

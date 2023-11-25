@@ -76,6 +76,10 @@ const locales = {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2023.png',
     title: `Hacktoberfest 2023 - ${title}`
   },
+  '/en/blog/2023/11/black-week-2023': {
+    featureGraphicPath: 'assets/images/blog/black-week-2023.jpg',
+    title: `Black Week 2023 - ${title}`
+  },
   '/en/blog/2023/11/hacktoberfest-2023-debriefing': {
     featureGraphicPath: 'assets/images/blog/hacktoberfest-2023.png',
     title: `Hacktoberfest 2023 Debriefing - ${title}`
@@ -87,6 +91,9 @@ const isFileRequest = (filename: string) => {
     return true;
   } else if (
     filename.includes('auth/ey') ||
+    filename.includes(
+      'personal-finance-tools/open-source-alternative-to-de.fi'
+    ) ||
     filename.includes(
       'personal-finance-tools/open-source-alternative-to-markets.sh'
     )
