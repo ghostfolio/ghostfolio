@@ -231,7 +231,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
       }
 
       Logger.error(message, 'CoinGeckoService');
