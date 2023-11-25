@@ -32,7 +32,7 @@ Use `*ngIf="user?.settings?.isExperimentalFeatures"` in HTML template
 
 1. Run `yarn nx migrate latest`
 1. Make sure `package.json` changes make sense and then run `yarn install`
-1. Run `yarn nx migrate --run-migrations`
+1. Run `yarn nx migrate --run-migrations` (Run `YARN_NODE_LINKER="node-modules" NX_MIGRATE_SKIP_INSTALL=1 yarn nx migrate --run-migrations` due to https://github.com/nrwl/nx/issues/16338)
 
 ### Prisma
 
