@@ -375,68 +375,6 @@ export class PortfolioService {
     };
   }
 
-  public async getChart({
-    dateRange = 'max',
-    filters,
-    impersonationId,
-    userCurrency,
-    userId,
-    withExcludedAccounts = false
-  }: {
-    dateRange?: DateRange;
-    filters?: Filter[];
-    impersonationId: string;
-    userCurrency: string;
-    userId: string;
-    withExcludedAccounts?: boolean;
-  }): Promise<HistoricalDataContainer> {
-    userId = await this.getUserId(impersonationId, userId);
-
-    // TODO: Don't get all transaction points again
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        userId,
-        withExcludedAccounts
-      });
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
-    });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        isAllTimeHigh: false,
-        isAllTimeLow: false,
-        items: []
-      };
-    }
-    const endDate = new Date();
-
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(dateRange, portfolioStart);
-
-    const daysInMarket = differenceInDays(new Date(), startDate);
-    const step = Math.round(
-      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
-    );
-
-    const items = await portfolioCalculator.getChartData(
-      startDate,
-      endDate,
-      step
-    );
-
-    return {
-      items,
-      isAllTimeHigh: false,
-      isAllTimeLow: false
-    };
-  }
-
   public async getDetails({
     dateRange = 'max',
     filters,
@@ -1220,15 +1158,15 @@ export class PortfolioService {
 
     const { items } = await this.getChart({
       dateRange,
-      filters,
       impersonationId,
+      portfolioOrders,
+      transactionPoints,
       userCurrency,
-      userId,
-      withExcludedAccounts
+      userId
     });
 
-    const itemOfToday = items.find((item) => {
-      return item.date === format(new Date(), DATE_FORMAT);
+    const itemOfToday = items.find(({ date }) => {
+      return date === format(new Date(), DATE_FORMAT);
     });
 
     if (itemOfToday) {
@@ -1241,6 +1179,17 @@ export class PortfolioService {
     accountBalanceItems = accountBalanceItems.filter(({ date }) => {
       return !isBefore(parseDate(date), startDate);
     });
+
+    const accountBalanceItemOfToday = accountBalanceItems.find(({ date }) => {
+      return date === format(new Date(), DATE_FORMAT);
+    });
+
+    if (!accountBalanceItemOfToday) {
+      accountBalanceItems.push({
+        date: format(new Date(), DATE_FORMAT),
+        value: last(accountBalanceItems)?.value ?? 0
+      });
+    }
 
     const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
       accountBalanceItems,
@@ -1414,6 +1363,60 @@ export class PortfolioService {
     }
 
     return cashPositions;
+  }
+
+  private async getChart({
+    dateRange = 'max',
+    impersonationId,
+    portfolioOrders,
+    transactionPoints,
+    userCurrency,
+    userId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+    portfolioOrders: PortfolioOrder[];
+    transactionPoints: TransactionPoint[];
+    userCurrency: string;
+    userId: string;
+  }): Promise<HistoricalDataContainer> {
+    userId = await this.getUserId(impersonationId, userId);
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+    if (transactionPoints.length === 0) {
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
+    }
+    const endDate = new Date();
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
+
+    const daysInMarket = differenceInDays(new Date(), startDate);
+    const step = Math.round(
+      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
+    );
+
+    const items = await portfolioCalculator.getChartData(
+      startDate,
+      endDate,
+      step
+    );
+
+    return {
+      items,
+      isAllTimeHigh: false,
+      isAllTimeLow: false
+    };
   }
 
   private getDividendsByGroup({
@@ -2050,7 +2053,6 @@ export class PortfolioService {
     for (const item of accountBalanceItems.concat(performanceChartItems)) {
       const isAccountBalanceItem = accountBalanceItems.includes(item);
 
-      // TODO: Still zero if no account balance item has been tracked yet
       const totalAccountBalance = isAccountBalanceItem
         ? item.value
         : latestAccountBalance;
