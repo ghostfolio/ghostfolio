@@ -275,6 +275,13 @@ export class PortfolioService {
         includeDrafts: true
       });
 
+    if (transactionPoints.length === 0) {
+      return {
+        investments: [],
+        streaks: { currentStreak: 0, longestStreak: 0 }
+      };
+    }
+
     const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
@@ -282,12 +289,6 @@ export class PortfolioService {
     });
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        investments: [],
-        streaks: { currentStreak: 0, longestStreak: 0 }
-      };
-    }
 
     let investments: InvestmentItem[];
 
@@ -975,18 +976,18 @@ export class PortfolioService {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
-    });
-
     if (transactionPoints?.length <= 0) {
       return {
         hasErrors: false,
         positions: []
       };
     }
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: this.request.user.Settings.settings.baseCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
@@ -1380,6 +1381,14 @@ export class PortfolioService {
     userCurrency: string;
     userId: string;
   }): Promise<HistoricalDataContainer> {
+    if (transactionPoints.length === 0) {
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
+    }
+
     userId = await this.getUserId(impersonationId, userId);
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1389,13 +1398,7 @@ export class PortfolioService {
     });
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        isAllTimeHigh: false,
-        isAllTimeLow: false,
-        items: []
-      };
-    }
+
     const endDate = new Date();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
