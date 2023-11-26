@@ -128,8 +128,8 @@ export class AccountController {
     @Param('id') id: string
   ): Promise<AccountBalancesResponse> {
     return this.accountBalanceService.getAccountBalances({
-      accountId: id,
-      userId: this.request.user.id
+      filters: [{ id, type: 'ACCOUNT' }],
+      user: this.request.user
     });
   }
 

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the chart in the account detail dialog by historical cash balances
 - Improved the error log for a timeout in the data source request
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `16.2.12` to `17.0.4`

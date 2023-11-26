@@ -12,6 +12,7 @@ import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/ap
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
@@ -67,14 +68,16 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  isValid,
   max,
+  min,
   parseISO,
   set,
   setDayOfYear,
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -91,6 +94,7 @@ const europeMarkets = require('../../assets/countries/europe-markets.json');
 @Injectable()
 export class PortfolioService {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly currentRateService: CurrentRateService,
     private readonly dataProviderService: DataProviderService,
@@ -114,8 +118,12 @@ export class PortfolioService {
   }): Promise<AccountWithValue[]> {
     const where: Prisma.AccountWhereInput = { userId: userId };
 
-    if (filters?.[0].id && filters?.[0].type === 'ACCOUNT') {
-      where.id = filters[0].id;
+    const accountFilter = filters?.find(({ type }) => {
+      return type === 'ACCOUNT';
+    });
+
+    if (accountFilter) {
+      where.id = accountFilter.id;
     }
 
     const [accounts, details] = await Promise.all([
@@ -267,6 +275,13 @@ export class PortfolioService {
         includeDrafts: true
       });
 
+    if (transactionPoints.length === 0) {
+      return {
+        investments: [],
+        streaks: { currentStreak: 0, longestStreak: 0 }
+      };
+    }
+
     const portfolioCalculator = new PortfolioCalculator({
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
@@ -274,12 +289,6 @@ export class PortfolioService {
     });
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        investments: [],
-        streaks: { currentStreak: 0, longestStreak: 0 }
-      };
-    }
 
     let investments: InvestmentItem[];
 
@@ -364,67 +373,6 @@ export class PortfolioService {
     return {
       investments,
       streaks
-    };
-  }
-
-  public async getChart({
-    dateRange = 'max',
-    filters,
-    impersonationId,
-    userCurrency,
-    userId,
-    withExcludedAccounts = false
-  }: {
-    dateRange?: DateRange;
-    filters?: Filter[];
-    impersonationId: string;
-    userCurrency: string;
-    userId: string;
-    withExcludedAccounts?: boolean;
-  }): Promise<HistoricalDataContainer> {
-    userId = await this.getUserId(impersonationId, userId);
-
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        userId,
-        withExcludedAccounts
-      });
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
-    });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-    if (transactionPoints.length === 0) {
-      return {
-        isAllTimeHigh: false,
-        isAllTimeLow: false,
-        items: []
-      };
-    }
-    const endDate = new Date();
-
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(dateRange, portfolioStart);
-
-    const daysInMarket = differenceInDays(new Date(), startDate);
-    const step = Math.round(
-      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
-    );
-
-    const items = await portfolioCalculator.getChartData(
-      startDate,
-      endDate,
-      step
-    );
-
-    return {
-      items,
-      isAllTimeHigh: false,
-      isAllTimeLow: false
     };
   }
 
@@ -1028,18 +976,18 @@ export class PortfolioService {
         userId
       });
 
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      orders: portfolioOrders
-    });
-
     if (transactionPoints?.length <= 0) {
       return {
         hasErrors: false,
         positions: []
       };
     }
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: this.request.user.Settings.settings.baseCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
@@ -1126,6 +1074,31 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
+    const accountBalances = await this.accountBalanceService.getAccountBalances(
+      { filters, user }
+    );
+
+    let accountBalanceItems: HistoricalDataItem[] = Object.values(
+      // Reduce the array to a map with unique dates as keys
+      accountBalances.balances.reduce(
+        (
+          map: { [date: string]: HistoricalDataItem },
+          { date, valueInBaseCurrency }
+        ) => {
+          const formattedDate = format(date, DATE_FORMAT);
+
+          // Store the item in the map, overwriting if the date already exists
+          map[formattedDate] = {
+            date: formattedDate,
+            value: valueInBaseCurrency
+          };
+
+          return map;
+        },
+        {}
+      )
+    );
+
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
@@ -1139,7 +1112,7 @@ export class PortfolioService {
       orders: portfolioOrders
     });
 
-    if (transactionPoints?.length <= 0) {
+    if (accountBalanceItems?.length <= 0 && transactionPoints?.length <= 0) {
       return {
         chart: [],
         firstOrderDate: undefined,
@@ -1149,6 +1122,7 @@ export class PortfolioService {
           currentGrossPerformancePercent: 0,
           currentNetPerformance: 0,
           currentNetPerformancePercent: 0,
+          currentNetWorth: 0,
           currentValue: 0,
           totalInvestment: 0
         }
@@ -1157,7 +1131,15 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
+    const portfolioStart = min(
+      [
+        parseDate(accountBalanceItems[0]?.date),
+        parseDate(transactionPoints[0]?.date)
+      ].filter((date) => {
+        return isValid(date);
+      })
+    );
+
     const startDate = this.getStartDate(dateRange, portfolioStart);
     const {
       currentValue,
@@ -1175,17 +1157,17 @@ export class PortfolioService {
     let currentNetPerformance = netPerformance;
     let currentNetPerformancePercent = netPerformancePercentage;
 
-    const historicalDataContainer = await this.getChart({
+    const { items } = await this.getChart({
       dateRange,
-      filters,
       impersonationId,
+      portfolioOrders,
+      transactionPoints,
       userCurrency,
-      userId,
-      withExcludedAccounts
+      userId
     });
 
-    const itemOfToday = historicalDataContainer.items.find((item) => {
-      return item.date === format(new Date(), DATE_FORMAT);
+    const itemOfToday = items.find(({ date }) => {
+      return date === format(new Date(), DATE_FORMAT);
     });
 
     if (itemOfToday) {
@@ -1195,34 +1177,42 @@ export class PortfolioService {
       ).div(100);
     }
 
+    accountBalanceItems = accountBalanceItems.filter(({ date }) => {
+      return !isBefore(parseDate(date), startDate);
+    });
+
+    const accountBalanceItemOfToday = accountBalanceItems.find(({ date }) => {
+      return date === format(new Date(), DATE_FORMAT);
+    });
+
+    if (!accountBalanceItemOfToday) {
+      accountBalanceItems.push({
+        date: format(new Date(), DATE_FORMAT),
+        value: last(accountBalanceItems)?.value ?? 0
+      });
+    }
+
+    const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
+      accountBalanceItems,
+      items
+    );
+
+    const currentHistoricalDataItem = last(mergedHistoricalDataItems);
+    const currentNetWorth = currentHistoricalDataItem?.netWorth ?? 0;
+
     return {
       errors,
       hasErrors,
-      chart: historicalDataContainer.items.map(
-        ({
-          date,
-          netPerformance: netPerformanceOfItem,
-          netPerformanceInPercentage,
-          totalInvestment: totalInvestmentOfItem,
-          value
-        }) => {
-          return {
-            date,
-            netPerformanceInPercentage,
-            value,
-            netPerformance: netPerformanceOfItem,
-            totalInvestment: totalInvestmentOfItem
-          };
-        }
-      ),
-      firstOrderDate: parseDate(historicalDataContainer.items[0]?.date),
+      chart: mergedHistoricalDataItems,
+      firstOrderDate: parseDate(items[0]?.date),
       performance: {
-        currentValue: currentValue.toNumber(),
+        currentNetWorth,
         currentGrossPerformance: currentGrossPerformance.toNumber(),
         currentGrossPerformancePercent:
           currentGrossPerformancePercent.toNumber(),
         currentNetPerformance: currentNetPerformance.toNumber(),
         currentNetPerformancePercent: currentNetPerformancePercent.toNumber(),
+        currentValue: currentValue.toNumber(),
         totalInvestment: totalInvestment.toNumber()
       }
     };
@@ -1374,6 +1364,62 @@ export class PortfolioService {
     }
 
     return cashPositions;
+  }
+
+  private async getChart({
+    dateRange = 'max',
+    impersonationId,
+    portfolioOrders,
+    transactionPoints,
+    userCurrency,
+    userId
+  }: {
+    dateRange?: DateRange;
+    impersonationId: string;
+    portfolioOrders: PortfolioOrder[];
+    transactionPoints: TransactionPoint[];
+    userCurrency: string;
+    userId: string;
+  }): Promise<HistoricalDataContainer> {
+    if (transactionPoints.length === 0) {
+      return {
+        isAllTimeHigh: false,
+        isAllTimeLow: false,
+        items: []
+      };
+    }
+
+    userId = await this.getUserId(impersonationId, userId);
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      orders: portfolioOrders
+    });
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const endDate = new Date();
+
+    const portfolioStart = parseDate(transactionPoints[0].date);
+    const startDate = this.getStartDate(dateRange, portfolioStart);
+
+    const daysInMarket = differenceInDays(new Date(), startDate);
+    const step = Math.round(
+      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
+    );
+
+    const items = await portfolioCalculator.getChartData(
+      startDate,
+      endDate,
+      step
+    );
+
+    return {
+      items,
+      isAllTimeHigh: false,
+      isAllTimeLow: false
+    };
   }
 
   private getDividendsByGroup({
@@ -1998,5 +2044,45 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
+  }
+
+  private mergeHistoricalDataItems(
+    accountBalanceItems: HistoricalDataItem[],
+    performanceChartItems: HistoricalDataItem[]
+  ): HistoricalDataItem[] {
+    const historicalDataItemsMap: { [date: string]: HistoricalDataItem } = {};
+    let latestAccountBalance = 0;
+
+    for (const item of accountBalanceItems.concat(performanceChartItems)) {
+      const isAccountBalanceItem = accountBalanceItems.includes(item);
+
+      const totalAccountBalance = isAccountBalanceItem
+        ? item.value
+        : latestAccountBalance;
+
+      if (isAccountBalanceItem && performanceChartItems.length > 0) {
+        latestAccountBalance = item.value;
+      } else {
+        historicalDataItemsMap[item.date] = {
+          ...item,
+          totalAccountBalance,
+          netWorth:
+            (isAccountBalanceItem ? 0 : item.value) + totalAccountBalance
+        };
+      }
+    }
+
+    // Convert to an array and sort by date in ascending order
+    const historicalDataItems = Object.keys(historicalDataItemsMap).map(
+      (date) => {
+        return historicalDataItemsMap[date];
+      }
+    );
+
+    historicalDataItems.sort(
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    return historicalDataItems;
   }
 }

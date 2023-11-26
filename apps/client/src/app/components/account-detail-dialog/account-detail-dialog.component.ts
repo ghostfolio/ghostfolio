@@ -122,13 +122,13 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
         this.historicalDataItems = chart.map(
-          ({ date, value, valueInPercentage }) => {
+          ({ date, netWorth, netWorthInPercentage }) => {
             return {
               date,
               value:
                 this.hasImpersonationId || this.user.settings.isRestrictedView
-                  ? valueInPercentage
-                  : value
+                  ? netWorthInPercentage
+                  : netWorth
             };
           }
         );
