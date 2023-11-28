@@ -10,10 +10,7 @@ describe('HasPermissionsGuard', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        HasPermissionsGuard,
-        Reflector,
-      ],
+      providers: [HasPermissionsGuard, Reflector]
     }).compile();
 
     guard = module.get<HasPermissionsGuard>(HasPermissionsGuard);
@@ -28,9 +25,9 @@ describe('HasPermissionsGuard', () => {
     return new ExecutionContextHost([
       {
         user: {
-          permissions, // Set user permissions based on the argument
-        },
-      },
+          permissions // Set user permissions based on the argument
+        }
+      }
     ]);
   }
 

@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, HttpException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  HttpException
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
@@ -6,10 +11,13 @@ import { hasPermission } from '@ghostfolio/common/permissions';
 
 @Injectable()
 export class HasPermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector) { }
+  constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredPermission = this.reflector.get<string>(HAS_PERMISSION_KEY, context.getHandler());
+    const requiredPermission = this.reflector.get<string>(
+      HAS_PERMISSION_KEY,
+      context.getHandler()
+    );
 
     if (!requiredPermission) {
       return true; // No specific permissions required
