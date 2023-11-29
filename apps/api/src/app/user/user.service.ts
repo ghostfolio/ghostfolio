@@ -60,7 +60,7 @@ export class UserService {
       PROPERTY_SYSTEM_MESSAGE
     )) as SystemMessage;
 
-    if (systemMessageProperty?.targetGroups?.includes(subscription.type)) {
+    if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
     }
 
