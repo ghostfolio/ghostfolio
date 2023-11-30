@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HasPermissionsGuard as HasPermissionGuard } from './has-permission.guard';
+import { HasPermissionGuard as HasPermissionGuard } from './has-permission.guard';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import { HttpException } from '@nestjs/common';

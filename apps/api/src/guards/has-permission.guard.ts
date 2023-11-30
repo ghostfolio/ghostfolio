@@ -10,8 +10,8 @@ import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.de
 import { hasPermission } from '@ghostfolio/common/permissions';
 
 @Injectable()
-export class HasPermissionsGuard implements CanActivate {
-  public constructor(private reflector: Reflector) { }
+export class HasPermissionGuard implements CanActivate {
+  public constructor(private reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
     const requiredPermission = this.reflector.get<string>(
