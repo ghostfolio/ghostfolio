@@ -11,9 +11,9 @@ import { hasPermission } from '@ghostfolio/common/permissions';
 
 @Injectable()
 export class HasPermissionsGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  public constructor(private reflector: Reflector) { }
 
-  canActivate(context: ExecutionContext): boolean {
+  public canActivate(context: ExecutionContext): boolean {
     const requiredPermission = this.reflector.get<string>(
       HAS_PERMISSION_KEY,
       context.getHandler()
@@ -23,8 +23,7 @@ export class HasPermissionsGuard implements CanActivate {
       return true; // No specific permissions required
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const { user } = context.switchToHttp().getRequest();
 
     if (!user || !hasPermission(user.permissions, requiredPermission)) {
       throw new HttpException(

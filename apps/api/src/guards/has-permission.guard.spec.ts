@@ -1,19 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HasPermissionsGuard } from './has-permissions.guard';
+import { HasPermissionsGuard as HasPermissionGuard } from './has-permission.guard';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import { HttpException } from '@nestjs/common';
 
-describe('HasPermissionsGuard', () => {
-  let guard: HasPermissionsGuard;
+describe('HasPermissionGuard', () => {
+  let guard: HasPermissionGuard;
   let reflector: Reflector;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [HasPermissionsGuard, Reflector]
+      providers: [HasPermissionGuard, Reflector]
     }).compile();
 
-    guard = module.get<HasPermissionsGuard>(HasPermissionsGuard);
+    guard = module.get<HasPermissionGuard>(HasPermissionGuard);
     reflector = module.get<Reflector>(Reflector);
   });
 
