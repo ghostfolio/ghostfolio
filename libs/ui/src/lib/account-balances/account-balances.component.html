@@ -1,15 +1,27 @@
-<table mat-table [dataSource]="balances" class="mat-elevation-z8">
-
+<table class="gf-table w-100" mat-table [dataSource]="dataSource">
   <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef> Date </th>
-    <td mat-cell *matCellDef="let balance"> {{balance.date}} </td>
+    <th *matHeaderCellDef class="px-2" i18n mat-header-cell>Date</th>
+    <td *matCellDef="let element" class="px-2" mat-cell>
+      <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="value">
-    <th mat-header-cell *matHeaderCellDef> Value </th>
-    <td mat-cell *matCellDef="let balance"> {{balance.value}} </td>
+    <th *matHeaderCellDef class="px-2 text-right" i18n mat-header-cell>
+      Value
+    </th>
+    <td *matCellDef="let element" class="px-2" mat-cell>
+      <div class="d-flex justify-content-end">
+        <gf-value
+          [isCurrency]="true"
+          [locale]="locale"
+          [unit]="currency"
+          [value]="element?.value"
+        ></gf-value>
+      </div>
+    </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 </table>

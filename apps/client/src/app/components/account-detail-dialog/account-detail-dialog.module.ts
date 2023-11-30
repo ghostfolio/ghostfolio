@@ -6,8 +6,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfAccountBalancesModule } from '@ghostfolio/ui/account-balances/account-balances.module';
+import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 

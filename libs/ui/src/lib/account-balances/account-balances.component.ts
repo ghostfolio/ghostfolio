@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { AccountBalance } from '@ghostfolio/common/interfaces';
 import { Subject, takeUntil } from 'rxjs';
@@ -17,26 +19,33 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class AccountBalancesComponent implements OnDestroy, OnInit {
   @Input() accountId: string;
+  @Input() currency: string;
+  @Input() locale: string;
 
-  public balances: AccountBalance[];
+  public dataSource: MatTableDataSource<AccountBalance> =
+    new MatTableDataSource();
   public displayedColumns: string[] = ['date', 'value'];
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private dataService: DataService) {}
+  public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService
+  ) {}
+
+  public ngOnInit() {
+    this.fetchBalances();
+  }
 
   public fetchBalances() {
     this.dataService
       .fetchAccountBalances(this.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ balances }) => {
-        console.log({ balances });
-        this.balances = balances;
-      });
-  }
+        this.dataSource = new MatTableDataSource(balances);
 
-  public ngOnInit() {
-    this.fetchBalances();
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public ngOnDestroy() {

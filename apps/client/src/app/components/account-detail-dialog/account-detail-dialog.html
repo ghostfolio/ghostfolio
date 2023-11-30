@@ -1,50 +1,99 @@
-<gf-dialog-header mat-dialog-title position="center" [deviceType]="data.deviceType" [title]="name"
-  (closeButtonClicked)="onClose()"></gf-dialog-header>
+<gf-dialog-header
+  mat-dialog-title
+  position="center"
+  [deviceType]="data.deviceType"
+  [title]="name"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-header>
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
     <div class="row">
       <div class="col-12 d-flex justify-content-center mb-3">
-        <gf-value size="large" [isCurrency]="true" [locale]="user?.settings?.locale"
-          [unit]="user?.settings?.baseCurrency" [value]="valueInBaseCurrency"></gf-value>
+        <gf-value
+          size="large"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [unit]="user?.settings?.baseCurrency"
+          [value]="valueInBaseCurrency"
+        ></gf-value>
       </div>
     </div>
 
     <div class="chart-container mb-3">
-      <gf-investment-chart class="h-100" [currency]="user?.settings?.baseCurrency"
-        [historicalDataItems]="historicalDataItems" [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-        [isLoading]="isLoadingChart" [locale]="user?.settings?.locale"></gf-investment-chart>
+      <gf-investment-chart
+        class="h-100"
+        [currency]="user?.settings?.baseCurrency"
+        [historicalDataItems]="historicalDataItems"
+        [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+        [isLoading]="isLoadingChart"
+        [locale]="user?.settings?.locale"
+      ></gf-investment-chart>
     </div>
 
     <div class="row mb-3">
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [isCurrency]="true" [locale]="user?.settings?.locale" [unit]="currency"
-          [value]="balance">Cash Balance</gf-value>
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [unit]="currency"
+          [value]="balance"
+          >Cash Balance</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [isCurrency]="true" [locale]="user?.settings?.locale" [unit]="currency"
-          [value]="equity">Equity</gf-value>
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="user?.settings?.locale"
+          [unit]="currency"
+          [value]="equity"
+          >Equity</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
-        <gf-value i18n size="medium" [value]="transactionCount">Activities</gf-value>
+        <gf-value i18n size="medium" [value]="transactionCount"
+          >Activities</gf-value
+        >
       </div>
       <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="platformName">Platform</gf-value>
       </div>
     </div>
 
-    <mat-tab-group>
-      <mat-tab label="Activities">
-        <gf-activities-table [activities]="orders" [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType" [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="true" [hasPermissionToFilter]="false" [hasPermissionToOpenDetails]="false"
-          [locale]="user?.settings?.locale" [showActions]="false" (export)="onExport()"></gf-activities-table>
+    <mat-tab-group animationDuration="0" [mat-stretch-tabs]="false">
+      <mat-tab>
+        <ng-template i18n mat-tab-label>Activities</ng-template>
+        <gf-activities-table
+          [activities]="orders"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="true"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="user?.settings?.locale"
+          [showActions]="false"
+          (export)="onExport()"
+        ></gf-activities-table>
       </mat-tab>
-      <mat-tab label="Balances">
-        <gf-account-balances [accountId]="data.accountId"></gf-account-balances>
+      <mat-tab>
+        <ng-template i18n mat-tab-label>Balances</ng-template>
+        <gf-account-balances
+          [accountId]="data.accountId"
+          [currency]="currency"
+          [locale]="user?.settings?.locale"
+        ></gf-account-balances>
       </mat-tab>
     </mat-tab-group>
   </div>
 </div>
 
-<gf-dialog-footer mat-dialog-actions [deviceType]="data.deviceType" (closeButtonClicked)="onClose()"></gf-dialog-footer>
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+></gf-dialog-footer>

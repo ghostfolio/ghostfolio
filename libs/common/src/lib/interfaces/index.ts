@@ -1,6 +1,6 @@
 import type { Access } from './access.interface';
-import type { Accounts } from './accounts.interface';
 import type { AccountBalance } from './account-balance.interface';
+import type { Accounts } from './accounts.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
