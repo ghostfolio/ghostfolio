@@ -1075,7 +1075,7 @@ export class PortfolioService {
     const userCurrency = this.getUserCurrency(user);
 
     const accountBalances = await this.accountBalanceService.getAccountBalances(
-      { filters, user }
+      { filters, user, withExcludedAccounts }
     );
 
     let accountBalanceItems: HistoricalDataItem[] = Object.values(
