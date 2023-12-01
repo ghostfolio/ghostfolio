@@ -1,21 +1,30 @@
-<table class="gf-table w-100" mat-table [dataSource]="dataSource">
+<table
+  class="gf-table w-100"
+  mat-table
+  matSort
+  matSortActive="date"
+  matSortDirection="desc"
+  [dataSource]="dataSource"
+>
   <ng-container matColumnDef="date">
-    <th *matHeaderCellDef class="px-2" i18n mat-header-cell>Date</th>
+    <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+      <ng-container i18n>Date</ng-container>
+    </th>
     <td *matCellDef="let element" class="px-2" mat-cell>
       <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
     </td>
   </ng-container>
 
   <ng-container matColumnDef="value">
-    <th *matHeaderCellDef class="px-2 text-right" i18n mat-header-cell>
-      Value
+    <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
+      <ng-container i18n>Value</ng-container>
     </th>
     <td *matCellDef="let element" class="px-2" mat-cell>
       <div class="d-flex justify-content-end">
         <gf-value
           [isCurrency]="true"
           [locale]="locale"
-          [unit]="currency"
+          [unit]="element?.Account?.currency"
           [value]="element?.value"
         ></gf-value>
       </div>

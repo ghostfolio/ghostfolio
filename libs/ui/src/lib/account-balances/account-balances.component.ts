@@ -4,11 +4,14 @@ import {
   Component,
   Input,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { AccountBalance } from '@ghostfolio/common/interfaces';
+import { get } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -19,8 +22,9 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class AccountBalancesComponent implements OnDestroy, OnInit {
   @Input() accountId: string;
-  @Input() currency: string;
   @Input() locale: string;
+
+  @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<AccountBalance> =
     new MatTableDataSource();
@@ -37,19 +41,22 @@ export class AccountBalancesComponent implements OnDestroy, OnInit {
     this.fetchBalances();
   }
 
-  public fetchBalances() {
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private fetchBalances() {
     this.dataService
       .fetchAccountBalances(this.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ balances }) => {
         this.dataSource = new MatTableDataSource(balances);
 
+        this.dataSource.sort = this.sort;
+        this.dataSource.sortingDataAccessor = get;
+
         this.changeDetectorRef.markForCheck();
       });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

@@ -64,11 +64,15 @@
       </div>
     </div>
 
-    <mat-tab-group animationDuration="0" [mat-stretch-tabs]="false">
+    <mat-tab-group
+      animationDuration="0"
+      [mat-stretch-tabs]="false"
+      [ngClass]="{ 'd-none': isLoadingActivities }"
+    >
       <mat-tab>
         <ng-template i18n mat-tab-label>Activities</ng-template>
         <gf-activities-table
-          [activities]="orders"
+          [activities]="activities"
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
@@ -81,10 +85,9 @@
         ></gf-activities-table>
       </mat-tab>
       <mat-tab>
-        <ng-template i18n mat-tab-label>Balances</ng-template>
+        <ng-template i18n mat-tab-label>Cash Balances</ng-template>
         <gf-account-balances
           [accountId]="data.accountId"
-          [currency]="currency"
           [locale]="user?.settings?.locale"
         ></gf-account-balances>
       </mat-tab>
