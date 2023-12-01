@@ -26,7 +26,14 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, format, isAfter, isSameDay, parseISO } from 'date-fns';
+import {
+  endOfToday,
+  format,
+  isAfter,
+  isSameDay,
+  isSameSecond,
+  parseISO
+} from 'date-fns';
 import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -488,7 +495,7 @@ export class ImportService {
             activity.accountId === accountId &&
             activity.SymbolProfile.currency === currency &&
             activity.SymbolProfile.dataSource === dataSource &&
-            isSameDay(activity.date, date) &&
+            isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === symbol &&
