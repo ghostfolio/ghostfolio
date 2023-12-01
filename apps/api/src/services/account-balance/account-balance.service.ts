@@ -22,10 +22,12 @@ export class AccountBalanceService {
 
   public async getAccountBalances({
     filters,
-    user
+    user,
+    withExcludedAccounts
   }: {
     filters?: Filter[];
     user: UserWithSettings;
+    withExcludedAccounts?: boolean;
   }): Promise<AccountBalancesResponse> {
     const where: Prisma.AccountBalanceWhereInput = { userId: user.id };
 
@@ -35,6 +37,10 @@ export class AccountBalanceService {
 
     if (accountFilter) {
       where.accountId = accountFilter.id;
+    }
+
+    if (withExcludedAccounts === false) {
+      where.Account = { isExcluded: false };
     }
 
     const balances = await this.prismaService.accountBalance.findMany({
