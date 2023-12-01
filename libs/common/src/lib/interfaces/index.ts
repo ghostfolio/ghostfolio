@@ -1,5 +1,4 @@
 import type { Access } from './access.interface';
-import type { AccountBalance } from './account-balance.interface';
 import type { Accounts } from './accounts.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
@@ -52,7 +51,6 @@ import type { User } from './user.interface';
 
 export {
   Access,
-  AccountBalance,
   AccountBalancesResponse,
   Accounts,
   AdminData,

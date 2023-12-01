@@ -10,7 +10,7 @@ import {
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { AccountBalance } from '@ghostfolio/common/interfaces';
+import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 import { get } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -26,8 +26,9 @@ export class AccountBalancesComponent implements OnDestroy, OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<AccountBalance> =
-    new MatTableDataSource();
+  public dataSource: MatTableDataSource<
+    AccountBalancesResponse['balances'][0]
+  > = new MatTableDataSource();
   public displayedColumns: string[] = ['date', 'value'];
 
   private unsubscribeSubject = new Subject<void>();
