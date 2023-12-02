@@ -18,6 +18,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
+  AccountBalancesResponse,
   Accounts,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
@@ -135,6 +136,12 @@ export class DataService {
 
   public fetchAccount(aAccountId: string) {
     return this.http.get<AccountWithValue>(`/api/v1/account/${aAccountId}`);
+  }
+
+  public fetchAccountBalances(aAccountId: string) {
+    return this.http.get<AccountBalancesResponse>(
+      `/api/v1/account/${aAccountId}/balances`
+    );
   }
 
   public fetchAccounts() {
