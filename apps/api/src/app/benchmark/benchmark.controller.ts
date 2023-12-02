@@ -5,7 +5,7 @@ import type {
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -25,6 +25,7 @@ import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('benchmark')
 export class BenchmarkController {
@@ -35,19 +36,8 @@ export class BenchmarkController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
   public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     try {
       const benchmark = await this.benchmarkService.addBenchmark({
         dataSource,
@@ -62,7 +52,7 @@ export class BenchmarkController {
       }
 
       return benchmark;
-    } catch {
+    } catch  {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         StatusCodes.INTERNAL_SERVER_ERROR
@@ -72,22 +62,11 @@ export class BenchmarkController {
 
   @Delete(':dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
   public async deleteBenchmark(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     try {
       const benchmark = await this.benchmarkService.deleteBenchmark({
         dataSource,

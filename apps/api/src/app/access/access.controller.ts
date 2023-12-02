@@ -1,5 +1,5 @@
 import { Access } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -19,6 +19,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('access')
 export class AccessController {
@@ -59,18 +60,10 @@ export class AccessController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createAccess)
   public async createAccess(
     @Body() data: CreateAccessDto
   ): Promise<AccessModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createAccess)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.accessService.createAccess({
       alias: data.alias || undefined,
       GranteeUser: data.granteeUserId
@@ -82,11 +75,11 @@ export class AccessController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteAccess)
   public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
     const access = await this.accessService.access({ id });
 
     if (
-      !hasPermission(this.request.user.permissions, permissions.deleteAccess) ||
       !access ||
       access.userId !== this.request.user.id
     ) {

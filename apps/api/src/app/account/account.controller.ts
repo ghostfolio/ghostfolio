@@ -7,7 +7,7 @@ import {
   AccountBalancesResponse,
   Accounts
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,
   RequestWithUser
@@ -35,6 +35,7 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('account')
 export class AccountController {
@@ -48,16 +49,8 @@ export class AccountController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteAccount)
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deleteAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const account = await this.accountService.accountWithOrders(
       {
         id_userId: {
@@ -135,17 +128,10 @@ export class AccountController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createAccount)
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
 
     if (data.platformId) {
       const platformId = data.platformId;
@@ -174,17 +160,10 @@ export class AccountController {
 
   @Post('transfer-balance')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updateAccount)
   public async transferAccountBalance(
     @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
   ) {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.updateAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
 
     const accountsOfUser = await this.accountService.getAccounts(
       this.request.user.id
@@ -236,15 +215,8 @@ export class AccountController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updateAccount)
   public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.updateAccount)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
 
     const originalAccount = await this.accountService.account({
       id_userId: {

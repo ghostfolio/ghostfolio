@@ -20,6 +20,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { CreateTagDto } from './create-tag.dto';
 import { TagService } from './tag.service';
 import { UpdateTagDto } from './update-tag.dto';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('tag')
 export class TagController {
@@ -36,27 +37,15 @@ export class TagController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createTag)
   public async createTag(@Body() data: CreateTagDto): Promise<Tag> {
-    if (!hasPermission(this.request.user.permissions, permissions.createTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.tagService.createTag(data);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updateTag)
   public async updateTag(@Param('id') id: string, @Body() data: UpdateTagDto) {
-    if (!hasPermission(this.request.user.permissions, permissions.updateTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalTag = await this.tagService.getTag({
       id
     });
@@ -80,14 +69,8 @@ export class TagController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteTag)
   public async deleteTag(@Param('id') id: string) {
-    if (!hasPermission(this.request.user.permissions, permissions.deleteTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalTag = await this.tagService.getTag({
       id
     });

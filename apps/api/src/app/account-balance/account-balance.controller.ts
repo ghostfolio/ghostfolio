@@ -10,8 +10,10 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { AccountBalance } from '@prisma/client';
+import { permissions } from '@ghostfolio/common/permissions';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { AccountBalance } from '@prisma/client';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 import { AccountBalanceService } from './account-balance.service';
 
@@ -24,6 +26,7 @@ export class AccountBalanceController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteAccountBalance)
   public async deleteAccountBalance(
     @Param('id') id: string
   ): Promise<AccountBalance> {
@@ -32,10 +35,6 @@ export class AccountBalanceController {
     });
 
     if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.deleteAccountBalance
-      ) ||
       !accountBalance ||
       accountBalance.userId !== this.request.user.id
     ) {

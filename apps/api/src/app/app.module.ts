@@ -41,6 +41,8 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { HasPermissionGuard } from '../guards/has-permission.guard';
 
 @Module({
   imports: [
@@ -91,7 +93,7 @@ import { UserModule } from './user/user.module';
               if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
                 languageCode = code;
               }
-            } catch {}
+            } catch { }
 
             res.set('Location', `/${languageCode}`);
             res.statusCode = StatusCodes.MOVED_PERMANENTLY;
@@ -107,6 +109,12 @@ import { UserModule } from './user/user.module';
     UserModule
   ],
   controllers: [AppController],
-  providers: [CronService]
+  providers: [
+    CronService,
+    {
+      provide: APP_GUARD,
+      useClass: HasPermissionGuard
+    }
+  ]
 })
-export class AppModule {}
+export class AppModule { }

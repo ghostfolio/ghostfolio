@@ -20,6 +20,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { CreatePlatformDto } from './create-platform.dto';
 import { PlatformService } from './platform.service';
 import { UpdatePlatformDto } from './update-platform.dto';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('platform')
 export class PlatformController {
@@ -36,36 +37,20 @@ export class PlatformController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createPlatform)
   public async createPlatform(
     @Body() data: CreatePlatformDto
   ): Promise<Platform> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createPlatform)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.platformService.createPlatform(data);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updatePlatform)
   public async updatePlatform(
     @Param('id') id: string,
     @Body() data: UpdatePlatformDto
   ) {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.updatePlatform)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalPlatform = await this.platformService.getPlatform({
       id
     });
@@ -89,16 +74,8 @@ export class PlatformController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deletePlatform)
   public async deletePlatform(@Param('id') id: string) {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deletePlatform)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalPlatform = await this.platformService.getPlatform({
       id
     });

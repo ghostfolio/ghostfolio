@@ -24,6 +24,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('import')
 export class ImportController {
@@ -35,6 +36,7 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createAccount)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
@@ -42,10 +44,6 @@ export class ImportController {
     @Query('dryRun') isDryRun?: boolean
   ): Promise<ImportResponse> {
     if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.createAccount
-      ) ||
       !hasPermission(this.request.user.permissions, permissions.createOrder)
     ) {
       throw new HttpException(

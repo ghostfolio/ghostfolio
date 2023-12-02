@@ -1,6 +1,6 @@
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -25,6 +25,7 @@ import { size } from 'lodash';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('user')
 export class UserController {
@@ -37,10 +38,9 @@ export class UserController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteUser)
   public async deleteUser(@Param('id') id: string): Promise<UserModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deleteUser) ||
-      id === this.request.user.id
+    if (id === this.request.user.id
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -93,6 +93,7 @@ export class UserController {
 
   @Put('setting')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updateUserSettings)
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
       size(data) === 1 &&
@@ -100,16 +101,6 @@ export class UserController {
       this.request.user.role === 'DEMO'
     ) {
       // Allow benchmark or date range change for demo user
-    } else if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.updateUserSettings
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
     }
 
     const userSettings: UserSettings = {

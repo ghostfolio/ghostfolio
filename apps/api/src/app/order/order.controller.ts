@@ -32,6 +32,7 @@ import { CreateOrderDto } from './create-order.dto';
 import { Activities } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './update-order.dto';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 
 @Controller('order')
 export class OrderController {
@@ -45,16 +46,8 @@ export class OrderController {
 
   @Delete()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteOrder)
   public async deleteOrders(): Promise<number> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.orderService.deleteOrders({
       userId: this.request.user.id
     });
@@ -122,17 +115,9 @@ export class OrderController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createOrder)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const order = await this.orderService.createOrder({
       ...data,
       date: parseISO(data.date),
@@ -172,6 +157,7 @@ export class OrderController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.updateOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
     const originalOrder = await this.orderService.order({
@@ -179,7 +165,6 @@ export class OrderController {
     });
 
     if (
-      !hasPermission(this.request.user.permissions, permissions.updateOrder) ||
       !originalOrder ||
       originalOrder.userId !== this.request.user.id
     ) {
