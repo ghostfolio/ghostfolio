@@ -1,8 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { HasPermissionGuard as HasPermissionGuard } from './has-permission.guard';
+import { HttpException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
-import { HttpException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { HasPermissionGuard } from './has-permission.guard';
 
 describe('HasPermissionGuard', () => {
   let guard: HasPermissionGuard;

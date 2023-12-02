@@ -1,13 +1,13 @@
+import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { hasPermission } from '@ghostfolio/common/permissions';
 import {
-  Injectable,
   CanActivate,
   ExecutionContext,
-  HttpException
+  HttpException,
+  Injectable
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { hasPermission } from '@ghostfolio/common/permissions';
 
 @Injectable()
 export class HasPermissionGuard implements CanActivate {
