@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a historical cash balances table to the account detail dialog
+- Introduced a `HasPermission` annotation for endpoints
 
 ### Changed
 
