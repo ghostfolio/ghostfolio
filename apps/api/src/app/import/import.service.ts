@@ -26,14 +26,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import {
-  endOfToday,
-  format,
-  isAfter,
-  isSameDay,
-  isSameSecond,
-  parseISO
-} from 'date-fns';
+import { endOfToday, format, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -90,12 +83,13 @@ export class ImportService {
 
         const value = new Big(quantity).mul(marketPrice).toNumber();
 
+        const date = parseDate(dateString);
         const isDuplicate = orders.some((activity) => {
           return (
             activity.accountId === Account?.id &&
             activity.SymbolProfile.currency === assetProfile.currency &&
             activity.SymbolProfile.dataSource === assetProfile.dataSource &&
-            isSameDay(activity.date, parseDate(dateString)) &&
+            isSameSecond(activity.date, date) &&
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === assetProfile.symbol &&
             activity.type === 'DIVIDEND' &&
@@ -109,6 +103,7 @@ export class ImportService {
 
         return {
           Account,
+          date,
           error,
           quantity,
           value,
@@ -116,7 +111,6 @@ export class ImportService {
           accountUserId: undefined,
           comment: undefined,
           createdAt: undefined,
-          date: parseDate(dateString),
           fee: 0,
           feeInBaseCurrency: 0,
           id: assetProfile.id,
@@ -489,7 +483,7 @@ export class ImportService {
         type,
         unitPrice
       }) => {
-        const date = parseISO(<string>(<unknown>dateString));
+        const date = parseISO(dateString);
         const isDuplicate = existingActivities.some((activity) => {
           return (
             activity.accountId === accountId &&
