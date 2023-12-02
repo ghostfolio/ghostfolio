@@ -152,8 +152,8 @@
     "serve": {
       "executor": "@nx/angular:webpack-dev-server",
       "options": {
-        "browserTarget": "client:build",
-        "proxyConfig": "apps/client/proxy.conf.json"
+        "proxyConfig": "apps/client/proxy.conf.json",
+        "browserTarget": "client:build"
       },
       "configurations": {
         "development-de": {
@@ -215,8 +215,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/client/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/client/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
