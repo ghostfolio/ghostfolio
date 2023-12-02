@@ -346,7 +346,7 @@ export class DataProviderService {
             );
 
             try {
-              this.marketDataService.updateMany({
+              await this.marketDataService.updateMany({
                 data: Object.keys(response)
                   .filter((symbol) => {
                     return (
