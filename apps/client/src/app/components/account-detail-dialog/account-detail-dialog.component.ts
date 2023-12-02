@@ -29,14 +29,15 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./account-detail-dialog.component.scss']
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
+  public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
   public equity: number;
   public hasImpersonationId: boolean;
   public historicalDataItems: HistoricalDataItem[];
+  public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
-  public orders: OrderWithAccount[];
   public platformName: string;
   public transactionCount: number;
   public user: User;
@@ -64,6 +65,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.isLoadingActivities = true;
     this.isLoadingChart = true;
 
     this.dataService
@@ -103,7 +105,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
-        this.orders = activities;
+        this.activities = activities;
+
+        this.isLoadingActivities = false;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -122,13 +126,13 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
         this.historicalDataItems = chart.map(
-          ({ date, value, valueInPercentage }) => {
+          ({ date, netWorth, netWorthInPercentage }) => {
             return {
               date,
               value:
                 this.hasImpersonationId || this.user.settings.isRestrictedView
-                  ? valueInPercentage
-                  : value
+                  ? netWorthInPercentage
+                  : netWorth
             };
           }
         );
@@ -153,8 +157,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public onExport() {
     this.dataService
       .fetchExport(
-        this.orders.map((order) => {
-          return order.id;
+        this.activities.map(({ id }) => {
+          return id;
         })
       )
       .pipe(takeUntil(this.unsubscribeSubject))

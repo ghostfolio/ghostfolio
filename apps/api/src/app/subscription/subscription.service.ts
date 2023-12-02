@@ -111,14 +111,14 @@ export class SubscriptionService {
     aSubscriptions: Subscription[]
   ): UserWithSettings['subscription'] {
     if (aSubscriptions.length > 0) {
-      const latestSubscription = aSubscriptions.reduce((a, b) => {
+      const { expiresAt, price } = aSubscriptions.reduce((a, b) => {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
       });
 
       return {
-        expiresAt: latestSubscription.expiresAt,
-        offer: latestSubscription.price === 0 ? 'default' : 'renewal',
-        type: isBefore(new Date(), latestSubscription.expiresAt)
+        expiresAt,
+        offer: price ? 'renewal' : 'default',
+        type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
       };

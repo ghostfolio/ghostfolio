@@ -56,7 +56,13 @@ export class CoinGeckoService implements DataProviderInterface {
 
       response.name = name;
     } catch (error) {
-      Logger.error(error, 'CoinGeckoService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'CoinGeckoService');
     }
 
     return response;
@@ -174,7 +180,13 @@ export class CoinGeckoService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'CoinGeckoService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'CoinGeckoService');
     }
 
     return response;
@@ -216,7 +228,13 @@ export class CoinGeckoService implements DataProviderInterface {
         };
       });
     } catch (error) {
-      Logger.error(error, 'CoinGeckoService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'CoinGeckoService');
     }
 
     return { items };

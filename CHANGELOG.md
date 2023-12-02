@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a historical cash balances table to the account detail dialog
+- Introduced a `HasPermission` annotation for endpoints
+
+### Changed
+
+- Respected the `withExcludedAccounts` flag in the account balance time series
+
+### Fixed
+
+- Changed the mechanism of the `INTRADAY` data gathering to operate synchronously avoiding database deadlocks
+
+## 2.27.1 - 2023-11-28
+
+### Changed
+
+- Reverted `Nx` from version `17.1.3` to `17.0.2`
+
+## 2.27.0 - 2023-11-26
+
+### Changed
+
+- Extended the chart in the account detail dialog by historical cash balances
+- Improved the error log for a timeout in the data source request
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `16.2.12` to `17.0.4`
+- Upgraded `Nx` from version `17.0.2` to `17.1.3`
+
+## 2.26.0 - 2023-11-24
+
 ### Changed
 
 - Upgraded `prisma` from version `5.5.2` to `5.6.0`

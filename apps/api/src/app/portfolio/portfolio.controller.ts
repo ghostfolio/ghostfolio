@@ -381,16 +381,34 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
-        ({ date, netPerformanceInPercentage, totalInvestment, value }) => {
+        ({
+          date,
+          netPerformanceInPercentage,
+          netWorth,
+          totalInvestment,
+          value
+        }) => {
           return {
             date,
             netPerformanceInPercentage,
-            totalInvestment: new Big(totalInvestment)
-              .div(performanceInformation.performance.totalInvestment)
-              .toNumber(),
-            valueInPercentage: new Big(value)
-              .div(performanceInformation.performance.currentValue)
-              .toNumber()
+            netWorthInPercentage:
+              performanceInformation.performance.currentNetWorth === 0
+                ? 0
+                : new Big(netWorth)
+                    .div(performanceInformation.performance.currentNetWorth)
+                    .toNumber(),
+            totalInvestment:
+              performanceInformation.performance.totalInvestment === 0
+                ? 0
+                : new Big(totalInvestment)
+                    .div(performanceInformation.performance.totalInvestment)
+                    .toNumber(),
+            valueInPercentage:
+              performanceInformation.performance.currentValue === 0
+                ? 0
+                : new Big(value)
+                    .div(performanceInformation.performance.currentValue)
+                    .toNumber()
           };
         }
       );
@@ -400,6 +418,7 @@ export class PortfolioController {
         [
           'currentGrossPerformance',
           'currentNetPerformance',
+          'currentNetWorth',
           'currentValue',
           'totalInvestment'
         ]
