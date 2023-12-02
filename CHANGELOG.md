@@ -9,11 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Respected the `withExcludedAccounts` flag in the account balance time series
+- Added a historical cash balances table to the account detail dialog
+- Introduced a `HasPermission` annotation for endpoints
 
 ### Changed
 
 - Relaxed the check for duplicates in the preview step of the activities import (allow same day)
+- Respected the `withExcludedAccounts` flag in the account balance time series
+
+### Fixed
+
+- Changed the mechanism of the `INTRADAY` data gathering to operate synchronously avoiding database deadlocks
 
 ## 2.27.1 - 2023-11-28
 
