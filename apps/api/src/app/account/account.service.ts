@@ -1,4 +1,4 @@
-import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Filter } from '@ghostfolio/common/interfaces';
