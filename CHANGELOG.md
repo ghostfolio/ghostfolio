@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Changed the mechanism of the `INTRADAY` data gathering to function synchronously avoiding database deadlocks
+- Changed the mechanism of the `INTRADAY` data gathering to operate synchronously avoiding database deadlocks
 
 ## 2.27.1 - 2023-11-28
 
