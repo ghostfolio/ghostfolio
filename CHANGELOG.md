@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the height of the tabs on mobile
 - Improved the language localization for German (`de`)
 
 ## 2.28.0 - 2023-12-02
