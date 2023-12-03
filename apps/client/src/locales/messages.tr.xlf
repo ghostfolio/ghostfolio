@@ -2934,7 +2934,7 @@
       </trans-unit>
       <trans-unit id="59ff3fc0819994af3ded42a88914305f1f7ad5ef" datatype="html">
         <source>FIRE Calculator</source>
-        <target state="new">FIRE Calculator</target>
+        <target state="translated">FIRE Hesaplayıcı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">37</context>
@@ -2950,7 +2950,7 @@
       </trans-unit>
       <trans-unit id="67f30752e71d53c03798fbd0ea1dcbc2567795c7" datatype="html">
         <source>Professional Data Provider</source>
-        <target state="new">Professional Data Provider</target>
+        <target state="translated">Profesyonel Veri Sağlayıcı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">41</context>
@@ -2962,7 +2962,7 @@
       </trans-unit>
       <trans-unit id="ae3ddc340195a1b9564574fd757c0cd1ab5cd765" datatype="html">
         <source>and more Features...</source>
-        <target state="new">and more Features...</target>
+        <target state="translated">ve daha fazla Özellik...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">45</context>
@@ -2978,7 +2978,7 @@
       </trans-unit>
       <trans-unit id="8b17e00983a474a52d16bd139e180303703f01ff" datatype="html">
         <source> Get the tools to effectively manage your finances and refine your personal investment strategy. </source>
-        <target state="new"> Get the tools to effectively manage your finances and refine your personal investment strategy. </target>
+        <target state="translated"> Mali durumunuzu etkili bir şekilde yönetecek ve kişisel yatırım stratejinizi geliştirecek Araçları edinin. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">48,51</context>
@@ -2986,7 +2986,7 @@
       </trans-unit>
       <trans-unit id="eb075d0450deb6f381616f7da4b9244ced843053" datatype="html">
         <source>Skip</source>
-        <target state="new">Skip</target>
+        <target state="translated">Geç</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">55</context>
@@ -2994,7 +2994,7 @@
       </trans-unit>
       <trans-unit id="6dcab4069ec74eb21b38bd9f9678dc957c99618c" datatype="html">
         <source>Upgrade Plan</source>
-        <target state="new">Upgrade Plan</target>
+        <target state="translated"><Üyeliğinizi Yükseltin></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">62</context>
@@ -3006,7 +3006,7 @@
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
         <source>Today</source>
-        <target state="new">Today</target>
+        <target state="translated">Bugün</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -3014,7 +3014,7 @@
       </trans-unit>
       <trans-unit id="7377728350294749129" datatype="html">
         <source>YTD</source>
-        <target state="new">YTD</target>
+        <target state="translated">YTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -3022,7 +3022,7 @@
       </trans-unit>
       <trans-unit id="8768104874317770689" datatype="html">
         <source>1Y</source>
-        <target state="new">1Y</target>
+        <target state="trasnlated">1Y</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">23</context>
@@ -3030,7 +3030,7 @@
       </trans-unit>
       <trans-unit id="7304247106520037555" datatype="html">
         <source>5Y</source>
-        <target state="new">5Y</target>
+        <target state="translated">5Y</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">24</context>
@@ -3038,7 +3038,7 @@
       </trans-unit>
       <trans-unit id="3667949571823271511" datatype="html">
         <source>Max</source>
-        <target state="new">Max</target>
+        <target state="translated">Maks.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">25</context>
@@ -3046,7 +3046,7 @@
       </trans-unit>
       <trans-unit id="4190182554887994764" datatype="html">
         <source>This feature is currently unavailable.</source>
-        <target state="new">This feature is currently unavailable.</target>
+        <target state="translated">Bu özellik şu an için mevcut değil.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">59</context>
@@ -3054,7 +3054,7 @@
       </trans-unit>
       <trans-unit id="8947585964755853889" datatype="html">
         <source>Please try again later.</source>
-        <target state="new">Please try again later.</target>
+        <target state="translated">Daha sonra tekrar deneyiniz.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">61</context>
@@ -3070,7 +3070,7 @@
       </trans-unit>
       <trans-unit id="7224997887539831269" datatype="html">
         <source>Oops! Something went wrong.</source>
-        <target state="new">Oops! Something went wrong.</target>
+        <target state="translated">Hay Allah! Bir şeyler yanlış gitti.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">86</context>
@@ -3082,7 +3082,7 @@
       </trans-unit>
       <trans-unit id="1579692722565712588" datatype="html">
         <source>Okay</source>
-        <target state="new">Okay</target>
+        <target state="translated">Tamam</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">89</context>
@@ -3094,7 +3094,7 @@
       </trans-unit>
       <trans-unit id="1726363342938046830" datatype="html">
         <source>About</source>
-        <target state="new">About</target>
+        <target state="translated">Hakkında</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page-routing.module.ts</context>
           <context context-type="linenumber">52</context>
@@ -3110,7 +3110,7 @@
       </trans-unit>
       <trans-unit id="7136888919962092730" datatype="html">
         <source>Changelog</source>
-        <target state="new">Changelog</target>
+        <target state="translated">Değişiklik Günlüğü</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -3122,7 +3122,7 @@
       </trans-unit>
       <trans-unit id="6877113876835666202" datatype="html">
         <source>License</source>
-        <target state="new">License</target>
+        <target state="tranlated">Lisans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">53</context>
@@ -3134,7 +3134,7 @@
       </trans-unit>
       <trans-unit id="8439955599488894226" datatype="html">
         <source>Privacy Policy</source>
-        <target state="new">Privacy Policy</target>
+        <target state="translated">Gizlilik Politikası</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">61</context>
@@ -3146,7 +3146,7 @@
       </trans-unit>
       <trans-unit id="bc5d27ff889e9ac6d1f33ba419ec2d5fe923cfe3" datatype="html">
         <source>Our</source>
-        <target state="new">Our</target>
+        <target state="translated">Bizim</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">6</context>
@@ -3154,7 +3154,7 @@
       </trans-unit>
       <trans-unit id="84e1290e06dcaba8e890116cd795d79ef89ccc90" datatype="html">
         <source>Discover other exciting Open Source Software projects</source>
-        <target state="new">Discover other exciting Open Source Software projects</target>
+        <target state="translated">Diğer heyecan verici Açık Kaynak Yazılım projelerini keşfedin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">9</context>
@@ -3162,7 +3162,7 @@
       </trans-unit>
       <trans-unit id="6bf6d7aaba2bcbbd200e6869bbfdafc5991d5df8" datatype="html">
         <source>Visit</source>
-        <target state="new">Visit</target>
+        <target state="translated">Ziyaret et</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">28</context>
@@ -3170,7 +3170,7 @@
       </trans-unit>
       <trans-unit id="5016419499983434110" datatype="html">
         <source>Accounts</source>
-        <target state="new">Accounts</target>
+        <target state="translated">Hesaplar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page-routing.module.ts</context>
           <context context-type="linenumber">12</context>
@@ -3178,7 +3178,7 @@
       </trans-unit>
       <trans-unit id="220a4641dcde60d1d86ceec62886b1878f1578d3" datatype="html">
         <source>Update account</source>
-        <target state="new">Update account</target>
+        <target state="translated">Hesabı Güncelle</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">2</context>
@@ -3186,7 +3186,7 @@
       </trans-unit>
       <trans-unit id="4eb2164d8ef5d328ef6bc1e66da011218bac968f" datatype="html">
         <source>Add account</source>
-        <target state="new">Add account</target>
+        <target state="translated">Hesap ekle</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">3</context>
@@ -3194,7 +3194,7 @@
       </trans-unit>
       <trans-unit id="bc53583e9b147e117be82c6bbec021d66ea8b549" datatype="html">
         <source>Account ID</source>
-        <target state="new">Account ID</target>
+        <target state="translated">Hesap Kimliği</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/create-or-update-account-dialog/create-or-update-account-dialog.html</context>
           <context context-type="linenumber">68</context>
@@ -3202,7 +3202,7 @@
       </trans-unit>
       <trans-unit id="4979019387603946865" datatype="html">
         <source>Admin Control</source>
-        <target state="new">Admin Control</target>
+        <target state="translated">Yönetici Denetimleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">19</context>
@@ -3210,7 +3210,7 @@
       </trans-unit>
       <trans-unit id="3229595422546554334" datatype="html">
         <source>Jobs</source>
-        <target state="new">Jobs</target>
+        <target state="translated">İşler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">21</context>
@@ -3222,7 +3222,7 @@
       </trans-unit>
       <trans-unit id="4798457301875181136" datatype="html">
         <source>Market Data</source>
-        <target state="new">Market Data</target>
+        <target state="translated">Piyasa Verileri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">25</context>
@@ -3234,7 +3234,7 @@
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
-        <target state="new">Settings</target>
+        <target state="translated">Ayarlar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">30</context>
