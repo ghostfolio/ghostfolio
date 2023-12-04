@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Increased the height of the tabs on mobile
 - Improved the language localization for German (`de`)
+- Improved the language localization for Türkçe (`tr`)
 - Upgraded `marked` from version `4.2.12` to `9.1.6`
 - Upgraded `ngx-markdown` from version `15.1.0` to `17.1.1`
 - Upgraded `ng-extract-i18n-merge` from version `2.8.3` to `2.9.0`
