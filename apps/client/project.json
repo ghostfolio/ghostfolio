@@ -60,6 +60,10 @@
           "baseHref": "/nl/",
           "localize": ["nl"]
         },
+        "development-pl": {
+          "baseHref": "/pl/",
+          "localize": ["pl"]
+        },
         "development-pt": {
           "baseHref": "/pt/",
           "localize": ["pt"]
@@ -125,6 +129,9 @@
             "command": "shx cp apps/client/src/assets/site.webmanifest dist/apps/client"
           },
           {
+            "command": "shx cp -r apps/client/src/locales dist/apps/api/assets"
+          },
+          {
             "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
           },
           {
@@ -145,8 +152,8 @@
     "serve": {
       "executor": "@nx/angular:webpack-dev-server",
       "options": {
-        "browserTarget": "client:build",
-        "proxyConfig": "apps/client/proxy.conf.json"
+        "proxyConfig": "apps/client/proxy.conf.json",
+        "browserTarget": "client:build"
       },
       "configurations": {
         "development-de": {
@@ -166,6 +173,9 @@
         },
         "development-nl": {
           "browserTarget": "client:build:development-nl"
+        },
+        "development-pl": {
+          "browserTarget": "client:build:development-pl"
         },
         "development-pt": {
           "browserTarget": "client:build:development-pt"
@@ -190,6 +200,7 @@
           "messages.fr.xlf",
           "messages.it.xlf",
           "messages.nl.xlf",
+          "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf"
         ]
@@ -204,8 +215,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/client/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/client/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
@@ -231,6 +241,10 @@
       "nl": {
         "baseHref": "/nl/",
         "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pl": {
+        "baseHref": "/pl/",
+        "translation": "apps/client/src/locales/messages.pl.xlf"
       },
       "pt": {
         "baseHref": "/pt/",

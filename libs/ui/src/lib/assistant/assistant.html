@@ -1,0 +1,88 @@
+<div
+  [style.width]="deviceType === 'mobile' ? '85vw' : '30rem'"
+  (click)="$event.stopPropagation();"
+  (keydown.tab)="$event.stopPropagation()"
+>
+  <div class="align-items-center d-flex search-container">
+    <ion-icon class="ml-2 mr-0" name="search-outline"></ion-icon>
+    <input
+      #search
+      autocomplete="off"
+      autocorrect="off"
+      class="border-0 p-2 w-100"
+      name="search"
+      type="text"
+      [formControl]="searchFormControl"
+      [placeholder]="placeholder"
+    />
+    <div
+      *ngIf="deviceType !== 'mobile' && !searchFormControl.value"
+      class="hot-key-hint mx-1 px-1"
+    >
+      /
+    </div>
+    <button
+      *ngIf="searchFormControl.value"
+      class="h-100 no-min-width px-3 rounded-0"
+      mat-button
+      (click)="initialize()"
+    >
+      <ion-icon class="m-0" name="close-circle-outline"></ion-icon>
+    </button>
+    <button
+      *ngIf="!searchFormControl.value"
+      class="h-100 no-min-width px-3 rounded-0"
+      mat-button
+      (click)="onCloseAssistant()"
+    >
+      <ion-icon class="m-0" name="close-outline"></ion-icon>
+    </button>
+  </div>
+  <div
+    *ngIf="isLoading || searchFormControl.value"
+    class="overflow-auto py-3 result-container"
+  >
+    <div>
+      <div class="h6 mb-1 px-2" i18n>Holdings</div>
+      <gf-assistant-list-item
+        *ngFor="let searchResultItem of searchResults?.holdings"
+        mode="holding"
+        [item]="searchResultItem"
+        (clicked)="onCloseAssistant()"
+      />
+      <ng-container *ngIf="searchResults?.holdings?.length === 0">
+        <ngx-skeleton-loader
+          *ngIf="isLoading"
+          animation="pulse"
+          class="mx-2"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        ></ngx-skeleton-loader>
+        <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+      </ng-container>
+    </div>
+    <div *ngIf="hasPermissionToAccessAdminControl" class="mt-3">
+      <div class="h6 mb-1 px-2" i18n>Asset Profiles</div>
+      <gf-assistant-list-item
+        *ngFor="let searchResultItem of searchResults?.assetProfiles"
+        mode="assetProfile"
+        [item]="searchResultItem"
+        (clicked)="onCloseAssistant()"
+      />
+      <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
+        <ngx-skeleton-loader
+          *ngIf="isLoading"
+          animation="pulse"
+          class="mx-2"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        ></ngx-skeleton-loader>
+        <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -17,6 +18,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
+  AccountBalancesResponse,
   Accounts,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
@@ -36,7 +38,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -58,6 +59,7 @@ export class DataService {
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
         PRESET_ID: filtersByPresetId,
+        SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -100,6 +102,10 @@ export class DataService {
         params = params.append('presetId', filtersByPresetId[0].id);
       }
 
+      if (filtersBySearchQuery) {
+        params = params.append('query', filtersBySearchQuery[0].id);
+      }
+
       if (filtersByTag) {
         params = params.append(
           'tags',
@@ -130,6 +136,12 @@ export class DataService {
 
   public fetchAccount(aAccountId: string) {
     return this.http.get<AccountWithValue>(`/api/v1/account/${aAccountId}`);
+  }
+
+  public fetchAccountBalances(aAccountId: string) {
+    return this.http.get<AccountBalancesResponse>(
+      `/api/v1/account/${aAccountId}/balances`
+    );
   }
 
   public fetchAccounts() {
@@ -200,8 +212,16 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account/${aId}`);
   }
 
+  public deleteAccountBalance(aId: string) {
+    return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
+  }
+
   public deleteAllOrders() {
     return this.http.delete<any>(`/api/v1/order/`);
+  }
+
+  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
   public deleteOrder(aId: string) {
@@ -377,13 +397,19 @@ export class DataService {
 
   public fetchPortfolioPerformance({
     filters,
-    range
+    range,
+    withExcludedAccounts = false
   }: {
     filters?: Filter[];
     range: DateRange;
+    withExcludedAccounts?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
     params = params.append('range', range);
+
+    if (withExcludedAccounts) {
+      params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
 
     return this.http
       .get<any>(`/api/v2/portfolio/performance`, {
@@ -494,6 +520,33 @@ export class DataService {
   public redeemCoupon(couponCode: string) {
     return this.http.post('/api/v1/subscription/redeem-coupon', {
       couponCode
+    });
+  }
+
+  public transferAccountBalance({
+    accountIdFrom,
+    accountIdTo,
+    balance
+  }: TransferBalanceDto) {
+    return this.http.post('/api/v1/account/transfer-balance', {
+      accountIdFrom,
+      accountIdTo,
+      balance
+    });
+  }
+
+  public updateInfo() {
+    this.http.get<InfoItem>('/api/v1/info').subscribe((info) => {
+      const utmSource = <'ios' | 'trusted-web-activity'>(
+        window.localStorage.getItem('utm_source')
+      );
+
+      info.globalPermissions = filterGlobalPermissions(
+        info.globalPermissions,
+        utmSource
+      );
+
+      (window as any).info = info;
     });
   }
 }

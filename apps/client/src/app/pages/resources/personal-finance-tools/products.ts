@@ -1,25 +1,38 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
+import { BasilFinancePageComponent } from './products/basil-finance-page.component';
+import { BeanvestPageComponent } from './products/beanvest-page.component';
+import { CapitallyPageComponent } from './products/capitally-page.component';
 import { CapMonPageComponent } from './products/capmon-page.component';
+import { CompoundPlanningPageComponent } from './products/compound-planning-page.component';
 import { CopilotMoneyPageComponent } from './products/copilot-money-page.component';
+import { DeFiPageComponent } from './products/de.fi-page.component';
 import { DeltaPageComponent } from './products/delta-page.component';
 import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
+import { EightFiguresPageComponent } from './products/eightfigures-page.component';
+import { EmpowerPageComponent } from './products/empower-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
+import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
 import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
+import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
+import { MagnifiPageComponent } from './products/magnifi-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
+import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
+import { RocketMoneyPageComponent } from './products/rocket-money-page.component';
 import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.component';
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
@@ -27,8 +40,13 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
+import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
+import { VyzerPageComponent } from './products/vyzer-page.component';
+import { WealthicaPageComponent } from './products/wealthica-page.component';
+import { WhalPageComponent } from './products/whal-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
+import { YnabPageComponent } from './products/ynab-page.component';
 
 export const products: Product[] = [
   {
@@ -49,10 +67,19 @@ export const products: Product[] = [
     ],
     name: 'Ghostfolio',
     origin: $localize`Switzerland`,
-    pricingPerYear: '$24',
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
+  },
+  {
+    component: AllvueSystemsPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'allvue-systems',
+    name: 'Allvue Systems',
+    origin: $localize`United States`,
+    slogan: 'Investment Software Suite'
   },
   {
     component: AltooPageComponent,
@@ -64,13 +91,51 @@ export const products: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    component: BasilFinancePageComponent,
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'basil-finance',
+    name: 'Basil Finance',
+    slogan: 'The ultimate solution for tracking and managing your investments'
+  },
+  {
+    component: BeanvestPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'beanvest',
+    name: 'Beanvest',
+    origin: $localize`France`,
+    pricingPerYear: '$100',
+    slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    component: CapitallyPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'capitally',
+    name: 'Capitally',
+    origin: $localize`Poland`,
+    pricingPerYear: '€50',
+    slogan: 'Optimize your investments performance'
+  },
+  {
     component: CapMonPageComponent,
     founded: 2022,
     key: 'capmon',
     name: 'CapMon.org',
     origin: $localize`Germany`,
-    note: 'Sunset in 2023',
+    note: 'CapMon.org has discontinued in 2023',
     slogan: 'Next Generation Assets Tracking'
+  },
+  {
+    component: CompoundPlanningPageComponent,
+    founded: 2019,
+    key: 'compound-planning',
+    name: 'Compound Planning',
+    origin: $localize`United States`,
+    slogan: 'Modern Wealth & Investment Management'
   },
   {
     component: CopilotMoneyPageComponent,
@@ -82,6 +147,14 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    component: DeFiPageComponent,
+    founded: 2020,
+    key: 'de.fi',
+    languages: ['English'],
+    name: 'De.Fi',
+    slogan: 'DeFi Portfolio Tracker'
   },
   {
     component: DeltaPageComponent,
@@ -107,6 +180,25 @@ export const products: Product[] = [
     slogan: 'Your personal Dividend Calendar'
   },
   {
+    component: EmpowerPageComponent,
+    founded: 2009,
+    hasSelfHostingAbility: false,
+    key: 'empower',
+    name: 'Empower',
+    note: 'Originally named as Personal Capital',
+    origin: $localize`United States`,
+    slogan: 'Get answers to your money questions'
+  },
+  {
+    alias: '8figures',
+    component: EightFiguresPageComponent,
+    founded: 2022,
+    key: 'eightfigures',
+    name: '8FIGURES',
+    origin: $localize`United States`,
+    slogan: 'Portfolio Tracker Designed by Professional Investors'
+  },
+  {
     component: ExirioPageComponent,
     founded: 2020,
     hasFreePlan: true,
@@ -125,6 +217,16 @@ export const products: Product[] = [
     name: 'Finary',
     origin: $localize`United States`,
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
+  },
+  {
+    component: FinWisePageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    key: 'finwise',
+    name: 'FinWise',
+    origin: $localize`South Africa`,
+    pricingPerYear: '€69.99',
+    slogan: 'Personal finances, simplified'
   },
   {
     component: FolisharePageComponent,
@@ -159,6 +261,17 @@ export const products: Product[] = [
     slogan: 'Volle Kontrolle über deine Investitionen'
   },
   {
+    component: IntuitMintPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'intuit-mint',
+    name: 'Intuit Mint',
+    note: 'Intuit Mint has discontinued in 2023',
+    origin: $localize`United States`,
+    pricingPerYear: '$60',
+    slogan: 'Managing money, made simple'
+  },
+  {
     component: JustEtfPageComponent,
     founded: 2011,
     hasFreePlan: true,
@@ -181,6 +294,17 @@ export const products: Product[] = [
     slogan: 'The Time Machine for your Net Worth'
   },
   {
+    component: MagnifiPageComponent,
+    founded: 2018,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'magnifi',
+    name: 'Magnifi',
+    origin: $localize`United States`,
+    pricingPerYear: '$132',
+    slogan: 'AI Investing Assistant'
+  },
+  {
     component: MarketsShPageComponent,
     founded: 2022,
     hasFreePlan: true,
@@ -200,11 +324,22 @@ export const products: Product[] = [
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
-    note: 'Sunset in 2023',
+    note: 'Maybe Finance has discontinued in 2023',
     origin: $localize`United States`,
     pricingPerYear: '$145',
     region: $localize`United States`,
     slogan: 'Your financial future, in your control'
+  },
+  {
+    component: MonarchMoneyPageComponent,
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'monarch-money',
+    name: 'Monarch Money',
+    origin: $localize`United States`,
+    pricingPerYear: '$99.99',
+    slogan: 'The modern way to manage your money'
   },
   {
     component: MonsePageComponent,
@@ -272,6 +407,15 @@ export const products: Product[] = [
     slogan: 'Build Financial Plans You Love.'
   },
   {
+    component: RocketMoneyPageComponent,
+    founded: 2015,
+    hasSelfHostingAbility: false,
+    key: 'rocket-money',
+    name: 'Rocket Money',
+    origin: $localize`United States`,
+    slogan: 'Track your net worth'
+  },
+  {
     component: SeekingAlphaPageComponent,
     founded: 2004,
     hasFreePlan: false,
@@ -328,7 +472,7 @@ export const products: Product[] = [
     key: 'stockmarketeye',
     name: 'StockMarketEye',
     origin: $localize`France`,
-    note: 'Sunset in 2023',
+    note: 'StockMarketEye has discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
@@ -340,6 +484,17 @@ export const products: Product[] = [
     origin: $localize`Czech Republic`,
     pricingPerYear: '$20',
     slogan: 'Sum up and build your wealth.'
+  },
+  {
+    component: TillerPageComponent,
+    founded: 2016,
+    hasFreePlan: false,
+    key: 'tiller',
+    name: 'Tiller',
+    origin: $localize`United States`,
+    pricingPerYear: '$79',
+    slogan:
+      'Your financial life in a spreadsheet, automatically updated each day'
   },
   {
     component: UtlunaPageComponent,
@@ -354,13 +509,55 @@ export const products: Product[] = [
     useAnonymously: true
   },
   {
+    component: VyzerPageComponent,
+    founded: 2020,
+    hasFreePlan: true,
+    key: 'vyzer',
+    name: 'Vyzer',
+    origin: $localize`United States`,
+    pricingPerYear: '$348',
+    slogan: 'Virtual Family Office for Smart Wealth Management'
+  },
+  {
+    component: WealthicaPageComponent,
+    founded: 2015,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'wealthica',
+    languages: ['English', 'Français'],
+    name: 'Wealthica',
+    origin: $localize`Canada`,
+    pricingPerYear: '$50',
+    slogan: 'See all your investments in one place'
+  },
+  {
+    component: WhalPageComponent,
+    key: 'whal',
+    name: 'Whal',
+    origin: $localize`United States`,
+    slogan: 'Manage your investments in one place'
+  },
+  {
     component: YeekateePageComponent,
     founded: 2021,
+    hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'yeekatee',
+    languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
     origin: $localize`Switzerland`,
-    region: $localize`Switzerland`,
+    region: $localize`Global`,
     slogan: 'Connect. Share. Invest.'
+  },
+  {
+    component: YnabPageComponent,
+    founded: 2004,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'ynab',
+    name: 'YNAB (You Need a Budget)',
+    origin: $localize`United States`,
+    pricingPerYear: '$99',
+    slogan: 'Change Your Relationship With Money'
   }
 ];

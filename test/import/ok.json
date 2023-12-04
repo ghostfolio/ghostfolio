@@ -24,7 +24,7 @@
       "currency": "USD",
       "dataSource": "YAHOO",
       "date": "2050-06-05T22:00:00.000Z",
-      "symbol": "MSFT"
+      "symbol": "US5949181045"
     },
     {
       "accountId": null,
@@ -52,7 +52,7 @@
     },
     {
       "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
-      "comment": "My first order",
+      "comment": "My first order 🤓",
       "fee": 19,
       "quantity": 5,
       "type": "BUY",

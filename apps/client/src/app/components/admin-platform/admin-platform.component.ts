@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Platform } from '@prisma/client';
 import { get } from 'lodash';
@@ -40,6 +41,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -118,6 +120,8 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
         this.dataSource = new MatTableDataSource(platforms);
         this.dataSource.sort = this.sort;
         this.dataSource.sortingDataAccessor = get;
+
+        this.dataService.updateInfo();
 
         this.changeDetectorRef.markForCheck();
       });

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
+import { GfMembershipCardModule } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
@@ -13,6 +14,7 @@ import { UserAccountMembershipComponent } from './user-account-membership.compon
   exports: [UserAccountMembershipComponent],
   imports: [
     CommonModule,
+    GfMembershipCardModule,
     GfPremiumIndicatorModule,
     GfValueModule,
     MatButtonModule,

@@ -1,6 +1,6 @@
 import { Platform } from '@angular/cdk/platform';
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -35,6 +35,7 @@ export function NgxStripeFactory(): string {
 }
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [AppComponent],
   imports: [
     AppRoutingModule,
@@ -72,6 +73,6 @@ export function NgxStripeFactory(): string {
       useFactory: NgxStripeFactory
     }
   ],
-  bootstrap: [AppComponent]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

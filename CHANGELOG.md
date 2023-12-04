@@ -7,14 +7,329 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Increased the height of the tabs on mobile
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.8.3` to `2.9.0`
+
+## 2.28.0 - 2023-12-02
+
 ### Added
 
-- Added the version to the admin control panel
+- Added a historical cash balances table to the account detail dialog
+- Introduced a `HasPermission` annotation for endpoints
+
+### Changed
+
+- Relaxed the check for duplicates in the preview step of the activities import (allow same day)
+- Respected the `withExcludedAccounts` flag in the account balance time series
+
+### Fixed
+
+- Changed the mechanism of the `INTRADAY` data gathering to operate synchronously avoiding database deadlocks
+
+## 2.27.1 - 2023-11-28
+
+### Changed
+
+- Reverted `Nx` from version `17.1.3` to `17.0.2`
+
+## 2.27.0 - 2023-11-26
+
+### Changed
+
+- Extended the chart in the account detail dialog by historical cash balances
+- Improved the error log for a timeout in the data source request
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `16.2.12` to `17.0.4`
+- Upgraded `Nx` from version `17.0.2` to `17.1.3`
+
+## 2.26.0 - 2023-11-24
+
+### Changed
+
+- Upgraded `prisma` from version `5.5.2` to `5.6.0`
+- Upgraded `yahoo-finance2` from version `2.8.1` to `2.9.0`
+
+## 2.25.1 - 2023-11-19
+
+### Added
+
+- Added a blog post: _Black Friday 2023_
+
+### Changed
+
+- Upgraded `http-status-codes` from version `2.2.0` to `2.3.0`
+
+### Fixed
+
+- Handled reading items from missing transaction point while getting the position (`getPosition()`) in portfolio service
+
+## 2.24.0 - 2023-11-16
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the "too many bind variables in prepared statement" issue of the data range functionality (`getRange()`) in the market data service
+
+## 2.23.0 - 2023-11-15
+
+### Added
+
+- Extended the benchmarks in the markets overview by 50-Day and 200-Day trends (experimental)
+- Set up the language localization for Polski (`pl`)
+
+### Changed
+
+- Improved the data source validation in the activities import
+- Changed _Twitter_ to _𝕏_
+- Improved the selection in the twitter bot service
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.7.0` to `2.8.3`
+- Upgraded `prettier` from version `3.0.3` to `3.1.0`
+
+## 2.22.0 - 2023-11-11
+
+### Added
+
+- Added the platform icon to the account selectors in the cash balance transfer from one to another account
+- Added the platform icon to the account selector of the create or edit activity dialog
+
+### Changed
+
+- Optimized the style of the carousel component on mobile for the testimonial section on the landing page
+- Introduced action menus in the overview of the admin control panel
+- Harmonized the name column in the historical market data table of the admin control panel
+- Refactored the implementation of the data range functionality (`getRange()`) in the market data service
+
+## 2.21.0 - 2023-11-09
+
+### Changed
+
+- Extended the system message
+
+### Fixed
+
+- Fixed the unit for the _Zen Mode_ in the overview tab of the home page
+- Fixed an issue to get quotes in the _Financial Modeling Prep_ service
+
+## 2.20.0 - 2023-11-08
+
+### Changed
+
+- Removed the loading indicator of the unit in the overview tab of the home page
+- Improved the import of historical market data in the admin control panel
+- Increased the timeout in the health check endpoint for data enhancers
+- Increased the timeout in the health check endpoint for data providers
+- Removed the account type from the `Account` database schema
+
+## 2.19.0 - 2023-11-06
+
+### Added
+
+- Added a data migration to set `accountType` to `NULL` in the account database table
+
+### Changed
+
+- Improved the language localization for the _Fear & Greed Index_ (market mood)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the handling of derived currencies (`GBp`, `ILA`, `ZAc`)
+
+## 2.18.0 - 2023-11-05
+
+### Added
+
+- Added support to import activities by `isin` in the _Yahoo Finance_ service
+- Added a new tag with the major version to the docker image on _Docker Hub_
+- Added a blog post: _Hacktoberfest 2023 Debriefing_
+
+### Changed
+
+- Upgraded `angular` from version `16.2.1` to `16.2.12`
+
+### Fixed
+
+- Fixed an issue to get quotes in the _CoinGecko_ service
+- Loosened the validation in the activities import (expects values greater than or equal to 0 for `fee`, `quantity` and `unitPrice`)
+- Handled an issue with a failing database query (`account.findMany()`) related to activities without account
+
+## 2.17.0 - 2023-11-02
+
+### Added
+
+- Added a button to edit the exchange rates in the admin control panel
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed an issue in the biometric authentication
+- Fixed the alignment of the icons in various menus
+
+## 2.16.0 - 2023-10-29
+
+### Changed
+
+- Relaxed the check for duplicates in the preview step of the activities import (allow different accounts)
+- Improved the usability and validation in the cash balance transfer from one to another account
+- Changed the checkboxes to slide toggles in the overview of the admin control panel
+- Switched from the deprecated (`PUT`) to the new endpoint (`POST`) to manage historical market data in the asset profile details dialog of the admin control panel
+- Improved the date parsing in the import historical market data of the admin control panel
+- Improved the localized meta data (keywords) in `html` files
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.4.2` to `5.5.2`
+
+## 2.15.0 - 2023-10-26
+
+### Added
+
+- Added support to edit the name, asset class and asset sub class of asset profiles with `MANUAL` data source in the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Improved the style and wording of the position detail dialog
+- Improved the validation in the activities import (expects positive values for `fee`, `quantity` and `unitPrice`)
+- Improved the validation in the cash balance transfer from one to another account (expects a positive value)
+- Changed the currency selector in the create or update account dialog to `@angular/material/autocomplete`
+- Upgraded `Nx` from version `16.7.4` to `17.0.2`
+- Upgraded `uuid` from version `9.0.0` to `9.0.1`
+- Upgraded `yahoo-finance2` from version `2.8.0` to `2.8.1`
+
+### Fixed
+
+- Fixed the chart in the account detail dialog for accounts excluded from analysis
+- Verified the current benchmark before loading it on the analysis page
+
+## 2.14.0 - 2023-10-21
+
+### Added
+
+- Added the _OpenFIGI_ data enhancer for _Financial Instrument Global Identifier_ (FIGI)
+- Added `figi`, `figiComposite` and `figiShareClass` to the asset profile model
+
+### Changed
+
+- Moved the fees on account level feature from experimental to general availability
+- Moved the interest on account level feature from experimental to general availability
+- Moved the search for a holding from experimental to general availability
+- Improved the error message in the activities import for `csv` files
+- Removed the application version from the client
+- Allowed to edit today’s historical market data in the asset profile details dialog of the admin control panel
+
+### Fixed
+
+- Fixed the style of the active page in the header navigation
+- Trimmed text in `i18n` service to query `messages.*.xlf` files on the server
+
+## 2.13.0 - 2023-10-20
+
+### Added
+
+- Added a chart to the account detail dialog
+- Added an `i18n` service to query `messages.*.xlf` files on the server
+
+### Changed
+
+- Changed the users table in the admin control panel to an `@angular/material` data table
+- Improved the styling of the membership status
+
+### Fixed
+
+- Fixed an issue where holdings were requested twice from the server
+
+## 2.12.0 - 2023-10-17
+
+### Added
+
+- Added the endpoint `GET api/v1/account/:id/balances` which provides historical cash balances
+- Added support to search for an asset profile by `isin`, `name` and `symbol` as an administrator (experimental)
+- Added support for creating asset profiles with `MANUAL` data source
+
+### Changed
+
+- Changed the checkboxes to slide toggles in the user settings of the user account page
+- Extended the `copy-assets` `Nx` target to copy the locales to the server’s assets
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `5.2.1` to `8.3`
+
+### Fixed
+
+- Displayed the transfer cash balance button based on a permission
+- Fixed the biometric authentication
+- Fixed the query to get asset profiles that match both the `dataSource` and `symbol` values
+
+## 2.11.0 - 2023-10-14
+
+### Added
+
+- Added support to transfer a part of the cash balance from one to another account
+- Extended the benchmarks in the markets overview by the date of the last all time high
+- Added support to import historical market data in the admin control panel
+
+### Changed
+
+- Harmonized the style of the create button on the page for granting and revoking public access to share the portfolio
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.3.1` to `5.4.2`
+
+### Fixed
+
+- Fixed `FEE` and `INTEREST` types in the activities import of `csv` files
+- Fixed the displayed currency of the cash balance in the create or update account dialog
+
+## 2.10.0 - 2023-10-09
+
+### Added
+
+- Supported enter key press to submit the form of the create or update access dialog
+
+### Changed
+
+- Improved the display of the results in the search for a holding
+- Changed the queue jobs view in the admin control panel to an `@angular/material` data table
+- Improved the symbol conversion in the _EOD Historical Data_ service
+
+## 2.9.0 - 2023-10-08
+
+### Added
+
+- Added support to search for a holding by `isin`, `name` and `symbol` (experimental)
+- Added support for notes in the activities import
+- Added support to search in the platform selector of the create or update account dialog
+- Added support for a search query in the portfolio position endpoint
+- Added the application version to the endpoint `GET api/v1/admin`
+- Introduced a carousel component for the testimonial section on the landing page
+
+### Changed
+
+- Displayed the link to the markets overview on the home page without any permission
+
+### Fixed
+
+- Fixed the style of the active features page in the navigation on desktop
+
+## 2.8.0 - 2023-10-03
+
+### Added
+
+- Supported enter key press to submit the form of the create or update account dialog
+- Added the application version to the admin control panel
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/order`
 
 ### Changed
 
 - Harmonized the settings icon of the user account page
+- Improved the usability to set an asset profile as a benchmark
+- Reload platforms after making a change in the admin control panel
+- Reload tags after making a change in the admin control panel
 
 ### Fixed
 
@@ -72,13 +387,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the preselected currency based on the account's currency in the create or edit activity dialog
+- Improved the preselected currency based on the account’s currency in the create or edit activity dialog
 - Unlocked the experimental features setting for all users
 - Upgraded `prisma` from version `5.2.0` to `5.3.1`
 
 ### Fixed
 
-- Fixed a memory leak related to the server's timezone (behind UTC) in the data gathering
+- Fixed a memory leak related to the server’s timezone (behind UTC) in the data gathering
 
 ## 2.3.0 - 2023-09-17
 
@@ -168,7 +483,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added health check endpoints for data enhancers
+- Added a health check endpoint for data enhancers
 
 ### Changed
 
@@ -229,7 +544,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Optimized the activities import by allowing a different currency than the asset's official one
+- Optimized the activities import by allowing a different currency than the asset’s official one
 - Added a timeout to the _EOD Historical Data_ requests
 - Migrated the requests from `bent` to `got` in the _EOD Historical Data_ service
 
@@ -344,7 +659,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the login dialog
-- Disabled the caching in the health check endpoints for data providers
+- Disabled the caching in the health check endpoint for data providers
 - Improved the content of the Frequently Asked Questions (FAQ) page
 - Upgraded `prisma` from version `4.15.0` to `4.16.2`
 
@@ -732,11 +1047,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a fallback to historical market data if a data provider does not provide live data
 - Added a general health check endpoint
-- Added health check endpoints for data providers
+- Added a health check endpoint for data providers
 
 ### Changed
 
-- Persisted today's market data continuously
+- Persisted today’s market data continuously
 
 ### Fixed
 
@@ -970,7 +1285,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Filtered activities with type `ITEM` from search results
-- Considered the user's language in the _Stripe_ checkout
+- Considered the user’s language in the _Stripe_ checkout
 - Upgraded the _Stripe_ dependencies
 - Upgraded `twitter-api-v2` from version `1.10.3` to `1.14.2`
 
@@ -2196,7 +2511,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the _Ghostfolio_ trailer to the landing page
-- Extended the markets overview by benchmarks (current change to the all time high)
+- Extended the benchmarks in the markets overview by the current change to the all time high
 
 ## 1.151.0 - 24.05.2022
 
@@ -2644,7 +2959,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the countries and sectors charts in the position detail dialog
-- Distinguished today's data point of historical data in the admin control panel
+- Distinguished today’s data point of historical data in the admin control panel
 - Restructured the server modules
 
 ### Fixed

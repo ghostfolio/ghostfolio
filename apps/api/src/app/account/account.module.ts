@@ -1,7 +1,7 @@
+import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
 import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
-import { AccountBalanceModule } from '@ghostfolio/api/services/account-balance/account-balance.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';

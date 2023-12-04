@@ -7,9 +7,14 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
   PROPERTY_IS_READ_ONLY_MODE,
+  PROPERTY_SYSTEM_MESSAGE,
   locale
 } from '@ghostfolio/common/config';
-import { User as IUser, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  User as IUser,
+  SystemMessage,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 import {
   getPermissions,
   hasRole,
@@ -48,6 +53,17 @@ export class UserService {
       orderBy: { alias: 'asc' },
       where: { GranteeUser: { id } }
     });
+
+    let systemMessage: SystemMessage;
+
+    const systemMessageProperty = (await this.propertyService.getByKey(
+      PROPERTY_SYSTEM_MESSAGE
+    )) as SystemMessage;
+
+    if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
+      systemMessage = systemMessageProperty;
+    }
+
     let tags = await this.tagService.getByUser(id);
 
     if (
@@ -61,6 +77,7 @@ export class UserService {
       id,
       permissions,
       subscription,
+      systemMessage,
       tags,
       access: access.map((accessItem) => {
         return {
@@ -110,7 +127,9 @@ export class UserService {
       updatedAt
     } = await this.prismaService.user.findUnique({
       include: {
-        Account: true,
+        Account: {
+          include: { Platform: true }
+        },
         Analytics: true,
         Settings: true,
         Subscription: true
@@ -163,6 +182,13 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
+    if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
+      // currentPermissions = without(
+      //   currentPermissions,
+      //   permissions.xyz
+      // );
+    }
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription =
         this.subscriptionService.getSubscription(Subscription);
@@ -172,16 +198,18 @@ export class UserService {
           new Date(),
           user.createdAt
         );
-        let frequency = 20;
+        let frequency = 15;
 
-        if (daysSinceRegistration > 180) {
+        if (daysSinceRegistration > 365) {
+          frequency = 2;
+        } else if (daysSinceRegistration > 180) {
           frequency = 3;
         } else if (daysSinceRegistration > 60) {
           frequency = 5;
         } else if (daysSinceRegistration > 30) {
-          frequency = 10;
+          frequency = 8;
         } else if (daysSinceRegistration > 15) {
-          frequency = 15;
+          frequency = 12;
         }
 
         if (Analytics?.activityCount % frequency === 1) {
@@ -226,8 +254,8 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.Account = sortBy(user.Account, (account) => {
-      return account.name;
+    user.Account = sortBy(user.Account, ({ name }) => {
+      return name.toLowerCase();
     });
     user.permissions = currentPermissions.sort();
 

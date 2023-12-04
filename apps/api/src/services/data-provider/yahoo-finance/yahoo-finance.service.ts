@@ -6,7 +6,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_REQUEST_TIMEOUT
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -30,7 +33,7 @@ export class YahooFinanceService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name } =
+    const { assetClass, assetSubClass, currency, name, symbol } =
       await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
 
     return {
@@ -38,8 +41,8 @@ export class YahooFinanceService implements DataProviderInterface {
       assetSubClass,
       currency,
       name,
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
   }
 
@@ -156,20 +159,24 @@ export class YahooFinanceService implements DataProviderInterface {
     return DataSource.YAHOO;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
-      return {};
+  public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
+
+    if (symbols.length <= 0) {
+      return response;
     }
 
-    const yahooFinanceSymbols = aSymbols.map((symbol) =>
+    const yahooFinanceSymbols = symbols.map((symbol) =>
       this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(symbol)
     );
 
     try {
-      const response: { [symbol: string]: IDataProviderResponse } = {};
-
       let quotes: Pick<
         Quote,
         'currency' | 'marketState' | 'regularMarketPrice' | 'symbol'

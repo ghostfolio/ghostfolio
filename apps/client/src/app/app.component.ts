@@ -17,7 +17,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { environment } from '../environments/environment';
 import { DataService } from './services/data.service';
 import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
@@ -60,7 +59,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkResources = ['/' + $localize`resources`];
   public showFooter = false;
   public user: User;
-  public version = environment.version;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -157,10 +155,7 @@ export class AppComponent implements OnDestroy, OnInit {
         );
 
         this.hasInfoMessage =
-          hasPermission(
-            this.user?.permissions,
-            permissions.createUserAccount
-          ) || !!this.info.systemMessage;
+          this.canCreateAccount || !!this.user?.systemMessage;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 
@@ -168,12 +163,16 @@ export class AppComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onCreateAccount() {
-    this.tokenStorageService.signOut();
+  public onClickSystemMessage() {
+    if (this.user.systemMessage.routerLink) {
+      this.router.navigate(this.user.systemMessage.routerLink);
+    } else {
+      alert(this.user.systemMessage.message);
+    }
   }
 
-  public onShowSystemMessage() {
-    alert(this.info.systemMessage);
+  public onCreateAccount() {
+    this.tokenStorageService.signOut();
   }
 
   public onSignOut() {

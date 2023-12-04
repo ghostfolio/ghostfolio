@@ -131,28 +131,34 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return DataSource.EOD_HISTORICAL_DATA;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const symbols = aSymbols.map((symbol) => {
-      return this.convertToEodSymbol(symbol);
-    });
+  public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    let response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
-      return {};
+      return response;
     }
+
+    const eodHistoricalDataSymbols = symbols.map((symbol) => {
+      return this.convertToEodSymbol(symbol);
+    });
 
     try {
       const abortController = new AbortController();
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, requestTimeout);
 
       const realTimeResponse = await got(
-        `${this.URL}/real-time/${symbols[0]}?api_token=${
+        `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
           this.apiKey
-        }&fmt=json&s=${symbols.join(',')}`,
+        }&fmt=json&s=${eodHistoricalDataSymbols.join(',')}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -160,10 +166,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       const quotes =
-        symbols.length === 1 ? [realTimeResponse] : realTimeResponse;
+        eodHistoricalDataSymbols.length === 1
+          ? [realTimeResponse]
+          : realTimeResponse;
 
       const searchResponse = await Promise.all(
-        symbols
+        eodHistoricalDataSymbols
           .filter((symbol) => {
             return !symbol.endsWith('.FOREX');
           })
@@ -176,7 +184,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         return items[0];
       });
 
-      const response = quotes.reduce(
+      response = quotes.reduce(
         (
           result: { [symbol: string]: IDataProviderResponse },
           { close, code, timestamp }
@@ -221,7 +229,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      Logger.error(error, 'EodHistoricalDataService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'EodHistoricalDataService');
     }
 
     return {};
@@ -283,7 +297,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
     if (symbol.endsWith('.FOREX')) {
       symbol = symbol.replace('GBX', 'GBp');
       symbol = symbol.replace('.FOREX', '');
-      symbol = `${DEFAULT_CURRENCY}${symbol}`;
     }
 
     return symbol;
@@ -292,7 +305,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   /**
    * Converts a symbol to a EOD symbol
    *
-   * Currency:  USDCHF  -> CHF.FOREX
+   * Currency:  USDCHF  -> USDCHF.FOREX
    */
   private convertToEodSymbol(aSymbol: string) {
     if (
@@ -304,9 +317,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
           aSymbol.substring(0, aSymbol.length - DEFAULT_CURRENCY.length)
         )
       ) {
-        return `${aSymbol
-          .replace('GBp', 'GBX')
-          .replace(DEFAULT_CURRENCY, '')}.FOREX`;
+        let symbol = aSymbol;
+        symbol = symbol.replace('GBp', 'GBX');
+
+        return `${symbol}.FOREX`;
       }
     }
 
@@ -374,7 +388,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
         }
       );
     } catch (error) {
-      Logger.error(error, 'EodHistoricalDataService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'EodHistoricalDataService');
     }
 
     return searchResult;

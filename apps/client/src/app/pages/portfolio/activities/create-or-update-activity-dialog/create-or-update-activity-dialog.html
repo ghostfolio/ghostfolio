@@ -21,10 +21,7 @@
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
-          <mat-option
-            *ngIf="data.user?.settings?.isExperimentalFeatures"
-            value="FEE"
-          >
+          <mat-option value="FEE">
             <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >One-time fee, annual account fees</small
@@ -36,10 +33,7 @@
               >Distribution of corporate earnings</small
             >
           </mat-option>
-          <mat-option
-            *ngIf="data.user?.settings?.isExperimentalFeatures"
-            value="INTEREST"
-          >
+          <mat-option value="INTEREST">
             <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Revenue for lending out money</small
@@ -78,9 +72,20 @@
             *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
             [value]="null"
           ></mat-option>
-          <mat-option *ngFor="let account of data.accounts" [value]="account.id"
-            >{{ account.name }}</mat-option
+          <mat-option
+            *ngFor="let account of data.accounts"
+            [value]="account.id"
           >
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

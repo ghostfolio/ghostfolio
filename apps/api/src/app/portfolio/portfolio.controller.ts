@@ -323,7 +323,8 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('withExcludedAccounts') withExcludedAccounts = false
   ): Promise<PortfolioPerformanceResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -335,6 +336,7 @@ export class PortfolioController {
       dateRange,
       filters,
       impersonationId,
+      withExcludedAccounts,
       userId: this.request.user.id
     });
 
@@ -344,16 +346,34 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
-        ({ date, netPerformanceInPercentage, totalInvestment, value }) => {
+        ({
+          date,
+          netPerformanceInPercentage,
+          netWorth,
+          totalInvestment,
+          value
+        }) => {
           return {
             date,
             netPerformanceInPercentage,
-            totalInvestment: new Big(totalInvestment)
-              .div(performanceInformation.performance.totalInvestment)
-              .toNumber(),
-            valueInPercentage: new Big(value)
-              .div(performanceInformation.performance.currentValue)
-              .toNumber()
+            netWorthInPercentage:
+              performanceInformation.performance.currentNetWorth === 0
+                ? 0
+                : new Big(netWorth)
+                    .div(performanceInformation.performance.currentNetWorth)
+                    .toNumber(),
+            totalInvestment:
+              performanceInformation.performance.totalInvestment === 0
+                ? 0
+                : new Big(totalInvestment)
+                    .div(performanceInformation.performance.totalInvestment)
+                    .toNumber(),
+            valueInPercentage:
+              performanceInformation.performance.currentValue === 0
+                ? 0
+                : new Big(value)
+                    .div(performanceInformation.performance.currentValue)
+                    .toNumber()
           };
         }
       );
@@ -363,6 +383,7 @@ export class PortfolioController {
         [
           'currentGrossPerformance',
           'currentNetPerformance',
+          'currentNetWorth',
           'currentValue',
           'totalInvestment'
         ]
@@ -391,12 +412,14 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('query') filterBySearchQuery?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioPositions> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
+      filterBySearchQuery,
       filterByTags
     });
 

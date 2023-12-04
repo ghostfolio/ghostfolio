@@ -1,8 +1,12 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
-import { Accounts } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  Accounts
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type {
   AccountWithValue,
@@ -29,11 +33,13 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
+import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
 
 @Controller('account')
 export class AccountController {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
@@ -115,6 +121,18 @@ export class AccountController {
     return accountsWithAggregations.accounts[0];
   }
 
+  @Get(':id/balances')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  public async getAccountBalancesById(
+    @Param('id') id: string
+  ): Promise<AccountBalancesResponse> {
+    return this.accountBalanceService.getAccountBalances({
+      filters: [{ id, type: 'ACCOUNT' }],
+      user: this.request.user
+    });
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   public async createAccount(
@@ -152,6 +170,68 @@ export class AccountController {
         this.request.user.id
       );
     }
+  }
+
+  @Post('transfer-balance')
+  @UseGuards(AuthGuard('jwt'))
+  public async transferAccountBalance(
+    @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
+  ) {
+    if (
+      !hasPermission(this.request.user.permissions, permissions.updateAccount)
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const accountsOfUser = await this.accountService.getAccounts(
+      this.request.user.id
+    );
+
+    const accountFrom = accountsOfUser.find(({ id }) => {
+      return id === accountIdFrom;
+    });
+
+    const accountTo = accountsOfUser.find(({ id }) => {
+      return id === accountIdTo;
+    });
+
+    if (!accountFrom || !accountTo) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    if (accountFrom.id === accountTo.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    if (accountFrom.balance < balance) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    await this.accountService.updateAccountBalance({
+      accountId: accountFrom.id,
+      amount: -balance,
+      currency: accountFrom.currency,
+      userId: this.request.user.id
+    });
+
+    await this.accountService.updateAccountBalance({
+      accountId: accountTo.id,
+      amount: balance,
+      currency: accountFrom.currency,
+      userId: this.request.user.id
+    });
   }
 
   @Put(':id')

@@ -1,0 +1,69 @@
+<form
+  class="d-flex flex-column h-100"
+  [formGroup]="transferBalanceForm"
+  (keyup.enter)="transferBalanceForm.valid && onSubmit()"
+  (ngSubmit)="onSubmit()"
+>
+  <h1 i18n mat-dialog-title>Transfer Cash Balance</h1>
+  <div class="flex-grow-1 py-3" mat-dialog-content>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>From</mat-label>
+        <mat-select formControlName="fromAccount">
+          <mat-option *ngFor="let account of accounts" [value]="account.id">
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>To</mat-label>
+        <mat-select formControlName="toAccount">
+          <mat-option *ngFor="let account of accounts" [value]="account.id">
+            <div class="d-flex">
+              <gf-symbol-icon
+                *ngIf="account.Platform?.url"
+                class="mr-1"
+                [tooltip]="account.Platform?.name"
+                [url]="account.Platform?.url"
+              ></gf-symbol-icon
+              ><span>{{ account.name }}</span>
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>Value</mat-label>
+        <input
+          formControlName="balance"
+          matInput
+          type="number"
+          (keydown.enter)="$event.stopPropagation()"
+        />
+        <span class="ml-2" matTextSuffix>{{ currency }}</span>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="justify-content-end" mat-dialog-actions>
+    <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
+    <button
+      color="primary"
+      mat-flat-button
+      type="submit"
+      [disabled]="!transferBalanceForm.valid"
+    >
+      <ng-container i18n>Transfer</ng-container>
+    </button>
+  </div>
+</form>

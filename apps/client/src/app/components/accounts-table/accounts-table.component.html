@@ -1,3 +1,15 @@
+<div *ngIf="showActions" class="d-flex justify-content-end">
+  <button
+    class="align-items-center d-flex"
+    mat-stroked-button
+    [disabled]="dataSource?.data.length < 2"
+    (click)="onTransferBalance()"
+  >
+    <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>
+    <ng-container i18n>Transfer Cash Balance</ng-container>...
+  </button>
+</div>
+
 <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
   <ng-container matColumnDef="status">
     <th
@@ -242,16 +254,20 @@
       </button>
       <mat-menu #accountMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onUpdateAccount(element)">
-          <ion-icon class="mr-2" name="create-outline"></ion-icon>
-          <span i18n>Edit</span>
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="create-outline"></ion-icon>
+            <span i18n>Edit</span>
+          </span>
         </button>
         <button
           mat-menu-item
           [disabled]="element.isDefault || element.transactionCount > 0"
           (click)="onDeleteAccount(element.id)"
         >
-          <ion-icon class="mr-2" name="trash-outline"></ion-icon>
-          <span i18n>Delete</span>
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+            <span i18n>Delete</span>
+          </span>
         </button>
       </mat-menu>
     </td>

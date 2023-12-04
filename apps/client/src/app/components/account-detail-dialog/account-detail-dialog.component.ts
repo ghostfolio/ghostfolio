@@ -8,11 +8,15 @@ import {
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  HistoricalDataItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
@@ -20,6 +24,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -29,11 +34,17 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./account-detail-dialog.component.scss']
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
+  public accountBalances: AccountBalancesResponse['balances'];
+  public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
   public equity: number;
+  public hasImpersonationId: boolean;
+  public hasPermissionToDeleteAccountBalance: boolean;
+  public historicalDataItems: HistoricalDataItem[];
+  public isLoadingActivities: boolean;
+  public isLoadingChart: boolean;
   public name: string;
-  public orders: OrderWithAccount[];
   public platformName: string;
   public transactionCount: number;
   public user: User;
@@ -46,6 +57,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -54,12 +66,19 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.hasPermissionToDeleteAccountBalance = hasPermission(
+            this.user.permissions,
+            permissions.deleteAccountBalance
+          );
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
+    this.isLoadingActivities = true;
+
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -97,21 +116,45 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
-        this.orders = activities;
+        this.activities = activities;
+
+        this.isLoadingActivities = false;
 
         this.changeDetectorRef.markForCheck();
       });
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
+
+    this.fetchAccountBalances();
+    this.fetchPortfolioPerformance();
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
+  }
+
+  public onDeleteAccountBalance(aId: string) {
+    this.dataService
+      .deleteAccountBalance(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchAccountBalances();
+          this.fetchPortfolioPerformance();
+        }
+      });
   }
 
   public onExport() {
     this.dataService
       .fetchExport(
-        this.orders.map((order) => {
-          return order.id;
+        this.activities.map(({ id }) => {
+          return id;
         })
       )
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -126,6 +169,51 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           )}.json`,
           format: 'json'
         });
+      });
+  }
+
+  private fetchAccountBalances() {
+    this.dataService
+      .fetchAccountBalances(this.data.accountId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ balances }) => {
+        this.accountBalances = balances;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private fetchPortfolioPerformance() {
+    this.isLoadingChart = true;
+
+    this.dataService
+      .fetchPortfolioPerformance({
+        filters: [
+          {
+            id: this.data.accountId,
+            type: 'ACCOUNT'
+          }
+        ],
+        range: 'max',
+        withExcludedAccounts: true
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ chart }) => {
+        this.historicalDataItems = chart.map(
+          ({ date, netWorth, netWorthInPercentage }) => {
+            return {
+              date,
+              value:
+                this.hasImpersonationId || this.user.settings.isRestrictedView
+                  ? netWorthInPercentage
+                  : netWorth
+            };
+          }
+        );
+
+        this.isLoadingChart = false;
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 

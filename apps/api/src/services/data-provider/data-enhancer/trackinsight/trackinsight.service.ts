@@ -21,9 +21,11 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   };
 
   public async enhance({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     response,
     symbol
   }: {
+    requestTimeout?: number;
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
@@ -37,7 +39,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     setTimeout(() => {
       abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
+    }, requestTimeout);
 
     const profile = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,

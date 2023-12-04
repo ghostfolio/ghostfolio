@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Docker metadata
         id: meta
@@ -21,6 +21,7 @@ jobs:
         with:
           images: ghostfolio/ghostfolio
           tags: |
+            type=semver,pattern={{major}}
             type=semver,pattern={{version}}
 
       - name: Set up QEMU

@@ -3,6 +3,7 @@ import { Role } from '@prisma/client';
 
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
+  accessAssistant: 'accessAssistant',
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createOrder: 'createOrder',
@@ -11,6 +12,7 @@ export const permissions = {
   createUserAccount: 'createUserAccount',
   deleteAccess: 'deleteAccess',
   deleteAccount: 'deleteAcccount',
+  deleteAccountBalance: 'deleteAcccountBalance',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deletePlatform: 'deletePlatform',
@@ -34,15 +36,17 @@ export const permissions = {
   updateTag: 'updateTag',
   updateUserSettings: 'updateUserSettings',
   updateViewMode: 'updateViewMode'
-};
+} as const;
 
 export function getPermissions(aRole: Role): string[] {
   switch (aRole) {
     case 'ADMIN':
       return [
         permissions.accessAdminControl,
+        permissions.accessAssistant,
         permissions.createAccess,
         permissions.createAccount,
+        permissions.deleteAccountBalance,
         permissions.createOrder,
         permissions.createPlatform,
         permissions.createTag,
@@ -63,15 +67,17 @@ export function getPermissions(aRole: Role): string[] {
       ];
 
     case 'DEMO':
-      return [permissions.createUserAccount];
+      return [permissions.accessAssistant, permissions.createUserAccount];
 
     case 'USER':
       return [
+        permissions.accessAssistant,
         permissions.createAccess,
         permissions.createAccount,
         permissions.createOrder,
         permissions.deleteAccess,
         permissions.deleteAccount,
+        permissions.deleteAccountBalance,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.updateAccount,

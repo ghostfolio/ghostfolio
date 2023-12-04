@@ -1,5 +1,5 @@
 import { SubscriptionOffer } from '@ghostfolio/common/types';
-import { SymbolProfile, Tag } from '@prisma/client';
+import { Platform, SymbolProfile, Tag } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
@@ -13,10 +13,9 @@ export interface InfoItem {
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
   isReadOnlyMode?: boolean;
-  platforms: { id: string; name: string }[];
+  platforms: Platform[];
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptions: { [offer in SubscriptionOffer]: Subscription };
-  systemMessage?: string;
   tags: Tag[];
 }

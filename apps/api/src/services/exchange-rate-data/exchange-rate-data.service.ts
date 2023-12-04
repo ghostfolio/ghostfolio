@@ -95,6 +95,30 @@ export class ExchangeRateDataService {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
       const [date] = Object.keys(result[symbol]);
 
+      // Add derived currencies
+      if (currency2 === 'GBP') {
+        resultExtended[`${currency1}GBp`] = {
+          [date]: {
+            marketPrice:
+              result[`${currency1}${currency2}`][date].marketPrice * 100
+          }
+        };
+      } else if (currency2 === 'ILS') {
+        resultExtended[`${currency1}ILA`] = {
+          [date]: {
+            marketPrice:
+              result[`${currency1}${currency2}`][date].marketPrice * 100
+          }
+        };
+      } else if (currency2 === 'ZAR') {
+        resultExtended[`${currency1}ZAc`] = {
+          [date]: {
+            marketPrice:
+              result[`${currency1}${currency2}`][date].marketPrice * 100
+          }
+        };
+      }
+
       // Calculate the opposite direction
       resultExtended[`${currency2}${currency1}`] = {
         [date]: {

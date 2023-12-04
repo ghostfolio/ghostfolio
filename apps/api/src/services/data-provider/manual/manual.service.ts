@@ -133,18 +133,22 @@ export class ManualService implements DataProviderInterface {
     return DataSource.MANUAL;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
-    if (aSymbols.length <= 0) {
+    if (symbols.length <= 0) {
       return response;
     }
 
     try {
       const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols.map((symbol) => {
+        symbols.map((symbol) => {
           return { symbol, dataSource: this.getName() };
         })
       );
@@ -154,10 +158,10 @@ export class ManualService implements DataProviderInterface {
         orderBy: {
           date: 'desc'
         },
-        take: aSymbols.length,
+        take: symbols.length,
         where: {
           symbol: {
-            in: aSymbols
+            in: symbols
           }
         }
       });

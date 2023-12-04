@@ -6,6 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -20,6 +21,7 @@ import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/
     GfActivitiesFilterModule,
     GfAssetProfileDialogModule,
     GfCreateAssetProfileDialogModule,
+    GfSymbolModule,
     MatButtonModule,
     MatMenuModule,
     MatPaginatorModule,

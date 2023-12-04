@@ -52,20 +52,12 @@ export class SymbolProfileService {
           SymbolProfileOverrides: true
         },
         where: {
-          AND: [
-            {
-              dataSource: {
-                in: aUniqueAssets.map(({ dataSource }) => {
-                  return dataSource;
-                })
-              },
-              symbol: {
-                in: aUniqueAssets.map(({ symbol }) => {
-                  return symbol;
-                })
-              }
-            }
-          ]
+          OR: aUniqueAssets.map(({ dataSource, symbol }) => {
+            return {
+              dataSource,
+              symbol
+            };
+          })
         }
       })
       .then((symbolProfiles) => this.getSymbols(symbolProfiles));
@@ -94,14 +86,24 @@ export class SymbolProfileService {
   }
 
   public updateSymbolProfile({
+    assetClass,
+    assetSubClass,
     comment,
     dataSource,
+    name,
     scraperConfiguration,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
-      data: { comment, scraperConfiguration, symbolMapping },
+      data: {
+        assetClass,
+        assetSubClass,
+        comment,
+        name,
+        scraperConfiguration,
+        symbolMapping
+      },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
   }

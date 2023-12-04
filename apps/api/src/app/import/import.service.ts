@@ -8,6 +8,7 @@ import {
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -25,7 +26,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { endOfToday, format, isAfter, isSameDay, parseISO } from 'date-fns';
+import { endOfToday, format, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -33,6 +34,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class ImportService {
   public constructor(
     private readonly accountService: AccountService,
+    private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -81,11 +83,13 @@ export class ImportService {
 
         const value = new Big(quantity).mul(marketPrice).toNumber();
 
+        const date = parseDate(dateString);
         const isDuplicate = orders.some((activity) => {
           return (
+            activity.accountId === Account?.id &&
             activity.SymbolProfile.currency === assetProfile.currency &&
             activity.SymbolProfile.dataSource === assetProfile.dataSource &&
-            isSameDay(activity.date, parseDate(dateString)) &&
+            isSameSecond(activity.date, date) &&
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === assetProfile.symbol &&
             activity.type === 'DIVIDEND' &&
@@ -99,6 +103,7 @@ export class ImportService {
 
         return {
           Account,
+          date,
           error,
           quantity,
           value,
@@ -106,7 +111,6 @@ export class ImportService {
           accountUserId: undefined,
           comment: undefined,
           createdAt: undefined,
-          date: parseDate(dateString),
           fee: 0,
           feeInBaseCurrency: 0,
           id: assetProfile.id,
@@ -280,6 +284,9 @@ export class ImportService {
         createdAt,
         currency,
         dataSource,
+        figi,
+        figiComposite,
+        figiShareClass,
         id,
         isin,
         name,
@@ -350,6 +357,9 @@ export class ImportService {
             createdAt,
             currency,
             dataSource,
+            figi,
+            figiComposite,
+            figiShareClass,
             id,
             isin,
             name,
@@ -473,12 +483,13 @@ export class ImportService {
         type,
         unitPrice
       }) => {
-        const date = parseISO(<string>(<unknown>dateString));
+        const date = parseISO(dateString);
         const isDuplicate = existingActivities.some((activity) => {
           return (
+            activity.accountId === accountId &&
             activity.SymbolProfile.currency === currency &&
             activity.SymbolProfile.dataSource === dataSource &&
-            isSameDay(activity.date, date) &&
+            isSameSecond(activity.date, date) &&
             activity.fee === fee &&
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === symbol &&
@@ -509,6 +520,9 @@ export class ImportService {
             comment: null,
             countries: null,
             createdAt: undefined,
+            figi: null,
+            figiComposite: null,
+            figiShareClass: null,
             id: undefined,
             isin: null,
             name: null,
@@ -559,6 +573,12 @@ export class ImportService {
       index,
       { currency, dataSource, symbol }
     ] of uniqueActivitiesDto.entries()) {
+      if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
+        throw new Error(
+          `activities.${index}.dataSource ("${dataSource}") is not valid`
+        );
+      }
+
       if (dataSource !== 'MANUAL') {
         const assetProfile = (
           await this.dataProviderService.getAssetProfiles([

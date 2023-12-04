@@ -33,6 +33,7 @@ import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
+import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
@@ -41,6 +42,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
+import { SystemMessage } from './system-message.interface';
 import { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
 import type { UniqueAsset } from './unique-asset.interface';
@@ -49,6 +51,7 @@ import type { User } from './user.interface';
 
 export {
   Access,
+  AccountBalancesResponse,
   Accounts,
   AdminData,
   AdminJobs,
@@ -88,6 +91,7 @@ export {
   ResponseError,
   ScraperConfiguration,
   Statistics,
+  SystemMessage,
   Subscription,
   TabConfiguration,
   TimelinePosition,

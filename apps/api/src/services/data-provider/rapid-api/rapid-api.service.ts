@@ -87,15 +87,19 @@ export class RapidApiService implements DataProviderInterface {
     return DataSource.RAPID_API;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
+  public async getQuotes({
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (symbols.length <= 0) {
       return {};
     }
 
     try {
-      const symbol = aSymbols[0];
+      const symbol = symbols[0];
 
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
@@ -159,7 +163,13 @@ export class RapidApiService implements DataProviderInterface {
 
       return fgi;
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+      }
+
+      Logger.error(message, 'RapidApiService');
 
       return undefined;
     }

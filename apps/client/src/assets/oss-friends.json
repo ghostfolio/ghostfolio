@@ -1,11 +1,6 @@
 {
-  "createdAt": "2023-09-25T08:15:38.055Z",
+  "createdAt": "2023-11-30T00:00:00.000Z",
   "data": [
-    {
-      "name": "Appsmith",
-      "description": "Build build custom software on top of your data.",
-      "href": "https://www.appsmith.com"
-    },
     {
       "name": "BoxyHQ",
       "description": "BoxyHQ’s suite of APIs for security and privacy helps engineering teams build and ship compliant cloud applications faster.",
@@ -22,14 +17,29 @@
       "href": "https://www.crowd.dev"
     },
     {
+      "name": "DevHunt",
+      "description": "Find the best Dev Tools upvoted by the community every week.",
+      "href": "https://devhunt.org"
+    },
+    {
       "name": "Documenso",
       "description": "The Open-Source DocuSign Alternative. We aim to earn your trust by enabling you to self-host the platform and examine its inner workings.",
       "href": "https://documenso.com"
     },
     {
+      "name": "dyrector.io",
+      "description": "dyrector.io is an open-source continuous delivery & deployment platform with version management.",
+      "href": "https://dyrector.io"
+    },
+    {
       "name": "Erxes",
       "description": "The Open-Source HubSpot Alternative. A single XOS enables to create unique and life-changing experiences that work for all types of business.",
       "href": "https://erxes.io"
+    },
+    {
+      "name": "Firecamp",
+      "description": "vscode for apis, open-source postman/insomnia alternative",
+      "href": "https://firecamp.io"
     },
     {
       "name": "Formbricks",
@@ -52,6 +62,11 @@
       "href": "https://www.hanko.io"
     },
     {
+      "name": "Hook0",
+      "description": "Open-Source Webhooks-as-a-service (WaaS) that makes it easy for developers to send webhooks.",
+      "href": "https://www.hook0.com"
+    },
+    {
       "name": "HTMX",
       "description": "HTMX is a dependency-free JavaScript library that allows you to access AJAX, CSS Transitions, WebSockets, and Server Sent Events directly in HTML.",
       "href": "https://htmx.org"
@@ -67,11 +82,6 @@
       "href": "https://mockoon.com"
     },
     {
-      "name": "Novu",
-      "description": "The open-source notification infrastructure for developers. Simple components and APIs for managing all communication channels in one place.",
-      "href": "https://novu.co"
-    },
-    {
       "name": "OpenBB",
       "description": "Democratizing investment research through an open source financial ecosystem. The OpenBB Terminal allows everyone to perform investment research, from everywhere.",
       "href": "https://openbb.co"
@@ -84,7 +94,7 @@
     {
       "name": "Papermark",
       "description": "Open-Source Docsend Alternative to securely share documents with real-time analytics.",
-      "href": "https://www.papermark.io/"
+      "href": "https://www.papermark.io"
     },
     {
       "name": "Requestly",
@@ -92,14 +102,29 @@
       "href": "https://requestly.io"
     },
     {
+      "name": "Revert",
+      "description": "The open-source unified API to build B2B integrations remarkably fast",
+      "href": "https://revert.dev"
+    },
+    {
       "name": "Rivet",
       "description": "Open-source solution to deploy, scale, and operate your multiplayer game.",
       "href": "https://rivet.gg"
     },
     {
+      "name": "Shelf.nu",
+      "description": "Open Source Asset and Equipment tracking software that lets you create QR asset labels, manage and overview your assets across locations.",
+      "href": "https://www.shelf.nu"
+    },
+    {
       "name": "Sniffnet",
       "description": "Sniffnet is a network monitoring tool to help you easily keep track of your Internet traffic.",
       "href": "https://www.sniffnet.net"
+    },
+    {
+      "name": "Spark.NET",
+      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
+      "href": "https://spark-framework.net"
     },
     {
       "name": "Tolgee",
@@ -112,14 +137,19 @@
       "href": "https://trigger.dev"
     },
     {
+      "name": "Twenty",
+      "description": "A modern CRM offering the flexibility of open-source, advanced features and sleek design.",
+      "href": "https://twenty.com"
+    },
+    {
       "name": "Typebot",
       "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
       "href": "https://typebot.io"
     },
     {
-      "name": "Twenty",
-      "description": "A modern CRM offering the flexibility of open-source, advanced features and sleek design.",
-      "href": "https://twenty.com"
+      "name": "Unkey",
+      "description": "An API authentication and authorization platform for scaling user facing APIs. Create, verify, and manage low latency API keys in seconds.",
+      "href": "https://unkey.dev"
     },
     {
       "name": "Webiny",
@@ -130,11 +160,6 @@
       "name": "Webstudio",
       "description": "Webstudio is an open source alternative to Webflow",
       "href": "https://webstudio.is"
-    },
-    {
-      "name": "Spark.NET",
-      "description": "The .NET Web Framework for Makers. Build production ready, full-stack web applications fast without sweating the small stuff.",
-      "href": "https://spark-framework.net"
     }
   ],
   "source": "https://formbricks.com/api/oss-friends"
