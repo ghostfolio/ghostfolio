@@ -14094,7 +14094,7 @@
       </trans-unit>
       <trans-unit id="2263595996673750436" datatype="html">
         <source>Do you really want to delete this account balance?</source>
-        <target state="new">!!!CHECK POINT CHARLIE!!!Do you really want to delete this account balance?</target>
+        <target state="new">Do you really want to delete this account balance?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.ts</context>
           <context context-type="linenumber">56</context>
