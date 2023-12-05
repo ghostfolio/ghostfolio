@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import {
-  STAY_SIGNED_IN,
+  KEY_STAY_SIGNED_IN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
@@ -31,7 +31,7 @@ export class LoginWithAccessTokenDialog {
 
   public onChangeStaySignedIn(aValue: MatCheckboxChange) {
     this.settingsStorageService.setSetting(
-      STAY_SIGNED_IN,
+      KEY_STAY_SIGNED_IN,
       aValue.checked?.toString()
     );
   }
