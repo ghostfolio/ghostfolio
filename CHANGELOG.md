@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the actions columns of various tables to stick at the end
 - Increased the height of the tabs on mobile
 - Improved the language localization for German (`de`)
 - Improved the language localization for Türkçe (`tr`)
