@@ -16,7 +16,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import { DataSource, Order as OrderModel, Prisma } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -42,6 +42,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public pageIndex = 0;
   public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
+  public sortColumn = 'date';
+  public sortDirection: Prisma.SortOrder = 'desc';
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -109,26 +111,50 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
-    this.dataService
-      .fetchActivities({})
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ activities }) => {
-        this.activities = activities;
-        this.dataSource = new MatTableDataSource(activities);
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      this.dataService
+        .fetchActivities({
+          sortColumn: this.sortColumn,
+          sortDirection: this.sortDirection,
+          skip: this.pageIndex * this.pageSize,
+          take: this.pageSize
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities }) => {
+          this.dataSource = new MatTableDataSource(activities);
 
-        if (
-          this.hasPermissionToCreateActivity &&
-          this.activities?.length <= 0
-        ) {
-          this.router.navigate([], { queryParams: { createDialog: true } });
-        }
+          if (
+            this.hasPermissionToCreateActivity &&
+            this.activities?.length <= 0
+          ) {
+            this.router.navigate([], { queryParams: { createDialog: true } });
+          }
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        });
+    } else {
+      this.dataService
+        .fetchActivities({})
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities }) => {
+          this.activities = activities;
+
+          if (
+            this.hasPermissionToCreateActivity &&
+            this.activities?.length <= 0
+          ) {
+            this.router.navigate([], { queryParams: { createDialog: true } });
+          }
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
   }
 
   public onChangePage(page: PageEvent) {
     this.pageIndex = page.pageIndex;
+
+    this.fetchActivities();
   }
 
   public onCloneActivity(aActivity: Activity) {

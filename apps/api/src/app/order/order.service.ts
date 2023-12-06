@@ -51,7 +51,7 @@ export class OrderService {
     take?: number;
     cursor?: Prisma.OrderWhereUniqueInput;
     where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.OrderOrderByWithRelationInput;
+    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput>;
   }): Promise<OrderWithAccount[]> {
     const { include, skip, take, cursor, where, orderBy } = params;
 
@@ -231,6 +231,8 @@ export class OrderService {
     filters,
     includeDrafts = false,
     skip,
+    sortColumn,
+    sortDirection,
     take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
@@ -240,12 +242,17 @@ export class OrderService {
     filters?: Filter[];
     includeDrafts?: boolean;
     skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
     take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<Activity[]> {
+    let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
+      { date: 'asc' }
+    ];
     const where: Prisma.OrderWhereInput = { userId };
 
     const {
@@ -307,6 +314,10 @@ export class OrderService {
       };
     }
 
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+    }
+
     if (types) {
       where.OR = types.map((type) => {
         return {
@@ -319,6 +330,7 @@ export class OrderService {
 
     return (
       await this.orders({
+        orderBy,
         skip,
         take,
         where,
@@ -332,8 +344,7 @@ export class OrderService {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           SymbolProfile: true,
           tags: true
-        },
-        orderBy: { date: 'asc' }
+        }
       })
     )
       .filter((order) => {

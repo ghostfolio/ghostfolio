@@ -65,14 +65,7 @@
 </div>
 
 <div class="activities">
-  <table
-    class="gf-table w-100"
-    mat-table
-    matSort
-    matSortActive="date"
-    matSortDirection="desc"
-    [dataSource]="dataSource"
-  >
+  <table class="gf-table w-100" mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
@@ -476,13 +469,11 @@
 </div>
 
 <mat-paginator
+  [length]="length"
   [ngClass]="{
-    'd-none':
-      (isLoading && dataSource?.data.length === 0) ||
-      dataSource?.data.length <= pageSize
+    'd-none': isLoading && dataSource?.data.length === 0
   }"
   [pageSize]="pageSize"
-  [showFirstLastButtons]="true"
   (page)="onChangePage($event)"
 ></mat-paginator>
 

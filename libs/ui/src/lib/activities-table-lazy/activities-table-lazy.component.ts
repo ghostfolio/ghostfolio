@@ -11,7 +11,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -21,7 +20,6 @@ import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
-import { get } from 'lodash';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
@@ -39,6 +37,7 @@ export class ActivitiesTableLazyComponent
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
+  @Input() length = Number.MAX_SAFE_INTEGER;
   @Input() locale: string;
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
@@ -59,7 +58,6 @@ export class ActivitiesTableLazyComponent
   @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   public defaultDateFormat: string;
   public displayedColumns = [];
@@ -128,10 +126,6 @@ export class ActivitiesTableLazyComponent
     }
 
     if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = get;
-
       this.isLoading = false;
     }
   }

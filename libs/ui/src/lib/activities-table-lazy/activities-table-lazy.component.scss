@@ -5,15 +5,11 @@
 
   .activities {
     overflow-x: auto;
+  }
 
-    .mat-mdc-table {
-      th {
-        ::ng-deep {
-          .mat-sort-header-container {
-            justify-content: inherit;
-          }
-        }
-      }
+  ::ng-deep {
+    .mat-mdc-paginator-range-label {
+      display: none;
     }
   }
 }
