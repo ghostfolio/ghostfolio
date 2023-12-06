@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -30,6 +31,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
+  public dataSource: MatTableDataSource<Activity>;
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -108,6 +110,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
         this.activities = activities;
+        this.dataSource = new MatTableDataSource(activities);
 
         if (
           this.hasPermissionToCreateActivity &&

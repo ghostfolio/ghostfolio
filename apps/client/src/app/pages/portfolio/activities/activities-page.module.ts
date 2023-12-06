@@ -5,6 +5,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
 
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';
@@ -17,6 +18,7 @@ import { GfImportActivitiesDialogModule } from './import-activities-dialog/impor
     ActivitiesPageRoutingModule,
     CommonModule,
     GfActivitiesTableModule,
+    GfActivitiesTableLazyModule,
     GfCreateOrUpdateActivityDialogModule,
     GfImportActivitiesDialogModule,
     MatButtonModule,
