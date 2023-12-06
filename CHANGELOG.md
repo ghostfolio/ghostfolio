@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced a lazy-loaded activities table on the portfolio activities page (experimental)
+
 ### Changed
 
 - Set the actions columns of various tables to stick at the end
