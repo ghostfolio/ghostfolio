@@ -99,6 +99,7 @@ export class ActivitiesTableLazyComponent
     this.displayedColumns = [
       'select',
       'importStatus',
+      'icon',
       'nameWithSymbol',
       'type',
       'date',
