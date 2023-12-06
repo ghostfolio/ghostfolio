@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -11,6 +12,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -37,6 +39,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
   public hasPermissionToDeleteActivity: boolean;
+  public pageIndex = 0;
+  public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
   public user: User;
 
@@ -121,6 +125,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
   }
 
   public onCloneActivity(aActivity: Activity) {

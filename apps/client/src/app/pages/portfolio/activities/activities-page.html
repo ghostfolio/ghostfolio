@@ -10,6 +10,8 @@
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [locale]="user?.settings?.locale"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
         (activityDeleted)="onDeleteActivity($event)"
         (activityToClone)="onCloneActivity($event)"
@@ -19,6 +21,7 @@
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
         (importDividends)="onImportDividends()"
+        (pageChanged)="onChangePage($event)"
       ></gf-activities-table-lazy>
       <gf-activities-table
         *ngIf="user?.settings?.isExperimentalFeatures !== true"

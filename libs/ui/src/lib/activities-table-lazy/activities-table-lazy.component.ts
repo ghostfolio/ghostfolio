@@ -40,6 +40,7 @@ export class ActivitiesTableLazyComponent
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale: string;
+  @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions = true;
   @Input() showCheckbox = false;
@@ -54,6 +55,7 @@ export class ActivitiesTableLazyComponent
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
   @Output() importDividends = new EventEmitter<UniqueAsset>();
+  @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -67,7 +69,6 @@ export class ActivitiesTableLazyComponent
   public isAfter = isAfter;
   public isLoading = true;
   public isUUID = isUUID;
-  public pageIndex = 0;
   public routeQueryParams: Subscription;
   public searchKeywords: string[] = [];
   public selectedRows = new SelectionModel<Activity>(true, []);
@@ -136,7 +137,7 @@ export class ActivitiesTableLazyComponent
   }
 
   public onChangePage(page: PageEvent) {
-    this.pageIndex = page.pageIndex;
+    this.pageChanged.emit(page);
   }
 
   public onClickActivity(activity: Activity) {
