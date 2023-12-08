@@ -87,8 +87,11 @@
       <mat-tab>
         <ng-template i18n mat-tab-label>Cash Balances</ng-template>
         <gf-account-balances
+          [accountBalances]="accountBalances"
           [accountId]="data.accountId"
           [locale]="user?.settings?.locale"
+          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
+          (accountBalanceDeleted)="onDeleteAccountBalance($event)"
         ></gf-account-balances>
       </mat-tab>
     </mat-tab-group>

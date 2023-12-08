@@ -12,11 +12,30 @@ export class AccountBalanceService {
     private readonly prismaService: PrismaService
   ) {}
 
+  public async accountBalance(
+    accountBalanceWhereInput: Prisma.AccountBalanceWhereInput
+  ): Promise<AccountBalance | null> {
+    return this.prismaService.accountBalance.findFirst({
+      include: {
+        Account: true
+      },
+      where: accountBalanceWhereInput
+    });
+  }
+
   public async createAccountBalance(
     data: Prisma.AccountBalanceCreateInput
   ): Promise<AccountBalance> {
     return this.prismaService.accountBalance.create({
       data
+    });
+  }
+
+  public async deleteAccountBalance(
+    where: Prisma.AccountBalanceWhereUniqueInput
+  ): Promise<AccountBalance> {
+    return this.prismaService.accountBalance.delete({
+      where
     });
   }
 

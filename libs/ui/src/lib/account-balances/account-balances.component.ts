@@ -1,18 +1,19 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 import { get } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,44 +21,48 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })
-export class AccountBalancesComponent implements OnDestroy, OnInit {
+export class AccountBalancesComponent implements OnChanges, OnDestroy, OnInit {
+  @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountId: string;
   @Input() locale: string;
+  @Input() showActions = true;
+
+  @Output() accountBalanceDeleted = new EventEmitter<string>();
 
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<
     AccountBalancesResponse['balances'][0]
   > = new MatTableDataSource();
-  public displayedColumns: string[] = ['date', 'value'];
+  public displayedColumns: string[] = ['date', 'value', 'actions'];
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
-  ) {}
+  public constructor() {}
 
-  public ngOnInit() {
-    this.fetchBalances();
+  public ngOnInit() {}
+
+  public ngOnChanges() {
+    if (this.accountBalances) {
+      this.dataSource = new MatTableDataSource(this.accountBalances);
+
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = get;
+    }
+  }
+
+  public onDeleteAccountBalance(aId: string) {
+    const confirmation = confirm(
+      $localize`Do you really want to delete this account balance?`
+    );
+
+    if (confirmation) {
+      this.accountBalanceDeleted.emit(aId);
+    }
   }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private fetchBalances() {
-    this.dataService
-      .fetchAccountBalances(this.accountId)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ balances }) => {
-        this.dataSource = new MatTableDataSource(balances);
-
-        this.dataSource.sort = this.sort;
-        this.dataSource.sortingDataAccessor = get;
-
-        this.changeDetectorRef.markForCheck();
-      });
   }
 }

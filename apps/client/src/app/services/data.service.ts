@@ -212,6 +212,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account/${aId}`);
   }
 
+  public deleteAccountBalance(aId: string) {
+    return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
+  }
+
   public deleteAllOrders() {
     return this.http.delete<any>(`/api/v1/order/`);
   }

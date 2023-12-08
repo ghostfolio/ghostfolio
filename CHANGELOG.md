@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Set the actions columns of various tables to stick at the end
+- Increased the height of the tabs on mobile
+- Improved the language localization for German (`de`)
+- Improved the language localization for Türkçe (`tr`)
+- Upgraded `marked` from version `4.2.12` to `9.1.6`
+- Upgraded `ngx-markdown` from version `15.1.0` to `17.1.1`
+- Upgraded `ng-extract-i18n-merge` from version `2.8.3` to `2.9.0`
+
+### Fixed
+
+- Fixed an issue in the biometric authentication registration
+
+## 2.28.0 - 2023-12-02
+
 ### Added
 
 - Added a historical cash balances table to the account detail dialog
@@ -14,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Relaxed the check for duplicates in the preview step of the activities import (allow same day)
 - Respected the `withExcludedAccounts` flag in the account balance time series
 
 ### Fixed
@@ -170,7 +187,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the check for duplicates in the preview step of the activities import (allow different accounts)
+- Relaxed the check for duplicates in the preview step of the activities import (allow different accounts)
 - Improved the usability and validation in the cash balance transfer from one to another account
 - Changed the checkboxes to slide toggles in the overview of the admin control panel
 - Switched from the deprecated (`PUT`) to the new endpoint (`POST`) to manage historical market data in the asset profile details dialog of the admin control panel
