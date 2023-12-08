@@ -3,6 +3,7 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  HistoricalDataItem,
   ResponseError,
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
@@ -92,7 +93,7 @@ export class PortfolioCalculator {
         let investment = new Big(0);
 
         if (newQuantity.gt(0)) {
-          if (order.type === 'BUY') {
+          if (order.type === 'BUY' || order.type === 'STAKE') {
             investment = oldAccumulatedSymbol.investment.plus(
               order.quantity.mul(unitPrice)
             );
@@ -279,46 +280,29 @@ export class PortfolioCalculator {
       };
     }
 
-    for (const currentDate of dates) {
-      const dateString = format(currentDate, DATE_FORMAT);
+    return dates.map((date) => {
+      const dateString = format(date, DATE_FORMAT);
+      let totalCurrentValue = new Big(0);
+      let totalInvestmentValue = new Big(0);
+      let maxTotalInvestmentValue = new Big(0);
+      let totalNetPerformanceValue = new Big(0);
 
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
 
-        const currentValue =
-          symbolValues.currentValues?.[dateString] ?? new Big(0);
-        const investmentValue =
-          symbolValues.investmentValues?.[dateString] ?? new Big(0);
-        const maxInvestmentValue =
-          symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0);
-        const netPerformanceValue =
-          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
-
-        valuesByDate[dateString] = {
-          totalCurrentValue: (
-            valuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
-          ).add(currentValue),
-          totalInvestmentValue: (
-            valuesByDate[dateString]?.totalInvestmentValue ?? new Big(0)
-          ).add(investmentValue),
-          maxTotalInvestmentValue: (
-            valuesByDate[dateString]?.maxTotalInvestmentValue ?? new Big(0)
-          ).add(maxInvestmentValue),
-          totalNetPerformanceValue: (
-            valuesByDate[dateString]?.totalNetPerformanceValue ?? new Big(0)
-          ).add(netPerformanceValue)
-        };
+        totalCurrentValue = totalCurrentValue.plus(
+          symbolValues.currentValues?.[dateString] ?? new Big(0)
+        );
+        totalInvestmentValue = totalInvestmentValue.plus(
+          symbolValues.investmentValues?.[dateString] ?? new Big(0)
+        );
+        maxTotalInvestmentValue = maxTotalInvestmentValue.plus(
+          symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0)
+        );
+        totalNetPerformanceValue = totalNetPerformanceValue.plus(
+          symbolValues.netPerformanceValues?.[dateString] ?? new Big(0)
+        );
       }
-    }
-
-    return Object.entries(valuesByDate).map(([date, values]) => {
-      const {
-        maxTotalInvestmentValue,
-        totalCurrentValue,
-        totalInvestmentValue,
-        totalNetPerformanceValue
-      } = values;
-
       const netPerformanceInPercentage = maxTotalInvestmentValue.eq(0)
         ? 0
         : totalNetPerformanceValue
@@ -327,7 +311,7 @@ export class PortfolioCalculator {
             .toNumber();
 
       return {
-        date,
+        date: dateString,
         netPerformanceInPercentage,
         netPerformance: totalNetPerformanceValue.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
@@ -756,7 +740,7 @@ export class PortfolioCalculator {
 
       totalInvestment = totalInvestment.plus(currentPosition.investment);
 
-      if (currentPosition.grossPerformance) {
+      if (currentPosition.grossPerformance !== null) {
         grossPerformance = grossPerformance.plus(
           currentPosition.grossPerformance
         );
@@ -766,7 +750,7 @@ export class PortfolioCalculator {
         hasErrors = true;
       }
 
-      if (currentPosition.grossPerformancePercentage) {
+      if (currentPosition.grossPerformancePercentage !== null) {
         // Use the average from the initial value and the current investment as
         // a weight
         const weight = (initialValues[currentPosition.symbol] ?? new Big(0))
@@ -934,6 +918,7 @@ export class PortfolioCalculator {
 
     switch (type) {
       case 'BUY':
+      case 'STAKE':
         factor = 1;
         break;
       case 'SELL':
@@ -1090,6 +1075,20 @@ export class PortfolioCalculator {
               marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
               lastUnitPrice
           });
+        } else {
+          let orderIndex = orders.findIndex(
+            (o) => o.date === format(day, DATE_FORMAT) && o.type === 'STAKE'
+          );
+          if (orderIndex >= 0) {
+            let order = orders[orderIndex];
+            orders.splice(orderIndex, 1);
+            orders.push({
+              ...order,
+              unitPrice:
+                marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
+                lastUnitPrice
+            });
+          }
         }
 
         lastUnitPrice = last(orders).unitPrice;
@@ -1159,7 +1158,7 @@ export class PortfolioCalculator {
       }
 
       const transactionInvestment =
-        order.type === 'BUY'
+        order.type === 'BUY' || order.type === 'STAKE'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
           : totalUnits.gt(0)
           ? totalInvestment
@@ -1192,6 +1191,11 @@ export class PortfolioCalculator {
           initialValue = valueOfInvestmentBeforeTransaction;
         } else if (transactionInvestment.gt(0)) {
           initialValue = transactionInvestment;
+        } else if (order.type === 'STAKE') {
+          // For Parachain Rewards or Stock SpinOffs, first transactionInvestment might be 0 if the symbol has been acquired for free
+          initialValue = order.quantity.mul(
+            marketSymbolMap[order.date]?.[order.symbol] ?? new Big(0)
+          );
         }
       }
 

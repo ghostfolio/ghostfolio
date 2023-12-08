@@ -40,6 +40,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   };
   public dataProviderInfo: DataProviderInfo;
   public dividendInBaseCurrency: number;
+  public stakeRewards: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public grossPerformance: number;
@@ -54,6 +55,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public orders: OrderWithAccount[];
   public quantity: number;
   public quantityPrecision = 2;
+  public stakePrecision = 2;
   public reportDataGlitchMail: string;
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -84,6 +86,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
+          stakeRewards,
           feeInBaseCurrency,
           firstBuyDate,
           grossPerformance,
@@ -107,6 +110,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
           this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.stakeRewards = stakeRewards;
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.grossPerformance = grossPerformance;
@@ -226,6 +230,13 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
+            if (
+              orders
+                .filter((o) => o.type === 'STAKE')
+                .every((o) => Number.isInteger(o.quantity))
+            ) {
+              this.stakeRewards = 0;
+            }
           } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
             if (this.quantity < 1) {
               this.quantityPrecision = 7;
@@ -234,6 +245,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
             } else if (this.quantity > 10000000) {
               this.quantityPrecision = 0;
             }
+            this.stakePrecision = this.quantityPrecision;
           }
 
           this.changeDetectorRef.markForCheck();

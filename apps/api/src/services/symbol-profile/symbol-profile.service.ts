@@ -8,7 +8,12 @@ import {
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
+import {
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides,
+  Tag
+} from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
@@ -49,6 +54,7 @@ export class SymbolProfileService {
             select: { date: true },
             take: 1
           },
+          tags: true,
           SymbolProfileOverrides: true
         },
         where: {
@@ -72,7 +78,8 @@ export class SymbolProfileService {
           _count: {
             select: { Order: true }
           },
-          SymbolProfileOverrides: true
+          SymbolProfileOverrides: true,
+          tags: true
         },
         where: {
           id: {
@@ -91,6 +98,7 @@ export class SymbolProfileService {
     comment,
     dataSource,
     name,
+    tags,
     scraperConfiguration,
     symbol,
     symbolMapping
@@ -101,6 +109,7 @@ export class SymbolProfileService {
         assetSubClass,
         comment,
         name,
+        tags,
         scraperConfiguration,
         symbolMapping
       },
@@ -114,6 +123,7 @@ export class SymbolProfileService {
       Order?: {
         date: Date;
       }[];
+      tags?: Tag[];
       SymbolProfileOverrides: SymbolProfileOverrides;
     })[]
   ): EnhancedSymbolProfile[] {
@@ -127,7 +137,8 @@ export class SymbolProfileService {
         dateOfFirstActivity: <Date>undefined,
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
         sectors: this.getSectors(symbolProfile),
-        symbolMapping: this.getSymbolMapping(symbolProfile)
+        symbolMapping: this.getSymbolMapping(symbolProfile),
+        tags: symbolProfile?.tags
       };
 
       item.activitiesCount = symbolProfile._count.Order;

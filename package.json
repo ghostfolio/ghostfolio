@@ -86,6 +86,7 @@
     "@simplewebauthn/server": "8.3.2",
     "@stripe/stripe-js": "1.47.0",
     "alphavantage": "2.2.0",
+    "await-lock": "^2.2.2",
     "big.js": "6.2.1",
     "body-parser": "1.20.1",
     "bootstrap": "4.6.0",
