@@ -13,6 +13,7 @@
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        [totalItems]="totalItems"
         (activityDeleted)="onDeleteActivity($event)"
         (activityToClone)="onCloneActivity($event)"
         (activityToUpdate)="onUpdateActivity($event)"

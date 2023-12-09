@@ -105,7 +105,7 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const activities = await this.orderService.getOrders({
+    const { activities, count } = await this.orderService.getOrders({
       filters,
       sortColumn,
       sortDirection,
@@ -117,7 +117,7 @@ export class OrderController {
       withExcludedAccounts: true
     });
 
-    return { activities };
+    return { activities, count };
   }
 
   @Post()

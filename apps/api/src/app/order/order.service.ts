@@ -25,7 +25,7 @@ import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Activity } from './interfaces/activities.interface';
+import { Activities, Activity } from './interfaces/activities.interface';
 
 @Injectable()
 export class OrderService {
@@ -249,7 +249,7 @@ export class OrderService {
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
-  }): Promise<Activity[]> {
+  }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
       { date: 'asc' }
     ];
@@ -328,8 +328,8 @@ export class OrderService {
       });
     }
 
-    return (
-      await this.orders({
+    const [orders, count] = await Promise.all([
+      this.orders({
         orderBy,
         skip,
         take,
@@ -345,8 +345,11 @@ export class OrderService {
           SymbolProfile: true,
           tags: true
         }
-      })
-    )
+      }),
+      this.prismaService.order.count({ where })
+    ]);
+
+    const activities = orders
       .filter((order) => {
         return (
           withExcludedAccounts ||
@@ -372,6 +375,8 @@ export class OrderService {
           )
         };
       });
+
+    return { activities, count };
   }
 
   public async updateOrder({

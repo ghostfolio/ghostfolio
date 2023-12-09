@@ -180,12 +180,12 @@ export class DataService {
     }
 
     return this.http.get<any>('/api/v1/order', { params }).pipe(
-      map(({ activities }) => {
+      map(({ activities, count }) => {
         for (const activity of activities) {
           activity.createdAt = parseISO(activity.createdAt);
           activity.date = parseISO(activity.date);
         }
-        return { activities };
+        return { activities, count };
       })
     );
   }

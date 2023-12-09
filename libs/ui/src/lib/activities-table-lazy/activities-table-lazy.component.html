@@ -469,9 +469,9 @@
 </div>
 
 <mat-paginator
-  [length]="length"
+  [length]="totalItems"
   [ngClass]="{
-    'd-none': isLoading && dataSource?.data.length === 0
+    'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
   }"
   [pageSize]="pageSize"
   (page)="onChangePage($event)"

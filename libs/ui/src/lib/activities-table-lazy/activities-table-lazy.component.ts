@@ -37,7 +37,6 @@ export class ActivitiesTableLazyComponent
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() length = Number.MAX_SAFE_INTEGER;
   @Input() locale: string;
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
@@ -45,6 +44,7 @@ export class ActivitiesTableLazyComponent
   @Input() showCheckbox = false;
   @Input() showFooter = true;
   @Input() showNameColumn = true;
+  @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();

@@ -44,6 +44,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public routeQueryParams: Subscription;
   public sortColumn = 'date';
   public sortDirection: Prisma.SortOrder = 'desc';
+  public totalItems: number;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -120,13 +121,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           take: this.pageSize
         })
         .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities }) => {
+        .subscribe(({ activities, count }) => {
           this.dataSource = new MatTableDataSource(activities);
+          this.totalItems = count;
 
-          if (
-            this.hasPermissionToCreateActivity &&
-            this.activities?.length <= 0
-          ) {
+          if (this.hasPermissionToCreateActivity && count <= 0) {
             this.router.navigate([], { queryParams: { createDialog: true } });
           }
 
