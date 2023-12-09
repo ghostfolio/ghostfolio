@@ -24,7 +24,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel } from '@prisma/client';
+import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -90,6 +90,8 @@ export class OrderController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('skip') skip?: number,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<Activities> {
@@ -103,8 +105,10 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const activities = await this.orderService.getOrders({
+    const { activities, count } = await this.orderService.getOrders({
       filters,
+      sortColumn,
+      sortDirection,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,
@@ -113,7 +117,7 @@ export class OrderController {
       withExcludedAccounts: true
     });
 
-    return { activities };
+    return { activities, count };
   }
 
   @Post()

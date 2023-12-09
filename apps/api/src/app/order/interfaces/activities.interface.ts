@@ -2,6 +2,7 @@ import { OrderWithAccount } from '@ghostfolio/common/types';
 
 export interface Activities {
   activities: Activity[];
+  count: number;
 }
 
 export interface Activity extends OrderWithAccount {
