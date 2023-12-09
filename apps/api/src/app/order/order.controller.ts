@@ -89,9 +89,9 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
-    @Query('skip') skip?: number,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<Activities> {

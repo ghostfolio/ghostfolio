@@ -115,9 +115,9 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     if (this.user?.settings?.isExperimentalFeatures === true) {
       this.dataService
         .fetchActivities({
+          skip: this.pageIndex * this.pageSize,
           sortColumn: this.sortColumn,
           sortDirection: this.sortDirection,
-          skip: this.pageIndex * this.pageSize,
           take: this.pageSize
         })
         .pipe(takeUntil(this.unsubscribeSubject))
@@ -125,7 +125,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           this.dataSource = new MatTableDataSource(activities);
           this.totalItems = count;
 
-          if (this.hasPermissionToCreateActivity && count <= 0) {
+          if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
             this.router.navigate([], { queryParams: { createDialog: true } });
           }
 
