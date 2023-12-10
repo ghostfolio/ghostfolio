@@ -16,6 +16,7 @@ import {
   HistoricalDataItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
@@ -24,7 +25,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },

@@ -1,3 +1,4 @@
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -8,11 +9,11 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { AccountBalanceService } from './account-balance.service';
 import { AuthGuard } from '@nestjs/passport';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccountBalance } from '@prisma/client';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+
+import { AccountBalanceService } from './account-balance.service';
 
 @Controller('account-balance')
 export class AccountBalanceController {
