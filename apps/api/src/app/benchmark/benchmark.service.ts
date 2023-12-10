@@ -14,6 +14,7 @@ import {
   calculateBenchmarkTrend
 } from '@ghostfolio/common/helper';
 import {
+  Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
@@ -339,7 +340,15 @@ export class BenchmarkService {
     };
   }
 
-  private getMarketCondition(aPerformanceInPercent: number) {
-    return aPerformanceInPercent <= -0.2 ? 'BEAR_MARKET' : 'NEUTRAL_MARKET';
+  private getMarketCondition(
+    aPerformanceInPercent: number
+  ): Benchmark['marketCondition'] {
+    if (aPerformanceInPercent === 0) {
+      return 'ALL_TIME_HIGH';
+    } else if (aPerformanceInPercent <= -0.2) {
+      return 'BEAR_MARKET';
+    } else {
+      return 'NEUTRAL_MARKET';
+    }
   }
 }
