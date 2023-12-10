@@ -93,7 +93,6 @@ export class ActivitiesTableLazyComponent
 
   public ngAfterViewInit() {
     this.sort.sortChange.subscribe((value: Sort) => {
-      this.paginator.pageIndex = 0;
       this.sortChanged.emit(value);
     });
   }
