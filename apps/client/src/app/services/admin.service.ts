@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
@@ -17,7 +18,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData, Platform, Prisma, Tag } from '@prisma/client';
+import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -84,7 +85,7 @@ export class AdminService {
     filters?: Filter[];
     skip?: number;
     sortColumn?: string;
-    sortDirection?: Prisma.SortOrder;
+    sortDirection?: SortDirection;
     take: number;
   }) {
     let params = this.dataService.buildFiltersAsQueryParams({ filters });

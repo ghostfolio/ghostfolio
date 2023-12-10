@@ -31,6 +31,7 @@ import { ActivitiesTableLazyComponent } from './activities-table-lazy.component'
     MatCheckboxModule,
     MatMenuModule,
     MatPaginatorModule,
+    MatSortModule,
     MatTableModule,
     MatTooltipModule,
     NgxSkeletonLoaderModule,

@@ -13,6 +13,8 @@
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        [sortColumn]="sortColumn"
+        [sortDirection]="sortDirection"
         [totalItems]="totalItems"
         (activityDeleted)="onDeleteActivity($event)"
         (activityToClone)="onCloneActivity($event)"
@@ -23,6 +25,7 @@
         (import)="onImport()"
         (importDividends)="onImportDividends()"
         (pageChanged)="onChangePage($event)"
+        (sortChanged)="onSortChanged($event)"
       ></gf-activities-table-lazy>
       <gf-activities-table
         *ngIf="user?.settings?.isExperimentalFeatures !== true"

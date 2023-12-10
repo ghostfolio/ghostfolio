@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
@@ -19,7 +19,7 @@ import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
-import { AssetSubClass, DataSource, Prisma } from '@prisma/client';
+import { AssetSubClass, DataSource } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -160,7 +160,7 @@ export class AdminMarketDataComponent
 
         this.loadData({
           sortColumn,
-          sortDirection: <Prisma.SortOrder>direction,
+          sortDirection: direction,
           pageIndex: this.paginator.pageIndex
         });
       }
@@ -175,7 +175,7 @@ export class AdminMarketDataComponent
     this.loadData({
       pageIndex: page.pageIndex,
       sortColumn: this.sort.active,
-      sortDirection: <Prisma.SortOrder>this.sort.direction
+      sortDirection: this.sort.direction
     });
   }
 
@@ -262,7 +262,7 @@ export class AdminMarketDataComponent
     }: {
       pageIndex: number;
       sortColumn?: string;
-      sortDirection?: Prisma.SortOrder;
+      sortDirection?: SortDirection;
     } = { pageIndex: 0 }
   ) {
     this.isLoading = true;

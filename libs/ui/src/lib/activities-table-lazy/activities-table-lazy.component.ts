@@ -11,6 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -44,6 +45,8 @@ export class ActivitiesTableLazyComponent
   @Input() showCheckbox = false;
   @Input() showFooter = true;
   @Input() showNameColumn = true;
+  @Input() sortColumn: string;
+  @Input() sortDirection: SortDirection;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
   @Output() activityDeleted = new EventEmitter<string>();
@@ -56,8 +59,10 @@ export class ActivitiesTableLazyComponent
   @Output() importDividends = new EventEmitter<UniqueAsset>();
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
+  @Output() sortChanged = new EventEmitter<Sort>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
 
   public defaultDateFormat: string;
   public displayedColumns = [];
@@ -84,6 +89,13 @@ export class ActivitiesTableLazyComponent
           this.selectedActivities.emit(selectedRows.source.selected);
         });
     }
+  }
+
+  public ngAfterViewInit() {
+    this.sort.sortChange.subscribe((value: Sort) => {
+      this.paginator.pageIndex = 0;
+      this.sortChanged.emit(value);
+    });
   }
 
   public areAllRowsSelected() {
