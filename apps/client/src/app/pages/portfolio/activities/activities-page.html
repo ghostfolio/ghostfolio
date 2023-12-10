@@ -2,7 +2,30 @@
   <div class="mb-3 row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
+      <gf-activities-table-lazy
+        *ngIf="user?.settings?.isExperimentalFeatures === true"
+        [baseCurrency]="user?.settings?.baseCurrency"
+        [dataSource]="dataSource"
+        [deviceType]="deviceType"
+        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
+        [hasPermissionToExportActivities]="!hasImpersonationId"
+        [locale]="user?.settings?.locale"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        [totalItems]="totalItems"
+        (activityDeleted)="onDeleteActivity($event)"
+        (activityToClone)="onCloneActivity($event)"
+        (activityToUpdate)="onUpdateActivity($event)"
+        (deleteAllActivities)="onDeleteAllActivities()"
+        (export)="onExport($event)"
+        (exportDrafts)="onExportDrafts($event)"
+        (import)="onImport()"
+        (importDividends)="onImportDividends()"
+        (pageChanged)="onChangePage($event)"
+      ></gf-activities-table-lazy>
       <gf-activities-table
+        *ngIf="user?.settings?.isExperimentalFeatures !== true"
         [activities]="activities"
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"

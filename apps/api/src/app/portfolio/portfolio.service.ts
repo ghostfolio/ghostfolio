@@ -225,7 +225,7 @@ export class PortfolioService {
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
-    const activities = await this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       filters,
       userId,
       types: ['DIVIDEND'],
@@ -679,13 +679,13 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const orders = (
-      await this.orderService.getOrders({
-        userCurrency,
-        userId,
-        withExcludedAccounts: true
-      })
-    ).filter(({ SymbolProfile }) => {
+    const { activities } = await this.orderService.getOrders({
+      userCurrency,
+      userId,
+      withExcludedAccounts: true
+    });
+
+    const orders = activities.filter(({ SymbolProfile }) => {
       return (
         SymbolProfile.dataSource === aDataSource &&
         SymbolProfile.symbol === aSymbol
@@ -1639,18 +1639,18 @@ export class PortfolioService {
       userId
     });
 
-    const activities = await this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId
     });
 
-    const excludedActivities = (
-      await this.orderService.getOrders({
-        userCurrency,
-        userId,
-        withExcludedAccounts: true
-      })
-    ).filter(({ Account: account }) => {
+    let { activities: excludedActivities } = await this.orderService.getOrders({
+      userCurrency,
+      userId,
+      withExcludedAccounts: true
+    });
+
+    excludedActivities = excludedActivities.filter(({ Account: account }) => {
       return account?.isExcluded ?? false;
     });
 
@@ -1830,7 +1830,7 @@ export class PortfolioService {
     const userCurrency =
       this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
 
-    const orders = await this.orderService.getOrders({
+    const { activities, count } = await this.orderService.getOrders({
       filters,
       includeDrafts,
       userCurrency,
@@ -1839,11 +1839,11 @@ export class PortfolioService {
       types: ['BUY', 'SELL']
     });
 
-    if (orders.length <= 0) {
+    if (count <= 0) {
       return { transactionPoints: [], orders: [], portfolioOrders: [] };
     }
 
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+    const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
       currency: order.SymbolProfile.currency,
       dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
@@ -1877,8 +1877,8 @@ export class PortfolioService {
     portfolioCalculator.computeTransactionPoints();
 
     return {
-      orders,
       portfolioOrders,
+      orders: activities,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
   }
@@ -1913,13 +1913,14 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
-    const ordersOfTypeItemOrLiability = await this.orderService.getOrders({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccounts,
-      types: ['ITEM', 'LIABILITY']
-    });
+    const { activities: ordersOfTypeItemOrLiability } =
+      await this.orderService.getOrders({
+        filters,
+        userCurrency,
+        userId,
+        withExcludedAccounts,
+        types: ['ITEM', 'LIABILITY']
+      });
 
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
