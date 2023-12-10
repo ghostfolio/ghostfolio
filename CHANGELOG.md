@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the benchmarks of the markets overview by the current market condition (all time high)
+
 ### Changed
 
 - Upgraded `prisma` from version `5.6.0` to `5.7.0`
