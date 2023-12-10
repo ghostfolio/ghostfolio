@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -30,7 +31,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   templateUrl: './activities-table-lazy.component.html'
 })
 export class ActivitiesTableLazyComponent
-  implements OnChanges, OnDestroy, OnInit
+  implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
   @Input() dataSource: MatTableDataSource<Activity>;
