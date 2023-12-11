@@ -381,10 +381,10 @@ export function resolveFearAndGreedIndex(aValue: number) {
 export function resolveMarketCondition(
   aMarketCondition: Benchmark['marketCondition']
 ) {
-  if (aMarketCondition === 'BEAR_MARKET') {
+  if (aMarketCondition === 'ALL_TIME_HIGH') {
+    return { emoji: '🎉' };
+  } else if (aMarketCondition === 'BEAR_MARKET') {
     return { emoji: '🐻' };
-  } else if (aMarketCondition === 'BULL_MARKET') {
-    return { emoji: '🐮' };
   } else {
     return { emoji: '⚪' };
   }
