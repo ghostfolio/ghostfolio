@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
@@ -16,7 +17,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DataSource, Order as OrderModel, Prisma } from '@prisma/client';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -43,7 +44,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
   public sortColumn = 'date';
-  public sortDirection: Prisma.SortOrder = 'desc';
+  public sortDirection: SortDirection = 'desc';
   public totalItems: number;
   public user: User;
 
@@ -259,6 +260,14 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.fetchActivities();
       });
+  }
+
+  public onSortChanged({ active, direction }: Sort) {
+    this.pageIndex = 0;
+    this.sortColumn = active;
+    this.sortDirection = direction;
+
+    this.fetchActivities();
   }
 
   public onUpdateActivity(aActivity: OrderModel) {
