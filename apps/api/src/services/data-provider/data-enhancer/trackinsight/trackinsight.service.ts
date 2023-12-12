@@ -13,6 +13,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static countriesMapping = {
     'Russian Federation': 'Russia'
   };
+  private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Defensive': 'Consumer Staples',
@@ -113,7 +114,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           });
       });
 
-    if (holdings?.weight < 0.95) {
+    if (
+      holdings?.weight < TrackinsightDataEnhancerService.holdingsWeightTreshold
+    ) {
       // Skip if data is inaccurate
       return response;
     }
