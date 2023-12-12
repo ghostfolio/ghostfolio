@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Adjusted the threshold to skip the data enhancement (_Trackinsight_) if data is inaccurate
 - Upgraded `prisma` from version `5.6.0` to `5.7.0`
 
 ## 2.29.0 - 2023-12-09
