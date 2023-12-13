@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -38,7 +39,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
-import { DataSource, Order as OrderModel, Prisma } from '@prisma/client';
+import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
@@ -158,7 +159,7 @@ export class DataService {
     filters?: Filter[];
     skip?: number;
     sortColumn?: string;
-    sortDirection?: Prisma.SortOrder;
+    sortDirection?: SortDirection;
     take?: number;
   }): Observable<Activities> {
     let params = this.buildFiltersAsQueryParams({ filters });

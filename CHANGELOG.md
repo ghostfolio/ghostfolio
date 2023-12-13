@@ -5,10 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.30.0 - 2023-12-12
+
+### Added
+
+- Added support for column sorting to the lazy-loaded activities table on the portfolio activities page (experimental)
+- Extended the benchmarks of the markets overview by the current market condition (all time high)
 
 ### Changed
 
+- Adjusted the threshold to skip the data enhancement (_Trackinsight_) if data is inaccurate
 - Upgraded `prisma` from version `5.6.0` to `5.7.0`
 
 ## 2.29.0 - 2023-12-09

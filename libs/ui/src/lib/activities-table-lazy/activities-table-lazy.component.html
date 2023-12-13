@@ -65,7 +65,14 @@
 </div>
 
 <div class="activities">
-  <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    [dataSource]="dataSource"
+    [matSortActive]="sortColumn"
+    [matSortDirection]="sortDirection"
+  >
     <ng-container matColumnDef="select">
       <th *matHeaderCellDef class="px-1" mat-header-cell>
         <mat-checkbox
@@ -118,12 +125,7 @@
     </ng-container>
 
     <ng-container matColumnDef="nameWithSymbol">
-      <th
-        *matHeaderCellDef
-        class="px-1"
-        mat-header-cell
-        mat-sort-header="SymbolProfile.symbol"
-      >
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
@@ -243,7 +245,6 @@
         *matHeaderCellDef
         class="d-none d-lg-table-cell justify-content-end px-1"
         mat-header-cell
-        mat-sort-header
       >
         <ng-container i18n>Value</ng-container>
       </th>
@@ -263,12 +264,7 @@
     </ng-container>
 
     <ng-container matColumnDef="currency">
-      <th
-        *matHeaderCellDef
-        class="d-none d-lg-table-cell px-1"
-        mat-header-cell
-        mat-sort-header="SymbolProfile.currency"
-      >
+      <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
         <ng-container i18n>Currency</ng-container>
       </th>
       <td
@@ -285,7 +281,6 @@
         *matHeaderCellDef
         class="d-lg-none d-xl-none justify-content-end px-1"
         mat-header-cell
-        mat-sort-header
       >
         <ng-container i18n>Value</ng-container>
       </th>
@@ -301,12 +296,7 @@
     </ng-container>
 
     <ng-container matColumnDef="account">
-      <th
-        *matHeaderCellDef
-        class="px-1"
-        mat-header-cell
-        mat-sort-header="Account.name"
-      >
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
         <span class="d-none d-lg-block" i18n>Account</span>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
@@ -473,7 +463,9 @@
   [ngClass]="{
     'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
   }"
+  [pageIndex]="pageIndex"
   [pageSize]="pageSize"
+  [showFirstLastButtons]="true"
   (page)="onChangePage($event)"
 ></mat-paginator>
 
