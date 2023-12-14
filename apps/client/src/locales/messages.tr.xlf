@@ -4850,7 +4850,7 @@
       </trans-unit>
       <trans-unit id="eabb7b2ede5498042bc9fbb565981a780bf340dc" datatype="html">
         <source>Longest Streak</source>
-        <target state="new">Longest Streak</target>
+        <target state="translated">En Uzun Seri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">196</context>
@@ -4858,7 +4858,7 @@
       </trans-unit>
       <trans-unit id="6410cffb96159fcff46d91effc26df0e240bc0e3" datatype="html">
         <source>Dividend Timeline</source>
-        <target state="new">Dividend Timeline</target>
+        <target state="translated">Temettü Zaman Çizelgesi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">223</context>
@@ -4978,7 +4978,7 @@
       </trans-unit>
       <trans-unit id="897e322427107efb4a101afcc9641f0e81ce9643" datatype="html">
         <source>Unlimited Accounts</source>
-        <target state="new">Unlimited Accounts</target>
+        <target state="translated">Kısıtsız Hesaplar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">53</context>
@@ -5010,7 +5010,7 @@
       </trans-unit>
       <trans-unit id="4ed0cb02583e008888e614de4032f41d8abfc37e" datatype="html">
         <source>Data Import and Export</source>
-        <target state="new">Data Import and Export</target>
+        <target state="translated">Veri İçe Aktarma ve Dışa Aktarma</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">95</context>
@@ -5082,7 +5082,7 @@
       </trans-unit>
       <trans-unit id="fdfee1a7c44bc6d014323bf1f5b3d7fab6e1fb47" datatype="html">
         <source>Email and Chat Support</source>
-        <target state="new">Email and Chat Support</target>
+        <target state="translated">E-posta ve Sohbet Desteği</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">314</context>
