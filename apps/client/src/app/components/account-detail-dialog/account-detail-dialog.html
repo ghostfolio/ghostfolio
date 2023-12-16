@@ -71,7 +71,25 @@
     >
       <mat-tab>
         <ng-template i18n mat-tab-label>Activities</ng-template>
+        <gf-activities-table-lazy
+          *ngIf="user?.settings?.isExperimentalFeatures === true"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [dataSource]="dataSource"
+          [deviceType]="deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="user?.settings?.locale"
+          [showActions]="false"
+          [sortColumn]="sortColumn"
+          [sortDirection]="sortDirection"
+          [totalItems]="totalItems"
+          (export)="onExport()"
+          (sortChanged)="onSortChanged($event)"
+        ></gf-activities-table-lazy>
         <gf-activities-table
+          *ngIf="user?.settings?.isExperimentalFeatures !== true"
           [activities]="activities"
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
