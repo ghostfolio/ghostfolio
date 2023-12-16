@@ -236,6 +236,7 @@ export class ImportService {
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
+      userCurrency,
       userId
     });
 
@@ -459,15 +460,18 @@ export class ImportService {
 
   private async extendActivitiesWithErrors({
     activitiesDto,
+    userCurrency,
     userId
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
+    userCurrency: string;
     userId: string;
   }): Promise<Partial<Activity>[]> {
-    const existingActivities = await this.orderService.orders({
-      include: { SymbolProfile: true },
-      orderBy: { date: 'desc' },
-      where: { userId }
+    let { activities: existingActivities } = await this.orderService.getOrders({
+      userCurrency,
+      userId,
+      includeDrafts: true,
+      withExcludedAccounts: true
     });
 
     return activitiesDto.map(
