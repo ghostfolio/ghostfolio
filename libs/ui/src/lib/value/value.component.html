@@ -16,14 +16,20 @@
         <div
           *ngIf="isPercent"
           class="mb-0 value"
-          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+          [ngClass]="{
+            'font-weight-bold h2': size === 'large',
+            h4: size === 'medium'
+          }"
         >
           {{ formattedValue }}%
         </div>
         <div
           *ngIf="!isPercent"
           class="mb-0 value"
-          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+          [ngClass]="{
+            'font-weight-bold h2': size === 'large',
+            h4: size === 'medium'
+          }"
         >
           <ng-container *ngIf="value === null">
             <span class="text-monospace text-muted">***</span>
@@ -42,7 +48,10 @@
       <ng-container *ngIf="isString">
         <div
           class="mb-0 text-truncate value"
-          [ngClass]="{ h2: size === 'large', h4: size === 'medium' }"
+          [ngClass]="{
+            'font-weight-bold h2': size === 'large',
+            h4: size === 'medium'
+          }"
         >
           {{ formattedValue }}
         </div>
