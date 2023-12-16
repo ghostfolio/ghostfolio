@@ -48,6 +48,7 @@ export class ActivitiesTableLazyComponent
   @Input() showNameColumn = true;
   @Input() sortColumn: string;
   @Input() sortDirection: SortDirection;
+  @Input() sortDisabled = false;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
   @Output() activityDeleted = new EventEmitter<string>();
