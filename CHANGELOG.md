@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Introduced the lazy-loaded activities table to the position detail dialog (experimental)
 - Upgraded to _Inter_ 4 font family
 - Improved the language localization for Türkçe (`tr`)
 
