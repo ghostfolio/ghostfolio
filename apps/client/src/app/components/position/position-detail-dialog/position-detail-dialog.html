@@ -266,7 +266,6 @@
           [sortDisabled]="true"
           [totalItems]="totalItems"
           (export)="onExport()"
-          (sortChanged)="onSortChanged($event)"
         ></gf-activities-table-lazy>
         <gf-activities-table
           *ngIf="user?.settings?.isExperimentalFeatures !== true"

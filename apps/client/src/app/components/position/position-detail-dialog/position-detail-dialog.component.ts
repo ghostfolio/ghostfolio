@@ -295,13 +295,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSortChanged({ active, direction }: Sort) {
-    this.sortColumn = active;
-    this.sortDirection = direction;
-
-    this.dataSource.sortData(this.dataSource.data, this.dataSource.sort);
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
