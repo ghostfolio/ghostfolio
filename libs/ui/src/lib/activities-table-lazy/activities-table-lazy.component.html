@@ -458,17 +458,6 @@
   </table>
 </div>
 
-<mat-paginator
-  [length]="totalItems"
-  [ngClass]="{
-    'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
-  }"
-  [pageIndex]="pageIndex"
-  [pageSize]="pageSize"
-  [showFirstLastButtons]="true"
-  (page)="onChangePage($event)"
-></mat-paginator>
-
 <ngx-skeleton-loader
   *ngIf="isLoading"
   animation="pulse"
@@ -478,6 +467,17 @@
     width: '100%'
   }"
 ></ngx-skeleton-loader>
+
+<mat-paginator
+  [length]="totalItems"
+  [ngClass]="{
+    'd-none': (isLoading && !totalItems) || totalItems <= pageSize
+  }"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="true"
+  (page)="onChangePage($event)"
+></mat-paginator>
 
 <div
   *ngIf="

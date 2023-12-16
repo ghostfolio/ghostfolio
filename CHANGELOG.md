@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the loading state in the lazy-loaded activities table on the portfolio activities page (experimental)
 - Fixed the edit of activity in the lazy-loaded activities table on the portfolio activities page (experimental)
 
 ## 2.30.0 - 2023-12-12
