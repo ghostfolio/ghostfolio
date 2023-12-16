@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Introduced the lazy-loaded activities table to the account detail dialog (experimental)
 - Introduced the lazy-loaded activities table to the import activities dialog (experimental)
+- Introduced the lazy-loaded activities table to the position detail dialog (experimental)
 - Improved the font weight in the value component
 - Improved the language localization for Türkçe (`tr`)
 - Upgraded to _Inter_ 4 font family

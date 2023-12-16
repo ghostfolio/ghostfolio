@@ -25,7 +25,7 @@ import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Activities, Activity } from './interfaces/activities.interface';
+import { Activities } from './interfaces/activities.interface';
 
 @Injectable()
 export class OrderService {
@@ -36,34 +36,6 @@ export class OrderService {
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
-
-  public async order(
-    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
-  ): Promise<Order | null> {
-    return this.prismaService.order.findUnique({
-      where: orderWhereUniqueInput
-    });
-  }
-
-  public async orders(params: {
-    include?: Prisma.OrderInclude;
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.OrderWhereUniqueInput;
-    where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput>;
-  }): Promise<OrderWithAccount[]> {
-    const { include, skip, take, cursor, where, orderBy } = params;
-
-    return this.prismaService.order.findMany({
-      cursor,
-      include,
-      orderBy,
-      skip,
-      take,
-      where
-    });
-  }
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -379,6 +351,14 @@ export class OrderService {
     return { activities, count };
   }
 
+  public async order(
+    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
+  ): Promise<Order | null> {
+    return this.prismaService.order.findUnique({
+      where: orderWhereUniqueInput
+    });
+  }
+
   public async updateOrder({
     data,
     where
@@ -452,6 +432,26 @@ export class OrderService {
           })
         }
       },
+      where
+    });
+  }
+
+  private async orders(params: {
+    include?: Prisma.OrderInclude;
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.OrderWhereUniqueInput;
+    where?: Prisma.OrderWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput>;
+  }): Promise<OrderWithAccount[]> {
+    const { include, skip, take, cursor, where, orderBy } = params;
+
+    return this.prismaService.order.findMany({
+      cursor,
+      include,
+      orderBy,
+      skip,
+      take,
       where
     });
   }
