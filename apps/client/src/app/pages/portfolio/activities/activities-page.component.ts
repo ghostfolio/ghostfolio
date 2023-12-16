@@ -73,6 +73,12 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             });
 
             this.openUpdateActivityDialog(activity);
+          } else if (this.dataSource) {
+            const activity = this.dataSource.data.find(({ id }) => {
+              return id === params['activityId'];
+            });
+
+            this.openUpdateActivityDialog(activity);
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }

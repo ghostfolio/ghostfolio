@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the font weight in the value component
 - Improved the language localization for Türkçe (`tr`)
+- Upgraded to _Inter_ 4 font family
+
+### Fixed
+
+- Fixed the edit of activity in the lazy-loaded activities table on the portfolio activities page (experimental)
 
 ## 2.30.0 - 2023-12-12
 
