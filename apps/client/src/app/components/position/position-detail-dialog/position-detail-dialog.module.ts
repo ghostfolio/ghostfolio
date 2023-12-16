@@ -5,6 +5,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfDataProviderCreditsModule } from '@ghostfolio/ui/data-provider-credits/data-provider-credits.module';
 import { GfLineChartModule } from '@ghostfolio/ui/line-chart/line-chart.module';
@@ -19,6 +20,7 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
   imports: [
     CommonModule,
     GfActivitiesTableModule,
+    GfActivitiesTableLazyModule,
     GfDataProviderCreditsModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
