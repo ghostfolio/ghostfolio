@@ -12,4 +12,5 @@ export interface HistoricalDataItem {
   totalInvestment?: number;
   value?: number;
   valueInPercentage?: number;
+  timeWeightedPerformance?: number;
 }

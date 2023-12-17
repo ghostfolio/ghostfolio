@@ -1585,26 +1585,38 @@ export class PortfolioCalculator {
       const previousOrder = orders[i - 1];
 
       if (order.unitPrice.toNumber() && previousOrder.unitPrice.toNumber()) {
-        netPerformanceValuesPercentage[order.date] = previousOrder.unitPrice
-          .div(order.unitPrice)
+        netPerformanceValuesPercentage[order.date] = order.unitPrice
+          .div(previousOrder.unitPrice)
           .minus(1);
       } else if (
         order.type === 'STAKE' &&
-        marketSymbolMap[order.date][order.symbol]
+        marketSymbolMap[order.date][order.symbol] &&
+        ((marketSymbolMap[previousOrder.date][
+          previousOrder.symbol
+        ]?.toNumber() &&
+          previousOrder.type === 'STAKE') ||
+          (previousOrder.type !== 'STAKE' &&
+            previousOrder.unitPrice.toNumber()))
       ) {
-        netPerformanceValuesPercentage[order.date] =
+        let previousUnitPrice =
           previousOrder.type === 'STAKE'
             ? marketSymbolMap[previousOrder.date][previousOrder.symbol]
-            : previousOrder.unitPrice
-                .div(marketSymbolMap[order.date][order.symbol])
-                .minus(1);
+            : previousOrder.unitPrice;
+        netPerformanceValuesPercentage[order.date] = marketSymbolMap[
+          order.date
+        ][order.symbol]
+          ? marketSymbolMap[order.date][order.symbol]
+              .div(previousUnitPrice)
+              .minus(1)
+          : new Big(0);
       } else if (previousOrder.unitPrice.toNumber()) {
         netPerformanceValuesPercentage[order.date] = new Big(-1);
-      } else if (previousOrder.type === 'STAKE' && order.unitPrice.toNumber()) {
-        netPerformanceValuesPercentage[order.date] = marketSymbolMap[
-          previousOrder.date
-        ][previousOrder.symbol]
-          .div(order.unitPrice)
+      } else if (
+        previousOrder.type === 'STAKE' &&
+        marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()
+      ) {
+        netPerformanceValuesPercentage[order.date] = order.unitPrice
+          .div(marketSymbolMap[previousOrder.date][previousOrder.symbol])
           .minus(1);
       } else {
         netPerformanceValuesPercentage[order.date] = new Big(0);

@@ -398,17 +398,25 @@ export class DataService {
   public fetchPortfolioPerformance({
     filters,
     range,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    timeWeightedPerformance = false
   }: {
     filters?: Filter[];
     range: DateRange;
     withExcludedAccounts?: boolean;
+    timeWeightedPerformance?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
     params = params.append('range', range);
 
     if (withExcludedAccounts) {
       params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
+    if (timeWeightedPerformance) {
+      params = params.append(
+        'timeWeightedPerformance',
+        timeWeightedPerformance
+      );
     }
 
     return this.http

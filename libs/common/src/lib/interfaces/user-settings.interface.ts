@@ -15,4 +15,5 @@ export interface UserSettings {
   retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
+  timeWeightedPerformance?: string;
 }
