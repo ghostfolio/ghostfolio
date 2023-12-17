@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Set the select column of the lazy-loaded activities table to stick at the end (experimental)
+
 ## 2.31.0 - 2023-12-16
 
 ### Changed
@@ -12,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the lazy-loaded activities table to the account detail dialog (experimental)
 - Introduced the lazy-loaded activities table to the import activities dialog (experimental)
 - Introduced the lazy-loaded activities table to the position detail dialog (experimental)
-- Set the select column of the lazy-loaded activities table to stick at the end (experimental)
 - Improved the font weight in the value component
 - Improved the language localization for Türkçe (`tr`)
 - Upgraded `angular` from version `17.0.4` to `17.0.7`
