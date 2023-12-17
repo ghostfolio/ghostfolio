@@ -12322,7 +12322,7 @@
       </trans-unit>
       <trans-unit id="7608037008789240367" datatype="html">
         <source>Asset Sub Class</source>
-        <target state="new">Asset Sub Class</target>
+        <target state="translated">Varlık Alt Sınıfı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">7</context>
@@ -12330,7 +12330,7 @@
       </trans-unit>
       <trans-unit id="7027401708987643293" datatype="html">
         <source>Core</source>
-        <target state="new">Core</target>
+        <target state="translated">Temel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">8</context>
@@ -12338,7 +12338,7 @@
       </trans-unit>
       <trans-unit id="3298117765569632011" datatype="html">
         <source>Switch to Ghostfolio Premium or Ghostfolio Open Source easily</source>
-        <target state="new">Switch to Ghostfolio Premium or Ghostfolio Open Source easily</target>
+        <target state="translated">Ghostfolio Premium veya Ghostfolio Açık Kaynak'a kolayca geçiş yapın</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">9</context>
@@ -12346,7 +12346,7 @@
       </trans-unit>
       <trans-unit id="1631940846690193897" datatype="html">
         <source>Switch to Ghostfolio Premium easily</source>
-        <target state="new">Switch to Ghostfolio Premium easily</target>
+        <target state="translated">Ghostfolio Premium'a kolayca geçiş yapın</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">10</context>
@@ -12354,7 +12354,7 @@
       </trans-unit>
       <trans-unit id="1921273115613254799" datatype="html">
         <source>Switch to Ghostfolio Open Source or Ghostfolio Basic easily</source>
-        <target state="new">Switch to Ghostfolio Open Source or Ghostfolio Basic easily</target>
+        <target state="translated">Ghostfolio Açık Kaynak veya Ghostfolio Temel'e kolayca geçiş yapın</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">11</context>
@@ -12362,7 +12362,7 @@
       </trans-unit>
       <trans-unit id="6268646680388419543" datatype="html">
         <source>Emergency Fund</source>
-        <target state="new">Emergency Fund</target>
+        <target state="translated">Acil Durum Yedeği</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">12</context>
@@ -12370,7 +12370,7 @@
       </trans-unit>
       <trans-unit id="5036857680734170026" datatype="html">
         <source>Grant</source>
-        <target state="new">Grant</target>
+        <target state="translated">Hibe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">13</context>
@@ -12378,7 +12378,7 @@
       </trans-unit>
       <trans-unit id="2963674907100579427" datatype="html">
         <source>Higher Risk</source>
-        <target state="new">Higher Risk</target>
+        <target state="translated">Daha Yüksek Risk</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">14</context>
@@ -12386,7 +12386,7 @@
       </trans-unit>
       <trans-unit id="687928208076721343" datatype="html">
         <source>This activity already exists.</source>
-        <target state="new">This activity already exists.</target>
+        <target state="translated">Bu işlem zaten mevcut.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">15</context>
@@ -12394,7 +12394,7 @@
       </trans-unit>
       <trans-unit id="80663871075536039" datatype="html">
         <source>Japan</source>
-        <target state="new">Japan</target>
+        <target state="translated">Japonya</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">16</context>
@@ -12402,7 +12402,7 @@
       </trans-unit>
       <trans-unit id="4152514811781104574" datatype="html">
         <source>Lower Risk</source>
-        <target state="new">Lower Risk</target>
+        <target state="translated">Daha Düşük Risk</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">17</context>
@@ -12410,7 +12410,7 @@
       </trans-unit>
       <trans-unit id="5403684285319082289" datatype="html">
         <source>Month</source>
-        <target state="new">Month</target>
+        <target state="translated">Ay</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">18</context>
@@ -12418,7 +12418,7 @@
       </trans-unit>
       <trans-unit id="4845030128243887325" datatype="html">
         <source>Months</source>
-        <target state="new">Months</target>
+        <target state="translated">Ay</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">19</context>
@@ -12426,7 +12426,7 @@
       </trans-unit>
       <trans-unit id="8693603235657020323" datatype="html">
         <source>Other</source>
-        <target state="new">Other</target>
+        <target state="translated">Diğer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">20</context>
@@ -12438,7 +12438,7 @@
       </trans-unit>
       <trans-unit id="6333857424161463201" datatype="html">
         <source>Preset</source>
-        <target state="new">Preset</target>
+        <target state="translated">Ön Ayarlı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">21</context>
@@ -12446,7 +12446,7 @@
       </trans-unit>
       <trans-unit id="9219851060664514927" datatype="html">
         <source>Retirement Provision</source>
-        <target state="new">Retirement Provision</target>
+        <target state="translated">Emeklilik Birikimi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">22</context>
@@ -12454,7 +12454,7 @@
       </trans-unit>
       <trans-unit id="8050244774979733855" datatype="html">
         <source>Satellite</source>
-        <target state="new">Satellite</target>
+        <target state="translated">Uydu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">23</context>
