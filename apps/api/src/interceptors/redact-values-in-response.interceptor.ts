@@ -30,32 +30,28 @@ export class RedactValuesInResponseInterceptor<T>
           hasImpersonationId ||
           this.userService.isRestrictedView(request.user)
         ) {
-          const attributes = [
-            'balance',
-            'balanceInBaseCurrency',
-            'comment',
-            'convertedBalance',
-            'dividendInBaseCurrency',
-            'fee',
-            'feeInBaseCurrency',
-            'filteredValueInBaseCurrency',
-            'grossPerformance',
-            'investment',
-            'netPerformance',
-            'quantity',
-            'symbolMapping',
-            'totalBalanceInBaseCurrency',
-            'totalValueInBaseCurrency',
-            'unitPrice',
-            'value',
-            'valueInBaseCurrency'
-          ];
-
-          console.time('oldExecutionTime');
-
           data = redactAttributes({
             object: data,
-            options: attributes.map((attribute) => {
+            options: [
+              'balance',
+              'balanceInBaseCurrency',
+              'comment',
+              'convertedBalance',
+              'dividendInBaseCurrency',
+              'fee',
+              'feeInBaseCurrency',
+              'filteredValueInBaseCurrency',
+              'grossPerformance',
+              'investment',
+              'netPerformance',
+              'quantity',
+              'symbolMapping',
+              'totalBalanceInBaseCurrency',
+              'totalValueInBaseCurrency',
+              'unitPrice',
+              'value',
+              'valueInBaseCurrency'
+            ].map((attribute) => {
               return {
                 attribute,
                 valueMap: {
@@ -64,59 +60,10 @@ export class RedactValuesInResponseInterceptor<T>
               };
             })
           });
-
-          console.timeLog('oldExecutionTime');
-
-          data = this.redactObject({
-            attributes,
-            data,
-            valueMap: {
-              '*': null
-            }
-          });
         }
 
         return data;
       })
     );
-  }
-
-  private redactObject({
-    attributes,
-    data,
-    valueMap
-  }: {
-    attributes: string[];
-    data: any;
-    valueMap: { [key: string]: any };
-  }) {
-    console.time('newExecutionTime');
-
-    // Stringify the JSON object
-    let jsonString = JSON.stringify(data);
-
-    // Nullify occurrences of attributes in the string
-    for (const attribute of attributes) {
-      const regex = new RegExp(`"${attribute}"\\s*:\\s*"[^"]*"`, 'g');
-
-      if (valueMap['*'] || valueMap['*'] === null) {
-        jsonString = jsonString.replace(
-          regex,
-          `"${attribute}":${valueMap['*']}`
-        );
-      } else if (valueMap[attribute]) {
-        jsonString = jsonString.replace(
-          regex,
-          `"${attribute}":${valueMap[attribute]}`
-        );
-      }
-    }
-
-    // Transform the stringified JSON back to an object
-    const transformedObject = JSON.parse(jsonString);
-
-    console.timeLog('newExecutionTime');
-
-    return transformedObject;
   }
 }
