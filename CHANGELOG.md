@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the select column of the lazy-loaded activities table to stick at the end (experimental)
 - Improved the validation of the currency management in the admin control panel
+- Improved the performance of the value redaction interceptor for the impersonation mode by eliminating `cloneDeep`
+
+### Fixed
+
+- Reset the letter spacing in buttons
 
 ## 2.31.0 - 2023-12-16
 
