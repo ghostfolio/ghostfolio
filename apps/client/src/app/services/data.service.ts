@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -149,23 +150,45 @@ export class DataService {
   }
 
   public fetchActivities({
-    filters
+    filters,
+    skip,
+    sortColumn,
+    sortDirection,
+    take
   }: {
     filters?: Filter[];
+    skip?: number;
+    sortColumn?: string;
+    sortDirection?: SortDirection;
+    take?: number;
   }): Observable<Activities> {
-    return this.http
-      .get<any>('/api/v1/order', {
-        params: this.buildFiltersAsQueryParams({ filters })
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (skip) {
+      params = params.append('skip', skip);
+    }
+
+    if (sortColumn) {
+      params = params.append('sortColumn', sortColumn);
+    }
+
+    if (sortDirection) {
+      params = params.append('sortDirection', sortDirection);
+    }
+
+    if (take) {
+      params = params.append('take', take);
+    }
+
+    return this.http.get<any>('/api/v1/order', { params }).pipe(
+      map(({ activities, count }) => {
+        for (const activity of activities) {
+          activity.createdAt = parseISO(activity.createdAt);
+          activity.date = parseISO(activity.date);
+        }
+        return { activities, count };
       })
-      .pipe(
-        map(({ activities }) => {
-          for (const activity of activities) {
-            activity.createdAt = parseISO(activity.createdAt);
-            activity.date = parseISO(activity.date);
-          }
-          return { activities };
-        })
-      );
+    );
   }
 
   public fetchDividends({

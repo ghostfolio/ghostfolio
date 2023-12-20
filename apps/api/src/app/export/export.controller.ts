@@ -20,6 +20,7 @@ export class ExportController {
   ): Promise<Export> {
     return this.exportService.export({
       activityIds,
+      userCurrency: this.request.user.Settings.settings.baseCurrency,
       userId: this.request.user.id
     });
   }

@@ -17,7 +17,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { Access as AccessModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { AccessModule } from './access.module';
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
 
@@ -83,7 +82,7 @@ export class AccessController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  public async deleteAccess(@Param('id') id: string): Promise<AccessModule> {
+  public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
     const access = await this.accessService.access({ id });
 
     if (

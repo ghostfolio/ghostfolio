@@ -7,6 +7,8 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -16,6 +18,7 @@ import {
   HistoricalDataItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
@@ -24,7 +27,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -38,6 +40,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
+  public dataSource: MatTableDataSource<OrderWithAccount>;
   public equity: number;
   public hasImpersonationId: boolean;
   public hasPermissionToDeleteAccountBalance: boolean;
@@ -46,6 +49,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public isLoadingChart: boolean;
   public name: string;
   public platformName: string;
+  public sortColumn = 'date';
+  public sortDirection: SortDirection = 'desc';
+  public totalItems: number;
   public transactionCount: number;
   public user: User;
   public valueInBaseCurrency: number;
@@ -77,8 +83,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.isLoadingActivities = true;
-
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -110,19 +114,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         }
       );
 
-    this.dataService
-      .fetchActivities({
-        filters: [{ id: this.data.accountId, type: 'ACCOUNT' }]
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ activities }) => {
-        this.activities = activities;
-
-        this.isLoadingActivities = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -131,6 +122,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
 
     this.fetchAccountBalances();
+    this.fetchActivities();
     this.fetchPortfolioPerformance();
   }
 
@@ -151,12 +143,20 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onExport() {
+    let activityIds = [];
+
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      activityIds = this.dataSource.data.map(({ id }) => {
+        return id;
+      });
+    } else {
+      activityIds = this.activities.map(({ id }) => {
+        return id;
+      });
+    }
+
     this.dataService
-      .fetchExport(
-        this.activities.map(({ id }) => {
-          return id;
-        })
-      )
+      .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         downloadAsFile({
@@ -172,6 +172,13 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
+  public onSortChanged({ active, direction }: Sort) {
+    this.sortColumn = active;
+    this.sortDirection = direction;
+
+    this.fetchActivities();
+  }
+
   private fetchAccountBalances() {
     this.dataService
       .fetchAccountBalances(this.data.accountId)
@@ -181,6 +188,41 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private fetchActivities() {
+    this.isLoadingActivities = true;
+
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      this.dataService
+        .fetchActivities({
+          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
+          sortColumn: this.sortColumn,
+          sortDirection: this.sortDirection
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities, count }) => {
+          this.dataSource = new MatTableDataSource(activities);
+          this.totalItems = count;
+
+          this.isLoadingActivities = false;
+
+          this.changeDetectorRef.markForCheck();
+        });
+    } else {
+      this.dataService
+        .fetchActivities({
+          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }]
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities }) => {
+          this.activities = activities;
+
+          this.isLoadingActivities = false;
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
   }
 
   private fetchPortfolioPerformance() {

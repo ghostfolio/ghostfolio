@@ -119,8 +119,12 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     const currency = prompt($localize`Please add a currency:`);
 
     if (currency) {
-      const currencies = uniq([...this.customCurrencies, currency]);
-      this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
+      if (currency.length === 3) {
+        const currencies = uniq([...this.customCurrencies, currency]);
+        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
+      } else {
+        alert($localize`${currency} is an invalid currency!`);
+      }
     }
   }
 

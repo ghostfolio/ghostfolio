@@ -13,9 +13,11 @@ export class ExportService {
 
   public async export({
     activityIds,
+    userCurrency,
     userId
   }: {
     activityIds?: string[];
+    userCurrency: string;
     userId: string;
   }): Promise<Export> {
     const accounts = (
@@ -39,10 +41,13 @@ export class ExportService {
       }
     );
 
-    let activities = await this.orderService.orders({
-      include: { SymbolProfile: true },
-      orderBy: { date: 'desc' },
-      where: { userId }
+    let { activities } = await this.orderService.getOrders({
+      userCurrency,
+      userId,
+      includeDrafts: true,
+      sortColumn: 'date',
+      sortDirection: 'asc',
+      withExcludedAccounts: true
     });
 
     if (activityIds) {

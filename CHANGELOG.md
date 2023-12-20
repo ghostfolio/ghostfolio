@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the select column of the lazy-loaded activities table to stick at the end (experimental)
+- Improved the validation of the currency management in the admin control panel
+- Improved the performance of the value redaction interceptor for the impersonation mode by eliminating `cloneDeep`
+
+### Fixed
+
+- Reset the letter spacing in buttons
+
+## 2.31.0 - 2023-12-16
+
+### Changed
+
+- Introduced the lazy-loaded activities table to the account detail dialog (experimental)
+- Introduced the lazy-loaded activities table to the import activities dialog (experimental)
+- Introduced the lazy-loaded activities table to the position detail dialog (experimental)
+- Improved the font weight in the value component
+- Improved the language localization for Türkçe (`tr`)
+- Upgraded `angular` from version `17.0.4` to `17.0.7`
+- Upgraded to _Inter_ 4 font family
+- Upgraded `Nx` from version `17.0.2` to `17.2.5`
+
+### Fixed
+
+- Fixed the loading state in the lazy-loaded activities table on the portfolio activities page (experimental)
+- Fixed the edit of activity in the lazy-loaded activities table on the portfolio activities page (experimental)
+
+## 2.30.0 - 2023-12-12
+
+### Added
+
+- Added support for column sorting to the lazy-loaded activities table on the portfolio activities page (experimental)
+- Extended the benchmarks of the markets overview by the current market condition (all time high)
+
+### Changed
+
+- Adjusted the threshold to skip the data enhancement (_Trackinsight_) if data is inaccurate
+- Upgraded `prisma` from version `5.6.0` to `5.7.0`
+
+## 2.29.0 - 2023-12-09
+
+### Added
+
+- Introduced a lazy-loaded activities table on the portfolio activities page (experimental)
+
+### Changed
+
 - Set the actions columns of various tables to stick at the end
 - Increased the height of the tabs on mobile
 - Improved the language localization for German (`de`)
