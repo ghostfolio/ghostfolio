@@ -77,6 +77,7 @@ describe('PortfolioCalculator', () => {
         date: '2022-03-07',
         netPerformanceInPercentage: 0,
         netPerformance: 0,
+        timeWeightedPerformance: 0,
         totalInvestment: 151.6,
         value: 151.6
       });
@@ -85,6 +86,7 @@ describe('PortfolioCalculator', () => {
         date: '2022-04-11',
         netPerformanceInPercentage: 13.100263852242744,
         netPerformance: 19.86,
+        timeWeightedPerformance: 0,
         totalInvestment: 0,
         value: 0
       });
