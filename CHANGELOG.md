@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to search for an asset profile by `id` as an administrator
+
 ### Changed
 
 - Set the select column of the lazy-loaded activities table to stick at the end (experimental)
