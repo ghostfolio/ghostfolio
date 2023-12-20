@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Set the select column of the lazy-loaded activities table to stick at the end (experimental)
+- Dropped the activity id in the activities import
 - Improved the validation of the currency management in the admin control panel
 - Improved the performance of the value redaction interceptor for the impersonation mode by eliminating `cloneDeep`
 
