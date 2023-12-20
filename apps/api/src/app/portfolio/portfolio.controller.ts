@@ -359,7 +359,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccounts = false
+    @Query('withExcludedAccounts') withExcludedAccounts = false,
+    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false
   ): Promise<PortfolioPerformanceResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
@@ -372,7 +373,8 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      calculateTimeWeightedPerformance
     });
 
     if (

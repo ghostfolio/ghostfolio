@@ -19,6 +19,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, DataSource, SymbolProfile } from '@prisma/client';
+import Big from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -37,6 +38,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: Position[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public timeWeightedPerformanceOptions = [
+    { label: $localize`No`, value: 'N' },
+    { label: $localize`Both`, value: 'B' },
+    { label: $localize`Only`, value: 'O' }
+  ];
+  public selectedTimeWeightedPerformanceOption: string;
   public daysInMarket: number;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
@@ -56,9 +63,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   ];
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
+  public performanceDataItemsTimeWeightedInPercentage: HistoricalDataItem[] =
+    [];
   public placeholder = '';
   public portfolioEvolutionDataLabel = $localize`Deposit`;
   public streaks: PortfolioInvestments['streaks'];
+  public timeWeightedPerformance: string = 'N';
   public top3: Position[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
@@ -212,6 +222,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onTimeWeightedPerformanceChanged(timeWeightedPerformance: string) {
+    this.timeWeightedPerformance = timeWeightedPerformance;
+
+    this.update();
+  }
+
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
@@ -252,16 +268,16 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
               ? translate('YEAR')
               : translate('YEARS')
             : this.streaks?.currentStreak === 1
-            ? translate('MONTH')
-            : translate('MONTHS');
+              ? translate('MONTH')
+              : translate('MONTHS');
         this.unitLongestStreak =
           this.mode === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
             : this.streaks?.longestStreak === 1
-            ? translate('MONTH')
-            : translate('MONTHS');
+              ? translate('MONTH')
+              : translate('MONTHS');
 
         this.changeDetectorRef.markForCheck();
       });
@@ -314,7 +330,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.activeFilters,
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange,
+        timeWeightedPerformance:
+          this.timeWeightedPerformance === 'N' ? false : true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate }) => {
@@ -324,6 +342,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.investments = [];
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
+        this.performanceDataItemsTimeWeightedInPercentage = [];
 
         for (const [
           index,
@@ -332,7 +351,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             netPerformanceInPercentage,
             totalInvestment,
             value,
-            valueInPercentage
+            valueInPercentage,
+            timeWeightedPerformance
           }
         ] of chart.entries()) {
           if (index > 0 || this.user?.settings?.dateRange === 'max') {
@@ -347,6 +367,27 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             date,
             value: netPerformanceInPercentage
           });
+          if ((this.timeWeightedPerformance ?? 'N') !== 'N') {
+            let lastPerformance = 0;
+            if (index > 0) {
+              lastPerformance = new Big(
+                chart[index - 1].timeWeightedPerformance
+              )
+                .div(100)
+                .plus(1)
+                .mul(
+                  new Big(chart[index].timeWeightedPerformance).div(100).plus(1)
+                )
+                .minus(1)
+                .mul(100)
+                .toNumber();
+            }
+            chart[index].timeWeightedPerformance = lastPerformance;
+            this.performanceDataItemsTimeWeightedInPercentage.push({
+              date,
+              value: lastPerformance
+            });
+          }
         }
 
         this.isLoadingInvestmentChart = false;

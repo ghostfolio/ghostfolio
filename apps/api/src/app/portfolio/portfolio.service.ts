@@ -1153,13 +1153,15 @@ export class PortfolioService {
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    calculateTimeWeightedPerformance = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    calculateTimeWeightedPerformance?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1254,7 +1256,8 @@ export class PortfolioService {
       portfolioOrders,
       transactionPoints,
       userCurrency,
-      userId
+      userId,
+      calculateTimeWeightedPerformance
     });
 
     const itemOfToday = items.find(({ date }) => {
@@ -1463,7 +1466,8 @@ export class PortfolioService {
     portfolioOrders,
     transactionPoints,
     userCurrency,
-    userId
+    userId,
+    calculateTimeWeightedPerformance
   }: {
     dateRange?: DateRange;
     impersonationId: string;
@@ -1471,6 +1475,7 @@ export class PortfolioService {
     transactionPoints: TransactionPoint[];
     userCurrency: string;
     userId: string;
+    calculateTimeWeightedPerformance: boolean;
   }): Promise<HistoricalDataContainer> {
     if (transactionPoints.length === 0) {
       return {
@@ -1503,7 +1508,8 @@ export class PortfolioService {
     const items = await portfolioCalculator.getChartData(
       startDate,
       endDate,
-      step
+      step,
+      calculateTimeWeightedPerformance
     );
 
     return {
