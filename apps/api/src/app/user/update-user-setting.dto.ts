@@ -68,8 +68,4 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
-
-  @IsIn(<string[]>['N', 'B', 'O'])
-  @IsOptional()
-  timeWeightedPerformance?: string;
 }

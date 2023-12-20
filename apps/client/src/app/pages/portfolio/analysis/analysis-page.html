@@ -25,8 +25,8 @@
         [daysInMarket]="daysInMarket"
         [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
-        [performanceDataItems]="performanceDataItemsInPercentage"
-        [timeWeightedPerformanceDataItems]="performanceDataItemsTimeWeightedInPercentage"
+        [performanceDataItems]="timeWeightedPerformance === 'O' ? [] :performanceDataItemsInPercentage"
+        [timeWeightedPerformanceDataItems]="timeWeightedPerformance === 'N' ? [] :performanceDataItemsTimeWeightedInPercentage"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
       ></gf-benchmark-comparator>
@@ -37,7 +37,7 @@
           >
             <span i18n>Include time-weighted performance </span>
             <gf-toggle
-              [defaultValue]="user?.settings?.timeWeightedPerformance ?? 'N'"
+              [defaultValue]="timeWeightedPerformance"
               [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
               [options]="timeWeightedPerformanceOptions"
               (change)="onTimeWeightedPerformanceChanged($event.value)"

@@ -240,15 +240,15 @@ export class PortfolioCalculator {
     this.getRelevantStartAndEndDates(start, end, dates, step);
     const dataGartheringDates = [
       ...dates,
-      ...this.orders.map((o) => {
-        let dateParsed = Date.parse(o.date);
-        if (isBefore(dateParsed, end) && isAfter(dateParsed, start)) {
-          let date = new Date(dateParsed);
-          if (dates.indexOf(date) === -1) {
-            return date;
-          }
-        }
-      })
+      ...this.orders
+        .filter((o) => {
+          let dateParsed = Date.parse(o.date);
+          return isBefore(dateParsed, end) && isAfter(dateParsed, start);
+        })
+        .map((o) => {
+          let dateParsed = Date.parse(o.date);
+          return new Date(dateParsed);
+        })
     ];
 
     const { dataProviderInfos, values: marketSymbols } =
@@ -285,12 +285,26 @@ export class PortfolioCalculator {
       valuesBySymbol
     );
 
+    let valuesBySymbolShortend: {
+      [symbol: string]: {
+        currentValues: { [date: string]: Big };
+        investmentValues: { [date: string]: Big };
+        maxInvestmentValues: { [date: string]: Big };
+        netPerformanceValues: { [date: string]: Big };
+        netPerformanceValuesPercentage: { [date: string]: Big };
+      };
+    } = {};
+    Object.keys(valuesBySymbol).forEach((k) => {
+      if (valuesBySymbol[k].currentValues) {
+        Object.assign(valuesBySymbolShortend, { [k]: valuesBySymbol[k] });
+      }
+    });
     return dates.map((date: Date, index: number, dates: Date[]) => {
       let previousDate: Date = index > 0 ? dates[index - 1] : null;
       return this.calculatePerformance(
         date,
         previousDate,
-        valuesBySymbol,
+        valuesBySymbolShortend,
         calculateTimeWeightedPerformance
       );
     });
@@ -347,17 +361,23 @@ export class PortfolioCalculator {
       );
 
       if (
-        calculateTimeWeightedPerformance &&
         previousTotalInvestmentValue.toNumber() &&
-        symbolValues.netPerformanceValuesPercentage
+        symbolValues.netPerformanceValuesPercentage &&
+        (
+          symbolValues.currentValues?.[previousDateString] ?? new Big(0)
+        ).toNumber()
       ) {
         const previousValue =
           symbolValues.currentValues?.[previousDateString] ?? new Big(0);
         const netPerformance =
           symbolValues.netPerformanceValuesPercentage?.[dateString] ??
           new Big(0);
+        const timeWeightedPerformanceContribution = previousValue
+          .div(previousTotalInvestmentValue)
+          .mul(netPerformance)
+          .mul(100);
         timeWeightedPerformance = timeWeightedPerformance.plus(
-          previousValue.div(previousTotalInvestmentValue).mul(netPerformance)
+          timeWeightedPerformanceContribution
         );
       }
     }
@@ -1590,7 +1610,7 @@ export class PortfolioCalculator {
           .minus(1);
       } else if (
         order.type === 'STAKE' &&
-        marketSymbolMap[order.date][order.symbol] &&
+        marketSymbolMap[order.date] &&
         ((marketSymbolMap[previousOrder.date][
           previousOrder.symbol
         ]?.toNumber() &&
@@ -1613,6 +1633,7 @@ export class PortfolioCalculator {
         netPerformanceValuesPercentage[order.date] = new Big(-1);
       } else if (
         previousOrder.type === 'STAKE' &&
+        marketSymbolMap[previousOrder.date] &&
         marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()
       ) {
         netPerformanceValuesPercentage[order.date] = order.unitPrice

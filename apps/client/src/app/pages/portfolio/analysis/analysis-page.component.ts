@@ -68,6 +68,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public placeholder = '';
   public portfolioEvolutionDataLabel = $localize`Deposit`;
   public streaks: PortfolioInvestments['streaks'];
+  public timeWeightedPerformance: string = 'N';
   public top3: Position[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
@@ -222,21 +223,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   public onTimeWeightedPerformanceChanged(timeWeightedPerformance: string) {
-    this.dataService
-      .putUserSetting({ timeWeightedPerformance })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService.remove();
+    this.timeWeightedPerformance = timeWeightedPerformance;
 
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
+    this.update();
   }
 
   public onChangeGroupBy(aMode: GroupBy) {
@@ -343,7 +332,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         filters: this.activeFilters,
         range: this.user?.settings?.dateRange,
         timeWeightedPerformance:
-          this.user?.settings?.timeWeightedPerformance === 'N' ? false : true
+          this.timeWeightedPerformance === 'N' ? false : true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate }) => {
@@ -378,15 +367,19 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             date,
             value: netPerformanceInPercentage
           });
-          if ((this.user?.settings?.timeWeightedPerformance ?? 'N') !== 'N') {
+          if ((this.timeWeightedPerformance ?? 'N') !== 'N') {
             let lastPerformance = 0;
             if (index > 0) {
               lastPerformance = new Big(
                 chart[index - 1].timeWeightedPerformance
               )
+                .div(100)
                 .plus(1)
-                .mul(new Big(chart[index].timeWeightedPerformance).plus(1))
+                .mul(
+                  new Big(chart[index].timeWeightedPerformance).div(100).plus(1)
+                )
                 .minus(1)
+                .mul(100)
                 .toNumber();
             }
             chart[index].timeWeightedPerformance = lastPerformance;

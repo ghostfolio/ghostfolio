@@ -116,6 +116,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
+          borderDash: [5, 5],
           data: this.timeWeightedPerformanceDataItems.map(({ date, value }) => {
             return { x: parseDate(date).getTime(), y: value };
           }),
