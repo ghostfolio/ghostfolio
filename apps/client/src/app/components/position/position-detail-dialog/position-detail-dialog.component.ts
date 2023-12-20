@@ -7,12 +7,16 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   EnhancedSymbolProfile,
-  LineChartItem
+  LineChartItem,
+  User
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -31,6 +35,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
+  public activities: OrderWithAccount[];
   public assetClass: string;
   public assetSubClass: string;
   public averagePrice: number;
@@ -39,6 +44,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public dataProviderInfo: DataProviderInfo;
+  public dataSource: MatTableDataSource<OrderWithAccount>;
   public dividendInBaseCurrency: number;
   public stakeRewards: number;
   public feeInBaseCurrency: number;
@@ -52,7 +58,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public minPrice: number;
   public netPerformance: number;
   public netPerformancePercent: number;
-  public orders: OrderWithAccount[];
   public quantity: number;
   public quantityPrecision = 2;
   public stakePrecision = 2;
@@ -60,9 +65,13 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+  public sortColumn = 'date';
+  public sortDirection: SortDirection = 'desc';
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
+  public totalItems: number;
   public transactionCount: number;
+  public user: User;
   public value: number;
 
   private unsubscribeSubject = new Subject<void>();
@@ -71,7 +80,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<PositionDetailDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams
+    @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams,
+    private userService: UserService
   ) {}
 
   public ngOnInit(): void {
@@ -105,10 +115,12 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           transactionCount,
           value
         }) => {
+          this.activities = orders;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
+          this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
           this.stakeRewards = stakeRewards;
           this.feeInBaseCurrency = feeInBaseCurrency;
@@ -134,7 +146,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.minPrice = minPrice;
           this.netPerformance = netPerformance;
           this.netPerformancePercent = netPerformancePercent;
-          this.orders = orders;
           this.quantity = quantity;
           this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
@@ -146,6 +157,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
             };
           });
           this.transactionCount = transactionCount;
+          this.totalItems = transactionCount;
           this.value = value;
 
           if (SymbolProfile?.assetClass) {
@@ -251,6 +263,16 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   public onClose(): void {
@@ -258,12 +280,20 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   }
 
   public onExport() {
+    let activityIds = [];
+
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      activityIds = this.dataSource.data.map(({ id }) => {
+        return id;
+      });
+    } else {
+      activityIds = this.activities.map(({ id }) => {
+        return id;
+      });
+    }
+
     this.dataService
-      .fetchExport(
-        this.orders.map((order) => {
-          return order.id;
-        })
-      )
+      .fetchExport(activityIds)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         downloadAsFile({

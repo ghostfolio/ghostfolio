@@ -119,8 +119,29 @@
       </ng-template>
       <div class="pt-3">
         <ng-container *ngIf="errorMessages?.length === 0; else errorMessage">
+          <gf-activities-table-lazy
+            *ngIf="importStep === 1 && data?.user?.settings?.isExperimentalFeatures === true"
+            [baseCurrency]="data?.user?.settings?.baseCurrency"
+            [dataSource]="dataSource"
+            [deviceType]="data?.deviceType"
+            [hasPermissionToCreateActivity]="false"
+            [hasPermissionToExportActivities]="false"
+            [hasPermissionToFilter]="false"
+            [hasPermissionToOpenDetails]="false"
+            [locale]="data?.user?.settings?.locale"
+            [pageSize]="maxSafeInteger"
+            [showActions]="false"
+            [showCheckbox]="true"
+            [showFooter]="false"
+            [showSymbolColumn]="false"
+            [sortColumn]="sortColumn"
+            [sortDirection]="sortDirection"
+            [sortDisabled]="true"
+            [totalItems]="totalItems"
+            (selectedActivities)="updateSelection($event)"
+          ></gf-activities-table-lazy>
           <gf-activities-table
-            *ngIf="importStep === 1"
+            *ngIf="importStep === 1 && data?.user?.settings?.isExperimentalFeatures !== true"
             [activities]="activities"
             [baseCurrency]="data?.user?.settings?.baseCurrency"
             [deviceType]="data?.deviceType"

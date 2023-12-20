@@ -226,7 +226,7 @@ export class PortfolioService {
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
-    const activities = await this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       filters,
       userId,
       types: ['DIVIDEND'],
@@ -752,13 +752,13 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const orders = (
-      await this.orderService.getOrders({
-        userCurrency,
-        userId,
-        withExcludedAccounts: true
-      })
-    ).filter(({ SymbolProfile }) => {
+    const { activities } = await this.orderService.getOrders({
+      userCurrency,
+      userId,
+      withExcludedAccounts: true
+    });
+
+    const orders = activities.filter(({ SymbolProfile }) => {
       return (
         SymbolProfile.dataSource === aDataSource &&
         SymbolProfile.symbol === aSymbol
@@ -1758,12 +1758,11 @@ export class PortfolioService {
       userId
     });
 
-    const ordersRaw = await this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId,
       withExcludedAccounts: true
     });
-    const activities: Activity[] = [];
     const excludedActivities: Activity[] = [];
     let dividend = 0;
     let fees = 0;
@@ -1774,7 +1773,7 @@ export class PortfolioService {
 
     let totalBuy = 0;
     let totalSell = 0;
-    for (let order of ordersRaw) {
+    for (let order of activities) {
       if (order.Account?.isExcluded ?? false) {
         excludedActivities.push(order);
       } else {
@@ -1811,7 +1810,6 @@ export class PortfolioService {
         }
       }
     }
-
     const emergencyFund = new Big(
       Math.max(
         emergencyFundPositionsValueInBaseCurrency,
@@ -1957,7 +1955,7 @@ export class PortfolioService {
     const userCurrency =
       this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
 
-    const orders = await this.orderService.getOrders({
+    const { activities, count } = await this.orderService.getOrders({
       filters,
       includeDrafts,
       userCurrency,
@@ -1966,11 +1964,11 @@ export class PortfolioService {
       types: ['BUY', 'SELL', 'STAKE']
     });
 
-    if (orders.length <= 0) {
+    if (count <= 0) {
       return { transactionPoints: [], orders: [], portfolioOrders: [] };
     }
 
-    const portfolioOrders: PortfolioOrder[] = orders.map((order) => ({
+    const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
       currency: order.SymbolProfile.currency,
       dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
@@ -2004,8 +2002,8 @@ export class PortfolioService {
     portfolioCalculator.computeTransactionPoints();
 
     return {
-      orders,
       portfolioOrders,
+      orders: activities,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
   }
@@ -2040,13 +2038,14 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
-    const ordersOfTypeItemOrLiability = await this.orderService.getOrders({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccounts,
-      types: ['ITEM', 'LIABILITY']
-    });
+    const { activities: ordersOfTypeItemOrLiability } =
+      await this.orderService.getOrders({
+        filters,
+        userCurrency,
+        userId,
+        withExcludedAccounts,
+        types: ['ITEM', 'LIABILITY']
+      });
 
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};

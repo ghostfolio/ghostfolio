@@ -12,7 +12,9 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SortDirection } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
+import { MatTableDataSource } from '@angular/material/table';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -35,6 +37,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 export class ImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];
   public activities: Activity[] = [];
+  public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
   public deviceType: string;
   public dialogTitle = $localize`Import Activities`;
@@ -45,7 +48,10 @@ export class ImportActivitiesDialog implements OnDestroy {
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
   public mode: 'DIVIDEND';
   public selectedActivities: Activity[] = [];
+  public sortColumn = 'date';
+  public sortDirection: SortDirection = 'desc';
   public stepperOrientation: StepperOrientation;
+  public totalItems: number;
   public uniqueAssetForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
@@ -173,6 +179,8 @@ export class ImportActivitiesDialog implements OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ activities }) => {
         this.activities = activities;
+        this.dataSource = new MatTableDataSource(activities.reverse());
+        this.totalItems = activities.length;
 
         aStepper.next();
 
@@ -260,6 +268,8 @@ export class ImportActivitiesDialog implements OnDestroy {
                 isDryRun: true
               });
             this.activities = activities;
+            this.dataSource = new MatTableDataSource(activities.reverse());
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({ error, activities: content.activities });
@@ -276,6 +286,8 @@ export class ImportActivitiesDialog implements OnDestroy {
               userAccounts: this.data.user.accounts
             });
             this.activities = data.activities;
+            this.dataSource = new MatTableDataSource(data.activities.reverse());
+            this.totalItems = data.activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({

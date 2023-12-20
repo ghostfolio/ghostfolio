@@ -13,6 +13,7 @@ import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-heade
 import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
 
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
@@ -22,6 +23,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
     CommonModule,
     FormsModule,
     GfActivitiesTableModule,
+    GfActivitiesTableLazyModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfFileDropModule,

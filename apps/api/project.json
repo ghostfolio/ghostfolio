@@ -14,7 +14,8 @@
         "tsConfig": "apps/api/tsconfig.app.json",
         "assets": ["apps/api/src/assets"],
         "target": "node",
-        "compiler": "tsc"
+        "compiler": "tsc",
+        "webpackConfig": "apps/api/webpack.config.js"
       },
       "configurations": {
         "production": {

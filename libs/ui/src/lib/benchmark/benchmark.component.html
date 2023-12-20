@@ -89,7 +89,7 @@
           'text-danger':
             element?.performances?.allTimeHigh?.performancePercent < 0,
           'text-success':
-            element?.performances?.allTimeHigh?.performancePercent > 0
+            element?.performances?.allTimeHigh?.performancePercent === 0
         }"
         [value]="element?.performances?.allTimeHigh?.performancePercent"
       />
