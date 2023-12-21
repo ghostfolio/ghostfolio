@@ -1,6 +1,6 @@
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
-import { permissions } from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
@@ -92,7 +92,6 @@ export class UserController {
 
   @Put('setting')
   @UseGuards(AuthGuard('jwt'))
-  @HasPermission(permissions.updateUserSettings)
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
       size(data) === 1 &&
@@ -100,6 +99,16 @@ export class UserController {
       this.request.user.role === 'DEMO'
     ) {
       // Allow benchmark or date range change for demo user
+    } else if (
+      !hasPermission(
+        this.request.user.permissions,
+        permissions.updateUserSettings
+      )
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
     }
 
     const userSettings: UserSettings = {
