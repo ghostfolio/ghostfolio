@@ -11,11 +11,9 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
 export class HasPermissionGuard implements CanActivate {
-  public constructor(private reflector: Reflector) {
-  }
+  public constructor(private reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
-
     const { user } = context.switchToHttp().getRequest();
     const requiredPermission = this.reflector.get<string>(
       HAS_PERMISSION_KEY,
@@ -25,8 +23,6 @@ export class HasPermissionGuard implements CanActivate {
     if (!requiredPermission) {
       return true; // No specific permissions required
     }
-
-
 
     if (!user || !hasPermission(user.permissions, requiredPermission)) {
       throw new HttpException(

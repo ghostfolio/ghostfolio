@@ -34,10 +34,7 @@ export class AccountBalanceController {
       id
     });
 
-    if (
-      !accountBalance ||
-      accountBalance.userId !== this.request.user.id
-    ) {
+    if (!accountBalance || accountBalance.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

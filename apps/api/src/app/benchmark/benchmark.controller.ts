@@ -52,7 +52,7 @@ export class BenchmarkController {
       }
 
       return benchmark;
-    } catch  {
+    } catch {
       throw new HttpException(
         getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
         StatusCodes.INTERNAL_SERVER_ERROR

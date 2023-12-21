@@ -132,7 +132,6 @@ export class AccountController {
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
-
     if (data.platformId) {
       const platformId = data.platformId;
       delete data.platformId;
@@ -164,7 +163,6 @@ export class AccountController {
   public async transferAccountBalance(
     @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
   ) {
-
     const accountsOfUser = await this.accountService.getAccounts(
       this.request.user.id
     );
@@ -217,7 +215,6 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'))
   @HasPermission(permissions.updateAccount)
   public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
-
     const originalAccount = await this.accountService.account({
       id_userId: {
         id,

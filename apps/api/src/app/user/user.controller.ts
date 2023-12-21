@@ -40,8 +40,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @HasPermission(permissions.deleteUser)
   public async deleteUser(@Param('id') id: string): Promise<UserModel> {
-    if (id === this.request.user.id
-    ) {
+    if (id === this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

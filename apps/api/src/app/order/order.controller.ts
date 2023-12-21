@@ -164,10 +164,7 @@ export class OrderController {
       id
     });
 
-    if (
-      !originalOrder ||
-      originalOrder.userId !== this.request.user.id
-    ) {
+    if (!originalOrder || originalOrder.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

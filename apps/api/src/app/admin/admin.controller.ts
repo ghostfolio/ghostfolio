@@ -70,14 +70,14 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'))
   @HasPermission(permissions.accessAdminControl)
   public async gather7Days(): Promise<void> {
-     this.dataGatheringService.gather7Days();
+    this.dataGatheringService.gather7Days();
   }
 
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'))
   @HasPermission(permissions.accessAdminControl)
   public async gatherMax(): Promise<void> {
-     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     await this.dataGatheringService.addJobsToQueue(
       uniqueAssets.map(({ dataSource, symbol }) => {
@@ -161,7 +161,7 @@ export class AdminController {
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<MarketData> {
-     const date = parseISO(dateString);
+    const date = parseISO(dateString);
 
     if (!isDate(date)) {
       throw new HttpException(
@@ -189,7 +189,7 @@ export class AdminController {
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('take') take?: number
   ): Promise<AdminMarketData> {
-     const filters = this.apiService.buildFiltersFromQueryParams({
+    const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
       filterBySearchQuery
     });
@@ -222,7 +222,7 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-     const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
+    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
       ({ date, marketPrice }) => ({
         dataSource,
         marketPrice,

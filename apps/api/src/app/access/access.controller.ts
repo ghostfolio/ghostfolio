@@ -79,10 +79,7 @@ export class AccessController {
   public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
     const access = await this.accessService.access({ id });
 
-    if (
-      !access ||
-      access.userId !== this.request.user.id
-    ) {
+    if (!access || access.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

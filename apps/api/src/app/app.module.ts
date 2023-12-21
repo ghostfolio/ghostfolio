@@ -93,7 +93,7 @@ import { HasPermissionGuard } from '../guards/has-permission.guard';
               if (SUPPORTED_LANGUAGE_CODES.includes(code)) {
                 languageCode = code;
               }
-            } catch { }
+            } catch {}
 
             res.set('Location', `/${languageCode}`);
             res.statusCode = StatusCodes.MOVED_PERMANENTLY;
@@ -117,4 +117,4 @@ import { HasPermissionGuard } from '../guards/has-permission.guard';
     }
   ]
 })
-export class AppModule { }
+export class AppModule {}
