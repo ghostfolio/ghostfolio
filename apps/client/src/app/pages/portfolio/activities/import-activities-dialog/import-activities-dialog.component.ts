@@ -260,6 +260,14 @@ export class ImportActivitiesDialog implements OnDestroy {
             }
           }
 
+          content.activities = content.activities.map((activity) => {
+            if (activity.id) {
+              delete activity.id;
+            }
+
+            return activity;
+          });
+
           try {
             const { activities } =
               await this.importActivitiesService.importJson({
