@@ -187,6 +187,10 @@ export class AdminService {
     return this.http.post<MarketData | void>(url, {});
   }
 
+  public testScrapeConfig(config: string){
+    return this.http.post<any>(`/api/v1/admin/test-scraper`, {config});
+  }
+
   public fetchSymbolForDate({
     dataSource,
     date,

@@ -240,21 +240,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onTestScraper(symbol: string) {
-    const today = new Date();
+  public onTestScraper() {
+
     this.adminService
-      .gatherSymbol({
-        dataSource: 'MANUAL',
-        date: today,
-        isDryRun: true,
-        symbol
-      })
+      .testScrapeConfig(this.assetProfileForm.controls['scraperConfiguration'].value)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        if (response !== null) {
-          alert($localize`Please try again.`);
+        if (response && response.price) {
+          console.log(response);
+          alert($localize`Current Market Price is:` + ' ' + response.price);
         } else {
-          alert($localize`Current Market Price is:` + ' ' + response);
+          alert($localize`Please try again.`);
         }
       });
   }

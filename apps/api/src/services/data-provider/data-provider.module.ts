@@ -29,6 +29,7 @@ import { DataProviderService } from './data-provider.service';
     PropertyModule,
     RedisCacheModule,
     SymbolProfileModule
+
   ],
   providers: [
     AlphaVantageService,
@@ -74,6 +75,6 @@ import { DataProviderService } from './data-provider.service';
     },
     YahooFinanceDataEnhancerService
   ],
-  exports: [DataProviderService, YahooFinanceService]
+  exports: [DataProviderService, YahooFinanceService, ManualService]
 })
 export class DataProviderModule {}

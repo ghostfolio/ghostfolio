@@ -241,6 +241,7 @@
             formControlName="scraperConfiguration"
             matInput
             type="text"
+            val
             (keyup.enter)="$event.stopPropagation()"
           ></textarea>
           <button
@@ -248,7 +249,7 @@
             mat-flat-button
             type="button"
             [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
-            (click)="onTestScraper(assetProfile?.symbol)"
+            (click)="onTestScraper()"
           >
             <ng-container i18n>Test</ng-container>
           </button>

@@ -45,6 +45,7 @@ import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
+import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 
 @Controller('admin')
 export class AdminController {
@@ -52,6 +53,7 @@ export class AdminController {
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly manualService: ManualService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -246,8 +248,8 @@ export class AdminController {
     }
 
     if (dataSource === 'MANUAL' && isDryRun && isToday(date)) {
-      // TODO
-      Logger.log(`Check ${symbol} via scraperConfiguration`);
+      //const marketData = await this.manualService.scrape()
+      Logger.log(`Check ${symbol} via scraperConfiguration`, dataSource);
     }
 
     return this.dataGatheringService.gatherSymbolForDate({
@@ -256,6 +258,17 @@ export class AdminController {
       isDryRun,
       symbol
     });
+  }
+
+  @Post('test-scraper')
+  @UseGuards(AuthGuard('jwt'))
+  public async testScraper(
+    @Body() data: { config: string }
+  ): Promise<{ price: number }> {
+    const {url, selector} = JSON.parse(data.config);
+
+    let price = await this.manualService.scrape(url ,selector);
+    return {price: price};
   }
 
   @Get('market-data')
