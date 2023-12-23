@@ -17,6 +17,7 @@ import {
   addYears,
   endOfDay,
   format,
+  intervalToDuration,
   isAfter,
   isBefore,
   isSameDay,
@@ -43,7 +44,7 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
-  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
+  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_TIME_WEIGHTED_INVESTMENT =
     true;
 
   private static readonly ENABLE_LOGGING = false;
@@ -238,12 +239,13 @@ export class PortfolioCalculator {
       }
     }
 
-    const valuesByDate: {
+    const accumulatedValuesByDate: {
       [date: string]: {
         maxTotalInvestmentValue: Big;
         totalCurrentValue: Big;
         totalInvestmentValue: Big;
         totalNetPerformanceValue: Big;
+        totalTimeWeightedInvestmentValue: Big;
       };
     } = {};
 
@@ -253,6 +255,7 @@ export class PortfolioCalculator {
         investmentValues: { [date: string]: Big };
         maxInvestmentValues: { [date: string]: Big };
         netPerformanceValues: { [date: string]: Big };
+        timeWeightedInvestmentValues: { [date: string]: Big };
       };
     } = {};
 
@@ -261,7 +264,8 @@ export class PortfolioCalculator {
         currentValues,
         investmentValues,
         maxInvestmentValues,
-        netPerformanceValues
+        netPerformanceValues,
+        timeWeightedInvestmentValues
       } = this.getSymbolMetrics({
         end,
         marketSymbolMap,
@@ -275,7 +279,8 @@ export class PortfolioCalculator {
         currentValues,
         investmentValues,
         maxInvestmentValues,
-        netPerformanceValues
+        netPerformanceValues,
+        timeWeightedInvestmentValues
       };
     }
 
@@ -293,38 +298,50 @@ export class PortfolioCalculator {
           symbolValues.maxInvestmentValues?.[dateString] ?? new Big(0);
         const netPerformanceValue =
           symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
+        const timeWeightedInvestmentValue =
+          symbolValues.timeWeightedInvestmentValues?.[dateString] ?? new Big(0);
 
-        valuesByDate[dateString] = {
+        accumulatedValuesByDate[dateString] = {
           totalCurrentValue: (
-            valuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
+            accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
           totalInvestmentValue: (
-            valuesByDate[dateString]?.totalInvestmentValue ?? new Big(0)
+            accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
+            new Big(0)
           ).add(investmentValue),
+          totalTimeWeightedInvestmentValue: (
+            accumulatedValuesByDate[dateString]
+              ?.totalTimeWeightedInvestmentValue ?? new Big(0)
+          ).add(timeWeightedInvestmentValue),
           maxTotalInvestmentValue: (
-            valuesByDate[dateString]?.maxTotalInvestmentValue ?? new Big(0)
+            accumulatedValuesByDate[dateString]?.maxTotalInvestmentValue ??
+            new Big(0)
           ).add(maxInvestmentValue),
           totalNetPerformanceValue: (
-            valuesByDate[dateString]?.totalNetPerformanceValue ?? new Big(0)
+            accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
+            new Big(0)
           ).add(netPerformanceValue)
         };
       }
     }
 
-    return Object.entries(valuesByDate).map(([date, values]) => {
+    return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
       const {
         maxTotalInvestmentValue,
         totalCurrentValue,
         totalInvestmentValue,
-        totalNetPerformanceValue
+        totalNetPerformanceValue,
+        totalTimeWeightedInvestmentValue
       } = values;
 
-      const netPerformanceInPercentage = maxTotalInvestmentValue.eq(0)
+      let investmentValue =
+        PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_TIME_WEIGHTED_INVESTMENT
+          ? totalTimeWeightedInvestmentValue
+          : maxTotalInvestmentValue;
+
+      const netPerformanceInPercentage = investmentValue.eq(0)
         ? 0
-        : totalNetPerformanceValue
-            .div(maxTotalInvestmentValue)
-            .mul(100)
-            .toNumber();
+        : totalNetPerformanceValue.div(investmentValue).mul(100).toNumber();
 
       return {
         date,
@@ -1018,6 +1035,7 @@ export class PortfolioCalculator {
 
     let averagePriceAtEndDate = new Big(0);
     let averagePriceAtStartDate = new Big(0);
+    const currentValues: { [date: string]: Big } = {};
     let feesAtStartDate = new Big(0);
     let fees = new Big(0);
     let grossPerformance = new Big(0);
@@ -1025,12 +1043,12 @@ export class PortfolioCalculator {
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
     let investmentAtStartDate: Big;
-    const currentValues: { [date: string]: Big } = {};
     const investmentValues: { [date: string]: Big } = {};
     const maxInvestmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
     let maxTotalInvestment = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
+    const timeWeightedInvestmentValues: { [date: string]: Big } = {};
     let totalInvestment = new Big(0);
     let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
     let totalUnits = new Big(0);
@@ -1122,6 +1140,9 @@ export class PortfolioCalculator {
       return order.itemType === 'end';
     });
 
+    let totalInvestmentDays = 0;
+    let sumOfTimeWeightedInvestments = new Big(0);
+
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
 
@@ -1162,11 +1183,11 @@ export class PortfolioCalculator {
         order.type === 'BUY'
           ? order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
           : totalUnits.gt(0)
-          ? totalInvestment
-              .div(totalUnits)
-              .mul(order.quantity)
-              .mul(this.getFactor(order.type))
-          : new Big(0);
+            ? totalInvestment
+                .div(totalUnits)
+                .mul(order.quantity)
+                .mul(this.getFactor(order.type))
+            : new Big(0);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log('totalInvestment', totalInvestment.toNumber());
@@ -1243,14 +1264,38 @@ export class PortfolioCalculator {
         grossPerformanceAtStartDate = grossPerformance;
       }
 
-      if (isChartMode && i > indexOfStartOrder) {
-        currentValues[order.date] = valueOfInvestment;
-        netPerformanceValues[order.date] = grossPerformance
-          .minus(grossPerformanceAtStartDate)
-          .minus(fees.minus(feesAtStartDate));
+      if (i > indexOfStartOrder) {
+        // Calculate the number of days since the previous order
+        const orderDate = new Date(order.date);
+        const previousOrderDate = new Date(orders[i - 1].date);
 
-        investmentValues[order.date] = totalInvestment;
-        maxInvestmentValues[order.date] = maxTotalInvestment;
+        const daysSinceLastOrder = intervalToDuration({
+          end: orderDate,
+          start: previousOrderDate
+        }).days;
+
+        // Sum up the total investment days since the start date to calculate the
+        // time weighted investment
+        totalInvestmentDays += daysSinceLastOrder;
+
+        sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
+          totalInvestment.mul(daysSinceLastOrder)
+        );
+
+        if (isChartMode) {
+          currentValues[order.date] = valueOfInvestment;
+          netPerformanceValues[order.date] = grossPerformance
+            .minus(grossPerformanceAtStartDate)
+            .minus(fees.minus(feesAtStartDate));
+
+          investmentValues[order.date] = totalInvestment;
+          maxInvestmentValues[order.date] = maxTotalInvestment;
+
+          timeWeightedInvestmentValues[order.date] =
+            totalInvestmentDays > 0
+              ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
+              : new Big(0);
+        }
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -1274,50 +1319,79 @@ export class PortfolioCalculator {
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
 
+    const timeWeightedAverageInvestmentBetweenStartAndEndDate =
+      totalInvestmentDays > 0
+        ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
+        : new Big(0);
+
     const maxInvestmentBetweenStartAndEndDate = valueAtStartDate.plus(
       maxTotalInvestment.minus(investmentAtStartDate)
     );
 
-    const grossPerformancePercentage =
-      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
-      averagePriceAtStartDate.eq(0) ||
-      averagePriceAtEndDate.eq(0) ||
-      orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxInvestmentBetweenStartAndEndDate.gt(0)
-          ? totalGrossPerformance.div(maxInvestmentBetweenStartAndEndDate)
-          : new Big(0)
-        : // This formula has the issue that buying more units with a price
-          // lower than the average buying price results in a positive
-          // performance even if the market price stays constant
-          unitPriceAtEndDate
-            .div(averagePriceAtEndDate)
-            .div(
-              orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+    let grossPerformancePercentage: Big;
+
+    if (
+      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_TIME_WEIGHTED_INVESTMENT
+    ) {
+      grossPerformancePercentage =
+        timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
+          ? totalGrossPerformance.div(
+              timeWeightedAverageInvestmentBetweenStartAndEndDate
             )
-            .minus(1);
+          : new Big(0);
+    } else {
+      grossPerformancePercentage =
+        averagePriceAtStartDate.eq(0) ||
+        averagePriceAtEndDate.eq(0) ||
+        orders[indexOfStartOrder].unitPrice.eq(0)
+          ? maxInvestmentBetweenStartAndEndDate.gt(0)
+            ? totalGrossPerformance.div(maxInvestmentBetweenStartAndEndDate)
+            : new Big(0)
+          : // This formula has the issue that buying more units with a price
+            // lower than the average buying price results in a positive
+            // performance even if the market price stays constant
+            unitPriceAtEndDate
+              .div(averagePriceAtEndDate)
+              .div(
+                orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+              )
+              .minus(1);
+    }
 
     const feesPerUnit = totalUnits.gt(0)
       ? fees.minus(feesAtStartDate).div(totalUnits)
       : new Big(0);
 
-    const netPerformancePercentage =
-      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
-      averagePriceAtStartDate.eq(0) ||
-      averagePriceAtEndDate.eq(0) ||
-      orders[indexOfStartOrder].unitPrice.eq(0)
-        ? maxInvestmentBetweenStartAndEndDate.gt(0)
-          ? totalNetPerformance.div(maxInvestmentBetweenStartAndEndDate)
-          : new Big(0)
-        : // This formula has the issue that buying more units with a price
-          // lower than the average buying price results in a positive
-          // performance even if the market price stays constant
-          unitPriceAtEndDate
-            .minus(feesPerUnit)
-            .div(averagePriceAtEndDate)
-            .div(
-              orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+    let netPerformancePercentage: Big;
+
+    if (
+      PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_TIME_WEIGHTED_INVESTMENT
+    ) {
+      netPerformancePercentage =
+        timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
+          ? totalNetPerformance.div(
+              timeWeightedAverageInvestmentBetweenStartAndEndDate
             )
-            .minus(1);
+          : new Big(0);
+    } else {
+      netPerformancePercentage =
+        averagePriceAtStartDate.eq(0) ||
+        averagePriceAtEndDate.eq(0) ||
+        orders[indexOfStartOrder].unitPrice.eq(0)
+          ? maxInvestmentBetweenStartAndEndDate.gt(0)
+            ? totalNetPerformance.div(maxInvestmentBetweenStartAndEndDate)
+            : new Big(0)
+          : // This formula has the issue that buying more units with a price
+            // lower than the average buying price results in a positive
+            // performance even if the market price stays constant
+            unitPriceAtEndDate
+              .minus(feesPerUnit)
+              .div(averagePriceAtEndDate)
+              .div(
+                orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate)
+              )
+              .minus(1);
+    }
 
     if (PortfolioCalculator.ENABLE_LOGGING) {
       console.log(
@@ -1330,6 +1404,7 @@ export class PortfolioCalculator {
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
         Total investment: ${totalInvestment.toFixed(2)}
+        Time weighted investment: ${timeWeightedAverageInvestmentBetweenStartAndEndDate.toFixed()}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2
@@ -1349,6 +1424,7 @@ export class PortfolioCalculator {
       maxInvestmentValues,
       netPerformancePercentage,
       netPerformanceValues,
+      timeWeightedInvestmentValues,
       grossPerformance: totalGrossPerformance,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
       netPerformance: totalNetPerformance
