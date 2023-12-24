@@ -15,9 +15,9 @@ import {
   addMilliseconds,
   addMonths,
   addYears,
+  differenceInDays,
   endOfDay,
   format,
-  intervalToDuration,
   isAfter,
   isBefore,
   isSameDay,
@@ -1195,6 +1195,7 @@ export class PortfolioCalculator {
         console.log('transactionInvestment', transactionInvestment.toNumber());
       }
 
+      const totalInvestmentBeforeTransaction = totalInvestment;
       totalInvestment = totalInvestment.plus(transactionInvestment);
 
       if (i >= indexOfStartOrder && totalInvestment.gt(maxTotalInvestment)) {
@@ -1265,22 +1266,32 @@ export class PortfolioCalculator {
       }
 
       if (i > indexOfStartOrder) {
-        // Calculate the number of days since the previous order
-        const orderDate = new Date(order.date);
-        const previousOrderDate = new Date(orders[i - 1].date);
+        // Only consider periods with an investment for the calculation of
+        // the time weighted investment
+        if (totalInvestmentBeforeTransaction.gt(0)) {
+          // Calculate the number of days since the previous order
+          const orderDate = new Date(order.date);
+          const previousOrderDate = new Date(orders[i - 1].date);
 
-        const daysSinceLastOrder = intervalToDuration({
-          end: orderDate,
-          start: previousOrderDate
-        }).days;
+          let daysSinceLastOrder = differenceInDays(
+            orderDate,
+            previousOrderDate
+          );
 
-        // Sum up the total investment days since the start date to calculate the
-        // time weighted investment
-        totalInvestmentDays += daysSinceLastOrder;
+          // Set to at least 1 day, otherwise the transactions on the same day
+          // would not be considered in the time weighted calculation
+          if (daysSinceLastOrder <= 0) {
+            daysSinceLastOrder = 1;
+          }
 
-        sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
-          totalInvestment.mul(daysSinceLastOrder)
-        );
+          // Sum up the total investment days since the start date to calculate
+          // the time weighted investment
+          totalInvestmentDays += daysSinceLastOrder;
+
+          sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
+            totalInvestmentBeforeTransaction.mul(daysSinceLastOrder)
+          );
+        }
 
         if (isChartMode) {
           currentValues[order.date] = valueOfInvestment;
