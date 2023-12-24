@@ -1,18 +1,15 @@
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { permissions } from '@ghostfolio/common/permissions';
 import {
   Body,
   Controller,
   Delete,
   Get,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   UseGuards
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -24,10 +21,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 
 @Controller('tag')
 export class TagController {
-  public constructor(
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly tagService: TagService
-  ) {}
+  public constructor(private readonly tagService: TagService) {}
 
   @Get()
   @UseGuards(AuthGuard('jwt'))

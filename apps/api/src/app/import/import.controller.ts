@@ -36,7 +36,7 @@ export class ImportController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  @HasPermission(permissions.createAccount)
+  @HasPermission(permissions.createOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
@@ -44,7 +44,7 @@ export class ImportController {
     @Query('dryRun') isDryRun?: boolean
   ): Promise<ImportResponse> {
     if (
-      !hasPermission(this.request.user.permissions, permissions.createOrder)
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),

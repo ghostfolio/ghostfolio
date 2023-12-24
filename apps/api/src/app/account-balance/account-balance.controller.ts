@@ -1,4 +1,4 @@
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -10,11 +10,9 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { permissions } from '@ghostfolio/common/permissions';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccountBalance } from '@prisma/client';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-
 import { AccountBalanceService } from './account-balance.service';
 
 @Controller('account-balance')

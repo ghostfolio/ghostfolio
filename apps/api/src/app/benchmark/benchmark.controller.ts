@@ -6,7 +6,6 @@ import type {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -19,7 +18,6 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -29,10 +27,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 
 @Controller('benchmark')
 export class BenchmarkController {
-  public constructor(
-    private readonly benchmarkService: BenchmarkService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  public constructor(private readonly benchmarkService: BenchmarkService) {}
 
   @Post()
   @UseGuards(AuthGuard('jwt'))

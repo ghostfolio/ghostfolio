@@ -1,16 +1,13 @@
 import { AdminJobs } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
   Delete,
   Get,
-  Inject,
   Param,
   Query,
   UseGuards
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { JobStatus } from 'bull';
 
@@ -19,10 +16,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 
 @Controller('admin/queue')
 export class QueueController {
-  public constructor(
-    private readonly queueService: QueueService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  public constructor(private readonly queueService: QueueService) {}
 
   @Delete('job')
   @UseGuards(AuthGuard('jwt'))
