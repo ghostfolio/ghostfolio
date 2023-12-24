@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modernized the `Nx` executors
   - `@nx/eslint:lint`
   - `@nx/webpack:webpack`
+- Upgraded `prettier` from version `3.1.0` to `3.1.1`
 
 ### Fixed
 
