@@ -176,6 +176,7 @@ export class AdminService {
 
     if (searchQuery) {
       where.OR = [
+        { id: { mode: 'insensitive', startsWith: searchQuery } },
         { isin: { mode: 'insensitive', startsWith: searchQuery } },
         { name: { mode: 'insensitive', startsWith: searchQuery } },
         { symbol: { mode: 'insensitive', startsWith: searchQuery } }
