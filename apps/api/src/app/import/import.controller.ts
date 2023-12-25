@@ -25,6 +25,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('import')
 export class ImportController {
@@ -35,7 +36,7 @@ export class ImportController {
   ) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.createOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)

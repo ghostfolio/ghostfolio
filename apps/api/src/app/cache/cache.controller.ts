@@ -1,5 +1,6 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
 import { Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -9,7 +10,7 @@ export class CacheController {
   public constructor(private readonly redisCacheService: RedisCacheService) {}
 
   @Post('flush')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
   public async flushCache(): Promise<void> {
     return this.redisCacheService.reset();

@@ -1,5 +1,6 @@
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
 import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -9,7 +10,7 @@ export class AuthDeviceController {
   public constructor(private readonly authDeviceService: AuthDeviceService) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAuthDevice)
   public async deleteAuthDevice(@Param('id') id: string): Promise<void> {
     await this.authDeviceService.deleteAuthDevice({ id });

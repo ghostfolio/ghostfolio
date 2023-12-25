@@ -18,6 +18,7 @@ import { CreatePlatformDto } from './create-platform.dto';
 import { PlatformService } from './platform.service';
 import { UpdatePlatformDto } from './update-platform.dto';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('platform')
 export class PlatformController {
@@ -30,7 +31,7 @@ export class PlatformController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.createPlatform)
   public async createPlatform(
     @Body() data: CreatePlatformDto
@@ -39,7 +40,7 @@ export class PlatformController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.updatePlatform)
   public async updatePlatform(
     @Param('id') id: string,
@@ -67,7 +68,7 @@ export class PlatformController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deletePlatform)
   public async deletePlatform(@Param('id') id: string) {
     const originalPlatform = await this.platformService.getPlatform({

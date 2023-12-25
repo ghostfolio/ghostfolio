@@ -20,6 +20,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccessService } from './access.service';
 import { CreateAccessDto } from './create-access.dto';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('access')
 export class AccessController {
@@ -59,7 +60,7 @@ export class AccessController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.createAccess)
   public async createAccess(
     @Body() data: CreateAccessDto
@@ -74,7 +75,7 @@ export class AccessController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAccess)
   public async deleteAccess(@Param('id') id: string): Promise<AccessModel> {
     const access = await this.accessService.access({ id });

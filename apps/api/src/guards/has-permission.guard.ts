@@ -20,6 +20,9 @@ export class HasPermissionGuard implements CanActivate {
       context.getHandler()
     );
 
+    console.log('requiredPermission', requiredPermission);
+    console.log('user', user);
+
     if (!requiredPermission) {
       return true; // No specific permissions required
     }

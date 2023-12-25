@@ -24,13 +24,14 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('benchmark')
 export class BenchmarkController {
   public constructor(private readonly benchmarkService: BenchmarkService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
   public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
     try {
@@ -56,7 +57,7 @@ export class BenchmarkController {
   }
 
   @Delete(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
   public async deleteBenchmark(
     @Param('dataSource') dataSource: DataSource,

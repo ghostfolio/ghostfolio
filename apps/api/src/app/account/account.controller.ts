@@ -36,6 +36,7 @@ import { CreateAccountDto } from './create-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('account')
 export class AccountController {
@@ -48,7 +49,7 @@ export class AccountController {
   ) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAccount)
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
     const account = await this.accountService.accountWithOrders(
@@ -127,7 +128,7 @@ export class AccountController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.createAccount)
   public async createAccount(
     @Body() data: CreateAccountDto
@@ -158,7 +159,7 @@ export class AccountController {
   }
 
   @Post('transfer-balance')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.updateAccount)
   public async transferAccountBalance(
     @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
@@ -212,7 +213,7 @@ export class AccountController {
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.updateAccount)
   public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
     const originalAccount = await this.accountService.account({

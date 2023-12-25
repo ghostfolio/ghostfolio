@@ -14,6 +14,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { AccountBalance } from '@prisma/client';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { AccountBalanceService } from './account-balance.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('account-balance')
 export class AccountBalanceController {
@@ -23,7 +24,7 @@ export class AccountBalanceController {
   ) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAccountBalance)
   public async deleteAccountBalance(
     @Param('id') id: string

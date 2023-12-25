@@ -109,12 +109,6 @@ import { HasPermissionGuard } from '../guards/has-permission.guard';
     UserModule
   ],
   controllers: [AppController],
-  providers: [
-    CronService,
-    {
-      provide: APP_GUARD,
-      useClass: HasPermissionGuard
-    }
-  ]
+  providers: [CronService]
 })
 export class AppModule {}

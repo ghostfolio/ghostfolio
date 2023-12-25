@@ -26,6 +26,7 @@ import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('user')
 export class UserController {
@@ -37,7 +38,7 @@ export class UserController {
   ) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteUser)
   public async deleteUser(@Param('id') id: string): Promise<UserModel> {
     if (id === this.request.user.id) {

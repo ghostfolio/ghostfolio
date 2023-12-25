@@ -18,6 +18,7 @@ import { CreateTagDto } from './create-tag.dto';
 import { TagService } from './tag.service';
 import { UpdateTagDto } from './update-tag.dto';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('tag')
 export class TagController {
@@ -30,14 +31,14 @@ export class TagController {
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.createTag)
   public async createTag(@Body() data: CreateTagDto): Promise<Tag> {
     return this.tagService.createTag(data);
   }
 
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.updateTag)
   public async updateTag(@Param('id') id: string, @Body() data: UpdateTagDto) {
     const originalTag = await this.tagService.getTag({
@@ -62,7 +63,7 @@ export class TagController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteTag)
   public async deleteTag(@Param('id') id: string) {
     const originalTag = await this.tagService.getTag({
