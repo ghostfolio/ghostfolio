@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `@nx/eslint:lint`
   - `@nx/webpack:webpack`
 - Upgraded `prettier` from version `3.1.0` to `3.1.1`
+- Upgraded `prisma` from version `5.7.0` to `5.7.1`
 
 ### Fixed
 
