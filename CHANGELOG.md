@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Modernized the `Nx` executors
   - `@nx/eslint:lint`
   - `@nx/webpack:webpack`
+- Upgraded `Nx` from version `17.2.5` to `17.2.7`
 - Upgraded `prettier` from version `3.1.0` to `3.1.1`
 - Upgraded `prisma` from version `5.7.0` to `5.7.1`
 
