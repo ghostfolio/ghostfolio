@@ -1,7 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
-import { Test, TestingModule } from '@nestjs/testing';
 
 import { HasPermissionGuard } from './has-permission.guard';
 
@@ -10,12 +9,8 @@ describe('HasPermissionGuard', () => {
   let reflector: Reflector;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [HasPermissionGuard, Reflector]
-    }).compile();
-
-    guard = module.get<HasPermissionGuard>(HasPermissionGuard);
-    reflector = module.get<Reflector>(Reflector);
+    reflector = new Reflector();
+    guard = new HasPermissionGuard(reflector);
   });
 
   function setupReflectorSpy(returnValue: string) {

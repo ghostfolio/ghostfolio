@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { Export } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
@@ -14,7 +15,7 @@ export class ExportController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async export(
     @Query('activityIds') activityIds?: string[]
   ): Promise<Export> {

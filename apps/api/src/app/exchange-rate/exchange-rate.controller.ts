@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   Controller,
@@ -19,7 +20,7 @@ export class ExchangeRateController {
   ) {}
 
   @Get(':symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getExchangeRate(
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
