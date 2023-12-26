@@ -1,4 +1,5 @@
 import { WebAuthService } from '@ghostfolio/api/app/auth/web-auth.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { OAuthResponse } from '@ghostfolio/common/interfaces';
@@ -24,7 +25,6 @@ import {
   AssertionCredentialJSON,
   AttestationCredentialJSON
 } from './interfaces/simplewebauthn';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('auth')
 export class AuthController {

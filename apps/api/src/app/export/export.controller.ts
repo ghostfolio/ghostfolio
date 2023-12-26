@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { Export } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import { Controller, Get, Inject, Query, UseGuards } from '@nestjs/common';
@@ -5,7 +6,6 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 import { ExportService } from './export.service';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('export')
 export class ExportController {

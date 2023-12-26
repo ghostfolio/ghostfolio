@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -25,7 +26,6 @@ import { Request, Response } from 'express';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { SubscriptionService } from './subscription.service';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('subscription')
 export class SubscriptionController {

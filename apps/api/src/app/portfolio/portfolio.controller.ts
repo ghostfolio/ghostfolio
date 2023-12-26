@@ -1,5 +1,6 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
@@ -47,7 +48,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('portfolio')
 export class PortfolioController {

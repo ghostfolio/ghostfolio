@@ -1,5 +1,7 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
@@ -35,8 +37,6 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './create-account.dto';
 import { TransferBalanceDto } from './transfer-balance.dto';
 import { UpdateAccountDto } from './update-account.dto';
-import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('account')
 export class AccountController {
@@ -49,8 +49,8 @@ export class AccountController {
   ) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAccount)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
     const account = await this.accountService.accountWithOrders(
       {
@@ -127,9 +127,9 @@ export class AccountController {
     });
   }
 
+  @HasPermission(permissions.createAccount)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.createAccount)
   public async createAccount(
     @Body() data: CreateAccountDto
   ): Promise<AccountModel> {
@@ -158,9 +158,9 @@ export class AccountController {
     }
   }
 
+  @HasPermission(permissions.updateAccount)
   @Post('transfer-balance')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.updateAccount)
   public async transferAccountBalance(
     @Body() { accountIdFrom, accountIdTo, balance }: TransferBalanceDto
   ) {
@@ -212,9 +212,9 @@ export class AccountController {
     });
   }
 
+  @HasPermission(permissions.updateAccount)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.updateAccount)
   public async update(@Param('id') id: string, @Body() data: UpdateAccountDto) {
     const originalAccount = await this.accountService.account({
       id_userId: {

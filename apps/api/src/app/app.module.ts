@@ -41,8 +41,6 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
-import { APP_GUARD } from '@nestjs/core';
-import { HasPermissionGuard } from '../guards/has-permission.guard';
 
 @Module({
   imports: [

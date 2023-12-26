@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import type {
@@ -23,16 +25,14 @@ import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
-import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('benchmark')
 export class BenchmarkController {
   public constructor(private readonly benchmarkService: BenchmarkService) {}
 
+  @HasPermission(permissions.accessAdminControl)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
     try {
       const benchmark = await this.benchmarkService.addBenchmark({
@@ -57,8 +57,8 @@ export class BenchmarkController {
   }
 
   @Delete(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteBenchmark(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string

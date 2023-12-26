@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -24,8 +26,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ImportDataDto } from './import-data.dto';
 import { ImportService } from './import.service';
-import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('import')
 export class ImportController {

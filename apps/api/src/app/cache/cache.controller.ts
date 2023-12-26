@@ -9,9 +9,9 @@ import { AuthGuard } from '@nestjs/passport';
 export class CacheController {
   public constructor(private readonly redisCacheService: RedisCacheService) {}
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('flush')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async flushCache(): Promise<void> {
     return this.redisCacheService.reset();
   }

@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
@@ -47,8 +49,6 @@ import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
-import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('admin')
 export class AdminController {
@@ -61,22 +61,22 @@ export class AdminController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
     return this.adminService.get();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async gather7Days(): Promise<void> {
     this.dataGatheringService.gather7Days();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async gatherMax(): Promise<void> {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
@@ -99,9 +99,9 @@ export class AdminController {
     this.dataGatheringService.gatherMax();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async gatherProfileData(): Promise<void> {
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
@@ -122,9 +122,9 @@ export class AdminController {
     );
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async gatherProfileDataForSymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
@@ -154,9 +154,9 @@ export class AdminController {
     return;
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
@@ -206,8 +206,8 @@ export class AdminController {
   }
 
   @Get('market-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
@@ -215,9 +215,9 @@ export class AdminController {
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async updateMarketData(
     @Body() data: UpdateBulkMarketDataDto,
     @Param('dataSource') dataSource: DataSource,
@@ -241,9 +241,9 @@ export class AdminController {
   /**
    * @deprecated
    */
+  @HasPermission(permissions.accessAdminControl)
   @Put('market-data/:dataSource/:symbol/:dateString')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async update(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
@@ -264,9 +264,9 @@ export class AdminController {
     });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async addProfileData(
     @Param('dataSource') dataSource: DataSource,
@@ -280,8 +280,8 @@ export class AdminController {
   }
 
   @Delete('profile-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteProfileData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
@@ -289,9 +289,9 @@ export class AdminController {
     return this.adminService.deleteProfileData({ dataSource, symbol });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Patch('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async patchAssetProfileData(
     @Body() assetProfileData: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
@@ -304,9 +304,9 @@ export class AdminController {
     });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Put('settings/:key')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.accessAdminControl)
   public async updateProperty(
     @Param('key') key: string,
     @Body() data: PropertyDto

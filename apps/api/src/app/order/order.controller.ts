@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
@@ -32,8 +34,6 @@ import { CreateOrderDto } from './create-order.dto';
 import { Activities } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './update-order.dto';
-import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
-import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('order')
 export class OrderController {
@@ -46,8 +46,8 @@ export class OrderController {
   ) {}
 
   @Delete()
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteOrder)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrders(): Promise<number> {
     return this.orderService.deleteOrders({
       userId: this.request.user.id
@@ -114,9 +114,9 @@ export class OrderController {
     return { activities, count };
   }
 
+  @HasPermission(permissions.createOrder)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.createOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
     const order = await this.orderService.createOrder({
@@ -156,9 +156,9 @@ export class OrderController {
     return order;
   }
 
+  @HasPermission(permissions.updateOrder)
   @Put(':id')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @HasPermission(permissions.updateOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
     const originalOrder = await this.orderService.order({

@@ -10,8 +10,8 @@ export class AuthDeviceController {
   public constructor(private readonly authDeviceService: AuthDeviceService) {}
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.deleteAuthDevice)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAuthDevice(@Param('id') id: string): Promise<void> {
     await this.authDeviceService.deleteAuthDevice({ id });
   }
