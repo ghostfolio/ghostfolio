@@ -92,6 +92,7 @@ describe('PortfolioCalculator', () => {
             marketPrice: 13657.2,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
+            timeWeightedInvestment: new Big('640.56763686131386861314'),
             transactionCount: 2
           }
         ],

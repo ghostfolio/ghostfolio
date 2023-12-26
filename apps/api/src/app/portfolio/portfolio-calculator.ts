@@ -464,7 +464,6 @@ export class PortfolioCalculator {
     if (firstIndex > 0) {
       firstIndex--;
     }
-    const initialValues: { [symbol: string]: Big } = {};
 
     const positions: TimelinePosition[] = [];
     let hasAnySymbolMetricsErrors = false;
@@ -478,9 +477,9 @@ export class PortfolioCalculator {
         grossPerformance,
         grossPerformancePercentage,
         hasErrors,
-        initialValue,
         netPerformance,
-        netPerformancePercentage
+        netPerformancePercentage,
+        timeWeightedInvestment
       } = this.getSymbolMetrics({
         end,
         marketSymbolMap,
@@ -489,9 +488,9 @@ export class PortfolioCalculator {
       });
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
-      initialValues[item.symbol] = initialValue;
 
       positions.push({
+        timeWeightedInvestment,
         averagePrice: item.quantity.eq(0)
           ? new Big(0)
           : item.investment.div(item.quantity),
@@ -526,7 +525,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const overall = this.calculateOverallPerformance(positions, initialValues);
+    const overall = this.calculateOverallPerformance(positions);
 
     return {
       ...overall,
@@ -749,18 +748,13 @@ export class PortfolioCalculator {
     };
   }
 
-  private calculateOverallPerformance(
-    positions: TimelinePosition[],
-    initialValues: { [symbol: string]: Big }
-  ) {
+  private calculateOverallPerformance(positions: TimelinePosition[]) {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
-    let grossPerformancePercentage = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
-    let netPerformancePercentage = new Big(0);
-    let sumOfWeights = new Big(0);
     let totalInvestment = new Big(0);
+    let totalTimeWeightedInvestment = new Big(0);
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -783,21 +777,9 @@ export class PortfolioCalculator {
         hasErrors = true;
       }
 
-      if (currentPosition.grossPerformancePercentage) {
-        // Use the average from the initial value and the current investment as
-        // a weight
-        const weight = (initialValues[currentPosition.symbol] ?? new Big(0))
-          .plus(currentPosition.investment)
-          .div(2);
-
-        sumOfWeights = sumOfWeights.plus(weight);
-
-        grossPerformancePercentage = grossPerformancePercentage.plus(
-          currentPosition.grossPerformancePercentage.mul(weight)
-        );
-
-        netPerformancePercentage = netPerformancePercentage.plus(
-          currentPosition.netPerformancePercentage.mul(weight)
+      if (currentPosition.timeWeightedInvestment) {
+        totalTimeWeightedInvestment = totalTimeWeightedInvestment.plus(
+          currentPosition.timeWeightedInvestment
         );
       } else if (!currentPosition.quantity.eq(0)) {
         Logger.warn(
@@ -808,22 +790,18 @@ export class PortfolioCalculator {
       }
     }
 
-    if (sumOfWeights.gt(0)) {
-      grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
-      netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
-    } else {
-      grossPerformancePercentage = new Big(0);
-      netPerformancePercentage = new Big(0);
-    }
-
     return {
       currentValue,
       grossPerformance,
-      grossPerformancePercentage,
       hasErrors,
       netPerformance,
-      netPerformancePercentage,
-      totalInvestment
+      totalInvestment,
+      netPerformancePercentage: !totalTimeWeightedInvestment.eq(0)
+        ? netPerformance.div(totalTimeWeightedInvestment)
+        : new Big(0),
+      grossPerformancePercentage: !totalTimeWeightedInvestment.eq(0)
+        ? grossPerformance.div(totalTimeWeightedInvestment)
+        : new Big(0)
     };
   }
 
@@ -1438,7 +1416,9 @@ export class PortfolioCalculator {
       timeWeightedInvestmentValues,
       grossPerformance: totalGrossPerformance,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
-      netPerformance: totalNetPerformance
+      netPerformance: totalNetPerformance,
+      timeWeightedInvestment:
+        timeWeightedAverageInvestmentBetweenStartAndEndDate
     };
   }
 
