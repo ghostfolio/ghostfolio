@@ -24,6 +24,7 @@ import {
   AssertionCredentialJSON,
   AttestationCredentialJSON
 } from './interfaces/simplewebauthn';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -118,13 +119,13 @@ export class AuthController {
   }
 
   @Get('webauthn/generate-registration-options')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async generateRegistrationOptions() {
     return this.webAuthService.generateRegistrationOptions();
   }
 
   @Post('webauthn/verify-attestation')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async verifyAttestation(
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
   ) {

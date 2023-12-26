@@ -25,7 +25,7 @@ export class PlatformController {
   public constructor(private readonly platformService: PlatformService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPlatforms() {
     return this.platformService.getPlatformsWithAccountCount();
   }

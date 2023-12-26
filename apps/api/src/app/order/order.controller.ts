@@ -55,7 +55,7 @@ export class OrderController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
     const order = await this.orderService.order({ id });
 
@@ -76,7 +76,7 @@ export class OrderController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(

@@ -81,7 +81,7 @@ export class AccountController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAllAccounts(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId
@@ -96,7 +96,7 @@ export class AccountController {
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
@@ -116,7 +116,7 @@ export class AccountController {
   }
 
   @Get(':id/balances')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountBalancesById(
     @Param('id') id: string

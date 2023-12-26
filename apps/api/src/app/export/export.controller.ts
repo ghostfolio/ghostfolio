@@ -15,7 +15,7 @@ export class ExportController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async export(
     @Query('activityIds') activityIds?: string[]
   ): Promise<Export> {

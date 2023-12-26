@@ -30,7 +30,7 @@ export class AccessController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAllAccesses(): Promise<Access[]> {
     const accessesWithGranteeUser = await this.accessService.accesses({
       include: {

@@ -11,6 +11,7 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { ExchangeRateService } from './exchange-rate.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('exchange-rate')
 export class ExchangeRateController {
@@ -19,7 +20,7 @@ export class ExchangeRateController {
   ) {}
 
   @Get(':symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getExchangeRate(
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string

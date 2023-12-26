@@ -95,7 +95,7 @@ export class BenchmarkController {
   }
 
   @Get(':dataSource/:symbol/:startDateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getBenchmarkMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,

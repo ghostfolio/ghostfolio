@@ -54,7 +54,7 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getUser(
     @Headers('accept-language') acceptLanguage: string
   ): Promise<User> {
@@ -92,7 +92,7 @@ export class UserController {
   }
 
   @Put('setting')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateUserSetting(@Body() data: UpdateUserSettingDto) {
     if (
       size(data) === 1 &&

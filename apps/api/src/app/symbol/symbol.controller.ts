@@ -22,6 +22,7 @@ import { isDate, isEmpty } from 'lodash';
 import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 
 @Controller('symbol')
 export class SymbolController {
@@ -34,7 +35,7 @@ export class SymbolController {
    * Must be before /:symbol
    */
   @Get('lookup')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
     @Query('includeIndices') includeIndices: boolean = false,
@@ -88,7 +89,7 @@ export class SymbolController {
   }
 
   @Get(':dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,

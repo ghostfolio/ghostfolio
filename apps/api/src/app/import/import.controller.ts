@@ -91,7 +91,7 @@ export class ImportController {
   }
 
   @Get('dividends/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async gatherDividends(
