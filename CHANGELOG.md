@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the performance calculation to a time-weighted approach
 - Used the `HasPermission` annotation in endpoints
 
 ## 2.32.0 - 2023-12-26
