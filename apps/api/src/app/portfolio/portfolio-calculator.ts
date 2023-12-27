@@ -796,12 +796,12 @@ export class PortfolioCalculator {
       hasErrors,
       netPerformance,
       totalInvestment,
-      netPerformancePercentage: !totalTimeWeightedInvestment.eq(0)
-        ? netPerformance.div(totalTimeWeightedInvestment)
-        : new Big(0),
-      grossPerformancePercentage: !totalTimeWeightedInvestment.eq(0)
-        ? grossPerformance.div(totalTimeWeightedInvestment)
-        : new Big(0)
+      netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
+        ? new Big(0)
+        : netPerformance.div(totalTimeWeightedInvestment),
+      grossPerformancePercentage: totalTimeWeightedInvestment.eq(0)
+        ? new Big(0)
+        : grossPerformance.div(totalTimeWeightedInvestment)
     };
   }
 
@@ -1393,7 +1393,9 @@ export class PortfolioCalculator {
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
         Total investment: ${totalInvestment.toFixed(2)}
-        Time weighted investment: ${timeWeightedAverageInvestmentBetweenStartAndEndDate.toFixed()}
+        Time weighted investment: ${timeWeightedAverageInvestmentBetweenStartAndEndDate.toFixed(
+          2
+        )}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2
