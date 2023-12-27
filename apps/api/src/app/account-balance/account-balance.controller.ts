@@ -1,4 +1,6 @@
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Controller,
@@ -22,8 +24,9 @@ export class AccountBalanceController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  @HasPermission(permissions.deleteAccountBalance)
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAccountBalance(
     @Param('id') id: string
   ): Promise<AccountBalance> {
@@ -31,14 +34,7 @@ export class AccountBalanceController {
       id
     });
 
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.deleteAccountBalance
-      ) ||
-      !accountBalance ||
-      accountBalance.userId !== this.request.user.id
-    ) {
+    if (!accountBalance || accountBalance.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
