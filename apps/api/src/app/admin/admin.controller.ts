@@ -19,7 +19,7 @@ import {
   AdminMarketDataDetails,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type {
   MarketDataPreset,
   RequestWithUser
