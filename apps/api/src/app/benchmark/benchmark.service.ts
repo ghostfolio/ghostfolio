@@ -260,9 +260,10 @@ export class BenchmarkService {
         marketDataItem.date
       );
 
-      const exchangeRateFactor = isNumber(exchangeRate)
-        ? exchangeRate / exchangeRateAtStartDate
-        : 1;
+      const exchangeRateFactor =
+        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
+          ? exchangeRate / exchangeRateAtStartDate
+          : 1;
 
       marketData.push({
         date: format(marketDataItem.date, DATE_FORMAT),
@@ -284,9 +285,10 @@ export class BenchmarkService {
         new Date()
       );
 
-      const exchangeRateFactor = isNumber(exchangeRate)
-        ? exchangeRate / exchangeRateAtStartDate
-        : 1;
+      const exchangeRateFactor =
+        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
+          ? exchangeRate / exchangeRateAtStartDate
+          : 1;
 
       marketData.push({
         date: format(new Date(), DATE_FORMAT),
