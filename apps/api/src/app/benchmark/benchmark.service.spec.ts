@@ -11,6 +11,7 @@ describe('BenchmarkService', () => {
       null,
       null,
       null,
+      null,
       null
     );
   });
