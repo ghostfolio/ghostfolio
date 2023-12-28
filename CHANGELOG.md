@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the performance calculation to a time-weighted approach
 - Used the `HasPermission` annotation in endpoints
 
+### Fixed
+
+- Improved the handling of derived currencies (`USX`)
+
 ## 2.32.0 - 2023-12-26
 
 ### Added
