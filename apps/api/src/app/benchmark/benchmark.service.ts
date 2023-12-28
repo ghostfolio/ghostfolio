@@ -232,13 +232,16 @@ export class BenchmarkService {
       })
     ]);
 
+    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
+      currencyFrom: currentSymbolItem.currency,
+      currencyTo: baseCurrency,
+      dates: marketDataItems.map(({ date }) => {
+        return format(date, DATE_FORMAT);
+      })
+    });
+
     const exchangeRateAtStartDate =
-      await this.exchangeRateDataService.toCurrencyAtDate(
-        1,
-        currentSymbolItem.currency,
-        baseCurrency,
-        startDate
-      );
+      exchangeRates[format(startDate, DATE_FORMAT)];
 
     const step = Math.round(
       marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
@@ -249,16 +252,12 @@ export class BenchmarkService {
 
     let i = 0;
     for (let marketDataItem of marketDataItems) {
-      if (i % step != 0) {
+      if (i % step !== 0) {
         continue;
       }
 
-      const exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
-        1,
-        currentSymbolItem.currency,
-        baseCurrency,
-        marketDataItem.date
-      );
+      const exchangeRate =
+        exchangeRates[format(marketDataItem.date, DATE_FORMAT)];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
@@ -278,12 +277,7 @@ export class BenchmarkService {
     }
 
     if (currentSymbolItem?.marketPrice) {
-      const exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
-        1,
-        currentSymbolItem.currency,
-        baseCurrency,
-        new Date()
-      );
+      const exchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)

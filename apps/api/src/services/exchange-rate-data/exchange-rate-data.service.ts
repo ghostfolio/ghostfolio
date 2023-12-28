@@ -7,7 +7,11 @@ import {
   DEFAULT_CURRENCY,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getYesterday,
+  parseDate
+} from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
@@ -31,6 +35,108 @@ export class ExchangeRateDataService {
 
   public getCurrencyPairs() {
     return this.currencyPairs;
+  }
+
+  public async getExchangeRates({
+    currencyFrom,
+    currencyTo,
+    dates
+  }: {
+    currencyFrom: string;
+    currencyTo: string;
+    dates: string[];
+  }) {
+    let factors: { [dateString: string]: number } = {};
+    const startDate = parseDate(dates[0]);
+
+    if (currencyFrom === currencyTo) {
+      for (const date of dates) {
+        factors[date] = 1;
+      }
+    } else {
+      const dataSource =
+        this.dataProviderService.getDataSourceForExchangeRates();
+      const symbol = `${currencyFrom}${currencyTo}`;
+
+      const marketData = await this.marketDataService.getRange({
+        dateQuery: { gte: startDate },
+        uniqueAssets: [
+          {
+            dataSource,
+            symbol
+          }
+        ]
+      });
+
+      if (marketData?.length > 0) {
+        for (const { date, marketPrice } of marketData) {
+          factors[format(date, DATE_FORMAT)] = marketPrice;
+        }
+      } else {
+        // Calculate indirectly via base currency
+
+        let marketPriceBaseCurrencyFromCurrency: {
+          [dateString: string]: number;
+        } = {};
+        let marketPriceBaseCurrencyToCurrency: {
+          [dateString: string]: number;
+        } = {};
+
+        try {
+          if (currencyFrom === DEFAULT_CURRENCY) {
+            for (const date of dates) {
+              marketPriceBaseCurrencyFromCurrency[date] = 1;
+            }
+          } else {
+            const marketData = await this.marketDataService.getRange({
+              dateQuery: { gte: startDate },
+              uniqueAssets: [
+                {
+                  dataSource,
+                  symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
+                }
+              ]
+            });
+
+            for (const { date, marketPrice } of marketData) {
+              marketPriceBaseCurrencyFromCurrency[format(date, DATE_FORMAT)] =
+                marketPrice;
+            }
+          }
+        } catch {}
+
+        try {
+          if (currencyTo === DEFAULT_CURRENCY) {
+            for (const date of dates) {
+              marketPriceBaseCurrencyToCurrency[date] = 1;
+            }
+          } else {
+            const marketData = await this.marketDataService.getRange({
+              dateQuery: { gte: startDate },
+              uniqueAssets: [
+                {
+                  dataSource,
+                  symbol: `${DEFAULT_CURRENCY}${currencyTo}`
+                }
+              ]
+            });
+
+            for (const { date, marketPrice } of marketData) {
+              marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)] =
+                marketPrice;
+            }
+          }
+        } catch {}
+
+        for (const date of dates) {
+          factors[date] =
+            (1 / marketPriceBaseCurrencyFromCurrency[date]) *
+            marketPriceBaseCurrencyToCurrency[date];
+        }
+      }
+    }
+
+    return factors;
   }
 
   public hasCurrencyPair(currency1: string, currency2: string) {

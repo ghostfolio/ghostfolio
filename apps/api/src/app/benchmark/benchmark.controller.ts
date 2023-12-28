@@ -8,6 +8,7 @@ import type {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -20,13 +21,12 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
-import { REQUEST } from '@nestjs/core';
-import { RequestWithUser } from '@ghostfolio/common/types';
 
 @Controller('benchmark')
 export class BenchmarkController {
