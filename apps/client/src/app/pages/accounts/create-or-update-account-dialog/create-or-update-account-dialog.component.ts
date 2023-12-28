@@ -15,7 +15,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Currency } from '@ghostfolio/common/interfaces/currency.interface';
+import { Currency } from '@ghostfolio/common/interfaces';
 import { Platform } from '@prisma/client';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
