@@ -27,8 +27,6 @@ import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
-import { REQUEST } from '@nestjs/core';
-import { RequestWithUser } from '@ghostfolio/common/types';
 
 @Controller('benchmark')
 export class BenchmarkController {
