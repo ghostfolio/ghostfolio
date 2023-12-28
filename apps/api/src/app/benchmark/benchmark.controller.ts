@@ -25,10 +25,15 @@ import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { BenchmarkService } from './benchmark.service';
+import { REQUEST } from '@nestjs/core';
+import { RequestWithUser } from '@ghostfolio/common/types';
 
 @Controller('benchmark')
 export class BenchmarkController {
-  public constructor(private readonly benchmarkService: BenchmarkService) {}
+  public constructor(
+    private readonly benchmarkService: BenchmarkService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
+  ) {}
 
   @HasPermission(permissions.accessAdminControl)
   @Post()
@@ -107,7 +112,8 @@ export class BenchmarkController {
     return this.benchmarkService.getMarketDataBySymbol({
       dataSource,
       startDate,
-      symbol
+      symbol,
+      baseCurrency: this.request.user.Settings.settings.baseCurrency
     });
   }
 }

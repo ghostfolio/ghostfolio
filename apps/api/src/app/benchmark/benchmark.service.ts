@@ -1,6 +1,7 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -25,7 +26,7 @@ import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { format, subDays } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { isNumber, uniqBy } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -34,6 +35,7 @@ export class BenchmarkService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -201,10 +203,14 @@ export class BenchmarkService {
   }
 
   public async getMarketDataBySymbol({
+    baseCurrency,
     dataSource,
     startDate,
     symbol
-  }: { startDate: Date } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+  }: {
+    baseCurrency: string;
+    startDate: Date;
+  } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
         dataGatheringItem: {
@@ -226,44 +232,75 @@ export class BenchmarkService {
       })
     ]);
 
+    const exchangeRateAtStartDate =
+      await this.exchangeRateDataService.toCurrencyAtDate(
+        1,
+        currentSymbolItem.currency,
+        baseCurrency,
+        startDate
+      );
+
     const step = Math.round(
       marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
     );
 
     const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
-    const response = {
-      marketData: [
-        ...marketDataItems
-          .filter((marketDataItem, index) => {
-            return index % step === 0;
-          })
-          .map((marketDataItem) => {
-            return {
-              date: format(marketDataItem.date, DATE_FORMAT),
-              value:
-                marketPriceAtStartDate === 0
-                  ? 0
-                  : this.calculateChangeInPercentage(
-                      marketPriceAtStartDate,
-                      marketDataItem.marketPrice
-                    ) * 100
-            };
-          })
-      ]
-    };
+    const marketData: { date: string; value: number }[] = [];
+
+    let i = 0;
+    for (let marketDataItem of marketDataItems) {
+      if (i % step != 0) {
+        continue;
+      }
+
+      const exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
+        1,
+        currentSymbolItem.currency,
+        baseCurrency,
+        marketDataItem.date
+      );
+
+      const exchangeRateFactor = isNumber(exchangeRate)
+        ? exchangeRate / exchangeRateAtStartDate
+        : 1;
+
+      marketData.push({
+        date: format(marketDataItem.date, DATE_FORMAT),
+        value:
+          marketPriceAtStartDate === 0
+            ? 0
+            : this.calculateChangeInPercentage(
+                marketPriceAtStartDate,
+                marketDataItem.marketPrice * exchangeRateFactor
+              ) * 100
+      });
+    }
 
     if (currentSymbolItem?.marketPrice) {
-      response.marketData.push({
+      const exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
+        1,
+        currentSymbolItem.currency,
+        baseCurrency,
+        new Date()
+      );
+
+      const exchangeRateFactor = isNumber(exchangeRate)
+        ? exchangeRate / exchangeRateAtStartDate
+        : 1;
+
+      marketData.push({
         date: format(new Date(), DATE_FORMAT),
         value:
           this.calculateChangeInPercentage(
             marketPriceAtStartDate,
-            currentSymbolItem.marketPrice
+            currentSymbolItem.marketPrice * exchangeRateFactor
           ) * 100
       });
     }
 
-    return response;
+    return {
+      marketData
+    };
   }
 
   public async addBenchmark({
