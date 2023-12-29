@@ -1,7 +1,7 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 
 import { YahooFinanceDataEnhancerService } from './yahoo-finance.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
 jest.mock(
   '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service',
