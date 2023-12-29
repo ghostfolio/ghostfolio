@@ -1,5 +1,5 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -9,6 +9,7 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 @Injectable()
 export class LogoService {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -46,7 +47,7 @@ export class LogoService {
 
     setTimeout(() => {
       abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
+    }, this.configurationService.get('REQUEST_TIMEOUT'));
 
     return got(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,

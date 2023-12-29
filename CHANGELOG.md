@@ -9,12 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support to edit the currency of asset profiles with `MANUAL` data source in the asset profile details dialog of the admin control panel
 - Added a hint for the community languages in the user settings
 
 ### Changed
 
 - Changed the performance calculation to a time-weighted approach
+- Exposed the environment variable `REQUEST_TIMEOUT`
 - Used the `HasPermission` annotation in endpoints
+- Upgraded `Nx` from version `17.2.5` to `17.2.7`
+
+### Fixed
+
+- Improved the handling of derived currencies (`USX`)
 
 ## 2.32.0 - 2023-12-26
 

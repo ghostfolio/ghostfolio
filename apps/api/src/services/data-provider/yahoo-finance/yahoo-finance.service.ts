@@ -1,4 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
@@ -6,10 +7,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT
-} from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -22,6 +20,7 @@ import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {}
@@ -160,7 +159,7 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
   }: {
     requestTimeout?: number;
