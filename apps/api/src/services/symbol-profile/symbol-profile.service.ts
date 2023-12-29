@@ -89,6 +89,7 @@ export class SymbolProfileService {
     assetClass,
     assetSubClass,
     comment,
+    currency,
     dataSource,
     name,
     scraperConfiguration,
@@ -100,6 +101,7 @@ export class SymbolProfileService {
         assetClass,
         assetSubClass,
         comment,
+        currency,
         name,
         scraperConfiguration,
         symbolMapping

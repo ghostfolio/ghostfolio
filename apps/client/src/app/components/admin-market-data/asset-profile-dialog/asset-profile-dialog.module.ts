@@ -10,6 +10,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { GfAdminMarketDataDetailModule } from '@ghostfolio/client/components/admin-market-data-detail/admin-market-data-detail.module';
+import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
 import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
@@ -21,6 +22,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     CommonModule,
     FormsModule,
     GfAdminMarketDataDetailModule,
+    GfCurrencySelectorModule,
     GfPortfolioProportionChartModule,
     GfValueModule,
     MatButtonModule,
