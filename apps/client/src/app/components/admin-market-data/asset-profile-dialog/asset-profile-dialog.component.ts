@@ -58,7 +58,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }),
     name: ['', Validators.required],
     scraperConfiguration: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    countries: '',
+    sectors: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -149,8 +151,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          countries: JSON.stringify(this.countries ?? {}),
+          sectors: JSON.stringify(this.sectors ?? {})
         });
+        console.log(this.assetProfileForm.value);
 
         this.assetProfileForm.markAsPristine();
 
@@ -186,7 +191,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-      ).data;
+
+        ).data;
 
       this.adminService
         .postMarketData({
