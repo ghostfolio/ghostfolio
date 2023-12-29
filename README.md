@@ -100,7 +100,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `REDIS_HOST`        |               | The host where _Redis_ is running                                                                                                   |
 | `REDIS_PASSWORD`    |               | The password of _Redis_                                                                                                             |
 | `REDIS_PORT`        |               | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`   | `2000`        | The timeout for network requests to data providers in milliseconds                                                                  |
+| `REQUEST_TIMEOUT`   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
 
 ### Run with Docker Compose
 
