@@ -236,7 +236,7 @@ export class BenchmarkService {
       currencyFrom: currentSymbolItem.currency,
       currencyTo: baseCurrency,
       dates: marketDataItems.map(({ date }) => {
-        return format(date, DATE_FORMAT);
+        return date;
       })
     });
 
