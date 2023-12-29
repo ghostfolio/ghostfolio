@@ -16,6 +16,10 @@ export class UpdateAssetProfileDto {
 
   @IsString()
   @IsOptional()
+  currency?: string;
+
+  @IsString()
+  @IsOptional()
   name?: string;
 
   @IsObject()

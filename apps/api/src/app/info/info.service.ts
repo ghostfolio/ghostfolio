@@ -8,7 +8,6 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -162,7 +161,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
@@ -187,7 +186,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
         // @ts-ignore
@@ -214,7 +213,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
@@ -342,7 +341,7 @@ export class InfoService {
 
         setTimeout(() => {
           abortController.abort();
-        }, DEFAULT_REQUEST_TIMEOUT);
+        }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         const { data } = await got(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(

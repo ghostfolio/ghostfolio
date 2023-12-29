@@ -5,10 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  DEFAULT_REQUEST_TIMEOUT,
-  ghostfolioFearAndGreedIndexSymbol
-} from '@ghostfolio/common/config';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -88,7 +85,7 @@ export class RapidApiService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
   }: {
     requestTimeout?: number;
@@ -146,7 +143,7 @@ export class RapidApiService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
@@ -166,7 +163,9 @@ export class RapidApiService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+          'REQUEST_TIMEOUT'
+        )}ms`;
       }
 
       Logger.error(message, 'RapidApiService');
