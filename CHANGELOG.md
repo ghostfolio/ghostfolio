@@ -9,9 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed the performance calculation to a time-weighted approach
+- Used the `HasPermission` annotation in endpoints
+
+## 2.32.0 - 2023-12-26
+
+### Added
+
+- Added support to search for an asset profile by `id` as an administrator
+
+### Changed
+
 - Set the select column of the lazy-loaded activities table to stick at the end (experimental)
+- Dropped the activity id in the activities import
 - Improved the validation of the currency management in the admin control panel
 - Improved the performance of the value redaction interceptor for the impersonation mode by eliminating `cloneDeep`
+- Modernized the `Nx` executors
+  - `@nx/eslint:lint`
+  - `@nx/webpack:webpack`
+- Upgraded `prettier` from version `3.1.0` to `3.1.1`
+- Upgraded `prisma` from version `5.7.0` to `5.7.1`
 
 ### Fixed
 

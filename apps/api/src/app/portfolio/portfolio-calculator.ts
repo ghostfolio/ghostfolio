@@ -16,6 +16,7 @@ import {
   addMilliseconds,
   addMonths,
   addYears,
+  differenceInDays,
   endOfDay,
   format,
   isAfter,
@@ -44,7 +45,7 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
-  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT =
+  private static readonly CALCULATE_PERCENTAGE_PERFORMANCE_WITH_TIME_WEIGHTED_INVESTMENT =
     true;
 
   private static readonly ENABLE_LOGGING = false;
@@ -621,7 +622,6 @@ export class PortfolioCalculator {
     if (firstIndex > 0) {
       firstIndex--;
     }
-    const initialValues: { [symbol: string]: Big } = {};
 
     const positions: TimelinePosition[] = [];
     let hasAnySymbolMetricsErrors = false;
@@ -635,9 +635,9 @@ export class PortfolioCalculator {
         grossPerformance,
         grossPerformancePercentage,
         hasErrors,
-        initialValue,
         netPerformance,
-        netPerformancePercentage
+        netPerformancePercentage,
+        timeWeightedInvestment
       } = this.getSymbolMetrics({
         end,
         marketSymbolMap,
@@ -646,9 +646,9 @@ export class PortfolioCalculator {
       });
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
-      initialValues[item.symbol] = initialValue;
 
       positions.push({
+        timeWeightedInvestment,
         averagePrice: item.quantity.eq(0)
           ? new Big(0)
           : item.investment.div(item.quantity),
@@ -683,7 +683,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const overall = this.calculateOverallPerformance(positions, initialValues);
+    const overall = this.calculateOverallPerformance(positions);
 
     return {
       ...overall,
@@ -906,18 +906,13 @@ export class PortfolioCalculator {
     };
   }
 
-  private calculateOverallPerformance(
-    positions: TimelinePosition[],
-    initialValues: { [symbol: string]: Big }
-  ) {
+  private calculateOverallPerformance(positions: TimelinePosition[]) {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
-    let grossPerformancePercentage = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
-    let netPerformancePercentage = new Big(0);
-    let sumOfWeights = new Big(0);
     let totalInvestment = new Big(0);
+    let totalTimeWeightedInvestment = new Big(0);
 
     for (const currentPosition of positions) {
       if (currentPosition.marketPrice) {
@@ -965,22 +960,18 @@ export class PortfolioCalculator {
       }
     }
 
-    if (sumOfWeights.gt(0)) {
-      grossPerformancePercentage = grossPerformancePercentage.div(sumOfWeights);
-      netPerformancePercentage = netPerformancePercentage.div(sumOfWeights);
-    } else {
-      grossPerformancePercentage = new Big(0);
-      netPerformancePercentage = new Big(0);
-    }
-
     return {
       currentValue,
       grossPerformance,
-      grossPerformancePercentage,
       hasErrors,
       netPerformance,
-      netPerformancePercentage,
-      totalInvestment
+      totalInvestment,
+      netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
+        ? new Big(0)
+        : netPerformance.div(totalTimeWeightedInvestment),
+      grossPerformancePercentage: totalTimeWeightedInvestment.eq(0)
+        ? new Big(0)
+        : grossPerformance.div(totalTimeWeightedInvestment)
     };
   }
 
@@ -1194,6 +1185,7 @@ export class PortfolioCalculator {
 
     let averagePriceAtEndDate = new Big(0);
     let averagePriceAtStartDate = new Big(0);
+    const currentValues: { [date: string]: Big } = {};
     let feesAtStartDate = new Big(0);
     let fees = new Big(0);
     let grossPerformance = new Big(0);
@@ -1201,7 +1193,6 @@ export class PortfolioCalculator {
     let grossPerformanceFromSells = new Big(0);
     let initialValue: Big;
     let investmentAtStartDate: Big;
-    const currentValues: { [date: string]: Big } = {};
     const investmentValues: { [date: string]: Big } = {};
     const maxInvestmentValues: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
@@ -1248,6 +1239,9 @@ export class PortfolioCalculator {
     const indexOfEndOrder = orders.findIndex((order) => {
       return order.itemType === 'end';
     });
+
+    let totalInvestmentDays = 0;
+    let sumOfTimeWeightedInvestments = new Big(0);
 
     return this.calculatePerformanceOfSymbol(
       orders,
@@ -1980,6 +1974,9 @@ export class PortfolioCalculator {
           2
         )} -> ${averagePriceAtEndDate.toFixed(2)}
         Total investment: ${totalInvestment.toFixed(2)}
+        Time weighted investment: ${timeWeightedAverageInvestmentBetweenStartAndEndDate.toFixed(
+          2
+        )}
         Max. total investment: ${maxTotalInvestment.toFixed(2)}
         Gross performance: ${totalGrossPerformance.toFixed(
           2

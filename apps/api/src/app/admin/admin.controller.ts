@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
@@ -59,56 +61,23 @@ export class AdminController {
   ) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.adminService.get();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gather7Days(): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     this.dataGatheringService.gather7Days();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/max')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     await this.dataGatheringService.addJobsToQueue(
@@ -130,21 +99,10 @@ export class AdminController {
     this.dataGatheringService.gatherMax();
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
     await this.dataGatheringService.addJobsToQueue(
@@ -164,24 +122,13 @@ export class AdminController {
     );
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileDataForSymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     await this.dataGatheringService.addJobToQueue({
       data: {
         dataSource,
@@ -196,47 +143,25 @@ export class AdminController {
   }
 
   @Post('gather/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.accessAdminControl)
   public async gatherSymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     this.dataGatheringService.gatherSymbol({ dataSource, symbol });
 
     return;
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/:dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string
   ): Promise<MarketData> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const date = parseISO(dateString);
 
     if (!isDate(date)) {
@@ -254,7 +179,8 @@ export class AdminController {
   }
 
   @Get('market-data')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.accessAdminControl)
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
     @Query('presetId') presetId?: MarketDataPreset,
@@ -264,18 +190,6 @@ export class AdminController {
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('take') take?: number
   ): Promise<AdminMarketData> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAssetSubClasses,
       filterBySearchQuery
@@ -292,45 +206,23 @@ export class AdminController {
   }
 
   @Get('market-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<AdminMarketDataDetails> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateMarketData(
     @Body() data: UpdateBulkMarketDataDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
       ({ date, marketPrice }) => ({
         dataSource,
@@ -349,26 +241,15 @@ export class AdminController {
   /**
    * @deprecated
    */
+  @HasPermission(permissions.accessAdminControl)
   @Put('market-data/:dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async update(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string,
     @Body() data: UpdateMarketDataDto
   ) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const date = parseISO(dateString);
 
     return this.marketDataService.updateMarketData({
@@ -383,24 +264,14 @@ export class AdminController {
     });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('profile-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async addProfileData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<SymbolProfile | never> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
     return this.adminService.addAssetProfile({
       dataSource,
       symbol,
@@ -409,28 +280,18 @@ export class AdminController {
   }
 
   @Delete('profile-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteProfileData(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.adminService.deleteProfileData({ dataSource, symbol });
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Patch('profile-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async patchAssetProfileData(
     @Body() assetProfileData: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
@@ -489,24 +350,13 @@ export class AdminController {
     }
   }
 
+  @HasPermission(permissions.accessAdminControl)
   @Put('settings/:key')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateProperty(
     @Param('key') key: string,
     @Body() data: PropertyDto
   ) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return await this.adminService.putSetting(key, data.value);
   }
 }

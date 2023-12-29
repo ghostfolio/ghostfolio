@@ -1,5 +1,6 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
@@ -61,7 +62,7 @@ export class PortfolioController {
   ) {}
 
   @Get('details')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
@@ -239,7 +240,7 @@ export class PortfolioController {
   }
 
   @Get('dividends')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getDividends(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
@@ -289,7 +290,7 @@ export class PortfolioController {
   }
 
   @Get('investments')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getInvestments(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
@@ -350,7 +351,7 @@ export class PortfolioController {
   }
 
   @Get('performance')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @Version('2')
   public async getPerformanceV2(
@@ -442,7 +443,7 @@ export class PortfolioController {
   }
 
   @Get('positions')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPositions(
@@ -537,7 +538,7 @@ export class PortfolioController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPosition(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource,
@@ -560,7 +561,7 @@ export class PortfolioController {
   }
 
   @Get('report')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getReport(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
   ): Promise<PortfolioReport> {

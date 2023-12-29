@@ -6,7 +6,13 @@ labels: ''
 assignees: ''
 ---
 
-The Issue tracker is **ONLY** used for reporting bugs. New features should be discussed in our [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) community or in [Discussions](https://github.com/ghostfolio/ghostfolio/discussions).
+**Important Notice**
+
+The issue tracker is **ONLY** used for reporting bugs. New features should be discussed in our [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) community or in [Discussions](https://github.com/ghostfolio/ghostfolio/discussions).
+
+Incomplete or non-reproducible issues may be closed, but we are here to help! If you encounter difficulties reproducing the bug or need assistance, please reach out to our community channels mentioned above.
+
+Thank you for your understanding and cooperation!
 
 **Bug Description**
 
@@ -36,8 +42,9 @@ The Issue tracker is **ONLY** used for reporting bugs. New features should be di
 
 <!-- Please complete the following information -->
 
-- Cloud or Self-hosted
 - Ghostfolio Version X.Y.Z
+- Cloud or Self-hosted
+- Experimental Features enabled or disabled
 - Browser
 - OS
 

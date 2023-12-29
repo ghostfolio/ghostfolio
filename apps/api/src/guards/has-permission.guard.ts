@@ -14,16 +14,16 @@ export class HasPermissionGuard implements CanActivate {
   public constructor(private reflector: Reflector) {}
 
   public canActivate(context: ExecutionContext): boolean {
+    const { user } = context.switchToHttp().getRequest();
     const requiredPermission = this.reflector.get<string>(
       HAS_PERMISSION_KEY,
       context.getHandler()
     );
 
     if (!requiredPermission) {
-      return true; // No specific permissions required
+      // No specific permissions required
+      return true;
     }
-
-    const { user } = context.switchToHttp().getRequest();
 
     if (!user || !hasPermission(user.permissions, requiredPermission)) {
       throw new HttpException(

@@ -114,6 +114,7 @@ describe('PortfolioCalculator', () => {
             marketPrice: 87.8,
             quantity: new Big('0'),
             symbol: 'NOVN.SW',
+            timeWeightedInvestment: new Big('151.6'),
             transactionCount: 2
           }
         ],
