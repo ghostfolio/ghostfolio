@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a hint for the community languages in the user settings
+
 ### Changed
 
 - Changed the performance calculation to a time-weighted approach
