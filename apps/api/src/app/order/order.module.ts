@@ -1,8 +1,8 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CacheModule } from '@ghostfolio/api/app/cache/cache.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
-import { AccountBalanceService } from '@ghostfolio/api/services/account-balance/account-balance.service';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';

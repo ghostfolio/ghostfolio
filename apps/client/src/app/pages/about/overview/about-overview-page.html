@@ -52,15 +52,15 @@
             title="Join the Ghostfolio Slack community"
             >Slack</a
           >
-          community, tweet to
+          community, post to
           <a
             href="https://twitter.com/ghostfolio_"
-            title="Tweet to Ghostfolio on Twitter"
-            >@ghostfolio_</a
+            title="Post to Ghostfolio on X (formerly Twitter)"
+            >&#64;ghostfolio_</a
           ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
             >, send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
-              >hi@ghostfol.io</a
+              >hi&#64;ghostfol.io</a
             ></ng-container
           >
           or start a discussion at
@@ -70,14 +70,14 @@
             >GitHub</a
           >.
         </p>
-        <p class="text-center">
+        <p class="align-items-center d-flex justify-content-center">
           <a
             class="mx-2"
             href="https://twitter.com/ghostfolio_"
             mat-icon-button
-            title="Follow Ghostfolio on Twitter"
+            title="Follow Ghostfolio on X (formerly Twitter)"
           >
-            <ion-icon name="logo-twitter"></ion-icon>
+            <span class="line-height-1 text-center w-100">𝕏</span>
           </a>
           <a
             *ngIf="user?.subscription?.type === 'Premium'"

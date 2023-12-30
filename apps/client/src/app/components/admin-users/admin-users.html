@@ -178,7 +178,7 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="actions">
+          <ng-container matColumnDef="actions" stickyEnd>
             <th
               *matHeaderCellDef
               class="mat-mdc-header-cell px-1 py-2"
@@ -203,16 +203,20 @@
                   mat-menu-item
                   (click)="onImpersonateUser(element.id)"
                 >
-                  <ion-icon class="mr-2" name="contract-outline"></ion-icon>
-                  <span i18n>Impersonate User</span>
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="contract-outline"></ion-icon>
+                    <span i18n>Impersonate User</span>
+                  </span>
                 </button>
                 <button
                   mat-menu-item
                   [disabled]="element.id === user?.id"
                   (click)="onDeleteUser(element.id)"
                 >
-                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
-                  <span i18n>Delete User</span>
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                    <span i18n>Delete User</span>
+                  </span>
                 </button>
               </mat-menu>
             </td>

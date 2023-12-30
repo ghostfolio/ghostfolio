@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
-  <div *ngIf="user?.settings?.viewMode !== 'ZEN'" class="my-4 text-center">
+  <div class="my-4 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"
       [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"

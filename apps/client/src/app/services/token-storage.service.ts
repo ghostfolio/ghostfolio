@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 
+import { KEY_TOKEN } from './settings-storage.service';
 import { UserService } from './user/user.service';
-
-const TOKEN_KEY = 'auth-token';
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +15,16 @@ export class TokenStorageService {
 
   public getToken(): string {
     return (
-      window.sessionStorage.getItem(TOKEN_KEY) ||
-      window.localStorage.getItem(TOKEN_KEY)
+      window.sessionStorage.getItem(KEY_TOKEN) ||
+      window.localStorage.getItem(KEY_TOKEN)
     );
   }
 
   public saveToken(token: string, staySignedIn = false): void {
     if (staySignedIn) {
-      window.localStorage.setItem(TOKEN_KEY, token);
+      window.localStorage.setItem(KEY_TOKEN, token);
     }
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    window.sessionStorage.setItem(KEY_TOKEN, token);
   }
 
   public signOut(): void {

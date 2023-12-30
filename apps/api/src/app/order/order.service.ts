@@ -25,7 +25,7 @@ import { endOfToday, isAfter } from 'date-fns';
 import { groupBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Activity } from './interfaces/activities.interface';
+import { Activities } from './interfaces/activities.interface';
 
 @Injectable()
 export class OrderService {
@@ -36,34 +36,6 @@ export class OrderService {
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
-
-  public async order(
-    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
-  ): Promise<Order | null> {
-    return this.prismaService.order.findUnique({
-      where: orderWhereUniqueInput
-    });
-  }
-
-  public async orders(params: {
-    include?: Prisma.OrderInclude;
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.OrderWhereUniqueInput;
-    where?: Prisma.OrderWhereInput;
-    orderBy?: Prisma.OrderOrderByWithRelationInput;
-  }): Promise<OrderWithAccount[]> {
-    const { include, skip, take, cursor, where, orderBy } = params;
-
-    return this.prismaService.order.findMany({
-      cursor,
-      include,
-      orderBy,
-      skip,
-      take,
-      where
-    });
-  }
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -231,6 +203,8 @@ export class OrderService {
     filters,
     includeDrafts = false,
     skip,
+    sortColumn,
+    sortDirection,
     take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
@@ -240,12 +214,17 @@ export class OrderService {
     filters?: Filter[];
     includeDrafts?: boolean;
     skip?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
     take?: number;
     types?: TypeOfOrder[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
-  }): Promise<Activity[]> {
+  }): Promise<Activities> {
+    let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
+      { date: 'asc' }
+    ];
     const where: Prisma.OrderWhereInput = { userId };
 
     const {
@@ -307,6 +286,10 @@ export class OrderService {
       };
     }
 
+    if (sortColumn) {
+      orderBy = [{ [sortColumn]: sortDirection }];
+    }
+
     if (types) {
       where.OR = types.map((type) => {
         return {
@@ -317,8 +300,9 @@ export class OrderService {
       });
     }
 
-    return (
-      await this.orders({
+    const [orders, count] = await Promise.all([
+      this.orders({
+        orderBy,
         skip,
         take,
         where,
@@ -332,10 +316,12 @@ export class OrderService {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           SymbolProfile: true,
           tags: true
-        },
-        orderBy: { date: 'asc' }
-      })
-    )
+        }
+      }),
+      this.prismaService.order.count({ where })
+    ]);
+
+    const activities = orders
       .filter((order) => {
         return (
           withExcludedAccounts ||
@@ -361,6 +347,16 @@ export class OrderService {
           )
         };
       });
+
+    return { activities, count };
+  }
+
+  public async order(
+    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
+  ): Promise<Order | null> {
+    return this.prismaService.order.findUnique({
+      where: orderWhereUniqueInput
+    });
   }
 
   public async updateOrder({
@@ -436,6 +432,26 @@ export class OrderService {
           })
         }
       },
+      where
+    });
+  }
+
+  private async orders(params: {
+    include?: Prisma.OrderInclude;
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.OrderWhereUniqueInput;
+    where?: Prisma.OrderWhereInput;
+    orderBy?: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput>;
+  }): Promise<OrderWithAccount[]> {
+    const { include, skip, take, cursor, where, orderBy } = params;
+
+    return this.prismaService.order.findMany({
+      cursor,
+      include,
+      orderBy,
+      skip,
+      take,
       where
     });
   }

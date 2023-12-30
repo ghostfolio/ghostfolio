@@ -60,6 +60,10 @@
           "baseHref": "/nl/",
           "localize": ["nl"]
         },
+        "development-pl": {
+          "baseHref": "/pl/",
+          "localize": ["pl"]
+        },
         "development-pt": {
           "baseHref": "/pt/",
           "localize": ["pt"]
@@ -146,45 +150,48 @@
       }
     },
     "serve": {
-      "executor": "@nx/angular:webpack-dev-server",
+      "executor": "@nx/angular:dev-server",
       "options": {
-        "browserTarget": "client:build",
-        "proxyConfig": "apps/client/proxy.conf.json"
+        "proxyConfig": "apps/client/proxy.conf.json",
+        "buildTarget": "client:build"
       },
       "configurations": {
         "development-de": {
-          "browserTarget": "client:build:development-de"
+          "buildTarget": "client:build:development-de"
         },
         "development-en": {
-          "browserTarget": "client:build:development-en"
+          "buildTarget": "client:build:development-en"
         },
         "development-es": {
-          "browserTarget": "client:build:development-es"
+          "buildTarget": "client:build:development-es"
         },
         "development-fr": {
-          "browserTarget": "client:build:development-fr"
+          "buildTarget": "client:build:development-fr"
         },
         "development-it": {
-          "browserTarget": "client:build:development-it"
+          "buildTarget": "client:build:development-it"
         },
         "development-nl": {
-          "browserTarget": "client:build:development-nl"
+          "buildTarget": "client:build:development-nl"
+        },
+        "development-pl": {
+          "buildTarget": "client:build:development-pl"
         },
         "development-pt": {
-          "browserTarget": "client:build:development-pt"
+          "buildTarget": "client:build:development-pt"
         },
         "development-tr": {
-          "browserTarget": "client:build:development-tr"
+          "buildTarget": "client:build:development-tr"
         },
         "production": {
-          "browserTarget": "client:build:production"
+          "buildTarget": "client:build:production"
         }
       }
     },
     "extract-i18n": {
       "executor": "ng-extract-i18n-merge:ng-extract-i18n-merge",
       "options": {
-        "browserTarget": "client:build",
+        "buildTarget": "client:build",
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
@@ -193,13 +200,14 @@
           "messages.fr.xlf",
           "messages.it.xlf",
           "messages.nl.xlf",
+          "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf"
         ]
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/eslint:lint",
       "options": {
         "lintFilePatterns": ["apps/client/**/*.ts"]
       }
@@ -207,8 +215,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "apps/client/jest.config.ts",
-        "passWithNoTests": true
+        "jestConfig": "apps/client/jest.config.ts"
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
@@ -234,6 +241,10 @@
       "nl": {
         "baseHref": "/nl/",
         "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pl": {
+        "baseHref": "/pl/",
+        "translation": "apps/client/src/locales/messages.pl.xlf"
       },
       "pt": {
         "baseHref": "/pt/",

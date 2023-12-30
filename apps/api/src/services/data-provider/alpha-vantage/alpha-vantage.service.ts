@@ -105,9 +105,13 @@ export class AlphaVantageService implements DataProviderInterface {
     return DataSource.ALPHA_VANTAGE;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  public async getQuotes({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     return {};
   }
 

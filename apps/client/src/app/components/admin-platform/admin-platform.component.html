@@ -68,7 +68,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
+        <ng-container matColumnDef="actions" stickyEnd>
           <th
             *matHeaderCellDef
             class="px-1 text-center"
@@ -86,12 +86,16 @@
             </button>
             <mat-menu #platformMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onUpdatePlatform(element)">
-                <ion-icon class="mr-2" name="create-outline"></ion-icon>
-                <span i18n>Edit</span>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                  <span i18n>Edit</span>
+                </span>
               </button>
               <button mat-menu-item (click)="onDeletePlatform(element.id)">
-                <ion-icon class="mr-2" name="trash-outline"></ion-icon>
-                <span i18n>Delete</span>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <span i18n>Delete</span>
+                </span>
               </button>
             </mat-menu>
           </td>

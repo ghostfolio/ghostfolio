@@ -539,6 +539,12 @@ ngx-skeleton-loader {
       --mdc-tab-indicator-active-indicator-color: transparent;
     }
 
+    @media (max-width: 575.98px) {
+      .mat-mdc-tab-link {
+        --mdc-secondary-navigation-tab-container-height: 3rem;
+      }
+    }
+
     @media (min-width: 576px) {
       flex-direction: row-reverse;
 

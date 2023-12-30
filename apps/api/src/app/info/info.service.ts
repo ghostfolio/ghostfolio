@@ -8,14 +8,12 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   PROPERTY_STRIPE_CONFIG,
-  PROPERTY_SYSTEM_MESSAGE,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -58,7 +56,6 @@ export class InfoService {
     const platforms = await this.platformService.getPlatforms({
       orderBy: { name: 'asc' }
     });
-    let systemMessage: string;
 
     const globalPermissions: string[] = [];
 
@@ -104,10 +101,6 @@ export class InfoService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SYSTEM_MESSAGE')) {
       globalPermissions.push(permissions.enableSystemMessage);
-
-      systemMessage = (await this.propertyService.getByKey(
-        PROPERTY_SYSTEM_MESSAGE
-      )) as string;
     }
 
     const isUserSignupEnabled =
@@ -135,7 +128,6 @@ export class InfoService {
       platforms,
       statistics,
       subscriptions,
-      systemMessage,
       tags,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
@@ -169,7 +161,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
@@ -194,7 +186,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
         // @ts-ignore
@@ -221,7 +213,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
@@ -349,7 +341,7 @@ export class InfoService {
 
         setTimeout(() => {
           abortController.abort();
-        }, DEFAULT_REQUEST_TIMEOUT);
+        }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         const { data } = await got(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(

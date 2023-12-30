@@ -38,7 +38,7 @@
             <div class="w-50">
               <table>
                 <tr *ngFor="let exchangeRate of exchangeRates">
-                  <td class="d-flex">
+                  <td>
                     <gf-value
                       [locale]="user?.settings?.locale"
                       [value]="1"
@@ -46,8 +46,9 @@
                   </td>
                   <td class="pl-1">{{ exchangeRate.label1 }}</td>
                   <td class="px-1">=</td>
-                  <td class="d-flex justify-content-end">
+                  <td align="right">
                     <gf-value
+                      class="d-inline-block"
                       [locale]="user?.settings?.locale"
                       [precision]="4"
                       [value]="exchangeRate.value"
@@ -56,13 +57,49 @@
                   <td class="pl-1">{{ exchangeRate.label2 }}</td>
                   <td>
                     <button
-                      *ngIf="customCurrencies.includes(exchangeRate.label2)"
-                      class="h-100 mx-1 no-min-width px-2"
+                      class="mx-1 no-min-width px-2"
                       mat-button
-                      (click)="onDeleteCurrency(exchangeRate.label2)"
+                      [matMenuTriggerFor]="exchangeRateActionsMenu"
+                      (click)="$event.stopPropagation()"
                     >
-                      <ion-icon name="trash-outline"></ion-icon>
+                      <ion-icon name="ellipsis-horizontal"></ion-icon>
                     </button>
+                    <mat-menu
+                      #exchangeRateActionsMenu="matMenu"
+                      class="h-100 mx-1 no-min-width px-2"
+                      xPosition="before"
+                    >
+                      <a
+                        mat-menu-item
+                        [queryParams]="{
+                        assetProfileDialog: true,
+                        dataSource: exchangeRate.dataSource,
+                        symbol: exchangeRate.symbol
+                      }"
+                        [routerLink]="['/admin', 'market-data']"
+                      >
+                        <span class="align-items-center d-flex">
+                          <ion-icon
+                            class="mr-2"
+                            name="create-outline"
+                          ></ion-icon>
+                          <span i18n>Edit</span>
+                        </span>
+                      </a>
+                      <button
+                        *ngIf="customCurrencies.includes(exchangeRate.label2)"
+                        mat-menu-item
+                        (click)="onDeleteCurrency(exchangeRate.label2)"
+                      >
+                        <span class="align-items-center d-flex">
+                          <ion-icon
+                            class="mr-2"
+                            name="trash-outline"
+                          ></ion-icon>
+                          <span i18n>Delete</span>
+                        </span>
+                      </button>
+                    </mat-menu>
                   </td>
                 </tr>
               </table>
@@ -81,28 +118,30 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Signup</div>
             <div class="w-50">
-              <mat-checkbox
+              <mat-slide-toggle
                 color="primary"
+                hideIcon="true"
                 [checked]="info.globalPermissions.includes(permissions.createUserAccount)"
                 (change)="onEnableUserSignupModeChange($event)"
-              ></mat-checkbox>
+              ></mat-slide-toggle>
             </div>
           </div>
           <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
             <div class="w-50" i18n>Read-only Mode</div>
             <div class="w-50">
-              <mat-checkbox
+              <mat-slide-toggle
                 color="primary"
+                hideIcon="true"
                 [checked]="info?.isReadOnlyMode"
                 (change)="onReadOnlyModeChange($event)"
-              ></mat-checkbox>
+              ></mat-slide-toggle>
             </div>
           </div>
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
             <div class="w-50" i18n>System Message</div>
             <div class="w-50">
-              <div *ngIf="info?.systemMessage">
-                <span>{{ info.systemMessage }}</span>
+              <div *ngIf="systemMessage" class="align-items-center d-flex">
+                <div class="text-truncate">{{ systemMessage | json }}</div>
                 <button
                   class="h-100 mx-1 no-min-width px-2"
                   mat-button
@@ -113,6 +152,7 @@
               </div>
               <button
                 *ngIf="!info?.systemMessage"
+                class="mt-2"
                 color="accent"
                 mat-flat-button
                 (click)="onSetSystemMessage()"
@@ -134,17 +174,34 @@
               <table>
                 <tr *ngFor="let coupon of coupons">
                   <td class="text-monospace">{{ coupon.code }}</td>
-                  <td class="d-flex justify-content-end pl-2">
-                    {{ coupon.duration }}
-                  </td>
+                  <td class="pl-2 text-right">{{ coupon.duration }}</td>
                   <td>
                     <button
-                      class="h-100 mx-1 no-min-width px-2"
+                      class="mx-1 no-min-width px-2"
                       mat-button
-                      (click)="onDeleteCoupon(coupon.code)"
+                      [matMenuTriggerFor]="couponActionsMenu"
+                      (click)="$event.stopPropagation()"
                     >
-                      <ion-icon name="trash-outline"></ion-icon>
+                      <ion-icon name="ellipsis-horizontal"></ion-icon>
                     </button>
+                    <mat-menu
+                      #couponActionsMenu="matMenu"
+                      class="h-100 mx-1 no-min-width px-2"
+                      xPosition="before"
+                    >
+                      <button
+                        mat-menu-item
+                        (click)="onDeleteCoupon(coupon.code)"
+                      >
+                        <span class="align-items-center d-flex">
+                          <ion-icon
+                            class="mr-2"
+                            name="trash-outline"
+                          ></ion-icon>
+                          <span i18n>Delete</span>
+                        </span>
+                      </button>
+                    </mat-menu>
                   </td>
                 </tr>
               </table>

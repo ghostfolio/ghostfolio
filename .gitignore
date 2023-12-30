@@ -27,6 +27,7 @@
 /.angular/cache
 .env
 .env.prod
+.nx/cache
 /.sass-cache
 /connect.lock
 /coverage

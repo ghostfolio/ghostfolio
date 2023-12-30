@@ -16,5 +16,6 @@ export interface TimelinePosition {
   quantity: Big;
   symbol: string;
   tags?: Tag[];
+  timeWeightedInvestment: Big;
   transactionCount: number;
 }

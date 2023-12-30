@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-10-21T00:00:00.000Z",
+  "createdAt": "2023-11-30T00:00:00.000Z",
   "data": [
     {
       "name": "BoxyHQ",
@@ -15,6 +15,11 @@
       "name": "Crowd.dev",
       "description": "Centralize community, product, and customer data to understand which companies are engaging with your open source project.",
       "href": "https://www.crowd.dev"
+    },
+    {
+      "name": "DevHunt",
+      "description": "Find the best Dev Tools upvoted by the community every week.",
+      "href": "https://devhunt.org"
     },
     {
       "name": "Documenso",
@@ -59,7 +64,7 @@
     {
       "name": "Hook0",
       "description": "Open-Source Webhooks-as-a-service (WaaS) that makes it easy for developers to send webhooks.",
-      "href": "https://www.hook0.com/"
+      "href": "https://www.hook0.com"
     },
     {
       "name": "HTMX",
@@ -89,12 +94,17 @@
     {
       "name": "Papermark",
       "description": "Open-Source Docsend Alternative to securely share documents with real-time analytics.",
-      "href": "https://www.papermark.io/"
+      "href": "https://www.papermark.io"
     },
     {
       "name": "Requestly",
       "description": "Makes frontend development cycle 10x faster with API Client, Mock Server, Intercept & Modify HTTP Requests and Session Replays.",
       "href": "https://requestly.io"
+    },
+    {
+      "name": "Revert",
+      "description": "The open-source unified API to build B2B integrations remarkably fast",
+      "href": "https://revert.dev"
     },
     {
       "name": "Rivet",
@@ -104,7 +114,7 @@
     {
       "name": "Shelf.nu",
       "description": "Open Source Asset and Equipment tracking software that lets you create QR asset labels, manage and overview your assets across locations.",
-      "href": "https://www.shelf.nu/"
+      "href": "https://www.shelf.nu"
     },
     {
       "name": "Sniffnet",
@@ -135,6 +145,11 @@
       "name": "Typebot",
       "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
       "href": "https://typebot.io"
+    },
+    {
+      "name": "Unkey",
+      "description": "An API authentication and authorization platform for scaling user facing APIs. Create, verify, and manage low latency API keys in seconds.",
+      "href": "https://unkey.dev"
     },
     {
       "name": "Webiny",

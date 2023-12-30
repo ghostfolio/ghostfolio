@@ -17,6 +17,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber } from 'lodash';
+import ms from 'ms';
 
 @Injectable()
 export class DataProviderService {
@@ -52,6 +53,7 @@ export class DataProviderService {
           symbol
         }
       ],
+      requestTimeout: ms('30 seconds'),
       useCache: false
     });
 
@@ -236,9 +238,11 @@ export class DataProviderService {
 
   public async getQuotes({
     items,
+    requestTimeout,
     useCache = true
   }: {
     items: UniqueAsset[];
+    requestTimeout?: number;
     useCache?: boolean;
   }): Promise<{
     [symbol: string]: IDataProviderResponse;
@@ -311,7 +315,9 @@ export class DataProviderService {
           i + maximumNumberOfSymbolsPerRequest
         );
 
-        const promise = Promise.resolve(dataProvider.getQuotes(symbolsChunk));
+        const promise = Promise.resolve(
+          dataProvider.getQuotes({ requestTimeout, symbols: symbolsChunk })
+        );
 
         promises.push(
           promise.then(async (result) => {
@@ -340,7 +346,7 @@ export class DataProviderService {
             );
 
             try {
-              this.marketDataService.updateMany({
+              await this.marketDataService.updateMany({
                 data: Object.keys(response)
                   .filter((symbol) => {
                     return (

@@ -73,10 +73,10 @@ describe('PortfolioCalculator', () => {
         currentValue: new Big('87.8'),
         errors: [],
         grossPerformance: new Big('21.93'),
-        grossPerformancePercentage: new Big('0.14465699208443271768'),
+        grossPerformancePercentage: new Big('0.15113417083448194384'),
         hasErrors: false,
         netPerformance: new Big('17.68'),
-        netPerformancePercentage: new Big('0.11662269129287598945'),
+        netPerformancePercentage: new Big('0.12184460284330327256'),
         positions: [
           {
             averagePrice: new Big('75.80'),
@@ -85,13 +85,14 @@ describe('PortfolioCalculator', () => {
             fee: new Big('4.25'),
             firstBuyDate: '2022-03-07',
             grossPerformance: new Big('21.93'),
-            grossPerformancePercentage: new Big('0.14465699208443271768'),
+            grossPerformancePercentage: new Big('0.15113417083448194384'),
             investment: new Big('75.80'),
             netPerformance: new Big('17.68'),
-            netPerformancePercentage: new Big('0.11662269129287598945'),
+            netPerformancePercentage: new Big('0.12184460284330327256'),
             marketPrice: 87.8,
             quantity: new Big('1'),
             symbol: 'NOVN.SW',
+            timeWeightedInvestment: new Big('145.10285714285714285714'),
             transactionCount: 2
           }
         ],

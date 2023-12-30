@@ -1,39 +1,18 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
-import {
-  Controller,
-  HttpException,
-  Inject,
-  Post,
-  UseGuards
-} from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { permissions } from '@ghostfolio/common/permissions';
+import { Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Controller('cache')
 export class CacheController {
-  public constructor(
-    private readonly redisCacheService: RedisCacheService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  public constructor(private readonly redisCacheService: RedisCacheService) {}
 
+  @HasPermission(permissions.accessAdminControl)
   @Post('flush')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async flushCache(): Promise<void> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.redisCacheService.reset();
   }
 }

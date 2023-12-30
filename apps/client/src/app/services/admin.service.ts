@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
@@ -18,7 +18,7 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { DataSource, MarketData, Platform, Prisma, Tag } from '@prisma/client';
+import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
 import { Observable, map } from 'rxjs';
@@ -85,7 +85,7 @@ export class AdminService {
     filters?: Filter[];
     skip?: number;
     sortColumn?: string;
-    sortDirection?: Prisma.SortOrder;
+    sortDirection?: SortDirection;
     take: number;
   }) {
     let params = this.dataService.buildFiltersAsQueryParams({ filters });
@@ -212,6 +212,7 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    currency,
     dataSource,
     name,
     scraperConfiguration,
@@ -224,6 +225,7 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        currency,
         name,
         scraperConfiguration,
         symbolMapping
@@ -251,25 +253,6 @@ export class AdminService {
 
   public postTag(aTag: CreateTagDto) {
     return this.http.post<Tag>(`/api/v1/tag`, aTag);
-  }
-
-  public putMarketData({
-    dataSource,
-    date,
-    marketData,
-    symbol
-  }: {
-    dataSource: DataSource;
-    date: Date;
-    marketData: UpdateMarketDataDto;
-    symbol: string;
-  }) {
-    const url = `/api/v1/admin/market-data/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
-
-    return this.http.put<MarketData>(url, marketData);
   }
 
   public putPlatform(aPlatform: UpdatePlatformDto) {

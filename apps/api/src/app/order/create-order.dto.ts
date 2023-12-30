@@ -13,7 +13,6 @@ import {
   IsISO8601,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Min
 } from 'class-validator';
@@ -54,7 +53,7 @@ export class CreateOrderDto {
   fee: number;
 
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   quantity: number;
 
   @IsString()
@@ -68,7 +67,7 @@ export class CreateOrderDto {
   type: Type;
 
   @IsNumber()
-  @IsPositive()
+  @Min(0)
   unitPrice: number;
 
   @IsBoolean()

@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -34,7 +36,8 @@ export class ImportController {
   ) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.createOrder)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
@@ -42,11 +45,7 @@ export class ImportController {
     @Query('dryRun') isDryRun?: boolean
   ): Promise<ImportResponse> {
     if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.createAccount
-      ) ||
-      !hasPermission(this.request.user.permissions, permissions.createOrder)
+      !hasPermission(this.request.user.permissions, permissions.createAccount)
     ) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
@@ -92,7 +91,7 @@ export class ImportController {
   }
 
   @Get('dividends/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async gatherDividends(

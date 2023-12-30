@@ -59,12 +59,12 @@ export class MarketDataService {
 
   public async getRange({
     dateQuery,
-    symbols
+    uniqueAssets
   }: {
     dateQuery: DateQuery;
-    symbols: string[];
+    uniqueAssets: UniqueAsset[];
   }): Promise<MarketData[]> {
-    return await this.prismaService.marketData.findMany({
+    return this.prismaService.marketData.findMany({
       orderBy: [
         {
           date: 'asc'
@@ -74,24 +74,33 @@ export class MarketDataService {
         }
       ],
       where: {
+        dataSource: {
+          in: uniqueAssets.map(({ dataSource }) => {
+            return dataSource;
+          })
+        },
         date: dateQuery,
         symbol: {
-          in: symbols
+          in: uniqueAssets.map(({ symbol }) => {
+            return symbol;
+          })
         }
       }
     });
   }
 
   public async marketDataItems(params: {
+    select?: Prisma.MarketDataSelectScalar;
     skip?: number;
     take?: number;
     cursor?: Prisma.MarketDataWhereUniqueInput;
     where?: Prisma.MarketDataWhereInput;
     orderBy?: Prisma.MarketDataOrderByWithRelationInput;
   }): Promise<MarketData[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { select, skip, take, cursor, where, orderBy } = params;
 
     return this.prismaService.marketData.findMany({
+      select,
       cursor,
       orderBy,
       skip,

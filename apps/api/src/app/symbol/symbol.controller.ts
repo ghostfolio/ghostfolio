@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -34,7 +35,7 @@ export class SymbolController {
    * Must be before /:symbol
    */
   @Get('lookup')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
     @Query('includeIndices') includeIndices: boolean = false,
@@ -88,7 +89,7 @@ export class SymbolController {
   }
 
   @Get(':dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,

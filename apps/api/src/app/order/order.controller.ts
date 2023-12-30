@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
@@ -24,7 +26,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel } from '@prisma/client';
+import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -44,24 +46,16 @@ export class OrderController {
   ) {}
 
   @Delete()
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteOrder)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrders(): Promise<number> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deleteOrder)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.orderService.deleteOrders({
       userId: this.request.user.id
     });
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
     const order = await this.orderService.order({ id });
 
@@ -82,7 +76,7 @@ export class OrderController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
@@ -90,6 +84,8 @@ export class OrderController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('skip') skip?: number,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<Activities> {
@@ -103,8 +99,10 @@ export class OrderController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const activities = await this.orderService.getOrders({
+    const { activities, count } = await this.orderService.getOrders({
       filters,
+      sortColumn,
+      sortDirection,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,
@@ -113,22 +111,14 @@ export class OrderController {
       withExcludedAccounts: true
     });
 
-    return { activities };
+    return { activities, count };
   }
 
+  @HasPermission(permissions.createOrder)
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
-    if (
-      !hasPermission(this.request.user.permissions, permissions.createOrder)
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const order = await this.orderService.createOrder({
       ...data,
       date: parseISO(data.date),
@@ -166,19 +156,16 @@ export class OrderController {
     return order;
   }
 
+  @HasPermission(permissions.updateOrder)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async update(@Param('id') id: string, @Body() data: UpdateOrderDto) {
     const originalOrder = await this.orderService.order({
       id
     });
 
-    if (
-      !hasPermission(this.request.user.permissions, permissions.updateOrder) ||
-      !originalOrder ||
-      originalOrder.userId !== this.request.user.id
-    ) {
+    if (!originalOrder || originalOrder.userId !== this.request.user.id) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

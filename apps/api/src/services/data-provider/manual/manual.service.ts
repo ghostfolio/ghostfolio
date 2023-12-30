@@ -1,10 +1,15 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { IDataProviderHistoricalResponse, IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
-import { DATE_FORMAT, extractNumberFromString, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  extractNumberFromString,
+  getYesterday
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -16,6 +21,7 @@ import got from 'got';
 @Injectable()
 export class ManualService implements DataProviderInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -90,7 +96,6 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-
       const value = await this.scrape(url, selector, headers);
       return {
         [symbol]: {
@@ -120,9 +125,8 @@ export class ManualService implements DataProviderInterface {
     });
 
     setTimeout(() => {
-      abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
-    const $ = cheerio.load(body);
+        abortController.abort();
+     }, this.configurationService.get('REQUEST_TIMEOUT'));
 
     return extractNumberFromString($(selector).first().text());
 
@@ -133,18 +137,22 @@ export class ManualService implements DataProviderInterface {
     return DataSource.MANUAL;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  public async getQuotes({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
-    if (aSymbols.length <= 0) {
+    if (symbols.length <= 0) {
       return response;
     }
 
     try {
       const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        aSymbols.map((symbol) => {
+        symbols.map((symbol) => {
           return { symbol, dataSource: this.getName() };
         })
       );
@@ -154,10 +162,10 @@ export class ManualService implements DataProviderInterface {
         orderBy: {
           date: 'desc'
         },
-        take: aSymbols.length,
+        take: symbols.length,
         where: {
           symbol: {
-            in: aSymbols
+            in: symbols
           }
         }
       });
