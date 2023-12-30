@@ -1,10 +1,17 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import { IDataProviderHistoricalResponse, IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
-import { DATE_FORMAT, extractNumberFromString, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  extractNumberFromString,
+  getYesterday
+} from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -65,7 +72,7 @@ export class ManualService implements DataProviderInterface {
         defaultMarketPrice,
         headers = {},
         selector,
-      url
+        url
       } = symbolProfile.scraperConfiguration ?? {};
 
       Logger.log(symbolProfile);
@@ -90,7 +97,6 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-
       const value = await this.scrape(url, selector, headers);
       return {
         [symbol]: {
@@ -109,8 +115,11 @@ export class ManualService implements DataProviderInterface {
     }
   }
 
-  public async scrape(url: string, selector: string, headers = {}): Promise<number>{
-
+  public async scrape(
+    url: string,
+    selector: string,
+    headers = {}
+  ): Promise<number> {
     const abortController = new AbortController();
 
     const { body } = await got(url, {
@@ -125,9 +134,7 @@ export class ManualService implements DataProviderInterface {
     const $ = cheerio.load(body);
 
     return extractNumberFromString($(selector).first().text());
-
   }
-
 
   public getName(): DataSource {
     return DataSource.MANUAL;

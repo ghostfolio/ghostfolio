@@ -26,11 +26,10 @@ import { QueueModule } from './queue/queue.module';
     PropertyModule,
     QueueModule,
     SubscriptionModule,
-    SymbolProfileModule,
+    SymbolProfileModule
   ],
   controllers: [AdminController],
   providers: [AdminService],
-  exports: [AdminService],
-
+  exports: [AdminService]
 })
 export class AdminModule {}

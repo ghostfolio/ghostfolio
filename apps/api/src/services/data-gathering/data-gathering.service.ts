@@ -100,7 +100,6 @@ export class DataGatheringService {
         historicalData[symbol]?.[format(getYesterday(), DATE_FORMAT)]
           .marketPrice;
 
-
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
           create: {

@@ -181,14 +181,14 @@ export class AdminService {
     let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
 
     if (date) {
-      url = `${url}/${format(date, DATE_FORMAT)}?dryRun=true`;
+      url = `${url}/${format(date, DATE_FORMAT)}`;
     }
 
     return this.http.post<MarketData | void>(url, {});
   }
 
-  public testScrapeConfig(config: string){
-    return this.http.post<any>(`/api/v1/admin/test-scraper`, {config});
+  public testScrapeConfig(config: string) {
+    return this.http.post<any>(`/api/v1/admin/test-scraper`, { config });
   }
 
   public fetchSymbolForDate({

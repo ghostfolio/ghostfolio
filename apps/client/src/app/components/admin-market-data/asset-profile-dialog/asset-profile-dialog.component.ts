@@ -241,9 +241,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onTestScraper() {
-
     this.adminService
-      .testScrapeConfig(this.assetProfileForm.controls['scraperConfiguration'].value)
+      .testScrapeConfig(
+        this.assetProfileForm.controls['scraperConfiguration'].value
+      )
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
         if (response?.price) {

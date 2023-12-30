@@ -223,7 +223,7 @@ export class AdminController {
   public async gatherSymbolForDate(
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
-    @Param('symbol') symbol: string,
+    @Param('symbol') symbol: string
   ): Promise<MarketData> {
     if (
       !hasPermission(
@@ -246,7 +246,6 @@ export class AdminController {
       );
     }
 
-
     return this.dataGatheringService.gatherSymbolForDate({
       dataSource,
       date,
@@ -259,10 +258,10 @@ export class AdminController {
   public async testScraper(
     @Body() data: { config: string }
   ): Promise<{ price: number }> {
-    const {url, selector} = JSON.parse(data.config);
+    const { url, selector } = JSON.parse(data.config);
 
-    let price = await this.manualService.scrape(url ,selector);
-    return {price: price};
+    let price = await this.manualService.scrape(url, selector);
+    return { price: price };
   }
 
   @Get('market-data')

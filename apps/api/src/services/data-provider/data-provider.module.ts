@@ -29,7 +29,6 @@ import { DataProviderService } from './data-provider.service';
     PropertyModule,
     RedisCacheModule,
     SymbolProfileModule
-
   ],
   providers: [
     AlphaVantageService,
