@@ -84,12 +84,10 @@ export class DataGatheringService {
   public async gatherSymbolForDate({
     dataSource,
     date,
-    isDryRun,
     symbol
   }: {
     dataSource: DataSource;
     date: Date;
-    isDryRun: boolean;
     symbol: string;
   }) {
     try {
@@ -102,18 +100,6 @@ export class DataGatheringService {
         historicalData[symbol]?.[format(getYesterday(), DATE_FORMAT)]
           .marketPrice;
 
-      if (isDryRun) {
-        const date = new Date();
-        return {
-          dataSource,
-          date,
-          marketPrice,
-          symbol,
-          createdAt: null,
-          id: null,
-          state: MarketDataState.INTRADAY
-        };
-      }
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({

@@ -224,7 +224,6 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('dateString') dateString: string,
     @Param('symbol') symbol: string,
-    @Query('dryRun') isDryRun?: boolean
   ): Promise<MarketData> {
     if (
       !hasPermission(
@@ -247,15 +246,10 @@ export class AdminController {
       );
     }
 
-    if (dataSource === 'MANUAL' && isDryRun && isToday(date)) {
-      //const marketData = await this.manualService.scrape()
-      Logger.log(`Check ${symbol} via scraperConfiguration`, dataSource);
-    }
 
     return this.dataGatheringService.gatherSymbolForDate({
       dataSource,
       date,
-      isDryRun,
       symbol
     });
   }

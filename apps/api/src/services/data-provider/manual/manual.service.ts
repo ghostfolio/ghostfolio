@@ -89,7 +89,6 @@ export class ManualService implements DataProviderInterface {
       } else if (selector === undefined || url === undefined) {
         return {};
       }
-      Logger.log("Here");
 
 
       const value = await this.scrape(url, selector, headers);

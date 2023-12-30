@@ -246,8 +246,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .testScrapeConfig(this.assetProfileForm.controls['scraperConfiguration'].value)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((response) => {
-        if (response && response.price) {
-          console.log(response);
+        if (response?.price) {
           alert($localize`Current Market Price is:` + ' ' + response.price);
         } else {
           alert($localize`Please try again.`);
