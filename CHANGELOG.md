@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the performance calculation to a time-weighted approach
 - Exposed the environment variable `REQUEST_TIMEOUT`
 - Used the `HasPermission` annotation in endpoints
+- Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.9.0` to `2.9.1`
 - Upgraded `Nx` from version `17.2.5` to `17.2.7`
 
