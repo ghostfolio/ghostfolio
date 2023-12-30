@@ -32,9 +32,11 @@ export function nullifyValuesInObjects<T>(aObjects: T[], keys: string[]): T[] {
 }
 
 export function redactAttributes({
+  isFirstRun = true,
   object,
   options
 }: {
+  isFirstRun?: boolean;
   object: any;
   options: { attribute: string; valueMap: { [key: string]: any } }[];
 }): any {
@@ -42,7 +44,10 @@ export function redactAttributes({
     return object;
   }
 
-  const redactedObject = cloneDeep(object);
+  // Create deep clone
+  const redactedObject = isFirstRun
+    ? JSON.parse(JSON.stringify(object))
+    : object;
 
   for (const option of options) {
     if (redactedObject.hasOwnProperty(option.attribute)) {
@@ -59,7 +64,11 @@ export function redactAttributes({
         if (isArray(redactedObject[property])) {
           redactedObject[property] = redactedObject[property].map(
             (currentObject) => {
-              return redactAttributes({ options, object: currentObject });
+              return redactAttributes({
+                options,
+                isFirstRun: false,
+                object: currentObject
+              });
             }
           );
         } else if (
@@ -69,6 +78,7 @@ export function redactAttributes({
           // Recursively call the function on the nested object
           redactedObject[property] = redactAttributes({
             options,
+            isFirstRun: false,
             object: redactedObject[property]
           });
         }

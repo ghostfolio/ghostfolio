@@ -1,5 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
@@ -10,6 +13,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -30,12 +34,18 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
+  public dataSource: MatTableDataSource<Activity>;
   public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
   public hasPermissionToDeleteActivity: boolean;
+  public pageIndex = 0;
+  public pageSize = DEFAULT_PAGE_SIZE;
   public routeQueryParams: Subscription;
+  public sortColumn = 'date';
+  public sortDirection: SortDirection = 'desc';
+  public totalItems: number;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -59,6 +69,12 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         } else if (params['editDialog']) {
           if (this.activities) {
             const activity = this.activities.find(({ id }) => {
+              return id === params['activityId'];
+            });
+
+            this.openUpdateActivityDialog(activity);
+          } else if (this.dataSource) {
+            const activity = this.dataSource.data.find(({ id }) => {
               return id === params['activityId'];
             });
 
@@ -103,21 +119,48 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
-    this.dataService
-      .fetchActivities({})
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ activities }) => {
-        this.activities = activities;
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      this.dataService
+        .fetchActivities({
+          skip: this.pageIndex * this.pageSize,
+          sortColumn: this.sortColumn,
+          sortDirection: this.sortDirection,
+          take: this.pageSize
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities, count }) => {
+          this.dataSource = new MatTableDataSource(activities);
+          this.totalItems = count;
 
-        if (
-          this.hasPermissionToCreateActivity &&
-          this.activities?.length <= 0
-        ) {
-          this.router.navigate([], { queryParams: { createDialog: true } });
-        }
+          if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
+            this.router.navigate([], { queryParams: { createDialog: true } });
+          }
 
-        this.changeDetectorRef.markForCheck();
-      });
+          this.changeDetectorRef.markForCheck();
+        });
+    } else {
+      this.dataService
+        .fetchActivities({})
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities }) => {
+          this.activities = activities;
+
+          if (
+            this.hasPermissionToCreateActivity &&
+            this.activities?.length <= 0
+          ) {
+            this.router.navigate([], { queryParams: { createDialog: true } });
+          }
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
+  }
+
+  public onChangePage(page: PageEvent) {
+    this.pageIndex = page.pageIndex;
+
+    this.fetchActivities();
   }
 
   public onCloneActivity(aActivity: Activity) {
@@ -223,6 +266,14 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.fetchActivities();
       });
+  }
+
+  public onSortChanged({ active, direction }: Sort) {
+    this.pageIndex = 0;
+    this.sortColumn = active;
+    this.sortDirection = direction;
+
+    this.fetchActivities();
   }
 
   public onUpdateActivity(aActivity: OrderModel) {

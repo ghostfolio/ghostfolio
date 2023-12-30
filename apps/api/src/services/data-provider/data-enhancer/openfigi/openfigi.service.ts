@@ -1,6 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { parseSymbol } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
@@ -15,9 +14,11 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
   ) {}
 
   public async enhance({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     response,
     symbol
   }: {
+    requestTimeout?: number;
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
@@ -45,7 +46,7 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
 
     setTimeout(() => {
       abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
+    }, requestTimeout);
 
     const mappings = await got
       .post(`${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`, {

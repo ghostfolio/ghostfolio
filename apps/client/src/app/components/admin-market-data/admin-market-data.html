@@ -28,6 +28,24 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="nameWithSymbol">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="symbol"
+          >
+            <ng-container i18n>Name</ng-container>
+          </th>
+          <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+            <div class="text-truncate">{{ element.name }}</div>
+            <div *ngIf="!isUUID(element.symbol)">
+              <small class="text-muted">{{ element.symbol | gfSymbol }}</small>
+            </div>
+          </td>
+          <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+        </ng-container>
+
         <ng-container matColumnDef="dataSource">
           <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
             <ng-container i18n>Data Source</ng-container>
@@ -111,7 +129,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
+        <ng-container matColumnDef="actions" stickyEnd>
           <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
             <button
               class="mx-1 no-min-width px-2"
@@ -145,10 +163,22 @@
             <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
                 mat-menu-item
+                (click)="onOpenAssetProfileDialog({ dataSource: element.dataSource, symbol: element.symbol })"
+              >
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                  <span i18n>Edit</span>
+                </span>
+              </button>
+              <button
+                mat-menu-item
                 [disabled]="element.activitiesCount !== 0"
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
-                <ng-container i18n>Delete</ng-container>
+                <span class="align-items-center d-flex">
+                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <span i18n>Delete</span>
+                </span>
               </button>
             </mat-menu>
           </td>

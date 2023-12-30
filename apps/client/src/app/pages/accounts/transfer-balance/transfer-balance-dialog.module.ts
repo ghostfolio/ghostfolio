@@ -6,6 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 
 import { TransferBalanceDialog } from './transfer-balance-dialog.component';
 
@@ -13,6 +14,7 @@ import { TransferBalanceDialog } from './transfer-balance-dialog.component';
   declarations: [TransferBalanceDialog],
   imports: [
     CommonModule,
+    GfSymbolIconModule,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,

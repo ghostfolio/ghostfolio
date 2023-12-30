@@ -100,6 +100,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `REDIS_HOST`        |               | The host where _Redis_ is running                                                                                                   |
 | `REDIS_PASSWORD`    |               | The password of _Redis_                                                                                                             |
 | `REDIS_PORT`        |               | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
 
 ### Run with Docker Compose
 
@@ -230,18 +231,18 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
-| Field      | Type                | Description                                        |
-| ---------- | ------------------- | -------------------------------------------------- |
-| accountId  | string (`optional`) | Id of the account                                  |
-| comment    | string (`optional`) | Comment of the activity                            |
-| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                       |
-| dataSource | string              | `MANUAL` (for type `ITEM`) \| `YAHOO`              |
-| date       | string              | Date in the format `ISO-8601`                      |
-| fee        | number              | Fee of the activity                                |
-| quantity   | number              | Quantity of the activity                           |
-| symbol     | string              | Symbol of the activity (suitable for `dataSource`) |
-| type       | string              | `BUY` \| `DIVIDEND` \| `ITEM` \| `SELL`            |
-| unitPrice  | number              | Price per unit of the activity                     |
+| Field      | Type                | Description                                                                   |
+| ---------- | ------------------- | ----------------------------------------------------------------------------- |
+| accountId  | string (`optional`) | Id of the account                                                             |
+| comment    | string (`optional`) | Comment of the activity                                                       |
+| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                                                  |
+| dataSource | string              | `COINGECKO` \| `MANUAL` (for type `ITEM`) \| `YAHOO`                          |
+| date       | string              | Date in the format `ISO-8601`                                                 |
+| fee        | number              | Fee of the activity                                                           |
+| quantity   | number              | Quantity of the activity                                                      |
+| symbol     | string              | Symbol of the activity (suitable for `dataSource`)                            |
+| type       | string              | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `ITEM` \| `LIABILITY` \| `SELL` |
+| unitPrice  | number              | Price per unit of the activity                                                |
 
 #### Response
 
@@ -272,7 +273,7 @@ Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ r
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
 
-Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or tweet to [@ghostfolio\_](https://twitter.com/ghostfolio_). We would love to hear from you.
+Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://twitter.com/ghostfolio_) on _X_. We would love to hear from you.
 
 If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 

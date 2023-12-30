@@ -1,3 +1,5 @@
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import type {
@@ -5,8 +7,7 @@ import type {
   BenchmarkResponse,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { permissions } from '@ghostfolio/common/permissions';
 import {
   Body,
   Controller,
@@ -19,7 +20,6 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -28,26 +28,12 @@ import { BenchmarkService } from './benchmark.service';
 
 @Controller('benchmark')
 export class BenchmarkController {
-  public constructor(
-    private readonly benchmarkService: BenchmarkService,
-    @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  public constructor(private readonly benchmarkService: BenchmarkService) {}
 
+  @HasPermission(permissions.accessAdminControl)
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     try {
       const benchmark = await this.benchmarkService.addBenchmark({
         dataSource,
@@ -71,23 +57,12 @@ export class BenchmarkController {
   }
 
   @Delete(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteBenchmark(
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     try {
       const benchmark = await this.benchmarkService.deleteBenchmark({
         dataSource,
@@ -120,7 +95,7 @@ export class BenchmarkController {
   }
 
   @Get(':dataSource/:symbol/:startDateString')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getBenchmarkMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,

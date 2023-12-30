@@ -1,3 +1,4 @@
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -37,7 +38,7 @@ export class SubscriptionController {
 
   @Post('redeem-coupon')
   @HttpCode(StatusCodes.OK)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async redeemCoupon(@Body() { couponCode }: { couponCode: string }) {
     if (!this.request.user) {
       throw new HttpException(
@@ -109,7 +110,7 @@ export class SubscriptionController {
   }
 
   @Post('stripe/checkout-session')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createCheckoutSession(
     @Body() { couponId, priceId }: { couponId: string; priceId: string }
   ) {

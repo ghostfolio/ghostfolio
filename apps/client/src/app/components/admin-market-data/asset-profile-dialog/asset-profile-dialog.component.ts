@@ -8,12 +8,14 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
+  Currency,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -23,10 +25,10 @@ import {
   MarketData,
   SymbolProfile
 } from '@prisma/client';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { parse as csvToJson } from 'papaparse';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
 
@@ -50,6 +52,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    currency: '',
+    historicalData: this.formBuilder.group({
+      csvString: ''
+    }),
     name: ['', Validators.required],
     scraperConfiguration: '',
     symbolMapping: ''
@@ -59,7 +65,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public historicalDataAsCsvString: string;
+  public currencies: Currency[] = [];
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -78,19 +84,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit(): void {
-    this.benchmarks = this.dataService.fetchInfo().benchmarks;
+    const { benchmarks, currencies } = this.dataService.fetchInfo();
+
+    this.benchmarks = benchmarks;
+    this.currencies = currencies.map((currency) => ({
+      label: currency,
+      value: currency
+    }));
 
     this.initialize();
   }
 
   public initialize() {
-    this.historicalDataAsCsvString =
-      AssetProfileDialog.HISTORICAL_DATA_TEMPLATE;
-
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -128,10 +138,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
 
         this.assetProfileForm.setValue({
-          name: this.assetProfile.name,
-          assetClass: this.assetProfile.assetClass,
-          assetSubClass: this.assetProfile.assetSubClass,
+          assetClass: this.assetProfile.assetClass ?? null,
+          assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
+          currency: this.assetProfile?.currency,
+          historicalData: {
+            csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
+          },
+          name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
@@ -163,26 +177,46 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onImportHistoricalData() {
-    const marketData = csvToJson(this.historicalDataAsCsvString, {
-      dynamicTyping: true,
-      header: true,
-      skipEmptyLines: true
-    }).data;
+    try {
+      const marketData = csvToJson(
+        this.assetProfileForm.controls['historicalData'].controls['csvString']
+          .value,
+        {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
+      ).data;
 
-    this.adminService
-      .postMarketData({
-        dataSource: this.data.dataSource,
-        marketData: {
-          marketData: marketData.map(({ date, marketPrice }) => {
-            return { marketPrice, date: parseISO(date) };
-          })
-        },
-        symbol: this.data.symbol
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.initialize();
-      });
+      this.adminService
+        .postMarketData({
+          dataSource: this.data.dataSource,
+          marketData: {
+            marketData: marketData.map(({ date, marketPrice }) => {
+              return { marketPrice, date: parseDate(date).toISOString() };
+            })
+          },
+          symbol: this.data.symbol
+        })
+        .pipe(
+          catchError(({ error, message }) => {
+            this.snackBar.open(`${error}: ${message[0]}`, undefined, {
+              duration: 3000
+            });
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.initialize();
+        });
+    } catch {
+      this.snackBar.open(
+        $localize`Oops! Could not parse historical data.`,
+        undefined,
+        { duration: 3000 }
+      );
+    }
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {
@@ -221,12 +255,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
+      scraperConfiguration,
+      symbolMapping,
       assetClass: this.assetProfileForm.controls['assetClass'].value,
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
-      name: this.assetProfileForm.controls['name'].value,
-      scraperConfiguration,
-      symbolMapping
+      currency: (<Currency>(
+        (<unknown>this.assetProfileForm.controls['currency'].value)
+      ))?.value,
+      name: this.assetProfileForm.controls['name'].value
     };
 
     this.adminService

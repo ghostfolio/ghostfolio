@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -12,7 +12,12 @@ import {
   PROPERTY_SYSTEM_MESSAGE,
   ghostfolioPrefix
 } from '@ghostfolio/common/config';
-import { Coupon, InfoItem, User } from '@ghostfolio/common/interfaces';
+import {
+  Coupon,
+  InfoItem,
+  SystemMessage,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   differenceInSeconds,
@@ -39,6 +44,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
   public permissions = permissions;
+  public systemMessage: SystemMessage;
   public transactionCount: number;
   public userCount: number;
   public user: User;
@@ -113,8 +119,12 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     const currency = prompt($localize`Please add a currency:`);
 
     if (currency) {
-      const currencies = uniq([...this.customCurrencies, currency]);
-      this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
+      if (currency.length === 3) {
+        const currencies = uniq([...this.customCurrencies, currency]);
+        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
+      } else {
+        alert($localize`${currency} is an invalid currency!`);
+      }
     }
   }
 
@@ -149,7 +159,13 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteSystemMessage() {
-    this.putAdminSetting({ key: PROPERTY_SYSTEM_MESSAGE, value: undefined });
+    const confirmation = confirm(
+      $localize`Do you really want to delete this system message?`
+    );
+
+    if (confirmation === true) {
+      this.putAdminSetting({ key: PROPERTY_SYSTEM_MESSAGE, value: undefined });
+    }
   }
 
   public onFlushCache() {
@@ -169,27 +185,36 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onReadOnlyModeChange(aEvent: MatCheckboxChange) {
-    this.putAdminSetting({
-      key: PROPERTY_IS_READ_ONLY_MODE,
-      value: aEvent.checked ? true : undefined
-    });
-  }
-
-  public onEnableUserSignupModeChange(aEvent: MatCheckboxChange) {
+  public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {
     this.putAdminSetting({
       key: PROPERTY_IS_USER_SIGNUP_ENABLED,
       value: aEvent.checked ? undefined : false
     });
   }
 
+  public onReadOnlyModeChange(aEvent: MatSlideToggleChange) {
+    this.putAdminSetting({
+      key: PROPERTY_IS_READ_ONLY_MODE,
+      value: aEvent.checked ? true : undefined
+    });
+  }
+
   public onSetSystemMessage() {
-    const systemMessage = prompt($localize`Please set your system message:`);
+    const systemMessage = prompt(
+      $localize`Please set your system message:`,
+      JSON.stringify(
+        this.systemMessage ??
+          <SystemMessage>{
+            message: '⚒️ Scheduled maintenance in progress...',
+            targetGroups: ['Basic', 'Premium']
+          }
+      )
+    );
 
     if (systemMessage) {
       this.putAdminSetting({
         key: PROPERTY_SYSTEM_MESSAGE,
-        value: systemMessage
+        value: JSON.parse(systemMessage)
       });
     }
   }
@@ -208,6 +233,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
           this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
           this.exchangeRates = exchangeRates;
+          this.systemMessage = settings[
+            PROPERTY_SYSTEM_MESSAGE
+          ] as SystemMessage;
           this.transactionCount = transactionCount;
           this.userCount = userCount;
           this.version = version;

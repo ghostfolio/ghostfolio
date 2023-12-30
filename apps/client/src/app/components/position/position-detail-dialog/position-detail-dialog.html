@@ -246,11 +246,30 @@
       </div>
     </div>
 
-    <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
+    <div class="row" [ngClass]="{ 'd-none': !activities?.length }">
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
+        <gf-activities-table-lazy
+          *ngIf="user?.settings?.isExperimentalFeatures === true"
+          [baseCurrency]="data.baseCurrency"
+          [dataSource]="dataSource"
+          [deviceType]="data.deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="data.locale"
+          [showActions]="false"
+          [showNameColumn]="false"
+          [sortColumn]="sortColumn"
+          [sortDirection]="sortDirection"
+          [sortDisabled]="true"
+          [totalItems]="totalItems"
+          (export)="onExport()"
+        ></gf-activities-table-lazy>
         <gf-activities-table
-          [activities]="orders"
+          *ngIf="user?.settings?.isExperimentalFeatures !== true"
+          [activities]="activities"
           [baseCurrency]="data.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
@@ -277,7 +296,7 @@
     </div>
 
     <div
-      *ngIf="data.hasPermissionToReportDataGlitch === true && orders?.length > 0"
+      *ngIf="activities?.length > 0 && data.hasPermissionToReportDataGlitch === true"
       class="row"
     >
       <div class="col">

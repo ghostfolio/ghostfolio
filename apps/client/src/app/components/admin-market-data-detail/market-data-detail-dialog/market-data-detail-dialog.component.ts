@@ -57,10 +57,16 @@ export class MarketDataDetailDialog implements OnDestroy {
 
   public onUpdate() {
     this.adminService
-      .putMarketData({
+      .postMarketData({
         dataSource: this.data.dataSource,
-        date: this.data.date,
-        marketData: { marketPrice: this.data.marketPrice },
+        marketData: {
+          marketData: [
+            {
+              date: this.data.date.toISOString(),
+              marketPrice: this.data.marketPrice
+            }
+          ]
+        },
         symbol: this.data.symbol
       })
       .pipe(takeUntil(this.unsubscribeSubject))

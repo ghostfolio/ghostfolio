@@ -61,6 +61,7 @@ export const CurrentRateServiceMock = {
         for (const dataGatheringItem of dataGatheringItems) {
           values.push({
             date,
+            dataSource: dataGatheringItem.dataSource,
             marketPriceInBaseCurrency: mockGetValue(
               dataGatheringItem.symbol,
               date
@@ -74,6 +75,7 @@ export const CurrentRateServiceMock = {
         for (const dataGatheringItem of dataGatheringItems) {
           values.push({
             date,
+            dataSource: dataGatheringItem.dataSource,
             marketPriceInBaseCurrency: mockGetValue(
               dataGatheringItem.symbol,
               date

@@ -7,11 +7,18 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { HistoricalDataItem, User } from '@ghostfolio/common/interfaces';
+import {
+  AccountBalancesResponse,
+  HistoricalDataItem,
+  User
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
@@ -29,15 +36,22 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./account-detail-dialog.component.scss']
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
+  public accountBalances: AccountBalancesResponse['balances'];
+  public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
+  public dataSource: MatTableDataSource<OrderWithAccount>;
   public equity: number;
   public hasImpersonationId: boolean;
+  public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
+  public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
-  public orders: OrderWithAccount[];
   public platformName: string;
+  public sortColumn = 'date';
+  public sortDirection: SortDirection = 'desc';
+  public totalItems: number;
   public transactionCount: number;
   public user: User;
   public valueInBaseCurrency: number;
@@ -58,14 +72,17 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.hasPermissionToDeleteAccountBalance = hasPermission(
+            this.user.permissions,
+            permissions.deleteAccountBalance
+          );
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
   public ngOnInit() {
-    this.isLoadingChart = true;
-
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -97,16 +114,119 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         }
       );
 
-    this.dataService
-      .fetchActivities({
-        filters: [{ id: this.data.accountId, type: 'ACCOUNT' }]
-      })
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ activities }) => {
-        this.orders = activities;
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
+
+    this.fetchAccountBalances();
+    this.fetchActivities();
+    this.fetchPortfolioPerformance();
+  }
+
+  public onClose() {
+    this.dialogRef.close();
+  }
+
+  public onDeleteAccountBalance(aId: string) {
+    this.dataService
+      .deleteAccountBalance(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchAccountBalances();
+          this.fetchPortfolioPerformance();
+        }
+      });
+  }
+
+  public onExport() {
+    let activityIds = [];
+
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      activityIds = this.dataSource.data.map(({ id }) => {
+        return id;
+      });
+    } else {
+      activityIds = this.activities.map(({ id }) => {
+        return id;
+      });
+    }
+
+    this.dataService
+      .fetchExport(activityIds)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((data) => {
+        downloadAsFile({
+          content: data,
+          fileName: `ghostfolio-export-${this.name
+            .replace(/\s+/g, '-')
+            .toLowerCase()}-${format(
+            parseISO(data.meta.date),
+            'yyyyMMddHHmm'
+          )}.json`,
+          format: 'json'
+        });
+      });
+  }
+
+  public onSortChanged({ active, direction }: Sort) {
+    this.sortColumn = active;
+    this.sortDirection = direction;
+
+    this.fetchActivities();
+  }
+
+  private fetchAccountBalances() {
+    this.dataService
+      .fetchAccountBalances(this.data.accountId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ balances }) => {
+        this.accountBalances = balances;
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private fetchActivities() {
+    this.isLoadingActivities = true;
+
+    if (this.user?.settings?.isExperimentalFeatures === true) {
+      this.dataService
+        .fetchActivities({
+          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
+          sortColumn: this.sortColumn,
+          sortDirection: this.sortDirection
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities, count }) => {
+          this.dataSource = new MatTableDataSource(activities);
+          this.totalItems = count;
+
+          this.isLoadingActivities = false;
+
+          this.changeDetectorRef.markForCheck();
+        });
+    } else {
+      this.dataService
+        .fetchActivities({
+          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }]
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(({ activities }) => {
+          this.activities = activities;
+
+          this.isLoadingActivities = false;
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
+  }
+
+  private fetchPortfolioPerformance() {
+    this.isLoadingChart = true;
 
     this.dataService
       .fetchPortfolioPerformance({
@@ -122,13 +242,13 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
         this.historicalDataItems = chart.map(
-          ({ date, value, valueInPercentage }) => {
+          ({ date, netWorth, netWorthInPercentage }) => {
             return {
               date,
               value:
                 this.hasImpersonationId || this.user.settings.isRestrictedView
-                  ? valueInPercentage
-                  : value
+                  ? netWorthInPercentage
+                  : netWorth
             };
           }
         );
@@ -136,39 +256,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         this.isLoadingChart = false;
 
         this.changeDetectorRef.markForCheck();
-      });
-
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-      });
-  }
-
-  public onClose() {
-    this.dialogRef.close();
-  }
-
-  public onExport() {
-    this.dataService
-      .fetchExport(
-        this.orders.map((order) => {
-          return order.id;
-        })
-      )
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        downloadAsFile({
-          content: data,
-          fileName: `ghostfolio-export-${this.name
-            .replace(/\s+/g, '-')
-            .toLowerCase()}-${format(
-            parseISO(data.meta.date),
-            'yyyyMMddHHmm'
-          )}.json`,
-          format: 'json'
-        });
       });
   }
 

@@ -1,18 +1,17 @@
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { permissions } from '@ghostfolio/common/permissions';
 import {
   Body,
   Controller,
   Delete,
   Get,
   HttpException,
-  Inject,
   Param,
   Post,
   Put,
   UseGuards
 } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -23,40 +22,25 @@ import { UpdateTagDto } from './update-tag.dto';
 
 @Controller('tag')
 export class TagController {
-  public constructor(
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly tagService: TagService
-  ) {}
+  public constructor(private readonly tagService: TagService) {}
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getTags() {
     return this.tagService.getTagsWithActivityCount();
   }
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.createTag)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createTag(@Body() data: CreateTagDto): Promise<Tag> {
-    if (!hasPermission(this.request.user.permissions, permissions.createTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     return this.tagService.createTag(data);
   }
 
+  @HasPermission(permissions.updateTag)
   @Put(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateTag(@Param('id') id: string, @Body() data: UpdateTagDto) {
-    if (!hasPermission(this.request.user.permissions, permissions.updateTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalTag = await this.tagService.getTag({
       id
     });
@@ -79,15 +63,9 @@ export class TagController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard('jwt'))
+  @HasPermission(permissions.deleteTag)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteTag(@Param('id') id: string) {
-    if (!hasPermission(this.request.user.permissions, permissions.deleteTag)) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     const originalTag = await this.tagService.getTag({
       id
     });

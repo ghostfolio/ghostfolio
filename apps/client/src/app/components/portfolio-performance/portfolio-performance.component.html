@@ -35,17 +35,7 @@
       <span #value id="value"></span>
     </div>
     <div class="flex-grow-1 px-1">
-      <ngx-skeleton-loader
-        *ngIf="isLoading"
-        animation="pulse"
-        [theme]="{
-          height: '1.3rem',
-          width: '2.5rem'
-        }"
-      ></ngx-skeleton-loader>
-      <div *ngIf="!isLoading">
-        {{ unit }}
-      </div>
+      {{ unit }}
     </div>
   </div>
   <div *ngIf="showDetails" class="row">

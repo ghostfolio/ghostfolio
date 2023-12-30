@@ -35,15 +35,19 @@
             its capabilities, security, and user experience.
           </p>
           <p i18n>
-            Let’s dive deeper into the detailed comparison table below to gain a
-            thorough understanding of how Ghostfolio positions itself relative
-            to {{ product2.name }}. We will explore various aspects such as
-            features, data privacy, pricing, and more, allowing you to make a
-            well-informed choice for your personal requirements.
+            Let’s dive deeper into the detailed Ghostfolio vs {{ product2.name
+            }} comparison table below to gain a thorough understanding of how
+            Ghostfolio positions itself relative to {{ product2.name }}. We will
+            explore various aspects such as features, data privacy, pricing, and
+            more, allowing you to make a well-informed choice for your personal
+            requirements.
           </p>
         </section>
         <section class="mb-4">
           <table class="gf-table w-100">
+            <caption class="text-center" i18n>
+              Ghostfolio vs {{ product2.name }} comparison table
+            </caption>
             <thead>
               <tr class="mat-mdc-header-row">
                 <th class="mat-mdc-header-cell px-1 py-2"></th>
@@ -177,13 +181,14 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Pricing</td>
-                <td class="mat-mdc-cell px-1 py-2" i18n>
-                  Starting from {{ product1.pricingPerYear }} / year
+                <td class="mat-mdc-cell px-1 py-2">
+                  <span i18n>Starting from</span> ${{ price }} /
+                  <span i18n>year</span>
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.pricingPerYear" i18n
-                    >Starting from {{ product2.pricingPerYear }} /
-                    year</ng-container
+                  <ng-container *ngIf="product2.pricingPerYear"
+                    ><span i18n>Starting from</span> {{ product2.pricingPerYear
+                    }} / <span i18n>year</span></ng-container
                   >
                 </td>
               </tr>
@@ -197,12 +202,13 @@
         </section>
         <section class="mb-4">
           <p i18n>
-            Please note that the information provided is based on our
-            independent research and analysis. This website is not affiliated
-            with {{ product2.name }} or any other product mentioned in the
-            comparison. As the landscape of personal finance tools evolves, it
-            is essential to verify any specific details or changes directly from
-            the respective product page. Data needs a refresh? Help us maintain
+            Please note that the information provided in the Ghostfolio vs {{
+            product2.name }} comparison table is based on our independent
+            research and analysis. This website is not affiliated with {{
+            product2.name }} or any other product mentioned in the comparison.
+            As the landscape of personal finance tools evolves, it is essential
+            to verify any specific details or changes directly from the
+            respective product page. Data needs a refresh? Help us maintain
             accurate data on
             <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
           </p>
@@ -225,22 +231,25 @@
         <section class="mb-4">
           <ul class="list-inline">
             <li class="list-inline-item">
-              <span class="badge badge-light">{{ product1.name }}</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">{{ product2.name }}</span>
-            </li>
-            <li class="list-inline-item">
               <span class="badge badge-light">Alternative</span>
             </li>
             <li class="list-inline-item">
               <span class="badge badge-light">App</span>
             </li>
             <li class="list-inline-item">
+              <span class="badge badge-light">Budgeting</span>
+            </li>
+            <li class="list-inline-item">
               <span class="badge badge-light">Community</span>
             </li>
             <li class="list-inline-item">
+              <span class="badge badge-light">Family Office</span>
+            </li>
+            <li class="list-inline-item">
               <span class="badge badge-light">Fintech</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">{{ product1.name }}</span>
             </li>
             <li class="list-inline-item">
               <span class="badge badge-light">Investment</span>
@@ -276,7 +285,13 @@
               <span class="badge badge-light">Wealth</span>
             </li>
             <li class="list-inline-item">
+              <span class="badge badge-light">WealthTech</span>
+            </li>
+            <li class="list-inline-item">
               <span class="badge badge-light">Wealth Management</span>
+            </li>
+            <li class="list-inline-item">
+              <span class="badge badge-light">{{ product2.name }}</span>
             </li>
           </ul>
         </section>
@@ -291,7 +306,7 @@
               aria-current="page"
               class="active breadcrumb-item text-truncate"
             >
-              {{ product2.name }}
+              Ghostfolio vs {{ product2.name }}
             </li>
           </ol>
         </nav>

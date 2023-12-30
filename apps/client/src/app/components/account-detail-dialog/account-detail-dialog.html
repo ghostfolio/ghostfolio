@@ -31,7 +31,7 @@
       ></gf-investment-chart>
     </div>
 
-    <div class="row">
+    <div class="mb-3 row">
       <div class="col-6 mb-3">
         <gf-value
           i18n
@@ -64,11 +64,33 @@
       </div>
     </div>
 
-    <div class="row" [ngClass]="{ 'd-none': !orders?.length }">
-      <div class="col mb-3">
-        <div class="h5 mb-0" i18n>Activities</div>
+    <mat-tab-group
+      animationDuration="0"
+      [mat-stretch-tabs]="false"
+      [ngClass]="{ 'd-none': isLoadingActivities }"
+    >
+      <mat-tab>
+        <ng-template i18n mat-tab-label>Activities</ng-template>
+        <gf-activities-table-lazy
+          *ngIf="user?.settings?.isExperimentalFeatures === true"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [dataSource]="dataSource"
+          [deviceType]="deviceType"
+          [hasPermissionToCreateActivity]="false"
+          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToFilter]="false"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="user?.settings?.locale"
+          [showActions]="false"
+          [sortColumn]="sortColumn"
+          [sortDirection]="sortDirection"
+          [totalItems]="totalItems"
+          (export)="onExport()"
+          (sortChanged)="onSortChanged($event)"
+        ></gf-activities-table-lazy>
         <gf-activities-table
-          [activities]="orders"
+          *ngIf="user?.settings?.isExperimentalFeatures !== true"
+          [activities]="activities"
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
@@ -79,8 +101,18 @@
           [showActions]="false"
           (export)="onExport()"
         ></gf-activities-table>
-      </div>
-    </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template i18n mat-tab-label>Cash Balances</ng-template>
+        <gf-account-balances
+          [accountBalances]="accountBalances"
+          [accountId]="data.accountId"
+          [locale]="user?.settings?.locale"
+          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
+          (accountBalanceDeleted)="onDeleteAccountBalance($event)"
+        ></gf-account-balances>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>
 

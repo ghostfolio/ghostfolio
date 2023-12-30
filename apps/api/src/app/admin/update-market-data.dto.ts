@@ -1,9 +1,9 @@
-import { IsDate, IsNumber, IsOptional } from 'class-validator';
+import { IsISO8601, IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateMarketDataDto {
-  @IsDate()
+  @IsISO8601()
   @IsOptional()
-  date?: Date;
+  date?: string;
 
   @IsNumber()
   marketPrice: number;

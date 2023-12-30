@@ -1,0 +1,492 @@
+<div *ngIf="hasPermissionToCreateActivity" class="d-flex justify-content-end">
+  <button
+    class="align-items-center d-flex"
+    mat-stroked-button
+    (click)="onImport()"
+  >
+    <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+    <ng-container i18n>Import Activities</ng-container>...
+  </button>
+  <button
+    *ngIf="hasPermissionToExportActivities"
+    class="mx-1 no-min-width px-2"
+    mat-stroked-button
+    [matMenuTriggerFor]="activitiesMenu"
+    (click)="$event.stopPropagation()"
+  >
+    <ion-icon name="ellipsis-vertical"></ion-icon>
+  </button>
+  <mat-menu #activitiesMenu="matMenu" xPosition="before">
+    <button
+      mat-menu-item
+      [disabled]="dataSource?.data.length === 0"
+      (click)="onImportDividends()"
+    >
+      <span class="align-items-center d-flex">
+        <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+        <ng-container i18n>Import Dividends</ng-container>...
+      </span>
+    </button>
+    <button
+      *ngIf="hasPermissionToExportActivities"
+      class="align-items-center d-flex"
+      mat-menu-item
+      [disabled]="dataSource?.data.length === 0"
+      (click)="onExport()"
+    >
+      <span class="align-items-center d-flex">
+        <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+        <span i18n>Export Activities</span>
+      </span>
+    </button>
+    <button
+      *ngIf="hasPermissionToExportActivities"
+      class="align-items-center d-flex"
+      mat-menu-item
+      [disabled]="!hasDrafts"
+      (click)="onExportDrafts()"
+    >
+      <span class="align-items-center d-flex">
+        <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+        <span i18n>Export Drafts as ICS</span>
+      </span>
+    </button>
+    <button
+      class="align-items-center d-flex"
+      mat-menu-item
+      (click)="onDeleteAllActivities()"
+    >
+      <span class="align-items-center d-flex">
+        <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+        <span i18n>Delete all Activities</span>
+      </span>
+    </button>
+  </mat-menu>
+</div>
+
+<div class="activities">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    [dataSource]="dataSource"
+    [matSortActive]="sortColumn"
+    [matSortDirection]="sortDirection"
+    [matSortDisabled]="sortDisabled"
+  >
+    <ng-container matColumnDef="select" sticky>
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <mat-checkbox
+          color="primary"
+          [checked]="
+            areAllRowsSelected() && !hasErrors && selectedRows.hasValue()
+          "
+          [disabled]="hasErrors"
+          [indeterminate]="selectedRows.hasValue() && !areAllRowsSelected()"
+          (change)="$event ? toggleAllRows() : null"
+        ></mat-checkbox>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <mat-checkbox
+          color="primary"
+          [checked]="element.error ? false : selectedRows.isSelected(element)"
+          [disabled]="element.error"
+          (change)="$event ? selectedRows.toggle(element) : null"
+          (click)="$event.stopPropagation()"
+        ></mat-checkbox>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="importStatus">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <ng-container i18n></ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div
+          *ngIf="element.error"
+          class="d-flex"
+          matTooltipPosition="above"
+          [matTooltip]="element.error.message"
+        >
+          <ion-icon class="text-danger" name="alert-circle-outline"></ion-icon>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="icon">
+      <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+        <gf-symbol-icon
+          [dataSource]="element.SymbolProfile?.dataSource"
+          [symbol]="element.SymbolProfile?.symbol"
+          [tooltip]="element.SymbolProfile?.name"
+        ></gf-symbol-icon>
+        <div>{{ element.dataSource }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nameWithSymbol">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <ng-container i18n>Name</ng-container>
+      </th>
+      <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+        <div class="d-flex align-items-center">
+          <div>
+            <span class="text-truncate">{{ element.SymbolProfile?.name }}</span>
+            <span
+              *ngIf="element.isDraft"
+              class="badge badge-secondary ml-1"
+              i18n
+              >Draft</span
+            >
+          </div>
+        </div>
+        <div *ngIf="!isUUID(element.SymbolProfile?.symbol)">
+          <small class="text-muted">{{
+            element.SymbolProfile?.symbol | gfSymbol
+          }}</small>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+        <ng-container i18n>Type</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <gf-activity-type [activityType]="element.type"></gf-activity-type>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+        <ng-container i18n>Date</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex">
+          {{ element.date | date: defaultDateFormat }}
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="quantity">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Quantity</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.quantity"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="unitPrice">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Unit Price</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.unitPrice"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fee">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Fee</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.fee"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-header-cell
+      >
+        <ng-container i18n>Value</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.value"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="currency">
+      <th *matHeaderCellDef class="d-none d-lg-table-cell px-1" mat-header-cell>
+        <ng-container i18n>Currency</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        {{ element.SymbolProfile?.currency }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="valueInBaseCurrency">
+      <th
+        *matHeaderCellDef
+        class="d-lg-none d-xl-none justify-content-end px-1"
+        mat-header-cell
+      >
+        <ng-container i18n>Value</ng-container>
+      </th>
+      <td *matCellDef="let element" class="d-lg-none d-xl-none px-1" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="isLoading ? undefined : element.valueInBaseCurrency"
+          ></gf-value>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="account">
+      <th *matHeaderCellDef class="px-1" mat-header-cell>
+        <span class="d-none d-lg-block" i18n>Account</span>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex">
+          <gf-symbol-icon
+            *ngIf="element.Account?.Platform?.url"
+            class="mr-1"
+            [tooltip]="element.Account?.Platform?.name"
+            [url]="element.Account?.Platform?.url"
+          ></gf-symbol-icon>
+          <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="comment">
+      <th
+        *matHeaderCellDef
+        class="d-none d-lg-table-cell px-1"
+        mat-header-cell
+      ></th>
+      <td
+        *matCellDef="let element"
+        class="d-none d-lg-table-cell px-1"
+        mat-cell
+      >
+        <button
+          *ngIf="element.comment"
+          class="mx-1 no-min-width px-2"
+          mat-button
+          title="Note"
+          (click)="onOpenComment(element.comment); $event.stopPropagation()"
+        >
+          <ion-icon name="document-text-outline"></ion-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions" stickyEnd>
+      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
+        <button
+          *ngIf="
+            !hasPermissionToCreateActivity && hasPermissionToExportActivities
+          "
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="activitiesMenu"
+          (click)="$event.stopPropagation()"
+        >
+          <ion-icon name="ellipsis-vertical"></ion-icon>
+        </button>
+        <mat-menu #activitiesMenu="matMenu" xPosition="before">
+          <button
+            *ngIf="hasPermissionToCreateActivity"
+            class="align-items-center d-flex"
+            mat-menu-item
+            (click)="onImport()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+              <ng-container i18n>Import Activities</ng-container>...
+            </span>
+          </button>
+          <button
+            *ngIf="hasPermissionToCreateActivity"
+            mat-menu-item
+            [disabled]="dataSource?.data.length === 0"
+            (click)="onImportDividends()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+              <ng-container i18n>Import Dividends</ng-container>...
+            </span>
+          </button>
+          <button
+            *ngIf="hasPermissionToExportActivities"
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="dataSource?.data.length === 0"
+            (click)="onExport()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+              <span i18n>Export Activities</span>
+            </span>
+          </button>
+          <button
+            *ngIf="hasPermissionToExportActivities"
+            class="align-items-center d-flex"
+            mat-menu-item
+            [disabled]="!hasDrafts"
+            (click)="onExportDrafts()"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+              <span i18n>Export Drafts as ICS</span>
+            </span>
+          </button>
+        </mat-menu>
+      </th>
+      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+        <button
+          *ngIf="showActions"
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="activityMenu"
+          (click)="$event.stopPropagation()"
+        >
+          <ion-icon name="ellipsis-horizontal"></ion-icon>
+        </button>
+        <mat-menu #activityMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="onUpdateActivity(element)">
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="create-outline"></ion-icon>
+              <span i18n>Edit</span>
+            </span>
+          </button>
+          <button mat-menu-item (click)="onCloneActivity(element)">
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="copy-outline"></ion-icon>
+              <span i18n>Clone</span>
+            </span>
+          </button>
+          <button
+            mat-menu-item
+            [disabled]="!element.isDraft"
+            (click)="onExportDraft(element.id)"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+              <span i18n>Export Draft as ICS</span>
+            </span>
+          </button>
+          <button mat-menu-item (click)="onDeleteActivity(element.id)">
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+              <span i18n>Delete</span>
+            </span>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr
+      *matRowDef="let row; columns: displayedColumns"
+      mat-row
+      [ngClass]="{
+        'cursor-pointer':
+          hasPermissionToOpenDetails &&
+          !row.isDraft &&
+          row.type !== 'FEE' &&
+          row.type !== 'INTEREST' &&
+          row.type !== 'ITEM' &&
+          row.type !== 'LIABILITY'
+      }"
+      (click)="onClickActivity(row)"
+    ></tr>
+  </table>
+</div>
+
+<ngx-skeleton-loader
+  *ngIf="isLoading"
+  animation="pulse"
+  class="px-4 py-3"
+  [theme]="{
+    height: '1.5rem',
+    width: '100%'
+  }"
+></ngx-skeleton-loader>
+
+<mat-paginator
+  [length]="totalItems"
+  [ngClass]="{
+    'd-none': (isLoading && !totalItems) || totalItems <= pageSize
+  }"
+  [pageIndex]="pageIndex"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="true"
+  (page)="onChangePage($event)"
+></mat-paginator>
+
+<div
+  *ngIf="
+    dataSource?.data.length === 0 && hasPermissionToCreateActivity && !isLoading
+  "
+  class="p-3 text-center"
+>
+  <gf-no-transactions-info-indicator
+    [hasBorder]="false"
+  ></gf-no-transactions-info-indicator>
+</div>

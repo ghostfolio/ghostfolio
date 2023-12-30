@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { DEFAULT_CURRENCY, UNKNOWN_KEY } from '@ghostfolio/common/config';
@@ -10,6 +11,7 @@ import {
   Prisma,
   SymbolProfile
 } from '@prisma/client';
+import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
 import yahooFinance from 'yahoo-finance2';
 import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
@@ -17,6 +19,7 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
 
@@ -71,9 +74,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   }
 
   public async enhance({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     response,
     symbol
   }: {
+    requestTimeout?: number;
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
@@ -156,7 +161,20 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     const response: Partial<SymbolProfile> = {};
 
     try {
-      const symbol = this.convertToYahooFinanceSymbol(aSymbol);
+      let symbol = aSymbol;
+
+      if (isISIN(symbol)) {
+        try {
+          const { quotes } = await yahooFinance.search(symbol);
+
+          if (quotes.length === 1) {
+            symbol = quotes[0].symbol;
+          }
+        } catch {}
+      } else {
+        symbol = this.convertToYahooFinanceSymbol(symbol);
+      }
+
       const assetProfile = await yahooFinance.quoteSummary(symbol, {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
@@ -176,7 +194,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         shortName: assetProfile.price.shortName,
         symbol: assetProfile.price.symbol
       });
-      response.symbol = aSymbol;
+      response.symbol = assetProfile.price.symbol;
 
       if (assetSubClass === AssetSubClass.MUTUALFUND) {
         response.sectors = [];

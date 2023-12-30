@@ -1,0 +1,59 @@
+<table
+  class="gf-table w-100"
+  mat-table
+  matSort
+  matSortActive="date"
+  matSortDirection="desc"
+  [dataSource]="dataSource"
+>
+  <ng-container matColumnDef="date">
+    <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+      <ng-container i18n>Date</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-2" mat-cell>
+      <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
+      <ng-container i18n>Value</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-2" mat-cell>
+      <div class="d-flex justify-content-end">
+        <gf-value
+          [isCurrency]="true"
+          [locale]="locale"
+          [unit]="element?.Account?.currency"
+          [value]="element?.value"
+        ></gf-value>
+      </div>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions" stickyEnd>
+    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <button
+        *ngIf="showActions"
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="accountBalanceMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-horizontal"></ion-icon>
+      </button>
+      <mat-menu #accountBalanceMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="onDeleteAccountBalance(element.id)">
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+            <span i18n>Delete</span>
+          </span>
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+</table>

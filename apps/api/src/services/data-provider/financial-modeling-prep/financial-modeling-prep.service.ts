@@ -5,10 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT
-} from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
@@ -70,7 +67,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { historical } = await got(
         `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,
@@ -113,13 +110,17 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return DataSource.FINANCIAL_MODELING_PREP;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const results: { [symbol: string]: IDataProviderResponse } = {};
+  public async getQuotes({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    const response: { [symbol: string]: IDataProviderResponse } = {};
 
-    if (aSymbols.length <= 0) {
-      return {};
+    if (symbols.length <= 0) {
+      return response;
     }
 
     try {
@@ -127,18 +128,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, requestTimeout);
 
-      const response = await got(
-        `${this.URL}/quote/${aSymbols.join(',')}?apikey=${this.apiKey}`,
+      const quotes = await got(
+        `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
           signal: abortController.signal
         }
       ).json<any>();
 
-      for (const { price, symbol } of response) {
-        results[symbol] = {
+      for (const { price, symbol } of quotes) {
+        response[symbol] = {
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
@@ -147,10 +148,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         };
       }
     } catch (error) {
-      Logger.error(error, 'FinancialModelingPrepService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+          'REQUEST_TIMEOUT'
+        )}ms`;
+      }
+
+      Logger.error(message, 'FinancialModelingPrepService');
     }
 
-    return results;
+    return response;
   }
 
   public getTestSymbol() {
@@ -171,7 +180,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const result = await got(
         `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
@@ -192,7 +201,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         };
       });
     } catch (error) {
-      Logger.error(error, 'FinancialModelingPrepService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+          'REQUEST_TIMEOUT'
+        )}ms`;
+      }
+
+      Logger.error(message, 'FinancialModelingPrepService');
     }
 
     return { items };

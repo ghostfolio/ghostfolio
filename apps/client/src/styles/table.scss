@@ -1,5 +1,5 @@
 @mixin gf-table($darkTheme: false) {
-  background: transparent !important;
+  --mat-table-background-color: var(--light-background);
 
   .mat-footer-row,
   .mat-row {
@@ -21,29 +21,17 @@
 
   .mat-mdc-row {
     &:nth-child(even) {
-      background-color: rgba(var(--palette-foreground-base), 0.02);
+      background-color: whitesmoke;
     }
 
     &:hover {
-      background-color: rgba(var(--palette-foreground-base), 0.05) !important;
-    }
-
-    .mat-mdc-cell {
-      background: none;
-    }
-  }
-
-  .mat-row {
-    &:nth-child(even) {
-      background-color: rgba(var(--palette-foreground-base), 0.02);
-    }
-
-    &:hover {
-      background-color: rgba(var(--palette-foreground-base), 0.05);
+      background-color: #e6e6e6 !important;
     }
   }
 
   @if $darkTheme {
+    --mat-table-background-color: var(--dark-background);
+
     .mat-mdc-footer-row {
       .mat-mdc-footer-cell {
         border-top-color: rgba(
@@ -55,28 +43,11 @@
 
     .mat-mdc-row {
       &:nth-child(even) {
-        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+        background-color: #222222;
       }
 
       &:hover {
-        background-color: rgba(
-          var(--palette-foreground-base-dark),
-          0.05
-        ) !important;
-      }
-
-      .mat-mdc-cell {
-        background: none;
-      }
-    }
-
-    .mat-row {
-      &:nth-child(even) {
-        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
-      }
-
-      &:hover {
-        background-color: rgba(var(--palette-foreground-base-dark), 0.05);
+        background-color: #303030 !important;
       }
     }
   }

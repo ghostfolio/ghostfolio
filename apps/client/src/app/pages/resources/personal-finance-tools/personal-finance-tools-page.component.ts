@@ -12,9 +12,13 @@ import { products } from './products';
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public pathAlternativeTo = $localize`open-source-alternative-to` + '-';
   public pathResources = '/' + $localize`resources`;
-  public products = products.filter(({ key }) => {
-    return key !== 'ghostfolio';
-  });
+  public products = products
+    .filter(({ key }) => {
+      return key !== 'ghostfolio';
+    })
+    .sort((a, b) => {
+      return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+    });
   public routerLinkAbout = ['/' + $localize`about`];
 
   private unsubscribeSubject = new Subject<void>();

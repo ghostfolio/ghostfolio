@@ -8,7 +8,8 @@ import {
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
-  STAY_SIGNED_IN,
+  KEY_STAY_SIGNED_IN,
+  KEY_TOKEN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -44,6 +45,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     'fr',
     'it',
     'nl',
+    'pl',
     'pt',
     'tr'
   ];
@@ -240,7 +242,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe(() => {
-        this.settingsStorageService.removeSetting(STAY_SIGNED_IN);
+        this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
+        this.settingsStorageService.removeSetting(KEY_TOKEN);
 
         this.update();
       });

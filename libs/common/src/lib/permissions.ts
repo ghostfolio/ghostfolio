@@ -12,6 +12,7 @@ export const permissions = {
   createUserAccount: 'createUserAccount',
   deleteAccess: 'deleteAccess',
   deleteAccount: 'deleteAcccount',
+  deleteAccountBalance: 'deleteAcccountBalance',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
   deletePlatform: 'deletePlatform',
@@ -35,7 +36,7 @@ export const permissions = {
   updateTag: 'updateTag',
   updateUserSettings: 'updateUserSettings',
   updateViewMode: 'updateViewMode'
-};
+} as const;
 
 export function getPermissions(aRole: Role): string[] {
   switch (aRole) {
@@ -45,6 +46,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.accessAssistant,
         permissions.createAccess,
         permissions.createAccount,
+        permissions.deleteAccountBalance,
         permissions.createOrder,
         permissions.createPlatform,
         permissions.createTag,
@@ -75,6 +77,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.createOrder,
         permissions.deleteAccess,
         permissions.deleteAccount,
+        permissions.deleteAccountBalance,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.updateAccount,

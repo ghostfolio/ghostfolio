@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
 import { products } from '../products';
+import { BaseProductPageComponent } from './base-page.component';
 
 @Component({
   host: { class: 'page' },
@@ -13,7 +14,7 @@ import { products } from '../products';
   styleUrls: ['../product-page-template.scss'],
   templateUrl: '../product-page-template.html'
 })
-export class FolisharePageComponent {
+export class FolisharePageComponent extends BaseProductPageComponent {
   public product1 = products.find(({ key }) => {
     return key === 'ghostfolio';
   });

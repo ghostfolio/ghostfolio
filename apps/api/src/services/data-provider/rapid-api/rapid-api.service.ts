@@ -5,10 +5,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  DEFAULT_REQUEST_TIMEOUT,
-  ghostfolioFearAndGreedIndexSymbol
-} from '@ghostfolio/common/config';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
@@ -87,15 +84,19 @@ export class RapidApiService implements DataProviderInterface {
     return DataSource.RAPID_API;
   }
 
-  public async getQuotes(
-    aSymbols: string[]
-  ): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    if (aSymbols.length <= 0) {
+  public async getQuotes({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+    if (symbols.length <= 0) {
       return {};
     }
 
     try {
-      const symbol = aSymbols[0];
+      const symbol = symbols[0];
 
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
@@ -142,7 +143,7 @@ export class RapidApiService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
@@ -159,7 +160,15 @@ export class RapidApiService implements DataProviderInterface {
 
       return fgi;
     } catch (error) {
-      Logger.error(error, 'RapidApiService');
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+          'REQUEST_TIMEOUT'
+        )}ms`;
+      }
+
+      Logger.error(message, 'RapidApiService');
 
       return undefined;
     }
