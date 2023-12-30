@@ -166,7 +166,7 @@ Ghostfolio is available for various home server systems, including [Runtipi](htt
 
 #### Debug
 
-Run `yarn watch:server` and click _Launch Program_ in [Visual Studio Code](https://code.visualstudio.com)
+Run `yarn watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
 
 #### Serve
 
