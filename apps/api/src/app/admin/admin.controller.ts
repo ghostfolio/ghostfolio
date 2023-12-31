@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
@@ -50,7 +51,6 @@ import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
 import { UpdateMarketDataDto } from './update-market-data.dto';
-import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 
 @Controller('admin')
 export class AdminController {
@@ -181,20 +181,9 @@ export class AdminController {
     });
   }
 
-  @Post('test-scraper')
-  @UseGuards(AuthGuard('jwt'))
-  public async testScraper(
-    @Body() data: { config: string }
-  ): Promise<{ price: number }> {
-    const { url, selector } = JSON.parse(data.config);
-
-    let price = await this.manualService.scrape(url, selector);
-    return { price: price };
-  }
-
   @Get('market-data')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
     @Query('presetId') presetId?: MarketDataPreset,
@@ -227,6 +216,18 @@ export class AdminController {
     @Param('symbol') symbol: string
   ): Promise<AdminMarketDataDetails> {
     return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
+  }
+
+  @HasPermission(permissions.accessAdminControl)
+  @Post('test-scraper')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async testScraper(
+    @Body() data: { config: string }
+  ): Promise<{ price: number }> {
+    const { url, selector } = JSON.parse(data.config);
+    const price = await this.manualService.scrape(url, selector);
+
+    return { price };
   }
 
   @HasPermission(permissions.accessAdminControl)

@@ -7,7 +7,6 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   extractNumberFromString,
@@ -77,7 +76,6 @@ export class ManualService implements DataProviderInterface {
         url
       } = symbolProfile.scraperConfiguration ?? {};
 
-      Logger.log(symbolProfile);
       if (defaultMarketPrice) {
         const historical: {
           [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -124,15 +122,17 @@ export class ManualService implements DataProviderInterface {
   ): Promise<number> {
     const abortController = new AbortController();
 
+    setTimeout(() => {
+      abortController.abort();
+    }, this.configurationService.get('REQUEST_TIMEOUT'));
+
     const { body } = await got(url, {
       headers,
       // @ts-ignore
       signal: abortController.signal
     });
 
-    setTimeout(() => {
-      abortController.abort();
-    }, this.configurationService.get('REQUEST_TIMEOUT'));
+    const $ = cheerio.load(body);
 
     return extractNumberFromString($(selector).first().text());
   }
