@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the performance calculation to a time-weighted approach
+- Normalized the benchmark by currency in the benchmark comparator
 - Increased the timeout to load currencies in the exchange rate data service
 - Exposed the environment variable `REQUEST_TIMEOUT`
 - Used the `HasPermission` annotation in endpoints
