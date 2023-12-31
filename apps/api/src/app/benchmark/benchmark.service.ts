@@ -246,9 +246,16 @@ export class BenchmarkService {
     const exchangeRateAtStartDate =
       exchangeRates[format(startDate, DATE_FORMAT)];
 
-    const step = Math.round(
-      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
-    );
+    if (!exchangeRateAtStartDate) {
+      Logger.error(
+        `No exchange rate has been found for ${
+          currentSymbolItem.currency
+        }${userCurrency} at ${format(startDate, DATE_FORMAT)}`,
+        'BenchmarkService'
+      );
+
+      return { marketData };
+    }
 
     const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
       return isSameDay(date, startDate);
@@ -265,6 +272,10 @@ export class BenchmarkService {
 
       return { marketData };
     }
+
+    const step = Math.round(
+      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
+    );
 
     let i = 0;
 
