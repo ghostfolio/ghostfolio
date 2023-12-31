@@ -223,7 +223,7 @@ export class AdminController {
   public async testScraper(
     @Body() data: { config: string }
   ): Promise<{ price: number }> {
-    const { url, selector } = JSON.parse(data.config);
+    const { selector, url } = JSON.parse(data.config);
     const price = await this.manualService.scrape(url, selector);
 
     return { price };
