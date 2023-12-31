@@ -11,6 +11,7 @@ import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { format, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
+import ms from 'ms';
 
 @Injectable()
 export class ExchangeRateDataService {
@@ -75,7 +76,8 @@ export class ExchangeRateDataService {
       const quotes = await this.dataProviderService.getQuotes({
         items: this.currencyPairs.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
-        })
+        }),
+        requestTimeout: ms('30 seconds')
       });
 
       for (const symbol of Object.keys(quotes)) {
