@@ -15,7 +15,6 @@ import {
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
-  getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
 import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -97,8 +96,7 @@ export class DataGatheringService {
         date
       );
       const marketPrice =
-        historicalData[symbol]?.[format(getYesterday(), DATE_FORMAT)]
-          .marketPrice;
+        historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
       if (marketPrice) {
         return await this.prismaService.marketData.upsert({
