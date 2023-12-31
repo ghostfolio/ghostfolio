@@ -12,7 +12,8 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
-  calculateBenchmarkTrend
+  calculateBenchmarkTrend,
+  parseDate
 } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -22,11 +23,11 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { format, subDays } from 'date-fns';
-import { isNumber, uniqBy } from 'lodash';
+import { format, isSameDay, subDays } from 'date-fns';
+import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -203,14 +204,16 @@ export class BenchmarkService {
   }
 
   public async getMarketDataBySymbol({
-    baseCurrency,
     dataSource,
     startDate,
-    symbol
+    symbol,
+    userCurrency
   }: {
-    baseCurrency: string;
     startDate: Date;
+    userCurrency: string;
   } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+    const marketData: { date: string; value: number }[] = [];
+
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
         dataGatheringItem: {
@@ -234,7 +237,7 @@ export class BenchmarkService {
 
     const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
       currencyFrom: currentSymbolItem.currency,
-      currencyTo: baseCurrency,
+      currencyTo: userCurrency,
       dates: marketDataItems.map(({ date }) => {
         return date;
       })
@@ -247,10 +250,24 @@ export class BenchmarkService {
       marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
     );
 
-    const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
-    const marketData: { date: string; value: number }[] = [];
+    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
+      return isSameDay(date, startDate);
+    })?.marketPrice;
+
+    if (!marketPriceAtStartDate) {
+      Logger.error(
+        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
+          startDate,
+          DATE_FORMAT
+        )}`,
+        'BenchmarkService'
+      );
+
+      return { marketData };
+    }
 
     let i = 0;
+
     for (let marketDataItem of marketDataItems) {
       if (i % step !== 0) {
         continue;
@@ -276,7 +293,12 @@ export class BenchmarkService {
       });
     }
 
-    if (currentSymbolItem?.marketPrice) {
+    const includesToday = isSameDay(
+      parseDate(last(marketData).date),
+      new Date()
+    );
+
+    if (currentSymbolItem?.marketPrice && !includesToday) {
       const exchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
 
       const exchangeRateFactor =

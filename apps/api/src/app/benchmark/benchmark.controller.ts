@@ -108,12 +108,13 @@ export class BenchmarkController {
     @Param('symbol') symbol: string
   ): Promise<BenchmarkMarketDataDetails> {
     const startDate = new Date(startDateString);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     return this.benchmarkService.getMarketDataBySymbol({
       dataSource,
       startDate,
       symbol,
-      baseCurrency: this.request.user.Settings.settings.baseCurrency
+      userCurrency
     });
   }
 }
