@@ -95,6 +95,7 @@ export class DataGatheringService {
         date,
         date
       );
+
       const marketPrice =
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
