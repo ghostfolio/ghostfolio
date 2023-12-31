@@ -175,8 +175,6 @@ export class AdminService {
     symbol
   }: UniqueAsset & {
     date?: Date;
-  } & {
-    isDryRun?: boolean;
   }) {
     let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
 
@@ -185,10 +183,6 @@ export class AdminService {
     }
 
     return this.http.post<MarketData | void>(url, {});
-  }
-
-  public testScrapeConfig(config: string) {
-    return this.http.post<any>(`/api/v1/admin/test-scraper`, { config });
   }
 
   public fetchSymbolForDate({
@@ -264,5 +258,9 @@ export class AdminService {
 
   public putTag(aTag: UpdateTagDto) {
     return this.http.put<Tag>(`/api/v1/tag/${aTag.id}`, aTag);
+  }
+
+  public testScrapeConfig(config: string) {
+    return this.http.post<any>(`/api/v1/admin/test-scraper`, { config });
   }
 }

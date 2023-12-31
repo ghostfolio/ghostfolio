@@ -44,7 +44,7 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource, MarketData, Prisma, SymbolProfile } from '@prisma/client';
-import { isDate, isToday, parseISO } from 'date-fns';
+import { isDate, parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
