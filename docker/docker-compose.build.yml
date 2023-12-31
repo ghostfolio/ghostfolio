@@ -31,7 +31,7 @@ services:
     image: redis:alpine
     env_file:
       - ../.env
-    command: ['redis-server','--requirepass',$REDIS_PASSWORD]
+    command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
     healthcheck:
       test: ['CMD-SHELL', 'redis-cli --pass $REDIS_PASSWORD ping | grep PONG']
       interval: 10s
