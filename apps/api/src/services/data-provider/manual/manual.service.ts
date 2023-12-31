@@ -131,8 +131,8 @@ export class ManualService implements DataProviderInterface {
     });
 
     setTimeout(() => {
-        abortController.abort();
-     }, this.configurationService.get('REQUEST_TIMEOUT'));
+      abortController.abort();
+    }, this.configurationService.get('REQUEST_TIMEOUT'));
 
     return extractNumberFromString($(selector).first().text());
   }
