@@ -32,7 +32,6 @@ import {
   Get,
   HttpException,
   Inject,
-  Logger,
   Param,
   Patch,
   Post,
