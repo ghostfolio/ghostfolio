@@ -93,6 +93,10 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.update();
   }
 
+  public isCommunityLanguage() {
+    return !(this.language === 'de' || this.language === 'en');
+  }
+
   public onChangeUserSetting(aKey: string, aValue: string) {
     this.dataService
       .putUserSetting({ [aKey]: aValue })

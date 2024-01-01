@@ -8,6 +8,7 @@ import type {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 import {
   Body,
   Controller,
@@ -20,6 +21,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -28,7 +30,10 @@ import { BenchmarkService } from './benchmark.service';
 
 @Controller('benchmark')
 export class BenchmarkController {
-  public constructor(private readonly benchmarkService: BenchmarkService) {}
+  public constructor(
+    private readonly benchmarkService: BenchmarkService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
+  ) {}
 
   @HasPermission(permissions.accessAdminControl)
   @Post()
@@ -103,11 +108,13 @@ export class BenchmarkController {
     @Param('symbol') symbol: string
   ): Promise<BenchmarkMarketDataDetails> {
     const startDate = new Date(startDateString);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     return this.benchmarkService.getMarketDataBySymbol({
       dataSource,
       startDate,
-      symbol
+      symbol,
+      userCurrency
     });
   }
 }

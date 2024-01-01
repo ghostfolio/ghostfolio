@@ -9,14 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to edit the currency of asset profiles with `MANUAL` data source in the asset profile details dialog of the admin control panel
 - Added a button to test the scraper configuration in the asset profile details dialog of the admin control
+
+## 2.33.0 - 2023-12-31
+
+### Added
+
+- Added support to edit the currency of asset profiles with `MANUAL` data source in the asset profile details dialog of the admin control panel
+- Added a hint for the community languages in the user settings
 
 ### Changed
 
 - Changed the performance calculation to a time-weighted approach
+- Normalized the benchmark by currency in the benchmark comparator
+- Increased the timeout to load currencies in the exchange rate data service
 - Exposed the environment variable `REQUEST_TIMEOUT`
 - Used the `HasPermission` annotation in endpoints
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.9.0` to `2.9.1`
 - Upgraded `Nx` from version `17.2.5` to `17.2.7`
 
 ### Fixed
