@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a button to test the scraper configuration in the asset profile details dialog of the admin control
+
 ### Changed
 
 - Improved the style of the _Top 3_ and _Bottom 3_ performers on the analysis page
