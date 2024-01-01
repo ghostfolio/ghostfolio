@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a button to test the scraper configuration in the asset profile details dialog of the admin control
 
+### Changed
+
+- Upgraded `Nx` from version `17.2.7` to `17.2.8`
+
 ## 2.33.0 - 2023-12-31
 
 ### Added
