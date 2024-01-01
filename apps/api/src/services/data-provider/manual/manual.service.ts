@@ -18,7 +18,7 @@ import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
-import got from 'got';
+import got, { Headers } from 'got';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -98,6 +98,7 @@ export class ManualService implements DataProviderInterface {
       }
 
       const value = await this.scrape({ headers, selector, url });
+
       return {
         [symbol]: {
           [format(getYesterday(), DATE_FORMAT)]: {
@@ -232,7 +233,7 @@ export class ManualService implements DataProviderInterface {
     selector,
     url
   }: {
-    headers?: any;
+    headers?: Headers;
     selector: string;
     url: string;
   }): Promise<number> {
