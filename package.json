@@ -110,6 +110,7 @@
     "helmet": "7.0.0",
     "http-status-codes": "2.3.0",
     "ionicons": "7.1.0",
+    "jsonpath": "^1.1.1",
     "lodash": "4.17.21",
     "marked": "9.1.6",
     "ms": "3.0.0-canary.1",

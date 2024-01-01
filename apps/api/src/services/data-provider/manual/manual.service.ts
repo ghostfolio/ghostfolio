@@ -19,6 +19,8 @@ import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
+import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
+import jsonpath from "jsonpath";
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -97,7 +99,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const value = await this.scrape({ headers, selector, url });
+      const value = await this.scrape(symbolProfile.scraperConfiguration);
 
       return {
         [symbol]: {
@@ -220,23 +222,11 @@ export class ManualService implements DataProviderInterface {
     return { items };
   }
 
-  public async test(params: any) {
-    return this.scrape({
-      headers: params.headers,
-      selector: params.selector,
-      url: params.url
-    });
+  public async test(config: ScraperConfiguration) {
+    return this.scrape(config);
   }
 
-  private async scrape({
-    headers = {},
-    selector,
-    url
-  }: {
-    headers?: Headers;
-    selector: string;
-    url: string;
-  }): Promise<number> {
+  private async scrape(config: ScraperConfiguration): Promise<number> {
     try {
       const abortController = new AbortController();
 
@@ -244,15 +234,23 @@ export class ManualService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { body } = await got(url, {
-        headers,
+
+      const { body } = await got(config.url, {
+        headers: config.headers as Headers,
         // @ts-ignore
         signal: abortController.signal
       });
+      if(config.type === 'json') {
+        const data = JSON.parse(body);
+        const field = String(jsonpath.query(data, config.selector)[0]);
+        return extractNumberFromString(field);
+      }
+      else{
 
-      const $ = cheerio.load(body);
+        const $ = cheerio.load(body);
+        return extractNumberFromString($(config.selector).first().text());
+      }
 
-      return extractNumberFromString($(selector).first().text());
     } catch (error) {
       throw error;
     }

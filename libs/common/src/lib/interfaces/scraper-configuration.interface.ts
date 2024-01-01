@@ -3,4 +3,5 @@ export interface ScraperConfiguration {
   headers?: { [key: string]: string };
   selector: string;
   url: string;
+  type: 'html' | 'json';
 }
