@@ -20,7 +20,7 @@ import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
 import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
-import jsonpath from "jsonpath";
+import jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -234,23 +234,19 @@ export class ManualService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-
       const { body } = await got(config.url, {
         headers: config.headers as Headers,
         // @ts-ignore
         signal: abortController.signal
       });
-      if(config.type === 'json') {
+      if (config.type === 'json') {
         const data = JSON.parse(body);
         const field = String(jsonpath.query(data, config.selector)[0]);
         return extractNumberFromString(field);
-      }
-      else{
-
+      } else {
         const $ = cheerio.load(body);
         return extractNumberFromString($(config.selector).first().text());
       }
-
     } catch (error) {
       throw error;
     }

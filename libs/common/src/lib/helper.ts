@@ -124,7 +124,7 @@ export function extractNumberFromString(aString: string): number {
   try {
     const [numberString] = aString.match(NUMERIC_REGEXP);
     return parseFloat(numberString.trim());
-  } catch (err){
+  } catch (err) {
     console.error(err);
     return undefined;
   }
