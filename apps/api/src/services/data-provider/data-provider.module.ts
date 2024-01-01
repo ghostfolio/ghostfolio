@@ -74,6 +74,6 @@ import { DataProviderService } from './data-provider.service';
     },
     YahooFinanceDataEnhancerService
   ],
-  exports: [DataProviderService, YahooFinanceService]
+  exports: [DataProviderService, ManualService, YahooFinanceService]
 })
 export class DataProviderModule {}

@@ -277,6 +277,34 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
+  public onTestMarketData() {
+    this.adminService
+      .testMarketData({
+        dataSource: this.data.dataSource,
+        scraperConfiguration:
+          this.assetProfileForm.controls['scraperConfiguration'].value,
+        symbol: this.data.symbol
+      })
+      .pipe(
+        catchError(({ error }) => {
+          alert(`Error: ${error?.message}`);
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(({ price }) => {
+        alert(
+          $localize`The current market price is` +
+            ' ' +
+            price +
+            ' ' +
+            (<Currency>(
+              (<unknown>this.assetProfileForm.controls['currency'].value)
+            ))?.value
+        );
+      });
+  }
+
   public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
