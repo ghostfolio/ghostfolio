@@ -260,7 +260,16 @@ export class AdminService {
     return this.http.put<Tag>(`/api/v1/tag/${aTag.id}`, aTag);
   }
 
-  public testScrapeConfig(config: string) {
-    return this.http.post<any>(`/api/v1/admin/test-scraper`, { config });
+  public testMarketData({
+    dataSource,
+    scraperConfiguration,
+    symbol
+  }: UniqueAsset & UpdateAssetProfileDto['scraperConfiguration']) {
+    return this.http.post<any>(
+      `/api/v1/admin/market-data/${dataSource}/${symbol}/test`,
+      {
+        scraperConfiguration
+      }
+    );
   }
 }

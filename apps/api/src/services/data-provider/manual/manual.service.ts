@@ -97,7 +97,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const value = await this.scrape(url, selector, headers);
+      const value = await this.scrape({ headers, selector, url });
       return {
         [symbol]: {
           [format(getYesterday(), DATE_FORMAT)]: {
@@ -113,28 +113,6 @@ export class ManualService implements DataProviderInterface {
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
       );
     }
-  }
-
-  public async scrape(
-    url: string,
-    selector: string,
-    headers = {}
-  ): Promise<number> {
-    const abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-    const { body } = await got(url, {
-      headers,
-      // @ts-ignore
-      signal: abortController.signal
-    });
-
-    const $ = cheerio.load(body);
-
-    return extractNumberFromString($(selector).first().text());
   }
 
   public getName(): DataSource {
@@ -239,5 +217,43 @@ export class ManualService implements DataProviderInterface {
     });
 
     return { items };
+  }
+
+  public async test(params: any) {
+    return this.scrape({
+      headers: params.headers,
+      selector: params.selector,
+      url: params.url
+    });
+  }
+
+  private async scrape({
+    headers = {},
+    selector,
+    url
+  }: {
+    headers?: any;
+    selector: string;
+    url: string;
+  }): Promise<number> {
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
+
+      const { body } = await got(url, {
+        headers,
+        // @ts-ignore
+        signal: abortController.signal
+      });
+
+      const $ = cheerio.load(body);
+
+      return extractNumberFromString($(selector).first().text());
+    } catch (error) {
+      throw error;
+    }
   }
 }

@@ -277,18 +277,31 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onTestScraper() {
+  public onTestMarketData() {
     this.adminService
-      .testScrapeConfig(
-        this.assetProfileForm.controls['scraperConfiguration'].value
+      .testMarketData({
+        dataSource: this.data.dataSource,
+        scraperConfiguration:
+          this.assetProfileForm.controls['scraperConfiguration'].value,
+        symbol: this.data.symbol
+      })
+      .pipe(
+        catchError(({ error }) => {
+          alert(`Error: ${error?.message}`);
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        if (response?.price) {
-          alert($localize`Current Market Price is:` + ' ' + response.price);
-        } else {
-          alert($localize`Please try again.`);
-        }
+      .subscribe(({ price }) => {
+        alert(
+          $localize`The current market price is` +
+            ' ' +
+            price +
+            ' ' +
+            (<Currency>(
+              (<unknown>this.assetProfileForm.controls['currency'].value)
+            ))?.value
+        );
       });
   }
 

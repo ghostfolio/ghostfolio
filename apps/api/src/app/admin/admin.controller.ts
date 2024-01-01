@@ -32,6 +32,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Logger,
   Param,
   Patch,
   Post,
@@ -218,15 +219,27 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
-  @Post('test-scraper')
+  @Post('market-data/:dataSource/:symbol/test')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async testScraper(
-    @Body() data: { config: string }
+  public async testMarketData(
+    @Body() data: { scraperConfiguration: string },
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
   ): Promise<{ price: number }> {
-    const { selector, url } = JSON.parse(data.config);
-    const price = await this.manualService.scrape(url, selector);
+    try {
+      const { headers, selector, url } = JSON.parse(data.scraperConfiguration);
+      const price = await this.manualService.test({ headers, selector, url });
 
-    return { price };
+      if (price) {
+        return { price };
+      }
+
+      throw new Error('Could not parse the current market price');
+    } catch (error) {
+      Logger.error(error);
+
+      throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
+    }
   }
 
   @HasPermission(permissions.accessAdminControl)
