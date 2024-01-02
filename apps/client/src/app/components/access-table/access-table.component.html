@@ -27,7 +27,7 @@
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
     <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
       <div *ngIf="element.type === 'PUBLIC'" class="align-items-center d-flex">
-        <ion-icon class="mr-1" name="link-outline"></ion-icon>
+        <ion-icon class="mr-1" name="link-outline" />
         <a
           href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
           target="_blank"
@@ -47,7 +47,7 @@
         [matMenuTriggerFor]="transactionMenu"
         (click)="$event.stopPropagation()"
       >
-        <ion-icon name="ellipsis-horizontal"></ion-icon>
+        <ion-icon name="ellipsis-horizontal" />
       </button>
       <mat-menu #transactionMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onDeleteAccess(element.id)">
