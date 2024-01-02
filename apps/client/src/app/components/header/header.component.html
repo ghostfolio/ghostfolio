@@ -119,7 +119,13 @@
           [matMenuTriggerRestoreFocus]="false"
           (menuOpened)="onOpenAssistant()"
         >
-          <ion-icon name="search-outline"></ion-icon>
+          <ion-icon
+            [name]="
+              user?.settings?.isExperimentalFeatures
+                ? 'options-outline'
+                : 'search-outline'
+            "
+          ></ion-icon>
         </button>
         <mat-menu
           #assistantMenu="matMenu"
@@ -134,7 +140,9 @@
             [hasPermissionToAccessAdminControl]="
               hasPermissionToAccessAdminControl
             "
+            [user]="user"
             (closed)="closeAssistant()"
+            (dateRangeChanged)="onDateRangeChange($event)"
           />
         </mat-menu>
       </li>

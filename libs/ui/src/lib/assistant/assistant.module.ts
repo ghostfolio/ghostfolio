@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfAssistantListItemModule } from './assistant-list-item/assistant-list-item.module';
@@ -15,7 +17,9 @@ import { AssistantComponent } from './assistant.component';
     CommonModule,
     FormsModule,
     GfAssistantListItemModule,
+    GfToggleModule,
     MatButtonModule,
+    MatTabsModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,
     RouterModule

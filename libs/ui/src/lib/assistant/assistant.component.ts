@@ -16,8 +16,11 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { User } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
@@ -73,8 +76,10 @@ export class AssistantComponent implements OnDestroy, OnInit {
 
   @Input() deviceType: string;
   @Input() hasPermissionToAccessAdminControl: boolean;
+  @Input() user: User;
 
   @Output() closed = new EventEmitter<void>();
+  @Output() dateRangeChanged = new EventEmitter<DateRange>();
 
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
@@ -84,6 +89,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
+  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public isLoading = false;
   public isOpen = false;
   public placeholder = $localize`Find holding...`;
@@ -163,6 +169,10 @@ export class AssistantComponent implements OnDestroy, OnInit {
     this.setIsOpen(true);
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  public onChangeDateRange(dateRangeString: string) {
+    this.dateRangeChanged.emit(dateRangeString as DateRange);
   }
 
   public onCloseAssistant() {
