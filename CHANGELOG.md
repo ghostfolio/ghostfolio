@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the _Top 3_ and _Bottom 3_ performers on the analysis page
 - Upgraded `Nx` from version `17.2.7` to `17.2.8`
 
 ## 2.33.0 - 2023-12-31
@@ -336,7 +337,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the users table in the admin control panel to an `@angular/material` data table
-- Improved the styling of the membership status
+- Improved the style of the membership status
 
 ### Fixed
 
@@ -1511,7 +1512,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the styling in the admin control panel
+- Improved the style in the admin control panel
 - Removed the _Google Play_ badge from the landing page
 - Upgraded `eslint` dependencies
 
@@ -2266,7 +2267,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Simplified the initialization of the exchange rate service
 - Improved the orders query for `assetClass` with symbol profile overrides
-- Improved the styling of the benchmarks in the markets overview
+- Improved the style of the benchmarks in the markets overview
 
 ### Todo
 
@@ -2600,7 +2601,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed a styling issue in the benchmark component on mobile
+- Fixed a style issue in the benchmark component on mobile
 
 ## 1.152.0 - 26.05.2022
 
@@ -3207,7 +3208,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the styling in the footer row of the activities table
+- Fixed the style in the footer row of the activities table
 
 ## 1.106.0 - 23.01.2022
 
@@ -3975,7 +3976,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the wording for the _Restricted View_: _Presenter View_
-- Improved the styling of the tables
+- Improved the style of the tables
 - Ignored cash assets in the allocation chart by sector, continent and country
 
 ### Fixed
@@ -4178,8 +4179,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the styling of the current pricing plan
-- Improved the styling of the transaction type badge
+- Improved the style of the current pricing plan
+- Improved the style of the transaction type badge
 - Set the public _Stripe_ key dynamically
 - Upgraded `angular-material-css-vars` from version `2.0.0` to `2.1.0`
 
@@ -4539,7 +4540,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the users table styling of the admin control panel
+- Improved the users table style of the admin control panel
 - Improved the background colors in the dark mode
 
 ## 0.92.0 - 25.04.2021
@@ -4563,7 +4564,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the styling of the rules in the _X-ray_ section
+- Improved the style of the rules in the _X-ray_ section
 
 ## 0.90.0 - 22.04.2021
 
@@ -4758,7 +4759,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the alignment of the _Why Ghostfolio?_ section
-- Improved the styling of the _Fear & Greed Index_ (market mood)
+- Improved the style of the _Fear & Greed Index_ (market mood)
 
 ## 0.73.0 - 31.03.2021
 
@@ -4804,7 +4805,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the styling in the _X-ray_ section
+- Improved the style in the _X-ray_ section
 
 ## 0.70.0 - 27.03.2021
 
@@ -5099,7 +5100,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Only show relevant data in the position detail dialog
-- Improved the performance chart styling in Safari
+- Improved the performance chart style in Safari
 
 ## 0.40.0 - 01.03.2021
 
