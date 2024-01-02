@@ -222,11 +222,11 @@ export class ManualService implements DataProviderInterface {
     return { items };
   }
 
-  public async test(config: ScraperConfiguration) {
-    return this.scrape(config);
+  public async test(scraperConfiguration: ScraperConfiguration) {
+    return this.scrape(scraperConfiguration);
   }
 
-  private async scrape(config: ScraperConfiguration): Promise<number> {
+  private async scrape(scraperConfiguration: ScraperConfiguration): Promise<number> {
     try {
       const abortController = new AbortController();
 
@@ -234,18 +234,18 @@ export class ManualService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { body } = await got(config.url, {
-        headers: config.headers as Headers,
+      const { body, headers } = await got(scraperConfiguration.url, {
+        headers: scraperConfiguration.headers as Headers,
         // @ts-ignore
         signal: abortController.signal
       });
-      if (config.type === 'json') {
+      if (headers["content-type"] === "application/json") {
         const data = JSON.parse(body);
-        const field = String(jsonpath.query(data, config.selector)[0]);
+        const field = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
         return extractNumberFromString(field);
       } else {
         const $ = cheerio.load(body);
-        return extractNumberFromString($(config.selector).first().text());
+        return extractNumberFromString($(scraperConfiguration.selector).first().text());
       }
     } catch (error) {
       throw error;

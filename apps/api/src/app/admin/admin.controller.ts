@@ -227,8 +227,8 @@ export class AdminController {
     @Param('symbol') symbol: string
   ): Promise<{ price: number }> {
     try {
-      const config = JSON.parse(data.scraperConfiguration);
-      const price = await this.manualService.test(config);
+      const scraperConfiguration = JSON.parse(data.scraperConfiguration);
+      const price = await this.manualService.test(scraperConfiguration);
 
       if (price) {
         return { price };

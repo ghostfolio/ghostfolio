@@ -204,8 +204,6 @@ export class SymbolProfileService {
           scraperConfiguration.headers as ScraperConfiguration['headers'],
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string,
-        type: (scraperConfiguration.type ??
-          'html') as ScraperConfiguration['type']
       };
     }
 
