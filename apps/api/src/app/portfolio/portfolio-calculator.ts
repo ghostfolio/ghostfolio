@@ -1246,7 +1246,7 @@ export class PortfolioCalculator {
       if (i > indexOfStartOrder) {
         // Only consider periods with an investment for the calculation of
         // the time weighted investment
-        if (totalInvestmentBeforeTransaction.gt(0)) {
+        if (valueOfInvestmentBeforeTransaction.gt(0)) {
           // Calculate the number of days since the previous order
           const orderDate = new Date(order.date);
           const previousOrderDate = new Date(orders[i - 1].date);
@@ -1267,7 +1267,10 @@ export class PortfolioCalculator {
           totalInvestmentDays += daysSinceLastOrder;
 
           sumOfTimeWeightedInvestments = sumOfTimeWeightedInvestments.add(
-            totalInvestmentBeforeTransaction.mul(daysSinceLastOrder)
+            valueAtStartDate
+              .minus(investmentAtStartDate)
+              .plus(totalInvestmentBeforeTransaction)
+              .mul(daysSinceLastOrder)
           );
         }
 
