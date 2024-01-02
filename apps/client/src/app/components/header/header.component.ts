@@ -19,8 +19,10 @@ import {
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
 import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -88,7 +90,8 @@ export class HeaderComponent implements OnChanges {
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -142,6 +145,20 @@ export class HeaderComponent implements OnChanges {
     }
 
     window.location.reload();
+  }
+
+  public onDateRangeChange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+      });
   }
 
   public onMenuClosed() {
