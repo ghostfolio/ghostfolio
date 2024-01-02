@@ -12,7 +12,7 @@
     mat-stroked-button
     (click)="onImport()"
   >
-    <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+    <ion-icon class="mr-2" name="cloud-upload-outline" />
     <ng-container i18n>Import Activities</ng-container>...
   </button>
   <button
@@ -22,7 +22,7 @@
     [matMenuTriggerFor]="activitiesMenu"
     (click)="$event.stopPropagation()"
   >
-    <ion-icon name="ellipsis-vertical"></ion-icon>
+    <ion-icon name="ellipsis-vertical" />
   </button>
   <mat-menu #activitiesMenu="matMenu" xPosition="before">
     <button
@@ -31,7 +31,7 @@
       (click)="onImportDividends()"
     >
       <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+        <ion-icon class="mr-2" name="color-wand-outline" />
         <ng-container i18n>Import Dividends</ng-container>...
       </span>
     </button>
@@ -43,7 +43,7 @@
       (click)="onExport()"
     >
       <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+        <ion-icon class="mr-2" name="cloud-download-outline" />
         <span i18n>Export Activities</span>
       </span>
     </button>
@@ -55,7 +55,7 @@
       (click)="onExportDrafts()"
     >
       <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+        <ion-icon class="mr-2" name="calendar-clear-outline" />
         <span i18n>Export Drafts as ICS</span>
       </span>
     </button>
@@ -65,7 +65,7 @@
       (click)="onDeleteAllActivities()"
     >
       <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+        <ion-icon class="mr-2" name="trash-outline" />
         <span i18n>Delete all Activities</span>
       </span>
     </button>
@@ -116,7 +116,7 @@
           matTooltipPosition="above"
           [matTooltip]="element.error.message"
         >
-          <ion-icon class="text-danger" name="alert-circle-outline"></ion-icon>
+          <ion-icon class="text-danger" name="alert-circle-outline" />
         </div>
       </td>
       <td *matFooterCellDef class="px-1" mat-footer-cell></td>
@@ -418,7 +418,7 @@
           title="Note"
           (click)="onOpenComment(element.comment); $event.stopPropagation()"
         >
-          <ion-icon name="document-text-outline"></ion-icon>
+          <ion-icon name="document-text-outline" />
         </button>
       </td>
       <td
@@ -439,7 +439,7 @@
           [matMenuTriggerFor]="activitiesMenu"
           (click)="$event.stopPropagation()"
         >
-          <ion-icon name="ellipsis-vertical"></ion-icon>
+          <ion-icon name="ellipsis-vertical" />
         </button>
         <mat-menu #activitiesMenu="matMenu" xPosition="before">
           <button
@@ -449,7 +449,7 @@
             (click)="onImport()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="cloud-upload-outline"></ion-icon>
+              <ion-icon class="mr-2" name="cloud-upload-outline" />
               <ng-container i18n>Import Activities</ng-container>...
             </span>
           </button>
@@ -460,7 +460,7 @@
             (click)="onImportDividends()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="color-wand-outline"></ion-icon>
+              <ion-icon class="mr-2" name="color-wand-outline" />
               <ng-container i18n>Import Dividends</ng-container>...
             </span>
           </button>
@@ -472,7 +472,7 @@
             (click)="onExport()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="cloud-download-outline"></ion-icon>
+              <ion-icon class="mr-2" name="cloud-download-outline" />
               <span i18n>Export Activities</span>
             </span>
           </button>
@@ -484,7 +484,7 @@
             (click)="onExportDrafts()"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+              <ion-icon class="mr-2" name="calendar-clear-outline" />
               <span i18n>Export Drafts as ICS</span>
             </span>
           </button>
@@ -498,18 +498,18 @@
           [matMenuTriggerFor]="activityMenu"
           (click)="$event.stopPropagation()"
         >
-          <ion-icon name="ellipsis-horizontal"></ion-icon>
+          <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #activityMenu="matMenu" xPosition="before">
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="create-outline"></ion-icon>
+              <ion-icon class="mr-2" name="create-outline" />
               <span i18n>Edit</span>
             </span>
           </button>
           <button mat-menu-item (click)="onCloneActivity(element)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="copy-outline"></ion-icon>
+              <ion-icon class="mr-2" name="copy-outline" />
               <span i18n>Clone</span>
             </span>
           </button>
@@ -519,13 +519,13 @@
             (click)="onExportDraft(element.id)"
           >
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="calendar-clear-outline"></ion-icon>
+              <ion-icon class="mr-2" name="calendar-clear-outline" />
               <span i18n>Export Draft as ICS</span>
             </span>
           </button>
           <button mat-menu-item (click)="onDeleteActivity(element.id)">
             <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+              <ion-icon class="mr-2" name="trash-outline" />
               <span i18n>Delete</span>
             </span>
           </button>

@@ -15,11 +15,8 @@
       class="align-items-center d-flex icon-container mr-2 px-2"
       [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
     >
-      <ion-icon
-        *ngIf="rule?.value === true"
-        name="checkmark-circle-outline"
-      ></ion-icon>
-      <ion-icon *ngIf="rule?.value === false" name="warning-outline"></ion-icon>
+      <ion-icon *ngIf="rule?.value === true" name="checkmark-circle-outline" />
+      <ion-icon *ngIf="rule?.value === false" name="warning-outline" />
     </div>
     <div *ngIf="isLoading" class="flex-grow-1">
       <ngx-skeleton-loader
