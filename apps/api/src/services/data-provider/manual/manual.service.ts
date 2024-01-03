@@ -241,14 +241,17 @@ export class ManualService implements DataProviderInterface {
         // @ts-ignore
         signal: abortController.signal
       });
+
       if (headers['content-type'] === 'application/json') {
         const data = JSON.parse(body);
-        const field = String(
+        const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
-        return extractNumberFromString(field);
+
+        return extractNumberFromString(value);
       } else {
         const $ = cheerio.load(body);
+
         return extractNumberFromString(
           $(scraperConfiguration.selector).first().text()
         );
