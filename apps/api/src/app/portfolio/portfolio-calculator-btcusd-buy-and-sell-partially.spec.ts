@@ -73,10 +73,10 @@ describe('PortfolioCalculator', () => {
         currentValue: new Big('13657.2'),
         errors: [],
         grossPerformance: new Big('27172.74'),
-        grossPerformancePercentage: new Big('42.41978276196153750666'),
+        grossPerformancePercentage: new Big('42.40043067128546016291'),
         hasErrors: false,
         netPerformance: new Big('27172.74'),
-        netPerformancePercentage: new Big('42.41978276196153750666'),
+        netPerformancePercentage: new Big('42.40043067128546016291'),
         positions: [
           {
             averagePrice: new Big('320.43'),
@@ -85,14 +85,14 @@ describe('PortfolioCalculator', () => {
             fee: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
-            grossPerformancePercentage: new Big('42.41978276196153750666'),
+            grossPerformancePercentage: new Big('42.40043067128546016291'),
             investment: new Big('320.43'),
             netPerformance: new Big('27172.74'),
-            netPerformancePercentage: new Big('42.41978276196153750666'),
+            netPerformancePercentage: new Big('42.40043067128546016291'),
             marketPrice: 13657.2,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
-            timeWeightedInvestment: new Big('640.56763686131386861314'),
+            tags: undefined,
             transactionCount: 2
           }
         ],

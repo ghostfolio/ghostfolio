@@ -92,7 +92,7 @@ describe('PortfolioCalculator', () => {
             marketPrice: 148.9,
             quantity: new Big('0'),
             symbol: 'BALN.SW',
-            timeWeightedInvestment: new Big('285.8'),
+            tags: undefined,
             transactionCount: 2
           }
         ],
