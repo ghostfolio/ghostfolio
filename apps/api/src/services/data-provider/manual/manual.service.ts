@@ -226,7 +226,9 @@ export class ManualService implements DataProviderInterface {
     return this.scrape(scraperConfiguration);
   }
 
-  private async scrape(scraperConfiguration: ScraperConfiguration): Promise<number> {
+  private async scrape(
+    scraperConfiguration: ScraperConfiguration
+  ): Promise<number> {
     try {
       const abortController = new AbortController();
 
@@ -239,13 +241,17 @@ export class ManualService implements DataProviderInterface {
         // @ts-ignore
         signal: abortController.signal
       });
-      if (headers["content-type"] === "application/json") {
+      if (headers['content-type'] === 'application/json') {
         const data = JSON.parse(body);
-        const field = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
+        const field = String(
+          jsonpath.query(data, scraperConfiguration.selector)[0]
+        );
         return extractNumberFromString(field);
       } else {
         const $ = cheerio.load(body);
-        return extractNumberFromString($(scraperConfiguration.selector).first().text());
+        return extractNumberFromString(
+          $(scraperConfiguration.selector).first().text()
+        );
       }
     } catch (error) {
       throw error;

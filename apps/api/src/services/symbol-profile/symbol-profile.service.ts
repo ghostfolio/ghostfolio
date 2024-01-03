@@ -203,7 +203,7 @@ export class SymbolProfileService {
         headers:
           scraperConfiguration.headers as ScraperConfiguration['headers'],
         selector: scraperConfiguration.selector as string,
-        url: scraperConfiguration.url as string,
+        url: scraperConfiguration.url as string
       };
     }
 
