@@ -20,7 +20,7 @@ import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
-import jsonpath from 'jsonpath';
+import { query } from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -244,9 +244,7 @@ export class ManualService implements DataProviderInterface {
 
       if (headers['content-type'] === 'application/json') {
         const data = JSON.parse(body);
-        const value = String(
-          jsonpath.query(data, scraperConfiguration.selector)[0]
-        );
+        const value = String(query(data, scraperConfiguration.selector)[0]);
 
         return extractNumberFromString(value);
       } else {
