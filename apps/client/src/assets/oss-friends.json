@@ -1,5 +1,5 @@
 {
-  "createdAt": "2023-11-30T00:00:00.000Z",
+  "createdAt": "2023-12-30T00:00:00.000Z",
   "data": [
     {
       "name": "BoxyHQ",
@@ -70,6 +70,11 @@
       "name": "HTMX",
       "description": "HTMX is a dependency-free JavaScript library that allows you to access AJAX, CSS Transitions, WebSockets, and Server Sent Events directly in HTML.",
       "href": "https://htmx.org"
+    },
+    {
+      "name": "Inbox Zero",
+      "description": "Inbox Zero makes it easy to clean up your inbox and reach inbox zero fast. It provides bulk newsletter unsubscribe, cold email blocking, email analytics, and AI automations.",
+      "href": "https://getinboxzero.com"
     },
     {
       "name": "Infisical",

@@ -180,6 +180,7 @@ export class AdminService {
 
     if (searchQuery) {
       where.OR = [
+        { id: { mode: 'insensitive', startsWith: searchQuery } },
         { isin: { mode: 'insensitive', startsWith: searchQuery } },
         { name: { mode: 'insensitive', startsWith: searchQuery } },
         { symbol: { mode: 'insensitive', startsWith: searchQuery } }
@@ -327,6 +328,7 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    currency,
     dataSource,
     name,
     tags,
@@ -339,6 +341,7 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        currency,
         dataSource,
         name,
         tags,

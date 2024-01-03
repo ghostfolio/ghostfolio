@@ -96,7 +96,10 @@
           [showDetails]="showDetails"
           [unit]="unit"
         ></gf-portfolio-performance>
-        <div *ngIf="showDetails" class="text-center">
+        <div
+          *ngIf="showDetails && !user?.settings?.isExperimentalFeatures"
+          class="text-center"
+        >
           <gf-toggle
             [defaultValue]="user?.settings?.dateRange"
             [isLoading]="isLoadingPerformance"

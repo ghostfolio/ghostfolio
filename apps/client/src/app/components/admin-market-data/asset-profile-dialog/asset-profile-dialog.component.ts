@@ -17,6 +17,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
+  Currency,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -58,6 +59,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
@@ -71,6 +73,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public currencies: Currency[] = [];
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -96,7 +99,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.benchmarks = this.dataService.fetchInfo().benchmarks;
+    const { benchmarks, currencies } = this.dataService.fetchInfo();
+
+    this.benchmarks = benchmarks;
+    this.currencies = currencies.map((currency) => ({
+      label: currency,
+      value: currency
+    }));
 
     this.initialize();
   }
@@ -155,6 +164,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           tags: this.assetProfile?.tags,
+          currency: this.assetProfile?.currency,
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
@@ -268,13 +278,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
+      scraperConfiguration,
+      symbolMapping,
       assetClass: this.assetProfileForm.controls['assetClass'].value,
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
       name: this.assetProfileForm.controls['name'].value,
       tags: this.assetProfileForm.controls['tags'].value,
-      scraperConfiguration,
-      symbolMapping
+      currency: (<Currency>(
+        (<unknown>this.assetProfileForm.controls['currency'].value)
+      ))?.value
     };
 
     this.adminService
@@ -285,6 +298,34 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public onTestMarketData() {
+    this.adminService
+      .testMarketData({
+        dataSource: this.data.dataSource,
+        scraperConfiguration:
+          this.assetProfileForm.controls['scraperConfiguration'].value,
+        symbol: this.data.symbol
+      })
+      .pipe(
+        catchError(({ error }) => {
+          alert(`Error: ${error?.message}`);
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(({ price }) => {
+        alert(
+          $localize`The current market price is` +
+            ' ' +
+            price +
+            ' ' +
+            (<Currency>(
+              (<unknown>this.assetProfileForm.controls['currency'].value)
+            ))?.value
+        );
       });
   }
 

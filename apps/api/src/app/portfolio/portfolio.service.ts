@@ -1125,26 +1125,45 @@ export class PortfolioService {
 
     return {
       hasErrors: currentPositions.hasErrors,
-      positions: positions.map((position) => {
-        return {
-          ...position,
-          assetClass: symbolProfileMap[position.symbol].assetClass,
-          assetSubClass: symbolProfileMap[position.symbol].assetSubClass,
-          averagePrice: new Big(position.averagePrice).toNumber(),
-          grossPerformance: position.grossPerformance?.toNumber() ?? null,
-          grossPerformancePercentage:
-            position.grossPerformancePercentage?.toNumber() ?? null,
-          investment: new Big(position.investment).toNumber(),
-          marketState:
-            dataProviderResponses[position.symbol]?.marketState ?? 'delayed',
-          name: symbolProfileMap[position.symbol].name,
-          netPerformance: position.netPerformance?.toNumber() ?? null,
-          tags: symbolProfileMap[position.symbol].tags,
-          netPerformancePercentage:
-            position.netPerformancePercentage?.toNumber() ?? null,
-          quantity: new Big(position.quantity).toNumber()
-        };
-      })
+      positions: positions.map(
+        ({
+          averagePrice,
+          currency,
+          dataSource,
+          firstBuyDate,
+          investment,
+          grossPerformance,
+          grossPerformancePercentage,
+          netPerformance,
+          netPerformancePercentage,
+          quantity,
+          symbol,
+          transactionCount
+        }) => {
+          return {
+            currency,
+            dataSource,
+            firstBuyDate,
+            symbol,
+            transactionCount,
+            assetClass: symbolProfileMap[symbol].assetClass,
+            assetSubClass: symbolProfileMap[symbol].assetSubClass,
+            averagePrice: averagePrice.toNumber(),
+            grossPerformance: grossPerformance?.toNumber() ?? null,
+            grossPerformancePercentage:
+              grossPerformancePercentage?.toNumber() ?? null,
+            investment: investment.toNumber(),
+            marketState:
+              dataProviderResponses[symbol]?.marketState ?? 'delayed',
+            name: symbolProfileMap[symbol].name,
+            netPerformance: netPerformance?.toNumber() ?? null,
+            tags: symbolProfileMap[symbol].tags,
+            netPerformancePercentage:
+              netPerformancePercentage?.toNumber() ?? null,
+            quantity: quantity.toNumber()
+          };
+        }
+      )
     };
   }
 

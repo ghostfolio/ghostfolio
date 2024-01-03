@@ -2,7 +2,7 @@
 
 :host {
   display: block;
-  min-height: 100vh;
+  min-height: 100svh;
 
   &.has-info-message {
     header {
@@ -30,7 +30,7 @@
     }
 
     main {
-      min-height: calc(100vh - 2 * var(--mat-toolbar-standard-height));
+      min-height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
     }
   }
 
@@ -44,7 +44,7 @@
   }
 
   main {
-    min-height: calc(100vh - var(--mat-toolbar-standard-height));
+    min-height: calc(100svh - var(--mat-toolbar-standard-height));
   }
 }
 

@@ -92,6 +92,7 @@ describe('PortfolioCalculator', () => {
             marketPrice: 13657.2,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
+            tags: undefined,
             transactionCount: 2
           }
         ],

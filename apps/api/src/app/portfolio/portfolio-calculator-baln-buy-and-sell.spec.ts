@@ -92,6 +92,7 @@ describe('PortfolioCalculator', () => {
             marketPrice: 148.9,
             quantity: new Big('0'),
             symbol: 'BALN.SW',
+            tags: undefined,
             transactionCount: 2
           }
         ],
