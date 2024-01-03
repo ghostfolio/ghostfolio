@@ -12,6 +12,7 @@ import {
   extractNumberFromString,
   getYesterday
 } from '@ghostfolio/common/helper';
+import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -19,6 +20,7 @@ import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
+import jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -97,7 +99,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const value = await this.scrape({ headers, selector, url });
+      const value = await this.scrape(symbolProfile.scraperConfiguration);
 
       return {
         [symbol]: {
@@ -220,23 +222,13 @@ export class ManualService implements DataProviderInterface {
     return { items };
   }
 
-  public async test(params: any) {
-    return this.scrape({
-      headers: params.headers,
-      selector: params.selector,
-      url: params.url
-    });
+  public async test(scraperConfiguration: ScraperConfiguration) {
+    return this.scrape(scraperConfiguration);
   }
 
-  private async scrape({
-    headers = {},
-    selector,
-    url
-  }: {
-    headers?: Headers;
-    selector: string;
-    url: string;
-  }): Promise<number> {
+  private async scrape(
+    scraperConfiguration: ScraperConfiguration
+  ): Promise<number> {
     try {
       const abortController = new AbortController();
 
@@ -244,15 +236,26 @@ export class ManualService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { body } = await got(url, {
-        headers,
+      const { body, headers } = await got(scraperConfiguration.url, {
+        headers: scraperConfiguration.headers as Headers,
         // @ts-ignore
         signal: abortController.signal
       });
 
-      const $ = cheerio.load(body);
+      if (headers['content-type'] === 'application/json') {
+        const data = JSON.parse(body);
+        const value = String(
+          jsonpath.query(data, scraperConfiguration.selector)[0]
+        );
 
-      return extractNumberFromString($(selector).first().text());
+        return extractNumberFromString(value);
+      } else {
+        const $ = cheerio.load(body);
+
+        return extractNumberFromString(
+          $(scraperConfiguration.selector).first().text()
+        );
+      }
     } catch (error) {
       throw error;
     }

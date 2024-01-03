@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for REST APIs (`JSON`) via the scraper configuration
+
+### Changed
+
 - Improved the user interface of the access table to share the portfolio
 
 ## 2.34.0 - 2024-01-02
