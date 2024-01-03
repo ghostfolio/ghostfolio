@@ -12,6 +12,7 @@ import {
   extractNumberFromString,
   getYesterday
 } from '@ghostfolio/common/helper';
+import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -19,7 +20,6 @@ import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
-import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
 import jsonpath from 'jsonpath';
 
 @Injectable()
