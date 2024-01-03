@@ -285,12 +285,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       comment: this.assetProfileForm.controls['comment'].value ?? null,
       name: this.assetProfileForm.controls['name'].value,
       tags: this.assetProfileForm.controls['tags'].value,
-      scraperConfiguration,
-      symbolMapping
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
-      ))?.value,
-      name: this.assetProfileForm.controls['name'].value
+      ))?.value
     };
 
     this.adminService
