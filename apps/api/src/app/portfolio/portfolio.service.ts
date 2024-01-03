@@ -1157,7 +1157,7 @@ export class PortfolioService {
               dataProviderResponses[symbol]?.marketState ?? 'delayed',
             name: symbolProfileMap[symbol].name,
             netPerformance: netPerformance?.toNumber() ?? null,
-            tags: symbolProfileMap[position.symbol].tags,
+            tags: symbolProfileMap[symbol].tags,
             netPerformancePercentage:
               netPerformancePercentage?.toNumber() ?? null,
             quantity: quantity.toNumber()

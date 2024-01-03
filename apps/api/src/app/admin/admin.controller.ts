@@ -324,18 +324,6 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<EnhancedSymbolProfile> {
-    if (
-      !hasPermission(
-        this.request.user.permissions,
-        permissions.accessAdminControl
-      )
-    ) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
     if (dataSource === 'MANUAL') {
       await this.adminService.patchAssetProfileData({
         dataSource,
