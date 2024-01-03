@@ -100,6 +100,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `REDIS_HOST`        |               | The host where _Redis_ is running                                                                                                   |
 | `REDIS_PASSWORD`    |               | The password of _Redis_                                                                                                             |
 | `REDIS_PORT`        |               | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
 
 ### Run with Docker Compose
 
@@ -165,7 +166,7 @@ Ghostfolio is available for various home server systems, including [Runtipi](htt
 
 #### Debug
 
-Run `yarn watch:server` and click _Launch Program_ in [Visual Studio Code](https://code.visualstudio.com)
+Run `yarn watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
 
 #### Serve
 
@@ -278,6 +279,6 @@ If you like to support this project, get [**Ghostfolio Premium**](https://ghostf
 
 ## License
 
-© 2021 - 2023 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2024 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).

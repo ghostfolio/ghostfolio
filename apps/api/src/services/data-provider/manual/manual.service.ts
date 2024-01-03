@@ -1,4 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
@@ -7,7 +8,6 @@ import {
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   extractNumberFromString,
@@ -19,11 +19,12 @@ import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
-import got from 'got';
+import got, { Headers } from 'got';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -97,21 +98,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
-
-      const { body } = await got(url, {
-        headers,
-        // @ts-ignore
-        signal: abortController.signal
-      });
-
-      const $ = cheerio.load(body);
-
-      const value = extractNumberFromString($(selector).text());
+      const value = await this.scrape({ headers, selector, url });
 
       return {
         [symbol]: {
@@ -135,7 +122,7 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
   }: {
     requestTimeout?: number;
@@ -239,5 +226,43 @@ export class ManualService implements DataProviderInterface {
     });
 
     return { items };
+  }
+
+  public async test(params: any) {
+    return this.scrape({
+      headers: params.headers,
+      selector: params.selector,
+      url: params.url
+    });
+  }
+
+  private async scrape({
+    headers = {},
+    selector,
+    url
+  }: {
+    headers?: Headers;
+    selector: string;
+    url: string;
+  }): Promise<number> {
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
+
+      const { body } = await got(url, {
+        headers,
+        // @ts-ignore
+        signal: abortController.signal
+      });
+
+      const $ = cheerio.load(body);
+
+      return extractNumberFromString($(selector).first().text());
+    } catch (error) {
+      throw error;
+    }
   }
 }

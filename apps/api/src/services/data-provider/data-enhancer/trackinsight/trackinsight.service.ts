@@ -1,5 +1,5 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
@@ -21,8 +21,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     'Information Technology': 'Technology'
   };
 
+  public constructor(
+    private readonly configurationService: ConfigurationService
+  ) {}
+
   public async enhance({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     response,
     symbol
   }: {
@@ -53,7 +57,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
         setTimeout(() => {
           abortController.abort();
-        }, DEFAULT_REQUEST_TIMEOUT);
+        }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         return got(
           `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
@@ -80,7 +84,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
     setTimeout(() => {
       abortController.abort();
-    }, DEFAULT_REQUEST_TIMEOUT);
+    }, this.configurationService.get('REQUEST_TIMEOUT'));
 
     const holdings = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
@@ -95,7 +99,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
         setTimeout(() => {
           abortController.abort();
-        }, DEFAULT_REQUEST_TIMEOUT);
+        }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         return got(
           `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(

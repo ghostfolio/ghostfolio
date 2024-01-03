@@ -1,6 +1,6 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
-  <div class="my-4 text-center">
+  <div *ngIf="!user?.settings?.isExperimentalFeatures" class="my-4 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"
       [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
@@ -57,31 +57,33 @@
           >
         </mat-card-header>
         <mat-card-content>
-          <div *ngFor="let position of top3; let i = index" class="py-1">
-            <a
-              class="d-flex"
-              [queryParams]="{
+          <ol class="mb-0 ml-1 pl-3">
+            <li *ngFor="let position of top3" class="py-1">
+              <a
+                class="d-flex"
+                [queryParams]="{
                 dataSource: position.dataSource,
                 positionDetailDialog: true,
                 symbol: position.symbol
               }"
-              [routerLink]="[]"
-            >
-              <div class="flex-grow-1 mr-2 text-truncate">
-                {{ i + 1 }}. {{ position.name }}
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [colorizeSign]="true"
-                  [isPercent]="true"
-                  [locale]="user?.settings?.locale"
-                  [value]="position.netPerformancePercentage"
-                ></gf-value>
-              </div>
-            </a>
-          </div>
+                [routerLink]="[]"
+              >
+                <div class="flex-grow-1 mr-2 text-truncate">
+                  {{ position.name }}
+                </div>
+                <div class="d-flex justify-content-end">
+                  <gf-value
+                    class="justify-content-end"
+                    position="end"
+                    [colorizeSign]="true"
+                    [isPercent]="true"
+                    [locale]="user?.settings?.locale"
+                    [value]="position.netPerformancePercentage"
+                  ></gf-value>
+                </div>
+              </a>
+            </li>
+          </ol>
           <div>
             <ngx-skeleton-loader
               *ngIf="!top3"
@@ -103,31 +105,33 @@
           >
         </mat-card-header>
         <mat-card-content>
-          <div *ngFor="let position of bottom3; let i = index" class="py-1">
-            <a
-              class="d-flex"
-              [queryParams]="{
+          <ol class="mb-0 ml-1 pl-3">
+            <li *ngFor="let position of bottom3" class="py-1">
+              <a
+                class="d-flex"
+                [queryParams]="{
                 dataSource: position.dataSource,
                 positionDetailDialog: true,
                 symbol: position.symbol
               }"
-              [routerLink]="[]"
-            >
-              <div class="flex-grow-1 mr-2 text-truncate">
-                {{ i + 1 }}. {{ position.name }}
-              </div>
-              <div class="d-flex justify-content-end">
-                <gf-value
-                  class="justify-content-end"
-                  position="end"
-                  [colorizeSign]="true"
-                  [isPercent]="true"
-                  [locale]="user?.settings?.locale"
-                  [value]="position.netPerformancePercentage"
-                ></gf-value>
-              </div>
-            </a>
-          </div>
+                [routerLink]="[]"
+              >
+                <div class="flex-grow-1 mr-2 text-truncate">
+                  {{ position.name }}
+                </div>
+                <div class="d-flex justify-content-end">
+                  <gf-value
+                    class="justify-content-end"
+                    position="end"
+                    [colorizeSign]="true"
+                    [isPercent]="true"
+                    [locale]="user?.settings?.locale"
+                    [value]="position.netPerformancePercentage"
+                  ></gf-value>
+                </div>
+              </a>
+            </li>
+          </ol>
           <div>
             <ngx-skeleton-loader
               *ngIf="!bottom3"

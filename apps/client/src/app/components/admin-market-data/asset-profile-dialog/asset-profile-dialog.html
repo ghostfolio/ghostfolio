@@ -185,6 +185,15 @@
     </div>
     <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>Currency</mat-label>
+        <gf-currency-selector
+          formControlName="currency"
+          [currencies]="currencies"
+        />
+      </mat-form-field>
+    </div>
+    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null"></mat-option>
@@ -265,12 +274,24 @@
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Scraper Configuration</mat-label>
-        <textarea
-          cdkTextareaAutosize
-          formControlName="scraperConfiguration"
-          matInput
-          type="text"
-        ></textarea>
+        <div class="align-items-end d-flex">
+          <textarea
+            cdkTextareaAutosize
+            formControlName="scraperConfiguration"
+            matInput
+            type="text"
+            (keyup.enter)="$event.stopPropagation()"
+          ></textarea>
+          <button
+            color="accent"
+            mat-flat-button
+            type="button"
+            [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
+            (click)="onTestMarketData()"
+          >
+            <ng-container i18n>Test</ng-container>
+          </button>
+        </div>
       </mat-form-field>
     </div>
     <div>

@@ -32,6 +32,10 @@
 
       ion-icon {
         font-size: 1.5rem;
+
+        &.rotate-90 {
+          transform: rotate(-90deg);
+        }
       }
     }
 
