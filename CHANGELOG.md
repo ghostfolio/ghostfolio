@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Improved the user interface of the access table to share the portfolio
+- Grant private access
 
 ## 2.34.0 - 2024-01-02
 

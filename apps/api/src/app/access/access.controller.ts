@@ -65,13 +65,20 @@ export class AccessController {
   public async createAccess(
     @Body() data: CreateAccessDto
   ): Promise<AccessModel> {
-    return this.accessService.createAccess({
-      alias: data.alias || undefined,
-      GranteeUser: data.granteeUserId
-        ? { connect: { id: data.granteeUserId } }
-        : undefined,
-      User: { connect: { id: this.request.user.id } }
-    });
+    try {
+      return await this.accessService.createAccess({
+        alias: data.alias || undefined,
+        GranteeUser: data.granteeUserId
+          ? { connect: { id: data.granteeUserId } }
+          : undefined,
+        User: { connect: { id: this.request.user.id } }
+      });
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.BAD_REQUEST),
+        StatusCodes.BAD_REQUEST
+      );
+    }
   }
 
   @Delete(':id')

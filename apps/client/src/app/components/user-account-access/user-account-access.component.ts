@@ -112,25 +112,9 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const access: CreateAccessDto = data?.access;
-
-        if (access) {
-          this.dataService
-            .postAccess({ alias: access.alias })
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe({
-              next: () => {
-                this.update();
-              }
-            });
-        }
-
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
   }
 
   private update() {

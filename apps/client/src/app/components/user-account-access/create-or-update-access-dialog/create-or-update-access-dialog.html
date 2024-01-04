@@ -22,7 +22,19 @@
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-option i18n value="PUBLIC">Public</mat-option>
+          <mat-option i18n value="PRIVATE">Private</mat-option>
         </mat-select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="accessForm.controls['type'].value === 'PRIVATE' ">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label i18n>User ID</mat-label>
+        <input
+          formControlName="userId"
+          matInput
+          type="text"
+          (keydown.enter)="$event.stopPropagation()"
+        />
       </mat-form-field>
     </div>
   </div>

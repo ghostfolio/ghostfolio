@@ -7,6 +7,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { Subject } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
@@ -26,13 +27,15 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private dataService: DataService
   ) {}
 
   ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
-      type: [this.data.access.type, Validators.required]
+      type: [this.data.access.type, Validators.required],
+      userId: [this.data.access.grantee, Validators.required]
     });
   }
 
@@ -43,10 +46,20 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   public onSubmit() {
     const access: CreateAccessDto = {
       alias: this.accessForm.controls['alias'].value,
-      type: this.accessForm.controls['type'].value
+      type: this.accessForm.controls['type'].value,
+      granteeUserId: this.accessForm.controls['userId'].value
     };
 
-    this.dialogRef.close({ access });
+    this.dataService.postAccess(access).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (error) => {
+        if (error.status === 400) {
+          alert('It was not possible to grant access, please try again later.');
+        }
+      }
+    });
   }
 
   public ngOnDestroy() {
