@@ -1609,40 +1609,87 @@ export class PortfolioCalculator {
           .div(previousOrder.unitPrice)
           .minus(1);
       } else if (
-        order.type === 'STAKE' &&
-        marketSymbolMap[order.date] &&
-        ((marketSymbolMap[previousOrder.date][
-          previousOrder.symbol
-        ]?.toNumber() &&
-          previousOrder.type === 'STAKE') ||
-          (previousOrder.type !== 'STAKE' &&
-            previousOrder.unitPrice.toNumber()))
+        this.needsStakeHandling(order, marketSymbolMap, previousOrder)
       ) {
-        let previousUnitPrice =
-          previousOrder.type === 'STAKE'
-            ? marketSymbolMap[previousOrder.date][previousOrder.symbol]
-            : previousOrder.unitPrice;
-        netPerformanceValuesPercentage[order.date] = marketSymbolMap[
-          order.date
-        ][order.symbol]
-          ? marketSymbolMap[order.date][order.symbol]
-              .div(previousUnitPrice)
-              .minus(1)
-          : new Big(0);
+        this.stakeHandling(
+          previousOrder,
+          marketSymbolMap,
+          netPerformanceValuesPercentage,
+          order
+        );
       } else if (previousOrder.unitPrice.toNumber()) {
         netPerformanceValuesPercentage[order.date] = new Big(-1);
       } else if (
-        previousOrder.type === 'STAKE' &&
-        marketSymbolMap[previousOrder.date] &&
-        marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()
+        this.ispreviousOrderStakeAndHasInformation(
+          previousOrder,
+          marketSymbolMap
+        )
       ) {
-        netPerformanceValuesPercentage[order.date] = order.unitPrice
-          .div(marketSymbolMap[previousOrder.date][previousOrder.symbol])
-          .minus(1);
+        this.handleIfPreviousOrderIsStake(
+          netPerformanceValuesPercentage,
+          order,
+          marketSymbolMap,
+          previousOrder
+        );
       } else {
         netPerformanceValuesPercentage[order.date] = new Big(0);
       }
     }
+  }
+
+  private handleIfPreviousOrderIsStake(
+    netPerformanceValuesPercentage: { [date: string]: Big },
+    order: PortfolioOrderItem,
+    marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
+    previousOrder: PortfolioOrderItem
+  ) {
+    netPerformanceValuesPercentage[order.date] = order.unitPrice
+      .div(marketSymbolMap[previousOrder.date][previousOrder.symbol])
+      .minus(1);
+  }
+
+  private stakeHandling(
+    previousOrder: PortfolioOrderItem,
+    marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
+    netPerformanceValuesPercentage: { [date: string]: Big },
+    order: PortfolioOrderItem
+  ) {
+    let previousUnitPrice =
+      previousOrder.type === 'STAKE'
+        ? marketSymbolMap[previousOrder.date][previousOrder.symbol]
+        : previousOrder.unitPrice;
+    netPerformanceValuesPercentage[order.date] = marketSymbolMap[order.date][
+      order.symbol
+    ]
+      ? marketSymbolMap[order.date][order.symbol]
+          .div(previousUnitPrice)
+          .minus(1)
+      : new Big(0);
+  }
+
+  private ispreviousOrderStakeAndHasInformation(
+    previousOrder: PortfolioOrderItem,
+    marketSymbolMap: { [date: string]: { [symbol: string]: Big } }
+  ) {
+    return (
+      previousOrder.type === 'STAKE' &&
+      marketSymbolMap[previousOrder.date] &&
+      marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()
+    );
+  }
+
+  private needsStakeHandling(
+    order: PortfolioOrderItem,
+    marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
+    previousOrder: PortfolioOrderItem
+  ) {
+    return (
+      order.type === 'STAKE' &&
+      marketSymbolMap[order.date] &&
+      ((marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber() &&
+        previousOrder.type === 'STAKE') ||
+        (previousOrder.type !== 'STAKE' && previousOrder.unitPrice.toNumber()))
+    );
   }
 
   private handleLoggingOfInvestmentMetrics(
