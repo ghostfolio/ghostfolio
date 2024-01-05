@@ -6,7 +6,7 @@ export interface Environment extends CleanedEnvAccessors {
   BETTER_UPTIME_API_KEY: string;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
-  COINGECKO_API_KEY: string;
+  COINGECKO_API_KEY_DEMO: string;
   DATA_SOURCE_EXCHANGE_RATES: string;
   DATA_SOURCE_IMPORT: string;
   DATA_SOURCES: string[];

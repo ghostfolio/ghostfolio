@@ -17,17 +17,19 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
-import got from 'got';
+import got, { Headers } from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
-  private apiKey: string;
+  private headers: Headers = {};
   private readonly URL = 'https://api.coingecko.com/api/v3';
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.apiKey = this.configurationService.get('COINGECKO_API_KEY');
+    if (this.configurationService.get('COINGECKO_API_KEY_DEMO')) {
+      this.headers['x-cg-demo-api-key'] = this.configurationService.get('COINGECKO_API_KEY_DEMO');
+    }
   }
 
   public canHandle(symbol: string) {
@@ -52,10 +54,10 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.URL}/coins/${aSymbol
-        }?x_cg_demo_api_key=${this.apiKey}`, {
+      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
         // @ts-ignore
-        signal: abortController.signal
+        signal: abortController.signal,
+        headers: this.headers
       }).json<any>();
 
       response.name = name;
@@ -108,11 +110,11 @@ export class CoinGeckoService implements DataProviderInterface {
           this.URL
         }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
-        )}&to=${getUnixTime(to)
-        }?x_cg_demo_api_key=${this.apiKey}`,
+        )}&to=${getUnixTime(to)}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: abortController.signal,
+          headers: this.headers
         }
       ).json<any>();
 
@@ -170,8 +172,7 @@ export class CoinGeckoService implements DataProviderInterface {
       const quotes = await got(
         `${this.URL}/simple/price?ids=${symbols.join(
           ','
-        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()
-        }?x_cg_demo_api_key=${this.apiKey}`,
+        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -222,8 +223,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { coins } = await got(`${this.URL}/search?query=${query
-        }?x_cg_demo_api_key=${this.apiKey}`, {
+      const { coins } = await got(`${this.URL}/search?query=${query}`, {
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
