@@ -1708,6 +1708,8 @@ export class PortfolioCalculator {
         'previousOrder.unitPrice?.toNumber()',
         previousOrder.unitPrice?.toNumber()
       );
+
+      throw error;
     }
   }
 
