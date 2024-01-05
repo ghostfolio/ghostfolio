@@ -22,13 +22,18 @@ import got, { Headers } from 'got';
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
   private headers: Headers = {};
-  private readonly URL = 'https://api.coingecko.com/api/v3';
+  private readonly URL: string = 'https://api.coingecko.com/api/v3';
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
     if (this.configurationService.get('COINGECKO_API_KEY_DEMO')) {
       this.headers['x-cg-demo-api-key'] = this.configurationService.get('COINGECKO_API_KEY_DEMO');
+    }
+
+    if (this.configurationService.get('COINGECKO_API_KEY_PRO')) {
+      this.headers['x-cg-pro-api-key'] = this.configurationService.get('COINGECKO_API_KEY_PRO');
+      this.URL = 'https://pro-api.coingecko.com/api/v3';
     }
   }
 

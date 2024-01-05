@@ -16,6 +16,7 @@ export class ConfigurationService {
       CACHE_QUOTES_TTL: num({ default: 1 }),
       CACHE_TTL: num({ default: 1 }),
       COINGECKO_API_KEY_DEMO: str({ default: '' }),
+      COINGECKO_API_KEY_PRO: str({ default: '' }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({
