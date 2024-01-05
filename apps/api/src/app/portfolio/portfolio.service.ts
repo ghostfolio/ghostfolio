@@ -86,6 +86,8 @@ import {
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
+import { CurrentPositions } from './interfaces/current-positions.interface';
+import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
@@ -472,6 +474,79 @@ export class PortfolioService {
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
 
+    this.handlePositions(
+      currentPositions,
+      portfolioItemsNow,
+      symbolProfileMap,
+      dataProviderResponses,
+      holdings,
+      filteredValueInBaseCurrency
+    );
+
+    await this.handleCashPosition(
+      filters,
+      isFilteredByAccount,
+      cashDetails,
+      userCurrency,
+      filteredValueInBaseCurrency,
+      holdings
+    );
+
+    const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
+      filters,
+      orders,
+      portfolioItemsNow,
+      userCurrency,
+      userId,
+      withExcludedAccounts
+    });
+
+    filteredValueInBaseCurrency = await this.handleEmergencyFunds(
+      filters,
+      cashDetails,
+      userCurrency,
+      filteredValueInBaseCurrency,
+      emergencyFund,
+      orders,
+      accounts,
+      holdings
+    );
+
+    const summary = await this.getSummary({
+      impersonationId,
+      userCurrency,
+      userId,
+      balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
+      emergencyFundPositionsValueInBaseCurrency:
+        this.getEmergencyFundPositionsValueInBaseCurrency({
+          holdings
+        })
+    });
+
+    return {
+      accounts,
+      holdings,
+      platforms,
+      summary,
+      filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
+      filteredValueInPercentage: summary.netWorth
+        ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
+        : 0,
+      hasErrors: currentPositions.hasErrors,
+      totalValueInBaseCurrency: summary.netWorth
+    };
+  }
+
+  private handlePositions(
+    currentPositions: CurrentPositions,
+    portfolioItemsNow: { [symbol: string]: TimelinePosition },
+    symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile },
+    dataProviderResponses: {
+      [symbol: string]: IDataProviderResponse;
+    },
+    holdings: { [symbol: string]: PortfolioPosition },
+    filteredValueInBaseCurrency: Big
+  ) {
     for (const item of currentPositions.positions) {
       portfolioItemsNow[item.symbol] = item;
       if (item.quantity.lte(0)) {
@@ -536,59 +611,6 @@ export class PortfolioService {
         valueInBaseCurrency: value.toNumber()
       };
     }
-
-    await this.handleCashPosition(
-      filters,
-      isFilteredByAccount,
-      cashDetails,
-      userCurrency,
-      filteredValueInBaseCurrency,
-      holdings
-    );
-
-    const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
-      filters,
-      orders,
-      portfolioItemsNow,
-      userCurrency,
-      userId,
-      withExcludedAccounts
-    });
-
-    filteredValueInBaseCurrency = await this.handleEmergencyFunds(
-      filters,
-      cashDetails,
-      userCurrency,
-      filteredValueInBaseCurrency,
-      emergencyFund,
-      orders,
-      accounts,
-      holdings
-    );
-
-    const summary = await this.getSummary({
-      impersonationId,
-      userCurrency,
-      userId,
-      balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
-      emergencyFundPositionsValueInBaseCurrency:
-        this.getEmergencyFundPositionsValueInBaseCurrency({
-          holdings
-        })
-    });
-
-    return {
-      accounts,
-      holdings,
-      platforms,
-      summary,
-      filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
-      filteredValueInPercentage: summary.netWorth
-        ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
-        : 0,
-      hasErrors: currentPositions.hasErrors,
-      totalValueInBaseCurrency: summary.netWorth
-    };
   }
 
   private async handleCashPosition(
@@ -1792,11 +1814,13 @@ export class PortfolioService {
 
     let totalBuy = 0;
     let totalSell = 0;
+    let activitiesUsed: Activity[] = [];
+    let ordersCount = 0;
     for (let order of activities) {
       if (order.Account?.isExcluded ?? false) {
         excludedActivities.push(order);
       } else {
-        activities.push(order);
+        activitiesUsed.push(order);
         fees += this.exchangeRateDataService.toCurrency(
           order.fee,
           order.SymbolProfile.currency,
@@ -1816,9 +1840,11 @@ export class PortfolioService {
             break;
           case 'SELL':
             totalSell += amount;
+            ordersCount++;
             break;
           case 'BUY':
             totalBuy += amount;
+            ordersCount++;
             break;
           case 'LIABILITY':
             liabilities += amount;
@@ -1836,7 +1862,7 @@ export class PortfolioService {
       )
     );
 
-    const firstOrderDate = activities[0]?.date;
+    const firstOrderDate = activitiesUsed[0]?.date;
 
     const cash = new Big(balanceInBaseCurrency)
       .minus(emergencyFund)
@@ -1917,9 +1943,7 @@ export class PortfolioService {
       fireWealth: new Big(performanceInformation.performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
-      ordersCount: activities.filter(({ type }) => {
-        return type === 'BUY' || type === 'SELL';
-      }).length
+      ordersCount: ordersCount
     };
   }
 
