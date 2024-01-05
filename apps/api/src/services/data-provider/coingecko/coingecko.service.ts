@@ -21,11 +21,14 @@ import got from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
+  private apiKey: string;
   private readonly URL = 'https://api.coingecko.com/api/v3';
 
   public constructor(
     private readonly configurationService: ConfigurationService
-  ) {}
+  ) {
+    this.apiKey = this.configurationService.get('COINGECKO_API_KEY');
+  }
 
   public canHandle(symbol: string) {
     return true;
@@ -49,7 +52,8 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+      const { name } = await got(`${this.URL}/coins/${aSymbol
+        }?x_cg_demo_api_key=${this.apiKey}`, {
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
@@ -104,7 +108,8 @@ export class CoinGeckoService implements DataProviderInterface {
           this.URL
         }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
-        )}&to=${getUnixTime(to)}`,
+        )}&to=${getUnixTime(to)
+        }?x_cg_demo_api_key=${this.apiKey}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -165,7 +170,8 @@ export class CoinGeckoService implements DataProviderInterface {
       const quotes = await got(
         `${this.URL}/simple/price?ids=${symbols.join(
           ','
-        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
+        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()
+        }?x_cg_demo_api_key=${this.apiKey}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -216,7 +222,8 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { coins } = await got(`${this.URL}/search?query=${query}`, {
+      const { coins } = await got(`${this.URL}/search?query=${query
+        }?x_cg_demo_api_key=${this.apiKey}`, {
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
