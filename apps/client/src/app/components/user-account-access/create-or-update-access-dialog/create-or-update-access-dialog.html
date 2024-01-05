@@ -26,7 +26,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="accessForm.controls['type'].value === 'PRIVATE' ">
+
+    @if (accessForm.controls['type'].value === 'PRIVATE') {
+    <div>
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>User ID</mat-label>
         <input
@@ -37,6 +39,7 @@
         />
       </mat-form-field>
     </div>
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>

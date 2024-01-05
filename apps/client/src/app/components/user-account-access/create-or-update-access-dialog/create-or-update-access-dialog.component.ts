@@ -8,9 +8,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Subject } from 'rxjs';
+import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
+import { StatusCodes } from 'http-status-codes';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,15 +28,25 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
-    private formBuilder: FormBuilder,
-    private dataService: DataService
+    private dataService: DataService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       type: [this.data.access.type, Validators.required],
-      userId: [this.data.access.grantee, Validators.required]
+      userId: [this.data.access.grantee]
+    });
+
+    this.accessForm.get('type').valueChanges.subscribe((value) => {
+      const userIdControl = this.accessForm.get('userId');
+      if (value === 'PRIVATE') {
+        userIdControl.setValidators(Validators.required);
+      } else {
+        userIdControl.clearValidators();
+      }
+      userIdControl.updateValueAndValidity();
     });
   }
 
@@ -50,16 +61,21 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
       granteeUserId: this.accessForm.controls['userId'].value
     };
 
-    this.dataService.postAccess(access).subscribe({
-      next: () => {
-        this.dialogRef.close();
-      },
-      error: (error) => {
-        if (error.status === 400) {
-          alert('It was not possible to grant access, please try again later.');
-        }
-      }
-    });
+    this.dataService
+      .postAccess(access)
+      .pipe(
+        catchError((error) => {
+          if (error.status === StatusCodes.BAD_REQUEST) {
+            alert($localize`Oops! Could not grant access.`);
+          }
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(() => {
+        this.dialogRef.close({ access });
+      });
   }
 
   public ngOnDestroy() {

@@ -112,7 +112,10 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe(() => {
+    dialogRef.afterClosed().subscribe((access) => {
+      if (access) {
+        this.update();
+      }
       this.router.navigate(['.'], { relativeTo: this.route });
     });
   }
