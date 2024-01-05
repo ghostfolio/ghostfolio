@@ -42,6 +42,7 @@
     "start": "node dist/apps/api/main",
     "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o",
     "start:production": "yarn database:migrate && yarn database:seed && node main",
+    "start:dev": "yarn install && yarn start",
     "start:server": "nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
     "test": "npx dotenv-cli -e .env.example -- nx test",
