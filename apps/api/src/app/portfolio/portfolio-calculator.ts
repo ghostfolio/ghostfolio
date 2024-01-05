@@ -1683,34 +1683,15 @@ export class PortfolioCalculator {
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     previousOrder: PortfolioOrderItem
   ) {
-    try {
-      return (
-        order.type === 'STAKE' &&
-        previousOrder &&
-        marketSymbolMap[order.date] &&
-        ((marketSymbolMap[previousOrder.date][
-          previousOrder.symbol
-        ]?.toNumber() &&
-          previousOrder.type === 'STAKE') ||
-          (previousOrder.type !== 'STAKE' &&
-            previousOrder.unitPrice?.toNumber()))
-      );
-    } catch (error) {
-      console.log(error);
-      console.log(' order.type' + order.type);
-      console.log('previousOrder' + previousOrder);
-      console.log('marketSymbolMap' + marketSymbolMap[order.date]);
-      console.log(
-        'marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()' +
-          marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber()
-      );
-      console.log(
-        'previousOrder.unitPrice?.toNumber()',
-        previousOrder.unitPrice?.toNumber()
-      );
-
-      throw error;
-    }
+    return (
+      order.type === 'STAKE' &&
+      previousOrder &&
+      marketSymbolMap[order.date] &&
+      marketSymbolMap[previousOrder.date] &&
+      ((marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber() &&
+        previousOrder.type === 'STAKE') ||
+        (previousOrder.type !== 'STAKE' && previousOrder.unitPrice?.toNumber()))
+    );
   }
 
   private handleLoggingOfInvestmentMetrics(
