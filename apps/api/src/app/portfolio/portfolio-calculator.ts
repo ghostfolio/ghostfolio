@@ -1685,10 +1685,11 @@ export class PortfolioCalculator {
   ) {
     return (
       order.type === 'STAKE' &&
+      previousOrder &&
       marketSymbolMap[order.date] &&
       ((marketSymbolMap[previousOrder.date][previousOrder.symbol]?.toNumber() &&
         previousOrder.type === 'STAKE') ||
-        (previousOrder.type !== 'STAKE' && previousOrder.unitPrice.toNumber()))
+        (previousOrder.type !== 'STAKE' && previousOrder.unitPrice?.toNumber()))
     );
   }
 
