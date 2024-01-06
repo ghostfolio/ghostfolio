@@ -105,32 +105,20 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       data: {
         access: {
           alias: '',
-          type: 'PUBLIC'
+          type: 'PRIVATE'
         }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const access: CreateAccessDto = data?.access;
+    dialogRef.afterClosed().subscribe((access) => {
+      if (access) {
+        this.update();
+      }
 
-        if (access) {
-          this.dataService
-            .postAccess({ alias: access.alias })
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe({
-              next: () => {
-                this.update();
-              }
-            });
-        }
-
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
   }
 
   private update() {

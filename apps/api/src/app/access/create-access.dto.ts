@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateAccessDto {
   @IsOptional()
@@ -6,7 +6,7 @@ export class CreateAccessDto {
   alias?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUUID()
   granteeUserId?: string;
 
   @IsOptional()
