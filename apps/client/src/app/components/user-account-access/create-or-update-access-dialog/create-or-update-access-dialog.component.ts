@@ -63,8 +63,8 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   public onSubmit() {
     const access: CreateAccessDto = {
       alias: this.accessForm.controls['alias'].value,
-      type: this.accessForm.controls['type'].value,
-      granteeUserId: this.accessForm.controls['userId'].value
+      granteeUserId: this.accessForm.controls['userId'].value,
+      type: this.accessForm.controls['type'].value
     };
 
     this.dataService

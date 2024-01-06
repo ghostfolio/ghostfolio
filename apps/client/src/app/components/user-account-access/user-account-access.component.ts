@@ -116,6 +116,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       if (access) {
         this.update();
       }
+
       this.router.navigate(['.'], { relativeTo: this.route });
     });
   }
