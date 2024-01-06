@@ -27,11 +27,14 @@ export class CoinGeckoService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    if (this.configurationService.get('COINGECKO_API_KEY_DEMO')) {
+    const apiKeyDemo = this.configurationService.get('COINGECKO_API_KEY_DEMO');
+    const apiKeyPro = this.configurationService.get('COINGECKO_API_KEY_PRO');
+
+    if (apiKeyDemo) {
       this.headers['x-cg-demo-api-key'] = this.configurationService.get('COINGECKO_API_KEY_DEMO');
     }
 
-    if (this.configurationService.get('COINGECKO_API_KEY_PRO')) {
+    if (apiKeyPro) {
       this.headers['x-cg-pro-api-key'] = this.configurationService.get('COINGECKO_API_KEY_PRO');
       this.URL = 'https://pro-api.coingecko.com/api/v3';
     }
@@ -60,9 +63,9 @@ export class CoinGeckoService implements DataProviderInterface {
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+        headers: this.headers,
         // @ts-ignore
-        signal: abortController.signal,
-        headers: this.headers
+        signal: abortController.signal
       }).json<any>();
 
       response.name = name;
@@ -117,9 +120,9 @@ export class CoinGeckoService implements DataProviderInterface {
           from
         )}&to=${getUnixTime(to)}`,
         {
+          headers: this.headers,
           // @ts-ignore
-          signal: abortController.signal,
-          headers: this.headers
+          signal: abortController.signal
         }
       ).json<any>();
 
@@ -179,6 +182,7 @@ export class CoinGeckoService implements DataProviderInterface {
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
+          headers: this.headers,
           // @ts-ignore
           signal: abortController.signal
         }
@@ -229,6 +233,7 @@ export class CoinGeckoService implements DataProviderInterface {
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { coins } = await got(`${this.URL}/search?query=${query}`, {
+        headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
