@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-ghostfolio
+  labels:
+    app: ghostfolio
+spec:
+  replicas: {{ .Values.ghostfolio.replicaCount }}
+  selector:
+    matchLabels:
+      app: ghostfolio
+  template:
+    metadata:
+      labels:
+        app: ghostfolio
+    spec:
+      containers:
+        - name: ghostfolio
+          image: {{ .Values.ghostfolio.repository }}:{{ .Values.ghostfolio.tag }}
+          imagePullPolicy: {{ .Values.ghostfolio.pullPolicy }}
+          env:
+            {{- range .Values.ghostfolio.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.ghostfolio.port }}
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: {{ .Values.ghostfolio.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: {{ .Values.ghostfolio.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

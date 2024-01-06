@@ -41,3 +41,7 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
+
+
+k8s/charts/
+k8s/Chart.lock

@@ -1,0 +1,33 @@
+apiVersion: v2
+name: ghostfolio-k8s
+description: A Helm chart for deploying Ghostfolio on Kubernetes
+
+# This chart is designed for deploying Ghostfolio as an application on Kubernetes.
+
+# Chart Version:
+# Increment this version number each time you make changes to the chart or its templates,
+# including the app version. Follow Semantic Versioning (https://semver.org/).
+version: 0.2.0
+
+# Application Version:
+# This is the version number of the application being deployed. Increment it for each
+# change to the application. It doesn't follow Semantic Versioning and should reflect
+# the actual version the application is using. Use quotes for compatibility.
+appVersion: "1.0.0"
+
+# Dependencies:
+# Specify dependencies for the chart. These are additional services or components
+# required for Ghostfolio to run. Make sure to check and adjust version numbers
+# accordingly.
+dependencies:
+  - name: postgresql
+    version: 13.2.27
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+    # Additional comments can be added to explain why this dependency is required.
+
+  - name: redis
+    version: 18.6.2
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled
+    # Provide helpful comments to clarify the purpose of each dependency.

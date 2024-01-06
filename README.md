@@ -130,6 +130,19 @@ docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
 docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
+### Run on Kubernetes
+
+Run the following commands to run ghostfolio in a k8s environment ([more details](./k8s/README.md)).
+
+```bash
+kubectl create namespace ghostfolio
+helm dependency update
+helm install ghostfolio . --namespace ghostfolio
+kubectl get svc --namespace ghostfolio
+#If using Minikube, expose the service to localhost:
+#minikube service ghostfolio-ghostfolio -n ghostfolio  
+```
+
 #### Setup
 
 1. Open http://localhost:3333 in your browser
