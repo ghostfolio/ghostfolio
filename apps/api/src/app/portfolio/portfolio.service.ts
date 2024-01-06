@@ -482,7 +482,7 @@ export class PortfolioService {
         continue;
       }
 
-      const value = item.quantity.mul(item.marketPrice ?? 0);
+      const value = item.quantity.mul(item.marketPriceInBaseCurrency ?? 0);
       const symbolProfile = symbolProfileMap[item.symbol];
       const dataProviderResponse = dataProviderResponses[item.symbol];
 
@@ -1044,7 +1044,6 @@ export class PortfolioService {
           averagePrice,
           currency,
           dataSource,
-          // fee,
           firstBuyDate,
           grossPerformance,
           grossPerformancePercentage,
@@ -1058,6 +1057,8 @@ export class PortfolioService {
           netPerformanceWithCurrencyEffect,
           quantity,
           symbol,
+          timeWeightedInvestment,
+          timeWeightedInvestmentWithCurrencyEffect,
           transactionCount
         }) => {
           return {
@@ -1069,7 +1070,6 @@ export class PortfolioService {
             assetClass: symbolProfileMap[symbol].assetClass,
             assetSubClass: symbolProfileMap[symbol].assetSubClass,
             averagePrice: averagePrice.toNumber(),
-            // fee: fee?.toNumber(),
             grossPerformance: grossPerformance?.toNumber() ?? null,
             grossPerformancePercentage:
               grossPerformancePercentage?.toNumber() ?? null,
@@ -1090,11 +1090,10 @@ export class PortfolioService {
               netPerformancePercentageWithCurrencyEffect?.toNumber() ?? null,
             netPerformanceWithCurrencyEffect:
               netPerformanceWithCurrencyEffect?.toNumber() ?? null,
-            quantity: quantity.toNumber()
-            /*quantity: quantity?.toNumber(),
-          timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
-          timeWeightedInvestmentWithCurrencyEffect:
-            timeWeightedInvestmentWithCurrencyEffect?.toNumber()*/
+            quantity: quantity.toNumber(),
+            timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
+            timeWeightedInvestmentWithCurrencyEffect:
+              timeWeightedInvestmentWithCurrencyEffect?.toNumber()
           };
         }
       )
@@ -2072,7 +2071,8 @@ export class PortfolioService {
       for (const order of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           order.quantity *
-          (portfolioItemsNow[order.SymbolProfile.symbol]?.marketPrice ??
+          (portfolioItemsNow[order.SymbolProfile.symbol]
+            ?.marketPriceInBaseCurrency ??
             order.unitPrice ??
             0);
 
