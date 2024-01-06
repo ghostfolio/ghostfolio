@@ -87,20 +87,22 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 ### Supported Environment Variables
 
-| Name                | Default Value | Description                                                                                                                         |
-| ------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT` |               | A random string used as salt for access tokens                                                                                      |
-| `DATABASE_URL`      |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
-| `HOST`              | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
-| `JWT_SECRET_KEY`    |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
-| `PORT`              | `3333`        | The port where the Ghostfolio application will run on                                                                               |
-| `POSTGRES_DB`       |               | The name of the _PostgreSQL_ database                                                                                               |
-| `POSTGRES_PASSWORD` |               | The password of the _PostgreSQL_ database                                                                                           |
-| `POSTGRES_USER`     |               | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_HOST`        |               | The host where _Redis_ is running                                                                                                   |
-| `REDIS_PASSWORD`    |               | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`        |               | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`   | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
+| Name                     | Default Value | Description                                                                                                                         |
+| ------------------------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `ACCESS_TOKEN_SALT`      |               | A random string used as salt for access tokens                                                                                      |
+| `API_KEY_COINGECKO_DEMO` |               | The _CoinGecko_ Demo API key                                                                                                        |
+| `API_KEY_COINGECKO_PRO`  |               | The _CoinGecko_ Pro API                                                                                                             |
+| `DATABASE_URL`           |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `HOST`                   | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
+| `JWT_SECRET_KEY`         |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
+| `PORT`                   | `3333`        | The port where the Ghostfolio application will run on                                                                               |
+| `POSTGRES_DB`            |               | The name of the _PostgreSQL_ database                                                                                               |
+| `POSTGRES_PASSWORD`      |               | The password of the _PostgreSQL_ database                                                                                           |
+| `POSTGRES_USER`          |               | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_HOST`             |               | The host where _Redis_ is running                                                                                                   |
+| `REDIS_PASSWORD`         |               | The password of _Redis_                                                                                                             |
+| `REDIS_PORT`             |               | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`        | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
 
 ### Run with Docker Compose
 
