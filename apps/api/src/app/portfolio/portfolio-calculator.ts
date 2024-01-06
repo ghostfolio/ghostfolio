@@ -1709,6 +1709,7 @@ export class PortfolioCalculator {
       );
       console.log(`previousOrder.type:${previousOrder.type}`);
       console.log(`previousOrder.unitPrice:${previousOrder.unitPrice}`);
+      throw error;
     }
   }
 
