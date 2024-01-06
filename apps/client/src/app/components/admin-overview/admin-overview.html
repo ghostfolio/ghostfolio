@@ -62,7 +62,7 @@
                       [matMenuTriggerFor]="exchangeRateActionsMenu"
                       (click)="$event.stopPropagation()"
                     >
-                      <ion-icon name="ellipsis-horizontal"></ion-icon>
+                      <ion-icon name="ellipsis-horizontal" />
                     </button>
                     <mat-menu
                       #exchangeRateActionsMenu="matMenu"
@@ -79,10 +79,7 @@
                         [routerLink]="['/admin', 'market-data']"
                       >
                         <span class="align-items-center d-flex">
-                          <ion-icon
-                            class="mr-2"
-                            name="create-outline"
-                          ></ion-icon>
+                          <ion-icon class="mr-2" name="create-outline" />
                           <span i18n>Edit</span>
                         </span>
                       </a>
@@ -92,10 +89,7 @@
                         (click)="onDeleteCurrency(exchangeRate.label2)"
                       >
                         <span class="align-items-center d-flex">
-                          <ion-icon
-                            class="mr-2"
-                            name="trash-outline"
-                          ></ion-icon>
+                          <ion-icon class="mr-2" name="trash-outline" />
                           <span i18n>Delete</span>
                         </span>
                       </button>
@@ -109,7 +103,7 @@
                   mat-flat-button
                   (click)="onAddCurrency()"
                 >
-                  <ion-icon class="mr-1" name="add-outline"></ion-icon>
+                  <ion-icon class="mr-1" name="add-outline" />
                   <span i18n>Add Currency</span>
                 </button>
               </div>
@@ -147,7 +141,7 @@
                   mat-button
                   (click)="onDeleteSystemMessage()"
                 >
-                  <ion-icon name="trash-outline"></ion-icon>
+                  <ion-icon name="trash-outline" />
                 </button>
               </div>
               <button
@@ -157,10 +151,7 @@
                 mat-flat-button
                 (click)="onSetSystemMessage()"
               >
-                <ion-icon
-                  class="mr-1"
-                  name="information-circle-outline"
-                ></ion-icon>
+                <ion-icon class="mr-1" name="information-circle-outline" />
                 <span i18n>Set Message</span>
               </button>
             </div>
@@ -182,7 +173,7 @@
                       [matMenuTriggerFor]="couponActionsMenu"
                       (click)="$event.stopPropagation()"
                     >
-                      <ion-icon name="ellipsis-horizontal"></ion-icon>
+                      <ion-icon name="ellipsis-horizontal" />
                     </button>
                     <mat-menu
                       #couponActionsMenu="matMenu"
@@ -194,10 +185,7 @@
                         (click)="onDeleteCoupon(coupon.code)"
                       >
                         <span class="align-items-center d-flex">
-                          <ion-icon
-                            class="mr-2"
-                            name="trash-outline"
-                          ></ion-icon>
+                          <ion-icon class="mr-2" name="trash-outline" />
                           <span i18n>Delete</span>
                         </span>
                       </button>
@@ -240,7 +228,7 @@
             <div class="w-50" i18n>Housekeeping</div>
             <div class="w-50">
               <button color="warn" mat-flat-button (click)="onFlushCache()">
-                <ion-icon class="mr-1" name="close-circle-outline"></ion-icon>
+                <ion-icon class="mr-1" name="close-circle-outline" />
                 <span i18n>Flush Cache</span>
               </button>
             </div>

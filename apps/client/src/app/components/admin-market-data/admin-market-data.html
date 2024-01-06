@@ -125,7 +125,7 @@
               *ngIf="element.comment"
               class="d-block"
               name="document-text-outline"
-            ></ion-icon>
+            />
           </td>
         </ng-container>
 
@@ -137,7 +137,7 @@
               [matMenuTriggerFor]="assetProfilesActionsMenu"
               (click)="$event.stopPropagation()"
             >
-              <ion-icon name="ellipsis-vertical"></ion-icon>
+              <ion-icon name="ellipsis-vertical" />
             </button>
             <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onGather7Days()">
@@ -158,7 +158,7 @@
               [matMenuTriggerFor]="assetProfileActionsMenu"
               (click)="$event.stopPropagation()"
             >
-              <ion-icon name="ellipsis-horizontal"></ion-icon>
+              <ion-icon name="ellipsis-horizontal" />
             </button>
             <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
               <button
@@ -166,7 +166,7 @@
                 (click)="onOpenAssetProfileDialog({ dataSource: element.dataSource, symbol: element.symbol })"
               >
                 <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                  <ion-icon class="mr-2" name="create-outline" />
                   <span i18n>Edit</span>
                 </span>
               </button>
@@ -176,7 +176,7 @@
                 (click)="onDeleteProfileData({dataSource: element.dataSource, symbol: element.symbol})"
               >
                 <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <ion-icon class="mr-2" name="trash-outline" />
                   <span i18n>Delete</span>
                 </span>
               </button>
@@ -225,7 +225,7 @@
       [queryParams]="{ createAssetProfileDialog: true }"
       [routerLink]="[]"
     >
-      <ion-icon name="add-outline" size="large"></ion-icon>
+      <ion-icon name="add-outline" size="large" />
     </a>
   </div>
 </div>

@@ -4,7 +4,7 @@
   (keydown.tab)="$event.stopPropagation()"
 >
   <div class="align-items-center d-flex search-container">
-    <ion-icon class="ml-2 mr-0" name="search-outline"></ion-icon>
+    <ion-icon class="ml-2 mr-0" name="search-outline" />
     <input
       #search
       autocomplete="off"
@@ -27,7 +27,7 @@
       mat-button
       (click)="initialize()"
     >
-      <ion-icon class="m-0" name="close-circle-outline"></ion-icon>
+      <ion-icon class="m-0" name="close-circle-outline" />
     </button>
     <button
       *ngIf="!searchFormControl.value"
@@ -35,7 +35,7 @@
       mat-button
       (click)="onCloseAssistant()"
     >
-      <ion-icon class="m-0" name="close-outline"></ion-icon>
+      <ion-icon class="m-0" name="close-outline" />
     </button>
   </div>
   <div

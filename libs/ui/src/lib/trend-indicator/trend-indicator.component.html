@@ -14,16 +14,14 @@
     class="text-muted"
     name="pause-circle-outline"
     [size]="size"
-  >
-  </ion-icon>
+  />
   <ng-template #delayed>
     <ion-icon
       *ngIf="marketState === 'delayed' && range === '1d'; else trend"
       class="text-muted"
       name="time-outline"
       [size]="size"
-    >
-    </ion-icon>
+    />
   </ng-template>
   <ng-template #trend>
     <ng-container>
@@ -33,20 +31,20 @@
         name="arrow-down-circle-outline"
         [ngClass]="{ 'rotate-45-down': value > -0.01 }"
         [size]="size"
-      ></ion-icon>
+      />
       <ion-icon
         *ngIf="value > -0.0005 && value < 0.0005"
         class="text-muted"
         name="arrow-forward-circle-outline"
         [size]="size"
-      ></ion-icon>
+      />
       <ion-icon
         *ngIf="value >= 0.0005"
         class="text-success"
         name="arrow-up-circle-outline"
         [ngClass]="{ 'rotate-45-up': value < 0.01 }"
         [size]="size"
-      ></ion-icon>
+      />
     </ng-container>
   </ng-template>
 </ng-template>

@@ -140,7 +140,7 @@
             class="text-muted"
             matDatepickerToggleIcon
             name="calendar-clear-outline"
-          ></ion-icon>
+          />
         </mat-datepicker-toggle>
         <mat-datepicker #date disabled="false"></mat-datepicker>
       </mat-form-field>
@@ -210,7 +210,7 @@
           type="button"
           (click)="applyCurrentMarketPrice()"
         >
-          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+          <ion-icon class="text-muted" name="refresh-outline" />
         </button>
       </div>
     </div>
@@ -326,7 +326,7 @@
             (removed)="onRemoveTag(tag)"
           >
             {{ tag.name }}
-            <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+            <ion-icon class="ml-2" matPrefix name="close-outline" />
           </mat-chip-row>
           <input
             #tagInput

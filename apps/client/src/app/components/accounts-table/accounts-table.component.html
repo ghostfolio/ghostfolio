@@ -5,7 +5,7 @@
     [disabled]="dataSource?.data.length < 2"
     (click)="onTransferBalance()"
   >
-    <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>
+    <ion-icon class="mr-2" name="arrow-redo-outline" />
     <ng-container i18n>Transfer Cash Balance</ng-container>...
   </button>
 </div>
@@ -19,7 +19,7 @@
     ></th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex justify-content-center">
-        <ion-icon *ngIf="element.isExcluded" name="eye-off-outline"></ion-icon>
+        <ion-icon *ngIf="element.isExcluded" name="eye-off-outline" />
       </div>
     </td>
     <td
@@ -231,7 +231,7 @@
         title="Note"
         (click)="onOpenComment(element.comment); $event.stopPropagation()"
       >
-        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-icon name="document-text-outline" />
       </button>
     </td>
     <td
@@ -250,12 +250,12 @@
         [matMenuTriggerFor]="accountMenu"
         (click)="$event.stopPropagation()"
       >
-        <ion-icon name="ellipsis-horizontal"></ion-icon>
+        <ion-icon name="ellipsis-horizontal" />
       </button>
       <mat-menu #accountMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onUpdateAccount(element)">
           <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="create-outline"></ion-icon>
+            <ion-icon class="mr-2" name="create-outline" />
             <span i18n>Edit</span>
           </span>
         </button>
@@ -265,7 +265,7 @@
           (click)="onDeleteAccount(element.id)"
         >
           <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+            <ion-icon class="mr-2" name="trash-outline" />
             <span i18n>Delete</span>
           </span>
         </button>
