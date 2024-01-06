@@ -158,6 +158,7 @@ Ghostfolio is available for various home server systems, including [Runtipi](htt
 1. Run `yarn install`
 1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `yarn database:setup` to initialize the database schema
+1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
 1. Start the server and the client (see [_Development_](#Development))
 1. Open http://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
