@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the user interface of the access table to share the portfolio
+- Improved the style of the assistant (experimental)
 
 ## 2.34.0 - 2024-01-02
 
