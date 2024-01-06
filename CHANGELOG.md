@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Improved the user interface of the access table to share the portfolio
 - Added support to grant private access
+- Added a hint for _Time-Weighted Rate of Return_ (TWR) to the portfolio summary tab on the home page
+- Added support for REST APIs (`JSON`) via the scraper configuration
+- Enabled the _Redis_ authentication in the `docker-compose` files
+
+### Changed
+
+- Improved the user interface of the access table to share the portfolio
+- Improved the style of the assistant (experimental)
 
 ## 2.34.0 - 2024-01-02
 
