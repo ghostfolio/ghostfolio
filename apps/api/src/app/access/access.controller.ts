@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { Access } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
@@ -26,6 +27,7 @@ import { CreateAccessDto } from './create-access.dto';
 export class AccessController {
   public constructor(
     private readonly accessService: AccessService,
+    private readonly configurationService: ConfigurationService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -65,6 +67,16 @@ export class AccessController {
   public async createAccess(
     @Body() data: CreateAccessDto
   ): Promise<AccessModel> {
+    if (
+      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+      this.request.user.subscription.type === 'Basic'
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
     try {
       return await this.accessService.createAccess({
         alias: data.alias || undefined,
