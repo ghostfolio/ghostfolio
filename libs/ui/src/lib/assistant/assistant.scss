@@ -1,6 +1,14 @@
 :host {
   display: block;
 
+  .filter-container {
+    ::ng-deep {
+      label {
+        margin-bottom: 0;
+      }
+    }
+  }
+
   .result-container {
     max-height: 15rem;
   }

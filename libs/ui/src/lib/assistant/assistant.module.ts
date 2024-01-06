@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
@@ -19,6 +20,7 @@ import { AssistantComponent } from './assistant.component';
     GfAssistantListItemModule,
     GfToggleModule,
     MatButtonModule,
+    MatRadioModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,

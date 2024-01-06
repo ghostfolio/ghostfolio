@@ -22,6 +22,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { Tag } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -98,6 +99,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
     assetProfiles: [],
     holdings: []
   };
+  public tags: Tag[] = [];
 
   private keyManager: FocusKeyManager<AssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
@@ -109,6 +111,15 @@ export class AssistantComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
+    const { tags } = this.dataService.fetchInfo();
+
+    this.tags = tags.map(({ id, name }) => {
+      return {
+        id,
+        name: translate(name)
+      };
+    });
+
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
@@ -179,6 +190,12 @@ export class AssistantComponent implements OnDestroy, OnInit {
     this.setIsOpen(false);
 
     this.closed.emit();
+  }
+
+  public onSelectTag(tag: Tag) {
+    console.log(tag);
+
+    this.onCloseAssistant();
   }
 
   public setIsOpen(aIsOpen: boolean) {
