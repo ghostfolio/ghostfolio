@@ -196,11 +196,6 @@ model User {
   Subscription  Subscription[]
 }
 
-enum AccountType {
-  CASH
-  SECURITIES
-}
-
 enum AssetClass {
   CASH
   COMMODITY
