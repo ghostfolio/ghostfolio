@@ -4,6 +4,7 @@ import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -16,15 +17,24 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
+  let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null, null);
+    currentRateService = new CurrentRateService(null, null);
+
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
   });
 
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
+        exchangeRateDataService,
         currency: 'CHF',
         orders: [
           {
@@ -75,18 +85,26 @@ describe('PortfolioCalculator', () => {
 
       expect(chartData[0]).toEqual({
         date: '2022-03-07',
-        netPerformanceInPercentage: 0,
         netPerformance: 0,
+        netPerformanceInPercentage: 0,
+        netPerformanceInPercentageWithCurrencyEffect: 0,
+        netPerformanceWithCurrencyEffect: 0,
         totalInvestment: 151.6,
-        value: 151.6
+        totalInvestmentValueWithCurrencyEffect: 151.6,
+        value: 151.6,
+        valueWithCurrencyEffect: 151.6
       });
 
       expect(chartData[chartData.length - 1]).toEqual({
         date: '2022-04-11',
-        netPerformanceInPercentage: 13.100263852242744,
         netPerformance: 19.86,
+        netPerformanceInPercentage: 13.100263852242744,
+        netPerformanceInPercentageWithCurrencyEffect: 13.100263852242744,
+        netPerformanceWithCurrencyEffect: 19.86,
         totalInvestment: 0,
-        value: 0
+        totalInvestmentValueWithCurrencyEffect: 0,
+        value: 0,
+        valueWithCurrencyEffect: 0
       });
 
       expect(currentPositions).toEqual({
@@ -94,9 +112,17 @@ describe('PortfolioCalculator', () => {
         errors: [],
         grossPerformance: new Big('19.86'),
         grossPerformancePercentage: new Big('0.13100263852242744063'),
+        grossPerformancePercentageWithCurrencyEffect: new Big(
+          '0.13100263852242744063'
+        ),
+        grossPerformanceWithCurrencyEffect: new Big('19.86'),
         hasErrors: false,
         netPerformance: new Big('19.86'),
         netPerformancePercentage: new Big('0.13100263852242744063'),
+        netPerformancePercentageWithCurrencyEffect: new Big(
+          '0.13100263852242744063'
+        ),
+        netPerformanceWithCurrencyEffect: new Big('19.86'),
         positions: [
           {
             averagePrice: new Big('0'),
@@ -106,17 +132,29 @@ describe('PortfolioCalculator', () => {
             firstBuyDate: '2022-03-07',
             grossPerformance: new Big('19.86'),
             grossPerformancePercentage: new Big('0.13100263852242744063'),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '0.13100263852242744063'
+            ),
+            grossPerformanceWithCurrencyEffect: new Big('19.86'),
             investment: new Big('0'),
+            investmentWithCurrencyEffect: new Big('0'),
             netPerformance: new Big('19.86'),
             netPerformancePercentage: new Big('0.13100263852242744063'),
+            netPerformancePercentageWithCurrencyEffect: new Big(
+              '0.13100263852242744063'
+            ),
+            netPerformanceWithCurrencyEffect: new Big('19.86'),
             marketPrice: 87.8,
+            marketPriceInBaseCurrency: 87.8,
             quantity: new Big('0'),
             symbol: 'NOVN.SW',
             timeWeightedInvestment: new Big('151.6'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
             transactionCount: 2
           }
         ],
-        totalInvestment: new Big('0')
+        totalInvestment: new Big('0'),
+        totalInvestmentWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([

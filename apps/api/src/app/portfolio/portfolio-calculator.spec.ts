@@ -2,17 +2,27 @@ import Big from 'big.js';
 
 import { CurrentRateService } from './current-rate.service';
 import { PortfolioCalculator } from './portfolio-calculator';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
+  let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null, null);
+    currentRateService = new CurrentRateService(null, null);
+
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
   });
 
   describe('annualized performance percentage', () => {
     const portfolioCalculator = new PortfolioCalculator({
       currentRateService,
+      exchangeRateDataService,
       currency: 'USD',
       orders: []
     });

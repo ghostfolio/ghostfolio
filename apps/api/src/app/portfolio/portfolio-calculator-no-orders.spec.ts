@@ -4,6 +4,7 @@ import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -16,15 +17,24 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
+  let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null, null);
+    currentRateService = new CurrentRateService(null, null);
+
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
   });
 
   describe('get current positions', () => {
     it('with no orders', async () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
+        exchangeRateDataService,
         currency: 'CHF',
         orders: []
       });
@@ -50,9 +60,13 @@ describe('PortfolioCalculator', () => {
         currentValue: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        grossPerformancePercentageWithCurrencyEffect: new Big(0),
+        grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformancePercentageWithCurrencyEffect: new Big(0),
+        netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
         totalInvestment: new Big(0)
       });

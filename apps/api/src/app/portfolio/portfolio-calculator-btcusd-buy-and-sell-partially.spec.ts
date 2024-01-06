@@ -4,6 +4,7 @@ import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -16,15 +17,24 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
+  let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null, null);
+    currentRateService = new CurrentRateService(null, null);
+
+    exchangeRateDataService = new ExchangeRateDataService(
+      null,
+      null,
+      null,
+      null
+    );
   });
 
   describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
+        exchangeRateDataService,
         currency: 'CHF',
         orders: [
           {
@@ -74,9 +84,17 @@ describe('PortfolioCalculator', () => {
         errors: [],
         grossPerformance: new Big('27172.74'),
         grossPerformancePercentage: new Big('42.41978276196153750666'),
+        grossPerformancePercentageWithCurrencyEffect: new Big(
+          '42.41978276196153750666'
+        ),
+        grossPerformanceWithCurrencyEffect: new Big('27172.74'),
         hasErrors: false,
         netPerformance: new Big('27172.74'),
         netPerformancePercentage: new Big('42.41978276196153750666'),
+        netPerformancePercentageWithCurrencyEffect: new Big(
+          '42.41978276196153750666'
+        ),
+        netPerformanceWithCurrencyEffect: new Big('27172.74'),
         positions: [
           {
             averagePrice: new Big('320.43'),
@@ -86,17 +104,31 @@ describe('PortfolioCalculator', () => {
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
             grossPerformancePercentage: new Big('42.41978276196153750666'),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '42.41978276196153750666'
+            ),
+            grossPerformanceWithCurrencyEffect: new Big('27172.74'),
             investment: new Big('320.43'),
+            investmentWithCurrencyEffect: new Big('320.43'),
             netPerformance: new Big('27172.74'),
             netPerformancePercentage: new Big('42.41978276196153750666'),
+            netPerformancePercentageWithCurrencyEffect: new Big(
+              '42.41978276196153750666'
+            ),
+            netPerformanceWithCurrencyEffect: new Big('27172.74'),
             marketPrice: 13657.2,
+            marketPriceInBaseCurrency: 13657.2,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             timeWeightedInvestment: new Big('640.56763686131386861314'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big(
+              '640.56763686131386861314'
+            ),
             transactionCount: 2
           }
         ],
-        totalInvestment: new Big('320.43')
+        totalInvestment: new Big('320.43'),
+        totalInvestmentWithCurrencyEffect: new Big('320.43')
       });
 
       expect(investments).toEqual([

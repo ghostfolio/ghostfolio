@@ -7,9 +7,13 @@ import {
   DEFAULT_CURRENCY,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getYesterday,
+  resetHours
+} from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { format, isToday } from 'date-fns';
+import { addDays, format, isAfter, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 import ms from 'ms';
 
@@ -32,6 +36,59 @@ export class ExchangeRateDataService {
 
   public getCurrencyPairs() {
     return this.currencyPairs;
+  }
+
+  public async getExchangeRatesByCurrency({
+    currencies,
+    endDate = new Date(),
+    startDate,
+    targetCurrency
+  }: {
+    currencies: string[];
+    endDate?: Date;
+    startDate: Date;
+    targetCurrency: string;
+  }) {
+    if (!startDate) {
+      return {};
+    }
+
+    let exchangeRatesByCurrency: {
+      [currency: string]: { [dateString: string]: number };
+    } = {};
+
+    let dates: Date[] = [];
+    let currentDate = resetHours(startDate);
+
+    while (isAfter(endDate, currentDate)) {
+      dates.push(currentDate);
+      currentDate = addDays(currentDate, 1);
+    }
+
+    for (let currency of uniq(Object.values(currencies))) {
+      exchangeRatesByCurrency[currency] = await this.getExchangeRates({
+        dates,
+        currencyFrom: currency,
+        currencyTo: targetCurrency
+      });
+
+      let previousExchangeRate = 1;
+
+      let date = startDate;
+      do {
+        let dateString = format(date, DATE_FORMAT);
+
+        if (isNaN(exchangeRatesByCurrency[currency][dateString])) {
+          exchangeRatesByCurrency[currency][dateString] = previousExchangeRate;
+        } else {
+          previousExchangeRate = exchangeRatesByCurrency[currency][dateString];
+        }
+
+        date = addDays(resetHours(date), 1);
+      } while (!isAfter(date, endDate));
+    }
+
+    return exchangeRatesByCurrency;
   }
 
   public async getExchangeRates({
