@@ -105,7 +105,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       data: {
         access: {
           alias: '',
-          type: 'PUBLIC'
+          type: 'PRIVATE'
         }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

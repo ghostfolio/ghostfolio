@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
   OnDestroy
@@ -8,10 +9,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { StatusCodes } from 'http-status-codes';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
 import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
-import { StatusCodes } from 'http-status-codes';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +27,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
     private dataService: DataService,
@@ -36,17 +38,21 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       type: [this.data.access.type, Validators.required],
-      userId: [this.data.access.grantee]
+      userId: [this.data.access.grantee, Validators.required]
     });
 
     this.accessForm.get('type').valueChanges.subscribe((value) => {
       const userIdControl = this.accessForm.get('userId');
+
       if (value === 'PRIVATE') {
         userIdControl.setValidators(Validators.required);
       } else {
         userIdControl.clearValidators();
       }
+
       userIdControl.updateValueAndValidity();
+
+      this.changeDetectorRef.markForCheck();
     });
   }
 
