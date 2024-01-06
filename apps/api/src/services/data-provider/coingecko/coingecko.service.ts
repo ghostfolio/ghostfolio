@@ -21,22 +21,24 @@ import got, { Headers } from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
-  private headers: Headers = {};
-  private readonly URL: string = 'https://api.coingecko.com/api/v3';
+  private readonly apiUrl: string;
+  private readonly headers: Headers = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    const apiKeyDemo = this.configurationService.get('COINGECKO_API_KEY_DEMO');
-    const apiKeyPro = this.configurationService.get('COINGECKO_API_KEY_PRO');
+    const apiKeyDemo = this.configurationService.get('API_KEY_COINGECKO_DEMO');
+    const apiKeyPro = this.configurationService.get('API_KEY_COINGECKO_PRO');
+
+    this.apiUrl = 'https://api.coingecko.com/api/v3';
 
     if (apiKeyDemo) {
-      this.headers['x-cg-demo-api-key'] = this.configurationService.get('COINGECKO_API_KEY_DEMO');
+      this.headers['x-cg-demo-api-key'] = apiKeyDemo;
     }
 
     if (apiKeyPro) {
-      this.headers['x-cg-pro-api-key'] = this.configurationService.get('COINGECKO_API_KEY_PRO');
-      this.URL = 'https://pro-api.coingecko.com/api/v3';
+      this.apiUrl = 'https://pro-api.coingecko.com/api/v3';
+      this.headers['x-cg-pro-api-key'] = apiKeyPro;
     }
   }
 
@@ -62,7 +64,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+      const { name } = await got(`${this.apiUrl}/coins/${aSymbol}`, {
         headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
@@ -115,7 +117,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
       const { prices } = await got(
         `${
-          this.URL
+          this.apiUrl
         }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
         )}&to=${getUnixTime(to)}`,
@@ -178,7 +180,7 @@ export class CoinGeckoService implements DataProviderInterface {
       }, requestTimeout);
 
       const quotes = await got(
-        `${this.URL}/simple/price?ids=${symbols.join(
+        `${this.apiUrl}/simple/price?ids=${symbols.join(
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
@@ -232,7 +234,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { coins } = await got(`${this.URL}/search?query=${query}`, {
+      const { coins } = await got(`${this.apiUrl}/search?query=${query}`, {
         headers: this.headers,
         // @ts-ignore
         signal: abortController.signal

@@ -12,11 +12,11 @@ export class ConfigurationService {
     this.environmentConfiguration = cleanEnv(process.env, {
       ACCESS_TOKEN_SALT: str(),
       ALPHA_VANTAGE_API_KEY: str({ default: '' }),
+      API_KEY_COINGECKO_DEMO: str({ default: '' }),
+      API_KEY_COINGECKO_PRO: str({ default: '' }),
       BETTER_UPTIME_API_KEY: str({ default: '' }),
       CACHE_QUOTES_TTL: num({ default: 1 }),
       CACHE_TTL: num({ default: 1 }),
-      COINGECKO_API_KEY_DEMO: str({ default: '' }),
-      COINGECKO_API_KEY_PRO: str({ default: '' }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({

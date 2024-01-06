@@ -3,11 +3,11 @@ import { CleanedEnvAccessors } from 'envalid';
 export interface Environment extends CleanedEnvAccessors {
   ACCESS_TOKEN_SALT: string;
   ALPHA_VANTAGE_API_KEY: string;
+  API_KEY_COINGECKO_DEMO: string;
+  API_KEY_COINGECKO_PRO: string;
   BETTER_UPTIME_API_KEY: string;
   CACHE_QUOTES_TTL: number;
   CACHE_TTL: number;
-  COINGECKO_API_KEY_DEMO: string;
-  COINGECKO_API_KEY_PRO: string;
   DATA_SOURCE_EXCHANGE_RATES: string;
   DATA_SOURCE_IMPORT: string;
   DATA_SOURCES: string[];
