@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a hint for _Time-Weighted Rate of Return_ (TWR) to the portfolio summary tab on the home page
 - Added support for REST APIs (`JSON`) via the scraper configuration
 - Enabled the _Redis_ authentication in the `docker-compose` files
 

@@ -1,3 +1,7 @@
 /.nx/cache
+
+# Issue: https://github.com/prettier/prettier/issues/15650
+/apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html
+
 /dist
 /test/import
