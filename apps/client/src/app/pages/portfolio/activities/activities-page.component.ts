@@ -15,7 +15,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
+import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
@@ -111,6 +111,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.updateUser(state.user);
 
+          this.fetchActivities();
+
           this.changeDetectorRef.markForCheck();
         }
       });
@@ -122,6 +124,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     if (this.user?.settings?.isExperimentalFeatures === true) {
       this.dataService
         .fetchActivities({
+          filters: this.userService.getFilters(),
           skip: this.pageIndex * this.pageSize,
           sortColumn: this.sortColumn,
           sortDirection: this.sortDirection,

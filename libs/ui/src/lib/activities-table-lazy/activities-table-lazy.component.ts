@@ -75,7 +75,6 @@ export class ActivitiesTableLazyComponent
   public isLoading = true;
   public isUUID = isUUID;
   public routeQueryParams: Subscription;
-  public searchKeywords: string[] = [];
   public selectedRows = new SelectionModel<Activity>(true, []);
 
   private unsubscribeSubject = new Subject<void>();
@@ -182,15 +181,7 @@ export class ActivitiesTableLazyComponent
   }
 
   public onExport() {
-    if (this.searchKeywords.length > 0) {
-      this.export.emit(
-        this.dataSource.filteredData.map((activity) => {
-          return activity.id;
-        })
-      );
-    } else {
-      this.export.emit();
-    }
+    this.export.emit();
   }
 
   public onExportDraft(aActivityId: string) {

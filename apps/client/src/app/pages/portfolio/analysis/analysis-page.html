@@ -1,6 +1,7 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
-  <div *ngIf="!user?.settings?.isExperimentalFeatures" class="my-4 text-center">
+  @if (!user?.settings?.isExperimentalFeatures) {
+  <div class="my-4 text-center">
     <gf-toggle
       [defaultValue]="user?.settings?.dateRange"
       [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
@@ -14,6 +15,7 @@
     [placeholder]="placeholder"
     (valueChanged)="filters$.next($event)"
   ></gf-activities-filter>
+  }
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator

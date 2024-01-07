@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ObservableStore } from '@codewithdan/observable-store';
 import { SubscriptionInterstitialDialogParams } from '@ghostfolio/client/components/subscription-interstitial-dialog/interfaces/interfaces';
 import { SubscriptionInterstitialDialog } from '@ghostfolio/client/components/subscription-interstitial-dialog/subscription-interstitial-dialog.component';
-import { User } from '@ghostfolio/common/interfaces';
+import { Filter, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -44,6 +44,21 @@ export class UserService extends ObservableStore<UserStoreState> {
       // Get from endpoint
       return this.fetchUser().pipe(catchError(this.handleError));
     }
+  }
+
+  public getFilters() {
+    const user = this.getState().user;
+
+    return user?.settings?.isExperimentalFeatures === true
+      ? user.settings['filters.tags']
+        ? <Filter[]>[
+            {
+              id: user.settings['filters.tags'][0],
+              type: 'TAG'
+            }
+          ]
+        : []
+      : [];
   }
 
   public remove() {

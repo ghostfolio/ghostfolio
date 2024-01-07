@@ -7,6 +7,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -22,6 +23,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { Tag } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -41,7 +43,7 @@ import { ISearchResultItem, ISearchResults } from './interfaces/interfaces';
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
-export class AssistantComponent implements OnDestroy, OnInit {
+export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   @HostListener('document:keydown', ['$event']) onKeydown(
     event: KeyboardEvent
   ) {
@@ -80,6 +82,7 @@ export class AssistantComponent implements OnDestroy, OnInit {
 
   @Output() closed = new EventEmitter<void>();
   @Output() dateRangeChanged = new EventEmitter<DateRange>();
+  @Output() selectedTagChanged = new EventEmitter<Tag>();
 
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
@@ -98,6 +101,8 @@ export class AssistantComponent implements OnDestroy, OnInit {
     assetProfiles: [],
     holdings: []
   };
+  public tags: Tag[] = [];
+  public tagsFormControl = new FormControl<string>(undefined);
 
   private keyManager: FocusKeyManager<AssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
@@ -109,6 +114,15 @@ export class AssistantComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
+    const { tags } = this.dataService.fetchInfo();
+
+    this.tags = tags.map(({ id, name }) => {
+      return {
+        id,
+        name: translate(name)
+      };
+    });
+
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
@@ -148,6 +162,12 @@ export class AssistantComponent implements OnDestroy, OnInit {
       });
   }
 
+  public ngOnChanges() {
+    this.tagsFormControl.setValue(
+      this.user?.settings?.['filters.tags']?.[0] ?? null
+    );
+  }
+
   public async initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
@@ -179,6 +199,16 @@ export class AssistantComponent implements OnDestroy, OnInit {
     this.setIsOpen(false);
 
     this.closed.emit();
+  }
+
+  public onTagChange() {
+    const selectedTag = this.tags.find(({ id }) => {
+      return id === this.tagsFormControl.value;
+    });
+
+    this.selectedTagChanged.emit(selectedTag);
+
+    this.onCloseAssistant();
   }
 
   public setIsOpen(aIsOpen: boolean) {

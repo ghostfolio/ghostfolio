@@ -225,7 +225,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   private fetchDividendsAndInvestments() {
     this.dataService
       .fetchDividends({
-        filters: this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
@@ -238,7 +241,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchInvestments({
-        filters: this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
@@ -252,16 +258,16 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
               ? translate('YEAR')
               : translate('YEARS')
             : this.streaks?.currentStreak === 1
-            ? translate('MONTH')
-            : translate('MONTHS');
+              ? translate('MONTH')
+              : translate('MONTHS');
         this.unitLongestStreak =
           this.mode === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
             : this.streaks?.longestStreak === 1
-            ? translate('MONTH')
-            : translate('MONTHS');
+              ? translate('MONTH')
+              : translate('MONTHS');
 
         this.changeDetectorRef.markForCheck();
       });
@@ -313,7 +319,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        filters: this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -358,7 +367,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPositions({
-        filters: this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
