@@ -122,18 +122,9 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   public fetchActivities() {
     if (this.user?.settings?.isExperimentalFeatures === true) {
-      const filters: Filter[] = [];
-
-      if (this.user?.settings?.['filters.tags']) {
-        filters.push({
-          id: this.user.settings['filters.tags'][0],
-          type: 'TAG'
-        });
-      }
-
       this.dataService
         .fetchActivities({
-          filters,
+          filters: this.userService.getFilters() ?? [],
           skip: this.pageIndex * this.pageSize,
           sortColumn: this.sortColumn,
           sortDirection: this.sortDirection,
