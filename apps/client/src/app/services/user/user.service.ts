@@ -58,7 +58,7 @@ export class UserService extends ObservableStore<UserStoreState> {
             }
           ]
         : []
-      : undefined;
+      : [];
   }
 
   public remove() {

@@ -225,7 +225,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   private fetchDividendsAndInvestments() {
     this.dataService
       .fetchDividends({
-        filters: this.userService.getFilters() ?? this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
@@ -238,7 +241,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchInvestments({
-        filters: this.userService.getFilters() ?? this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         groupBy: this.mode,
         range: this.user?.settings?.dateRange
       })
@@ -313,7 +319,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        filters: this.userService.getFilters() ?? this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -358,7 +367,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPositions({
-        filters: this.userService.getFilters() ?? this.activeFilters,
+        filters:
+          this.activeFilters.length > 0
+            ? this.activeFilters
+            : this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))

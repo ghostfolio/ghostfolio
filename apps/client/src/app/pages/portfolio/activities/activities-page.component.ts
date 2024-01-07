@@ -124,7 +124,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     if (this.user?.settings?.isExperimentalFeatures === true) {
       this.dataService
         .fetchActivities({
-          filters: this.userService.getFilters() ?? [],
+          filters: this.userService.getFilters(),
           skip: this.pageIndex * this.pageSize,
           sortColumn: this.sortColumn,
           sortDirection: this.sortDirection,
