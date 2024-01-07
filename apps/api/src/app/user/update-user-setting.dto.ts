@@ -4,6 +4,7 @@ import type {
   ViewMode
 } from '@ghostfolio/common/types';
 import {
+  IsArray,
   IsBoolean,
   IsISO8601,
   IsIn,
@@ -36,6 +37,10 @@ export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
   emergencyFund?: number;
+
+  @IsArray()
+  @IsOptional()
+  'filters.tags'?: string[];
 
   @IsBoolean()
   @IsOptional()

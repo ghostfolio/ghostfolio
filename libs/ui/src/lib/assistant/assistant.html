@@ -116,13 +116,17 @@
           >Tags</span
         ></ng-template
       >
-      <div>
-        <mat-radio-group color="primary">
+      <div class="p-3">
+        <mat-radio-group
+          color="primary"
+          [formControl]="tagsFormControl"
+          (change)="onTagChange()"
+        >
+          <mat-radio-button class="d-flex flex-column" i18n [value]="null"
+            >No tag</mat-radio-button
+          >
           @for (tag of tags; track tag.id) {
-          <mat-radio-button
-            class="d-flex flex-column"
-            [value]="tag.id"
-            (click)="onSelectTag(tag)"
+          <mat-radio-button class="d-flex flex-column" [value]="tag.id"
             >{{ tag.name }}</mat-radio-button
           >
           }

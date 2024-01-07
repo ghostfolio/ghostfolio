@@ -24,6 +24,7 @@ import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { Tag } from '@prisma/client';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -171,6 +172,20 @@ export class HeaderComponent implements OnChanges {
 
   public onOpenAssistant() {
     this.assistantElement.initialize();
+  }
+
+  public onSelectedTagChanged(tag: Tag) {
+    this.dataService
+      .putUserSetting({ 'filters.tags': tag ? [tag.id] : null })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+      });
   }
 
   public onSignOut() {
