@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Updated the `docker compose` instructions to _Compose V2_ in the documentation
+
 ### Fixed
 
 - Fixed the hidden fifth tab on mobile

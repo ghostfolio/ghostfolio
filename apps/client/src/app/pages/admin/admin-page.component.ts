@@ -38,7 +38,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       },
       {
         iconName: 'flash-outline',
-        label: $localize`Jobs`,
+        label: $localize`Job Queue`,
         path: ['/admin', 'jobs']
       },
       {
