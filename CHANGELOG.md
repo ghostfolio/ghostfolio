@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the chart size in the asset profile details dialog of the admin control
 - Updated the `docker compose` instructions to _Compose V2_ in the documentation
 
 ## 2.36.0 - 2024-01-07
