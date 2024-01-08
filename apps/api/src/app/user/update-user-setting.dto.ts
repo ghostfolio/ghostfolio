@@ -30,7 +30,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
+  @IsIn(<DateRange[]>['1d', '1w', '1m', '1y', '5y', 'max', 'ytd'])
   @IsOptional()
   dateRange?: DateRange;
 

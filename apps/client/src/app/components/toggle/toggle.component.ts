@@ -20,6 +20,8 @@ export class ToggleComponent implements OnChanges, OnInit {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
     { label: $localize`Today`, value: '1d' },
     { label: $localize`YTD`, value: 'ytd' },
+    { label: $localize`1W`, value: '1w' },
+    { label: $localize`1M`, value: '1m' },
     { label: $localize`1Y`, value: '1y' },
     { label: $localize`5Y`, value: '5y' },
     { label: $localize`Max`, value: 'max' }
