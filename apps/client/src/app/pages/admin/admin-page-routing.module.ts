@@ -18,7 +18,11 @@ const routes: Routes = [
         component: AdminOverviewComponent,
         title: $localize`Admin Control`
       },
-      { path: 'jobs', component: AdminJobsComponent, title: $localize`Jobs` },
+      {
+        path: 'jobs',
+        component: AdminJobsComponent,
+        title: $localize`Job Queue`
+      },
       {
         path: 'market-data',
         component: AdminMarketDataComponent,
