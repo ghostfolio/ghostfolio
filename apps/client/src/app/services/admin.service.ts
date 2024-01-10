@@ -211,7 +211,9 @@ export class AdminService {
     name,
     scraperConfiguration,
     symbol,
-    symbolMapping
+    symbolMapping,
+    sectors,
+    countries
   }: UniqueAsset & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
@@ -222,7 +224,9 @@ export class AdminService {
         currency,
         name,
         scraperConfiguration,
-        symbolMapping
+        symbolMapping,
+        sectors,
+        countries
       }
     );
   }

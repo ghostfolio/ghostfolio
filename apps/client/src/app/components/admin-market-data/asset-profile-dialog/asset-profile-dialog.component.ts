@@ -138,7 +138,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             };
           }
         }
-
         this.assetProfileForm.setValue({
           assetClass: this.assetProfile.assetClass ?? null,
           assetSubClass: this.assetProfile.assetSubClass ?? null,
@@ -152,8 +151,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfile?.scraperConfiguration ?? {}
           ),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
-          countries: JSON.stringify(this.countries ?? {}),
-          sectors: JSON.stringify(this.sectors ?? {})
+          countries: JSON.stringify(
+            assetProfile.countries.map((e) => {
+              return { code: e.code, weight: e.weight };
+            }) ?? []
+          ),
+          sectors: JSON.stringify(assetProfile.sectors ?? [])
         });
         console.log(this.assetProfileForm.value);
 
@@ -191,8 +194,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-
-        ).data;
+      ).data;
 
       this.adminService
         .postMarketData({
@@ -247,6 +249,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public onSubmit() {
     let scraperConfiguration = {};
     let symbolMapping = {};
+    let countries = [];
+
+    let sectors = [];
 
     try {
       scraperConfiguration = JSON.parse(
@@ -260,6 +265,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       );
     } catch {}
 
+    try {
+      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+    } catch {}
+
+    try {
+      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
+    } catch {}
+
     const assetProfileData: UpdateAssetProfileDto = {
       scraperConfiguration,
       symbolMapping,
@@ -269,8 +282,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
       ))?.value,
-      name: this.assetProfileForm.controls['name'].value
+      name: this.assetProfileForm.controls['name'].value,
+      countries,
+      sectors
     };
+    console.log(assetProfileData);
 
     this.adminService
       .patchAssetProfile({

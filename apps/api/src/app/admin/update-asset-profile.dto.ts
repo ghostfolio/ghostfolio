@@ -1,5 +1,11 @@
 import { AssetClass, AssetSubClass, Prisma } from '@prisma/client';
-import { IsEnum, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsObject,
+  IsOptional,
+  IsString
+} from 'class-validator';
 
 export class UpdateAssetProfileDto {
   @IsEnum(AssetClass, { each: true })
@@ -31,4 +37,12 @@ export class UpdateAssetProfileDto {
   symbolMapping?: {
     [dataProvider: string]: string;
   };
+
+  @IsArray()
+  @IsOptional()
+  sectors?: Prisma.InputJsonArray;
+
+  @IsArray()
+  @IsOptional()
+  countries?: Prisma.InputJsonArray;
 }
