@@ -1,13 +1,11 @@
 #!/bin/bash
 
-
-# Will check if yarn format is run before executing
-# Called by "git commit" with no arguments.  The hook should
+# Will check if "yarn format" is run before executing.
+# Called by "git commit" with no arguments. The hook should
 # exit with non-zero status after issuing an appropriate message if
 # it wants to stop the commit.
-#
 
-echo "Running yarn format "
+echo "Running yarn format"
 
 # Run the command and loop over its output
 FILES_TO_STAGE=""
