@@ -103,11 +103,11 @@ describe('PortfolioCalculator', () => {
             fee: new Big('4.25'),
             firstBuyDate: '2022-03-07',
             grossPerformance: new Big('21.93'),
-            grossPerformanceWithCurrencyEffect: new Big('21.93'),
             grossPerformancePercentage: new Big('0.15113417083448194384'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
               '0.15113417083448194384'
             ),
+            grossPerformanceWithCurrencyEffect: new Big('21.93'),
             investment: new Big('75.80'),
             investmentWithCurrencyEffect: new Big('75.80'),
             netPerformance: new Big('17.68'),
