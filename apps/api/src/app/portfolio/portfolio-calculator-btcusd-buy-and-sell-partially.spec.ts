@@ -38,7 +38,7 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF',
         orders: [
           {
-            currency: 'CHF',
+            currency: 'CHF', // TODO: Change to USD
             date: '2015-01-01',
             dataSource: 'YAHOO',
             fee: new Big(0),
@@ -49,7 +49,7 @@ describe('PortfolioCalculator', () => {
             unitPrice: new Big(320.43)
           },
           {
-            currency: 'CHF',
+            currency: 'CHF', // TODO: Change to USD
             date: '2017-12-31',
             dataSource: 'YAHOO',
             fee: new Big(0),
@@ -98,7 +98,7 @@ describe('PortfolioCalculator', () => {
         positions: [
           {
             averagePrice: new Big('320.43'),
-            currency: 'CHF',
+            currency: 'CHF', // TODO: Change to USD
             dataSource: 'YAHOO',
             fee: new Big('0'),
             firstBuyDate: '2015-01-01',
