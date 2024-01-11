@@ -1230,10 +1230,6 @@ export class PortfolioService {
     if (itemOfToday) {
       currentNetPerformance = new Big(itemOfToday.netPerformance);
 
-      currentNetPerformanceWithCurrencyEffect = new Big(
-        itemOfToday.netPerformanceWithCurrencyEffect
-      );
-
       currentNetPerformancePercent = new Big(
         itemOfToday.netPerformanceInPercentage
       ).div(100);
@@ -1241,6 +1237,10 @@ export class PortfolioService {
       currentNetPerformancePercentWithCurrencyEffect = new Big(
         itemOfToday.netPerformanceInPercentageWithCurrencyEffect
       ).div(100);
+
+      currentNetPerformanceWithCurrencyEffect = new Big(
+        itemOfToday.netPerformanceWithCurrencyEffect
+      );
     }
 
     accountBalanceItems = accountBalanceItems.filter(({ date }) => {

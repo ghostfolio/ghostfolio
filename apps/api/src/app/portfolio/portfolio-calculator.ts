@@ -1,6 +1,7 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -53,7 +54,7 @@ import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.in
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
-  private static ENABLE_LOGGING = false;
+  private static readonly ENABLE_LOGGING = false;
 
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -364,14 +365,6 @@ export class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueWithCurrencyEffect),
-          totalTimeWeightedInvestmentValue: (
-            accumulatedValuesByDate[dateString]
-              ?.totalTimeWeightedInvestmentValue ?? new Big(0)
-          ).add(timeWeightedInvestmentValue),
-          totalTimeWeightedInvestmentValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.totalTimeWeightedInvestmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(timeWeightedInvestmentValueWithCurrencyEffect),
           totalNetPerformanceValue: (
             accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
             new Big(0)
@@ -379,7 +372,15 @@ export class PortfolioCalculator {
           totalNetPerformanceValueWithCurrencyEffect: (
             accumulatedValuesByDate[dateString]
               ?.totalNetPerformanceValueWithCurrencyEffect ?? new Big(0)
-          ).add(netPerformanceValueWithCurrencyEffect)
+          ).add(netPerformanceValueWithCurrencyEffect),
+          totalTimeWeightedInvestmentValue: (
+            accumulatedValuesByDate[dateString]
+              ?.totalTimeWeightedInvestmentValue ?? new Big(0)
+          ).add(timeWeightedInvestmentValue),
+          totalTimeWeightedInvestmentValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.totalTimeWeightedInvestmentValueWithCurrencyEffect ?? new Big(0)
+          ).add(timeWeightedInvestmentValueWithCurrencyEffect)
         };
       }
     }
@@ -440,14 +441,14 @@ export class PortfolioCalculator {
       return {
         currentValue: new Big(0),
         grossPerformance: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
+        grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
         netPerformance: new Big(0),
-        netPerformanceWithCurrencyEffect: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
+        netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
         totalInvestment: new Big(0)
       };
@@ -565,14 +566,14 @@ export class PortfolioCalculator {
 
       const {
         grossPerformance,
-        grossPerformanceWithCurrencyEffect,
         grossPerformancePercentage,
         grossPerformancePercentageWithCurrencyEffect,
+        grossPerformanceWithCurrencyEffect,
         hasErrors,
         netPerformance,
-        netPerformanceWithCurrencyEffect,
         netPerformancePercentage,
         netPerformancePercentageWithCurrencyEffect,
+        netPerformanceWithCurrencyEffect,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         totalInvestment,
@@ -598,14 +599,14 @@ export class PortfolioCalculator {
         fee: item.fee,
         firstBuyDate: item.firstBuyDate,
         grossPerformance: !hasErrors ? grossPerformance ?? null : null,
-        grossPerformanceWithCurrencyEffect: !hasErrors
-          ? grossPerformanceWithCurrencyEffect ?? null
-          : null,
         grossPerformancePercentage: !hasErrors
           ? grossPerformancePercentage ?? null
           : null,
         grossPerformancePercentageWithCurrencyEffect: !hasErrors
           ? grossPerformancePercentageWithCurrencyEffect ?? null
+          : null,
+        grossPerformanceWithCurrencyEffect: !hasErrors
+          ? grossPerformanceWithCurrencyEffect ?? null
           : null,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
@@ -614,14 +615,14 @@ export class PortfolioCalculator {
         marketPriceInBaseCurrency:
           marketPriceInBaseCurrency?.toNumber() ?? null,
         netPerformance: !hasErrors ? netPerformance ?? null : null,
-        netPerformanceWithCurrencyEffect: !hasErrors
-          ? netPerformanceWithCurrencyEffect ?? null
-          : null,
         netPerformancePercentage: !hasErrors
           ? netPerformancePercentage ?? null
           : null,
         netPerformancePercentageWithCurrencyEffect: !hasErrors
           ? netPerformancePercentageWithCurrencyEffect ?? null
+          : null,
+        netPerformanceWithCurrencyEffect: !hasErrors
+          ? netPerformanceWithCurrencyEffect ?? null
           : null,
         quantity: item.quantity,
         symbol: item.symbol,
@@ -877,8 +878,8 @@ export class PortfolioCalculator {
 
     for (const currentPosition of positions) {
       if (
-        currentPosition.marketPriceInBaseCurrency &&
-        currentPosition.investment
+        currentPosition.investment &&
+        currentPosition.marketPriceInBaseCurrency
       ) {
         currentValue = currentValue.plus(
           new Big(currentPosition.marketPriceInBaseCurrency).mul(
@@ -1194,9 +1195,9 @@ export class PortfolioCalculator {
         investmentValues: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformanceValues: {},
         netPerformanceWithCurrencyEffect: new Big(0),
-        netPerformanceWithCurrencyEffectPercentage: new Big(0),
-        netPerformanceValues: {}
+        netPerformanceWithCurrencyEffectPercentage: new Big(0)
       };
     }
 
@@ -1328,8 +1329,9 @@ export class PortfolioCalculator {
       const exchangeRateAtOrderDate = exchangeRates[order.date];
 
       if (!exchangeRateAtOrderDate) {
-        console.error(
-          `${symbol}: No exchange rate found for date ${order.date}`
+        Logger.error(
+          `No exchange rate has been found for ${DEFAULT_CURRENCY}${order.currency} at ${order.date}`,
+          'PortfolioCalculator'
         );
       }
 

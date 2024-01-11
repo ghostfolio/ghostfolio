@@ -53,12 +53,12 @@ export class ExchangeRateDataService {
       return {};
     }
 
+    let currentDate = resetHours(startDate);
+    let dates: Date[] = [];
+
     let exchangeRatesByCurrency: {
       [currency: string]: { [dateString: string]: number };
     } = {};
-
-    let dates: Date[] = [];
-    let currentDate = resetHours(startDate);
 
     while (isAfter(endDate, currentDate)) {
       dates.push(currentDate);

@@ -4,9 +4,9 @@ export interface HistoricalDataItem {
   grossPerformancePercent?: number;
   marketPrice?: number;
   netPerformance?: number;
-  netPerformanceWithCurrencyEffect?: number;
   netPerformanceInPercentage?: number;
   netPerformanceInPercentageWithCurrencyEffect?: number;
+  netPerformanceWithCurrencyEffect?: number;
   netWorth?: number;
   netWorthInPercentage?: number;
   quantity?: number;
@@ -14,6 +14,6 @@ export interface HistoricalDataItem {
   totalInvestment?: number;
   totalInvestmentValueWithCurrencyEffect?: number;
   value?: number;
-  valueWithCurrencyEffect?: number;
   valueInPercentage?: number;
+  valueWithCurrencyEffect?: number;
 }
