@@ -13,8 +13,8 @@ export interface PortfolioPositionDetail {
   feeInBaseCurrency: number;
   firstBuyDate: string;
   grossPerformance: number;
-  grossPerformancePercentWithCurrencyEffect: number;
   grossPerformancePercent: number;
+  grossPerformancePercentWithCurrencyEffect: number;
   grossPerformanceWithCurrencyEffect: number;
   historicalData: HistoricalDataItem[];
   investment: number;
