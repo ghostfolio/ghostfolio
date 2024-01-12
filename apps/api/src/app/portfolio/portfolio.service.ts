@@ -700,6 +700,7 @@ export class PortfolioService {
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
+        dividendYieldInPercent: undefined,
         feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -783,6 +784,10 @@ export class PortfolioService {
             return new Big(valueInBaseCurrency);
           })
       );
+
+      const dividendYieldInPercent = dividendInBaseCurrency
+        .mul(100)
+        .div(marketPrice);
 
       // Convert investment, gross and net performance to currency of user
       const investment = this.exchangeRateDataService.toCurrency(
@@ -878,6 +883,7 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        dividendYieldInPercent: dividendYieldInPercent.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
@@ -941,6 +947,7 @@ export class PortfolioService {
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
+        dividendYieldInPercent: 0,
         feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
