@@ -236,11 +236,9 @@ export class BenchmarkService {
     ]);
 
     const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
+      startDate,
       currencyFrom: currentSymbolItem.currency,
-      currencyTo: userCurrency,
-      dates: marketDataItems.map(({ date }) => {
-        return date;
-      })
+      currencyTo: userCurrency
     });
 
     const exchangeRateAtStartDate =

@@ -13,7 +13,7 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { addDays, format, isAfter, isToday } from 'date-fns';
+import { addDays, eachDayOfInterval, format, isAfter, isToday } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 import ms from 'ms';
 
@@ -53,21 +53,13 @@ export class ExchangeRateDataService {
       return {};
     }
 
-    let currentDate = resetHours(startDate);
-    let dates: Date[] = [];
-
     let exchangeRatesByCurrency: {
       [currency: string]: { [dateString: string]: number };
     } = {};
 
-    while (isAfter(endDate, currentDate)) {
-      dates.push(currentDate);
-      currentDate = addDays(currentDate, 1);
-    }
-
-    for (let currency of uniq(Object.values(currencies))) {
+    for (let currency of uniq(currencies)) {
       exchangeRatesByCurrency[currency] = await this.getExchangeRates({
-        dates,
+        startDate,
         currencyFrom: currency,
         currencyTo: targetCurrency
       });
@@ -94,12 +86,15 @@ export class ExchangeRateDataService {
   public async getExchangeRates({
     currencyFrom,
     currencyTo,
-    dates
+    endDate = new Date(),
+    startDate
   }: {
     currencyFrom: string;
     currencyTo: string;
-    dates: Date[];
+    endDate?: Date;
+    startDate: Date;
   }) {
+    const dates = eachDayOfInterval({ end: endDate, start: startDate });
     let factors: { [dateString: string]: number } = {};
 
     if (currencyFrom === currencyTo) {
@@ -112,7 +107,7 @@ export class ExchangeRateDataService {
       const symbol = `${currencyFrom}${currencyTo}`;
 
       const marketData = await this.marketDataService.getRange({
-        dateQuery: { in: dates },
+        dateQuery: { gte: startDate, lt: endDate },
         uniqueAssets: [
           {
             dataSource,
@@ -143,7 +138,7 @@ export class ExchangeRateDataService {
             }
           } else {
             const marketData = await this.marketDataService.getRange({
-              dateQuery: { in: dates },
+              dateQuery: { gte: startDate, lt: endDate },
               uniqueAssets: [
                 {
                   dataSource,
@@ -167,7 +162,8 @@ export class ExchangeRateDataService {
           } else {
             const marketData = await this.marketDataService.getRange({
               dateQuery: {
-                in: dates
+                gte: startDate,
+                lt: endDate
               },
               uniqueAssets: [
                 {
