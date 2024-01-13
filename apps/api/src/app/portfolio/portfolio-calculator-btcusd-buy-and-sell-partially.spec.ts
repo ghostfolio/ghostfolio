@@ -1,5 +1,6 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 import Big from 'big.js';
 
@@ -14,6 +15,18 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
     })
   };
 });
+
+jest.mock(
+  '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service',
+  () => {
+    return {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      ExchangeRateDataService: jest.fn().mockImplementation(() => {
+        return ExchangeRateDataServiceMock;
+      })
+    };
+  }
+);
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
@@ -38,7 +51,7 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF',
         orders: [
           {
-            currency: 'CHF', // TODO: Change to USD
+            currency: 'USD',
             date: '2015-01-01',
             dataSource: 'YAHOO',
             fee: new Big(0),
@@ -49,7 +62,7 @@ describe('PortfolioCalculator', () => {
             unitPrice: new Big(320.43)
           },
           {
-            currency: 'CHF', // TODO: Change to USD
+            currency: 'USD',
             date: '2017-12-31',
             dataSource: 'YAHOO',
             fee: new Big(0),
@@ -80,55 +93,60 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('13657.2'),
+        currentValue: new Big('13298.425356'),
         errors: [],
         grossPerformance: new Big('27172.74'),
         grossPerformancePercentage: new Big('42.41978276196153750666'),
         grossPerformancePercentageWithCurrencyEffect: new Big(
-          '42.41978276196153750666'
+          '41.6401219622042072686'
         ),
-        grossPerformanceWithCurrencyEffect: new Big('27172.74'),
+        grossPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         hasErrors: false,
         netPerformance: new Big('27172.74'),
         netPerformancePercentage: new Big('42.41978276196153750666'),
         netPerformancePercentageWithCurrencyEffect: new Big(
-          '42.41978276196153750666'
+          '41.6401219622042072686'
         ),
-        netPerformanceWithCurrencyEffect: new Big('27172.74'),
+        netPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         positions: [
           {
             averagePrice: new Big('320.43'),
-            currency: 'CHF', // TODO: Change to USD
+            currency: 'USD',
             dataSource: 'YAHOO',
             fee: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
             grossPerformancePercentage: new Big('42.41978276196153750666'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '42.41978276196153750666'
+              '41.6401219622042072686'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('27172.74'),
+            grossPerformanceWithCurrencyEffect: new Big(
+              '26516.208701400000064086'
+            ),
             investment: new Big('320.43'),
-            investmentWithCurrencyEffect: new Big('320.43'),
+            investmentWithCurrencyEffect: new Big('318.542667299999967957'),
+            marketPrice: 13657.2,
+            marketPriceInBaseCurrency: 13298.425356,
             netPerformance: new Big('27172.74'),
             netPerformancePercentage: new Big('42.41978276196153750666'),
             netPerformancePercentageWithCurrencyEffect: new Big(
-              '42.41978276196153750666'
+              '41.6401219622042072686'
             ),
-            netPerformanceWithCurrencyEffect: new Big('27172.74'),
-            marketPrice: 13657.2,
-            marketPriceInBaseCurrency: 13657.2,
+            netPerformanceWithCurrencyEffect: new Big(
+              '26516.208701400000064086'
+            ),
             quantity: new Big('1'),
             symbol: 'BTCUSD',
+            tags: undefined,
             timeWeightedInvestment: new Big('640.56763686131386861314'),
             timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '640.56763686131386861314'
+              '636.79469348020066587024'
             ),
             transactionCount: 2
           }
         ],
         totalInvestment: new Big('320.43'),
-        totalInvestmentWithCurrencyEffect: new Big('320.43')
+        totalInvestmentWithCurrencyEffect: new Big('318.542667299999967957')
       });
 
       expect(investments).toEqual([
