@@ -1447,7 +1447,7 @@ export class PortfolioCalculator {
         }
       }
 
-      fees = fees.plus(order.fee.mul(currentExchangeRate ?? 1));
+      fees = fees.plus(order.fee);
 
       feesWithCurrencyEffect = feesWithCurrencyEffect.plus(
         order.fee.mul(exchangeRateAtOrderDate ?? 1)
