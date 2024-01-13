@@ -236,6 +236,7 @@ export class ManualService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
+      let locale = scraperConfiguration.locale;
       const { body, headers } = await got(scraperConfiguration.url, {
         headers: scraperConfiguration.headers as Headers,
         // @ts-ignore
@@ -248,14 +249,15 @@ export class ManualService implements DataProviderInterface {
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
 
-        return extractNumberFromString({ value });
+        return extractNumberFromString({ locale, value });
       } else {
         const $ = cheerio.load(body);
-        let locale: string;
 
-        try {
-          locale = $('html').attr('lang');
-        } catch {}
+        if (!locale) {
+          try {
+            locale = $('html').attr('lang');
+          } catch {}
+        }
 
         return extractNumberFromString({
           locale,
