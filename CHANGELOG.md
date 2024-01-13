@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the indicator for delayed market data in the client
 - Prepared the portfolio calculation for exchange rate effects
 
 ## 2.37.0 - 2024-01-11
