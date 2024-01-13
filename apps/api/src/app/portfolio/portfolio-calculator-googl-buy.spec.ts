@@ -82,21 +82,21 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('103.512405'),
+        currentValue: new Big('103.10483'),
         errors: [],
         grossPerformance: new Big('27.33'),
         grossPerformancePercentage: new Big('0.3066651705565529623'),
         grossPerformancePercentageWithCurrencyEffect: new Big(
-          '0.25859529729394801776'
+          '0.25235044599563974109'
         ),
-        grossPerformanceWithCurrencyEffect: new Big('21.268013'),
+        grossPerformanceWithCurrencyEffect: new Big('20.775774'),
         hasErrors: false,
         netPerformance: new Big('26.33'),
         netPerformancePercentage: new Big('0.29544434470377019749'),
         netPerformancePercentageWithCurrencyEffect: new Big(
-          '0.24737447144116525295'
+          '0.24112962014285697628'
         ),
-        netPerformanceWithCurrencyEffect: new Big('20.345163'),
+        netPerformanceWithCurrencyEffect: new Big('19.851974'),
         positions: [
           {
             averagePrice: new Big('89.12'),
@@ -107,28 +107,29 @@ describe('PortfolioCalculator', () => {
             grossPerformance: new Big('27.33'),
             grossPerformancePercentage: new Big('0.3066651705565529623'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.25859529729394801776'
+              '0.25235044599563974109'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('21.268013'),
+            grossPerformanceWithCurrencyEffect: new Big('20.775774'),
             investment: new Big('89.12'),
-            investmentWithCurrencyEffect: new Big('82.244392'),
+            investmentWithCurrencyEffect: new Big('82.329056'),
             netPerformance: new Big('26.33'),
             netPerformancePercentage: new Big('0.29544434470377019749'),
             netPerformancePercentageWithCurrencyEffect: new Big(
-              '0.24737447144116525295'
+              '0.24112962014285697628'
             ),
-            netPerformanceWithCurrencyEffect: new Big('20.345163'),
+            netPerformanceWithCurrencyEffect: new Big('19.851974'),
             marketPrice: 116.45,
-            marketPriceInBaseCurrency: 103.512405,
+            marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
             symbol: 'GOOGL',
+            tags: undefined,
             timeWeightedInvestment: new Big('89.12'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('82.244392'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             transactionCount: 1
           }
         ],
         totalInvestment: new Big('89.12'),
-        totalInvestmentWithCurrencyEffect: new Big('82.244392')
+        totalInvestmentWithCurrencyEffect: new Big('82.329056')
       });
 
       expect(investments).toEqual([
