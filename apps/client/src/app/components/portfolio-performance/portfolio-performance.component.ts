@@ -74,7 +74,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   }
 
   public onShowErrors() {
-    const errorMessageParts = ['Data Provider Errors for'];
+    const errorMessageParts = [$localize`Market data is delayed for`];
 
     for (const error of this.errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
