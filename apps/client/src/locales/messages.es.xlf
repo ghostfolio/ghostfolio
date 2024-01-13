@@ -14273,6 +14273,22 @@
           <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="51dd2d6b36bb8aefdd92fb9ab25ccb1fb7685670" datatype="html">
+        <source>Oops! Our data provider partner is experiencing the hiccups.</source>
+        <target state="new">Oops! Our data provider partner is experiencing the hiccups.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7754789218064641822" datatype="html">
+        <source>Market data is delayed for</source>
+        <target state="new">Market data is delayed for</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.ts</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
