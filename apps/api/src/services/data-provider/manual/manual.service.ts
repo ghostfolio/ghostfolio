@@ -248,13 +248,19 @@ export class ManualService implements DataProviderInterface {
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
 
-        return extractNumberFromString(value);
+        return extractNumberFromString({ value });
       } else {
         const $ = cheerio.load(body);
+        let locale: string;
 
-        return extractNumberFromString(
-          $(scraperConfiguration.selector).first().text()
-        );
+        try {
+          locale = $('html').attr('lang');
+        } catch {}
+
+        return extractNumberFromString({
+          locale,
+          value: $(scraperConfiguration.selector).first().text()
+        });
       }
     } catch (error) {
       throw error;

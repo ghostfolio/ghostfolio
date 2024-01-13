@@ -195,11 +195,11 @@ export class InfoService {
 
       const $ = cheerio.load(body);
 
-      return extractNumberFromString(
-        $(
+      return extractNumberFromString({
+        value: $(
           `a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter`
         ).text()
-      );
+      });
     } catch (error) {
       Logger.error(error, 'InfoService - GitHub');
 
