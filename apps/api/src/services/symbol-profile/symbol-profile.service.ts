@@ -202,6 +202,7 @@ export class SymbolProfileService {
         defaultMarketPrice: scraperConfiguration.defaultMarketPrice as number,
         headers:
           scraperConfiguration.headers as ScraperConfiguration['headers'],
+        locale: scraperConfiguration.locale as string,
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };
