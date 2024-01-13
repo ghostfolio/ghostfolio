@@ -14,6 +14,8 @@ export interface PortfolioPositionDetail {
   firstBuyDate: string;
   grossPerformance: number;
   grossPerformancePercent: number;
+  grossPerformancePercentWithCurrencyEffect: number;
+  grossPerformanceWithCurrencyEffect: number;
   historicalData: HistoricalDataItem[];
   investment: number;
   marketPrice: number;
@@ -21,6 +23,8 @@ export interface PortfolioPositionDetail {
   minPrice: number;
   netPerformance: number;
   netPerformancePercent: number;
+  netPerformancePercentWithCurrencyEffect: number;
+  netPerformanceWithCurrencyEffect: number;
   orders: OrderWithAccount[];
   quantity: number;
   SymbolProfile: EnhancedSymbolProfile;

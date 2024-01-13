@@ -11,6 +11,7 @@ import {
   Filter,
   HistoricalDataItem,
   PortfolioInvestments,
+  PortfolioPerformance,
   Position,
   User
 } from '@ghostfolio/common/interfaces';
@@ -54,6 +55,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     { label: $localize`Monthly`, value: 'month' },
     { label: $localize`Yearly`, value: 'year' }
   ];
+  public performance: PortfolioPerformance;
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public placeholder = '';
@@ -326,11 +328,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart, firstOrderDate }) => {
+      .subscribe(({ chart, firstOrderDate, performance }) => {
         this.firstOrderDate = firstOrderDate ?? new Date();
         this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
         this.investments = [];
+        this.performance = performance;
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
 

@@ -1,5 +1,6 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllInvestViewPageComponent } from './products/allinvestview-page.component';
 import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
 import { BasilFinancePageComponent } from './products/basil-finance-page.component';
@@ -70,6 +71,15 @@ export const products: Product[] = [
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
+  },
+  {
+    component: AllInvestViewPageComponent,
+    founded: 2023,
+    hasSelfHostingAbility: false,
+    key: 'allinvestview',
+    languages: ['English'],
+    name: 'AllInvestView',
+    slogan: 'All your Investments in One View'
   },
   {
     component: AllvueSystemsPageComponent,
