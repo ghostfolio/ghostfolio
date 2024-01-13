@@ -70,6 +70,14 @@
       [ngClass]="{ 'd-none': isLoadingActivities }"
     >
       <mat-tab>
+        <ng-template i18n mat-tab-label>Holdings</ng-template>
+        <gf-holdings-table
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [locale]="user?.settings?.locale"
+          [positions]="holdings$ | async"
+        ></gf-holdings-table>
+      </mat-tab>
+      <mat-tab>
         <ng-template i18n mat-tab-label>Activities</ng-template>
         <gf-activities-table-lazy
           *ngIf="user?.settings?.isExperimentalFeatures === true"

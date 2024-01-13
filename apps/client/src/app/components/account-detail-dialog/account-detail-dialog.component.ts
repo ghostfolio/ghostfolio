@@ -16,6 +16,7 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   HistoricalDataItem,
+  PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -23,10 +24,11 @@ import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -55,6 +57,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public transactionCount: number;
   public user: User;
   public valueInBaseCurrency: number;
+  public holdings$: Observable<PortfolioPosition[]>;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -83,6 +86,26 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
+    this.holdings$ = this.dataService
+      .fetchPortfolioDetails({
+        filters: [
+          {
+            type: 'ACCOUNT',
+            id: this.data.accountId
+          }
+        ]
+      })
+      .pipe(
+        map((d) =>
+          Object.values(d.holdings).map(function (x) {
+            return {
+              ...x,
+              assetClassLabel: translate(x.assetClass),
+              assetSubClassLabel: translate(x.assetSubClass)
+            };
+          })
+        )
+      );
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))

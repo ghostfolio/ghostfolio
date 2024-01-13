@@ -13,6 +13,7 @@ import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AccountDetailDialog } from './account-detail-dialog.component';
+import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
 
 @NgModule({
   declarations: [AccountDetailDialog],
@@ -28,7 +29,8 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     MatButtonModule,
     MatDialogModule,
     MatTabsModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    GfHoldingsTableModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
