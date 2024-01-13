@@ -247,17 +247,6 @@ export class BenchmarkService {
         format(startDate, DATE_FORMAT)
       ];
 
-    if (!exchangeRateAtStartDate) {
-      Logger.error(
-        `No exchange rate has been found for ${
-          currentSymbolItem.currency
-        }${userCurrency} at ${format(startDate, DATE_FORMAT)}`,
-        'BenchmarkService'
-      );
-
-      return { marketData };
-    }
-
     const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
       return isSameDay(date, startDate);
     })?.marketPrice;

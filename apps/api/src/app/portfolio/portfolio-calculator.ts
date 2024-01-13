@@ -504,10 +504,13 @@ export class PortfolioCalculator {
       dates.map((date) => {
         return date.getTime();
       })
-    ).map((timestamp) => {
-      return new Date(timestamp);
-    });
-    dates.sort((a, b) => a.getTime() - b.getTime());
+    )
+      .map((timestamp) => {
+        return new Date(timestamp);
+      })
+      .sort((a, b) => {
+        return a.getTime() - b.getTime();
+      });
 
     let exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
@@ -1327,13 +1330,6 @@ export class PortfolioCalculator {
       }
 
       const exchangeRateAtOrderDate = exchangeRates[order.date];
-
-      if (!exchangeRateAtOrderDate) {
-        Logger.error(
-          `No exchange rate has been found for ${DEFAULT_CURRENCY}${order.currency} at ${order.date}`,
-          'PortfolioCalculator'
-        );
-      }
 
       if (order.itemType === 'start') {
         // Take the unit price of the order as the market price if there are no
