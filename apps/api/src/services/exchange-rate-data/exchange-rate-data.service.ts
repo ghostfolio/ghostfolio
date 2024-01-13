@@ -13,7 +13,13 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
-import { addDays, eachDayOfInterval, format, isAfter, isToday } from 'date-fns';
+import {
+  eachDayOfInterval,
+  format,
+  isBefore,
+  isToday,
+  subDays
+} from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 import ms from 'ms';
 
@@ -66,18 +72,29 @@ export class ExchangeRateDataService {
 
       let previousExchangeRate = 1;
 
-      let date = startDate;
-      do {
+      // Start from the most recent date and fill in missing exchange rates
+      // using the latest available rate
+      for (
+        let date = endDate;
+        !isBefore(date, startDate);
+        date = subDays(resetHours(date), 1)
+      ) {
         let dateString = format(date, DATE_FORMAT);
 
+        // Check if the exchange rate for the current date is missing
         if (isNaN(exchangeRatesByCurrency[currency][dateString])) {
+          // If missing, fill with the previous exchange rate
           exchangeRatesByCurrency[currency][dateString] = previousExchangeRate;
+
+          Logger.error(
+            `No exchange rate has been found for ${DEFAULT_CURRENCY}${targetCurrency} at ${dateString}`,
+            'ExchangeRateDataService'
+          );
         } else {
+          // If available, update the previous exchange rate
           previousExchangeRate = exchangeRatesByCurrency[currency][dateString];
         }
-
-        date = addDays(resetHours(date), 1);
-      } while (!isAfter(date, endDate));
+      }
     }
 
     return exchangeRatesByCurrency;
