@@ -235,27 +235,17 @@ export class BenchmarkService {
       })
     ]);
 
-    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
-      currencyFrom: currentSymbolItem.currency,
-      currencyTo: userCurrency,
-      dates: marketDataItems.map(({ date }) => {
-        return date;
-      })
-    });
+    const exchangeRates =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        startDate,
+        currencies: [currentSymbolItem.currency],
+        targetCurrency: userCurrency
+      });
 
     const exchangeRateAtStartDate =
-      exchangeRates[format(startDate, DATE_FORMAT)];
-
-    if (!exchangeRateAtStartDate) {
-      Logger.error(
-        `No exchange rate has been found for ${
-          currentSymbolItem.currency
-        }${userCurrency} at ${format(startDate, DATE_FORMAT)}`,
-        'BenchmarkService'
-      );
-
-      return { marketData };
-    }
+      exchangeRates[currentSymbolItem.currency]?.[
+        format(startDate, DATE_FORMAT)
+      ];
 
     const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
       return isSameDay(date, startDate);

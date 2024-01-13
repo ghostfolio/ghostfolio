@@ -155,7 +155,9 @@ export class PortfolioController {
         'cash',
         'committedFunds',
         'currentGrossPerformance',
+        'currentGrossPerformanceWithCurrencyEffect',
         'currentNetPerformance',
+        'currentNetPerformanceWithCurrencyEffect',
         'currentValue',
         'dividend',
         'emergencyFund',
@@ -383,7 +385,9 @@ export class PortfolioController {
         performanceInformation.performance,
         [
           'currentGrossPerformance',
+          'currentGrossPerformanceWithCurrencyEffect',
           'currentNetPerformance',
+          'currentNetPerformanceWithCurrencyEffect',
           'currentNetWorth',
           'currentValue',
           'totalInvestment'
