@@ -235,14 +235,17 @@ export class BenchmarkService {
       })
     ]);
 
-    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
-      startDate,
-      currencyFrom: currentSymbolItem.currency,
-      currencyTo: userCurrency
-    });
+    const exchangeRates =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        startDate,
+        currencies: [currentSymbolItem.currency],
+        targetCurrency: userCurrency
+      });
 
     const exchangeRateAtStartDate =
-      exchangeRates[format(startDate, DATE_FORMAT)];
+      exchangeRates[currentSymbolItem.currency]?.[
+        format(startDate, DATE_FORMAT)
+      ];
 
     if (!exchangeRateAtStartDate) {
       Logger.error(
