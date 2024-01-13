@@ -1350,10 +1350,6 @@ export class PortfolioCalculator {
         );
       }
 
-      // TODO:
-      // Do all order types have a unit price? What about dividends that
-      // are defined with an order quantity of 1 and the unit price of the total
-      // dividend?
       const valueOfInvestmentBeforeTransaction = totalUnits.mul(
         order.unitPriceInBaseCurrency
       );
