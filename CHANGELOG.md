@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Broken down the performance into asset and currency on the analysis page (experimental)
 - Added support for international formatted numbers in the scraper configuration
+- Added the attribute `locale` to the scraper configuration to parse the number
 
 ### Changed
 
