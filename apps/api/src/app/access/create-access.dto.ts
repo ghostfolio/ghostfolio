@@ -12,4 +12,8 @@ export class CreateAccessDto {
   @IsOptional()
   @IsString()
   type?: 'PUBLIC';
+
+  @IsOptional()
+  @IsString()
+  permission?: string;
 }

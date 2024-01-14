@@ -44,6 +44,21 @@ export class AccessTableComponent implements OnChanges, OnInit {
     }
   }
 
+  public getDisplayName(
+    type: 'PRIVATE' | 'PUBLIC' | 'RESTRICTED_VIEW' | 'VIEW'
+  ): string {
+    switch (type) {
+      case 'PUBLIC':
+        return $localize`Public`;
+      case 'RESTRICTED_VIEW':
+        return $localize`Restricted View`;
+      case 'VIEW':
+        return $localize`View`;
+      default:
+        return $localize`Unknown`;
+    }
+  }
+
   public onDeleteAccess(aId: string) {
     const confirmation = confirm(
       $localize`Do you really want to revoke this granted access?`

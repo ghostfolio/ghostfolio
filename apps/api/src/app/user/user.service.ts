@@ -109,6 +109,10 @@ export class UserService {
     return aUser.Settings.settings.isRestrictedView ?? false;
   }
 
+  public hasReadRestrictedPermission(user: UserWithSettings): boolean {
+    return user.permissions.includes('READ_RESTRICTED');
+  }
+
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {

@@ -28,7 +28,7 @@ export class RedactValuesInResponseInterceptor<T>
 
         if (
           hasImpersonationId ||
-          this.userService.isRestrictedView(request.user)
+          this.userService.hasReadRestrictedPermission(request.user)
         ) {
           data = redactAttributes({
             object: data,

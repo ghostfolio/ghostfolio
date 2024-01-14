@@ -38,19 +38,23 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       type: [this.data.access.type, Validators.required],
-      userId: [this.data.access.grantee, Validators.required]
+      userId: [this.data.access.grantee, Validators.required],
+      permission: [this.data.access.permission, Validators.required]
     });
 
     this.accessForm.get('type').valueChanges.subscribe((value) => {
       const userIdControl = this.accessForm.get('userId');
+      const permissionControl = this.accessForm.get('permission');
 
       if (value === 'PRIVATE') {
         userIdControl.setValidators(Validators.required);
+        permissionControl.setValidators(Validators.required);
       } else {
         userIdControl.clearValidators();
       }
 
       userIdControl.updateValueAndValidity();
+      permissionControl.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });
@@ -64,9 +68,10 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     const access: CreateAccessDto = {
       alias: this.accessForm.controls['alias'].value,
       granteeUserId: this.accessForm.controls['userId'].value,
-      type: this.accessForm.controls['type'].value
+      type: this.accessForm.controls['type'].value,
+      permission: this.accessForm.controls['permission'].value
     };
-
+   
     this.dataService
       .postAccess(access)
       .pipe(
