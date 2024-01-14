@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the alignment in the portfolio performance chart
 
+### Fixed
+
+- Fixed the currency in the error log of the exchange rate data service
+
 ## 2.38.0 - 2024-01-13
 
 ### Added
