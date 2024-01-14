@@ -87,7 +87,7 @@ export class ExchangeRateDataService {
           exchangeRatesByCurrency[currency][dateString] = previousExchangeRate;
 
           Logger.error(
-            `No exchange rate has been found for ${DEFAULT_CURRENCY}${targetCurrency} at ${dateString}`,
+            `No exchange rate has been found for ${DEFAULT_CURRENCY}${currency} at ${dateString}`,
             'ExchangeRateDataService'
           );
         } else {
