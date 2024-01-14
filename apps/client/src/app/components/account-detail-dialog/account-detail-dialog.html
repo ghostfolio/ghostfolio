@@ -73,6 +73,7 @@
         <ng-template i18n mat-tab-label>Holdings</ng-template>
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
           [locale]="user?.settings?.locale"
           [positions]="holdings$ | async"
         ></gf-holdings-table>
@@ -83,7 +84,7 @@
           *ngIf="user?.settings?.isExperimentalFeatures === true"
           [baseCurrency]="user?.settings?.baseCurrency"
           [dataSource]="dataSource"
-          [deviceType]="deviceType"
+          [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"

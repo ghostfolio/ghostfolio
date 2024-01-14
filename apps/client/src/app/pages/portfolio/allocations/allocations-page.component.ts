@@ -344,9 +344,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.positions[symbol] = {
         value,
         assetClass: position.assetClass,
-        assetClassLabel: translate(position.assetClass),
+        assetClassLabel: position.assetClassLabel,
         assetSubClass: position.assetSubClass,
-        assetSubClassLabel: translate(position.assetSubClass),
+        assetSubClassLabel: position.assetSubClassLabel,
         currency: position.currency,
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetSubClass,

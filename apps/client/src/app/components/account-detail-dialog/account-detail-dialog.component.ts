@@ -28,7 +28,6 @@ import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -47,6 +46,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
+  public holdings$: Observable<PortfolioPosition[]>;
   public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
@@ -57,7 +57,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public transactionCount: number;
   public user: User;
   public valueInBaseCurrency: number;
-  public holdings$: Observable<PortfolioPosition[]>;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -95,17 +94,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
         ]
       })
-      .pipe(
-        map((d) =>
-          Object.values(d.holdings).map(function (x) {
-            return {
-              ...x,
-              assetClassLabel: translate(x.assetClass),
-              assetSubClassLabel: translate(x.assetSubClass)
-            };
-          })
-        )
-      );
+      .pipe(map((d) => Object.values(d.holdings)));
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))

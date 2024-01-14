@@ -44,6 +44,7 @@ import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { translate } from '@ghostfolio/ui/i18n';
 
 @Injectable({
   providedIn: 'root'
@@ -404,6 +405,13 @@ export class DataService {
               ].dateOfFirstActivity
                 ? parseISO(response.holdings[symbol].dateOfFirstActivity)
                 : undefined;
+
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
 
               response.holdings[symbol].value = isNumber(
                 response.holdings[symbol].value
