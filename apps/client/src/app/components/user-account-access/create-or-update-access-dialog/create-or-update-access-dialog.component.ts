@@ -71,7 +71,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
       type: this.accessForm.controls['type'].value,
       permission: this.accessForm.controls['permission'].value
     };
-   
+
     this.dataService
       .postAccess(access)
       .pipe(

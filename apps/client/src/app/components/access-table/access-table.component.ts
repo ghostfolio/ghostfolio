@@ -44,18 +44,20 @@ export class AccessTableComponent implements OnChanges, OnInit {
     }
   }
 
-  public getDisplayName(
-    type: 'PRIVATE' | 'PUBLIC' | 'RESTRICTED_VIEW' | 'VIEW'
-  ): string {
-    switch (type) {
-      case 'PUBLIC':
-        return $localize`Public`;
-      case 'RESTRICTED_VIEW':
-        return $localize`Restricted View`;
-      case 'VIEW':
-        return $localize`View`;
-      default:
-        return $localize`Unknown`;
+  public getPermissonDisplayName(access: Access): string {
+    if (access.type === 'PUBLIC') {
+      return $localize`Public`;
+    }
+
+    if (access.type === 'PRIVATE') {
+      switch (access.permission) {
+        case 'READ':
+          return $localize`View`;
+        case 'READ_RESTRICTED':
+          return $localize`Restricted View`;
+        default:
+          return $localize`Unknown`;
+      }
     }
   }
 
