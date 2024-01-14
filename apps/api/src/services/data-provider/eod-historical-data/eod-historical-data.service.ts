@@ -235,6 +235,17 @@ export class EodHistoricalDataService implements DataProviderInterface {
         };
       }
 
+      if (response[`${DEFAULT_CURRENCY}ZAR`]) {
+        response[`${DEFAULT_CURRENCY}ZAc`] = {
+          ...response[`${DEFAULT_CURRENCY}ZAR`],
+          currency: 'ZAc',
+          marketPrice: this.getConvertedValue({
+            symbol: `${DEFAULT_CURRENCY}ZAc`,
+            value: response[`${DEFAULT_CURRENCY}ZAR`].marketPrice
+          })
+        };
+      }
+
       return response;
     } catch (error) {
       let message = error;
@@ -349,6 +360,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
       return new Big(value).mul(100).toNumber();
     } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
       // Convert ILS to ILA
+      return new Big(value).mul(100).toNumber();
+    } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
+      // Convert ZAR to ZAc
       return new Big(value).mul(100).toNumber();
     }
 
