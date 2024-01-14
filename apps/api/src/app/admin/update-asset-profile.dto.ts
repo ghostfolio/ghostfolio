@@ -16,6 +16,10 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
+  @IsArray()
+  @IsOptional()
+  countries?: Prisma.InputJsonArray;
+
   @IsString()
   @IsOptional()
   comment?: string;
@@ -32,17 +36,13 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   scraperConfiguration?: Prisma.InputJsonObject;
 
+  @IsArray()
+  @IsOptional()
+  sectors?: Prisma.InputJsonArray;
+
   @IsObject()
   @IsOptional()
   symbolMapping?: {
     [dataProvider: string]: string;
   };
-
-  @IsArray()
-  @IsOptional()
-  sectors?: Prisma.InputJsonArray;
-
-  @IsArray()
-  @IsOptional()
-  countries?: Prisma.InputJsonArray;
 }
