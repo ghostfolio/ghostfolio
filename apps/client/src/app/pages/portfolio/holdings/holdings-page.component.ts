@@ -31,10 +31,10 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
+  public holdings: PortfolioPosition[];
   public isLoading = false;
   public placeholder = '';
   public portfolioDetails: PortfolioDetails;
-  public positionsArray: PortfolioPosition[];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -152,20 +152,16 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   }
 
   public initialize() {
-    this.positionsArray = [];
+    this.holdings = [];
   }
 
   public initializeAnalysisData() {
     this.initialize();
 
-    for (const [symbol, position] of Object.entries(
+    for (const [symbol, holding] of Object.entries(
       this.portfolioDetails.holdings
     )) {
-      this.positionsArray.push({
-        ...position,
-        assetClassLabel: translate(position.assetClass),
-        assetSubClassLabel: translate(position.assetSubClass)
-      });
+      this.holdings.push(holding);
     }
   }
 

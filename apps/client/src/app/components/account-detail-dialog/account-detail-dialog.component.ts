@@ -16,6 +16,7 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   HistoricalDataItem,
+  PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -45,6 +46,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
+  public holdings: PortfolioPosition[];
   public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
@@ -113,6 +115,26 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
+
+    this.dataService
+      .fetchPortfolioDetails({
+        filters: [
+          {
+            type: 'ACCOUNT',
+            id: this.data.accountId
+          }
+        ]
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = [];
+
+        for (const [symbol, holding] of Object.entries(holdings)) {
+          this.holdings.push(holding);
+        }
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

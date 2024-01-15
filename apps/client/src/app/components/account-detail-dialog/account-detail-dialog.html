@@ -70,12 +70,27 @@
       [ngClass]="{ 'd-none': isLoadingActivities }"
     >
       <mat-tab>
-        <ng-template i18n mat-tab-label>Activities</ng-template>
+        <ng-template mat-tab-label>
+          <ion-icon name="wallet-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Holdings</div>
+        </ng-template>
+        <gf-holdings-table
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
+          [holdings]="holdings"
+          [locale]="user?.settings?.locale"
+        ></gf-holdings-table>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="swap-vertical-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+        </ng-template>
         <gf-activities-table-lazy
           *ngIf="user?.settings?.isExperimentalFeatures === true"
           [baseCurrency]="user?.settings?.baseCurrency"
           [dataSource]="dataSource"
-          [deviceType]="deviceType"
+          [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"
@@ -103,7 +118,10 @@
         ></gf-activities-table>
       </mat-tab>
       <mat-tab>
-        <ng-template i18n mat-tab-label>Cash Balances</ng-template>
+        <ng-template mat-tab-label>
+          <ion-icon name="cash-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Cash Balances</div>
+        </ng-template>
         <gf-account-balances
           [accountBalances]="accountBalances"
           [accountId]="data.accountId"

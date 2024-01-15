@@ -5,6 +5,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { GfAccountBalancesModule } from '@ghostfolio/ui/account-balances/account-balances.module';
 import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
@@ -23,6 +24,7 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     GfActivitiesTableLazyModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfHoldingsTableModule,
     GfInvestmentChartModule,
     GfValueModule,
     MatButtonModule,
