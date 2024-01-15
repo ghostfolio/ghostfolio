@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Inreased the robustness of the exchange rates by always getting quotes in the exchange rate data service
+- Increased the robustness of the exchange rates by always getting quotes in the exchange rate data service
 
 ## 2.39.0 - 2024-01-14
 
