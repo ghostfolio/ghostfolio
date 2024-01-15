@@ -24,8 +24,8 @@ import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
-import { Observable, Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
 
@@ -46,7 +46,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
-  public holdings$: Observable<PortfolioPosition[]>;
+  public holdings: PortfolioPosition[];
   public isLoadingActivities: boolean;
   public isLoadingChart: boolean;
   public name: string;
@@ -85,16 +85,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.holdings$ = this.dataService
-      .fetchPortfolioDetails({
-        filters: [
-          {
-            type: 'ACCOUNT',
-            id: this.data.accountId
-          }
-        ]
-      })
-      .pipe(map((d) => Object.values(d.holdings)));
     this.dataService
       .fetchAccount(this.data.accountId)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -125,6 +115,26 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
+
+    this.dataService
+      .fetchPortfolioDetails({
+        filters: [
+          {
+            type: 'ACCOUNT',
+            id: this.data.accountId
+          }
+        ]
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = [];
+
+        for (const [symbol, holding] of Object.entries(holdings)) {
+          this.holdings.push(holding);
+        }
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.impersonationStorageService
       .onChangeHasImpersonation()

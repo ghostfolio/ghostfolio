@@ -17,10 +17,10 @@
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
         [locale]="user?.settings?.locale"
-        [positions]="positionsArray"
+        [positions]="holdings"
       ></gf-holdings-table>
       <div
-        *ngIf="hasPermissionToCreateOrder && positionsArray?.length > 0"
+        *ngIf="hasPermissionToCreateOrder && holdings?.length > 0"
         class="text-center"
       >
         <a

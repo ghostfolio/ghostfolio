@@ -75,7 +75,7 @@
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
           [locale]="user?.settings?.locale"
-          [positions]="holdings$ | async"
+          [positions]="holdings"
         ></gf-holdings-table>
       </mat-tab>
       <mat-tab>

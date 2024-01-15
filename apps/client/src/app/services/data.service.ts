@@ -39,12 +39,12 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { translate } from '@ghostfolio/ui/i18n';
 
 @Injectable({
   providedIn: 'root'
@@ -400,18 +400,19 @@ export class DataService {
 
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
               response.holdings[symbol].dateOfFirstActivity = response.holdings[
                 symbol
               ].dateOfFirstActivity
                 ? parseISO(response.holdings[symbol].dateOfFirstActivity)
                 : undefined;
-
-              response.holdings[symbol].assetClassLabel = translate(
-                response.holdings[symbol].assetClass
-              );
-              response.holdings[symbol].assetSubClassLabel = translate(
-                response.holdings[symbol].assetSubClass
-              );
 
               response.holdings[symbol].value = isNumber(
                 response.holdings[symbol].value
