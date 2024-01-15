@@ -33,6 +33,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       symbol = `${DEFAULT_CURRENCY}${symbol}`;
     }
 
+    if (symbol.includes(`${DEFAULT_CURRENCY}ZAC`)) {
+      symbol = `${DEFAULT_CURRENCY}ZAc`;
+    }
+
     return symbol.replace('=X', '');
   }
 

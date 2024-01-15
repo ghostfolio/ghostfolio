@@ -136,24 +136,20 @@ export class ExchangeRateDataService {
       getYesterday()
     );
 
-    if (Object.keys(result).length !== this.currencyPairs.length) {
-      // Load currencies directly from data provider as a fallback
-      // if historical data is not fully available
-      const quotes = await this.dataProviderService.getQuotes({
-        items: this.currencyPairs.map(({ dataSource, symbol }) => {
-          return { dataSource, symbol };
-        }),
-        requestTimeout: ms('30 seconds')
-      });
+    const quotes = await this.dataProviderService.getQuotes({
+      items: this.currencyPairs.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      requestTimeout: ms('30 seconds')
+    });
 
-      for (const symbol of Object.keys(quotes)) {
-        if (isNumber(quotes[symbol].marketPrice)) {
-          result[symbol] = {
-            [format(getYesterday(), DATE_FORMAT)]: {
-              marketPrice: quotes[symbol].marketPrice
-            }
-          };
-        }
+    for (const symbol of Object.keys(quotes)) {
+      if (isNumber(quotes[symbol].marketPrice)) {
+        result[symbol] = {
+          [format(getYesterday(), DATE_FORMAT)]: {
+            marketPrice: quotes[symbol].marketPrice
+          }
+        };
       }
     }
 
