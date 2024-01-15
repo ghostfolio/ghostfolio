@@ -28,6 +28,7 @@ export class PublicPageComponent implements OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
+  public holdings: PortfolioPublicDetails['holdings'][string][];
   public markets: {
     [key in Market]: { name: string; value: number };
   };
@@ -37,7 +38,6 @@ export class PublicPageComponent implements OnInit {
       value: number;
     };
   };
-  public positionsArray: PortfolioPublicDetails['holdings'][string][];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -99,6 +99,7 @@ export class PublicPageComponent implements OnInit {
         value: 0
       }
     };
+    this.holdings = [];
     this.markets = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -118,7 +119,6 @@ export class PublicPageComponent implements OnInit {
       }
     };
     this.positions = {};
-    this.positionsArray = [];
     this.sectors = {
       [UNKNOWN_KEY]: {
         name: UNKNOWN_KEY,
@@ -136,14 +136,13 @@ export class PublicPageComponent implements OnInit {
     for (const [symbol, position] of Object.entries(
       this.portfolioPublicDetails.holdings
     )) {
-      const value = position.allocationInPercentage;
+      this.holdings.push(position);
 
       this.positions[symbol] = {
-        value,
         currency: position.currency,
-        name: position.name
+        name: position.name,
+        value: position.allocationInPercentage
       };
-      this.positionsArray.push(position);
 
       if (position.countries.length > 0) {
         this.markets.developedMarkets.value +=

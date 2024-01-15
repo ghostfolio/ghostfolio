@@ -16,8 +16,8 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+        [holdings]="holdings"
         [locale]="user?.settings?.locale"
-        [positions]="holdings"
       ></gf-holdings-table>
       <div
         *ngIf="hasPermissionToCreateOrder && holdings?.length > 0"
