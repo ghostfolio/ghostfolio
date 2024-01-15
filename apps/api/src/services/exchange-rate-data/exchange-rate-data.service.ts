@@ -64,11 +64,12 @@ export class ExchangeRateDataService {
     } = {};
 
     for (let currency of currencies) {
-      exchangeRatesByCurrency[currency] = await this.getExchangeRates({
-        startDate,
-        currencyFrom: currency,
-        currencyTo: targetCurrency
-      });
+      exchangeRatesByCurrency[`${currency}${targetCurrency}`] =
+        await this.getExchangeRates({
+          startDate,
+          currencyFrom: currency,
+          currencyTo: targetCurrency
+        });
 
       let previousExchangeRate = 1;
 
@@ -82,17 +83,25 @@ export class ExchangeRateDataService {
         let dateString = format(date, DATE_FORMAT);
 
         // Check if the exchange rate for the current date is missing
-        if (isNaN(exchangeRatesByCurrency[currency][dateString])) {
+        if (
+          isNaN(
+            exchangeRatesByCurrency[`${currency}${targetCurrency}`][dateString]
+          )
+        ) {
           // If missing, fill with the previous exchange rate
-          exchangeRatesByCurrency[currency][dateString] = previousExchangeRate;
+          exchangeRatesByCurrency[`${currency}${targetCurrency}`][dateString] =
+            previousExchangeRate;
 
-          Logger.error(
-            `No exchange rate has been found for ${DEFAULT_CURRENCY}${currency} at ${dateString}`,
-            'ExchangeRateDataService'
-          );
+          if (currency === DEFAULT_CURRENCY) {
+            Logger.error(
+              `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
+              'ExchangeRateDataService'
+            );
+          }
         } else {
           // If available, update the previous exchange rate
-          previousExchangeRate = exchangeRatesByCurrency[currency][dateString];
+          previousExchangeRate =
+            exchangeRatesByCurrency[`${currency}${targetCurrency}`][dateString];
         }
       }
     }
@@ -249,6 +258,7 @@ export class ExchangeRateDataService {
       `No exchange rate has been found for ${aFromCurrency}${aToCurrency}`,
       'ExchangeRateDataService'
     );
+
     return aValue;
   }
 

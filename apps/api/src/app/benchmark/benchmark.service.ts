@@ -243,7 +243,7 @@ export class BenchmarkService {
       });
 
     const exchangeRateAtStartDate =
-      exchangeRates[currentSymbolItem.currency]?.[
+      exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
         format(startDate, DATE_FORMAT)
       ];
 
@@ -275,7 +275,9 @@ export class BenchmarkService {
       }
 
       const exchangeRate =
-        exchangeRates[format(marketDataItem.date, DATE_FORMAT)];
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(marketDataItem.date, DATE_FORMAT)
+        ];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
@@ -300,7 +302,10 @@ export class BenchmarkService {
     );
 
     if (currentSymbolItem?.marketPrice && !includesToday) {
-      const exchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
+      const exchangeRate =
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(new Date(), DATE_FORMAT)
+        ];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)

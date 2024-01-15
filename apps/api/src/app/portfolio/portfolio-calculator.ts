@@ -298,7 +298,8 @@ export class PortfolioCalculator {
         start,
         step,
         symbol,
-        exchangeRates: exchangeRatesByCurrency[currencies[symbol]],
+        exchangeRates:
+          exchangeRatesByCurrency[`${currencies[symbol]}${this.currency}`],
         isChartMode: true
       });
 
@@ -565,7 +566,11 @@ export class PortfolioCalculator {
     for (const item of lastTransactionPoint.items) {
       const marketPriceInBaseCurrency = marketSymbolMap[endDateString]?.[
         item.symbol
-      ]?.mul(exchangeRatesByCurrency[item.currency]?.[endDateString]);
+      ]?.mul(
+        exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
+          endDateString
+        ]
+      );
 
       const {
         grossPerformance,
@@ -585,7 +590,8 @@ export class PortfolioCalculator {
         end,
         marketSymbolMap,
         start,
-        exchangeRates: exchangeRatesByCurrency[item.currency],
+        exchangeRates:
+          exchangeRatesByCurrency[`${item.currency}${this.currency}`],
         symbol: item.symbol
       });
 
