@@ -583,34 +583,32 @@ export class ImportService {
         );
       }
 
-      if (dataSource !== 'MANUAL') {
-        const assetProfile = (
-          await this.dataProviderService.getAssetProfiles([
-            { dataSource, symbol }
-          ])
-        )?.[symbol];
+      const assetProfile = (
+        await this.dataProviderService.getAssetProfiles([
+          { dataSource, symbol }
+        ])
+      )?.[symbol];
 
-        if (!assetProfile?.name) {
-          throw new Error(
-            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
-          );
-        }
-
-        if (
-          assetProfile.currency !== currency &&
-          !this.exchangeRateDataService.hasCurrencyPair(
-            currency,
-            assetProfile.currency
-          )
-        ) {
-          throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
-          );
-        }
-
-        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
-          assetProfile;
+      if (!assetProfile?.name) {
+        throw new Error(
+          `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+        );
       }
+
+      if (
+        assetProfile.currency !== currency &&
+        !this.exchangeRateDataService.hasCurrencyPair(
+          currency,
+          assetProfile.currency
+        )
+      ) {
+        throw new Error(
+          `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
+        );
+      }
+
+      assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
+        assetProfile;
     }
 
     return assetProfiles;
