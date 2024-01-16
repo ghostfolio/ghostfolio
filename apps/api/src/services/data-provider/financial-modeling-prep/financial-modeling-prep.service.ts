@@ -58,7 +58,8 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
-    to: Date
+    to: Date,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
@@ -67,7 +68,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
+      }, requestTimeout);
 
       const { historical } = await got(
         `${this.URL}/historical-price-full/${aSymbol}?apikey=${this.apiKey}`,

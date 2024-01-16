@@ -27,7 +27,8 @@ export interface DataProviderInterface {
     aSymbol: string,
     aGranularity: Granularity,
     from: Date,
-    to: Date
+    to: Date,
+    requestTimeout?: number
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }>; // TODO: Return only one symbol
