@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the timeout to load historical data in the data provider service
 - Improved the asset profile validation for `MANUAL` data source in the activities import
 
 ## 2.40.0 - 2024-01-15
