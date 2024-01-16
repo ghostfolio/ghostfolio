@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the holdings table to the account detail dialog
+- Validated the currency of the search results in the _EOD Historical Data_ service
 
 ## 2.40.0 - 2024-01-15
 
