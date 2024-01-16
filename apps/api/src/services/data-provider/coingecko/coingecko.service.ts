@@ -104,7 +104,8 @@ export class CoinGeckoService implements DataProviderInterface {
     aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
-    to: Date
+    to: Date,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
@@ -113,7 +114,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
+      }, requestTimeout);
 
       const { prices } = await got(
         `${

@@ -57,7 +57,8 @@ export class AlphaVantageService implements DataProviderInterface {
     aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
-    to: Date
+    to: Date,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {

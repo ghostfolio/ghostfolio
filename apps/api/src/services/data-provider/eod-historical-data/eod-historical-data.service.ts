@@ -68,7 +68,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
     aSymbol: string,
     aGranularity: Granularity = 'day',
     from: Date,
-    to: Date
+    to: Date,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
@@ -79,7 +80,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
+      }, requestTimeout);
 
       const response = await got(
         `${this.URL}/eod/${symbol}?api_token=${
@@ -87,7 +88,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
           to,
           DATE_FORMAT
-        )}&period={aGranularity}`,
+        )}&period=${aGranularity}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -100,8 +101,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
             marketPrice: this.getConvertedValue({
               symbol: aSymbol,
               value: historicalItem.close
-            }),
-            performance: historicalItem.open - historicalItem.close
+            })
           };
 
           return result;
