@@ -1,11 +1,11 @@
 import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   ResponseError,
+  SymbolMetrics,
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
 import { GroupBy } from '@ghostfolio/common/types';
@@ -1143,7 +1143,7 @@ export class PortfolioCalculator {
     start: Date;
     step?: number;
     symbol: string;
-  }) {
+  }): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
@@ -1195,18 +1195,28 @@ export class PortfolioCalculator {
     if (orders.length <= 0) {
       return {
         currentValues: {},
+        currentValuesWithCurrencyEffect: {},
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffectPercentage: new Big(0),
         hasErrors: false,
         initialValue: new Big(0),
+        initialValueWithCurrencyEffect: new Big(0),
         investmentValues: {},
+        investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceValues: {},
+        netPerformanceValuesWithCurrencyEffect: {},
         netPerformanceWithCurrencyEffect: new Big(0),
-        netPerformanceWithCurrencyEffectPercentage: new Big(0)
+        timeWeightedInvestment: new Big(0),
+        timeWeightedInvestmentValues: {},
+        timeWeightedInvestmentValuesWithCurrencyEffect: {},
+        timeWeightedInvestmentWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0)
       };
     }
 
@@ -1223,16 +1233,29 @@ export class PortfolioCalculator {
       (!unitPriceAtStartDate && isBefore(dateOfFirstTransaction, start))
     ) {
       return {
+        currentValues: {},
+        currentValuesWithCurrencyEffect: {},
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
+        grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffectPercentage: new Big(0),
         hasErrors: true,
         initialValue: new Big(0),
+        initialValueWithCurrencyEffect: new Big(0),
+        investmentValues: {},
+        investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformancePercentageWithCurrencyEffect: new Big(0),
+        netPerformanceValues: {},
+        netPerformanceValuesWithCurrencyEffect: {},
         netPerformanceWithCurrencyEffect: new Big(0),
-        netPerformanceWithCurrencyEffectPercentage: new Big(0)
+        timeWeightedInvestment: new Big(0),
+        timeWeightedInvestmentValues: {},
+        timeWeightedInvestmentValuesWithCurrencyEffect: {},
+        timeWeightedInvestmentWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0)
       };
     }
 

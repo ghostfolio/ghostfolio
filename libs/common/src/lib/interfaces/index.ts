@@ -43,6 +43,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
+import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
@@ -95,6 +96,7 @@ export {
   Statistics,
   SystemMessage,
   Subscription,
+  SymbolMetrics,
   TabConfiguration,
   TimelinePosition,
   UniqueAsset,
