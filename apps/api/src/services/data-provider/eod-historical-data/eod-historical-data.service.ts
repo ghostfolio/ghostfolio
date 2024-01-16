@@ -277,8 +277,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
     return {
       items: searchResult
-        .filter(({ symbol }) => {
-          return !symbol.endsWith('.FOREX');
+        .filter(({ currency, symbol }) => {
+          // Remove 'NA' currency and exchange rates
+          return currency?.length === 3 && !symbol.endsWith('.FOREX');
         })
         .map(
           ({
