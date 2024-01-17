@@ -19,7 +19,7 @@ import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { format, isValid } from 'date-fns';
+import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber } from 'lodash';
 import ms from 'ms';
 
@@ -209,8 +209,6 @@ export class DataProviderService {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    // TODO
-
     const result: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
@@ -222,16 +220,36 @@ export class DataProviderService {
     for (const { dataSource, symbol } of aDataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.canHandle(symbol)) {
-        promises.push(
-          dataProvider
-            .getHistorical({
-              from,
-              symbol,
-              to,
-              requestTimeout: ms('30 seconds')
+        // TODO: Handle derived currencies
+        if (symbol === `${DEFAULT_CURRENCY}USX`) {
+          const data: {
+            [date: string]: IDataProviderHistoricalResponse;
+          } = {};
+
+          for (const date of eachDayOfInterval({ end: to, start: from })) {
+            data[format(date, DATE_FORMAT)] = { marketPrice: 100 };
+          }
+
+          promises.push(
+            Promise.resolve({
+              data,
+              symbol
             })
-            .then((data) => ({ data: data?.[symbol], symbol }))
-        );
+          );
+        } else {
+          promises.push(
+            dataProvider
+              .getHistorical({
+                from,
+                symbol,
+                to,
+                requestTimeout: ms('30 seconds')
+              })
+              .then((data) => {
+                return { symbol, data: data?.[symbol] };
+              })
+          );
+        }
       }
     }
 
@@ -243,6 +261,8 @@ export class DataProviderService {
     } catch (error) {
       Logger.error(error, 'DataProviderService');
     }
+
+    console.log({ result });
 
     return result;
   }
