@@ -1,13 +1,18 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -50,30 +55,20 @@ export class EodHistoricalDataService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
-  ): Promise<{
+  public async getHistorical({
+    from,
+    granularity = 'day',
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    const symbol = this.convertToEodSymbol(aSymbol);
+    symbol = this.convertToEodSymbol(symbol);
 
     try {
       const abortController = new AbortController();
@@ -88,7 +83,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
           to,
           DATE_FORMAT
-        )}&period=${aGranularity}`,
+        )}&period=${granularity}`,
         {
           // @ts-ignore
           signal: abortController.signal
@@ -99,7 +94,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         (result, historicalItem, index, array) => {
           result[this.convertFromEodSymbol(symbol)][historicalItem.date] = {
             marketPrice: this.getConvertedValue({
-              symbol: aSymbol,
+              symbol: symbol,
               value: historicalItem.close
             })
           };
@@ -110,7 +105,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       );
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -131,10 +126,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     let response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
@@ -267,12 +259,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     const searchResult = await this.getSearchResult(query);
 
     return {
