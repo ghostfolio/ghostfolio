@@ -206,10 +206,12 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping
   }: UniqueAsset & UpdateAssetProfileDto) {
@@ -219,9 +221,11 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
         currency,
         name,
         scraperConfiguration,
+        sectors,
         symbolMapping
       }
     );

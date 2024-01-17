@@ -321,10 +321,12 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
@@ -332,10 +334,12 @@ export class AdminService {
       assetClass,
       assetSubClass,
       comment,
+      countries,
       currency,
       dataSource,
       name,
       scraperConfiguration,
+      sectors,
       symbol,
       symbolMapping
     });

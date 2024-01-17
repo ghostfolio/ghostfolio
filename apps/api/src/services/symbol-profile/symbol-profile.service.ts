@@ -89,10 +89,12 @@ export class SymbolProfileService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
@@ -101,9 +103,11 @@ export class SymbolProfileService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
         currency,
         name,
         scraperConfiguration,
+        sectors,
         symbolMapping
       },
       where: { dataSource_symbol: { dataSource, symbol } }
