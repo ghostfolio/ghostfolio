@@ -52,15 +52,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    countries: '',
     currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
     name: ['', Validators.required],
     scraperConfiguration: '',
-    symbolMapping: '',
-    countries: '',
-    sectors: ''
+    sectors: '',
+    symbolMapping: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -143,6 +143,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetClass: this.assetProfile.assetClass ?? null,
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
+          countries: JSON.stringify(
+            assetProfile.countries.map(({ code, weight }) => {
+              return { code, weight };
+            }) ?? []
+          ),
           currency: this.assetProfile?.currency,
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
@@ -151,13 +156,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
-          countries: JSON.stringify(
-            assetProfile.countries.map(({code, weight}) => {
-              return { code, weight};
-            }) ?? []
-          ),
-          sectors: JSON.stringify(assetProfile.sectors ?? [])
+          sectors: JSON.stringify(assetProfile.sectors ?? []),
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
         this.assetProfileForm.markAsPristine();
@@ -253,9 +253,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     let symbolMapping = {};
 
     try {
+      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+    } catch {}
+
+    try {
       scraperConfiguration = JSON.parse(
         this.assetProfileForm.controls['scraperConfiguration'].value
       );
+    } catch {}
+
+    try {
+      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
     } catch {}
 
     try {
@@ -264,28 +272,19 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       );
     } catch {}
 
-    try {
-      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
-    } catch {}
-
-    try {
-      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
-    } catch {}
-
     const assetProfileData: UpdateAssetProfileDto = {
+      countries,
       scraperConfiguration,
+      sectors,
       symbolMapping,
       assetClass: this.assetProfileForm.controls['assetClass'].value,
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
-      countries,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
       ))?.value,
-      name: this.assetProfileForm.controls['name'].value,
-      sectors
+      name: this.assetProfileForm.controls['name'].value
     };
-    console.log(assetProfileData);
 
     this.adminService
       .patchAssetProfile({

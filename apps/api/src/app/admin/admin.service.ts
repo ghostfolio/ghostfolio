@@ -321,27 +321,27 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
-    symbolMapping,
-    countries,
-    sectors
+    symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     await this.symbolProfileService.updateSymbolProfile({
       assetClass,
       assetSubClass,
       comment,
+      countries,
       currency,
       dataSource,
       name,
       scraperConfiguration,
+      sectors,
       symbol,
-      symbolMapping,
-      countries,
-      sectors
+      symbolMapping
     });
 
     const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
