@@ -221,12 +221,12 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
         currency,
         name,
         scraperConfiguration,
-        symbolMapping,
         sectors,
-        countries
+        symbolMapping
       }
     );
   }

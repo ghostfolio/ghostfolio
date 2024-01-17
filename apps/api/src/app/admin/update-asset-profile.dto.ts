@@ -16,13 +16,13 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
-  @IsArray()
-  @IsOptional()
-  countries?: Prisma.InputJsonArray;
-
   @IsString()
   @IsOptional()
   comment?: string;
+
+  @IsArray()
+  @IsOptional()
+  countries?: Prisma.InputJsonArray;
 
   @IsString()
   @IsOptional()
