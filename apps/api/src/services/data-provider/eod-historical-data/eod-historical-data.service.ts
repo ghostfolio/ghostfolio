@@ -196,48 +196,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
         {}
       );
 
-      if (response[`${DEFAULT_CURRENCY}GBP`]) {
-        response[`${DEFAULT_CURRENCY}GBp`] = {
-          ...response[`${DEFAULT_CURRENCY}GBP`],
-          currency: 'GBp',
-          marketPrice: this.getConvertedValue({
-            symbol: `${DEFAULT_CURRENCY}GBp`,
-            value: response[`${DEFAULT_CURRENCY}GBP`].marketPrice
-          })
-        };
-      }
-
-      if (response[`${DEFAULT_CURRENCY}ILS`]) {
-        response[`${DEFAULT_CURRENCY}ILA`] = {
-          ...response[`${DEFAULT_CURRENCY}ILS`],
-          currency: 'ILA',
-          marketPrice: this.getConvertedValue({
-            symbol: `${DEFAULT_CURRENCY}ILA`,
-            value: response[`${DEFAULT_CURRENCY}ILS`].marketPrice
-          })
-        };
-      }
-
-      if (response[`${DEFAULT_CURRENCY}USX`]) {
-        response[`${DEFAULT_CURRENCY}USX`] = {
-          currency: 'USX',
-          dataSource: this.getName(),
-          marketPrice: new Big(1).mul(100).toNumber(),
-          marketState: 'open'
-        };
-      }
-
-      if (response[`${DEFAULT_CURRENCY}ZAR`]) {
-        response[`${DEFAULT_CURRENCY}ZAc`] = {
-          ...response[`${DEFAULT_CURRENCY}ZAR`],
-          currency: 'ZAc',
-          marketPrice: this.getConvertedValue({
-            symbol: `${DEFAULT_CURRENCY}ZAc`,
-            value: response[`${DEFAULT_CURRENCY}ZAR`].marketPrice
-          })
-        };
-      }
-
       return response;
     } catch (error) {
       let message = error;
@@ -337,6 +295,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return aSymbol;
   }
 
+  // TODO: Eliminate
   private getConvertedValue({
     symbol,
     value
@@ -344,17 +303,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol: string;
     value: number;
   }) {
-    if (symbol === `${DEFAULT_CURRENCY}GBp`) {
-      // Convert GPB to GBp (pence)
-      return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
-      // Convert ILS to ILA
-      return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
-      // Convert ZAR to ZAc
-      return new Big(value).mul(100).toNumber();
-    }
-
     return value;
   }
 

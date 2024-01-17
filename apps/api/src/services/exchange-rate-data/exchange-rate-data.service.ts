@@ -168,30 +168,6 @@ export class ExchangeRateDataService {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
       const [date] = Object.keys(result[symbol]);
 
-      // Add derived currencies
-      if (currency2 === 'GBP') {
-        resultExtended[`${currency1}GBp`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      } else if (currency2 === 'ILS') {
-        resultExtended[`${currency1}ILA`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      } else if (currency2 === 'ZAR') {
-        resultExtended[`${currency1}ZAc`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      }
-
       // Calculate the opposite direction
       resultExtended[`${currency2}${currency1}`] = {
         [date]: {
@@ -486,8 +462,8 @@ export class ExchangeRateDataService {
           }
         }
       })
-    ).forEach((account) => {
-      currencies.push(account.currency);
+    ).forEach(({ currency }) => {
+      currencies.push(currency);
     });
 
     (
@@ -496,8 +472,8 @@ export class ExchangeRateDataService {
         orderBy: [{ currency: 'asc' }],
         select: { currency: true }
       })
-    ).forEach((symbolProfile) => {
-      currencies.push(symbolProfile.currency);
+    ).forEach(({ currency }) => {
+      currencies.push(currency);
     });
 
     const customCurrencies = (await this.propertyService.getByKey(
@@ -506,6 +482,24 @@ export class ExchangeRateDataService {
 
     if (customCurrencies?.length > 0) {
       currencies = currencies.concat(customCurrencies);
+    }
+
+    // Add derived currencies
+    currencies.push('USX');
+
+    if (currencies.includes('GBP') || currencies.includes('GBp')) {
+      currencies.push('GBP');
+      currencies.push('GBp');
+    }
+
+    if (currencies.includes('ILS') || currencies.includes('ILA')) {
+      currencies.push('ILS');
+      currencies.push('ILA');
+    }
+
+    if (currencies.includes('ZAR') || currencies.includes('ZAc')) {
+      currencies.push('ZAR');
+      currencies.push('ZAc');
     }
 
     return uniq(currencies).filter(Boolean).sort();

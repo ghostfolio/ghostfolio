@@ -9,12 +9,16 @@ import {
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  PROPERTY_DATA_SOURCE_MAPPING
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
+import Big from 'big.js';
 import { format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber } from 'lodash';
 import ms from 'ms';
@@ -205,6 +209,8 @@ export class DataProviderService {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    // TODO
+
     const result: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
@@ -326,19 +332,99 @@ export class DataProviderService {
 
         promises.push(
           promise.then(async (result) => {
-            for (const [symbol, dataProviderResponse] of Object.entries(
-              result
-            )) {
+            for (let [symbol, dataProviderResponse] of Object.entries(result)) {
+              if (symbol === `${DEFAULT_CURRENCY}USX`) {
+                dataProviderResponse = {
+                  ...dataProviderResponse,
+                  marketPrice: new Big(1).mul(100).toNumber(),
+                  marketState: 'open'
+                };
+              }
+
+              if (
+                [
+                  `${DEFAULT_CURRENCY}GBp`,
+                  `${DEFAULT_CURRENCY}ILA`,
+                  `${DEFAULT_CURRENCY}ZAc`
+                ].includes(symbol)
+              ) {
+                continue;
+              }
+
               response[symbol] = dataProviderResponse;
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
-                  dataSource: DataSource[dataSource],
-                  symbol
+                  symbol,
+                  dataSource: DataSource[dataSource]
                 }),
-                JSON.stringify(dataProviderResponse),
+                JSON.stringify(response[symbol]),
                 this.configurationService.get('CACHE_QUOTES_TTL')
               );
+
+              if (symbol === `${DEFAULT_CURRENCY}GBP`) {
+                response[`${DEFAULT_CURRENCY}GBp`] = {
+                  ...dataProviderResponse,
+                  currency: 'GBp',
+                  marketPrice: new Big(
+                    result[`${DEFAULT_CURRENCY}GBP`].marketPrice
+                  )
+                    .mul(100)
+                    .toNumber(),
+                  marketState: 'open'
+                };
+
+                this.redisCacheService.set(
+                  this.redisCacheService.getQuoteKey({
+                    dataSource: DataSource[dataSource],
+                    symbol: `${DEFAULT_CURRENCY}GBp`
+                  }),
+                  JSON.stringify(response[`${DEFAULT_CURRENCY}GBp`]),
+                  this.configurationService.get('CACHE_QUOTES_TTL')
+                );
+              } else if (symbol === `${DEFAULT_CURRENCY}ILS`) {
+                response[`${DEFAULT_CURRENCY}ILA`] = {
+                  ...dataProviderResponse,
+                  currency: 'ILA',
+                  marketPrice: new Big(
+                    result[`${DEFAULT_CURRENCY}ILS`].marketPrice
+                  )
+                    .mul(100)
+                    .toNumber(),
+                  marketState: 'open'
+                };
+
+                this.redisCacheService.set(
+                  this.redisCacheService.getQuoteKey({
+                    dataSource: DataSource[dataSource],
+                    symbol: `${DEFAULT_CURRENCY}ILA`
+                  }),
+                  JSON.stringify(response[`${DEFAULT_CURRENCY}ILA`]),
+                  this.configurationService.get('CACHE_QUOTES_TTL')
+                );
+              } else if (symbol === `${DEFAULT_CURRENCY}ZAR`) {
+                response[`${DEFAULT_CURRENCY}ZAc`] = {
+                  ...dataProviderResponse,
+                  currency: 'ZAc',
+                  marketPrice: new Big(
+                    result[`${DEFAULT_CURRENCY}ZAR`].marketPrice
+                  )
+                    .mul(100)
+                    .toNumber(),
+                  marketState: 'open'
+                };
+
+                this.redisCacheService.set(
+                  this.redisCacheService.getQuoteKey({
+                    dataSource: DataSource[dataSource],
+                    symbol: `${DEFAULT_CURRENCY}ZAc`
+                  }),
+                  JSON.stringify(response[`${DEFAULT_CURRENCY}ZAc`]),
+                  this.configurationService.get('CACHE_QUOTES_TTL')
+                );
+              }
+
+              console.log({ response });
             }
 
             Logger.debug(
