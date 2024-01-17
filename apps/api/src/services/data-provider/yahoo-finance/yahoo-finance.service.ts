@@ -1,15 +1,19 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -20,7 +24,6 @@ import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {}
@@ -50,12 +53,7 @@ export class YahooFinanceService implements DataProviderInterface {
     granularity = 'day',
     symbol,
     to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  }: GetDividendsParams) {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
     }
@@ -100,13 +98,11 @@ export class YahooFinanceService implements DataProviderInterface {
     }
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
-  ): Promise<{
+  public async getHistorical({
+    from,
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     if (isSameDay(from, to)) {
@@ -116,7 +112,7 @@ export class YahooFinanceService implements DataProviderInterface {
     try {
       const historicalResult = await yahooFinance.historical(
         this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-          aSymbol
+          symbol
         ),
         {
           interval: '1d',
@@ -129,12 +125,12 @@ export class YahooFinanceService implements DataProviderInterface {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {};
 
-      response[aSymbol] = {};
+      response[symbol] = {};
 
       for (const historicalItem of historicalResult) {
-        response[aSymbol][format(historicalItem.date, DATE_FORMAT)] = {
+        response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
           marketPrice: this.getConvertedValue({
-            symbol: aSymbol,
+            symbol: symbol,
             value: historicalItem.close
           })
         };
@@ -143,7 +139,7 @@ export class YahooFinanceService implements DataProviderInterface {
       return response;
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -160,12 +156,8 @@ export class YahooFinanceService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
@@ -280,10 +272,7 @@ export class YahooFinanceService implements DataProviderInterface {
   public async search({
     includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     const items: LookupItem[] = [];
 
     try {

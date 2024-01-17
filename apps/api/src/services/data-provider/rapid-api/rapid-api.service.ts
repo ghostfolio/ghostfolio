@@ -1,13 +1,18 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
@@ -32,32 +37,18 @@ export class RapidApiService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
-  ): Promise<{
+  public async getHistorical({
+    from,
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const symbol = aSymbol;
-
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
 
@@ -71,7 +62,7 @@ export class RapidApiService implements DataProviderInterface {
       }
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -86,12 +77,8 @@ export class RapidApiService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (symbols.length <= 0) {
       return {};
     }
@@ -122,13 +109,7 @@ export class RapidApiService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({
-    includeIndices = false,
-    query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  public async search({}: GetSearchParams): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 

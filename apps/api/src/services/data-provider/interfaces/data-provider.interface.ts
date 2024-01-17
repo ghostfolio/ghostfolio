@@ -11,25 +11,17 @@ export interface DataProviderInterface {
 
   getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
 
-  getDividends({
+  getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
+    [date: string]: IDataProviderHistoricalResponse;
+  }>;
+
+  getHistorical({
     from,
     granularity,
+    requestTimeout,
     symbol,
     to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }): Promise<{ [date: string]: IDataProviderHistoricalResponse }>;
-
-  getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity,
-    from: Date,
-    to: Date,
-    requestTimeout?: number
-  ): Promise<{
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }>; // TODO: Return only one symbol
 
@@ -40,18 +32,37 @@ export interface DataProviderInterface {
   getQuotes({
     requestTimeout,
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }>;
 
   getTestSymbol(): string;
 
   search({
     includeIndices,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }>;
+  }: GetSearchParams): Promise<{ items: LookupItem[] }>;
+}
+
+export interface GetDividendsParams {
+  from: Date;
+  granularity?: Granularity;
+  symbol: string;
+  to: Date;
+}
+
+export interface GetHistoricalParams {
+  from: Date;
+  granularity?: Granularity;
+  requestTimeout?: number;
+  symbol: string;
+  to: Date;
+}
+
+export interface GetQuotesParams {
+  requestTimeout?: number;
+  symbols: string[];
+}
+
+export interface GetSearchParams {
+  includeIndices?: boolean;
+  query: string;
 }

@@ -1,6 +1,12 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
@@ -8,7 +14,6 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
-import { Granularity } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -86,27 +91,16 @@ export class CoinGeckoService implements DataProviderInterface {
     return response;
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
-  ): Promise<{
+  public async getHistorical({
+    from,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
@@ -119,7 +113,7 @@ export class CoinGeckoService implements DataProviderInterface {
       const { prices } = await got(
         `${
           this.apiUrl
-        }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
+        }/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
         )}&to=${getUnixTime(to)}`,
         {
@@ -132,11 +126,11 @@ export class CoinGeckoService implements DataProviderInterface {
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {
-        [aSymbol]: {}
+        [symbol]: {}
       };
 
       for (const [timestamp, marketPrice] of prices) {
-        result[aSymbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
+        result[symbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
           marketPrice
         };
       }
@@ -144,7 +138,7 @@ export class CoinGeckoService implements DataProviderInterface {
       return result;
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -163,10 +157,7 @@ export class CoinGeckoService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
@@ -220,12 +211,8 @@ export class CoinGeckoService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
     try {
