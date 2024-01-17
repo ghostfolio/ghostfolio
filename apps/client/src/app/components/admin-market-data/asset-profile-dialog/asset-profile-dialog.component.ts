@@ -121,20 +121,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.marketDataDetails = marketData;
         this.sectors = {};
 
-        if (assetProfile?.countries?.length > 0) {
-          for (const country of assetProfile.countries) {
-            this.countries[country.code] = {
-              name: country.name,
-              value: country.weight
+        if (this.assetProfile?.countries?.length > 0) {
+          for (const { code, name, weight } of this.assetProfile.countries) {
+            this.countries[code] = {
+              name,
+              value: weight
             };
           }
         }
 
-        if (assetProfile?.sectors?.length > 0) {
-          for (const sector of assetProfile.sectors) {
-            this.sectors[sector.name] = {
-              name: sector.name,
-              value: sector.weight
+        if (this.assetProfile?.sectors?.length > 0) {
+          for (const { name, weight } of this.assetProfile.sectors) {
+            this.sectors[name] = {
+              name,
+              value: weight
             };
           }
         }
@@ -144,7 +144,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           countries: JSON.stringify(
-            assetProfile.countries.map(({ code, weight }) => {
+            this.assetProfile?.countries.map(({ code, weight }) => {
               return { code, weight };
             }) ?? []
           ),
@@ -156,7 +156,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
-          sectors: JSON.stringify(assetProfile.sectors ?? []),
+          sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
