@@ -20,7 +20,6 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import Big from 'big.js';
 import { format, isToday } from 'date-fns';
 import got from 'got';
 
@@ -93,10 +92,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       return response.reduce(
         (result, historicalItem, index, array) => {
           result[this.convertFromEodSymbol(symbol)][historicalItem.date] = {
-            marketPrice: this.getConvertedValue({
-              symbol: symbol,
-              value: historicalItem.close
-            })
+            marketPrice: historicalItem.close
           };
 
           return result;

@@ -263,6 +263,19 @@ export class DataProviderService {
     } = {};
     const startTimeTotal = performance.now();
 
+    if (
+      items.some(({ symbol }) => {
+        return symbol === `${DEFAULT_CURRENCY}USX`;
+      })
+    ) {
+      response[`${DEFAULT_CURRENCY}USX`] = {
+        currency: 'USX',
+        dataSource: this.getDataSourceForExchangeRates(),
+        marketPrice: 100,
+        marketState: 'open'
+      };
+    }
+
     // Get items from cache
     const itemsToFetch: UniqueAsset[] = [];
 
@@ -333,18 +346,11 @@ export class DataProviderService {
         promises.push(
           promise.then(async (result) => {
             for (let [symbol, dataProviderResponse] of Object.entries(result)) {
-              if (symbol === `${DEFAULT_CURRENCY}USX`) {
-                dataProviderResponse = {
-                  ...dataProviderResponse,
-                  marketPrice: new Big(1).mul(100).toNumber(),
-                  marketState: 'open'
-                };
-              }
-
               if (
                 [
                   `${DEFAULT_CURRENCY}GBp`,
                   `${DEFAULT_CURRENCY}ILA`,
+                  `${DEFAULT_CURRENCY}USX`,
                   `${DEFAULT_CURRENCY}ZAc`
                 ].includes(symbol)
               ) {
@@ -423,9 +429,9 @@ export class DataProviderService {
                   this.configurationService.get('CACHE_QUOTES_TTL')
                 );
               }
-
-              console.log({ response });
             }
+
+            console.log({ response });
 
             Logger.debug(
               `Fetched ${symbolsChunk.length} quote${
