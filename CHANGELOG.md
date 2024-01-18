@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgraded `prisma` from version `5.7.1` to `5.8.0`
+- Upgraded `prisma` from version `5.7.1` to `5.8.1`
 
 ## 2.41.0 - 2024-01-16
 
