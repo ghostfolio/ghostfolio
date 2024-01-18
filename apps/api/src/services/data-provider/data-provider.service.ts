@@ -20,7 +20,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber } from 'lodash';
+import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -209,6 +209,48 @@ export class DataProviderService {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    let dataGatheringItems = aDataGatheringItems;
+
+    if (
+      this.hasCurrency({
+        dataGatheringItems,
+        currency: `${DEFAULT_CURRENCY}GBp`
+      })
+    ) {
+      dataGatheringItems.push({
+        dataSource: this.getDataSourceForExchangeRates(),
+        symbol: `${DEFAULT_CURRENCY}GBP`
+      });
+    }
+
+    if (
+      this.hasCurrency({
+        dataGatheringItems,
+        currency: `${DEFAULT_CURRENCY}ILA`
+      })
+    ) {
+      dataGatheringItems.push({
+        dataSource: this.getDataSourceForExchangeRates(),
+        symbol: `${DEFAULT_CURRENCY}ILS`
+      });
+    }
+
+    if (
+      this.hasCurrency({
+        dataGatheringItems,
+        currency: `${DEFAULT_CURRENCY}ZAc`
+      })
+    ) {
+      dataGatheringItems.push({
+        dataSource: this.getDataSourceForExchangeRates(),
+        symbol: `${DEFAULT_CURRENCY}ZAR`
+      });
+    }
+
+    dataGatheringItems = uniqWith(dataGatheringItems, (obj1, obj2) => {
+      return obj1.dataSource === obj2.dataSource && obj1.symbol === obj2.symbol;
+    });
+
     const result: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
@@ -217,10 +259,9 @@ export class DataProviderService {
       data: { [date: string]: IDataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
-    for (const { dataSource, symbol } of aDataGatheringItems) {
+    for (const { dataSource, symbol } of dataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.canHandle(symbol)) {
-        // TODO: Handle derived currencies
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
           const data: {
             [date: string]: IDataProviderHistoricalResponse;
@@ -256,13 +297,37 @@ export class DataProviderService {
     try {
       const allData = await Promise.all(promises);
       for (const { data, symbol } of allData) {
-        result[symbol] = data;
+        if (symbol === `${DEFAULT_CURRENCY}GBp`) {
+          result[symbol] = this.transformHistoricalData({
+            allData,
+            symbol,
+            currency: `${DEFAULT_CURRENCY}GBP`,
+            factor: 100
+          });
+        } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
+          result[symbol] = this.transformHistoricalData({
+            allData,
+            symbol,
+            currency: `${DEFAULT_CURRENCY}ILS`,
+            factor: 100
+          });
+        } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
+          result[symbol] = this.transformHistoricalData({
+            allData,
+            symbol,
+            currency: `${DEFAULT_CURRENCY}ZAR`,
+            factor: 100
+          });
+        } else {
+          result[symbol] = data;
+        }
       }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
     }
 
-    console.log({ result });
+    // TODO
+    console.log(JSON.stringify(result, null, '  '));
 
     return result;
   }
@@ -451,6 +516,7 @@ export class DataProviderService {
               }
             }
 
+            // TODO
             console.log({ response });
 
             Logger.debug(
@@ -584,11 +650,61 @@ export class DataProviderService {
     throw new Error('No data provider has been found.');
   }
 
+  private hasCurrency({
+    currency,
+    dataGatheringItems
+  }: {
+    currency: string;
+    dataGatheringItems: UniqueAsset[];
+  }) {
+    return dataGatheringItems.some(({ dataSource, symbol }) => {
+      return (
+        dataSource === this.getDataSourceForExchangeRates() &&
+        symbol === currency
+      );
+    });
+  }
+
   private isPremiumDataSource(aDataSource: DataSource) {
     const premiumDataSources: DataSource[] = [
       DataSource.EOD_HISTORICAL_DATA,
       DataSource.FINANCIAL_MODELING_PREP
     ];
     return premiumDataSources.includes(aDataSource);
+  }
+
+  private transformHistoricalData({
+    allData,
+    currency,
+    factor,
+    symbol
+  }: {
+    allData: {
+      data: {
+        [date: string]: IDataProviderHistoricalResponse;
+      };
+      symbol: string;
+    }[];
+    currency: string;
+    factor: number;
+    symbol: string;
+  }) {
+    const parentData = allData.find(({ symbol }) => {
+      return symbol === currency;
+    })?.data;
+
+    const data: {
+      [date: string]: IDataProviderHistoricalResponse;
+    } = {};
+
+    for (const date in parentData) {
+      data[date] = {
+        marketPrice: new Big(factor)
+          .mul(parentData[date].marketPrice)
+          .toNumber()
+      };
+    }
+
+    return data;
   }
 }
