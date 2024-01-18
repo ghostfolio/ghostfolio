@@ -291,17 +291,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return aSymbol;
   }
 
-  // TODO: Eliminate
-  private getConvertedValue({
-    symbol,
-    value
-  }: {
-    symbol: string;
-    value: number;
-  }) {
-    return value;
-  }
-
   private async getSearchResult(aQuery: string): Promise<
     (LookupItem & {
       assetClass: AssetClass;
