@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to edit countries in the asset profile details dialog of the admin control
 - Added support to edit sectors in the asset profile details dialog of the admin control
 
+### Changed
+
+- Upgraded `prisma` from version `5.7.1` to `5.8.1`
+
 ## 2.41.0 - 2024-01-16
 
 ### Added
