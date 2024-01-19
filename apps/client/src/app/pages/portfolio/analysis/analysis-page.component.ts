@@ -46,7 +46,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
   public investments: InvestmentItem[];
-  public investmentTimelineDataLabel = $localize`Deposit`;
+  public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingInvestmentChart: boolean;
@@ -59,7 +59,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public placeholder = '';
-  public portfolioEvolutionDataLabel = $localize`Deposit`;
+  public portfolioEvolutionDataLabel = $localize`Investment`;
   public streaks: PortfolioInvestments['streaks'];
   public top3: Position[];
   public unitCurrentStreak: string;
