@@ -18,6 +18,7 @@ RUN apt update && apt install -y \
     make \
     openssl \
     python3 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 RUN yarn install
 
