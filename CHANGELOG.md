@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the handling of derived currencies
 - Improved the labels in the portfolio evolution chart and investment timeline on the analysis page
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.7.1` to `5.8.1`
