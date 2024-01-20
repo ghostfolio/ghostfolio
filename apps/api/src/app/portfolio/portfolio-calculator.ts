@@ -1266,6 +1266,7 @@ export class PortfolioCalculator {
       date: format(start, DATE_FORMAT),
       dataSource: null,
       fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
       itemType: 'start',
       name: '',
       quantity: new Big(0),
@@ -1279,6 +1280,7 @@ export class PortfolioCalculator {
       date: format(end, DATE_FORMAT),
       dataSource: null,
       fee: new Big(0),
+      feeInBaseCurrency: new Big(0),
       itemType: 'end',
       name: '',
       quantity: new Big(0),
@@ -1306,6 +1308,7 @@ export class PortfolioCalculator {
             date: format(day, DATE_FORMAT),
             dataSource: null,
             fee: new Big(0),
+            feeInBaseCurrency: new Big(0),
             name: '',
             quantity: new Big(0),
             type: TypeOfOrder.BUY,
@@ -1367,6 +1370,13 @@ export class PortfolioCalculator {
           indexOfStartOrder === 0
             ? orders[i + 1]?.unitPrice
             : unitPriceAtStartDate;
+      }
+
+      if (order.fee) {
+        order.feeInBaseCurrency = order.fee.mul(currentExchangeRate ?? 1);
+        order.feeInBaseCurrencyWithCurrencyEffect = order.fee.mul(
+          exchangeRateAtOrderDate ?? 1
+        );
       }
 
       if (order.unitPrice) {
@@ -1468,10 +1478,10 @@ export class PortfolioCalculator {
         }
       }
 
-      fees = fees.plus(order.fee);
+      fees = fees.plus(order.feeInBaseCurrency ?? 0);
 
       feesWithCurrencyEffect = feesWithCurrencyEffect.plus(
-        order.fee.mul(exchangeRateAtOrderDate ?? 1)
+        order.feeInBaseCurrencyWithCurrencyEffect ?? 0
       );
 
       totalUnits = totalUnits.plus(
