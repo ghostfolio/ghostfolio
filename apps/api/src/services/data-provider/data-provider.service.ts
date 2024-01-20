@@ -11,6 +11,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
@@ -211,40 +212,23 @@ export class DataProviderService {
   }> {
     let dataGatheringItems = aDataGatheringItems;
 
-    if (
-      this.hasCurrency({
-        dataGatheringItems,
-        currency: `${DEFAULT_CURRENCY}GBp`
-      })
-    ) {
-      dataGatheringItems.push({
-        dataSource: this.getDataSourceForExchangeRates(),
-        symbol: `${DEFAULT_CURRENCY}GBP`
-      });
-    }
-
-    if (
-      this.hasCurrency({
-        dataGatheringItems,
-        currency: `${DEFAULT_CURRENCY}ILA`
-      })
-    ) {
-      dataGatheringItems.push({
-        dataSource: this.getDataSourceForExchangeRates(),
-        symbol: `${DEFAULT_CURRENCY}ILS`
-      });
-    }
-
-    if (
-      this.hasCurrency({
-        dataGatheringItems,
-        currency: `${DEFAULT_CURRENCY}ZAc`
-      })
-    ) {
-      dataGatheringItems.push({
-        dataSource: this.getDataSourceForExchangeRates(),
-        symbol: `${DEFAULT_CURRENCY}ZAR`
-      });
+    for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
+      if (
+        this.hasCurrency({
+          dataGatheringItems,
+          currency: `${DEFAULT_CURRENCY}${currency}`
+        })
+      ) {
+        // Skip derived currency
+        dataGatheringItems = dataGatheringItems.filter(({ symbol }) => {
+          return symbol !== `${DEFAULT_CURRENCY}${currency}`;
+        });
+        // Add root currency
+        dataGatheringItems.push({
+          dataSource: this.getDataSourceForExchangeRates(),
+          symbol: `${DEFAULT_CURRENCY}${rootCurrency}`
+        });
+      }
     }
 
     dataGatheringItems = uniqWith(dataGatheringItems, (obj1, obj2) => {
@@ -296,38 +280,27 @@ export class DataProviderService {
 
     try {
       const allData = await Promise.all(promises);
+
       for (const { data, symbol } of allData) {
-        if (symbol === `${DEFAULT_CURRENCY}GBp`) {
-          result[symbol] = this.transformHistoricalData({
-            allData,
-            symbol,
-            currency: `${DEFAULT_CURRENCY}GBP`,
-            factor: 100
-          });
-        } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
-          result[symbol] = this.transformHistoricalData({
-            allData,
-            symbol,
-            currency: `${DEFAULT_CURRENCY}ILS`,
-            factor: 100
-          });
-        } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
-          result[symbol] = this.transformHistoricalData({
-            allData,
-            symbol,
-            currency: `${DEFAULT_CURRENCY}ZAR`,
-            factor: 100
-          });
-        } else {
-          result[symbol] = data;
+        const currency = DERIVED_CURRENCIES.find(({ rootCurrency }) => {
+          return `${DEFAULT_CURRENCY}${rootCurrency}` === symbol;
+        });
+
+        if (currency) {
+          // Add derived currency
+          result[`${DEFAULT_CURRENCY}${currency.currency}`] =
+            this.transformHistoricalData({
+              allData,
+              currency: `${DEFAULT_CURRENCY}${currency.rootCurrency}`,
+              factor: currency.factor
+            });
         }
+
+        result[symbol] = data;
       }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
     }
-
-    // TODO
-    console.log(JSON.stringify(result, null, '  '));
 
     return result;
   }
@@ -433,10 +406,10 @@ export class DataProviderService {
             for (let [symbol, dataProviderResponse] of Object.entries(result)) {
               if (
                 [
-                  `${DEFAULT_CURRENCY}GBp`,
-                  `${DEFAULT_CURRENCY}ILA`,
-                  `${DEFAULT_CURRENCY}USX`,
-                  `${DEFAULT_CURRENCY}ZAc`
+                  ...DERIVED_CURRENCIES.map(({ currency }) => {
+                    return `${DEFAULT_CURRENCY}${currency}`;
+                  }),
+                  `${DEFAULT_CURRENCY}USX`
                 ].includes(symbol)
               ) {
                 continue;
@@ -453,71 +426,34 @@ export class DataProviderService {
                 this.configurationService.get('CACHE_QUOTES_TTL')
               );
 
-              if (symbol === `${DEFAULT_CURRENCY}GBP`) {
-                response[`${DEFAULT_CURRENCY}GBp`] = {
-                  ...dataProviderResponse,
-                  currency: 'GBp',
-                  marketPrice: new Big(
-                    result[`${DEFAULT_CURRENCY}GBP`].marketPrice
-                  )
-                    .mul(100)
-                    .toNumber(),
-                  marketState: 'open'
-                };
+              for (const {
+                currency,
+                factor,
+                rootCurrency
+              } of DERIVED_CURRENCIES) {
+                if (symbol === `${DEFAULT_CURRENCY}${rootCurrency}`) {
+                  response[`${DEFAULT_CURRENCY}${currency}`] = {
+                    ...dataProviderResponse,
+                    currency,
+                    marketPrice: new Big(
+                      result[`${DEFAULT_CURRENCY}${rootCurrency}`].marketPrice
+                    )
+                      .mul(factor)
+                      .toNumber(),
+                    marketState: 'open'
+                  };
 
-                this.redisCacheService.set(
-                  this.redisCacheService.getQuoteKey({
-                    dataSource: DataSource[dataSource],
-                    symbol: `${DEFAULT_CURRENCY}GBp`
-                  }),
-                  JSON.stringify(response[`${DEFAULT_CURRENCY}GBp`]),
-                  this.configurationService.get('CACHE_QUOTES_TTL')
-                );
-              } else if (symbol === `${DEFAULT_CURRENCY}ILS`) {
-                response[`${DEFAULT_CURRENCY}ILA`] = {
-                  ...dataProviderResponse,
-                  currency: 'ILA',
-                  marketPrice: new Big(
-                    result[`${DEFAULT_CURRENCY}ILS`].marketPrice
-                  )
-                    .mul(100)
-                    .toNumber(),
-                  marketState: 'open'
-                };
-
-                this.redisCacheService.set(
-                  this.redisCacheService.getQuoteKey({
-                    dataSource: DataSource[dataSource],
-                    symbol: `${DEFAULT_CURRENCY}ILA`
-                  }),
-                  JSON.stringify(response[`${DEFAULT_CURRENCY}ILA`]),
-                  this.configurationService.get('CACHE_QUOTES_TTL')
-                );
-              } else if (symbol === `${DEFAULT_CURRENCY}ZAR`) {
-                response[`${DEFAULT_CURRENCY}ZAc`] = {
-                  ...dataProviderResponse,
-                  currency: 'ZAc',
-                  marketPrice: new Big(
-                    result[`${DEFAULT_CURRENCY}ZAR`].marketPrice
-                  )
-                    .mul(100)
-                    .toNumber(),
-                  marketState: 'open'
-                };
-
-                this.redisCacheService.set(
-                  this.redisCacheService.getQuoteKey({
-                    dataSource: DataSource[dataSource],
-                    symbol: `${DEFAULT_CURRENCY}ZAc`
-                  }),
-                  JSON.stringify(response[`${DEFAULT_CURRENCY}ZAc`]),
-                  this.configurationService.get('CACHE_QUOTES_TTL')
-                );
+                  this.redisCacheService.set(
+                    this.redisCacheService.getQuoteKey({
+                      dataSource: DataSource[dataSource],
+                      symbol: `${DEFAULT_CURRENCY}${currency}`
+                    }),
+                    JSON.stringify(response[`${DEFAULT_CURRENCY}${currency}`]),
+                    this.configurationService.get('CACHE_QUOTES_TTL')
+                  );
+                }
               }
             }
-
-            // TODO
-            console.log({ response });
 
             Logger.debug(
               `Fetched ${symbolsChunk.length} quote${
@@ -676,8 +612,7 @@ export class DataProviderService {
   private transformHistoricalData({
     allData,
     currency,
-    factor,
-    symbol
+    factor
   }: {
     allData: {
       data: {
@@ -687,9 +622,8 @@ export class DataProviderService {
     }[];
     currency: string;
     factor: number;
-    symbol: string;
   }) {
-    const parentData = allData.find(({ symbol }) => {
+    const rootData = allData.find(({ symbol }) => {
       return symbol === currency;
     })?.data;
 
@@ -697,11 +631,9 @@ export class DataProviderService {
       [date: string]: IDataProviderHistoricalResponse;
     } = {};
 
-    for (const date in parentData) {
+    for (const date in rootData) {
       data[date] = {
-        marketPrice: new Big(factor)
-          .mul(parentData[date].marketPrice)
-          .toNumber()
+        marketPrice: new Big(factor).mul(rootData[date].marketPrice).toNumber()
       };
     }
 

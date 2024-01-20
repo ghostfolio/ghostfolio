@@ -5,6 +5,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
 import {
@@ -487,19 +488,11 @@ export class ExchangeRateDataService {
     // Add derived currencies
     currencies.push('USX');
 
-    if (currencies.includes('GBP') || currencies.includes('GBp')) {
-      currencies.push('GBP');
-      currencies.push('GBp');
-    }
-
-    if (currencies.includes('ILS') || currencies.includes('ILA')) {
-      currencies.push('ILS');
-      currencies.push('ILA');
-    }
-
-    if (currencies.includes('ZAR') || currencies.includes('ZAc')) {
-      currencies.push('ZAR');
-      currencies.push('ZAc');
+    for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
+      if (currencies.includes(currency) || currencies.includes(rootCurrency)) {
+        currencies.push(currency);
+        currencies.push(rootCurrency);
+      }
     }
 
     return uniq(currencies).filter(Boolean).sort();
