@@ -17,7 +17,6 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { User } from '@ghostfolio/common/interfaces';
@@ -91,8 +90,26 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   assistantListItems: QueryList<AssistantListItemComponent>;
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
+  public dateRangeFormControl = new FormControl<string>(undefined);
 
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public readonly dateRangeOptions = [
+    { label: $localize`Today`, value: '1d' },
+    {
+      label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
+      value: 'wtd'
+    },
+    {
+      label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
+      value: 'mtd'
+    },
+    {
+      label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
+      value: 'ytd'
+    },
+    { label: $localize`1Y`, value: '1y' },
+    { label: $localize`5Y`, value: '5y' },
+    { label: $localize`Max`, value: 'max' }
+  ];
   public isLoading = false;
   public isOpen = false;
   public placeholder = $localize`Find holding...`;
@@ -163,6 +180,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
+    this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
     this.tagsFormControl.setValue(
       this.user?.settings?.['filters.tags']?.[0] ?? null
     );

@@ -11,6 +11,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { GfAssistantListItemModule } from './assistant-list-item/assistant-list-item.module';
 import { AssistantComponent } from './assistant.component';
 
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 @NgModule({
   declarations: [AssistantComponent],
   exports: [AssistantComponent],
@@ -20,7 +23,9 @@ import { AssistantComponent } from './assistant.component';
     GfAssistantListItemModule,
     GfToggleModule,
     MatButtonModule,
+    MatFormFieldModule,
     MatRadioModule,
+    MatSelectModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,
