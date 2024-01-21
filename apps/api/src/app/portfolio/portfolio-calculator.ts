@@ -79,7 +79,9 @@ export class PortfolioCalculator {
     this.exchangeRateDataService = exchangeRateDataService;
     this.orders = orders;
 
-    this.orders.sort((a, b) => a.date?.localeCompare(b.date));
+    this.orders.sort((a, b) => {
+      return a.date?.localeCompare(b.date);
+    });
   }
 
   public computeTransactionPoints() {
@@ -150,7 +152,9 @@ export class PortfolioCalculator {
         (transactionPointItem) => transactionPointItem.symbol !== order.symbol
       );
       newItems.push(currentTransactionPointItem);
-      newItems.sort((a, b) => a.symbol?.localeCompare(b.symbol));
+      newItems.sort((a, b) => {
+        return a.symbol?.localeCompare(b.symbol);
+      });
       if (lastDate !== currentDate || lastTransactionPoint === null) {
         lastTransactionPoint = {
           date: currentDate,
@@ -767,8 +771,8 @@ export class PortfolioCalculator {
       }
     }
 
-    return sortBy(investments, (investment) => {
-      return investment.date;
+    return sortBy(investments, ({ date }) => {
+      return date;
     });
   }
 
