@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.7.1` to `5.8.1`
 
+### Fixed
+
+- Fixed an issue in the performance calculation with the currency conversion of fees
+
 ## 2.41.0 - 2024-01-16
 
 ### Added
@@ -3034,7 +3038,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with the user currency of the public page
-- Fixed an issue of the performance calculation with recent activities in the new calculation engine
+- Fixed an issue in the performance calculation with recent activities in the new calculation engine
 
 ## 1.127.0 - 16.03.2022
 
