@@ -349,8 +349,8 @@ export class PortfolioService {
       }
     }
 
-    investments = sortBy(investments, (investment) => {
-      return investment.date;
+    investments = sortBy(investments, ({ date }) => {
+      return date;
     });
 
     const startDate = this.getStartDate(
@@ -765,9 +765,9 @@ export class PortfolioService {
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(portfolioStart);
 
-    const position = currentPositions.positions.find(
-      (item) => item.symbol === aSymbol
-    );
+    const position = currentPositions.positions.find(({ symbol }) => {
+      return symbol === aSymbol;
+    });
 
     if (position) {
       const {
@@ -2146,9 +2146,9 @@ export class PortfolioService {
       }
     );
 
-    historicalDataItems.sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    historicalDataItems.sort((a, b) => {
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
 
     return historicalDataItems;
   }
