@@ -73,7 +73,9 @@ import {
   min,
   parseISO,
   set,
-  setDayOfYear,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
   subDays,
   subYears
 } from 'date-fns';
@@ -1649,10 +1651,22 @@ export class PortfolioService {
           subDays(new Date().setHours(0, 0, 0, 0), 1)
         ]);
         break;
+      case 'mtd':
+        portfolioStart = max([
+          portfolioStart,
+          startOfMonth(new Date().setHours(0, 0, 0, 0))
+        ]);
+        break;
+      case 'wtd':
+        portfolioStart = max([
+          portfolioStart,
+          startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 })
+        ]);
+        break;
       case 'ytd':
         portfolioStart = max([
           portfolioStart,
-          setDayOfYear(new Date().setHours(0, 0, 0, 0), 1)
+          startOfYear(new Date().setHours(0, 0, 0, 0))
         ]);
         break;
       case '1y':
