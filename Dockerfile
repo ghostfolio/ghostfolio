@@ -13,12 +13,12 @@ COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt update && apt install -y \
-    git \
+    curl \
     g++ \
+    git \
     make \
     openssl \
     python3 \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 RUN yarn install
 
