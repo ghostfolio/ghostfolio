@@ -16,7 +16,6 @@ import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
@@ -77,10 +76,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const historicalItem of historicalResult) {
         response[format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: this.getConvertedValue({
-            symbol,
-            value: historicalItem.dividends
-          })
+          marketPrice: historicalItem.dividends
         };
       }
 
@@ -129,10 +125,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
       for (const historicalItem of historicalResult) {
         response[symbol][format(historicalItem.date, DATE_FORMAT)] = {
-          marketPrice: this.getConvertedValue({
-            symbol: symbol,
-            value: historicalItem.close
-          })
+          marketPrice: historicalItem.close
         };
       }
 
@@ -203,57 +196,6 @@ export class YahooFinanceService implements DataProviderInterface {
               ? 'open'
               : 'closed',
           marketPrice: quote.regularMarketPrice || 0
-        };
-
-        if (
-          symbol === `${DEFAULT_CURRENCY}GBP` &&
-          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}GBp=X`)
-        ) {
-          // Convert GPB to GBp (pence)
-          response[`${DEFAULT_CURRENCY}GBp`] = {
-            ...response[symbol],
-            currency: 'GBp',
-            marketPrice: this.getConvertedValue({
-              symbol: `${DEFAULT_CURRENCY}GBp`,
-              value: response[symbol].marketPrice
-            })
-          };
-        } else if (
-          symbol === `${DEFAULT_CURRENCY}ILS` &&
-          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}ILA=X`)
-        ) {
-          // Convert ILS to ILA
-          response[`${DEFAULT_CURRENCY}ILA`] = {
-            ...response[symbol],
-            currency: 'ILA',
-            marketPrice: this.getConvertedValue({
-              symbol: `${DEFAULT_CURRENCY}ILA`,
-              value: response[symbol].marketPrice
-            })
-          };
-        } else if (
-          symbol === `${DEFAULT_CURRENCY}ZAR` &&
-          yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}ZAc=X`)
-        ) {
-          // Convert ZAR to ZAc (cents)
-          response[`${DEFAULT_CURRENCY}ZAc`] = {
-            ...response[symbol],
-            currency: 'ZAc',
-            marketPrice: this.getConvertedValue({
-              symbol: `${DEFAULT_CURRENCY}ZAc`,
-              value: response[symbol].marketPrice
-            })
-          };
-        }
-      }
-
-      if (yahooFinanceSymbols.includes(`${DEFAULT_CURRENCY}USX=X`)) {
-        // Convert USD to USX (cent)
-        response[`${DEFAULT_CURRENCY}USX`] = {
-          currency: 'USX',
-          dataSource: this.getName(),
-          marketPrice: new Big(1).mul(100).toNumber(),
-          marketState: 'open'
         };
       }
 
@@ -355,27 +297,6 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return { items };
-  }
-
-  private getConvertedValue({
-    symbol,
-    value
-  }: {
-    symbol: string;
-    value: number;
-  }) {
-    if (symbol === `${DEFAULT_CURRENCY}GBp`) {
-      // Convert GPB to GBp (pence)
-      return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${DEFAULT_CURRENCY}ILA`) {
-      // Convert ILS to ILA
-      return new Big(value).mul(100).toNumber();
-    } else if (symbol === `${DEFAULT_CURRENCY}ZAc`) {
-      // Convert ZAR to ZAc (cents)
-      return new Big(value).mul(100).toNumber();
-    }
-
-    return value;
   }
 
   private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {

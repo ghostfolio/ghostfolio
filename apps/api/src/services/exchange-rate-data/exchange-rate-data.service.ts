@@ -5,6 +5,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
   PROPERTY_CURRENCIES
 } from '@ghostfolio/common/config';
 import {
@@ -167,30 +168,6 @@ export class ExchangeRateDataService {
     for (const symbol of Object.keys(result)) {
       const [currency1, currency2] = symbol.match(/.{1,3}/g);
       const [date] = Object.keys(result[symbol]);
-
-      // Add derived currencies
-      if (currency2 === 'GBP') {
-        resultExtended[`${currency1}GBp`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      } else if (currency2 === 'ILS') {
-        resultExtended[`${currency1}ILA`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      } else if (currency2 === 'ZAR') {
-        resultExtended[`${currency1}ZAc`] = {
-          [date]: {
-            marketPrice:
-              result[`${currency1}${currency2}`][date].marketPrice * 100
-          }
-        };
-      }
 
       // Calculate the opposite direction
       resultExtended[`${currency2}${currency1}`] = {
@@ -486,8 +463,8 @@ export class ExchangeRateDataService {
           }
         }
       })
-    ).forEach((account) => {
-      currencies.push(account.currency);
+    ).forEach(({ currency }) => {
+      currencies.push(currency);
     });
 
     (
@@ -496,8 +473,8 @@ export class ExchangeRateDataService {
         orderBy: [{ currency: 'asc' }],
         select: { currency: true }
       })
-    ).forEach((symbolProfile) => {
-      currencies.push(symbolProfile.currency);
+    ).forEach(({ currency }) => {
+      currencies.push(currency);
     });
 
     const customCurrencies = (await this.propertyService.getByKey(
@@ -506,6 +483,16 @@ export class ExchangeRateDataService {
 
     if (customCurrencies?.length > 0) {
       currencies = currencies.concat(customCurrencies);
+    }
+
+    // Add derived currencies
+    currencies.push('USX');
+
+    for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
+      if (currencies.includes(currency) || currencies.includes(rootCurrency)) {
+        currencies.push(currency);
+        currencies.push(rootCurrency);
+      }
     }
 
     return uniq(currencies).filter(Boolean).sort();

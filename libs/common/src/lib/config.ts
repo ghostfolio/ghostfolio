@@ -41,6 +41,25 @@ export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_ROOT_URL = 'http://localhost:4200';
 
+// USX is handled separately
+export const DERIVED_CURRENCIES = [
+  {
+    currency: 'GBp',
+    factor: 100,
+    rootCurrency: 'GBP'
+  },
+  {
+    currency: 'ILA',
+    factor: 100,
+    rootCurrency: 'ILS'
+  },
+  {
+    currency: 'ZAc',
+    factor: 100,
+    rootCurrency: 'ZAR'
+  }
+];
+
 export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';

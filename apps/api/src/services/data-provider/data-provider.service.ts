@@ -9,14 +9,19 @@ import {
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_DATA_SOURCE_MAPPING } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
+  PROPERTY_DATA_SOURCE_MAPPING
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
-import { format, isValid } from 'date-fns';
-import { groupBy, isEmpty, isNumber } from 'lodash';
+import Big from 'big.js';
+import { eachDayOfInterval, format, isValid } from 'date-fns';
+import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -205,6 +210,31 @@ export class DataProviderService {
   ): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    let dataGatheringItems = aDataGatheringItems;
+
+    for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
+      if (
+        this.hasCurrency({
+          dataGatheringItems,
+          currency: `${DEFAULT_CURRENCY}${currency}`
+        })
+      ) {
+        // Skip derived currency
+        dataGatheringItems = dataGatheringItems.filter(({ symbol }) => {
+          return symbol !== `${DEFAULT_CURRENCY}${currency}`;
+        });
+        // Add root currency
+        dataGatheringItems.push({
+          dataSource: this.getDataSourceForExchangeRates(),
+          symbol: `${DEFAULT_CURRENCY}${rootCurrency}`
+        });
+      }
+    }
+
+    dataGatheringItems = uniqWith(dataGatheringItems, (obj1, obj2) => {
+      return obj1.dataSource === obj2.dataSource && obj1.symbol === obj2.symbol;
+    });
+
     const result: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
     } = {};
@@ -213,25 +243,59 @@ export class DataProviderService {
       data: { [date: string]: IDataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
-    for (const { dataSource, symbol } of aDataGatheringItems) {
+    for (const { dataSource, symbol } of dataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.canHandle(symbol)) {
-        promises.push(
-          dataProvider
-            .getHistorical({
-              from,
-              symbol,
-              to,
-              requestTimeout: ms('30 seconds')
+        if (symbol === `${DEFAULT_CURRENCY}USX`) {
+          const data: {
+            [date: string]: IDataProviderHistoricalResponse;
+          } = {};
+
+          for (const date of eachDayOfInterval({ end: to, start: from })) {
+            data[format(date, DATE_FORMAT)] = { marketPrice: 100 };
+          }
+
+          promises.push(
+            Promise.resolve({
+              data,
+              symbol
             })
-            .then((data) => ({ data: data?.[symbol], symbol }))
-        );
+          );
+        } else {
+          promises.push(
+            dataProvider
+              .getHistorical({
+                from,
+                symbol,
+                to,
+                requestTimeout: ms('30 seconds')
+              })
+              .then((data) => {
+                return { symbol, data: data?.[symbol] };
+              })
+          );
+        }
       }
     }
 
     try {
       const allData = await Promise.all(promises);
+
       for (const { data, symbol } of allData) {
+        const currency = DERIVED_CURRENCIES.find(({ rootCurrency }) => {
+          return `${DEFAULT_CURRENCY}${rootCurrency}` === symbol;
+        });
+
+        if (currency) {
+          // Add derived currency
+          result[`${DEFAULT_CURRENCY}${currency.currency}`] =
+            this.transformHistoricalData({
+              allData,
+              currency: `${DEFAULT_CURRENCY}${currency.rootCurrency}`,
+              factor: currency.factor
+            });
+        }
+
         result[symbol] = data;
       }
     } catch (error) {
@@ -256,6 +320,19 @@ export class DataProviderService {
       [symbol: string]: IDataProviderResponse;
     } = {};
     const startTimeTotal = performance.now();
+
+    if (
+      items.some(({ symbol }) => {
+        return symbol === `${DEFAULT_CURRENCY}USX`;
+      })
+    ) {
+      response[`${DEFAULT_CURRENCY}USX`] = {
+        currency: 'USX',
+        dataSource: this.getDataSourceForExchangeRates(),
+        marketPrice: 100,
+        marketState: 'open'
+      };
+    }
 
     // Get items from cache
     const itemsToFetch: UniqueAsset[] = [];
@@ -326,19 +403,56 @@ export class DataProviderService {
 
         promises.push(
           promise.then(async (result) => {
-            for (const [symbol, dataProviderResponse] of Object.entries(
-              result
-            )) {
+            for (let [symbol, dataProviderResponse] of Object.entries(result)) {
+              if (
+                [
+                  ...DERIVED_CURRENCIES.map(({ currency }) => {
+                    return `${DEFAULT_CURRENCY}${currency}`;
+                  }),
+                  `${DEFAULT_CURRENCY}USX`
+                ].includes(symbol)
+              ) {
+                continue;
+              }
+
               response[symbol] = dataProviderResponse;
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
-                  dataSource: DataSource[dataSource],
-                  symbol
+                  symbol,
+                  dataSource: DataSource[dataSource]
                 }),
-                JSON.stringify(dataProviderResponse),
+                JSON.stringify(response[symbol]),
                 this.configurationService.get('CACHE_QUOTES_TTL')
               );
+
+              for (const {
+                currency,
+                factor,
+                rootCurrency
+              } of DERIVED_CURRENCIES) {
+                if (symbol === `${DEFAULT_CURRENCY}${rootCurrency}`) {
+                  response[`${DEFAULT_CURRENCY}${currency}`] = {
+                    ...dataProviderResponse,
+                    currency,
+                    marketPrice: new Big(
+                      result[`${DEFAULT_CURRENCY}${rootCurrency}`].marketPrice
+                    )
+                      .mul(factor)
+                      .toNumber(),
+                    marketState: 'open'
+                  };
+
+                  this.redisCacheService.set(
+                    this.redisCacheService.getQuoteKey({
+                      dataSource: DataSource[dataSource],
+                      symbol: `${DEFAULT_CURRENCY}${currency}`
+                    }),
+                    JSON.stringify(response[`${DEFAULT_CURRENCY}${currency}`]),
+                    this.configurationService.get('CACHE_QUOTES_TTL')
+                  );
+                }
+              }
             }
 
             Logger.debug(
@@ -472,11 +586,57 @@ export class DataProviderService {
     throw new Error('No data provider has been found.');
   }
 
+  private hasCurrency({
+    currency,
+    dataGatheringItems
+  }: {
+    currency: string;
+    dataGatheringItems: UniqueAsset[];
+  }) {
+    return dataGatheringItems.some(({ dataSource, symbol }) => {
+      return (
+        dataSource === this.getDataSourceForExchangeRates() &&
+        symbol === currency
+      );
+    });
+  }
+
   private isPremiumDataSource(aDataSource: DataSource) {
     const premiumDataSources: DataSource[] = [
       DataSource.EOD_HISTORICAL_DATA,
       DataSource.FINANCIAL_MODELING_PREP
     ];
     return premiumDataSources.includes(aDataSource);
+  }
+
+  private transformHistoricalData({
+    allData,
+    currency,
+    factor
+  }: {
+    allData: {
+      data: {
+        [date: string]: IDataProviderHistoricalResponse;
+      };
+      symbol: string;
+    }[];
+    currency: string;
+    factor: number;
+  }) {
+    const rootData = allData.find(({ symbol }) => {
+      return symbol === currency;
+    })?.data;
+
+    const data: {
+      [date: string]: IDataProviderHistoricalResponse;
+    } = {};
+
+    for (const date in rootData) {
+      data[date] = {
+        marketPrice: new Big(factor).mul(rootData[date].marketPrice).toNumber()
+      };
+    }
+
+    return data;
   }
 }
