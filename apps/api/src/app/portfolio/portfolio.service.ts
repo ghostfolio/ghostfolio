@@ -1651,12 +1651,6 @@ export class PortfolioService {
           subDays(new Date().setHours(0, 0, 0, 0), 1)
         ]);
         break;
-      case 'ytd':
-        portfolioStart = max([
-          portfolioStart,
-          startOfYear(new Date().setHours(0, 0, 0, 0))
-        ]);
-        break;
       case 'mtd':
         portfolioStart = max([
           portfolioStart,
@@ -1667,6 +1661,12 @@ export class PortfolioService {
         portfolioStart = max([
           portfolioStart,
           startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 })
+        ]);
+        break;
+      case 'ytd':
+        portfolioStart = max([
+          portfolioStart,
+          startOfYear(new Date().setHours(0, 0, 0, 0))
         ]);
         break;
       case '1y':
