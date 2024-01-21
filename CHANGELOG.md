@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the date range support by week to date (`WTD`) and month to date (`MTD`) in the portfolio service
 - Added `healthcheck` for the _Ghostfolio_ service to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ## 2.42.0 - 2024-01-21
@@ -274,7 +275,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Handled reading items from missing transaction point while getting the position (`getPosition()`) in portfolio service
+- Handled reading items from missing transaction point while getting the position (`getPosition()`) in the portfolio service
 
 ## 2.24.0 - 2023-11-16
 
