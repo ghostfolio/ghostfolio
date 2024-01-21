@@ -144,7 +144,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           countries: JSON.stringify(
-            this.assetProfile?.countries.map(({ code, weight }) => {
+            this.assetProfile?.countries?.map(({ code, weight }) => {
               return { code, weight };
             }) ?? []
           ),
