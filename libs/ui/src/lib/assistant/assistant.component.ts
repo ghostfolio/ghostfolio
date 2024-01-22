@@ -90,8 +90,8 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   assistantListItems: QueryList<AssistantListItemComponent>;
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
-  public dateRangeFormControl = new FormControl<string>(undefined);
 
+  public dateRangeFormControl = new FormControl<string>(undefined);
   public readonly dateRangeOptions = [
     { label: $localize`Today`, value: '1d' },
     {
