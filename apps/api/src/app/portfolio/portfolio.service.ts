@@ -1660,7 +1660,10 @@ export class PortfolioService {
       case 'wtd':
         portfolioStart = max([
           portfolioStart,
-          startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 })
+          subDays(
+            startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 }),
+            1
+          )
         ]);
         break;
       case 'ytd':
@@ -1682,6 +1685,7 @@ export class PortfolioService {
         ]);
         break;
     }
+
     return portfolioStart;
   }
 
