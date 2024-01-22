@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extended the date range support by week to date (`WTD`) and month to date (`MTD`) in the portfolio service
+- Extended the date range support by week to date (`WTD`) and month to date (`MTD`) in the assistant (experimental)
 - Added `healthcheck` for the _Ghostfolio_ service to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ## 2.42.0 - 2024-01-21
