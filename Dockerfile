@@ -13,7 +13,6 @@ COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt update && apt install -y \
-    curl \
     g++ \
     git \
     make \
@@ -54,6 +53,7 @@ RUN yarn database:generate-typings
 FROM node:18-slim
 RUN apt update && apt install -y \
     openssl \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
