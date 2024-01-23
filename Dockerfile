@@ -52,8 +52,8 @@ RUN yarn database:generate-typings
 # Image to run, copy everything needed from builder
 FROM node:18-slim
 RUN apt update && apt install -y \
-    openssl \
     curl \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
