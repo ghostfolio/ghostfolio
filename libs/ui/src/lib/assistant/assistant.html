@@ -102,12 +102,17 @@
           >Date Range</span
         ></ng-template
       >
-      <div class="d-flex justify-content-center py-3">
-        <gf-toggle
-          [defaultValue]="user?.settings?.dateRange"
-          [options]="dateRangeOptions"
-          (change)="onChangeDateRange($event.value)"
-        ></gf-toggle>
+      <div class="p-3">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-select
+            [formControl]="dateRangeFormControl"
+            (selectionChange)="onChangeDateRange($event.value)"
+          >
+            @for (range of dateRangeOptions; track range) {
+            <mat-option [value]="range.value">{{ range.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       </div>
     </mat-tab>
     <mat-tab>

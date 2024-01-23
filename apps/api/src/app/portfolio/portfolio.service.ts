@@ -1654,19 +1654,22 @@ export class PortfolioService {
       case 'mtd':
         portfolioStart = max([
           portfolioStart,
-          startOfMonth(new Date().setHours(0, 0, 0, 0))
+          subDays(startOfMonth(new Date().setHours(0, 0, 0, 0)), 1)
         ]);
         break;
       case 'wtd':
         portfolioStart = max([
           portfolioStart,
-          startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 })
+          subDays(
+            startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 }),
+            1
+          )
         ]);
         break;
       case 'ytd':
         portfolioStart = max([
           portfolioStart,
-          startOfYear(new Date().setHours(0, 0, 0, 0))
+          subDays(startOfYear(new Date().setHours(0, 0, 0, 0)), 1)
         ]);
         break;
       case '1y':
@@ -1682,6 +1685,7 @@ export class PortfolioService {
         ]);
         break;
     }
+
     return portfolioStart;
   }
 
