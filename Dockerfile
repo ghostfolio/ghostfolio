@@ -13,7 +13,6 @@ COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt update && apt install -y \
-    curl \
     g++ \
     git \
     make \
@@ -53,6 +52,7 @@ RUN yarn database:generate-typings
 # Image to run, copy everything needed from builder
 FROM node:18-slim
 RUN apt update && apt install -y \
+    curl \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
