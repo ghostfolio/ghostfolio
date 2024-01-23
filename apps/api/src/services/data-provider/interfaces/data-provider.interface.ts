@@ -45,6 +45,7 @@ export interface DataProviderInterface {
 export interface GetDividendsParams {
   from: Date;
   granularity?: Granularity;
+  requestTimeout?: number;
   symbol: string;
   to: Date;
 }
