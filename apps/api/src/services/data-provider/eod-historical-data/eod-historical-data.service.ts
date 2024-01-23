@@ -20,7 +20,7 @@ import {
   DataSource,
   SymbolProfile
 } from '@prisma/client';
-import { format, isToday } from 'date-fns';
+import { addDays, format, isSameDay, isToday } from 'date-fns';
 import got from 'got';
 
 @Injectable()
@@ -54,8 +54,62 @@ export class EodHistoricalDataService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({}: GetDividendsParams) {
-    return {};
+  public async getDividends({
+    from,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetDividendsParams): Promise<{
+    [date: string]: IDataProviderHistoricalResponse;
+  }> {
+    symbol = this.convertToEodSymbol(symbol);
+
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
+    }
+
+    try {
+      const abortController = new AbortController();
+
+      const response: {
+        [date: string]: IDataProviderHistoricalResponse;
+      } = {};
+
+      setTimeout(() => {
+        abortController.abort();
+      }, requestTimeout);
+
+      const historicalResult = await got(
+        `${this.URL}/div/${symbol}?api_token=${
+          this.apiKey
+        }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
+          to,
+          DATE_FORMAT
+        )}`,
+        {
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
+
+      for (const { date, value } of historicalResult) {
+        response[date] = {
+          marketPrice: value
+        };
+      }
+
+      return response;
+    } catch (error) {
+      Logger.error(
+        `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
+        'EodHistoricalDataService'
+      );
+
+      return {};
+    }
   }
 
   public async getHistorical({

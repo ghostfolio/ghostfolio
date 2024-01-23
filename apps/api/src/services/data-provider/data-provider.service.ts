@@ -134,7 +134,8 @@ export class DataProviderService {
       from,
       granularity,
       symbol,
-      to
+      to,
+      requestTimeout: ms('30 seconds')
     });
   }
 
