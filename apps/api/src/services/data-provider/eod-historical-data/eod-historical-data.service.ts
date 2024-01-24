@@ -253,7 +253,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
             };
           } else {
             Logger.error(
-              `Could not get quotes for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
+              `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
               'EodHistoricalDataService'
             );
           }
