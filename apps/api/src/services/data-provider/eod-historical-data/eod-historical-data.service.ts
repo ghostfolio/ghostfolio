@@ -152,10 +152,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
             };
           } else {
             Logger.error(
-              `Could not get historical data for ${symbol} (${this.getName()}) from ${format(
-                from,
-                DATE_FORMAT
-              )} to ${format(to, DATE_FORMAT)}`,
+              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`,
               'EodHistoricalDataService'
             );
           }
