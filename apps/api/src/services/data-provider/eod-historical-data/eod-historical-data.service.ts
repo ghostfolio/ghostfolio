@@ -245,7 +245,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
               currency:
                 currency ??
                 this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
-              dataSource: DataSource.EOD_HISTORICAL_DATA,
+              dataSource: this.getName(),
               marketPrice: close,
               marketState: isToday(new Date(timestamp * 1000))
                 ? 'open'
