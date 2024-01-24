@@ -49,15 +49,12 @@ export class AccessTableComponent implements OnChanges, OnInit {
       return $localize`Public`;
     }
 
-    if (access.type === 'PRIVATE') {
-      switch (access.permission) {
-        case 'READ':
-          return $localize`View`;
-        case 'READ_RESTRICTED':
-          return $localize`Restricted View`;
-        default:
-          return $localize`Unknown`;
-      }
+    if (access.permissions.includes('READ')) {
+      return $localize`View`;
+    } else if (access.permissions.includes('READ_RESTRICTED')) {
+      return $localize`Restricted View`;
+    } else {
+      return $localize`Unknown`;
     }
   }
 

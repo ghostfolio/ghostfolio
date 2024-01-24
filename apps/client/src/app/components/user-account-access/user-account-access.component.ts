@@ -105,6 +105,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       data: {
         access: {
           alias: '',
+          permissions: ['READ_RESTRICTED'],
           type: 'PRIVATE'
         }
       },

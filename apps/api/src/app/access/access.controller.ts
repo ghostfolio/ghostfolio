@@ -48,6 +48,7 @@ export class AccessController {
           alias: access.alias,
           grantee: access.GranteeUser?.id,
           id: access.id,
+          permissions: access.permissions,
           type: 'RESTRICTED_VIEW'
         };
       }
@@ -56,6 +57,7 @@ export class AccessController {
         alias: access.alias,
         grantee: 'Public',
         id: access.id,
+        permissions: access.permissions,
         type: 'PUBLIC'
       };
     });
@@ -83,6 +85,7 @@ export class AccessController {
         GranteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
           : undefined,
+        permissions: data.permissions,
         User: { connect: { id: this.request.user.id } }
       });
     } catch {

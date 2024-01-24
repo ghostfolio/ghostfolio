@@ -37,24 +37,24 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
   ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
+      permissions: [this.data.access.permissions[0], Validators.required],
       type: [this.data.access.type, Validators.required],
-      userId: [this.data.access.grantee, Validators.required],
-      permission: [this.data.access.permission, Validators.required]
+      userId: [this.data.access.grantee, Validators.required]
     });
 
     this.accessForm.get('type').valueChanges.subscribe((value) => {
+      const permissionsControl = this.accessForm.get('permissions');
       const userIdControl = this.accessForm.get('userId');
-      const permissionControl = this.accessForm.get('permission');
 
       if (value === 'PRIVATE') {
+        permissionsControl.setValidators(Validators.required);
         userIdControl.setValidators(Validators.required);
-        permissionControl.setValidators(Validators.required);
       } else {
         userIdControl.clearValidators();
       }
 
+      permissionsControl.updateValueAndValidity();
       userIdControl.updateValueAndValidity();
-      permissionControl.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });
@@ -68,8 +68,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     const access: CreateAccessDto = {
       alias: this.accessForm.controls['alias'].value,
       granteeUserId: this.accessForm.controls['userId'].value,
-      type: this.accessForm.controls['type'].value,
-      permission: this.accessForm.controls['permission'].value
+      permissions: [this.accessForm.controls['permissions'].value]
     };
 
     this.dataService
