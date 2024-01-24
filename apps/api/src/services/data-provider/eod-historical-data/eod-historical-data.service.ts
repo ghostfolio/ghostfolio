@@ -22,6 +22,7 @@ import {
 } from '@prisma/client';
 import { addDays, format, isSameDay, isToday } from 'date-fns';
 import got from 'got';
+import { isNumber } from 'lodash';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
@@ -144,10 +145,17 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       return response.reduce(
-        (result, historicalItem, index, array) => {
-          result[this.convertFromEodSymbol(symbol)][historicalItem.date] = {
-            marketPrice: historicalItem.close
-          };
+        (result, { close, date }, index, array) => {
+          if (isNumber(close)) {
+            result[this.convertFromEodSymbol(symbol)][date] = {
+              marketPrice: close
+            };
+          } else {
+            Logger.error(
+              `Could not get historical market data for ${symbol} (${this.getName()}) at ${date}`,
+              'EodHistoricalDataService'
+            );
+          }
 
           return result;
         },
@@ -232,14 +240,23 @@ export class EodHistoricalDataService implements DataProviderInterface {
             return lookupItem.symbol === code;
           })?.currency;
 
-          result[this.convertFromEodSymbol(code)] = {
-            currency:
-              currency ??
-              this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
-            dataSource: DataSource.EOD_HISTORICAL_DATA,
-            marketPrice: close,
-            marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
-          };
+          if (isNumber(close)) {
+            result[this.convertFromEodSymbol(code)] = {
+              currency:
+                currency ??
+                this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
+              dataSource: this.getName(),
+              marketPrice: close,
+              marketState: isToday(new Date(timestamp * 1000))
+                ? 'open'
+                : 'closed'
+            };
+          } else {
+            Logger.error(
+              `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
+              'EodHistoricalDataService'
+            );
+          }
 
           return result;
         },
