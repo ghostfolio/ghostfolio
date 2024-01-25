@@ -105,18 +105,33 @@ export class UserService {
     return usersWithAdminRole.length > 0;
   }
 
-  public isRestrictedView(aUser: UserWithSettings) {
-    return aUser.Settings.settings.isRestrictedView ?? false;
+  public hasReadRestrictedAccessPermission({
+    impersonationId,
+    user
+  }: {
+    impersonationId: string;
+    user: UserWithSettings;
+  }) {
+    if (!impersonationId) {
+      return false;
+    }
+
+    const access = user.Access?.find(({ id }) => {
+      return id === impersonationId;
+    });
+
+    return access?.permissions?.includes('READ_RESTRICTED') ?? true;
   }
 
-  public hasReadRestrictedPermission(user: UserWithSettings): boolean {
-    return user.permissions.includes('READ_RESTRICTED');
+  public isRestrictedView(aUser: UserWithSettings) {
+    return aUser.Settings.settings.isRestrictedView ?? false;
   }
 
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
     const {
+      Access,
       accessToken,
       Account,
       Analytics,
@@ -131,6 +146,7 @@ export class UserService {
       updatedAt
     } = await this.prismaService.user.findUnique({
       include: {
+        Access: true,
         Account: {
           include: { Platform: true }
         },
@@ -142,6 +158,7 @@ export class UserService {
     });
 
     const user: UserWithSettings = {
+      Access,
       accessToken,
       Account,
       authChallenge,
