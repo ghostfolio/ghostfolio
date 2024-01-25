@@ -362,6 +362,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return aSymbol;
   }
 
+  private formatName({ name }: { name: string }) {
+    if (name) {
+      name = name.replace('iShares VII PLC - ', '');
+    }
+
+    return name;
+  }
+
   private async getSearchResult(aQuery: string): Promise<
     (LookupItem & {
       assetClass: AssetClass;
@@ -397,9 +405,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
             assetClass,
             assetSubClass,
             isin,
-            name,
             currency: this.convertCurrency(Currency),
             dataSource: this.getName(),
+            name: this.formatName({ name }),
             symbol: `${Code}.${Exchange}`
           };
         }
