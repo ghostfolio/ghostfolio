@@ -11,31 +11,32 @@ datasource db {
 
 model Access {
   alias         String?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime           @default(now())
   granteeUserId String?
-  id            String   @id @default(uuid())
-  updatedAt     DateTime @updatedAt
+  id            String             @id @default(uuid())
+  permissions   AccessPermission[] @default([READ_RESTRICTED])
+  updatedAt     DateTime           @updatedAt
   userId        String
-  GranteeUser   User?    @relation("accessGet", fields: [granteeUserId], references: [id])
-  User          User     @relation("accessGive", fields: [userId], references: [id])
+  GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], references: [id])
+  User          User               @relation("accessGive", fields: [userId], references: [id])
 }
 
 model Account {
-  balance     Float            @default(0)
-  balances    AccountBalance[]
-  comment     String?
-  createdAt   DateTime         @default(now())
-  currency    String?
-  id          String           @default(uuid())
-  isDefault   Boolean          @default(false)
-  isExcluded  Boolean          @default(false)
-  name        String?
-  platformId  String?
-  updatedAt   DateTime         @updatedAt
-  userId      String
-  Platform    Platform?        @relation(fields: [platformId], references: [id])
-  User        User             @relation(fields: [userId], references: [id])
-  Order       Order[]
+  balance    Float            @default(0)
+  balances   AccountBalance[]
+  comment    String?
+  createdAt  DateTime         @default(now())
+  currency   String?
+  id         String           @default(uuid())
+  isDefault  Boolean          @default(false)
+  isExcluded Boolean          @default(false)
+  name       String?
+  platformId String?
+  updatedAt  DateTime         @updatedAt
+  userId     String
+  Platform   Platform?        @relation(fields: [platformId], references: [id])
+  User       User             @relation(fields: [userId], references: [id])
+  Order      Order[]
 
   @@id([id, userId])
 }
@@ -194,6 +195,11 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
+}
+
+enum AccessPermission {
+  READ
+  READ_RESTRICTED
 }
 
 enum AssetClass {
