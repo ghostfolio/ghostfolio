@@ -11,7 +11,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  REPLACE_NAME_PARTS
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -364,7 +367,11 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
   private formatName({ name }: { name: string }) {
     if (name) {
-      name = name.replace('iShares VII PLC - ', '');
+      for (const part of REPLACE_NAME_PARTS) {
+        name = name.replace(part, '');
+      }
+
+      name = name.trim();
     }
 
     return name;

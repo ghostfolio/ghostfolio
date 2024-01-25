@@ -112,6 +112,21 @@ export const QUEUE_JOB_STATUS_LIST = <JobStatus[]>[
   'waiting'
 ];
 
+export const REPLACE_NAME_PARTS = [
+  'Amundi Index Solutions -',
+  'iShares ETF (CH) -',
+  'iShares III Public Limited Company -',
+  'iShares V PLC -',
+  'iShares VI Public Limited Company -',
+  'iShares VII PLC -',
+  'Multi Units Luxembourg -',
+  'VanEck ETFs N.V. -',
+  'Vaneck Vectors Ucits Etfs Plc -',
+  'Vanguard Funds Public Limited Company -',
+  'Vanguard Index Funds -',
+  'Xtrackers (IE) Plc -'
+];
+
 export const SUPPORTED_LANGUAGE_CODES = [
   'de',
   'en',
