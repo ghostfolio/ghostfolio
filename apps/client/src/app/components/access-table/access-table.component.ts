@@ -44,20 +44,6 @@ export class AccessTableComponent implements OnChanges, OnInit {
     }
   }
 
-  public getPermissonDisplayName(access: Access): string {
-    if (access.type === 'PUBLIC') {
-      return $localize`Public`;
-    }
-
-    if (access.permissions.includes('READ')) {
-      return $localize`View`;
-    } else if (access.permissions.includes('READ_RESTRICTED')) {
-      return $localize`Restricted View`;
-    } else {
-      return $localize`Unknown`;
-    }
-  }
-
   public onDeleteAccess(aId: string) {
     const confirmation = confirm(
       $localize`Do you really want to revoke this granted access?`

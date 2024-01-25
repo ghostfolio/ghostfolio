@@ -17,8 +17,13 @@
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
     <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
       <div class="align-items-center d-flex">
-        <ion-icon class="mr-1" name="lock-closed-outline" />
-        {{ getPermissonDisplayName(element) }}
+        @if (element.permissions.includes('READ')) {
+          <ion-icon class="mr-1" name="lock-open-outline" />
+          <ng-container i18n>View</ng-container>
+        } @else if (element.permissions.includes('READ_RESTRICTED')) {
+          <ion-icon class="mr-1" name="lock-closed-outline" />
+          <ng-container i18n>Restricted View</ng-container>
+        }
       </div>
     </td>
   </ng-container>
