@@ -42,25 +42,27 @@ export class AccessController {
       where: { userId: this.request.user.id }
     });
 
-    return accessesWithGranteeUser.map((access) => {
-      if (access.GranteeUser) {
+    return accessesWithGranteeUser.map(
+      ({ alias, GranteeUser, id, permissions }) => {
+        if (GranteeUser) {
+          return {
+            alias,
+            id,
+            permissions,
+            grantee: GranteeUser?.id,
+            type: 'PRIVATE'
+          };
+        }
+
         return {
-          alias: access.alias,
-          grantee: access.GranteeUser?.id,
-          id: access.id,
-          permissions: access.permissions,
-          type: 'RESTRICTED_VIEW'
+          alias,
+          id,
+          permissions,
+          grantee: 'Public',
+          type: 'PUBLIC'
         };
       }
-
-      return {
-        alias: access.alias,
-        grantee: 'Public',
-        id: access.id,
-        permissions: access.permissions,
-        type: 'PUBLIC'
-      };
-    });
+    );
   }
 
   @HasPermission(permissions.createAccess)
