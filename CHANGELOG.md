@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the tag selector to a form group in the assistant (experimental)
 - Improved the language localization for German (`de`)
 
 ### Fixed
