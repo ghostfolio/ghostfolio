@@ -86,57 +86,55 @@
     </div>
   </div>
 </div>
-<div
-  *ngIf="!(isLoading || searchFormControl.value) && user?.settings?.isExperimentalFeatures"
-  class="filter-container"
->
-  <mat-tab-group
-    animationDuration="0"
-    mat-align-tabs="start"
-    [mat-stretch-tabs]="false"
-    (click)="$event.stopPropagation();"
+<form [formGroup]="filterForm">
+  <div
+    *ngIf="!(isLoading || searchFormControl.value) && user?.settings?.isExperimentalFeatures"
+    class="filter-container"
   >
-    <mat-tab>
-      <ng-template mat-tab-label
-        ><ion-icon class="mr-2" name="calendar-clear-outline" /><span i18n
-          >Date Range</span
-        ></ng-template
-      >
-      <div class="p-3">
-        <mat-form-field appearance="outline" class="w-100 without-hint">
-          <mat-select
-            [formControl]="dateRangeFormControl"
-            (selectionChange)="onChangeDateRange($event.value)"
-          >
-            @for (range of dateRangeOptions; track range) {
-            <mat-option [value]="range.value">{{ range.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label
-        ><ion-icon class="mr-2" name="pricetag-outline" /><span i18n
-          >Tags</span
-        ></ng-template
-      >
-      <div class="p-3">
-        <mat-radio-group
-          color="primary"
-          [formControl]="tagsFormControl"
-          (change)="onTagChange()"
+    <mat-tab-group
+      animationDuration="0"
+      mat-align-tabs="start"
+      [mat-stretch-tabs]="false"
+      (click)="$event.stopPropagation();"
+    >
+      <mat-tab>
+        <ng-template mat-tab-label
+          ><ion-icon class="mr-2" name="calendar-clear-outline" /><span i18n
+            >Date Range</span
+          ></ng-template
         >
-          <mat-radio-button class="d-flex flex-column" i18n [value]="null"
-            >No tag</mat-radio-button
-          >
-          @for (tag of tags; track tag.id) {
-          <mat-radio-button class="d-flex flex-column" [value]="tag.id"
-            >{{ tag.name }}</mat-radio-button
-          >
-          }
-        </mat-radio-group>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</div>
+        <div class="p-3">
+          <mat-form-field appearance="outline" class="w-100 without-hint">
+            <mat-select
+              [formControl]="dateRangeFormControl"
+              (selectionChange)="onChangeDateRange($event.value)"
+            >
+              @for (range of dateRangeOptions; track range) {
+              <mat-option [value]="range.value">{{ range.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label
+          ><ion-icon class="mr-2" name="pricetag-outline" /><span i18n
+            >Tags</span
+          ></ng-template
+        >
+        <div class="p-3">
+          <mat-radio-group color="primary" formControlName="tag">
+            <mat-radio-button class="d-flex flex-column" i18n [value]="null"
+              >No tag</mat-radio-button
+            >
+            @for (tag of tags; track tag.id) {
+            <mat-radio-button class="d-flex flex-column" [value]="tag.id"
+              >{{ tag.name }}</mat-radio-button
+            >
+            }
+          </mat-radio-group>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</form>

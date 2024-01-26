@@ -15,7 +15,7 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -110,6 +110,9 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     { label: $localize`5Y`, value: '5y' },
     { label: $localize`Max`, value: 'max' }
   ];
+  public filterForm = this.formBuilder.group({
+    tag: new FormControl<string>(undefined)
+  });
   public isLoading = false;
   public isOpen = false;
   public placeholder = $localize`Find holding...`;
@@ -119,7 +122,6 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     holdings: []
   };
   public tags: Tag[] = [];
-  public tagsFormControl = new FormControl<string>(undefined);
 
   private keyManager: FocusKeyManager<AssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
@@ -127,7 +129,8 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private formBuilder: FormBuilder
   ) {}
 
   public ngOnInit() {
@@ -139,6 +142,19 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
         name: translate(name)
       };
     });
+
+    this.filterForm
+      .get('tag')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((tagId) => {
+        const tag = this.tags.find(({ id }) => {
+          return id === tagId;
+        });
+
+        this.selectedTagChanged.emit(tag);
+
+        this.onCloseAssistant();
+      });
 
     this.searchFormControl.valueChanges
       .pipe(
@@ -181,8 +197,14 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public ngOnChanges() {
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
-    this.tagsFormControl.setValue(
-      this.user?.settings?.['filters.tags']?.[0] ?? null
+
+    this.filterForm.setValue(
+      {
+        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+      },
+      {
+        emitEvent: false
+      }
     );
   }
 
@@ -217,16 +239,6 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(false);
 
     this.closed.emit();
-  }
-
-  public onTagChange() {
-    const selectedTag = this.tags.find(({ id }) => {
-      return id === this.tagsFormControl.value;
-    });
-
-    this.selectedTagChanged.emit(selectedTag);
-
-    this.onCloseAssistant();
   }
 
   public setIsOpen(aIsOpen: boolean) {
