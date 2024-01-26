@@ -379,7 +379,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ positions }) => {
         const positionsSorted = sortBy(
-          positions,
+          positions.filter(({ netPerformancePercentage }) => {
+            return isNumber(netPerformancePercentage);
+          }),
           'netPerformancePercentage'
         ).reverse();
 

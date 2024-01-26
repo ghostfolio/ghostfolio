@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Removed holdings with incomplete data from the _Top 3_ and _Bottom 3_ performers on the analysis page
+
 ## 2.44.0 - 2024-01-24
 
 ### Fixed
