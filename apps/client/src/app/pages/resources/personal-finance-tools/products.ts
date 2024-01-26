@@ -44,6 +44,7 @@ import { SumioPageComponent } from './products/sumio-page.component';
 import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
+import { WealthfolioPageComponent } from './products/wealthfolio-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { WhalPageComponent } from './products/whal-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
@@ -527,6 +528,14 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$348',
     slogan: 'Virtual Family Office for Smart Wealth Management'
+  },
+  {
+    component: WealthfolioPageComponent,
+    hasSelfHostingAbility: true,
+    key: 'wealthfolio',
+    languages: ['English'],
+    name: 'Wealthfolio',
+    slogan: 'Desktop Investment Tracker'
   },
   {
     component: WealthicaPageComponent,
