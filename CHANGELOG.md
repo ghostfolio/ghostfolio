@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the tag selector to a form group in the assistant (experimental)
 - Formatted the name in the _EOD Historical Data_ service
 - Improved the language localization for German (`de`)
+- Upgraded `prettier` from version `3.2.1` to `3.2.4`
 
 ### Fixed
 
