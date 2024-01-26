@@ -2,7 +2,7 @@
   <div class="no-gutters row">
     <div
       class="status-container text-muted text-right"
-      (click)="onShowErrors()"
+      (click)="errors?.length > 0 && onShowErrors()"
     >
       @if (errors?.length > 0 && !isLoading) {
         <ion-icon
