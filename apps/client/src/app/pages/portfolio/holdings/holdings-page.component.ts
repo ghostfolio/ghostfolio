@@ -86,16 +86,14 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
               ? $localize`Filter by account or tag...`
               : '';
 
-          return this.dataService.fetchPortfolioDetails({
-            filters: this.activeFilters
-          });
+          return this.fetchPortfolioDetails();
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe((portfolioDetails) => {
         this.portfolioDetails = portfolioDetails;
 
-        this.initializeAnalysisData();
+        this.initialize();
 
         this.isLoading = false;
 
@@ -146,28 +144,45 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
             ...tagFilters
           ];
 
+          if (this.user?.settings?.isExperimentalFeatures === true) {
+            this.holdings = undefined;
+
+            this.fetchPortfolioDetails().subscribe((portfolioDetails) => {
+              this.portfolioDetails = portfolioDetails;
+
+              this.initialize();
+
+              this.changeDetectorRef.markForCheck();
+            });
+          }
+
           this.changeDetectorRef.markForCheck();
         }
       });
   }
 
-  public initialize() {
-    this.holdings = [];
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
-  public initializeAnalysisData() {
-    this.initialize();
+  private fetchPortfolioDetails() {
+    return this.dataService.fetchPortfolioDetails({
+      filters:
+        this.activeFilters.length > 0
+          ? this.activeFilters
+          : this.userService.getFilters()
+    });
+  }
+
+  private initialize() {
+    this.holdings = [];
 
     for (const [symbol, holding] of Object.entries(
       this.portfolioDetails.holdings
     )) {
       this.holdings.push(holding);
     }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   private openPositionDialog({
