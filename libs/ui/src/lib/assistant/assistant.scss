@@ -2,6 +2,10 @@
   display: block;
 
   .filter-container {
+    .mat-mdc-tab-group {
+      max-height: 40vh;
+    }
+
     ::ng-deep {
       label {
         margin-bottom: 0;

@@ -99,7 +99,9 @@
     >
       <mat-tab>
         <ng-template mat-tab-label
-          ><ion-icon class="mr-2" name="calendar-clear-outline" /><span i18n
+          ><ion-icon name="calendar-clear-outline" /><span
+            class="d-none d-sm-block ml-2"
+            i18n
             >Date Range</span
           ></ng-template
         >
@@ -118,7 +120,30 @@
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label
-          ><ion-icon class="mr-2" name="pricetag-outline" /><span i18n
+          ><ion-icon name="albums-outline" /><span
+            class="d-none d-sm-block ml-2"
+            i18n
+            >Accounts</span
+          ></ng-template
+        >
+        <div class="p-3">
+          <mat-radio-group color="primary" formControlName="account">
+            <mat-radio-button class="d-flex flex-column" i18n [value]="null"
+              >No account</mat-radio-button
+            >
+            @for (account of accounts; track account.id) {
+            <mat-radio-button class="d-flex flex-column" [value]="account.id"
+              >{{ account.name }}</mat-radio-button
+            >
+            }
+          </mat-radio-group>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label
+          ><ion-icon name="pricetag-outline" /><span
+            class="d-none d-sm-block ml-2"
+            i18n
             >Tags</span
           ></ng-template
         >
