@@ -74,7 +74,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       });
 
     this.showDetails =
-      !this.hasImpersonationId &&
       !this.user.settings.isRestrictedView &&
       this.user.settings.viewMode !== 'ZEN';
 

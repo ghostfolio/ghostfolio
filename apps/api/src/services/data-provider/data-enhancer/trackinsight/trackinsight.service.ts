@@ -62,9 +62,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol.split(
-            '.'
-          )?.[0]}.json`,
+          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
+            symbol.split('.')?.[0]
+          }.json`,
           {
             // @ts-ignore
             signal: abortController.signal
@@ -104,9 +104,9 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         return got(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol.split(
-            '.'
-          )?.[0]}.json`,
+          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
+            symbol.split('.')?.[0]
+          }.json`,
           {
             // @ts-ignore
             signal: abortController.signal

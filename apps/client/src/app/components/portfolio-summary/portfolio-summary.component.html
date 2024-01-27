@@ -10,8 +10,8 @@
     [hidden]="summary?.ordersCount === null"
   >
     <div class="flex-grow-1 ml-3 text-truncate" i18n>
-      {{ summary?.ordersCount }} {summary?.ordersCount, plural, =1 {transaction}
-      other {transactions}}
+      {{ summary?.ordersCount }}
+      {summary?.ordersCount, plural, =1 {transaction} other {transactions}}
     </div>
   </div>
   <div class="row">
@@ -71,7 +71,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="align-items-center d-flex flex-grow-1 ml-3 text-truncate">
       <ng-container i18n>Gross Performance</ng-container>
-      <abbr class="initialism ml-2 text-muted" title="Time-Weighted Rate of Return">(TWR)</abbr>
+      <abbr
+        class="initialism ml-2 text-muted"
+        title="Time-Weighted Rate of Return"
+        >(TWR)</abbr
+      >
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value
@@ -117,7 +121,11 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate ml-3">
       <ng-container i18n>Net Performance</ng-container>
-      <abbr class="initialism ml-2 text-muted" title="Time-Weighted Rate of Return">(TWR)</abbr>
+      <abbr
+        class="initialism ml-2 text-muted"
+        title="Time-Weighted Rate of Return"
+        >(TWR)</abbr
+      >
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value

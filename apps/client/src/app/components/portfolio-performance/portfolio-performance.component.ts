@@ -58,7 +58,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           duration: 1,
           separator: getNumberFormatGroup(this.locale)
         }).start();
-      } else if (this.performance?.currentValue === null) {
+      } else if (this.showDetails === false) {
         new CountUp(
           'value',
           this.performance?.currentNetPerformancePercent * 100,
@@ -69,6 +69,8 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
             separator: getNumberFormatGroup(this.locale)
           }
         ).start();
+      } else {
+        this.value.nativeElement.innerHTML = '*****';
       }
     }
   }

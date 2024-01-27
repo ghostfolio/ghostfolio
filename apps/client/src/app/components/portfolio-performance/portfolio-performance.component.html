@@ -1,14 +1,12 @@
 <div class="container p-0">
   <div class="no-gutters row">
-    <div
-      class="status-container text-muted text-right"
-      (click)="onShowErrors()"
-    >
+    <div class="status-container text-muted text-right">
       @if (errors?.length > 0 && !isLoading) {
         <ion-icon
           i18n-title
           name="time-outline"
-          title="Oops! Our data provider partner is experiencing the hiccups."
+          title="Oops! A data provider is experiencing the hiccups."
+          (click)="onShowErrors()"
         />
       }
     </div>
