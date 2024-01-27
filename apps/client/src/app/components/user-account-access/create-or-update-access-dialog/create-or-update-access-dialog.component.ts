@@ -42,11 +42,11 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
       userId: [this.data.access.grantee, Validators.required]
     });
 
-    this.accessForm.get('type').valueChanges.subscribe((value) => {
+    this.accessForm.get('type').valueChanges.subscribe((accessType) => {
       const permissionsControl = this.accessForm.get('permissions');
       const userIdControl = this.accessForm.get('userId');
 
-      if (value === 'PRIVATE') {
+      if (accessType === 'PRIVATE') {
         permissionsControl.setValidators(Validators.required);
         userIdControl.setValidators(Validators.required);
       } else {

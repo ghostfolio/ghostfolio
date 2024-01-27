@@ -70,7 +70,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           }
         ).start();
       } else {
-        this.value.nativeElement.innerHTML = '***';
+        this.value.nativeElement.innerHTML = '*****';
       }
     }
   }
