@@ -147,13 +147,15 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
           if (this.user?.settings?.isExperimentalFeatures === true) {
             this.holdings = undefined;
 
-            this.fetchPortfolioDetails().subscribe((portfolioDetails) => {
-              this.portfolioDetails = portfolioDetails;
+            this.fetchPortfolioDetails()
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((portfolioDetails) => {
+                this.portfolioDetails = portfolioDetails;
 
-              this.initialize();
+                this.initialize();
 
-              this.changeDetectorRef.markForCheck();
-            });
+                this.changeDetectorRef.markForCheck();
+              });
           }
 
           this.changeDetectorRef.markForCheck();
