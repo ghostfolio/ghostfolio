@@ -2,7 +2,7 @@
   <div class="row no-gutters">
     <div class="col">
       <ng-container *ngIf="positions === undefined">
-        <gf-position [isLoading]="true"></gf-position>
+        <gf-position [isLoading]="true" />
       </ng-container>
       <ng-container *ngIf="positions !== undefined">
         <ng-container *ngIf="hasPositions">
@@ -13,7 +13,7 @@
             [locale]="locale"
             [position]="position"
             [range]="range"
-          ></gf-position>
+          />
           <gf-position
             *ngFor="let position of positionsRest"
             [baseCurrency]="baseCurrency"
@@ -21,15 +21,13 @@
             [locale]="locale"
             [position]="position"
             [range]="range"
-          ></gf-position>
+          />
         </ng-container>
         <div
           *ngIf="hasPermissionToCreateOrder && !hasPositions"
           class="p-3 text-center"
         >
-          <gf-no-transactions-info-indicator
-            [hasBorder]="false"
-          ></gf-no-transactions-info-indicator>
+          <gf-no-transactions-info-indicator [hasBorder]="false" />
         </div>
       </ng-container>
     </div>

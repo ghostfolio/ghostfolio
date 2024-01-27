@@ -8,7 +8,7 @@
         [isLoading]="isLoading"
         [placeholder]="placeholder"
         (valueChanged)="filters$.next($event)"
-      ></gf-activities-filter>
+      />
       }
     </div>
   </div>
@@ -20,7 +20,7 @@
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
         [holdings]="holdings"
         [locale]="user?.settings?.locale"
-      ></gf-holdings-table>
+      />
       <div
         *ngIf="hasPermissionToCreateOrder && holdings?.length > 0"
         class="text-center"

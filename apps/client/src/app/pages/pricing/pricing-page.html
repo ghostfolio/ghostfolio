@@ -171,10 +171,7 @@
                 <div class="align-items-center d-flex mb-2">
                   <h4 class="align-items-center d-flex flex-grow-1 m-0">
                     <span>Premium</span>
-                    <gf-premium-indicator
-                      class="ml-1"
-                      [enableLink]="false"
-                    ></gf-premium-indicator>
+                    <gf-premium-indicator class="ml-1" [enableLink]="false" />
                   </h4>
                   <div *ngIf="user?.subscription?.type === 'Premium'">
                     <ion-icon class="mr-1" name="checkmark-outline" />

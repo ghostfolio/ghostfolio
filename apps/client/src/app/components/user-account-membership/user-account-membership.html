@@ -5,7 +5,7 @@
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
           [name]="user?.subscription?.type"
-        ></gf-membership-card>
+        />
         <div
           *ngIf="user?.subscription?.type === 'Basic'"
           class="d-flex flex-column mt-5"
@@ -43,8 +43,8 @@
               <gf-premium-indicator
                 class="d-inline-block ml-1"
                 [enableLink]="false"
-              ></gf-premium-indicator
-            ></a>
+              />
+            </a>
             <a
               *ngIf="hasPermissionToUpdateUserSettings"
               class="mx-1"

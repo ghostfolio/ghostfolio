@@ -46,7 +46,7 @@
                   class="ml-1"
                   [enableLink]="false"
                   [title]="'Expires ' + formatDistanceToNow(element.subscription.expiresAt) + ' (' + (element.subscription.expiresAt | date: defaultDateFormat) + ')'"
-                ></gf-premium-indicator>
+                />
               </div>
             </td>
           </ng-container>
@@ -107,7 +107,7 @@
                 class="d-inline-block justify-content-end"
                 [locale]="user?.settings?.locale"
                 [value]="element.accountCount"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
@@ -128,7 +128,7 @@
                 class="d-inline-block justify-content-end"
                 [locale]="user?.settings?.locale"
                 [value]="element.transactionCount"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
@@ -153,7 +153,7 @@
                 [locale]="user?.settings?.locale"
                 [precision]="0"
                 [value]="element.engagement"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
