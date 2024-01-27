@@ -19,10 +19,10 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { User } from '@ghostfolio/common/interfaces';
+import { Filter, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { Tag } from '@prisma/client';
+import { Account, Tag } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -81,7 +81,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   @Output() closed = new EventEmitter<void>();
   @Output() dateRangeChanged = new EventEmitter<DateRange>();
-  @Output() selectedTagChanged = new EventEmitter<Tag>();
+  @Output() filtersChanged = new EventEmitter<Filter[]>();
 
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
@@ -91,6 +91,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
+  public accounts: Account[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
   public readonly dateRangeOptions = [
     { label: $localize`Today`, value: '1d' },
@@ -111,6 +112,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     { label: $localize`Max`, value: 'max' }
   ];
   public filterForm = this.formBuilder.group({
+    account: new FormControl<string>(undefined),
     tag: new FormControl<string>(undefined)
   });
   public isLoading = false;
@@ -136,6 +138,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnInit() {
     const { tags } = this.dataService.fetchInfo();
 
+    this.accounts = this.user?.accounts;
     this.tags = tags.map(({ id, name }) => {
       return {
         id,
@@ -143,15 +146,19 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
       };
     });
 
-    this.filterForm
-      .get('tag')
-      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((tagId) => {
-        const tag = this.tags.find(({ id }) => {
-          return id === tagId;
-        });
-
-        this.selectedTagChanged.emit(tag);
+    this.filterForm.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ account, tag }) => {
+        this.filtersChanged.emit([
+          {
+            id: account,
+            type: 'ACCOUNT'
+          },
+          {
+            id: tag,
+            type: 'TAG'
+          }
+        ]);
 
         this.onCloseAssistant();
       });
@@ -200,6 +207,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filterForm.setValue(
       {
+        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
         tag: this.user?.settings?.['filters.tags']?.[0] ?? null
       },
       {

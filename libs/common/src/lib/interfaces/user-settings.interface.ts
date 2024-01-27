@@ -7,6 +7,7 @@ export interface UserSettings {
   colorScheme?: ColorScheme;
   dateRange?: DateRange;
   emergencyFund?: number;
+  'filters.accounts'?: string[];
   'filters.tags'?: string[];
   isExperimentalFeatures?: boolean;
   isRestrictedView?: boolean;

@@ -15,7 +15,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
-import { Filter, User } from '@ghostfolio/common/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';

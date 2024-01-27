@@ -47,18 +47,26 @@ export class UserService extends ObservableStore<UserStoreState> {
   }
 
   public getFilters() {
+    const filters: Filter[] = [];
     const user = this.getState().user;
 
-    return user?.settings?.isExperimentalFeatures === true
-      ? user.settings['filters.tags']
-        ? <Filter[]>[
-            {
-              id: user.settings['filters.tags'][0],
-              type: 'TAG'
-            }
-          ]
-        : []
-      : [];
+    if (user?.settings?.isExperimentalFeatures === true) {
+      if (user.settings['filters.accounts']) {
+        filters.push({
+          id: user.settings['filters.accounts'][0],
+          type: 'ACCOUNT'
+        });
+      }
+
+      if (user.settings['filters.tags']) {
+        filters.push({
+          id: user.settings['filters.tags'][0],
+          type: 'TAG'
+        });
+      }
+    }
+
+    return filters;
   }
 
   public remove() {
