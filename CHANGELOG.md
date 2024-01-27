@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the import for activities with `MANUAL` data source and type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
 - Removed holdings with incomplete data from the _Top 3_ and _Bottom 3_ performers on the analysis page
 
 ## 2.44.0 - 2024-01-24

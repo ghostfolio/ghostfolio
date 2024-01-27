@@ -42,10 +42,21 @@ export class ManualService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    return {
+    const assetProfile: Partial<SymbolProfile> = {
       dataSource: this.getName(),
       symbol: aSymbol
     };
+
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource: this.getName(), symbol: aSymbol }
+    ]);
+
+    if (symbolProfile) {
+      assetProfile.currency = symbolProfile.currency;
+      assetProfile.name = symbolProfile.name;
+    }
+
+    return assetProfile;
   }
 
   public async getDividends({}: GetDividendsParams) {
