@@ -148,9 +148,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
           this.initialize();
 
-          return this.dataService.fetchPortfolioDetails({
-            filters: this.activeFilters
-          });
+          return this.fetchPortfolioDetails();
         }),
         takeUntil(this.unsubscribeSubject)
       )
@@ -209,6 +207,26 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.hasImpersonationId || this.user.settings.isRestrictedView
               ? `{0}%`
               : `{0} ${this.user?.settings?.baseCurrency}`;
+
+          if (this.user?.settings?.isExperimentalFeatures === true) {
+            this.isLoading = true;
+
+            this.initialize();
+
+            this.fetchPortfolioDetails()
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((portfolioDetails) => {
+                this.initialize();
+
+                this.portfolioDetails = portfolioDetails;
+
+                this.initializeAnalysisData();
+
+                this.isLoading = false;
+
+                this.changeDetectorRef.markForCheck();
+              });
+          }
 
           this.changeDetectorRef.markForCheck();
         }
@@ -559,6 +577,15 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchPortfolioDetails() {
+    return this.dataService.fetchPortfolioDetails({
+      filters:
+        this.activeFilters.length > 0
+          ? this.activeFilters
+          : this.userService.getFilters()
+    });
   }
 
   private openAccountDetailDialog(aAccountId: string) {
