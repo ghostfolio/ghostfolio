@@ -47,11 +47,10 @@ export class UserService extends ObservableStore<UserStoreState> {
   }
 
   public getFilters() {
+    const filters: Filter[] = [];
     const user = this.getState().user;
 
     if (user?.settings?.isExperimentalFeatures === true) {
-      const filters: Filter[] = [];
-
       if (user.settings['filters.accounts']) {
         filters.push({
           id: user.settings['filters.accounts'][0],
@@ -65,11 +64,9 @@ export class UserService extends ObservableStore<UserStoreState> {
           type: 'TAG'
         });
       }
-
-      return filters;
-    } else {
-      return [];
     }
+
+    return filters;
   }
 
   public remove() {
