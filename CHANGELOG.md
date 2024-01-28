@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the portfolio allocations to work with the filters of the assistant (experimental)
 - Migrated the portfolio holdings to work with the filters of the assistant (experimental)
 
 ## 2.45.0 - 2024-01-27

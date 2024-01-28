@@ -148,9 +148,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
           this.initialize();
 
-          return this.dataService.fetchPortfolioDetails({
-            filters: this.activeFilters
-          });
+          return this.fetchPortfolioDetails();
         }),
         takeUntil(this.unsubscribeSubject)
       )
@@ -159,7 +157,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
         this.portfolioDetails = portfolioDetails;
 
-        this.initializeAnalysisData();
+        this.initializeAllocationsData();
 
         this.isLoading = false;
 
@@ -210,6 +208,26 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
               ? `{0}%`
               : `{0} ${this.user?.settings?.baseCurrency}`;
 
+          if (this.user?.settings?.isExperimentalFeatures === true) {
+            this.isLoading = true;
+
+            this.initialize();
+
+            this.fetchPortfolioDetails()
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((portfolioDetails) => {
+                this.initialize();
+
+                this.portfolioDetails = portfolioDetails;
+
+                this.initializeAllocationsData();
+
+                this.isLoading = false;
+
+                this.changeDetectorRef.markForCheck();
+              });
+          }
+
           this.changeDetectorRef.markForCheck();
         }
       });
@@ -217,7 +235,52 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public initialize() {
+  public onAccountChartClicked({ symbol }: UniqueAsset) {
+    if (symbol && symbol !== UNKNOWN_KEY) {
+      this.router.navigate([], {
+        queryParams: { accountId: symbol, accountDetailDialog: true }
+      });
+    }
+  }
+
+  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private extractEtfProvider({
+    assetSubClass,
+    name
+  }: {
+    assetSubClass: PortfolioPosition['assetSubClass'];
+    name: string;
+  }) {
+    if (assetSubClass === 'ETF') {
+      const [firstWord] = name.split(' ');
+      return firstWord;
+    }
+
+    return UNKNOWN_KEY;
+  }
+
+  private fetchPortfolioDetails() {
+    return this.dataService.fetchPortfolioDetails({
+      filters:
+        this.activeFilters.length > 0
+          ? this.activeFilters
+          : this.userService.getFilters()
+    });
+  }
+
+  private initialize() {
     this.accounts = {};
     this.continents = {
       [UNKNOWN_KEY]: {
@@ -310,7 +373,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   }
 
-  public initializeAnalysisData() {
+  private initializeAllocationsData() {
     for (const [
       id,
       { name, valueInBaseCurrency, valueInPercentage }
@@ -540,27 +603,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets[UNKNOWN_KEY].value / marketsTotal;
   }
 
-  public onAccountChartClicked({ symbol }: UniqueAsset) {
-    if (symbol && symbol !== UNKNOWN_KEY) {
-      this.router.navigate([], {
-        queryParams: { accountId: symbol, accountDetailDialog: true }
-      });
-    }
-  }
-
-  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
-    if (dataSource && symbol) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
-      });
-    }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open(AccountDetailDialog, {
       autoFocus: false,
@@ -620,20 +662,5 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
-  }
-
-  private extractEtfProvider({
-    assetSubClass,
-    name
-  }: {
-    assetSubClass: PortfolioPosition['assetSubClass'];
-    name: string;
-  }) {
-    if (assetSubClass === 'ETF') {
-      const [firstWord] = name.split(' ');
-      return firstWord;
-    }
-
-    return UNKNOWN_KEY;
   }
 }
