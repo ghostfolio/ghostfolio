@@ -39,7 +39,7 @@
         class="d-inline d-sm-none mr-1"
         [tooltip]="element.Platform?.name"
         [url]="element.Platform?.url"
-      ></gf-symbol-icon>
+      />
       <span>{{ element.name }} </span>
       <span
         *ngIf="element.isDefault"
@@ -83,7 +83,7 @@
           class="mr-1"
           [tooltip]="element.Platform?.name"
           [url]="element.Platform?.url"
-        ></gf-symbol-icon>
+        />
         <span>{{ element.Platform?.name }}</span>
       </div>
     </td>
@@ -131,7 +131,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.balance"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -143,7 +143,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalBalanceInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 
@@ -166,7 +166,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.value"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -178,7 +178,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalValueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 
@@ -201,7 +201,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.valueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -213,7 +213,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalValueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 

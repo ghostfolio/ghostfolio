@@ -3,7 +3,7 @@
   [deviceType]="data.deviceType"
   [title]="dialogTitle"
   (closeButtonClicked)="onCancel()"
-></gf-dialog-header>
+/>
 
 <div class="flex-grow-1" mat-dialog-content>
   <mat-stepper
@@ -136,7 +136,7 @@
             [sortDisabled]="true"
             [totalItems]="totalItems"
             (selectedActivities)="updateSelection($event)"
-          ></gf-activities-table-lazy>
+          />
           <gf-activities-table
             *ngIf="importStep === 1 && data?.user?.settings?.isExperimentalFeatures !== true"
             [activities]="activities"
@@ -153,7 +153,7 @@
             [showFooter]="false"
             [showSymbolColumn]="false"
             (selectedActivities)="updateSelection($event)"
-          ></gf-activities-table>
+          />
           <div class="d-flex justify-content-end mt-3">
             <button mat-button (click)="onReset(stepper)">
               <ng-container i18n>Back</ng-container>
@@ -214,4 +214,4 @@
   mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onCancel()"
-></gf-dialog-footer>
+/>

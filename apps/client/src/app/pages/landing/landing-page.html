@@ -328,11 +328,7 @@
       <gf-carousel [aria-label]="'Testimonials'">
         <div *ngFor="let testimonial of testimonials" gf-carousel-item>
           <div class="d-flex px-4">
-            <gf-logo
-              class="mr-3 mt-2 pt-1"
-              size="medium"
-              [showLabel]="false"
-            ></gf-logo>
+            <gf-logo class="mr-3 mt-2 pt-1" size="medium" [showLabel]="false" />
             <div>
               <div>{{ testimonial.quote }}</div>
               <div class="mt-2 text-muted">
@@ -361,10 +357,7 @@
       </h2>
     </div>
     <div class="col-md-8 customer-map-container offset-md-2">
-      <gf-world-map-chart
-        format="👻"
-        [countries]="countriesOfSubscribersMap"
-      ></gf-world-map-chart>
+      <gf-world-map-chart format="👻" [countries]="countriesOfSubscribersMap" />
     </div>
   </div>
 
@@ -450,7 +443,7 @@
     <div
       class="align-items-center d-flex flex-column justify-content-center w-100"
     >
-      <gf-logo size="medium"></gf-logo>
+      <gf-logo size="medium" />
       <div>Wealth Management Software</div>
     </div>
   </div>

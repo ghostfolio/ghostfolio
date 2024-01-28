@@ -120,7 +120,7 @@
           [dataSource]="element.SymbolProfile?.dataSource"
           [symbol]="element.SymbolProfile?.symbol"
           [tooltip]="element.SymbolProfile?.name"
-        ></gf-symbol-icon>
+        />
         <div>{{ element.dataSource }}</div>
       </td>
     </ng-container>
@@ -154,7 +154,7 @@
         <ng-container i18n>Type</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        <gf-activity-type [activityType]="element.type"></gf-activity-type>
+        <gf-activity-type [activityType]="element.type" />
       </td>
     </ng-container>
 
@@ -188,7 +188,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.quantity"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -212,7 +212,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.unitPrice"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -236,7 +236,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.fee"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -259,7 +259,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.value"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -291,7 +291,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.valueInBaseCurrency"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -307,7 +307,7 @@
             class="mr-1"
             [tooltip]="element.Account?.Platform?.name"
             [url]="element.Account?.Platform?.url"
-          ></gf-symbol-icon>
+          />
           <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
         </div>
       </td>
@@ -486,7 +486,5 @@
   "
   class="p-3 text-center"
 >
-  <gf-no-transactions-info-indicator
-    [hasBorder]="false"
-  ></gf-no-transactions-info-indicator>
+  <gf-no-transactions-info-indicator [hasBorder]="false" />
 </div>

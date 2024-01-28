@@ -7,7 +7,7 @@
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
       >
-        <gf-logo class="px-2" [label]="pageTitle"></gf-logo>
+        <gf-logo class="px-2" [label]="pageTitle" />
       </a>
     </div>
     <span class="spacer"></span>
@@ -295,7 +295,7 @@
           class="px-2"
           [label]="pageTitle"
           [showLabel]="currentRoute !== 'register'"
-        ></gf-logo>
+        />
       </a>
     </div>
     <span class="spacer"></span>

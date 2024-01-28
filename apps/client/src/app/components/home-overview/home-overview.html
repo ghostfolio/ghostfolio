@@ -78,7 +78,7 @@
             [showLoader]="false"
             [showXAxis]="false"
             [showYAxis]="false"
-          ></gf-line-chart>
+          />
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
           [performance]="performance"
           [showDetails]="showDetails"
           [unit]="unit"
-        ></gf-portfolio-performance>
+        />
         <div
           *ngIf="showDetails && !user?.settings?.isExperimentalFeatures"
           class="text-center"
@@ -105,7 +105,7 @@
             [isLoading]="isLoadingPerformance"
             [options]="dateRangeOptions"
             (change)="onChangeDateRange($event.value)"
-          ></gf-toggle>
+          />
         </div>
       </div>
     </div>
