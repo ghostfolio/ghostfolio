@@ -165,6 +165,32 @@
           />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
+          <ng-container
+            *ngIf="
+              hasPermissionForSubscription &&
+              user?.subscription?.type === 'Basic'
+            "
+          >
+            <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
+              ><span class="align-items-center d-flex"
+                ><span
+                  ><ng-container
+                    *ngIf="user.subscription.offer === 'default'"
+                    i18n
+                    >Upgrade Plan</ng-container
+                  >
+                  <ng-container
+                    *ngIf="user.subscription.offer === 'renewal'"
+                    i18n
+                    >Renew Plan</ng-container
+                  ></span
+                >
+                <gf-premium-indicator
+                  class="d-inline-block ml-1"
+                  [enableLink]="false" /></span
+            ></a>
+            <hr class="m-0" />
+          </ng-container>
           <ng-container *ngIf="user?.access?.length > 0">
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
