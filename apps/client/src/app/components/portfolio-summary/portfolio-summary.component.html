@@ -2,7 +2,7 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Time in Market</div>
     <div class="justify-content-end">
-      <gf-value class="justify-content-end" [value]="timeInMarket"></gf-value>
+      <gf-value class="justify-content-end" [value]="timeInMarket" />
     </div>
   </div>
   <div
@@ -26,7 +26,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalBuy"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -38,7 +38,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.totalSell"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -53,7 +53,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.committedFunds"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -65,7 +65,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentGrossPerformance"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -87,7 +87,7 @@
         [value]="
           isLoading ? undefined : summary?.currentGrossPerformancePercent
         "
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -100,7 +100,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.fees"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -115,7 +115,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentNetPerformance"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -135,7 +135,7 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="isLoading ? undefined : summary?.currentNetPerformancePercent"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -151,7 +151,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.currentValue"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -163,7 +163,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.items"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -184,7 +184,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.total"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -197,7 +197,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.cash"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -210,7 +210,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.emergencyFund?.assets"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -222,7 +222,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.cash"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -234,7 +234,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.excludedAccountsAndActivities"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -254,7 +254,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.liabilities"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -269,7 +269,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.netWorth"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -284,7 +284,7 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="isLoading ? undefined : summary?.annualizedPerformancePercent"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="row">
@@ -299,7 +299,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.interest"
-      ></gf-value>
+      />
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
@@ -311,7 +311,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="isLoading ? undefined : summary?.dividend"
-      ></gf-value>
+      />
     </div>
   </div>
 </div>

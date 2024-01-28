@@ -4,7 +4,7 @@
   [deviceType]="data.deviceType"
   [title]="name"
   (closeButtonClicked)="onClose()"
-></gf-dialog-header>
+/>
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
@@ -16,7 +16,7 @@
           [locale]="user?.settings?.locale"
           [unit]="user?.settings?.baseCurrency"
           [value]="valueInBaseCurrency"
-        ></gf-value>
+        />
       </div>
     </div>
 
@@ -28,7 +28,7 @@
         [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
-      ></gf-investment-chart>
+      />
     </div>
 
     <div class="mb-3 row">
@@ -79,7 +79,7 @@
           [deviceType]="data.deviceType"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
-        ></gf-holdings-table>
+        />
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
@@ -102,7 +102,7 @@
           [totalItems]="totalItems"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
-        ></gf-activities-table-lazy>
+        />
         <gf-activities-table
           *ngIf="user?.settings?.isExperimentalFeatures !== true"
           [activities]="activities"
@@ -115,7 +115,7 @@
           [locale]="user?.settings?.locale"
           [showActions]="false"
           (export)="onExport()"
-        ></gf-activities-table>
+        />
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
@@ -128,7 +128,7 @@
           [locale]="user?.settings?.locale"
           [showActions]="!hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
-        ></gf-account-balances>
+        />
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -138,4 +138,4 @@
   mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onClose()"
-></gf-dialog-footer>
+/>

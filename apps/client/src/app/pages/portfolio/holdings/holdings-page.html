@@ -2,12 +2,14 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Holdings</h1>
+      @if (!user?.settings?.isExperimentalFeatures) {
       <gf-activities-filter
         [allFilters]="allFilters"
         [isLoading]="isLoading"
         [placeholder]="placeholder"
         (valueChanged)="filters$.next($event)"
-      ></gf-activities-filter>
+      />
+      }
     </div>
   </div>
   <div class="row">
@@ -18,7 +20,7 @@
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
         [holdings]="holdings"
         [locale]="user?.settings?.locale"
-      ></gf-holdings-table>
+      />
       <div
         *ngIf="hasPermissionToCreateOrder && holdings?.length > 0"
         class="text-center"

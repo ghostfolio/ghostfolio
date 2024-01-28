@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the export in the lazy-loaded activities table on the portfolio activities page (experimental)
 
+## 2.46.0 - 2024-01-28
+
+### Added
+
+- Added a button to reset the active filters in the assistant (experimental)
+
+### Changed
+
+- Migrated the portfolio allocations to work with the filters of the assistant (experimental)
+- Migrated the portfolio holdings to work with the filters of the assistant (experimental)
+
 ## 2.45.0 - 2024-01-27
 
 ### Added

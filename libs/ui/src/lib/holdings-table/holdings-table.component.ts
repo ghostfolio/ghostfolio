@@ -58,11 +58,11 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
 
     this.isLoading = true;
 
-    if (this.holdings) {
-      this.dataSource = new MatTableDataSource(this.holdings);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.dataSource = new MatTableDataSource(this.holdings);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
+    if (this.holdings) {
       this.isLoading = false;
     }
   }
