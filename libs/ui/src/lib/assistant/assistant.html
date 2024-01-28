@@ -91,33 +91,25 @@
     *ngIf="!(isLoading || searchFormControl.value) && user?.settings?.isExperimentalFeatures"
     class="filter-container"
   >
+    <div class="p-3">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>Date Range</mat-label>
+        <mat-select
+          [formControl]="dateRangeFormControl"
+          (selectionChange)="onChangeDateRange($event.value)"
+        >
+          @for (range of dateRangeOptions; track range) {
+          <mat-option [value]="range.value">{{ range.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
     <mat-tab-group
       animationDuration="0"
       mat-align-tabs="start"
       [mat-stretch-tabs]="false"
       (click)="$event.stopPropagation();"
     >
-      <mat-tab>
-        <ng-template mat-tab-label
-          ><ion-icon name="calendar-clear-outline" /><span
-            class="d-none d-sm-block ml-2"
-            i18n
-            >Date Range</span
-          ></ng-template
-        >
-        <div class="p-3">
-          <mat-form-field appearance="outline" class="w-100 without-hint">
-            <mat-select
-              [formControl]="dateRangeFormControl"
-              (selectionChange)="onChangeDateRange($event.value)"
-            >
-              @for (range of dateRangeOptions; track range) {
-              <mat-option [value]="range.value">{{ range.label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label
           ><ion-icon name="albums-outline" /><span
@@ -161,5 +153,17 @@
         </div>
       </mat-tab>
     </mat-tab-group>
+    <div class="p-3">
+      <button
+        class="w-100"
+        color="primary"
+        i18n
+        mat-flat-button
+        [disabled]="!hasFilter(filterForm.value)"
+        (click)="onResetFilters()"
+      >
+        Reset Filters
+      </button>
+    </div>
   </div>
 </form>

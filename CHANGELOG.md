@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a button to reset the active filters in the assistant (experimental)
+
 ### Changed
 
 - Migrated the portfolio allocations to work with the filters of the assistant (experimental)

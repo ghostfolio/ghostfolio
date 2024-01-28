@@ -216,6 +216,12 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
+  public hasFilter(aFormValue: { [key: string]: string }) {
+    return Object.values(aFormValue).some((value) => {
+      return !!value;
+    });
+  }
+
   public async initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
@@ -247,6 +253,21 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(false);
 
     this.closed.emit();
+  }
+
+  public onResetFilters() {
+    this.filtersChanged.emit([
+      {
+        id: null,
+        type: 'ACCOUNT'
+      },
+      {
+        id: null,
+        type: 'TAG'
+      }
+    ]);
+
+    this.onCloseAssistant();
   }
 
   public setIsOpen(aIsOpen: boolean) {
