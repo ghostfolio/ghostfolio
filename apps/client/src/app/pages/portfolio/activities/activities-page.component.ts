@@ -199,8 +199,14 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public onExport(activityIds?: string[]) {
+    let fetchExportParams: any = { activityIds };
+
+    if (!activityIds) {
+      fetchExportParams = { filters: this.userService.getFilters() };
+    }
+
     this.dataService
-      .fetchExport(activityIds)
+      .fetchExport(fetchExportParams)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         for (const activity of data.activities) {
@@ -220,7 +226,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   public onExportDrafts(activityIds?: string[]) {
     this.dataService
-      .fetchExport(activityIds)
+      .fetchExport({ activityIds })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         downloadAsFile({
