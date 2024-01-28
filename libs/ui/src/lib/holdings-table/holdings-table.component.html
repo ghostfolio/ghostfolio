@@ -14,7 +14,7 @@
           [dataSource]="element.dataSource"
           [symbol]="element.symbol"
           [tooltip]="element.name"
-        ></gf-symbol-icon>
+        />
       </td>
     </ng-container>
 
@@ -59,7 +59,7 @@
             [isDate]="element.dateOfFirstActivity ? true : false"
             [locale]="locale"
             [value]="element.dateOfFirstActivity ?? ''"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -83,7 +83,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.valueInBaseCurrency"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -104,7 +104,7 @@
             [isPercent]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.allocationInPercentage"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -126,7 +126,7 @@
             [isPercent]="true"
             [locale]="locale"
             [value]="isLoading ? undefined : element.netPerformancePercent"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -162,7 +162,7 @@
     height: '1.5rem',
     width: '100%'
   }"
-></ngx-skeleton-loader>
+/>
 
 <div
   *ngIf="dataSource.data.length > pageSize && !isLoading"
@@ -179,7 +179,5 @@
   "
   class="p-3 text-center"
 >
-  <gf-no-transactions-info-indicator
-    [hasBorder]="false"
-  ></gf-no-transactions-info-indicator>
+  <gf-no-transactions-info-indicator [hasBorder]="false" />
 </div>

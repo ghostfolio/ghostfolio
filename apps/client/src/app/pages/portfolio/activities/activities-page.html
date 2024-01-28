@@ -26,7 +26,7 @@
         (importDividends)="onImportDividends()"
         (pageChanged)="onChangePage($event)"
         (sortChanged)="onSortChanged($event)"
-      ></gf-activities-table-lazy>
+      />
       <gf-activities-table
         *ngIf="user?.settings?.isExperimentalFeatures !== true"
         [activities]="activities"
@@ -44,7 +44,7 @@
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
         (importDividends)="onImportDividends()"
-      ></gf-activities-table>
+      />
     </div>
   </div>
 

@@ -50,7 +50,7 @@
       [marketData]="marketDataDetails"
       [symbol]="data.symbol"
       (marketDataChanged)="onMarketDataChanged($event)"
-    ></gf-admin-market-data-detail>
+    />
 
     <div class="mt-3" formGroupName="historicalData">
       <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -162,7 +162,7 @@
               [keys]="['name']"
               [maxItems]="10"
               [positions]="sectors"
-            ></gf-portfolio-proportion-chart>
+            />
           </div>
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Countries</div>
@@ -172,7 +172,7 @@
               [keys]="['name']"
               [maxItems]="10"
               [positions]="countries"
-            ></gf-portfolio-proportion-chart>
+            />
           </div>
         </ng-template>
       </ng-container>
