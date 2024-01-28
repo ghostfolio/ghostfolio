@@ -15,10 +15,10 @@
           >
             <button color="primary" mat-flat-button (click)="onCheckout()">
               <ng-container *ngIf="user.subscription.offer === 'default'" i18n
-                >Upgrade</ng-container
+                >Upgrade Plan</ng-container
               >
               <ng-container *ngIf="user.subscription.offer === 'renewal'" i18n
-                >Renew</ng-container
+                >Renew Plan</ng-container
               >
             </button>
             <div *ngIf="price" class="mt-1 text-center">

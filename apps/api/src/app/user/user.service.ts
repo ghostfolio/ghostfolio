@@ -219,18 +219,18 @@ export class UserService {
           new Date(),
           user.createdAt
         );
-        let frequency = 15;
+        let frequency = 10;
 
         if (daysSinceRegistration > 365) {
           frequency = 2;
         } else if (daysSinceRegistration > 180) {
           frequency = 3;
         } else if (daysSinceRegistration > 60) {
-          frequency = 5;
+          frequency = 4;
         } else if (daysSinceRegistration > 30) {
-          frequency = 8;
+          frequency = 6;
         } else if (daysSinceRegistration > 15) {
-          frequency = 12;
+          frequency = 8;
         }
 
         if (Analytics?.activityCount % frequency === 1) {
