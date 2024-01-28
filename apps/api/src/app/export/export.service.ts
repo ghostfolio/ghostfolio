@@ -44,6 +44,7 @@ export class ExportService {
     );
 
     let { activities } = await this.orderService.getOrders({
+      filters,
       userCurrency,
       userId,
       includeDrafts: true,
