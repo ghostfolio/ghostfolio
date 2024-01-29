@@ -55,7 +55,7 @@ export class ActivitiesTableLazyComponent
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
   @Output() deleteAllActivities = new EventEmitter<void>();
-  @Output() export = new EventEmitter<string[]>();
+  @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
   @Output() importDividends = new EventEmitter<UniqueAsset>();
