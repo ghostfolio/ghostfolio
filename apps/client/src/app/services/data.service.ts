@@ -279,8 +279,14 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
 
-  public fetchExport(activityIds?: string[]) {
-    let params = new HttpParams();
+  public fetchExport({
+    activityIds,
+    filters
+  }: {
+    activityIds?: string[];
+    filters?: Filter[];
+  } = {}) {
+    let params = this.buildFiltersAsQueryParams({ filters });
 
     if (activityIds) {
       params = params.append('activityIds', activityIds.join(','));
