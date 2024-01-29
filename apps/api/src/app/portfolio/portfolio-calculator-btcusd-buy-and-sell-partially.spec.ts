@@ -88,7 +88,7 @@ describe('PortfolioCalculator', () => {
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+        await portfolioCalculator.getInvestmentsByGroup('month');
 
       spy.mockRestore();
 
@@ -155,7 +155,7 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2015-01-01', investment: new Big('640.86') },
+        { date: '2015-01-01', investment: new Big('637.085334599999935914') },
         { date: '2015-02-01', investment: new Big('0') },
         { date: '2015-03-01', investment: new Big('0') },
         { date: '2015-04-01', investment: new Big('0') },
@@ -190,7 +190,7 @@ describe('PortfolioCalculator', () => {
         { date: '2017-09-01', investment: new Big('0') },
         { date: '2017-10-01', investment: new Big('0') },
         { date: '2017-11-01', investment: new Big('0') },
-        { date: '2017-12-01', investment: new Big('-14156.4') }
+        { date: '2017-12-01', investment: new Big('-13854.86868') }
       ]);
     });
   });

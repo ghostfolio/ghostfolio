@@ -79,7 +79,7 @@ describe('PortfolioCalculator', () => {
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+        await portfolioCalculator.getInvestmentsByGroup('month');
 
       spy.mockRestore();
 
