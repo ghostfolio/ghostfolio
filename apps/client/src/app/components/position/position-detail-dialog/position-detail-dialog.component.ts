@@ -281,7 +281,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     }
 
     this.dataService
-      .fetchExport(activityIds)
+      .fetchExport({ activityIds })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data) => {
         downloadAsFile({

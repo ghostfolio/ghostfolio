@@ -1,7 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
-import { Export } from '@ghostfolio/common/interfaces';
+import { Filter, Export } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -13,10 +13,12 @@ export class ExportService {
 
   public async export({
     activityIds,
+    filters,
     userCurrency,
     userId
   }: {
     activityIds?: string[];
+    filters?: Filter[];
     userCurrency: string;
     userId: string;
   }): Promise<Export> {
@@ -42,6 +44,7 @@ export class ExportService {
     );
 
     let { activities } = await this.orderService.getOrders({
+      filters,
       userCurrency,
       userId,
       includeDrafts: true,
