@@ -136,10 +136,8 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { tags } = this.dataService.fetchInfo();
-
     this.accounts = this.user?.accounts;
-    this.tags = tags.map(({ id, name }) => {
+    this.tags = this.user?.tags.map(({ id, name }) => {
       return {
         id,
         name: translate(name)
