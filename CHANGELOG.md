@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the tag selector to only show used tags in the assistant (experimental)
+
 ### Fixed
 
 - Fixed the export in the lazy-loaded activities table on the portfolio activities page (experimental)
