@@ -685,9 +685,9 @@ export class PortfolioCalculator {
     });
   }
 
-  public getInvestmentsByGroup(
+  public async getInvestmentsByGroup(
     groupBy: GroupBy
-  ): { date: string; investment: Big }[] {
+  ): Promise<{ date: string; investment: Big }[]> {
     if (this.orders.length === 0) {
       return [];
     }
@@ -696,6 +696,18 @@ export class PortfolioCalculator {
     let currentDate: Date;
     let investmentByGroup = new Big(0);
 
+    const exchangeRatesByCurrency =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        currencies: uniq(
+          this.orders.map(({ currency }) => {
+            return currency;
+          })
+        ),
+        endDate: endOfDay(parseDate(last(this.transactionPoints).date)),
+        startDate: parseDate(first(this.transactionPoints).date),
+        targetCurrency: this.currency
+      });
+
     for (const [index, order] of this.orders.entries()) {
       if (
         isSameYear(parseDate(order.date), currentDate) &&
@@ -703,7 +715,14 @@ export class PortfolioCalculator {
       ) {
         // Same group: Add up investments
         investmentByGroup = investmentByGroup.plus(
-          order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
+          order.quantity
+            .mul(order.unitPrice)
+            .mul(
+              exchangeRatesByCurrency[`${order.currency}${this.currency}`][
+                order.date
+              ]
+            )
+            .mul(this.getFactor(order.type))
         );
       } else {
         // New group: Store previous group and reset
@@ -723,6 +742,11 @@ export class PortfolioCalculator {
         currentDate = parseDate(order.date);
         investmentByGroup = order.quantity
           .mul(order.unitPrice)
+          .mul(
+            exchangeRatesByCurrency[`${order.currency}${this.currency}`][
+              order.date
+            ]
+          )
           .mul(this.getFactor(order.type));
       }
 

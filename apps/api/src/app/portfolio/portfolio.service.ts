@@ -296,14 +296,15 @@ export class PortfolioService {
     let investments: InvestmentItem[];
 
     if (groupBy) {
-      investments = portfolioCalculator
-        .getInvestmentsByGroup(groupBy)
-        .map((item) => {
-          return {
-            date: item.date,
-            investment: item.investment.toNumber()
-          };
-        });
+      const investmentsByGroup =
+        await portfolioCalculator.getInvestmentsByGroup(groupBy);
+
+      investments = investmentsByGroup.map(({ date, investment }) => {
+        return {
+          date,
+          investment: investment.toNumber()
+        };
+      });
 
       // Add investment of current group
       const dateOfCurrentGroup = format(
