@@ -1,4 +1,3 @@
-import { TimelineInfoInterface } from '@ghostfolio/api/app/portfolio/interfaces/timeline-info.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
@@ -20,32 +19,19 @@ import {
   differenceInDays,
   endOfDay,
   format,
-  isAfter,
   isBefore,
   isSameDay,
   isSameMonth,
   isSameYear,
-  max,
-  min,
   set,
   subDays
 } from 'date-fns';
-import {
-  cloneDeep,
-  first,
-  flatten,
-  isNumber,
-  last,
-  sortBy,
-  uniq
-} from 'lodash';
+import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
-import { GetValueObject } from './interfaces/get-value-object.interface';
 import { PortfolioOrderItem } from './interfaces/portfolio-calculator.interface';
 import { PortfolioOrder } from './interfaces/portfolio-order.interface';
-import { TimelinePeriod } from './interfaces/timeline-period.interface';
 import {
   Accuracy,
   TimelineSpecification
@@ -776,107 +762,6 @@ export class PortfolioCalculator {
     });
   }
 
-  public async calculateTimeline(
-    timelineSpecification: TimelineSpecification[],
-    endDate: string
-  ): Promise<TimelineInfoInterface> {
-    if (timelineSpecification.length === 0) {
-      return {
-        maxNetPerformance: new Big(0),
-        minNetPerformance: new Big(0),
-        timelinePeriods: []
-      };
-    }
-
-    const startDate = timelineSpecification[0].start;
-    const start = parseDate(startDate);
-    const end = parseDate(endDate);
-
-    const timelinePeriodPromises: Promise<TimelineInfoInterface>[] = [];
-    let i = 0;
-    let j = -1;
-    for (
-      let currentDate = start;
-      !isAfter(currentDate, end);
-      currentDate = this.addToDate(
-        currentDate,
-        timelineSpecification[i].accuracy
-      )
-    ) {
-      if (this.isNextItemActive(timelineSpecification, currentDate, i)) {
-        i++;
-      }
-      while (
-        j + 1 < this.transactionPoints.length &&
-        !isAfter(parseDate(this.transactionPoints[j + 1].date), currentDate)
-      ) {
-        j++;
-      }
-
-      let periodEndDate = currentDate;
-      if (timelineSpecification[i].accuracy === 'day') {
-        let nextEndDate = end;
-        if (j + 1 < this.transactionPoints.length) {
-          nextEndDate = parseDate(this.transactionPoints[j + 1].date);
-        }
-        periodEndDate = min([
-          addMonths(currentDate, 3),
-          max([currentDate, nextEndDate])
-        ]);
-      }
-      const timePeriodForDates = this.getTimePeriodForDate(
-        j,
-        currentDate,
-        endOfDay(periodEndDate)
-      );
-      currentDate = periodEndDate;
-      if (timePeriodForDates != null) {
-        timelinePeriodPromises.push(timePeriodForDates);
-      }
-    }
-
-    let minNetPerformance = new Big(0);
-    let maxNetPerformance = new Big(0);
-
-    const timelineInfoInterfaces: TimelineInfoInterface[] = await Promise.all(
-      timelinePeriodPromises
-    );
-
-    try {
-      minNetPerformance = timelineInfoInterfaces
-        .map((timelineInfo) => timelineInfo.minNetPerformance)
-        .filter((performance) => performance !== null)
-        .reduce((minPerformance, current) => {
-          if (minPerformance.lt(current)) {
-            return minPerformance;
-          } else {
-            return current;
-          }
-        });
-
-      maxNetPerformance = timelineInfoInterfaces
-        .map((timelineInfo) => timelineInfo.maxNetPerformance)
-        .filter((performance) => performance !== null)
-        .reduce((maxPerformance, current) => {
-          if (maxPerformance.gt(current)) {
-            return maxPerformance;
-          } else {
-            return current;
-          }
-        });
-    } catch {}
-
-    const timelinePeriods = timelineInfoInterfaces.map(
-      (timelineInfo) => timelineInfo.timelinePeriods
-    );
-
-    return {
-      maxNetPerformance,
-      minNetPerformance,
-      timelinePeriods: flatten(timelinePeriods)
-    };
-  }
-
   private calculateOverallPerformance(positions: TimelinePosition[]) {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
@@ -980,123 +865,6 @@ export class PortfolioCalculator {
           : grossPerformanceWithCurrencyEffect.div(
               totalTimeWeightedInvestmentWithCurrencyEffect
             )
-    };
-  }
-
-  private async getTimePeriodForDate(
-    j: number,
-    startDate: Date,
-    endDate: Date
-  ): Promise<TimelineInfoInterface> {
-    let investment: Big = new Big(0);
-    let fees: Big = new Big(0);
-
-    const marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    } = {};
-    if (j >= 0) {
-      const currencies: { [name: string]: string } = {};
-      const dataGatheringItems: IDataGatheringItem[] = [];
-
-      for (const item of this.transactionPoints[j].items) {
-        currencies[item.symbol] = item.currency;
-        dataGatheringItems.push({
-          dataSource: item.dataSource,
-          symbol: item.symbol
-        });
-        investment = investment.plus(item.investment);
-        fees = fees.plus(item.fee);
-      }
-
-      let marketSymbols: GetValueObject[] = [];
-      if (dataGatheringItems.length > 0) {
-        try {
-          const { values } = await this.currentRateService.getValues({
-            dataGatheringItems,
-            dateQuery: {
-              gte: startDate,
-              lt: endOfDay(endDate)
-            }
-          });
-          marketSymbols = values;
-        } catch (error) {
-          Logger.error(
-            `Failed to fetch info for date ${startDate} with exception`,
-            error,
-            'PortfolioCalculator'
-          );
-          return null;
-        }
-      }
-
-      for (const marketSymbol of marketSymbols) {
-        const date = format(marketSymbol.date, DATE_FORMAT);
-        if (!marketSymbolMap[date]) {
-          marketSymbolMap[date] = {};
-        }
-        if (marketSymbol.marketPrice) {
-          marketSymbolMap[date][marketSymbol.symbol] = new Big(
-            marketSymbol.marketPrice
-          );
-        }
-      }
-    }
-
-    const results: TimelinePeriod[] = [];
-    let maxNetPerformance: Big = null;
-    let minNetPerformance: Big = null;
-    for (
-      let currentDate = startDate;
-      isBefore(currentDate, endDate);
-      currentDate = addDays(currentDate, 1)
-    ) {
-      let value = new Big(0);
-      const currentDateAsString = format(currentDate, DATE_FORMAT);
-      let invalid = false;
-      if (j >= 0) {
-        for (const item of this.transactionPoints[j].items) {
-          if (
-            !marketSymbolMap[currentDateAsString]?.hasOwnProperty(item.symbol)
-          ) {
-            invalid = true;
-            break;
-          }
-          value = value.plus(
-            item.quantity.mul(marketSymbolMap[currentDateAsString][item.symbol])
-          );
-        }
-      }
-      if (!invalid) {
-        const grossPerformance = value.minus(investment);
-        const netPerformance = grossPerformance.minus(fees);
-        if (
-          minNetPerformance === null ||
-          minNetPerformance.gt(netPerformance)
-        ) {
-          minNetPerformance = netPerformance;
-        }
-        if (
-          maxNetPerformance === null ||
-          maxNetPerformance.lt(netPerformance)
-        ) {
-          maxNetPerformance = netPerformance;
-        }
-
-        const result = {
-          grossPerformance,
-          investment,
-          netPerformance,
-          value,
-          date: currentDateAsString
-        };
-        results.push(result);
-      }
-    }
-
-    return {
-      maxNetPerformance,
-      minNetPerformance,
-      timelinePeriods: results
     };
   }
 
