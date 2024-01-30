@@ -293,6 +293,17 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
+    const chartData = await this.getChart({
+      dateRange,
+      impersonationId,
+      portfolioOrders,
+      transactionPoints,
+      userId,
+      userCurrency: this.request.user.Settings.settings.baseCurrency
+    });
+
+    console.log(chartData.items);
+
     let investments: InvestmentItem[];
 
     if (groupBy) {

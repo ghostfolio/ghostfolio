@@ -248,6 +248,7 @@ export class PortfolioCalculator {
 
     const accumulatedValuesByDate: {
       [date: string]: {
+        investmentValue: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
@@ -341,6 +342,7 @@ export class PortfolioCalculator {
           ] ?? new Big(0);
 
         accumulatedValuesByDate[dateString] = {
+          investmentValue,
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -378,6 +380,7 @@ export class PortfolioCalculator {
 
     return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
       const {
+        investmentValue,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
@@ -407,6 +410,7 @@ export class PortfolioCalculator {
         date,
         netPerformanceInPercentage,
         netPerformanceInPercentageWithCurrencyEffect,
+        investment: investmentValue.toNumber(),
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
