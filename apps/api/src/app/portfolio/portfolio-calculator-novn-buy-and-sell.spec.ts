@@ -85,7 +85,7 @@ describe('PortfolioCalculator', () => {
 
       expect(chartData[0]).toEqual({
         date: '2022-03-07',
-        investment: 151.6,
+        investmentValueWithCurrencyEffect: 151.6,
         netPerformance: 0,
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
@@ -98,7 +98,7 @@ describe('PortfolioCalculator', () => {
 
       expect(chartData[chartData.length - 1]).toEqual({
         date: '2022-04-11',
-        investment: 0,
+        investmentValueWithCurrencyEffect: 0,
         netPerformance: 19.86,
         netPerformanceInPercentage: 13.100263852242744,
         netPerformanceInPercentageWithCurrencyEffect: 13.100263852242744,

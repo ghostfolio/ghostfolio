@@ -2,6 +2,7 @@ export interface HistoricalDataItem {
   averagePrice?: number;
   date: string;
   grossPerformancePercent?: number;
+  investmentValueWithCurrencyEffect?: number;
   marketPrice?: number;
   netPerformance?: number;
   netPerformanceInPercentage?: number;

@@ -3,6 +3,7 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  HistoricalDataItem,
   ResponseError,
   SymbolMetrics,
   TimelinePosition
@@ -173,7 +174,11 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
-  public async getChartData(start: Date, end = new Date(Date.now()), step = 1) {
+  public async getChartData(
+    start: Date,
+    end = new Date(Date.now()),
+    step = 1
+  ): Promise<HistoricalDataItem[]> {
     const symbols: { [symbol: string]: boolean } = {};
 
     const transactionPointsBeforeEndDate =
@@ -242,7 +247,7 @@ export class PortfolioCalculator {
 
     const accumulatedValuesByDate: {
       [date: string]: {
-        investmentValue: Big;
+        investmentValueWithCurrencyEffect: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
@@ -344,8 +349,9 @@ export class PortfolioCalculator {
           ] ?? new Big(0);
 
         accumulatedValuesByDate[dateString] = {
-          investmentValue: (
-            accumulatedValuesByDate[dateString]?.investmentValue ?? new Big(0)
+          investmentValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.investmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueWithCurrencyEffect),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
@@ -384,7 +390,7 @@ export class PortfolioCalculator {
 
     return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
       const {
-        investmentValue,
+        investmentValueWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
@@ -414,7 +420,8 @@ export class PortfolioCalculator {
         date,
         netPerformanceInPercentage,
         netPerformanceInPercentageWithCurrencyEffect,
-        investment: investmentValue.toNumber(),
+        investmentValueWithCurrencyEffect:
+          investmentValueWithCurrencyEffect.toNumber(),
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
