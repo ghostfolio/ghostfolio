@@ -20,6 +20,9 @@ export interface SymbolMetrics {
   investmentValuesAccumulatedWithCurrencyEffect: {
     [date: string]: Big;
   };
+  investmentValuesWithCurrencyEffect: {
+    [date: string]: Big;
+  };
   netPerformance: Big;
   netPerformancePercentage: Big;
   netPerformancePercentageWithCurrencyEffect: Big;
@@ -38,7 +41,4 @@ export interface SymbolMetrics {
   timeWeightedInvestmentWithCurrencyEffect: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
-  transactionValues: {
-    [date: string]: Big;
-  };
 }
