@@ -258,8 +258,8 @@ export class PortfolioCalculator {
       [symbol: string]: {
         currentValues: { [date: string]: Big };
         currentValuesWithCurrencyEffect: { [date: string]: Big };
-        investmentValues: { [date: string]: Big };
-        investmentValuesWithCurrencyEffect: { [date: string]: Big };
+        investmentValuesAccumulated: { [date: string]: Big };
+        investmentValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValues: { [date: string]: Big };
         netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
         timeWeightedInvestmentValues: { [date: string]: Big };
@@ -272,8 +272,8 @@ export class PortfolioCalculator {
       const {
         currentValues,
         currentValuesWithCurrencyEffect,
-        investmentValues,
-        investmentValuesWithCurrencyEffect,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
         timeWeightedInvestmentValues,
@@ -290,11 +290,21 @@ export class PortfolioCalculator {
         isChartMode: true
       });
 
+      console.log(symbol);
+      for (const date of Object.keys(investmentValuesAccumulated)) {
+        console.log(date, investmentValuesAccumulated[date].toNumber());
+      }
+      console.log('---');
+      for (const date of Object.keys(transactionValues)) {
+        console.log(date, transactionValues[date].toNumber());
+      }
+      console.log('===');
+
       valuesBySymbol[symbol] = {
         currentValues,
         currentValuesWithCurrencyEffect,
-        investmentValues,
-        investmentValuesWithCurrencyEffect,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
         timeWeightedInvestmentValues,
@@ -317,14 +327,15 @@ export class PortfolioCalculator {
           new Big(0);
 
         const investmentValue =
-          symbolValues.investmentValues?.[dateString] ?? new Big(0);
+          symbolValues.investmentValuesAccumulated?.[dateString] ?? new Big(0);
 
         const transactionValue =
           symbolValues.transactionValues?.[dateString] ?? new Big(0);
 
         const investmentValueWithCurrencyEffect =
-          symbolValues.investmentValuesWithCurrencyEffect?.[dateString] ??
-          new Big(0);
+          symbolValues.investmentValuesAccumulatedWithCurrencyEffect?.[
+            dateString
+          ] ?? new Big(0);
 
         const netPerformanceValue =
           symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
@@ -928,8 +939,10 @@ export class PortfolioCalculator {
     let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
-    const investmentValues: { [date: string]: Big } = {};
-    const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
+    const investmentValuesAccumulated: { [date: string]: Big } = {};
+    const investmentValuesAccumulatedWithCurrencyEffect: {
+      [date: string]: Big;
+    } = {};
     let lastAveragePrice = new Big(0);
     let lastAveragePriceWithCurrencyEffect = new Big(0);
     const netPerformanceValues: { [date: string]: Big } = {};
@@ -971,8 +984,8 @@ export class PortfolioCalculator {
         hasErrors: false,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
-        investmentValues: {},
-        investmentValuesWithCurrencyEffect: {},
+        investmentValuesAccumulated: {},
+        investmentValuesAccumulatedWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -1011,8 +1024,8 @@ export class PortfolioCalculator {
         hasErrors: true,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
-        investmentValues: {},
-        investmentValuesWithCurrencyEffect: {},
+        investmentValuesAccumulated: {},
+        investmentValuesAccumulatedWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -1405,9 +1418,9 @@ export class PortfolioCalculator {
                 feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
               );
 
-          investmentValues[order.date] = totalInvestment;
+          investmentValuesAccumulated[order.date] = totalInvestment;
 
-          investmentValuesWithCurrencyEffect[order.date] =
+          investmentValuesAccumulatedWithCurrencyEffect[order.date] =
             totalInvestmentWithCurrencyEffect;
 
           timeWeightedInvestmentValues[order.date] =
@@ -1571,8 +1584,8 @@ export class PortfolioCalculator {
       grossPerformancePercentageWithCurrencyEffect,
       initialValue,
       initialValueWithCurrencyEffect,
-      investmentValues,
-      investmentValuesWithCurrencyEffect,
+      investmentValuesAccumulated,
+      investmentValuesAccumulatedWithCurrencyEffect,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceValues,

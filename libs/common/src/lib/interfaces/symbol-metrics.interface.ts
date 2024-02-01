@@ -14,10 +14,10 @@ export interface SymbolMetrics {
   hasErrors: boolean;
   initialValue: Big;
   initialValueWithCurrencyEffect: Big;
-  investmentValues: {
+  investmentValuesAccumulated: {
     [date: string]: Big;
   };
-  investmentValuesWithCurrencyEffect: {
+  investmentValuesAccumulatedWithCurrencyEffect: {
     [date: string]: Big;
   };
   netPerformance: Big;
