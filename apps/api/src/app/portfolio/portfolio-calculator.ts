@@ -326,17 +326,17 @@ export class PortfolioCalculator {
           symbolValues.currentValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
-        const investmentValue =
+        const investmentValueAccumulated =
           symbolValues.investmentValuesAccumulated?.[dateString] ?? new Big(0);
 
-        const transactionValue =
-          symbolValues.investmentValuesWithCurrencyEffect?.[dateString] ??
-          new Big(0);
-
-        const investmentValueWithCurrencyEffect =
+        const investmentValueAccumulatedWithCurrencyEffect =
           symbolValues.investmentValuesAccumulatedWithCurrencyEffect?.[
             dateString
           ] ?? new Big(0);
+
+        const investmentValueWithCurrencyEffect =
+          symbolValues.investmentValuesWithCurrencyEffect?.[dateString] ??
+          new Big(0);
 
         const netPerformanceValue =
           symbolValues.netPerformanceValues?.[dateString] ?? new Big(0);
@@ -356,7 +356,7 @@ export class PortfolioCalculator {
         accumulatedValuesByDate[dateString] = {
           investmentValue: (
             accumulatedValuesByDate[dateString]?.investmentValue ?? new Big(0)
-          ).add(transactionValue),
+          ).add(investmentValueWithCurrencyEffect),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -367,11 +367,11 @@ export class PortfolioCalculator {
           totalInvestmentValue: (
             accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
             new Big(0)
-          ).add(investmentValue),
+          ).add(investmentValueAccumulated),
           totalInvestmentValueWithCurrencyEffect: (
             accumulatedValuesByDate[dateString]
               ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(investmentValueWithCurrencyEffect),
+          ).add(investmentValueAccumulatedWithCurrencyEffect),
           totalNetPerformanceValue: (
             accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
             new Big(0)
