@@ -290,16 +290,6 @@ export class PortfolioCalculator {
         isChartMode: true
       });
 
-      console.log(symbol);
-      for (const date of Object.keys(investmentValuesAccumulated)) {
-        console.log(date, investmentValuesAccumulated[date].toNumber());
-      }
-      console.log('---');
-      for (const date of Object.keys(investmentValuesWithCurrencyEffect)) {
-        console.log(date, investmentValuesWithCurrencyEffect[date].toNumber());
-      }
-      console.log('===');
-
       valuesBySymbol[symbol] = {
         currentValues,
         currentValuesWithCurrencyEffect,
