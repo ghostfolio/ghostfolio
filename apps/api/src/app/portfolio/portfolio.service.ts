@@ -79,7 +79,7 @@ import {
   subDays,
   subYears
 } from 'date-fns';
-import { isEmpty, last, sortBy, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import {
   HistoricalDataContainer,
@@ -293,30 +293,27 @@ export class PortfolioService {
 
     portfolioCalculator.setTransactionPoints(transactionPoints);
 
-    const chartData = await this.getChart({
+    const { items } = await this.getChart({
       dateRange,
       impersonationId,
       portfolioOrders,
       transactionPoints,
       userId,
-      userCurrency: this.request.user.Settings.settings.baseCurrency
+      userCurrency: this.request.user.Settings.settings.baseCurrency,
+      withDataDecimation: false
     });
-
-    console.log(chartData.items);
 
     let investments: InvestmentItem[];
 
     if (groupBy) {
-      investments = this.groupHistoricalDataItems(chartData.items, groupBy);
+      investments = this.getInvestmentsByGroup({ groupBy, data: items });
     } else {
-      investments = chartData.items.map(
-        ({ date, investmentValueWithCurrencyEffect }) => {
-          return {
-            date,
-            investment: investmentValueWithCurrencyEffect
-          };
-        }
-      );
+      investments = items.map(({ date, investmentValueWithCurrencyEffect }) => {
+        return {
+          date,
+          investment: investmentValueWithCurrencyEffect
+        };
+      });
     }
 
     let streaks: PortfolioInvestments['streaks'];
@@ -1403,7 +1400,8 @@ export class PortfolioService {
     portfolioOrders,
     transactionPoints,
     userCurrency,
-    userId
+    userId,
+    withDataDecimation = true
   }: {
     dateRange?: DateRange;
     impersonationId: string;
@@ -1411,6 +1409,7 @@ export class PortfolioService {
     transactionPoints: TransactionPoint[];
     userCurrency: string;
     userId: string;
+    withDataDecimation?: boolean;
   }): Promise<HistoricalDataContainer> {
     if (transactionPoints.length === 0) {
       return {
@@ -1436,10 +1435,12 @@ export class PortfolioService {
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
 
-    const daysInMarket = differenceInDays(new Date(), startDate);
-    const step = Math.round(
-      daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS)
-    );
+    let step = 1;
+
+    if (withDataDecimation) {
+      const daysInMarket = differenceInDays(new Date(), startDate);
+      step = Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS));
+    }
 
     const items = await portfolioCalculator.getChartData(
       startDate,
@@ -1596,6 +1597,28 @@ export class PortfolioService {
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
+  }
+
+  private getInvestmentsByGroup({
+    data,
+    groupBy
+  }: {
+    data: HistoricalDataItem[];
+    groupBy: GroupBy;
+  }): InvestmentItem[] {
+    const groupedData: { [dateGroup: string]: number } = {};
+
+    for (const { date, investmentValueWithCurrencyEffect } of data) {
+      const unit =
+        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
+      groupedData[unit] =
+        (groupedData[unit] ?? 0) + investmentValueWithCurrencyEffect;
+    }
+
+    return Object.keys(groupedData).map((unit) => ({
+      date: groupBy === 'month' ? `${unit}-01` : `${unit}-01-01`,
+      investment: groupedData[unit]
+    }));
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
@@ -2084,25 +2107,6 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
-  }
-
-  private groupHistoricalDataItems(
-    data: HistoricalDataItem[],
-    groupBy: GroupBy
-  ): InvestmentItem[] {
-    const groupedData: { [dateGroup: string]: number } = {};
-
-    for (const { date, investmentValueWithCurrencyEffect } of data) {
-      const unit =
-        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
-      groupedData[unit] =
-        (groupedData[unit] ?? 0) + investmentValueWithCurrencyEffect;
-    }
-
-    return Object.keys(groupedData).map((unit) => ({
-      date: groupBy === 'month' ? `${unit}-01` : `${unit}-01-01`,
-      investment: groupedData[unit]
-    }));
   }
 
   private mergeHistoricalDataItems(
