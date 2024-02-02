@@ -307,73 +307,17 @@ export class PortfolioService {
     let investments: InvestmentItem[];
 
     if (groupBy) {
-      investments = portfolioCalculator
-        .getInvestmentsByGroup(groupBy)
-        .map((item) => {
-          return {
-            date: item.date,
-            investment: item.investment.toNumber()
-          };
-        });
-
-      // Add investment of current group
-      const dateOfCurrentGroup = format(
-        set(new Date(), {
-          date: 1,
-          month: groupBy === 'year' ? 0 : new Date().getMonth()
-        }),
-        DATE_FORMAT
-      );
-      const investmentOfCurrentGroup = investments.filter(({ date }) => {
-        return date === dateOfCurrentGroup;
-      });
-
-      if (investmentOfCurrentGroup.length <= 0) {
-        investments.push({
-          date: dateOfCurrentGroup,
-          investment: 0
-        });
-      }
+      investments = this.groupHistoricalDataItems(chartData.items, groupBy);
     } else {
-      investments = portfolioCalculator
-        .getInvestments()
-        .map(({ date, investment }) => {
+      investments = chartData.items.map(
+        ({ date, investmentValueWithCurrencyEffect }) => {
           return {
             date,
-            investment: investment.toNumber()
+            investment: investmentValueWithCurrencyEffect
           };
-        });
-
-      // Add investment of today
-      const investmentOfToday = investments.filter(({ date }) => {
-        return date === format(new Date(), DATE_FORMAT);
-      });
-
-      if (investmentOfToday.length <= 0) {
-        const pastInvestments = investments.filter(({ date }) => {
-          return isBefore(parseDate(date), new Date());
-        });
-        const lastInvestment = pastInvestments[pastInvestments.length - 1];
-
-        investments.push({
-          date: format(new Date(), DATE_FORMAT),
-          investment: lastInvestment?.investment ?? 0
-        });
-      }
+        }
+      );
     }
-
-    investments = sortBy(investments, ({ date }) => {
-      return date;
-    });
-
-    const startDate = this.getStartDate(
-      dateRange,
-      parseDate(investments[0]?.date)
-    );
-
-    investments = investments.filter(({ date }) => {
-      return !isBefore(parseDate(date), startDate);
-    });
 
     let streaks: PortfolioInvestments['streaks'];
 
@@ -2140,6 +2084,25 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
+  }
+
+  private groupHistoricalDataItems(
+    data: HistoricalDataItem[],
+    groupBy: GroupBy
+  ): InvestmentItem[] {
+    const groupedData: { [dateGroup: string]: number } = {};
+
+    for (const { date, investmentValueWithCurrencyEffect } of data) {
+      const unit =
+        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
+      groupedData[unit] =
+        (groupedData[unit] ?? 0) + investmentValueWithCurrencyEffect;
+    }
+
+    return Object.keys(groupedData).map((unit) => ({
+      date: groupBy === 'month' ? `${unit}-01` : `${unit}-01-01`,
+      investment: groupedData[unit]
+    }));
   }
 
   private mergeHistoricalDataItems(
