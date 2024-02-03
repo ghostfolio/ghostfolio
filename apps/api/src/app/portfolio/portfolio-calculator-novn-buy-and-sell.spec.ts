@@ -68,9 +68,9 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2022-04-11').getTime());
 
-      const chartData = await portfolioCalculator.getChartData(
-        parseDate('2022-03-07')
-      );
+      const chartData = await portfolioCalculator.getChartData({
+        start: parseDate('2022-03-07')
+      });
 
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parseDate('2022-03-07')

@@ -174,11 +174,15 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
-  public async getChartData(
-    start: Date,
+  public async getChartData({
     end = new Date(Date.now()),
+    start,
     step = 1
-  ): Promise<HistoricalDataItem[]> {
+  }: {
+    end?: Date;
+    start: Date;
+    step?: number;
+  }): Promise<HistoricalDataItem[]> {
     const symbols: { [symbol: string]: boolean } = {};
 
     const transactionPointsBeforeEndDate =
@@ -686,6 +690,9 @@ export class PortfolioCalculator {
     });
   }
 
+  /**
+   * @deprecated
+   */
   public getInvestmentsByGroup(
     groupBy: GroupBy
   ): { date: string; investment: Big }[] {
@@ -1421,6 +1428,10 @@ export class PortfolioCalculator {
           investmentValuesAccumulatedWithCurrencyEffect[order.date] =
             totalInvestmentWithCurrencyEffect;
 
+          investmentValuesWithCurrencyEffect[order.date] = (
+            investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
+          ).add(transactionInvestmentWithCurrencyEffect);
+
           timeWeightedInvestmentValues[order.date] =
             totalInvestmentDays > 0
               ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
@@ -1432,10 +1443,6 @@ export class PortfolioCalculator {
                   totalInvestmentDays
                 )
               : new Big(0);
-
-          investmentValuesWithCurrencyEffect[order.date] = (
-            investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
-          ).add(transactionInvestmentWithCurrencyEffect);
         }
       }
 

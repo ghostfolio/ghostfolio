@@ -1442,11 +1442,11 @@ export class PortfolioService {
       step = Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS));
     }
 
-    const items = await portfolioCalculator.getChartData(
-      startDate,
-      endDate,
-      step
-    );
+    const items = await portfolioCalculator.getChartData({
+      step,
+      end: endDate,
+      start: startDate
+    });
 
     return {
       items,
@@ -1606,18 +1606,19 @@ export class PortfolioService {
     data: HistoricalDataItem[];
     groupBy: GroupBy;
   }): InvestmentItem[] {
-    const groupedData: { [dateGroup: string]: number } = {};
+    const groupedData: { [dateGroup: string]: Big } = {};
 
     for (const { date, investmentValueWithCurrencyEffect } of data) {
-      const unit =
+      const dateGroup =
         groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
-      groupedData[unit] =
-        (groupedData[unit] ?? 0) + investmentValueWithCurrencyEffect;
+      groupedData[dateGroup] = (groupedData[dateGroup] ?? new Big(0)).plus(
+        investmentValueWithCurrencyEffect
+      );
     }
 
-    return Object.keys(groupedData).map((unit) => ({
-      date: groupBy === 'month' ? `${unit}-01` : `${unit}-01-01`,
-      investment: groupedData[unit]
+    return Object.keys(groupedData).map((dateGroup) => ({
+      date: groupBy === 'month' ? `${dateGroup}-01` : `${dateGroup}-01-01`,
+      investment: groupedData[dateGroup].toNumber()
     }));
   }
 
