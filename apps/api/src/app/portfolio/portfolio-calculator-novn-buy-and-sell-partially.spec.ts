@@ -68,14 +68,20 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2022-04-11').getTime());
 
+      const chartData = await portfolioCalculator.getChartData({
+        start: parseDate('2022-03-07')
+      });
+
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parseDate('2022-03-07')
       );
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 
@@ -137,8 +143,8 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: new Big('151.6') },
-        { date: '2022-04-01', investment: new Big('-85.73') }
+        { date: '2022-03-01', investment: 151.6 },
+        { date: '2022-04-01', investment: -75.8 }
       ]);
     });
   });

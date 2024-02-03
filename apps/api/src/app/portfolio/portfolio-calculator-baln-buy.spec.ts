@@ -57,14 +57,20 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
 
+      const chartData = await portfolioCalculator.getChartData({
+        start: parseDate('2021-11-30')
+      });
+
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parseDate('2021-11-30')
       );
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 
@@ -123,7 +129,8 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2021-11-01', investment: new Big('273.2') }
+        { date: '2021-11-01', investment: 273.2 },
+        { date: '2021-12-01', investment: 0 }
       ]);
     });
   });
