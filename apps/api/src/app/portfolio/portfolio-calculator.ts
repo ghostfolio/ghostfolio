@@ -4,6 +4,7 @@ import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   HistoricalDataItem,
+  InvestmentItem,
   ResponseError,
   SymbolMetrics,
   TimelinePosition
@@ -20,9 +21,6 @@ import {
   format,
   isBefore,
   isSameDay,
-  isSameMonth,
-  isSameYear,
-  set,
   subDays
 } from 'date-fns';
 import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
@@ -206,13 +204,15 @@ export class PortfolioCalculator {
       dates.push(resetHours(end));
     }
 
-    for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
-      dataGatheringItems.push({
-        dataSource: item.dataSource,
-        symbol: item.symbol
-      });
-      currencies[item.symbol] = item.currency;
-      symbols[item.symbol] = true;
+    if (transactionPointsBeforeEndDate.length > 0) {
+      for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
+        dataGatheringItems.push({
+          dataSource: item.dataSource,
+          symbol: item.symbol
+        });
+        currencies[item.symbol] = item.currency;
+        symbols[item.symbol] = true;
+      }
     }
 
     const { dataProviderInfos, values: marketSymbols } =
@@ -690,98 +690,27 @@ export class PortfolioCalculator {
     });
   }
 
-  /**
-   * @deprecated
-   */
-  public getInvestmentsByGroup(
-    groupBy: GroupBy
-  ): { date: string; investment: Big }[] {
-    if (this.orders.length === 0) {
-      return [];
-    }
+  public getInvestmentsByGroup({
+    data,
+    groupBy
+  }: {
+    data: HistoricalDataItem[];
+    groupBy: GroupBy;
+  }): InvestmentItem[] {
+    const groupedData: { [dateGroup: string]: Big } = {};
 
-    const investments: { date: string; investment: Big }[] = [];
-    let currentDate: Date;
-    let investmentByGroup = new Big(0);
-
-    for (const [index, order] of this.orders.entries()) {
-      if (
-        isSameYear(parseDate(order.date), currentDate) &&
-        (groupBy === 'year' || isSameMonth(parseDate(order.date), currentDate))
-      ) {
-        // Same group: Add up investments
-        investmentByGroup = investmentByGroup.plus(
-          order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
-        );
-      } else {
-        // New group: Store previous group and reset
-        if (currentDate) {
-          investments.push({
-            date: format(
-              set(currentDate, {
-                date: 1,
-                month: groupBy === 'year' ? 0 : currentDate.getMonth()
-              }),
-              DATE_FORMAT
-            ),
-            investment: investmentByGroup
-          });
-        }
-
-        currentDate = parseDate(order.date);
-        investmentByGroup = order.quantity
-          .mul(order.unitPrice)
-          .mul(this.getFactor(order.type));
-      }
-
-      if (index === this.orders.length - 1) {
-        // Store current group (latest order)
-        investments.push({
-          date: format(
-            set(currentDate, {
-              date: 1,
-              month: groupBy === 'year' ? 0 : currentDate.getMonth()
-            }),
-            DATE_FORMAT
-          ),
-          investment: investmentByGroup
-        });
-      }
-    }
-
-    // Fill in the missing dates with investment = 0
-    const startDate = parseDate(first(this.orders).date);
-    const endDate = parseDate(last(this.orders).date);
-
-    const allDates: string[] = [];
-    currentDate = startDate;
-
-    while (currentDate <= endDate) {
-      allDates.push(
-        format(
-          set(currentDate, {
-            date: 1,
-            month: groupBy === 'year' ? 0 : currentDate.getMonth()
-          }),
-          DATE_FORMAT
-        )
+    for (const { date, investmentValueWithCurrencyEffect } of data) {
+      const dateGroup =
+        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
+      groupedData[dateGroup] = (groupedData[dateGroup] ?? new Big(0)).plus(
+        investmentValueWithCurrencyEffect
       );
-      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    for (const date of allDates) {
-      const existingInvestment = investments.find((investment) => {
-        return investment.date === date;
-      });
-
-      if (!existingInvestment) {
-        investments.push({ date, investment: new Big(0) });
-      }
-    }
-
-    return sortBy(investments, ({ date }) => {
-      return date;
-    });
+    return Object.keys(groupedData).map((dateGroup) => ({
+      date: groupBy === 'month' ? `${dateGroup}-01` : `${dateGroup}-01-01`,
+      investment: groupedData[dateGroup].toNumber()
+    }));
   }
 
   private calculateOverallPerformance(positions: TimelinePosition[]) {

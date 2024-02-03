@@ -306,7 +306,10 @@ export class PortfolioService {
     let investments: InvestmentItem[];
 
     if (groupBy) {
-      investments = this.getInvestmentsByGroup({ groupBy, data: items });
+      investments = portfolioCalculator.getInvestmentsByGroup({
+        groupBy,
+        data: items
+      });
     } else {
       investments = items.map(({ date, investmentValueWithCurrencyEffect }) => {
         return {
@@ -1597,29 +1600,6 @@ export class PortfolioService {
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
-  }
-
-  private getInvestmentsByGroup({
-    data,
-    groupBy
-  }: {
-    data: HistoricalDataItem[];
-    groupBy: GroupBy;
-  }): InvestmentItem[] {
-    const groupedData: { [dateGroup: string]: Big } = {};
-
-    for (const { date, investmentValueWithCurrencyEffect } of data) {
-      const dateGroup =
-        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
-      groupedData[dateGroup] = (groupedData[dateGroup] ?? new Big(0)).plus(
-        investmentValueWithCurrencyEffect
-      );
-    }
-
-    return Object.keys(groupedData).map((dateGroup) => ({
-      date: groupBy === 'month' ? `${dateGroup}-01` : `${dateGroup}-01-01`,
-      investment: groupedData[dateGroup].toNumber()
-    }));
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {

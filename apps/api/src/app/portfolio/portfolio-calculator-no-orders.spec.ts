@@ -45,14 +45,20 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
 
+      const chartData = await portfolioCalculator.getChartData({
+        start: new Date()
+      });
+
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         new Date()
       );
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 

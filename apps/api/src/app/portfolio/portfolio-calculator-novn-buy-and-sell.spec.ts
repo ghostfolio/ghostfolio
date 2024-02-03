@@ -78,8 +78,10 @@ describe('PortfolioCalculator', () => {
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 
@@ -165,8 +167,8 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: new Big('151.6') },
-        { date: '2022-04-01', investment: new Big('-171.46') }
+        { date: '2022-03-01', investment: 151.6 },
+        { date: '2022-04-01', investment: -151.6 }
       ]);
     });
   });
