@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a rendering issue caused by the date range selector in the assistant (experimental)
 - Fixed the export in the lazy-loaded activities table on the portfolio activities page (experimental)
 
 ## 2.46.0 - 2024-01-28
