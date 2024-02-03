@@ -107,8 +107,11 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
       label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
       value: 'ytd'
     },
-    { label: $localize`1Y`, value: '1y' },
-    { label: $localize`5Y`, value: '5y' },
+    { label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')', value: '1y' },
+    {
+      label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
+      value: '5y'
+    },
     { label: $localize`Max`, value: 'max' }
   ];
   public filterForm = this.formBuilder.group({

@@ -862,7 +862,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">117</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b0f210a3147d1b669e081dae1fcd0918fe7c3021" datatype="html">
@@ -1556,7 +1556,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">139</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="43d544c2e88959f6c59cc4db419528fb0776bd6c" datatype="html">
@@ -1644,7 +1644,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3667949571823271511" datatype="html">
@@ -1656,7 +1656,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">112</context>
+          <context context-type="linenumber">115</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3041670542776846470" datatype="html">
@@ -13356,7 +13356,7 @@
         <target state="translated">Finde Position...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">120</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cd206f0509271d9e611747bef0713c7df048d3af" datatype="html">
@@ -14624,7 +14624,7 @@
         <target state="translated">Kein Tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5570511897986600686" datatype="html">
@@ -14772,7 +14772,7 @@
         <target state="translated">Kein Konto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a0b11f66d5106ad8e770666fd8ecc569e727e516" datatype="html">
@@ -14783,12 +14783,28 @@
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9e73e779188a11de170eb69b256494a443b97549" datatype="html">
+      <trans-unit id="7cb0a70c625a2cbcee0c3ba19bfe0f35e509660d" datatype="html">
         <source> Reset Filters </source>
         <target state="translated"> Filter zurücksetzen </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">163</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6479044529603381727" datatype="html">
+        <source>year</source>
+        <target state="translated">Jahr</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7658073495909471632" datatype="html">
+        <source>years</source>
+        <target state="translated">Jahre</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
     </body>
