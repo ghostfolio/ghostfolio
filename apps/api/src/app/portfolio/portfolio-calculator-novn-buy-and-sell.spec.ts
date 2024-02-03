@@ -68,9 +68,9 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2022-04-11').getTime());
 
-      const chartData = await portfolioCalculator.getChartData(
-        parseDate('2022-03-07')
-      );
+      const chartData = await portfolioCalculator.getChartData({
+        start: parseDate('2022-03-07')
+      });
 
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parseDate('2022-03-07')
@@ -78,13 +78,16 @@ describe('PortfolioCalculator', () => {
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 
       expect(chartData[0]).toEqual({
         date: '2022-03-07',
+        investmentValueWithCurrencyEffect: 151.6,
         netPerformance: 0,
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
@@ -97,6 +100,7 @@ describe('PortfolioCalculator', () => {
 
       expect(chartData[chartData.length - 1]).toEqual({
         date: '2022-04-11',
+        investmentValueWithCurrencyEffect: 0,
         netPerformance: 19.86,
         netPerformanceInPercentage: 13.100263852242744,
         netPerformanceInPercentageWithCurrencyEffect: 13.100263852242744,
@@ -163,8 +167,8 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: new Big('151.6') },
-        { date: '2022-04-01', investment: new Big('-171.46') }
+        { date: '2022-03-01', investment: 151.6 },
+        { date: '2022-04-01', investment: -151.6 }
       ]);
     });
   });

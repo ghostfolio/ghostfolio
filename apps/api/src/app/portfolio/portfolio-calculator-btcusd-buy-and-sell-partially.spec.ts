@@ -81,14 +81,20 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2018-01-01').getTime());
 
+      const chartData = await portfolioCalculator.getChartData({
+        start: parseDate('2015-01-01')
+      });
+
       const currentPositions = await portfolioCalculator.getCurrentPositions(
         parseDate('2015-01-01')
       );
 
       const investments = portfolioCalculator.getInvestments();
 
-      const investmentsByMonth =
-        portfolioCalculator.getInvestmentsByGroup('month');
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: chartData,
+        groupBy: 'month'
+      });
 
       spy.mockRestore();
 
@@ -155,42 +161,43 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2015-01-01', investment: new Big('640.86') },
-        { date: '2015-02-01', investment: new Big('0') },
-        { date: '2015-03-01', investment: new Big('0') },
-        { date: '2015-04-01', investment: new Big('0') },
-        { date: '2015-05-01', investment: new Big('0') },
-        { date: '2015-06-01', investment: new Big('0') },
-        { date: '2015-07-01', investment: new Big('0') },
-        { date: '2015-08-01', investment: new Big('0') },
-        { date: '2015-09-01', investment: new Big('0') },
-        { date: '2015-10-01', investment: new Big('0') },
-        { date: '2015-11-01', investment: new Big('0') },
-        { date: '2015-12-01', investment: new Big('0') },
-        { date: '2016-01-01', investment: new Big('0') },
-        { date: '2016-02-01', investment: new Big('0') },
-        { date: '2016-03-01', investment: new Big('0') },
-        { date: '2016-04-01', investment: new Big('0') },
-        { date: '2016-05-01', investment: new Big('0') },
-        { date: '2016-06-01', investment: new Big('0') },
-        { date: '2016-07-01', investment: new Big('0') },
-        { date: '2016-08-01', investment: new Big('0') },
-        { date: '2016-09-01', investment: new Big('0') },
-        { date: '2016-10-01', investment: new Big('0') },
-        { date: '2016-11-01', investment: new Big('0') },
-        { date: '2016-12-01', investment: new Big('0') },
-        { date: '2017-01-01', investment: new Big('0') },
-        { date: '2017-02-01', investment: new Big('0') },
-        { date: '2017-03-01', investment: new Big('0') },
-        { date: '2017-04-01', investment: new Big('0') },
-        { date: '2017-05-01', investment: new Big('0') },
-        { date: '2017-06-01', investment: new Big('0') },
-        { date: '2017-07-01', investment: new Big('0') },
-        { date: '2017-08-01', investment: new Big('0') },
-        { date: '2017-09-01', investment: new Big('0') },
-        { date: '2017-10-01', investment: new Big('0') },
-        { date: '2017-11-01', investment: new Big('0') },
-        { date: '2017-12-01', investment: new Big('-14156.4') }
+        { date: '2015-01-01', investment: 637.0853345999999 },
+        { date: '2015-02-01', investment: 0 },
+        { date: '2015-03-01', investment: 0 },
+        { date: '2015-04-01', investment: 0 },
+        { date: '2015-05-01', investment: 0 },
+        { date: '2015-06-01', investment: 0 },
+        { date: '2015-07-01', investment: 0 },
+        { date: '2015-08-01', investment: 0 },
+        { date: '2015-09-01', investment: 0 },
+        { date: '2015-10-01', investment: 0 },
+        { date: '2015-11-01', investment: 0 },
+        { date: '2015-12-01', investment: 0 },
+        { date: '2016-01-01', investment: 0 },
+        { date: '2016-02-01', investment: 0 },
+        { date: '2016-03-01', investment: 0 },
+        { date: '2016-04-01', investment: 0 },
+        { date: '2016-05-01', investment: 0 },
+        { date: '2016-06-01', investment: 0 },
+        { date: '2016-07-01', investment: 0 },
+        { date: '2016-08-01', investment: 0 },
+        { date: '2016-09-01', investment: 0 },
+        { date: '2016-10-01', investment: 0 },
+        { date: '2016-11-01', investment: 0 },
+        { date: '2016-12-01', investment: 0 },
+        { date: '2017-01-01', investment: 0 },
+        { date: '2017-02-01', investment: 0 },
+        { date: '2017-03-01', investment: 0 },
+        { date: '2017-04-01', investment: 0 },
+        { date: '2017-05-01', investment: 0 },
+        { date: '2017-06-01', investment: 0 },
+        { date: '2017-07-01', investment: 0 },
+        { date: '2017-08-01', investment: 0 },
+        { date: '2017-09-01', investment: 0 },
+        { date: '2017-10-01', investment: 0 },
+        { date: '2017-11-01', investment: 0 },
+        { date: '2017-12-01', investment: -318.54266729999995 },
+        { date: '2018-01-01', investment: 0 }
       ]);
     });
   });

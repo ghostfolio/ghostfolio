@@ -19,6 +19,7 @@ import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { InfoItem } from './info-item.interface';
+import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
@@ -74,6 +75,7 @@ export {
   HistoricalDataItem,
   ImportResponse,
   InfoItem,
+  InvestmentItem,
   LineChartItem,
   OAuthResponse,
   PortfolioChart,

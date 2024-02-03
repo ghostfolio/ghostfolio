@@ -3,6 +3,8 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  HistoricalDataItem,
+  InvestmentItem,
   ResponseError,
   SymbolMetrics,
   TimelinePosition
@@ -14,16 +16,11 @@ import Big from 'big.js';
 import {
   addDays,
   addMilliseconds,
-  addMonths,
-  addYears,
   differenceInDays,
   endOfDay,
   format,
   isBefore,
   isSameDay,
-  isSameMonth,
-  isSameYear,
-  set,
   subDays
 } from 'date-fns';
 import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
@@ -32,10 +29,6 @@ import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
 import { PortfolioOrderItem } from './interfaces/portfolio-calculator.interface';
 import { PortfolioOrder } from './interfaces/portfolio-order.interface';
-import {
-  Accuracy,
-  TimelineSpecification
-} from './interfaces/timeline-specification.interface';
 import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from './interfaces/transaction-point.interface';
 
@@ -179,7 +172,15 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
-  public async getChartData(start: Date, end = new Date(Date.now()), step = 1) {
+  public async getChartData({
+    end = new Date(Date.now()),
+    start,
+    step = 1
+  }: {
+    end?: Date;
+    start: Date;
+    step?: number;
+  }): Promise<HistoricalDataItem[]> {
     const symbols: { [symbol: string]: boolean } = {};
 
     const transactionPointsBeforeEndDate =
@@ -203,13 +204,15 @@ export class PortfolioCalculator {
       dates.push(resetHours(end));
     }
 
-    for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
-      dataGatheringItems.push({
-        dataSource: item.dataSource,
-        symbol: item.symbol
-      });
-      currencies[item.symbol] = item.currency;
-      symbols[item.symbol] = true;
+    if (transactionPointsBeforeEndDate.length > 0) {
+      for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
+        dataGatheringItems.push({
+          dataSource: item.dataSource,
+          symbol: item.symbol
+        });
+        currencies[item.symbol] = item.currency;
+        symbols[item.symbol] = true;
+      }
     }
 
     const { dataProviderInfos, values: marketSymbols } =
@@ -248,6 +251,7 @@ export class PortfolioCalculator {
 
     const accumulatedValuesByDate: {
       [date: string]: {
+        investmentValueWithCurrencyEffect: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
@@ -263,7 +267,8 @@ export class PortfolioCalculator {
       [symbol: string]: {
         currentValues: { [date: string]: Big };
         currentValuesWithCurrencyEffect: { [date: string]: Big };
-        investmentValues: { [date: string]: Big };
+        investmentValuesAccumulated: { [date: string]: Big };
+        investmentValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
         investmentValuesWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValues: { [date: string]: Big };
         netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
@@ -276,7 +281,8 @@ export class PortfolioCalculator {
       const {
         currentValues,
         currentValuesWithCurrencyEffect,
-        investmentValues,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
         investmentValuesWithCurrencyEffect,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
@@ -296,7 +302,8 @@ export class PortfolioCalculator {
       valuesBySymbol[symbol] = {
         currentValues,
         currentValuesWithCurrencyEffect,
-        investmentValues,
+        investmentValuesAccumulated,
+        investmentValuesAccumulatedWithCurrencyEffect,
         investmentValuesWithCurrencyEffect,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
@@ -318,8 +325,13 @@ export class PortfolioCalculator {
           symbolValues.currentValuesWithCurrencyEffect?.[dateString] ??
           new Big(0);
 
-        const investmentValue =
-          symbolValues.investmentValues?.[dateString] ?? new Big(0);
+        const investmentValueAccumulated =
+          symbolValues.investmentValuesAccumulated?.[dateString] ?? new Big(0);
+
+        const investmentValueAccumulatedWithCurrencyEffect =
+          symbolValues.investmentValuesAccumulatedWithCurrencyEffect?.[
+            dateString
+          ] ?? new Big(0);
 
         const investmentValueWithCurrencyEffect =
           symbolValues.investmentValuesWithCurrencyEffect?.[dateString] ??
@@ -341,6 +353,10 @@ export class PortfolioCalculator {
           ] ?? new Big(0);
 
         accumulatedValuesByDate[dateString] = {
+          investmentValueWithCurrencyEffect: (
+            accumulatedValuesByDate[dateString]
+              ?.investmentValueWithCurrencyEffect ?? new Big(0)
+          ).add(investmentValueWithCurrencyEffect),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -351,11 +367,11 @@ export class PortfolioCalculator {
           totalInvestmentValue: (
             accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
             new Big(0)
-          ).add(investmentValue),
+          ).add(investmentValueAccumulated),
           totalInvestmentValueWithCurrencyEffect: (
             accumulatedValuesByDate[dateString]
               ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(investmentValueWithCurrencyEffect),
+          ).add(investmentValueAccumulatedWithCurrencyEffect),
           totalNetPerformanceValue: (
             accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
             new Big(0)
@@ -378,6 +394,7 @@ export class PortfolioCalculator {
 
     return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
       const {
+        investmentValueWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
@@ -407,6 +424,8 @@ export class PortfolioCalculator {
         date,
         netPerformanceInPercentage,
         netPerformanceInPercentageWithCurrencyEffect,
+        investmentValueWithCurrencyEffect:
+          investmentValueWithCurrencyEffect.toNumber(),
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
@@ -671,95 +690,27 @@ export class PortfolioCalculator {
     });
   }
 
-  public getInvestmentsByGroup(
-    groupBy: GroupBy
-  ): { date: string; investment: Big }[] {
-    if (this.orders.length === 0) {
-      return [];
-    }
+  public getInvestmentsByGroup({
+    data,
+    groupBy
+  }: {
+    data: HistoricalDataItem[];
+    groupBy: GroupBy;
+  }): InvestmentItem[] {
+    const groupedData: { [dateGroup: string]: Big } = {};
 
-    const investments: { date: string; investment: Big }[] = [];
-    let currentDate: Date;
-    let investmentByGroup = new Big(0);
-
-    for (const [index, order] of this.orders.entries()) {
-      if (
-        isSameYear(parseDate(order.date), currentDate) &&
-        (groupBy === 'year' || isSameMonth(parseDate(order.date), currentDate))
-      ) {
-        // Same group: Add up investments
-        investmentByGroup = investmentByGroup.plus(
-          order.quantity.mul(order.unitPrice).mul(this.getFactor(order.type))
-        );
-      } else {
-        // New group: Store previous group and reset
-        if (currentDate) {
-          investments.push({
-            date: format(
-              set(currentDate, {
-                date: 1,
-                month: groupBy === 'year' ? 0 : currentDate.getMonth()
-              }),
-              DATE_FORMAT
-            ),
-            investment: investmentByGroup
-          });
-        }
-
-        currentDate = parseDate(order.date);
-        investmentByGroup = order.quantity
-          .mul(order.unitPrice)
-          .mul(this.getFactor(order.type));
-      }
-
-      if (index === this.orders.length - 1) {
-        // Store current group (latest order)
-        investments.push({
-          date: format(
-            set(currentDate, {
-              date: 1,
-              month: groupBy === 'year' ? 0 : currentDate.getMonth()
-            }),
-            DATE_FORMAT
-          ),
-          investment: investmentByGroup
-        });
-      }
-    }
-
-    // Fill in the missing dates with investment = 0
-    const startDate = parseDate(first(this.orders).date);
-    const endDate = parseDate(last(this.orders).date);
-
-    const allDates: string[] = [];
-    currentDate = startDate;
-
-    while (currentDate <= endDate) {
-      allDates.push(
-        format(
-          set(currentDate, {
-            date: 1,
-            month: groupBy === 'year' ? 0 : currentDate.getMonth()
-          }),
-          DATE_FORMAT
-        )
+    for (const { date, investmentValueWithCurrencyEffect } of data) {
+      const dateGroup =
+        groupBy === 'month' ? date.substring(0, 7) : date.substring(0, 4);
+      groupedData[dateGroup] = (groupedData[dateGroup] ?? new Big(0)).plus(
+        investmentValueWithCurrencyEffect
       );
-      currentDate.setMonth(currentDate.getMonth() + 1);
     }
 
-    for (const date of allDates) {
-      const existingInvestment = investments.find((investment) => {
-        return investment.date === date;
-      });
-
-      if (!existingInvestment) {
-        investments.push({ date, investment: new Big(0) });
-      }
-    }
-
-    return sortBy(investments, ({ date }) => {
-      return date;
-    });
+    return Object.keys(groupedData).map((dateGroup) => ({
+      date: groupBy === 'month' ? `${dateGroup}-01` : `${dateGroup}-01-01`,
+      investment: groupedData[dateGroup].toNumber()
+    }));
   }
 
   private calculateOverallPerformance(positions: TimelinePosition[]) {
@@ -886,17 +837,6 @@ export class PortfolioCalculator {
     return factor;
   }
 
-  private addToDate(date: Date, accuracy: Accuracy): Date {
-    switch (accuracy) {
-      case 'day':
-        return addDays(date, 1);
-      case 'month':
-        return addMonths(date, 1);
-      case 'year':
-        return addYears(date, 1);
-    }
-  }
-
   private getSymbolMetrics({
     end,
     exchangeRates,
@@ -933,7 +873,10 @@ export class PortfolioCalculator {
     let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
-    const investmentValues: { [date: string]: Big } = {};
+    const investmentValuesAccumulated: { [date: string]: Big } = {};
+    const investmentValuesAccumulatedWithCurrencyEffect: {
+      [date: string]: Big;
+    } = {};
     const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let lastAveragePrice = new Big(0);
     let lastAveragePriceWithCurrencyEffect = new Big(0);
@@ -975,7 +918,8 @@ export class PortfolioCalculator {
         hasErrors: false,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
-        investmentValues: {},
+        investmentValuesAccumulated: {},
+        investmentValuesAccumulatedWithCurrencyEffect: {},
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
@@ -1014,7 +958,8 @@ export class PortfolioCalculator {
         hasErrors: true,
         initialValue: new Big(0),
         initialValueWithCurrencyEffect: new Big(0),
-        investmentValues: {},
+        investmentValuesAccumulated: {},
+        investmentValuesAccumulatedWithCurrencyEffect: {},
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
@@ -1407,10 +1352,14 @@ export class PortfolioCalculator {
                 feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
               );
 
-          investmentValues[order.date] = totalInvestment;
+          investmentValuesAccumulated[order.date] = totalInvestment;
 
-          investmentValuesWithCurrencyEffect[order.date] =
+          investmentValuesAccumulatedWithCurrencyEffect[order.date] =
             totalInvestmentWithCurrencyEffect;
+
+          investmentValuesWithCurrencyEffect[order.date] = (
+            investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
+          ).add(transactionInvestmentWithCurrencyEffect);
 
           timeWeightedInvestmentValues[order.date] =
             totalInvestmentDays > 0
@@ -1569,7 +1518,8 @@ export class PortfolioCalculator {
       grossPerformancePercentageWithCurrencyEffect,
       initialValue,
       initialValueWithCurrencyEffect,
-      investmentValues,
+      investmentValuesAccumulated,
+      investmentValuesAccumulatedWithCurrencyEffect,
       investmentValuesWithCurrencyEffect,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -1590,16 +1540,5 @@ export class PortfolioCalculator {
       timeWeightedInvestmentWithCurrencyEffect:
         timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
     };
-  }
-
-  private isNextItemActive(
-    timelineSpecification: TimelineSpecification[],
-    currentDate: Date,
-    i: number
-  ) {
-    return (
-      i + 1 < timelineSpecification.length &&
-      !isBefore(currentDate, parseDate(timelineSpecification[i + 1].start))
-    );
   }
 }
