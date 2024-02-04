@@ -152,10 +152,6 @@ export class GoogleSheetsService implements DataProviderInterface {
     return 'INDEXSP:.INX';
   }
 
-  public isPremium() {
-    return false;
-  }
-
   public async search({
     query
   }: GetSearchParams): Promise<{ items: LookupItem[] }> {
