@@ -3,10 +3,10 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfAssistantListItemModule } from './assistant-list-item/assistant-list-item.module';
@@ -19,9 +19,9 @@ import { AssistantComponent } from './assistant.component';
     CommonModule,
     FormsModule,
     GfAssistantListItemModule,
+    GfSymbolIconModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatRadioModule,
     MatSelectModule,
     MatTabsModule,
     NgxSkeletonLoaderModule,
