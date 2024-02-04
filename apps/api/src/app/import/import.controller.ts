@@ -73,7 +73,7 @@ export class ImportController {
         userCurrency,
         accountsDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
-        userId: this.request.user.id
+        user: this.request.user
       });
 
       return { activities };

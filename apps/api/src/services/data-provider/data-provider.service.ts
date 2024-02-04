@@ -107,6 +107,31 @@ export class DataProviderService {
     return response;
   }
 
+  public getDataProvider(providerName: DataSource) {
+    for (const dataProviderInterface of this.dataProviderInterfaces) {
+      if (this.dataProviderMapping[dataProviderInterface.getName()]) {
+        const mappedDataProviderInterface = this.dataProviderInterfaces.find(
+          (currentDataProviderInterface) => {
+            return (
+              currentDataProviderInterface.getName() ===
+              this.dataProviderMapping[dataProviderInterface.getName()]
+            );
+          }
+        );
+
+        if (mappedDataProviderInterface) {
+          return mappedDataProviderInterface;
+        }
+      }
+
+      if (dataProviderInterface.getName() === providerName) {
+        return dataProviderInterface;
+      }
+    }
+
+    throw new Error('No data provider has been found.');
+  }
+
   public getDataSourceForExchangeRates(): DataSource {
     return DataSource[
       this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
@@ -565,31 +590,6 @@ export class DataProviderService {
     return {
       items: filteredItems
     };
-  }
-
-  private getDataProvider(providerName: DataSource) {
-    for (const dataProviderInterface of this.dataProviderInterfaces) {
-      if (this.dataProviderMapping[dataProviderInterface.getName()]) {
-        const mappedDataProviderInterface = this.dataProviderInterfaces.find(
-          (currentDataProviderInterface) => {
-            return (
-              currentDataProviderInterface.getName() ===
-              this.dataProviderMapping[dataProviderInterface.getName()]
-            );
-          }
-        );
-
-        if (mappedDataProviderInterface) {
-          return mappedDataProviderInterface;
-        }
-      }
-
-      if (dataProviderInterface.getName() === providerName) {
-        return dataProviderInterface;
-      }
-    }
-
-    throw new Error('No data provider has been found.');
   }
 
   private hasCurrency({

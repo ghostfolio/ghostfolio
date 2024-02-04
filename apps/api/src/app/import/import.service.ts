@@ -21,7 +21,8 @@ import {
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
-  OrderWithAccount
+  OrderWithAccount,
+  UserWithSettings
 } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
@@ -139,14 +140,14 @@ export class ImportService {
     isDryRun = false,
     maxActivitiesToImport,
     userCurrency,
-    userId
+    user
   }: {
     accountsDto: Partial<CreateAccountDto>[];
     activitiesDto: Partial<CreateOrderDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     userCurrency: string;
-    userId: string;
+    user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
 
@@ -171,7 +172,7 @@ export class ImportService {
         );
 
         // If there is no account or if the account belongs to a different user then create a new account
-        if (!accountWithSameId || accountWithSameId.userId !== userId) {
+        if (!accountWithSameId || accountWithSameId.userId !== user.id) {
           let oldAccountId: string;
           const platformId = account.platformId;
 
@@ -184,7 +185,7 @@ export class ImportService {
 
           let accountObject: Prisma.AccountCreateInput = {
             ...account,
-            User: { connect: { id: userId } }
+            User: { connect: { id: user.id } }
           };
 
           if (
@@ -200,7 +201,7 @@ export class ImportService {
 
           const newAccount = await this.accountService.createAccount(
             accountObject,
-            userId
+            user.id
           );
 
           // Store the new to old account ID mappings for updating activities
@@ -231,16 +232,17 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
-      maxActivitiesToImport
+      maxActivitiesToImport,
+      user
     });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
       userCurrency,
-      userId
+      userId: user.id
     });
 
-    const accounts = (await this.accountService.getAccounts(userId)).map(
+    const accounts = (await this.accountService.getAccounts(user.id)).map(
       ({ id, name }) => {
         return { id, name };
       }
@@ -345,7 +347,6 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
-          userId,
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
@@ -374,7 +375,8 @@ export class ImportService {
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          userId: user.id
         };
       } else {
         if (error) {
@@ -388,7 +390,6 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
-          userId,
           accountId: validatedAccount?.id,
           SymbolProfile: {
             connectOrCreate: {
@@ -405,8 +406,9 @@ export class ImportService {
               }
             }
           },
+          userId: user.id,
           updateAccountBalance: false,
-          User: { connect: { id: userId } }
+          User: { connect: { id: user.id } }
         });
       }
 
@@ -553,10 +555,12 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
-    maxActivitiesToImport
+    maxActivitiesToImport,
+    user
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
     maxActivitiesToImport: number;
+    user: UserWithSettings;
   }) {
     if (activitiesDto?.length > maxActivitiesToImport) {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
@@ -581,6 +585,21 @@ export class ImportService {
         throw new Error(
           `activities.${index}.dataSource ("${dataSource}") is not valid`
         );
+      }
+
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user.subscription.type === 'Basic'
+      ) {
+        const dataProvider = this.dataProviderService.getDataProvider(
+          DataSource[dataSource]
+        );
+
+        if (dataProvider.getDataProviderInfo().isPremium) {
+          throw new Error(
+            `activities.${index}.dataSource ("${dataSource}") is not valid`
+          );
+        }
       }
 
       const assetProfile = {
