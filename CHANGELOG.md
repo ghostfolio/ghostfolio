@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the error logs for a timeout in the data source request
+- Improved the error logs for a timeout in the data provider services
 
 ## 2.47.0 - 2024-02-02
 
