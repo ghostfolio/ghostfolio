@@ -143,7 +143,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -192,7 +192,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
