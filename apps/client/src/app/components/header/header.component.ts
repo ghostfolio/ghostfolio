@@ -13,6 +13,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -89,6 +90,7 @@ export class HeaderComponent implements OnChanges {
     private dataService: DataService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private layoutService: LayoutService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
@@ -190,6 +192,12 @@ export class HeaderComponent implements OnChanges {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe();
       });
+  }
+
+  public onLogoClick() {
+    if (this.currentRoute === 'home') {
+      this.layoutService.triggerReload();
+    }
   }
 
   public onMenuClosed() {

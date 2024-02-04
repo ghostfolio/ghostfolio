@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   LineChartItem,
@@ -12,7 +13,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -35,6 +36,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
+  private subscription: Subscription;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -42,6 +44,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private layoutService: LayoutService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
@@ -78,6 +81,10 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       this.user.settings.viewMode !== 'ZEN';
 
     this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
+
+    this.subscription = this.layoutService.shouldReload$.subscribe(() => {
+      this.update();
+    });
   }
 
   public onChangeDateRange(dateRange: DateRange) {
@@ -101,6 +108,9 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 
   private update() {
