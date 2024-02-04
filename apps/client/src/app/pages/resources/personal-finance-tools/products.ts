@@ -15,6 +15,7 @@ import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { EmpowerPageComponent } from './products/empower-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
+import { FinaPageComponent } from './products/fina-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -219,6 +220,18 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$100',
     slogan: 'All your wealth, in one place.'
+  },
+  {
+    component: FinaPageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'fina',
+    languages: ['English'],
+    name: 'Fina',
+    origin: $localize`United States`,
+    pricingPerYear: '$115',
+    slogan: 'Flexible Financial Management'
   },
   {
     component: FinaryPageComponent,
