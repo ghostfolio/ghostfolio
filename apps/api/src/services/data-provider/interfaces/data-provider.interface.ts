@@ -3,6 +3,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 import { DataSource, SymbolProfile } from '@prisma/client';
 
@@ -10,6 +11,8 @@ export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
 
   getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
+
+  getDataProviderInfo(): DataProviderInfo;
 
   getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
     [date: string]: IDataProviderHistoricalResponse;

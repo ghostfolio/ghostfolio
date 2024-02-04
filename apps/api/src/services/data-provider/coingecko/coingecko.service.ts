@@ -91,6 +91,14 @@ export class CoinGeckoService implements DataProviderInterface {
     return response;
   }
 
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false,
+      name: 'CoinGecko',
+      url: 'https://coingecko.com'
+    };
+  }
+
   public async getDividends({}: GetDividendsParams) {
     return {};
   }
@@ -251,12 +259,5 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     return { items };
-  }
-
-  private getDataProviderInfo(): DataProviderInfo {
-    return {
-      name: 'CoinGecko',
-      url: 'https://coingecko.com'
-    };
   }
 }

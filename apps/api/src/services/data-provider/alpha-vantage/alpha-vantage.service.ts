@@ -12,6 +12,7 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as Alphavantage from 'alphavantage';
@@ -33,6 +34,12 @@ export class AlphaVantageService implements DataProviderInterface {
 
   public canHandle(symbol: string) {
     return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
+  }
+
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
+    };
   }
 
   public async getAssetProfile(
@@ -114,10 +121,11 @@ export class AlphaVantageService implements DataProviderInterface {
 
     return {
       items: result?.bestMatches?.map((bestMatch) => {
-        return {
+        return <LookupItem>{
           assetClass: undefined,
           assetSubClass: undefined,
           currency: bestMatch['8. currency'],
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: bestMatch['2. name'],
           symbol: bestMatch['1. symbol']

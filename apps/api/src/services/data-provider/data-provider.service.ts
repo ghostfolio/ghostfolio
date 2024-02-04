@@ -520,20 +520,15 @@ export class DataProviderService {
       return { items: lookupItems };
     }
 
-    let dataSources = this.configurationService.get('DATA_SOURCES');
-
-    if (
-      this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-      user.subscription.type === 'Basic'
-    ) {
-      dataSources = dataSources.filter((dataSource) => {
-        return !this.isPremiumDataSource(DataSource[dataSource]);
+    let dataProviderServices = this.configurationService
+      .get('DATA_SOURCES')
+      .map((dataSource) => {
+        return this.getDataProvider(DataSource[dataSource]);
       });
-    }
 
-    for (const dataSource of dataSources) {
+    for (const dataProviderService of dataProviderServices) {
       promises.push(
-        this.getDataProvider(DataSource[dataSource]).search({
+        dataProviderService.search({
           includeIndices,
           query
         })
@@ -555,6 +550,16 @@ export class DataProviderService {
       })
       .sort(({ name: name1 }, { name: name2 }) => {
         return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
+      })
+      .map((lookupItem) => {
+        if (
+          !this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') ||
+          user.subscription.type === 'Premium'
+        ) {
+          lookupItem.dataProviderInfo.isPremium = false;
+        }
+
+        return lookupItem;
       });
 
     return {
@@ -600,14 +605,6 @@ export class DataProviderService {
         symbol === currency
       );
     });
-  }
-
-  private isPremiumDataSource(aDataSource: DataSource) {
-    const premiumDataSources: DataSource[] = [
-      DataSource.EOD_HISTORICAL_DATA,
-      DataSource.FINANCIAL_MODELING_PREP
-    ];
-    return premiumDataSources.includes(aDataSource);
   }
 
   private transformHistoricalData({
