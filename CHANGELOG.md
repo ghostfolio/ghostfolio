@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the assistant by an asset class selector (experimental)
+
 ### Changed
 
 - Improved the usability of the account selector in the assistant (experimental)

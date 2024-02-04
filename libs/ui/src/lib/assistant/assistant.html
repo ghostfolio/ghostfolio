@@ -89,9 +89,9 @@
   <form [formGroup]="filterForm">
     <div
       *ngIf="!(isLoading || searchFormControl.value) && user?.settings?.isExperimentalFeatures"
-      class="filter-container"
+      class="filter-container p-3"
     >
-      <div class="p-3">
+      <div class="mb-3">
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-label i18n>Date Range</mat-label>
           <mat-select
@@ -104,60 +104,51 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <mat-tab-group
-        animationDuration="0"
-        mat-align-tabs="start"
-        [mat-stretch-tabs]="false"
-      >
-        <mat-tab>
-          <ng-template mat-tab-label
-            ><ion-icon name="albums-outline" /><span
-              class="d-none d-sm-block ml-2"
-              i18n
-              >Accounts</span
-            ></ng-template
-          >
-          <div class="p-3">
-            <mat-form-field appearance="outline" class="w-100 without-hint">
-              <mat-select formControlName="account">
-                <mat-option [value]="null"></mat-option>
-                @for (account of accounts; track account.id) {
-                <mat-option [value]="account.id">
-                  <div class="d-flex">
-                    <gf-symbol-icon
-                      *ngIf="account.Platform?.url"
-                      class="mr-1"
-                      [tooltip]="account.Platform?.name"
-                      [url]="account.Platform?.url"
-                    /><span>{{ account.name }}</span>
-                  </div>
-                </mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-tab>
-        <mat-tab>
-          <ng-template mat-tab-label
-            ><ion-icon name="pricetag-outline" /><span
-              class="d-none d-sm-block ml-2"
-              i18n
-              >Tags</span
-            ></ng-template
-          >
-          <div class="p-3">
-            <mat-form-field appearance="outline" class="w-100 without-hint">
-              <mat-select formControlName="tag">
-                <mat-option [value]="null"></mat-option>
-                @for (tag of tags; track tag.id) {
-                <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-      <div class="pb-3 px-3">
+      <div class="mb-3">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-label i18n>Accounts</mat-label>
+          <mat-select formControlName="account">
+            <mat-option [value]="null"></mat-option>
+            @for (account of accounts; track account.id) {
+            <mat-option [value]="account.id">
+              <div class="d-flex">
+                <gf-symbol-icon
+                  *ngIf="account.Platform?.url"
+                  class="mr-1"
+                  [tooltip]="account.Platform?.name"
+                  [url]="account.Platform?.url"
+                /><span>{{ account.name }}</span>
+              </div>
+            </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="mb-3">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-label i18n>Tags</mat-label>
+          <mat-select formControlName="tag">
+            <mat-option [value]="null"></mat-option>
+            @for (tag of tags; track tag.id) {
+            <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="mb-3">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-label i18n>Asset Classes</mat-label>
+          <mat-select formControlName="assetClass">
+            <mat-option [value]="null"></mat-option>
+            @for (assetClass of assetClasses; track assetClass.id) {
+            <mat-option [value]="assetClass.id"
+              >{{ assetClass.label }}</mat-option
+            >
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
         <button
           class="w-100"
           color="primary"
