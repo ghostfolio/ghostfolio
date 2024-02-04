@@ -191,7 +191,7 @@
     "jest-environment-jsdom": "29.4.3",
     "jest-preset-angular": "13.1.4",
     "nx": "17.2.8",
-    "prettier": "3.2.4",
+    "prettier": "3.2.5",
     "prettier-plugin-organize-attributes": "1.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
