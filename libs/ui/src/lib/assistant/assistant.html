@@ -115,8 +115,8 @@
               class="d-none d-sm-block ml-2"
               i18n
               >Accounts</span
-            ></ng-template
-          >
+            >
+          </ng-template>
           <div class="p-3">
             <mat-form-field appearance="outline" class="w-100 without-hint">
               <mat-select formControlName="account">
@@ -143,14 +143,35 @@
               class="d-none d-sm-block ml-2"
               i18n
               >Tags</span
-            ></ng-template
-          >
+            >
+          </ng-template>
           <div class="p-3">
             <mat-form-field appearance="outline" class="w-100 without-hint">
               <mat-select formControlName="tag">
                 <mat-option [value]="null"></mat-option>
                 @for (tag of tags; track tag.id) {
-                <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+                <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-tab>
+        <mat-tab>
+          <ng-template mat-tab-label
+            ><ion-icon name="folder-open-outline" /><span
+              class="d-none d-sm-block ml-2"
+              i18n
+              >Asset Classes</span
+            >
+          </ng-template>
+          <div class="p-3">
+            <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-select formControlName="assetClass">
+                <mat-option [value]="null"></mat-option>
+                @for (assetClass of assetClasses; track assetClass.id) {
+                <mat-option [value]="assetClass.id"
+                  >{{ assetClass.label }}</mat-option
+                >
                 }
               </mat-select>
             </mat-form-field>

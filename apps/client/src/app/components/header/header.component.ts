@@ -170,6 +170,8 @@ export class HeaderComponent implements OnChanges {
 
       if (filter.type === 'ACCOUNT') {
         filtersType = 'accounts';
+      } else if (filter.type === 'ASSET_CLASS') {
+        filtersType = 'assetClasses';
       } else if (filter.type === 'TAG') {
         filtersType = 'tags';
       }

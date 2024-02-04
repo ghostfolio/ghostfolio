@@ -22,7 +22,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { Filter, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
-import { Account, Tag } from '@prisma/client';
+import { Account, AssetClass, Tag } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -92,6 +92,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
   public accounts: Account[] = [];
+  public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
   public readonly dateRangeOptions = [
     { label: $localize`Today`, value: '1d' },
@@ -116,6 +117,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   ];
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
+    assetClass: new FormControl<string>(undefined),
     tag: new FormControl<string>(undefined)
   });
   public isLoading = false;
@@ -126,8 +128,9 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     assetProfiles: [],
     holdings: []
   };
-  public tags: Tag[] = [];
+  public tags: Filter[] = [];
 
+  private filterTypes: Filter['type'][] = ['ACCOUNT', 'ASSET_CLASS', 'TAG'];
   private keyManager: FocusKeyManager<AssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
 
@@ -140,28 +143,38 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public ngOnInit() {
     this.accounts = this.user?.accounts;
+    this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
+      return {
+        id: assetClass,
+        label: translate(assetClass),
+        type: 'ASSET_CLASS'
+      };
+    });
     this.tags = this.user?.tags.map(({ id, name }) => {
       return {
         id,
-        name: translate(name)
+        label: translate(name),
+        type: 'TAG'
       };
     });
 
     this.filterForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ account, tag }) => {
+      .subscribe(({ account, assetClass, tag }) => {
         this.filtersChanged.emit([
           {
             id: account,
             type: 'ACCOUNT'
           },
           {
+            id: assetClass,
+            type: 'ASSET_CLASS'
+          },
+          {
             id: tag,
             type: 'TAG'
           }
         ]);
-
-        this.onCloseAssistant();
       });
 
     this.searchFormControl.valueChanges
@@ -209,6 +222,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.filterForm.setValue(
       {
         account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
+        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
         tag: this.user?.settings?.['filters.tags']?.[0] ?? null
       },
       {
@@ -257,16 +271,14 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onResetFilters() {
-    this.filtersChanged.emit([
-      {
-        id: null,
-        type: 'ACCOUNT'
-      },
-      {
-        id: null,
-        type: 'TAG'
-      }
-    ]);
+    this.filtersChanged.emit(
+      this.filterTypes.map((type) => {
+        return {
+          type,
+          id: null
+        };
+      })
+    );
 
     this.onCloseAssistant();
   }

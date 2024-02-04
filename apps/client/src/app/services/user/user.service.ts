@@ -58,6 +58,13 @@ export class UserService extends ObservableStore<UserStoreState> {
         });
       }
 
+      if (user.settings['filters.assetClasses']) {
+        filters.push({
+          id: user.settings['filters.assetClasses'][0],
+          type: 'ASSET_CLASS'
+        });
+      }
+
       if (user.settings['filters.tags']) {
         filters.push({
           id: user.settings['filters.tags'][0],
