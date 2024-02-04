@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the account selector in the assistant (experimental)
+- Improved the usability of the tag selector in the assistant (experimental)
 - Improved the error logs for a timeout in the data provider services
 - Upgraded `prettier` from version `3.2.4` to `3.2.5`
 

@@ -118,16 +118,23 @@
             ></ng-template
           >
           <div class="p-3">
-            <mat-radio-group color="primary" formControlName="account">
-              <mat-radio-button class="d-flex flex-column" i18n [value]="null"
-                >No account</mat-radio-button
-              >
-              @for (account of accounts; track account.id) {
-              <mat-radio-button class="d-flex flex-column" [value]="account.id"
-                >{{ account.name }}</mat-radio-button
-              >
-              }
-            </mat-radio-group>
+            <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-select formControlName="account">
+                <mat-option [value]="null"></mat-option>
+                @for (account of accounts; track account.id) {
+                <mat-option [value]="account.id">
+                  <div class="d-flex">
+                    <gf-symbol-icon
+                      *ngIf="account.Platform?.url"
+                      class="mr-1"
+                      [tooltip]="account.Platform?.name"
+                      [url]="account.Platform?.url"
+                    /><span>{{ account.name }}</span>
+                  </div>
+                </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
           </div>
         </mat-tab>
         <mat-tab>
@@ -139,20 +146,18 @@
             ></ng-template
           >
           <div class="p-3">
-            <mat-radio-group color="primary" formControlName="tag">
-              <mat-radio-button class="d-flex flex-column" i18n [value]="null"
-                >No tag</mat-radio-button
-              >
-              @for (tag of tags; track tag.id) {
-              <mat-radio-button class="d-flex flex-column" [value]="tag.id"
-                >{{ tag.name }}</mat-radio-button
-              >
-              }
-            </mat-radio-group>
+            <mat-form-field appearance="outline" class="w-100 without-hint">
+              <mat-select formControlName="tag">
+                <mat-option [value]="null"></mat-option>
+                @for (tag of tags; track tag.id) {
+                <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
           </div>
         </mat-tab>
       </mat-tab-group>
-      <div class="p-3">
+      <div class="pb-3 px-3">
         <button
           class="w-100"
           color="primary"
