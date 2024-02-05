@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { SymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete/symbol-autocomplete.component';
+import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 
 @NgModule({
   declarations: [SymbolAutocompleteComponent],
@@ -14,6 +15,7 @@ import { SymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete/
   imports: [
     CommonModule,
     FormsModule,
+    GfPremiumIndicatorModule,
     GfSymbolModule,
     MatAutocompleteModule,
     MatFormFieldModule,

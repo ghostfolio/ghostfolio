@@ -18,7 +18,10 @@ import {
   extractNumberFromString,
   getYesterday
 } from '@ghostfolio/common/helper';
-import { ScraperConfiguration } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  ScraperConfiguration
+} from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
@@ -57,6 +60,12 @@ export class ManualService implements DataProviderInterface {
     }
 
     return assetProfile;
+  }
+
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
+    };
   }
 
   public async getDividends({}: GetDividendsParams) {
@@ -214,7 +223,11 @@ export class ManualService implements DataProviderInterface {
       return !isUUID(symbol);
     });
 
-    return { items };
+    return {
+      items: items.map((item) => {
+        return { ...item, dataProviderInfo: this.getDataProviderInfo() };
+      })
+    };
   }
 
   public async test(scraperConfiguration: ScraperConfiguration) {

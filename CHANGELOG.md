@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the assistant by an asset class selector (experimental)
+- Added the data provider information to the search endpoint
 
 ### Changed
 

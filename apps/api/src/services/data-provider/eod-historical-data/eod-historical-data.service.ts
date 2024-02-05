@@ -16,6 +16,7 @@ import {
   REPLACE_NAME_PARTS
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -55,6 +56,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
       isin: searchResult?.isin,
       name: searchResult?.name,
       symbol: aSymbol
+    };
+  }
+
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: true
     };
   }
 
@@ -312,7 +319,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
               dataSource,
               name,
               symbol,
-              currency: this.convertCurrency(currency)
+              currency: this.convertCurrency(currency),
+              dataProviderInfo: this.getDataProviderInfo()
             };
           }
         )

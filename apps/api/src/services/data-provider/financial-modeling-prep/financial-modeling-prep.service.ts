@@ -45,6 +45,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     };
   }
 
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: true,
+      name: 'Financial Modeling Prep',
+      url: 'https://financialmodelingprep.com/developer/docs'
+    };
+  }
+
   public async getDividends({}: GetDividendsParams) {
     return {};
   }
@@ -201,12 +209,5 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     return { items };
-  }
-
-  private getDataProviderInfo(): DataProviderInfo {
-    return {
-      name: 'Financial Modeling Prep',
-      url: 'https://financialmodelingprep.com/developer/docs'
-    };
   }
 }

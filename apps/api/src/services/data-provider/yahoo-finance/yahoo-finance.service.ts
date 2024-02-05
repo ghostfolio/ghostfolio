@@ -14,6 +14,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
@@ -44,6 +45,12 @@ export class YahooFinanceService implements DataProviderInterface {
       name,
       symbol,
       dataSource: this.getName()
+    };
+  }
+
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
     };
   }
 
@@ -283,6 +290,7 @@ export class YahooFinanceService implements DataProviderInterface {
           assetSubClass,
           symbol,
           currency: marketDataItem.currency,
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: this.yahooFinanceDataEnhancerService.formatName({
             longName: quote.longname,

@@ -64,16 +64,13 @@ export class ImportController {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
 
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
-
     try {
       const activities = await this.importService.import({
         isDryRun,
         maxActivitiesToImport,
-        userCurrency,
         accountsDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
-        userId: this.request.user.id
+        user: this.request.user
       });
 
       return { activities };
