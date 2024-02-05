@@ -36,18 +36,18 @@ export class AlphaVantageService implements DataProviderInterface {
     return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
   }
 
-  public getDataProviderInfo(): DataProviderInfo {
-    return {
-      isPremium: false
-    };
-  }
-
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
     return {
       dataSource: this.getName(),
       symbol: aSymbol
+    };
+  }
+
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
     };
   }
 
@@ -121,7 +121,7 @@ export class AlphaVantageService implements DataProviderInterface {
 
     return {
       items: result?.bestMatches?.map((bestMatch) => {
-        return <LookupItem>{
+        return {
           assetClass: undefined,
           assetSubClass: undefined,
           currency: bestMatch['8. currency'],

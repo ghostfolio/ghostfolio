@@ -139,17 +139,16 @@ export class ImportService {
     activitiesDto,
     isDryRun = false,
     maxActivitiesToImport,
-    userCurrency,
     user
   }: {
     accountsDto: Partial<CreateAccountDto>[];
     activitiesDto: Partial<CreateOrderDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
-    userCurrency: string;
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
+    const userCurrency = user.Settings.settings.baseCurrency;
 
     if (!isDryRun && accountsDto?.length) {
       const [existingAccounts, existingPlatforms] = await Promise.all([
@@ -406,9 +405,9 @@ export class ImportService {
               }
             }
           },
-          userId: user.id,
           updateAccountBalance: false,
-          User: { connect: { id: user.id } }
+          User: { connect: { id: user.id } },
+          userId: user.id
         });
       }
 
