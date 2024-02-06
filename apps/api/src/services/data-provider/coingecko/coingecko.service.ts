@@ -243,6 +243,7 @@ export class CoinGeckoService implements DataProviderInterface {
           assetClass: AssetClass.CASH,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName()
         };
       });
