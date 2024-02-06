@@ -10,7 +10,7 @@ export class LayoutService {
   // Observable stream
   public shouldReload$ = this.shouldReloadSubject.asObservable();
 
-  constructor() {}
+  public constructor() {}
 
   // Method to trigger the reload
   public triggerReload() {

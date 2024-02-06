@@ -36,7 +36,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public showDetails = false;
   public unit: string;
   public user: User;
-  private subscription: Subscription;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -44,8 +43,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
-    private layoutService: LayoutService,
     private impersonationStorageService: ImpersonationStorageService,
+    private layoutService: LayoutService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -82,9 +81,11 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
 
     this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
 
-    this.subscription = this.layoutService.shouldReload$.subscribe(() => {
-      this.update();
-    });
+    this.layoutService.shouldReload$
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.update();
+      });
   }
 
   public onChangeDateRange(dateRange: DateRange) {
@@ -108,9 +109,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
   }
 
   private update() {
