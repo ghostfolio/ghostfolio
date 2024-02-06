@@ -399,7 +399,7 @@ export class ActivitiesTableComponent implements OnChanges, OnDestroy, OnInit {
           type === 'LIABILITY' ||
           type === 'SELL'
         ) {
-          return null;
+          continue;
         }
       } else {
         return null;
