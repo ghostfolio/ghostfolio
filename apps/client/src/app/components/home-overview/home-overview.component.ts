@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   LineChartItem,
@@ -43,6 +44,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
+    private layoutService: LayoutService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -71,6 +73,12 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!impersonationId;
 
         this.changeDetectorRef.markForCheck();
+      });
+
+    this.layoutService.shouldReloadContent$
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.update();
       });
 
     this.showDetails =
