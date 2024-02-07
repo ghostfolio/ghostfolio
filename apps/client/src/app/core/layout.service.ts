@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayoutService {
+  public shouldReloadContent$: Observable<void>;
+
   private shouldReloadSubject = new Subject<void>();
 
-  // Observable stream
-  public shouldReload$ = this.shouldReloadSubject.asObservable();
+  public constructor() {
+    this.shouldReloadContent$ = this.shouldReloadSubject.asObservable();
+  }
 
-  public constructor() {}
-
-  // Method to trigger the reload
-  public triggerReload() {
-    this.shouldReloadSubject.next();
+  public getShouldReloadSubject() {
+    return this.shouldReloadSubject;
   }
 }

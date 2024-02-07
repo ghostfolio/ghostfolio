@@ -195,8 +195,8 @@ export class HeaderComponent implements OnChanges {
   }
 
   public onLogoClick() {
-    if (this.currentRoute === 'home') {
-      this.layoutService.triggerReload();
+    if (this.currentRoute === 'home' || this.currentRoute === 'zen') {
+      this.layoutService.getShouldReloadSubject().next();
     }
   }
 

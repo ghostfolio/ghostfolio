@@ -13,7 +13,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -81,7 +81,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
 
     this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
 
-    this.layoutService.shouldReload$
+    this.layoutService.shouldReloadContent$
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.update();
