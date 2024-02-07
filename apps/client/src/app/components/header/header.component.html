@@ -6,6 +6,7 @@
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
+        (click)="onLogoClick()"
       >
         <gf-logo class="px-2" [label]="pageTitle" />
       </a>
