@@ -75,17 +75,17 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.showDetails =
-      !this.user.settings.isRestrictedView &&
-      this.user.settings.viewMode !== 'ZEN';
-
-    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
-
     this.layoutService.shouldReloadContent$
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.update();
       });
+
+    this.showDetails =
+      !this.user.settings.isRestrictedView &&
+      this.user.settings.viewMode !== 'ZEN';
+
+    this.unit = this.showDetails ? this.user.settings.baseCurrency : '%';
   }
 
   public onChangeDateRange(dateRange: DateRange) {
