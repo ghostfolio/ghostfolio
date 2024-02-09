@@ -50,7 +50,7 @@
           <context context-type="linenumber">12</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">154</context>
         </context-group>
       </trans-unit>
@@ -154,7 +154,7 @@
           <context context-type="linenumber">113</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">130</context>
         </context-group>
         <context-group purpose="location">
@@ -218,11 +218,11 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">250</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">286</context>
         </context-group>
         <context-group purpose="location">
@@ -254,7 +254,7 @@
           <context context-type="linenumber">71</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">415</context>
         </context-group>
       </trans-unit>
@@ -290,7 +290,7 @@
           <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">437</context>
         </context-group>
       </trans-unit>
@@ -442,7 +442,7 @@
           <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">163</context>
         </context-group>
       </trans-unit>
@@ -1873,7 +1873,7 @@
           <context context-type="linenumber">69</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">301</context>
         </context-group>
       </trans-unit>
@@ -2057,7 +2057,7 @@
           <context context-type="linenumber">119</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">269</context>
         </context-group>
       </trans-unit>
@@ -2437,7 +2437,7 @@
           <context context-type="linenumber">152</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">179</context>
         </context-group>
       </trans-unit>
@@ -2453,7 +2453,7 @@
           <context context-type="linenumber">227</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">203</context>
         </context-group>
       </trans-unit>
@@ -2469,7 +2469,7 @@
           <context context-type="linenumber">266</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
@@ -2669,7 +2669,7 @@
         <source>Draft</source>
         <target state="translated">Bozza</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">140</context>
         </context-group>
       </trans-unit>
@@ -2685,11 +2685,11 @@
         <source>Export Activities</source>
         <target state="translated">Esporta le attività</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">384</context>
         </context-group>
       </trans-unit>
@@ -2697,11 +2697,11 @@
         <source>Export Drafts as ICS</source>
         <target state="translated">Esporta le bozze come ICS</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">396</context>
         </context-group>
       </trans-unit>
@@ -2709,7 +2709,7 @@
         <source>Clone</source>
         <target state="translated">Clona</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">421</context>
         </context-group>
       </trans-unit>
@@ -2717,7 +2717,7 @@
         <source>Export Draft as ICS</source>
         <target state="translated">Esporta la bozza come ICS</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">431</context>
         </context-group>
       </trans-unit>
@@ -2725,7 +2725,7 @@
         <source>Do you really want to delete this activity?</source>
         <target state="translated">Vuoi davvero eliminare questa attività?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.ts</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
@@ -4097,7 +4097,7 @@
         <source>Delete all Activities</source>
         <target state="translated">Elimina tutte le attività</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
@@ -4265,11 +4265,11 @@
         <source>Import Activities</source>
         <target state="translated">Importa le attività</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">361</context>
         </context-group>
       </trans-unit>
@@ -4277,11 +4277,11 @@
         <source>Import Dividends</source>
         <target state="translated">Importa i dividendi</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/activities-table-lazy/activities-table-lazy.component.html</context>
+          <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">372</context>
         </context-group>
       </trans-unit>
