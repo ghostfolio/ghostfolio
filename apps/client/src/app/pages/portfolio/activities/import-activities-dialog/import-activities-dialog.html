@@ -116,7 +116,7 @@
       </ng-template>
       <div class="pt-3">
         <ng-container *ngIf="errorMessages?.length === 0; else errorMessage">
-          <gf-activities-table-lazy
+          <gf-activities-table
             *ngIf="importStep === 1"
             [baseCurrency]="data?.user?.settings?.baseCurrency"
             [dataSource]="dataSource"

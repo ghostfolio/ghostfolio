@@ -26,11 +26,11 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'gf-activities-table-lazy',
-  styleUrls: ['./activities-table-lazy.component.scss'],
-  templateUrl: './activities-table-lazy.component.html'
+  selector: 'gf-activities-table',
+  styleUrls: ['./activities-table.component.scss'],
+  templateUrl: './activities-table.component.html'
 })
-export class ActivitiesTableLazyComponent
+export class ActivitiesTableComponent
   implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
