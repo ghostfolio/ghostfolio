@@ -249,7 +249,7 @@
     <div class="row" [ngClass]="{ 'd-none': !activities?.length }">
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
-        <gf-activities-table-lazy
+        <gf-activities-table
           [baseCurrency]="data.baseCurrency"
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"

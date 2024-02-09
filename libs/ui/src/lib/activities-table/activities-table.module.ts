@@ -15,11 +15,11 @@ import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info'
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { ActivitiesTableLazyComponent } from './activities-table-lazy.component';
+import { ActivitiesTableComponent } from './activities-table.component';
 
 @NgModule({
-  declarations: [ActivitiesTableLazyComponent],
-  exports: [ActivitiesTableLazyComponent],
+  declarations: [ActivitiesTableComponent],
+  exports: [ActivitiesTableComponent],
   imports: [
     CommonModule,
     GfActivityTypeModule,
@@ -39,4 +39,4 @@ import { ActivitiesTableLazyComponent } from './activities-table-lazy.component'
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfActivitiesTableLazyModule {}
+export class GfActivitiesTableModule {}
