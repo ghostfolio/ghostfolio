@@ -1,16 +1,8 @@
 :host {
   display: block;
 
-  .filter-container {
-    .mat-mdc-tab-group {
-      max-height: 20vh;
-    }
-
-    ::ng-deep {
-      label {
-        margin-bottom: 0;
-      }
-    }
+  .date-range-selector-container {
+    border-bottom: 1px solid rgba(var(--dark-dividers));
   }
 
   .result-container {
@@ -35,6 +27,10 @@
 }
 
 :host-context(.is-dark-theme) {
+  .date-range-selector-container {
+    border-color: rgba(var(--light-dividers));
+  }
+
   .search-container {
     border-color: rgba(var(--light-dividers));
 

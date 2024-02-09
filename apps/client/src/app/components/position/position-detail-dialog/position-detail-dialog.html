@@ -250,12 +250,11 @@
       <div class="col mb-3">
         <div class="h5 mb-0" i18n>Activities</div>
         <gf-activities-table-lazy
-          *ngIf="user?.settings?.isExperimentalFeatures === true"
           [baseCurrency]="data.baseCurrency"
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
@@ -265,20 +264,6 @@
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
           [totalItems]="totalItems"
-          (export)="onExport()"
-        />
-        <gf-activities-table
-          *ngIf="user?.settings?.isExperimentalFeatures !== true"
-          [activities]="activities"
-          [baseCurrency]="data.baseCurrency"
-          [deviceType]="data.deviceType"
-          [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="true"
-          [hasPermissionToFilter]="false"
-          [hasPermissionToOpenDetails]="false"
-          [locale]="data.locale"
-          [showActions]="false"
-          [showNameColumn]="false"
           (export)="onExport()"
         />
       </div>

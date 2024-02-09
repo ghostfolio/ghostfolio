@@ -120,11 +120,7 @@
           [matMenuTriggerRestoreFocus]="false"
           (menuOpened)="onOpenAssistant()"
         >
-          @if (user?.settings?.isExperimentalFeatures) {
-            <ion-icon class="rotate-90" name="options-outline" />
-          } @else {
-            <ion-icon name="search-outline" />
-          }
+          <ion-icon class="rotate-90" name="options-outline" />
         </button>
         <mat-menu
           #assistantMenu="matMenu"

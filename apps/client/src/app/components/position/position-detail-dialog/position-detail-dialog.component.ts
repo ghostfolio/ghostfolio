@@ -268,17 +268,9 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   }
 
   public onExport() {
-    let activityIds = [];
-
-    if (this.user?.settings?.isExperimentalFeatures === true) {
-      activityIds = this.dataSource.data.map(({ id }) => {
-        return id;
-      });
-    } else {
-      activityIds = this.activities.map(({ id }) => {
-        return id;
-      });
-    }
+    let activityIds = this.dataSource.data.map(({ id }) => {
+      return id;
+    });
 
     this.dataService
       .fetchExport({ activityIds })

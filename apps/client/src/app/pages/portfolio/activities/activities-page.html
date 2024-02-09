@@ -3,7 +3,6 @@
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Activities</h1>
       <gf-activities-table-lazy
-        *ngIf="user?.settings?.isExperimentalFeatures === true"
         [baseCurrency]="user?.settings?.baseCurrency"
         [dataSource]="dataSource"
         [deviceType]="deviceType"
@@ -26,24 +25,6 @@
         (importDividends)="onImportDividends()"
         (pageChanged)="onChangePage($event)"
         (sortChanged)="onSortChanged($event)"
-      />
-      <gf-activities-table
-        *ngIf="user?.settings?.isExperimentalFeatures !== true"
-        [activities]="activities"
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [deviceType]="deviceType"
-        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
-        [hasPermissionToExportActivities]="!hasImpersonationId"
-        [locale]="user?.settings?.locale"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
-        (activityDeleted)="onDeleteActivity($event)"
-        (activityToClone)="onCloneActivity($event)"
-        (activityToUpdate)="onUpdateActivity($event)"
-        (deleteAllActivities)="onDeleteAllActivities()"
-        (export)="onExport($event)"
-        (exportDrafts)="onExportDrafts($event)"
-        (import)="onImport()"
-        (importDividends)="onImportDividends()"
       />
     </div>
   </div>

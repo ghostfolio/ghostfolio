@@ -4,7 +4,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
-import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
 import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
 import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
@@ -17,7 +16,6 @@ import { AllocationsPageComponent } from './allocations-page.component';
   imports: [
     AllocationsPageRoutingModule,
     CommonModule,
-    GfActivitiesFilterModule,
     GfPortfolioProportionChartModule,
     GfPremiumIndicatorModule,
     GfWorldMapChartModule,

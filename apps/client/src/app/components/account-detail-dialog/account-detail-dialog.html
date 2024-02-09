@@ -25,7 +25,7 @@
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
-        [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+        [isInPercent]="data.hasImpersonationId || user.settings.isRestrictedView"
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
       />
@@ -87,12 +87,11 @@
           <div class="d-none d-sm-block ml-2" i18n>Activities</div>
         </ng-template>
         <gf-activities-table-lazy
-          *ngIf="user?.settings?.isExperimentalFeatures === true"
           [baseCurrency]="user?.settings?.baseCurrency"
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
@@ -102,19 +101,6 @@
           [totalItems]="totalItems"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
-        />
-        <gf-activities-table
-          *ngIf="user?.settings?.isExperimentalFeatures !== true"
-          [activities]="activities"
-          [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType"
-          [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="true"
-          [hasPermissionToFilter]="false"
-          [hasPermissionToOpenDetails]="false"
-          [locale]="user?.settings?.locale"
-          [showActions]="false"
-          (export)="onExport()"
         />
       </mat-tab>
       <mat-tab>
@@ -126,7 +112,7 @@
           [accountBalances]="accountBalances"
           [accountId]="data.accountId"
           [locale]="user?.settings?.locale"
-          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
+          [showActions]="!data.hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
         />
       </mat-tab>
