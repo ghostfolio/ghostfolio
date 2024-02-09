@@ -2,14 +2,6 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Holdings</h1>
-      @if (!user?.settings?.isExperimentalFeatures) {
-      <gf-activities-filter
-        [allFilters]="allFilters"
-        [isLoading]="isLoading"
-        [placeholder]="placeholder"
-        (valueChanged)="filters$.next($event)"
-      />
-      }
     </div>
   </div>
   <div class="row">

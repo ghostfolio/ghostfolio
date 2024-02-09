@@ -9,7 +9,6 @@ import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-ta
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { GfAccountBalancesModule } from '@ghostfolio/ui/account-balances/account-balances.module';
 import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -20,7 +19,6 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
   imports: [
     CommonModule,
     GfAccountBalancesModule,
-    GfActivitiesTableModule,
     GfActivitiesTableLazyModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,

@@ -1,21 +1,5 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
-  @if (!user?.settings?.isExperimentalFeatures) {
-  <div class="my-4 text-center">
-    <gf-toggle
-      [defaultValue]="user?.settings?.dateRange"
-      [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
-      [options]="dateRangeOptions"
-      (change)="onChangeDateRange($event.value)"
-    />
-  </div>
-  <gf-activities-filter
-    [allFilters]="allFilters"
-    [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
-    [placeholder]="placeholder"
-    (valueChanged)="filters$.next($event)"
-  />
-  }
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator

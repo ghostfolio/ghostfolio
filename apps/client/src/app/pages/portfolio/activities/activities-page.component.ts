@@ -121,43 +121,25 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
-    if (this.user?.settings?.isExperimentalFeatures === true) {
-      this.dataService
-        .fetchActivities({
-          filters: this.userService.getFilters(),
-          skip: this.pageIndex * this.pageSize,
-          sortColumn: this.sortColumn,
-          sortDirection: this.sortDirection,
-          take: this.pageSize
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities, count }) => {
-          this.dataSource = new MatTableDataSource(activities);
-          this.totalItems = count;
+    this.dataService
+      .fetchActivities({
+        filters: this.userService.getFilters(),
+        skip: this.pageIndex * this.pageSize,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection,
+        take: this.pageSize
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities, count }) => {
+        this.dataSource = new MatTableDataSource(activities);
+        this.totalItems = count;
 
-          if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
-            this.router.navigate([], { queryParams: { createDialog: true } });
-          }
+        if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
+          this.router.navigate([], { queryParams: { createDialog: true } });
+        }
 
-          this.changeDetectorRef.markForCheck();
-        });
-    } else {
-      this.dataService
-        .fetchActivities({})
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities }) => {
-          this.activities = activities;
-
-          if (
-            this.hasPermissionToCreateActivity &&
-            this.activities?.length <= 0
-          ) {
-            this.router.navigate([], { queryParams: { createDialog: true } });
-          }
-
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onChangePage(page: PageEvent) {
