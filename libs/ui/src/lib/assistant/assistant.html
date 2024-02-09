@@ -148,16 +148,24 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div>
+      <div class="d-flex w-100">
         <button
-          class="w-100"
-          color="primary"
           i18n
-          mat-flat-button
+          mat-button
           [disabled]="!hasFilter(filterForm.value)"
           (click)="onResetFilters()"
         >
           Reset Filters
+        </button>
+        <span class="gf-spacer"></span>
+        <button
+          color="primary"
+          i18n
+          mat-flat-button
+          [disabled]="!filterForm.dirty"
+          (click)="onApplyFilters()"
+        >
+          Apply Filters
         </button>
       </div>
     </div>
