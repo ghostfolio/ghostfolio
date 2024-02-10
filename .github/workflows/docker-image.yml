@@ -23,7 +23,7 @@ jobs:
         run: |
           REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           BRANCH_NAME=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') # Get the branch name in lowercase
-          docker build . --env-file=.env -t ghcr.io/$REPO_LOWER/$REPO_LOWER:$BRANCH_NAME
+          docker build . -t ghcr.io/$REPO_LOWER/$REPO_LOWER:$BRANCH_NAME
 
       - name: Push Docker image to GitHub Packages
         run: |
