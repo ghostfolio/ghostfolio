@@ -25,9 +25,7 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_HOUR)
   public async runEveryHour() {
-    const isDataGatheringEnabled = await this.isDataGatheringEnabled();
-
-    if (isDataGatheringEnabled) {
+    if (await this.isDataGatheringEnabled()) {
       await this.dataGatheringService.gather7Days();
     }
   }
@@ -44,9 +42,7 @@ export class CronService {
 
   @Cron(CronService.EVERY_SUNDAY_AT_LUNCH_TIME)
   public async runEverySundayAtTwelvePm() {
-    const isDataGatheringEnabled = await this.isDataGatheringEnabled();
-
-    if (isDataGatheringEnabled) {
+    if (await this.isDataGatheringEnabled()) {
       const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
 
       await this.dataGatheringService.addJobsToQueue(
