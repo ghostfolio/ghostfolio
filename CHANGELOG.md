@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Harmonized the environment variables of various API keys
+
+### Todo
+
+- Rename the environment variable from `ALPHA_VANTAGE_API_KEY` to `API_KEY_ALPHA_VANTAGE`
+- Rename the environment variable from `BETTER_UPTIME_API_KEY` to `API_KEY_BETTER_UPTIME`
+- Rename the environment variable from `EOD_HISTORICAL_DATA_API_KEY` to `API_KEY_EOD_HISTORICAL_DATA`
+- Rename the environment variable from `FINANCIAL_MODELING_PREP_API_KEY` to `API_KEY_FINANCIAL_MODELING_PREP`
+- Rename the environment variable from `OPEN_FIGI_API_KEY` to `API_KEY_OPEN_FIGI`
+- Rename the environment variable from `RAPID_API_API_KEY` to `API_KEY_RAPID_API`
+
 ## 2.49.0 - 2024-02-09
 
 ### Added
