@@ -25,7 +25,6 @@
 
 # misc
 /.angular/cache
-.env
 .env.prod
 .nx/cache
 /.sass-cache
