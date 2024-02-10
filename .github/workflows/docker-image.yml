@@ -1,0 +1,32 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - development
+      - master
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          BRANCH_NAME=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') # Get the branch name in lowercase
+          docker build . --env-file=.env -t ghcr.io/$REPO_LOWER/$REPO_LOWER:$BRANCH_NAME
+
+      - name: Push Docker image to GitHub Packages
+        run: |
+          REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          BRANCH_NAME=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') # Get the branch name in lowercase
+          docker push ghcr.io/$REPO_LOWER/$REPO_LOWER:$BRANCH_NAME
