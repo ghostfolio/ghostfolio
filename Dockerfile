@@ -58,5 +58,5 @@ RUN apt update && apt install -y \
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 WORKDIR /ghostfolio/apps/api
-EXPOSE ${PORT:-3333}
+EXPOSE ${PORT:-3334}
 CMD [ "yarn", "start:production" ]

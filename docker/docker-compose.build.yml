@@ -10,14 +10,14 @@ services:
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
-      - 3333:3333
+      - ${PORT}:${PORT}
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:3333/api/v1/health']
+      test: ['CMD-SHELL', 'curl -f http://localhost:${PORT}/api/v1/health']
       interval: 10s
       timeout: 5s
       retries: 5
