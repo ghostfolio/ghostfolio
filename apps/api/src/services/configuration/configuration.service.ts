@@ -41,7 +41,7 @@ export class ConfigurationService {
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       OPEN_FIGI_API_KEY: str({ default: '' }),
-      PORT: port({ default: 3333 }),
+      PORT: port({ default: 3334 }),
       RAPID_API_API_KEY: str({ default: '' }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
