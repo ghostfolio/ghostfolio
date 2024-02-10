@@ -37,9 +37,9 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       dataSource: response.dataSource
     });
 
-    if (this.configurationService.get('OPEN_FIGI_API_KEY')) {
+    if (this.configurationService.get('API_KEY_OPEN_FIGI')) {
       headers['X-OPENFIGI-APIKEY'] =
-        this.configurationService.get('OPEN_FIGI_API_KEY');
+        this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
     let abortController = new AbortController();

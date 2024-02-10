@@ -28,12 +28,12 @@ export class AlphaVantageService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {
     this.alphaVantage = Alphavantage({
-      key: this.configurationService.get('ALPHA_VANTAGE_API_KEY')
+      key: this.configurationService.get('API_KEY_ALPHA_VANTAGE')
     });
   }
 
   public canHandle(symbol: string) {
-    return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
+    return !!this.configurationService.get('API_KEY_ALPHA_VANTAGE');
   }
 
   public async getAssetProfile(

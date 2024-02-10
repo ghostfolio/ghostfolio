@@ -26,7 +26,7 @@ export class RapidApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return !!this.configurationService.get('RAPID_API_API_KEY');
+    return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 
   public async getAssetProfile(
@@ -140,7 +140,7 @@ export class RapidApiService implements DataProviderInterface {
           headers: {
             useQueryString: 'true',
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-            'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
+            'x-rapidapi-key': this.configurationService.get('API_KEY_RAPID_API')
           },
           // @ts-ignore
           signal: abortController.signal
