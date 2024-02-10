@@ -16,11 +16,6 @@ jobs:
       - name: Check Out Repository
         uses: actions/checkout@v2
 
-      - name: Build Project
-        run: |
-          npm install
-          npm run build
-
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
@@ -28,7 +23,7 @@ jobs:
         run: |
           REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           BRANCH_NAME=$(echo ${{ github.ref_name }} | tr '[:upper:]' '[:lower:]') # Get the branch name in lowercase
-          docker build . -t ghcr.io/$REPO_LOWER/portfolio:$BRANCH_NAME
+          docker build . --env-file=.env -t ghcr.io/$REPO_LOWER/$REPO_LOWER:$BRANCH_NAME
 
       - name: Push Docker image to GitHub Packages
         run: |
