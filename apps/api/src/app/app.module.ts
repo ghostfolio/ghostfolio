@@ -6,6 +6,7 @@ import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/dat
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import {
   DEFAULT_LANGUAGE_CODE,
@@ -73,6 +74,7 @@ import { UserModule } from './user/user.module';
     PlatformModule,
     PortfolioModule,
     PrismaModule,
+    PropertyModule,
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
