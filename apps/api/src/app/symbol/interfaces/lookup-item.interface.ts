@@ -1,4 +1,5 @@
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 export interface LookupItem {

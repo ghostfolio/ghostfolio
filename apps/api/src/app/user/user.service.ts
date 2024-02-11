@@ -21,6 +21,7 @@ import {
   permissions
 } from '@ghostfolio/common/permissions';
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';

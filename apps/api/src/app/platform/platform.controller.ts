@@ -1,6 +1,7 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
+
 import {
   Body,
   Controller,

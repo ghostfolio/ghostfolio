@@ -13,6 +13,7 @@ import {
   getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   eachDayOfInterval,

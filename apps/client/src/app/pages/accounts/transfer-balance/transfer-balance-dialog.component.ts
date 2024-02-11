@@ -1,3 +1,5 @@
+import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,7 +14,6 @@ import {
   Validators
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { Account } from '@prisma/client';
 import { Subject } from 'rxjs';
 

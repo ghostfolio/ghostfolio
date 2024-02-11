@@ -1,6 +1,7 @@
 import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { encodeDataSource } from '@ghostfolio/common/helper';
+
 import {
   CallHandler,
   ExecutionContext,

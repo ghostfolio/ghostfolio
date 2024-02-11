@@ -1,10 +1,11 @@
+import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnInit
 } from '@angular/core';
-import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-rule',

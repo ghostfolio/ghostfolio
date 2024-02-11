@@ -1,10 +1,11 @@
+import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
-import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
 
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';

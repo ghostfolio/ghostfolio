@@ -2,6 +2,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import got from 'got';

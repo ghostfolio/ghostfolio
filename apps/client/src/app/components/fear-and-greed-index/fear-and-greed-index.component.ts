@@ -1,3 +1,6 @@
+import { resolveFearAndGreedIndex } from '@ghostfolio/common/helper';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,8 +8,6 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { resolveFearAndGreedIndex } from '@ghostfolio/common/helper';
-import { translate } from '@ghostfolio/ui/i18n';
 
 @Component({
   selector: 'gf-fear-and-greed-index',

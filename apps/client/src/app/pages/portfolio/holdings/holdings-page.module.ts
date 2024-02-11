@@ -1,7 +1,8 @@
+import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
 
 import { HoldingsPageRoutingModule } from './holdings-page-routing.module';
 import { HoldingsPageComponent } from './holdings-page.component';

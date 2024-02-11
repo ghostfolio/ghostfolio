@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
+
+import { Injectable } from '@angular/core';
 
 import { KEY_TOKEN } from './settings-storage.service';
 import { UserService } from './user/user.service';

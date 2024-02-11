@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   LineChartItem,
@@ -12,6 +11,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

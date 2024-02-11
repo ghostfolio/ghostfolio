@@ -1,16 +1,3 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostListener,
-  Input,
-  OnChanges,
-  Output,
-  ViewChild
-} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatMenuTrigger } from '@angular/material/menu';
-import { Router } from '@angular/router';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
@@ -26,6 +13,20 @@ import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  ViewChild
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatMenuTrigger } from '@angular/material/menu';
+import { Router } from '@angular/router';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

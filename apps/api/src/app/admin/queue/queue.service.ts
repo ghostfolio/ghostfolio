@@ -3,6 +3,7 @@ import {
   QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
+
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import { JobStatus, Queue } from 'bull';

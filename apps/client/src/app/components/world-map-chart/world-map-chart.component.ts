@@ -1,3 +1,5 @@
+import { getNumberFormatGroup } from '@ghostfolio/common/helper';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,7 +9,6 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { getNumberFormatGroup } from '@ghostfolio/common/helper';
 import svgMap from 'svgmap';
 
 @Component({

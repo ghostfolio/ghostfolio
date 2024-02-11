@@ -8,6 +8,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';

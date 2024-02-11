@@ -10,6 +10,7 @@ import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 

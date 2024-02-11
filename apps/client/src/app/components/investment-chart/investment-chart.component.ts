@@ -1,13 +1,3 @@
-import 'chartjs-adapter-date-fns';
-
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -25,6 +15,15 @@ import {
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { ColorScheme, DateRange, GroupBy } from '@ghostfolio/common/types';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {
   BarController,
   BarElement,
@@ -37,6 +36,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
 import { last } from 'lodash';

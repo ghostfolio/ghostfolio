@@ -1,4 +1,13 @@
 import {
+  getNumberFormatDecimal,
+  getNumberFormatGroup
+} from '@ghostfolio/common/helper';
+import {
+  PortfolioPerformance,
+  ResponseError
+} from '@ghostfolio/common/interfaces';
+
+import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -7,14 +16,6 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import {
-  getNumberFormatDecimal,
-  getNumberFormatGroup
-} from '@ghostfolio/common/helper';
-import {
-  PortfolioPerformance,
-  ResponseError
-} from '@ghostfolio/common/interfaces';
 import { CountUp } from 'countup.js';
 import { isNumber } from 'lodash';
 

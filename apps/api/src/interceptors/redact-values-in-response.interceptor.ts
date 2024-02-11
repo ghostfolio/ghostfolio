@@ -2,6 +2,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import {
   CallHandler,
   ExecutionContext,

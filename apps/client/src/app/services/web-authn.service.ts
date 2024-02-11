@@ -1,11 +1,12 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { AuthDeviceDto } from '@ghostfolio/api/app/auth-device/auth-device.dto';
 import {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON
 } from '@ghostfolio/api/app/auth/interfaces/simplewebauthn';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import {
   startAuthentication,
   startRegistration

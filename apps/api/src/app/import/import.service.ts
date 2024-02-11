@@ -24,6 +24,7 @@ import {
   OrderWithAccount,
   UserWithSettings
 } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';

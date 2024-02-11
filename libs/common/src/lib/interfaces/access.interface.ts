@@ -1,4 +1,5 @@
 import { AccessType } from '@ghostfolio/common/types';
+
 import { AccessPermission } from '@prisma/client';
 
 export interface Access {

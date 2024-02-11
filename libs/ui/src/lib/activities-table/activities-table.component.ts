@@ -1,3 +1,9 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit,
@@ -15,11 +21,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { Subject, Subscription, takeUntil } from 'rxjs';

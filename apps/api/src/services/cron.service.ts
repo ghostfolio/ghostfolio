@@ -4,6 +4,7 @@ import {
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 

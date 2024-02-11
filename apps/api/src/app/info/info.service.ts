@@ -28,6 +28,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as cheerio from 'cheerio';

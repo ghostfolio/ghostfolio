@@ -9,6 +9,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,

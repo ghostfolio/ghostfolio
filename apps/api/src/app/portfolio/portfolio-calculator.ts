@@ -10,6 +10,7 @@ import {
   TimelinePosition
 } from '@ghostfolio/common/interfaces';
 import { GroupBy } from '@ghostfolio/common/types';
+
 import { Logger } from '@nestjs/common';
 import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';

@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Controller,
   Delete,

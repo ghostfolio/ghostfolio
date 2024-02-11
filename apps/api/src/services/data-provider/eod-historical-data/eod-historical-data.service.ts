@@ -17,6 +17,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,

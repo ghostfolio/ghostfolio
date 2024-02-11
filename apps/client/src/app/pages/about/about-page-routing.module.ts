@@ -1,9 +1,9 @@
-import * as path from 'path';
+import { paths } from '@ghostfolio/client/app-routing.module';
+import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { paths } from '@ghostfolio/client/app-routing.module';
-import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import * as path from 'path';
 
 import { AboutPageComponent } from './about-page.component';
 

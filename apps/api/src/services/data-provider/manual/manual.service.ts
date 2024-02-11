@@ -22,6 +22,7 @@ import {
   DataProviderInfo,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';

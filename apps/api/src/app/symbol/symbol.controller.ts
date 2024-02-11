@@ -3,6 +3,7 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Controller,
   Get,

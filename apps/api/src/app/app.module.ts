@@ -1,5 +1,3 @@
-import { join } from 'path';
-
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronService } from '@ghostfolio/api/services/cron.service';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -12,12 +10,14 @@ import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
+
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
+import { join } from 'path';
 
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';

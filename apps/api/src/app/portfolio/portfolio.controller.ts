@@ -28,6 +28,7 @@ import type {
   GroupBy,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Controller,
   Get,

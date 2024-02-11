@@ -2,6 +2,7 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

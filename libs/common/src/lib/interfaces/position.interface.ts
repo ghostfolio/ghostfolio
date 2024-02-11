@@ -1,4 +1,5 @@
 import { MarketState } from '@ghostfolio/common/types';
+
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 export interface Position {

@@ -1,3 +1,5 @@
+import { Position } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,7 +7,6 @@ import {
   OnChanges,
   OnInit
 } from '@angular/core';
-import { Position } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-positions',

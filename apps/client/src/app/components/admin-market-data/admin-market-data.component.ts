@@ -1,3 +1,11 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,13 +20,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';

@@ -1,4 +1,5 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
+
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';

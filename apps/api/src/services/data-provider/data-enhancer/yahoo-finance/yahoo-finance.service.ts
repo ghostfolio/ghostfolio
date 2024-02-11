@@ -7,6 +7,7 @@ import {
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { isCurrency } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,

@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
   KEY_STAY_SIGNED_IN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
