@@ -91,7 +91,9 @@ export class DataProviderService {
 
       for (const symbol of symbols) {
         const promise = Promise.resolve(
-          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile({
+            symbol
+          })
         );
 
         promises.push(
