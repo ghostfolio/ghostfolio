@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Replaced `import-sort` with `prettier-plugin-sort-imports`
+- Upgraded `Nx` from version `17.2.8` to `18.0.4`
 
 ## 2.50.0 - 2024-02-11
 
