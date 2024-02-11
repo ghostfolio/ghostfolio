@@ -25,6 +25,7 @@ import type {
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,

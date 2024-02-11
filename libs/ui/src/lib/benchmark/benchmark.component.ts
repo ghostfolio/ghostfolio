@@ -1,11 +1,12 @@
+import { resolveMarketCondition } from '@ghostfolio/common/helper';
+import { Benchmark, User } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
-import { resolveMarketCondition } from '@ghostfolio/common/helper';
-import { Benchmark, User } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-benchmark',

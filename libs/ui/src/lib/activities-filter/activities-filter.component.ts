@@ -1,3 +1,6 @@
+import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
@@ -17,8 +20,6 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

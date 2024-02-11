@@ -2,6 +2,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+
 import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';

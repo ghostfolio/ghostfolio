@@ -22,6 +22,7 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
+
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AssetSubClass,

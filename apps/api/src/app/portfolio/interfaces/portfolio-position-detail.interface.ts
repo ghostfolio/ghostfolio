@@ -4,6 +4,7 @@ import {
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import { Tag } from '@prisma/client';
 
 export interface PortfolioPositionDetail {

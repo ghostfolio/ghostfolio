@@ -48,6 +48,7 @@ import type {
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
+
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import {

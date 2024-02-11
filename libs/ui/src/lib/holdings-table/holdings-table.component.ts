@@ -1,3 +1,5 @@
+import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +13,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { AssetClass } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 

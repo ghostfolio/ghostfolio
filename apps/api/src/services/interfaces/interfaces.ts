@@ -1,5 +1,6 @@
 import { DataProviderInfo, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
+
 import {
   Account,
   DataSource,

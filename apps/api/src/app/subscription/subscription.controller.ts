@@ -7,6 +7,7 @@ import {
 } from '@ghostfolio/common/config';
 import { Coupon } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,

@@ -1,6 +1,3 @@
-import * as fs from 'fs';
-import { join } from 'path';
-
 import { environment } from '@ghostfolio/api/environments/environment';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
@@ -9,8 +6,11 @@ import {
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
+
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
+import * as fs from 'fs';
+import { join } from 'path';
 
 const i18nService = new I18nService();
 

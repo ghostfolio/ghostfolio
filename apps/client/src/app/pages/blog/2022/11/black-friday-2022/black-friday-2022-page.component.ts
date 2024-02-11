@@ -1,7 +1,8 @@
+import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 
 @Component({
   host: { class: 'page' },

@@ -1,7 +1,8 @@
+import { OAuthResponse } from '@ghostfolio/common/interfaces';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { AuthClient } from '@dfinity/auth-client';
-import { OAuthResponse } from '@ghostfolio/common/interfaces';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 

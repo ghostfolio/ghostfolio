@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 

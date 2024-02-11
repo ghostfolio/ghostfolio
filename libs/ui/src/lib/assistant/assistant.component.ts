@@ -1,3 +1,9 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { Filter, User } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
@@ -17,11 +23,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { Filter, User } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import { Account, AssetClass } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {

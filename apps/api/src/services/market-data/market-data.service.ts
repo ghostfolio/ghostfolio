@@ -4,6 +4,7 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import {
   DataSource,

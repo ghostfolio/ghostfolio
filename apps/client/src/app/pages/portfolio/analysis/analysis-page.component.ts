@@ -1,6 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
@@ -18,6 +15,10 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';

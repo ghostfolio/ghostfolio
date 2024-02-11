@@ -1,3 +1,4 @@
 /.nx/cache
+/apps/client/src/polyfills.ts
 /dist
 /test/import

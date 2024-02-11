@@ -1,4 +1,5 @@
 import { Filter } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

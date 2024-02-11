@@ -1,3 +1,5 @@
+import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +13,6 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 

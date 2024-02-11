@@ -1,3 +1,6 @@
+import { getDateFnsLocale } from '@ghostfolio/common/helper';
+import { PortfolioSummary } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,8 +10,6 @@ import {
   OnInit,
   Output
 } from '@angular/core';
-import { getDateFnsLocale } from '@ghostfolio/common/helper';
-import { PortfolioSummary } from '@ghostfolio/common/interfaces';
 import { formatDistanceToNow } from 'date-fns';
 
 @Component({

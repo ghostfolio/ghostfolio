@@ -3,6 +3,7 @@ import type {
   DateRange,
   ViewMode
 } from '@ghostfolio/common/types';
+
 import {
   IsArray,
   IsBoolean,

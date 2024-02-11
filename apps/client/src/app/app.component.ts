@@ -1,3 +1,7 @@
+import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { ColorScheme } from '@ghostfolio/common/types';
+
 import { DOCUMENT } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -10,9 +14,6 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { ColorScheme } from '@ghostfolio/common/types';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';

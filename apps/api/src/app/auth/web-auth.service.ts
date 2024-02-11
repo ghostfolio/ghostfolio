@@ -3,6 +3,7 @@ import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.s
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Inject,
   Injectable,

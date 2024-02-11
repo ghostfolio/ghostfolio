@@ -4,6 +4,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { Access } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,

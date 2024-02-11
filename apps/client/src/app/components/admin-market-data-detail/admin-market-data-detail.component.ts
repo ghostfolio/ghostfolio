@@ -1,3 +1,11 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import {
+  DATE_FORMAT,
+  getDateFormatString,
+  getLocale
+} from '@ghostfolio/common/helper';
+import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,13 +16,6 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DATE_FORMAT,
-  getDateFormatString,
-  getLocale
-} from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,

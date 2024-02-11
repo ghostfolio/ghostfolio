@@ -3,6 +3,7 @@ import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cr
 import { OpenFigiDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/openfigi/openfigi.service';
 import { TrackinsightDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/trackinsight/trackinsight.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+
 import { Module } from '@nestjs/common';
 
 import { DataEnhancerService } from './data-enhancer.service';

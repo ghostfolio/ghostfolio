@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { parseSymbol } from '@ghostfolio/common/helper';
+
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import got, { Headers } from 'got';

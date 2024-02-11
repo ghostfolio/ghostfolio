@@ -4,6 +4,7 @@ import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import { SubscriptionOffer, UserWithSettings } from '@ghostfolio/common/types';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';

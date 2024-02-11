@@ -1,5 +1,6 @@
 import { HAS_PERMISSION_KEY } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { hasPermission } from '@ghostfolio/common/permissions';
+
 import {
   CanActivate,
   ExecutionContext,

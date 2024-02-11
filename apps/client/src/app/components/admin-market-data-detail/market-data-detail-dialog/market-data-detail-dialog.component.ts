@@ -1,3 +1,5 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,7 +9,6 @@ import {
 } from '@angular/core';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { Subject, takeUntil } from 'rxjs';
 
 import { MarketDataDetailDialogParams } from './interfaces/interfaces';
