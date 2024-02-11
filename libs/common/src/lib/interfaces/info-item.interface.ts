@@ -12,6 +12,7 @@ export interface InfoItem {
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
+  isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
   platforms: Platform[];
   statistics: Statistics;
