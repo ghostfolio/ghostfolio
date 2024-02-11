@@ -36,7 +36,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService
   ) {
-    this.apiKey = this.configurationService.get('EOD_HISTORICAL_DATA_API_KEY');
+    this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
 
   public canHandle(symbol: string) {
