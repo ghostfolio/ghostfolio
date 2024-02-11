@@ -170,7 +170,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="hasPermissionForSubscription" class="mb-4 media">
+        @if (hasPermissionForSubscription) {
+        <div class="mb-4 media">
           <div class="media-body">
             <h3 class="h5 mt-0">Personal Finance Tools</h3>
             <div class="mb-1">
@@ -185,6 +186,7 @@
             </div>
           </div>
         </div>
+        }
         <div class="mb-4 media">
           <div class="media-body">
             <h3 class="h5 mt-0">Stagflation</h3>

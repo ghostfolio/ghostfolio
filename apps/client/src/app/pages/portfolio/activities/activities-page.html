@@ -29,10 +29,9 @@
     </div>
   </div>
 
-  <div
-    *ngIf="!hasImpersonationId && hasPermissionToCreateActivity && !user.settings.isRestrictedView"
-    class="fab-container"
-  >
+  @if (!hasImpersonationId && hasPermissionToCreateActivity &&
+  !user.settings.isRestrictedView) {
+  <div class="fab-container">
     <a
       class="align-items-center d-flex justify-content-center"
       color="primary"
@@ -43,4 +42,5 @@
       <ion-icon name="add-outline" size="large" />
     </a>
   </div>
+  }
 </div>
