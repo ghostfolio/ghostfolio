@@ -1,68 +1,73 @@
-<div *ngIf="hasPermissionToCreateActivity" class="d-flex justify-content-end">
-  <button
-    class="align-items-center d-flex"
-    mat-stroked-button
-    (click)="onImport()"
-  >
-    <ion-icon class="mr-2" name="cloud-upload-outline" />
-    <ng-container i18n>Import Activities</ng-container>...
-  </button>
-  <button
-    *ngIf="hasPermissionToExportActivities"
-    class="mx-1 no-min-width px-2"
-    mat-stroked-button
-    [matMenuTriggerFor]="activitiesMenu"
-    (click)="$event.stopPropagation()"
-  >
-    <ion-icon name="ellipsis-vertical" />
-  </button>
-  <mat-menu #activitiesMenu="matMenu" xPosition="before">
-    <button
-      mat-menu-item
-      [disabled]="dataSource?.data.length === 0"
-      (click)="onImportDividends()"
-    >
-      <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="color-wand-outline" />
-        <ng-container i18n>Import Dividends</ng-container>...
-      </span>
-    </button>
-    <button
-      *ngIf="hasPermissionToExportActivities"
-      class="align-items-center d-flex"
-      mat-menu-item
-      [disabled]="dataSource?.data.length === 0"
-      (click)="onExport()"
-    >
-      <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="cloud-download-outline" />
-        <span i18n>Export Activities</span>
-      </span>
-    </button>
-    <button
-      *ngIf="hasPermissionToExportActivities"
-      class="align-items-center d-flex"
-      mat-menu-item
-      [disabled]="!hasDrafts"
-      (click)="onExportDrafts()"
-    >
-      <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="calendar-clear-outline" />
-        <span i18n>Export Drafts as ICS</span>
-      </span>
-    </button>
+@if (hasPermissionToCreateActivity) {
+  <div class="d-flex justify-content-end">
     <button
       class="align-items-center d-flex"
-      mat-menu-item
-      (click)="onDeleteAllActivities()"
+      mat-stroked-button
+      (click)="onImport()"
     >
-      <span class="align-items-center d-flex">
-        <ion-icon class="mr-2" name="trash-outline" />
-        <span i18n>Delete all Activities</span>
-      </span>
+      <ion-icon class="mr-2" name="cloud-upload-outline" />
+      <ng-container i18n>Import Activities</ng-container>...
     </button>
-  </mat-menu>
-</div>
+    @if (hasPermissionToExportActivities) {
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-stroked-button
+        [matMenuTriggerFor]="activitiesMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-vertical" />
+      </button>
+    }
+    <mat-menu #activitiesMenu="matMenu" xPosition="before">
+      <button
+        mat-menu-item
+        [disabled]="dataSource?.data.length === 0"
+        (click)="onImportDividends()"
+      >
+        <span class="align-items-center d-flex">
+          <ion-icon class="mr-2" name="color-wand-outline" />
+          <ng-container i18n>Import Dividends</ng-container>...
+        </span>
+      </button>
+      @if (hasPermissionToExportActivities) {
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          [disabled]="dataSource?.data.length === 0"
+          (click)="onExport()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="cloud-download-outline" />
+            <span i18n>Export Activities</span>
+          </span>
+        </button>
+      }
+      @if (hasPermissionToExportActivities) {
+        <button
+          class="align-items-center d-flex"
+          mat-menu-item
+          [disabled]="!hasDrafts"
+          (click)="onExportDrafts()"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="calendar-clear-outline" />
+            <span i18n>Export Drafts as ICS</span>
+          </span>
+        </button>
+      }
+      <button
+        class="align-items-center d-flex"
+        mat-menu-item
+        (click)="onDeleteAllActivities()"
+      >
+        <span class="align-items-center d-flex">
+          <ion-icon class="mr-2" name="trash-outline" />
+          <span i18n>Delete all Activities</span>
+        </span>
+      </button>
+    </mat-menu>
+  </div>
+}
 
 <div class="activities">
   <table
@@ -102,14 +107,15 @@
         <ng-container i18n></ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        <div
-          *ngIf="element.error"
-          class="d-flex"
-          matTooltipPosition="above"
-          [matTooltip]="element.error.message"
-        >
-          <ion-icon class="text-danger" name="alert-circle-outline" />
-        </div>
+        @if (element.error) {
+          <div
+            class="d-flex"
+            matTooltipPosition="above"
+            [matTooltip]="element.error.message"
+          >
+            <ion-icon class="text-danger" name="alert-circle-outline" />
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -133,19 +139,18 @@
         <div class="align-items-center d-flex line-height-1">
           <div>
             <span class="text-truncate">{{ element.SymbolProfile?.name }}</span>
-            <span
-              *ngIf="element.isDraft"
-              class="badge badge-secondary ml-1"
-              i18n
-              >Draft</span
-            >
+            @if (element.isDraft) {
+              <span class="badge badge-secondary ml-1" i18n>Draft</span>
+            }
           </div>
         </div>
-        <div *ngIf="!isUUID(element.SymbolProfile?.symbol)">
-          <small class="text-muted">{{
-            element.SymbolProfile?.symbol | gfSymbol
-          }}</small>
-        </div>
+        @if (!isUUID(element.SymbolProfile?.symbol)) {
+          <div>
+            <small class="text-muted">{{
+              element.SymbolProfile?.symbol | gfSymbol
+            }}</small>
+          </div>
+        }
       </td>
     </ng-container>
 
@@ -302,12 +307,13 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          <gf-symbol-icon
-            *ngIf="element.Account?.Platform?.url"
-            class="mr-1"
-            [tooltip]="element.Account?.Platform?.name"
-            [url]="element.Account?.Platform?.url"
-          />
+          @if (element.Account?.Platform?.url) {
+            <gf-symbol-icon
+              class="mr-1"
+              [tooltip]="element.Account?.Platform?.name"
+              [url]="element.Account?.Platform?.url"
+            />
+          }
           <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
         </div>
       </td>
@@ -324,90 +330,97 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        <button
-          *ngIf="element.comment"
-          class="mx-1 no-min-width px-2"
-          mat-button
-          title="Note"
-          (click)="onOpenComment(element.comment); $event.stopPropagation()"
-        >
-          <ion-icon name="document-text-outline" />
-        </button>
+        @if (element.comment) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            title="Note"
+            (click)="onOpenComment(element.comment); $event.stopPropagation()"
+          >
+            <ion-icon name="document-text-outline" />
+          </button>
+        }
       </td>
     </ng-container>
 
     <ng-container matColumnDef="actions" stickyEnd>
       <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
-        <button
-          *ngIf="
-            !hasPermissionToCreateActivity && hasPermissionToExportActivities
-          "
-          class="mx-1 no-min-width px-2"
-          mat-button
-          [matMenuTriggerFor]="activitiesMenu"
-          (click)="$event.stopPropagation()"
-        >
-          <ion-icon name="ellipsis-vertical" />
-        </button>
+        @if (
+          !hasPermissionToCreateActivity && hasPermissionToExportActivities
+        ) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            [matMenuTriggerFor]="activitiesMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <ion-icon name="ellipsis-vertical" />
+          </button>
+        }
         <mat-menu #activitiesMenu="matMenu" xPosition="before">
-          <button
-            *ngIf="hasPermissionToCreateActivity"
-            class="align-items-center d-flex"
-            mat-menu-item
-            (click)="onImport()"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="cloud-upload-outline" />
-              <ng-container i18n>Import Activities</ng-container>...
-            </span>
-          </button>
-          <button
-            *ngIf="hasPermissionToCreateActivity"
-            mat-menu-item
-            [disabled]="dataSource?.data.length === 0"
-            (click)="onImportDividends()"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="color-wand-outline" />
-              <ng-container i18n>Import Dividends</ng-container>...
-            </span>
-          </button>
-          <button
-            *ngIf="hasPermissionToExportActivities"
-            class="align-items-center d-flex"
-            mat-menu-item
-            [disabled]="dataSource?.data.length === 0"
-            (click)="onExport()"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="cloud-download-outline" />
-              <span i18n>Export Activities</span>
-            </span>
-          </button>
-          <button
-            *ngIf="hasPermissionToExportActivities"
-            class="align-items-center d-flex"
-            mat-menu-item
-            [disabled]="!hasDrafts"
-            (click)="onExportDrafts()"
-          >
-            <span class="align-items-center d-flex">
-              <ion-icon class="mr-2" name="calendar-clear-outline" />
-              <span i18n>Export Drafts as ICS</span>
-            </span>
-          </button>
+          @if (hasPermissionToCreateActivity) {
+            <button
+              class="align-items-center d-flex"
+              mat-menu-item
+              (click)="onImport()"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="cloud-upload-outline" />
+                <ng-container i18n>Import Activities</ng-container>...
+              </span>
+            </button>
+          }
+          @if (hasPermissionToCreateActivity) {
+            <button
+              mat-menu-item
+              [disabled]="dataSource?.data.length === 0"
+              (click)="onImportDividends()"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="color-wand-outline" />
+                <ng-container i18n>Import Dividends</ng-container>...
+              </span>
+            </button>
+          }
+          @if (hasPermissionToExportActivities) {
+            <button
+              class="align-items-center d-flex"
+              mat-menu-item
+              [disabled]="dataSource?.data.length === 0"
+              (click)="onExport()"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="cloud-download-outline" />
+                <span i18n>Export Activities</span>
+              </span>
+            </button>
+          }
+          @if (hasPermissionToExportActivities) {
+            <button
+              class="align-items-center d-flex"
+              mat-menu-item
+              [disabled]="!hasDrafts"
+              (click)="onExportDrafts()"
+            >
+              <span class="align-items-center d-flex">
+                <ion-icon class="mr-2" name="calendar-clear-outline" />
+                <span i18n>Export Drafts as ICS</span>
+              </span>
+            </button>
+          }
         </mat-menu>
       </th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <button
-          *ngIf="showActions"
-          class="mx-1 no-min-width px-2"
-          mat-button
-          [matMenuTriggerFor]="activityMenu"
-          (click)="$event.stopPropagation()"
-        >
-          <ion-icon name="ellipsis-horizontal" />
-        </button>
+        @if (showActions) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            [matMenuTriggerFor]="activityMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <ion-icon name="ellipsis-horizontal" />
+          </button>
+        }
         <mat-menu #activityMenu="matMenu" xPosition="before">
           <button mat-menu-item (click)="onUpdateActivity(element)">
             <span class="align-items-center d-flex">
@@ -459,15 +472,16 @@
   </table>
 </div>
 
-<ngx-skeleton-loader
-  *ngIf="isLoading"
-  animation="pulse"
-  class="px-4 py-3"
-  [theme]="{
-    height: '1.5rem',
-    width: '100%'
-  }"
-/>
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}
 
 <mat-paginator
   [length]="totalItems"
@@ -480,11 +494,10 @@
   (page)="onChangePage($event)"
 />
 
-<div
-  *ngIf="
-    dataSource?.data.length === 0 && hasPermissionToCreateActivity && !isLoading
-  "
-  class="p-3 text-center"
->
-  <gf-no-transactions-info-indicator [hasBorder]="false" />
-</div>
+@if (
+  dataSource?.data.length === 0 && hasPermissionToCreateActivity && !isLoading
+) {
+  <div class="p-3 text-center">
+    <gf-no-transactions-info-indicator [hasBorder]="false" />
+  </div>
+}

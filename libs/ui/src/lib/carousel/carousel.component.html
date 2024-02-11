@@ -1,14 +1,15 @@
-<button
-  *ngIf="this.showPrevArrow"
-  aria-hidden="true"
-  aria-label="previous"
-  class="carousel-nav carousel-nav-prev no-min-width position-absolute px-1"
-  mat-button
-  tabindex="-1"
-  (click)="previous()"
->
-  <ion-icon name="chevron-back-outline" />
-</button>
+@if (this.showPrevArrow) {
+  <button
+    aria-hidden="true"
+    aria-label="previous"
+    class="carousel-nav carousel-nav-prev no-min-width position-absolute px-1"
+    mat-button
+    tabindex="-1"
+    (click)="previous()"
+  >
+    <ion-icon name="chevron-back-outline" />
+  </button>
+}
 
 <div
   #contentWrapper
@@ -21,14 +22,15 @@
   </div>
 </div>
 
-<button
-  *ngIf="this.showNextArrow"
-  aria-hidden="true"
-  aria-label="next"
-  class="carousel-nav carousel-nav-next no-min-width position-absolute px-1"
-  mat-button
-  tabindex="-1"
-  (click)="next()"
->
-  <ion-icon name="chevron-forward-outline" />
-</button>
+@if (this.showNextArrow) {
+  <button
+    aria-hidden="true"
+    aria-label="next"
+    class="carousel-nav carousel-nav-next no-min-width position-absolute px-1"
+    mat-button
+    tabindex="-1"
+    (click)="next()"
+  >
+    <ion-icon name="chevron-forward-outline" />
+  </button>
+}
