@@ -455,7 +455,10 @@ export class AdminService {
         const subscription = this.configurationService.get(
           'ENABLE_FEATURE_SUBSCRIPTION'
         )
-          ? this.subscriptionService.getSubscription(Subscription)
+          ? this.subscriptionService.getSubscription({
+              createdAt,
+              subscriptions: Subscription
+            })
           : undefined;
 
         return {
