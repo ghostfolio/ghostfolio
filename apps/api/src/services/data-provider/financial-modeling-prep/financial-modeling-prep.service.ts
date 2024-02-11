@@ -28,7 +28,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {
     this.apiKey = this.configurationService.get(
-      'FINANCIAL_MODELING_PREP_API_KEY'
+      'API_KEY_FINANCIAL_MODELING_PREP'
     );
   }
 

@@ -351,7 +351,7 @@ export class InfoService {
           {
             headers: {
               Authorization: `Bearer ${this.configurationService.get(
-                'BETTER_UPTIME_API_KEY'
+                'API_KEY_BETTER_UPTIME'
               )}`
             },
             // @ts-ignore
