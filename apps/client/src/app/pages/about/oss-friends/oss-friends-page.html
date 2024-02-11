@@ -10,10 +10,8 @@
         >
       </h1>
       <div class="row">
-        <div
-          *ngFor="let ossFriend of ossFriends"
-          class="col-xs-12 col-md-4 mb-3"
-        >
+        @for (ossFriend of ossFriends; track ossFriend) {
+        <div class="col-xs-12 col-md-4 mb-3">
           <a target="_blank" [href]="ossFriend.href">
             <mat-card appearance="outlined" class="d-flex flex-column h-100">
               <mat-card-header>
@@ -33,6 +31,7 @@
             </mat-card>
           </a>
         </div>
+        }
       </div>
     </div>
   </div>
