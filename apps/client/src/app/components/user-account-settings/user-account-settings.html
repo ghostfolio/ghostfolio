@@ -17,7 +17,7 @@
             [checked]="user.settings.isRestrictedView"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onRestrictedViewChange($event)"
-          ></mat-slide-toggle>
+          />
         </div>
       </div>
       <div class="d-flex mt-4 py-1">
@@ -67,7 +67,7 @@
                   [value]="language"
                   (selectionChange)="onChangeUserSetting('language', $event.value)"
                 >
-                  <mat-option [value]="null"></mat-option>
+                  <mat-option [value]="null" />
                   <mat-option value="de">Deutsch</mat-option>
                   <mat-option value="en">English</mat-option>
                   <mat-option value="es"
@@ -117,7 +117,7 @@
                   [value]="user.settings.locale"
                   (selectionChange)="onChangeUserSetting('locale', $event.value)"
                 >
-                  <mat-option [value]="null"></mat-option>
+                  <mat-option [value]="null" />
                   <mat-option *ngFor="let locale of locales" [value]="locale"
                     >{{ locale }}</mat-option
                   >
@@ -162,7 +162,7 @@
             [checked]="user.settings.viewMode === 'ZEN'"
             [disabled]="!hasPermissionToUpdateViewMode"
             (change)="onViewModeChange($event)"
-          ></mat-slide-toggle>
+          />
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">
@@ -177,7 +177,7 @@
             [checked]="isWebAuthnEnabled === true"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onSignInWithFingerprintChange($event)"
-          ></mat-slide-toggle>
+          />
         </div>
       </div>
       <div
@@ -197,7 +197,7 @@
             [checked]="user.settings.isExperimentalFeatures"
             [disabled]="!hasPermissionToUpdateUserSettings"
             (change)="onExperimentalFeaturesChange($event)"
-          ></mat-slide-toggle>
+          />
         </div>
       </div>
       <div class="align-items-center d-flex mt-4 py-1">

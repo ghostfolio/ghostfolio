@@ -203,7 +203,7 @@
         [pageSize]="pageSize"
         [showFirstLastButtons]="true"
         (page)="onChangePage($event)"
-      ></mat-paginator>
+      />
 
       <ngx-skeleton-loader
         *ngIf="isLoading && totalItems === 0"
