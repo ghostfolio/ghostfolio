@@ -211,8 +211,10 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription =
-        this.subscriptionService.getSubscription(Subscription);
+      user.subscription = this.subscriptionService.getSubscription({
+        createdAt: user.createdAt,
+        subscriptions: Subscription
+      });
 
       if (user.subscription?.type === 'Basic') {
         const daysSinceRegistration = differenceInDays(
