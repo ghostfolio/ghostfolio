@@ -70,14 +70,15 @@
     </div>
     <div class="col-md-9 text-center">
       <div class="chart-container mb-4">
-        <ngx-skeleton-loader
-          *ngIf="isLoading"
-          animation="pulse"
-          [theme]="{
-            height: '100%',
-            width: '100%'
-          }"
-        />
+        @if (isLoading) {
+          <ngx-skeleton-loader
+            animation="pulse"
+            [theme]="{
+              height: '100%',
+              width: '100%'
+            }"
+          />
+        }
         <canvas
           #chartCanvas
           class="h-100"
