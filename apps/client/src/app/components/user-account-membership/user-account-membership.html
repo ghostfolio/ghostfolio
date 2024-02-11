@@ -17,7 +17,9 @@
               <ng-container *ngIf="user.subscription.offer === 'default'" i18n
                 >Upgrade Plan</ng-container
               >
-              <ng-container *ngIf="user.subscription.offer === 'renewal'" i18n
+              <ng-container
+                *ngIf="user.subscription.offer === 'renewal' || user.subscription.offer === 'renewal-early-bird'"
+                i18n
                 >Renew Plan</ng-container
               >
             </button>
