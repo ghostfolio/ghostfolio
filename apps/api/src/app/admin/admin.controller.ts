@@ -256,7 +256,7 @@ export class AdminController {
         dataSource,
         marketPrice,
         symbol,
-        date: resetHours(parseISO(date)),
+        date: parseISO(date),
         state: 'CLOSE'
       })
     );
