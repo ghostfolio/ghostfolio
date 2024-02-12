@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced `import-sort` with `prettier-plugin-sort-imports`
 - Upgraded `Nx` from version `17.2.8` to `18.0.4`
 
+### Fixed
+
+- Fixed the date conversion of the import of historical market data in the admin control panel
+
 ## 2.50.0 - 2024-02-11
 
 ### Added
