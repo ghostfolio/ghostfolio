@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the ordered list of the _Top 3_ and _Bottom 3_ performers on the analysis page in Safari
 - Replaced `import-sort` with `prettier-plugin-sort-imports`
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `17.2.8` to `18.0.4`
