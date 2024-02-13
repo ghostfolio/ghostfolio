@@ -186,57 +186,52 @@
       <ng-container
         *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
       >
-        <ng-container
-          *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
-        >
-          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
-            <gf-value
-              i18n
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.sectors[0].name"
-              >Sector</gf-value
-            >
-          </div>
-          <div
-            *ngIf="SymbolProfile?.countries?.length === 1"
-            class="col-6 mb-3"
+        @if(SymbolProfile?.countries?.length === 1 &&
+        SymbolProfile?.sectors?.length === 1) {
+        <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="SymbolProfile.sectors[0].name"
+            >Sector</gf-value
           >
-            <gf-value
-              i18n
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.countries[0].name"
-              >Country</gf-value
-            >
-          </div>
-        </ng-container>
-        <ng-template #charts>
-          <div class="col-md-6 mb-3">
-            <div class="h5" i18n>Sectors</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="data.baseCurrency"
-              [colorScheme]="data.colorScheme"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="data.locale"
-              [maxItems]="10"
-              [positions]="sectors"
-            />
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="h5" i18n>Countries</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="data.baseCurrency"
-              [colorScheme]="data.colorScheme"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="data.locale"
-              [maxItems]="10"
-              [positions]="countries"
-            />
-          </div>
-        </ng-template>
+        </div>
+        <div *ngIf="SymbolProfile?.countries?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="SymbolProfile.countries[0].name"
+            >Country</gf-value
+          >
+        </div>
+        } @else {
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Sectors</div>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="data.baseCurrency"
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [locale]="data.locale"
+            [maxItems]="10"
+            [positions]="sectors"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Countries</div>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="data.baseCurrency"
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [locale]="data.locale"
+            [maxItems]="10"
+            [positions]="countries"
+          />
+        </div>
+        }
       </ng-container>
       <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
         <hr />
