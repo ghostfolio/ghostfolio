@@ -48,11 +48,9 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .fetchPortfolioDetails()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
-        if (summary.cash === null || summary.currentValue === null) {
-          return;
-        }
-
-        this.fireWealth = new Big(summary.fireWealth);
+        this.fireWealth = summary.fireWealth
+          ? new Big(summary.fireWealth)
+          : new Big(10000);
         this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 
@@ -94,10 +92,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
             permissions.createOrder
           );
 
-          this.hasPermissionToUpdateUserSettings = hasPermission(
-            this.user.permissions,
-            permissions.updateUserSettings
-          );
+          this.hasPermissionToUpdateUserSettings =
+            this.user.subscription?.type === 'Basic'
+              ? false
+              : hasPermission(
+                  this.user.permissions,
+                  permissions.updateUserSettings
+                );
 
           this.changeDetectorRef.markForCheck();
         }
