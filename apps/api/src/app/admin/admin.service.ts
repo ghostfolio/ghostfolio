@@ -226,7 +226,7 @@ export class AdminService {
       this.prismaService.symbolProfile.count({ where })
     ]);
 
-    let marketData = assetProfiles.map(
+    let marketData: AdminMarketDataItem[] = assetProfiles.map(
       ({
         _count,
         assetClass,
