@@ -38,8 +38,16 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { addDays, format, isAfter, parseISO, subDays } from 'date-fns';
-import { last } from 'lodash';
+import {
+  addDays,
+  format,
+  isAfter,
+  isValid,
+  min,
+  parseISO,
+  subDays
+} from 'date-fns';
+import { first, last } from 'lodash';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -143,7 +151,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       });
     }
 
-    const chartData: ChartData<'line'> = {
+    const chartData: ChartData<'bar' | 'line'> = {
       labels: this.historicalDataItems.map(({ date }) => {
         return parseDate(date);
       }),
@@ -194,17 +202,23 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     };
 
     if (this.chartCanvas) {
+      let scaleXMin: string;
+
+      if (this.daysInMarket) {
+        const minDate = min([
+          parseDate(first(this.investments)?.date),
+          subDays(new Date().setHours(0, 0, 0, 0), this.daysInMarket)
+        ]);
+
+        scaleXMin = isValid(minDate) ? minDate.toISOString() : undefined;
+      }
+
       if (this.chart) {
         this.chart.data = chartData;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
-        this.chart.options.scales.x.min = this.daysInMarket
-          ? subDays(
-              new Date().setHours(0, 0, 0, 0),
-              this.daysInMarket
-            ).toISOString()
-          : undefined;
+        this.chart.options.scales.x.min = scaleXMin;
 
         if (
           this.savingsRate &&
@@ -287,9 +301,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 grid: {
                   display: false
                 },
-                min: this.daysInMarket
-                  ? subDays(new Date(), this.daysInMarket).toISOString()
-                  : undefined,
+                min: scaleXMin,
                 suggestedMax: new Date().toISOString(),
                 type: 'time',
                 time: {
