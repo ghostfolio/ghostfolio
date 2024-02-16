@@ -1,5 +1,5 @@
 {
-  "createdAt": "2024-01-29T00:00:00.000Z",
+  "createdAt": "2024-02-16T00:00:00.000Z",
   "data": [
     {
       "name": "Aptabase",
@@ -20,6 +20,11 @@
       "name": "Cal.com",
       "description": "Cal.com is a scheduling tool that helps you schedule meetings without the back-and-forth emails.",
       "href": "https://cal.com"
+    },
+    {
+      "name": "ClassroomIO.com",
+      "description": "ClassroomIO is a no-code tool that allows you build and scale your own teaching platform with ease.",
+      "href": "https://www.classroomio.com"
     },
     {
       "name": "Crowd.dev",
@@ -55,11 +60,6 @@
       "name": "Formbricks",
       "description": "Survey granular user segments at any point in the user journey. Gather up to 6x more insights with targeted micro-surveys. All open-source.",
       "href": "https://formbricks.com"
-    },
-    {
-      "name": "Ghostfolio",
-      "description": "Ghostfolio is a privacy-first, open source dashboard for your personal finances. Designed to simplify asset tracking and empower informed investment decisions.",
-      "href": "https://ghostfol.io"
     },
     {
       "name": "GitWonk",
@@ -122,6 +122,11 @@
       "href": "https://www.papermark.io"
     },
     {
+      "name": "Prisma",
+      "description": "Simplify working with databases. Build, optimize, and grow your app easily with an intuitive data model, type-safety, automated migrations, connection pooling, caching, and real-time db subscriptions.",
+      "href": "https://www.prisma.io"
+    },
+    {
       "name": "Requestly",
       "description": "Makes frontend development cycle 10x faster with API Client, Mock Server, Intercept & Modify HTTP Requests and Session Replays.",
       "href": "https://requestly.io"
@@ -170,6 +175,11 @@
       "name": "Typebot",
       "description": "Typebot gives you powerful blocks to create unique chat experiences. Embed them anywhere on your apps and start collecting results like magic.",
       "href": "https://typebot.io"
+    },
+    {
+      "name": "UnInbox",
+      "description": "Modern email for teams and professionals. Bringing the best of email and messaging into a single, modern, and secure platform.",
+      "href": "https://uninbox.com"
     },
     {
       "name": "Unkey",
