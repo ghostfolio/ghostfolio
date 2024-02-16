@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a loading indicator to the investment timeline on the analysis page
 - Added support for the cryptocurrency _Jupiter_ (`JUP29210-USD`)
 
+### Fixed
+
+- Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
+- Fixed an issue with the X-axis scale of the investment timeline on the analysis page
+
 ## 2.51.0 - 2024-02-12
 
 ### Changed
