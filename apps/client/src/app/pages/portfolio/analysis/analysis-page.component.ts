@@ -46,7 +46,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
   public isLoadingBenchmarkComparator: boolean;
+  public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
+  public isLoadingInvestmentTimelineChart: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -154,6 +156,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   private fetchDividendsAndInvestments() {
+    this.isLoadingDividendTimelineChart = true;
+    this.isLoadingInvestmentTimelineChart = true;
+
     this.dataService
       .fetchDividends({
         filters: this.userService.getFilters(),
@@ -163,6 +168,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ dividends }) => {
         this.dividendsByGroup = dividends;
+
+        this.isLoadingDividendTimelineChart = false;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -193,6 +200,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             : this.streaks?.longestStreak === 1
               ? translate('MONTH')
               : translate('MONTHS');
+
+        this.isLoadingInvestmentTimelineChart = false;
 
         this.changeDetectorRef.markForCheck();
       });
