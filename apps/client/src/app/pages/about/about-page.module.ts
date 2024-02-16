@@ -8,7 +8,7 @@ import { AboutPageComponent } from './about-page.component';
 
 @NgModule({
   declarations: [AboutPageComponent],
-  imports: [CommonModule, MatTabsModule, AboutPageRoutingModule, RouterModule],
+  imports: [AboutPageRoutingModule, CommonModule, MatTabsModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AboutPageModule {}
