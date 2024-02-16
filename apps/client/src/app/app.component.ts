@@ -111,6 +111,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
         this.hasTabs =
           (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
+            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
             this.currentRoute === 'account' ||
             this.currentRoute === 'admin' ||
             this.currentRoute === 'home' ||
@@ -120,7 +121,6 @@ export class AppComponent implements OnDestroy, OnInit {
 
         this.showFooter =
           (this.currentRoute === 'blog' ||
-            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
             this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
             this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
             this.currentRoute === 'open' ||
