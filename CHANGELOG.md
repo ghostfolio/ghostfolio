@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an accounts tab to the position detail dialog
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.52.0 - 2024-02-16
 
 ### Added
