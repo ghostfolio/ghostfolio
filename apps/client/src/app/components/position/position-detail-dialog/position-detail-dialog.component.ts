@@ -19,9 +19,9 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Sort, SortDirection } from '@angular/material/sort';
+import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Tag } from '@prisma/client';
+import { Account, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -36,6 +36,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./position-detail-dialog.component.scss']
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
+  public accounts: Account[];
   public activities: OrderWithAccount[];
   public assetClass: string;
   public assetSubClass: string;
@@ -92,6 +93,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
+          accounts,
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
@@ -113,6 +115,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           transactionCount,
           value
         }) => {
+          this.accounts = accounts;
           this.activities = orders;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];

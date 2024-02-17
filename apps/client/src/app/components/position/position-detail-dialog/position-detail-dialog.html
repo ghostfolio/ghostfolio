@@ -241,9 +241,17 @@
       </div>
     </div>
 
-    <div class="row" [ngClass]="{ 'd-none': !activities?.length }">
-      <div class="col mb-3">
-        <div class="h5 mb-0" i18n>Activities</div>
+    <mat-tab-group
+      animationDuration="0"
+      class="mb-3"
+      [mat-stretch-tabs]="false"
+      [ngClass]="{ 'd-none': !activities?.length }"
+    >
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="swap-vertical-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+        </ng-template>
         <gf-activities-table
           [baseCurrency]="data.baseCurrency"
           [dataSource]="dataSource"
@@ -261,8 +269,26 @@
           [totalItems]="totalItems"
           (export)="onExport()"
         />
-      </div>
-    </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="wallet-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Accounts</div>
+        </ng-template>
+        <gf-accounts-table
+          [accounts]="accounts"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
+          [hasPermissionToOpenDetails]="false"
+          [locale]="user?.settings?.locale"
+          [showBalance]="false"
+          [showFooter]="false"
+          [showTransactions]="false"
+          [showValue]="false"
+          [showValueInBaseCurrency]="false"
+        />
+      </mat-tab>
+    </mat-tab-group>
 
     <div *ngIf="tags?.length > 0" class="row">
       <div class="col">

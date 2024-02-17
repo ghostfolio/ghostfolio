@@ -277,14 +277,16 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
     *matRowDef="let row; columns: displayedColumns"
-    class="cursor-pointer"
     mat-row
+    [ngClass]="{
+      'cursor-pointer': hasPermissionToOpenDetails
+    }"
     (click)="onOpenAccountDetailDialog(row.id)"
   ></tr>
   <tr
     *matFooterRowDef="displayedColumns"
     mat-footer-row
-    [ngClass]="{ 'd-none': isLoading }"
+    [ngClass]="{ 'd-none': isLoading || !showFooter }"
   ></tr>
 </table>
 

@@ -45,7 +45,6 @@ export class ActivitiesTableComponent
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions = true;
   @Input() showCheckbox = false;
-  @Input() showFooter = true;
   @Input() showNameColumn = true;
   @Input() sortColumn: string;
   @Input() sortDirection: SortDirection;
