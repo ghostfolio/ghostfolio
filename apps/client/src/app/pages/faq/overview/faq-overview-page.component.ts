@@ -12,7 +12,6 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class FaqOverviewPageComponent implements OnDestroy {
   public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

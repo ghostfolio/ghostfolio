@@ -38,7 +38,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasInfoMessage: boolean;
-  public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
@@ -80,11 +79,6 @@ export class AppComponent implements OnDestroy, OnInit {
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
-
-    this.hasPermissionForBlog = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableBlog
-    );
 
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,

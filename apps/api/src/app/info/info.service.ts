@@ -60,10 +60,6 @@ export class InfoService {
 
     const globalPermissions: string[] = [];
 
-    if (this.configurationService.get('ENABLE_FEATURE_BLOG')) {
-      globalPermissions.push(permissions.enableBlog);
-    }
-
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
