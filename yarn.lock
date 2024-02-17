@@ -15117,10 +15117,10 @@ neo-async@^2.5.0, neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ng-extract-i18n-merge@2.9.1:
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.9.1.tgz#f8e4431a8672d27be6508c72f3cf47a318b1ecab"
-  integrity sha512-EJAgJrV2ZSRoH1njMI9lLLtLJkwabkk41ZZyV+U+6h8e5vDCM4zPGjm0NNZFy+YP+/ST+nlvi2CxprDXnjS8BQ==
+ng-extract-i18n-merge@2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/ng-extract-i18n-merge/-/ng-extract-i18n-merge-2.10.0.tgz#20d2a4a1d21f058773242cbcc8406c4ef0f8fea0"
+  integrity sha512-mWYRWAUc7kirS3kIQxUR0kGv7Yv5JnV0C05VNvGwHdyMM3vSdJ0WAE/o4RwzW1cRyzXuG9oNOz4gctTzQsTErw==
   dependencies:
     "@angular-devkit/architect" "^0.1301.0 || ^0.1401.0 || ^0.1501.0 || ^0.1601.0 || ^0.1700.0"
     "@angular-devkit/core" "^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0"
