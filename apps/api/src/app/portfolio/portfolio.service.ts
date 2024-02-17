@@ -657,6 +657,7 @@ export class PortfolioService {
     if (orders.length <= 0) {
       return {
         tags,
+        accounts: [],
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
@@ -739,6 +740,13 @@ export class PortfolioService {
         transactionCount
       } = position;
 
+      const accounts: PortfolioPositionDetail['accounts'] = uniqBy(
+        orders,
+        'Account.id'
+      ).map(({ Account }) => {
+        return Account;
+      });
+
       const dividendInBaseCurrency = getSum(
         orders
           .filter(({ type }) => {
@@ -812,6 +820,7 @@ export class PortfolioService {
       }
 
       return {
+        accounts,
         firstBuyDate,
         marketPrice,
         maxPrice,
@@ -894,6 +903,7 @@ export class PortfolioService {
         orders,
         SymbolProfile,
         tags,
+        accounts: [],
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
