@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added an accounts tab to the position detail dialog
 
+### Changed
+
+- Upgraded `ng-extract-i18n-merge` from version `2.9.1` to `2.10.0`
+
 ## 2.52.0 - 2024-02-16
 
 ### Added
