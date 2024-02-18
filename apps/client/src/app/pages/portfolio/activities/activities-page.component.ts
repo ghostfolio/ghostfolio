@@ -274,7 +274,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity): void {
+  public openUpdateActivityDialog(activity: Activity) {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
@@ -311,7 +311,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateActivityDialog(aActivity?: Activity): void {
+  private openCreateActivityDialog(aActivity?: Activity) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))

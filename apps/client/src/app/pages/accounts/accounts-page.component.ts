@@ -169,7 +169,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     isExcluded,
     name,
     platformId
-  }: AccountModel): void {
+  }: AccountModel) {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
@@ -237,7 +237,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openCreateAccountDialog(): void {
+  private openCreateAccountDialog() {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
@@ -279,7 +279,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openTransferBalanceDialog(): void {
+  private openTransferBalanceDialog() {
     const dialogRef = this.dialog.open(TransferBalanceDialog, {
       data: {
         accounts: this.accounts

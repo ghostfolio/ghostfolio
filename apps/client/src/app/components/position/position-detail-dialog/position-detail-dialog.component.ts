@@ -84,7 +84,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     private userService: UserService
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.dataService
       .fetchPositionDetail({
         dataSource: this.data.dataSource,
@@ -267,7 +267,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 

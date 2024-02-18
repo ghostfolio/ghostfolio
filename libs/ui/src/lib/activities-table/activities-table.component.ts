@@ -216,7 +216,7 @@ export class ActivitiesTableComponent
     alert(aComment);
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
+  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, positionDetailDialog: true }
     });
