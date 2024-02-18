@@ -137,12 +137,11 @@
       mat-row
       [ngClass]="{
         'cursor-pointer':
-          hasPermissionToShowValues &&
+          hasPermissionToOpenDetails &&
           !ignoreAssetSubClasses.includes(row.assetSubClass)
       }"
       (click)="
-        hasPermissionToShowValues &&
-          !ignoreAssetSubClasses.includes(row.assetSubClass) &&
+        !ignoreAssetSubClasses.includes(row.assetSubClass) &&
           onOpenPositionDialog({
             dataSource: row.dataSource,
             symbol: row.symbol
