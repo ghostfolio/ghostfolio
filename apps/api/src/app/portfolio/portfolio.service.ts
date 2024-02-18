@@ -301,9 +301,10 @@ export class PortfolioService {
       dateRange,
       impersonationId,
       portfolioOrders,
-      transactionPoints,
-      userId,
+      transactionPoints,      
       userCurrency: this.request.user.Settings.settings.baseCurrency,
+      userId,
+      calculateTimeWeightedPerformance: false,
       withDataDecimation: false
     });
 

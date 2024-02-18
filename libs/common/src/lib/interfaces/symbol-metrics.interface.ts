@@ -25,6 +25,9 @@ export interface SymbolMetrics {
   };
   netPerformance: Big;
   netPerformancePercentage: Big;
+  netPerformanceValuesPercentage: {
+    [date: string]: Big;
+  };
   netPerformancePercentageWithCurrencyEffect: Big;
   netPerformanceValues: {
     [date: string]: Big;

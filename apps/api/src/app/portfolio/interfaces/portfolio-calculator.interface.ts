@@ -9,3 +9,8 @@ export interface PortfolioOrderItem extends PortfolioOrder {
   unitPriceInBaseCurrency?: Big;
   unitPriceInBaseCurrencyWithCurrencyEffect?: Big;
 }
+
+export interface WithCurrencyEffect<T> {
+  Value: T;
+  WithCurrencyEffect: T;
+}
