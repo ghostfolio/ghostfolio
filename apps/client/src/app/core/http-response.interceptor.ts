@@ -99,6 +99,16 @@ export class HttpResponseInterceptor implements HttpInterceptor {
               window.location.reload();
             });
           }
+        } else if (error.status === StatusCodes.TOO_MANY_REQUESTS) {
+          if (!this.snackBarRef) {
+            this.snackBarRef = this.snackBar.open(
+              $localize`Oops! It looks like you’re making too many requests. Please slow down a bit.`
+            );
+
+            this.snackBarRef.afterDismissed().subscribe(() => {
+              this.snackBarRef = undefined;
+            });
+          }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           if (this.webAuthnService.isEnabled()) {
             this.router.navigate(['/webauthn']);
