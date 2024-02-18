@@ -107,7 +107,8 @@ describe('CurrentRateService', () => {
 
     currentRateService = new CurrentRateService(
       dataProviderService,
-      marketDataService
+      marketDataService,
+      null
     );
   });
 

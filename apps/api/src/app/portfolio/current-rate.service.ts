@@ -25,6 +25,7 @@ export class CurrentRateService {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  // TODO: Pass user instead of using this.request.user
   public async getValues({
     dataGatheringItems,
     dateQuery
@@ -43,7 +44,7 @@ export class CurrentRateService {
     if (includeToday) {
       promises.push(
         this.dataProviderService
-          .getQuotes({ items: dataGatheringItems, user: this.request.user })
+          .getQuotes({ items: dataGatheringItems, user: this.request?.user })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
 
