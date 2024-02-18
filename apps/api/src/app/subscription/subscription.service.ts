@@ -1,8 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { UserWithSettings } from '@ghostfolio/common/types';
+import { parseDate } from '@ghostfolio/common/helper';
+import { SubscriptionOffer, UserWithSettings } from '@ghostfolio/common/types';
 import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { Subscription } from '@prisma/client';
 import { addMilliseconds, isBefore } from 'date-fns';
@@ -107,17 +109,27 @@ export class SubscriptionService {
     }
   }
 
-  public getSubscription(
-    aSubscriptions: Subscription[]
-  ): UserWithSettings['subscription'] {
-    if (aSubscriptions.length > 0) {
-      const { expiresAt, price } = aSubscriptions.reduce((a, b) => {
+  public getSubscription({
+    createdAt,
+    subscriptions
+  }: {
+    createdAt: UserWithSettings['createdAt'];
+    subscriptions: Subscription[];
+  }): UserWithSettings['subscription'] {
+    if (subscriptions.length > 0) {
+      const { expiresAt, price } = subscriptions.reduce((a, b) => {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
       });
 
+      let offer: SubscriptionOffer = price ? 'renewal' : 'default';
+
+      if (isBefore(createdAt, parseDate('2023-01-01'))) {
+        offer = 'renewal-early-bird';
+      }
+
       return {
         expiresAt,
-        offer: price ? 'renewal' : 'default',
+        offer,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic

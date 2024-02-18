@@ -1,11 +1,3 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -17,6 +9,15 @@ import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
 import { EMPTY, Subject } from 'rxjs';
@@ -91,6 +92,10 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.update();
+  }
+
+  public isCommunityLanguage() {
+    return !(this.language === 'de' || this.language === 'en');
   }
 
   public onChangeUserSetting(aKey: string, aValue: string) {

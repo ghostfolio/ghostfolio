@@ -8,7 +8,7 @@
           ><gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </h4>
         <gf-fire-calculator
           [annualInterestRate]="user?.settings?.annualInterestRate"
@@ -18,6 +18,10 @@
           [fireWealth]="fireWealth?.toNumber()"
           [hasPermissionToUpdateUserSettings]="!hasImpersonationId && hasPermissionToUpdateUserSettings"
           [locale]="user?.settings?.locale"
+          [ngStyle]="{
+            opacity: user?.subscription?.type === 'Basic' ? '0.67' : 'initial',
+            'pointer-events': user?.subscription?.type === 'Basic' ? 'none' : 'initial'
+          }"
           [projectedTotalAmount]="user?.settings?.projectedTotalAmount"
           [retirementDate]="user?.settings?.retirementDate"
           [savingsRate]="user?.settings?.savingsRate"
@@ -25,7 +29,7 @@
           (projectedTotalAmountChanged)="onProjectedTotalAmountChange($event)"
           (retirementDateChanged)="onRetirementDateChange($event)"
           (savingsRateChanged)="onSavingsRateChange($event)"
-        ></gf-fire-calculator>
+        />
       </div>
     </div>
   </div>
@@ -35,7 +39,7 @@
       ><gf-premium-indicator
         *ngIf="user?.subscription?.type === 'Basic'"
         class="ml-1"
-      ></gf-premium-indicator>
+      />
     </h4>
     <div *ngIf="isLoading">
       <ngx-skeleton-loader
@@ -45,16 +49,20 @@
           height: '1rem',
           width: '100%'
         }"
-      ></ngx-skeleton-loader>
+      />
       <ngx-skeleton-loader
         animation="pulse"
         [theme]="{
           height: '1rem',
           width: '10rem'
         }"
-      ></ngx-skeleton-loader>
+      />
     </div>
-    <div *ngIf="!isLoading" i18n>
+    <div
+      *ngIf="!isLoading"
+      i18n
+      [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }"
+    >
       If you retire today, you would be able to withdraw
       <span class="font-weight-bold"
         ><gf-value
@@ -63,7 +71,7 @@
           [locale]="user?.settings?.locale"
           [unit]="user?.settings?.baseCurrency"
           [value]="withdrawalRatePerYear?.toNumber()"
-        ></gf-value>
+        />
         per year</span
       >
       or
@@ -74,7 +82,7 @@
           [locale]="user?.settings?.locale"
           [unit]="user?.settings?.baseCurrency"
           [value]="withdrawalRatePerMonth?.toNumber()"
-        ></gf-value>
+        />
         per month</span
       >, based on your total assets of
       <span class="font-weight-bold"
@@ -84,8 +92,8 @@
           [locale]="user?.settings?.locale"
           [unit]="user?.settings?.baseCurrency"
           [value]="fireWealth?.toNumber()"
-        ></gf-value
-      ></span>
+        />
+      </span>
       and a withdrawal rate of 4%.
     </div>
   </div>
@@ -112,12 +120,12 @@
           ><gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="emergencyFundRules"
-        ></gf-rules>
+        />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -125,12 +133,12 @@
           ><gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="currencyClusterRiskRules"
-        ></gf-rules>
+        />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -138,12 +146,12 @@
           ><gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="accountClusterRiskRules"
-        ></gf-rules>
+        />
       </div>
       <div>
         <h4 class="align-items-center d-flex m-0">
@@ -151,12 +159,12 @@
           ><gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </h4>
         <gf-rules
           [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
           [rules]="feeRules"
-        ></gf-rules>
+        />
       </div>
     </div>
   </div>

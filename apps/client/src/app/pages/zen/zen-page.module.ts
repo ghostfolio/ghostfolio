@@ -1,9 +1,10 @@
+import { GfHomeHoldingsModule } from '@ghostfolio/client/components/home-holdings/home-holdings.module';
+import { GfHomeOverviewModule } from '@ghostfolio/client/components/home-overview/home-overview.module';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { GfHomeHoldingsModule } from '@ghostfolio/client/components/home-holdings/home-holdings.module';
-import { GfHomeOverviewModule } from '@ghostfolio/client/components/home-overview/home-overview.module';
 
 import { ZenPageRoutingModule } from './zen-page-routing.module';
 import { ZenPageComponent } from './zen-page.component';

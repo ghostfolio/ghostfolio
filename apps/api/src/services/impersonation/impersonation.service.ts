@@ -1,6 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 

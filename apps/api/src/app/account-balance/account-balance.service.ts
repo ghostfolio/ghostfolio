@@ -2,6 +2,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { AccountBalancesResponse, Filter } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import { AccountBalance, Prisma } from '@prisma/client';
 

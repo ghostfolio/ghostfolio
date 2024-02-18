@@ -1,10 +1,11 @@
+import { getLocale } from '@ghostfolio/common/helper';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
-import { getLocale } from '@ghostfolio/common/helper';
 import { isNumber } from 'lodash';
 
 @Component({

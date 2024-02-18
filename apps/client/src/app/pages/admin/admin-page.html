@@ -12,7 +12,7 @@
     <a
       #rla="routerLinkActive"
       *ngIf="tab.showCondition !== false"
-      class="px-3"
+      class="no-min-width px-3"
       mat-tab-link
       routerLinkActive
       [active]="rla.isActive"
@@ -22,7 +22,7 @@
       <ion-icon
         [name]="tab.iconName"
         [size]="deviceType === 'mobile' ? 'large': 'small'"
-      ></ion-icon>
+      />
       <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
     </a>
   </ng-container>

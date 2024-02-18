@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import Big from 'big.js';
 
 import { FireCalculatorService } from './fire-calculator.service';
 

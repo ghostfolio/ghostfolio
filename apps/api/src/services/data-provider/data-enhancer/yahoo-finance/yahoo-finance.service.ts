@@ -1,11 +1,13 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT,
+  REPLACE_NAME_PARTS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { isCurrency } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -22,6 +24,7 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
 
@@ -33,6 +36,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
     if (symbol.includes('=X') && !symbol.includes(DEFAULT_CURRENCY)) {
       symbol = `${DEFAULT_CURRENCY}${symbol}`;
+    }
+
+    if (symbol.includes(`${DEFAULT_CURRENCY}ZAC`)) {
+      symbol = `${DEFAULT_CURRENCY}ZAc`;
     }
 
     return symbol.replace('=X', '');
@@ -76,7 +83,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   }
 
   public async enhance({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     response,
     symbol
   }: {
@@ -135,18 +142,11 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
     if (name) {
       name = name.replace('&amp;', '&');
 
-      name = name.replace('Amundi Index Solutions - ', '');
-      name = name.replace('iShares ETF (CH) - ', '');
-      name = name.replace('iShares III Public Limited Company - ', '');
-      name = name.replace('iShares V PLC - ', '');
-      name = name.replace('iShares VI Public Limited Company - ', '');
-      name = name.replace('iShares VII PLC - ', '');
-      name = name.replace('Multi Units Luxembourg - ', '');
-      name = name.replace('VanEck ETFs N.V. - ', '');
-      name = name.replace('Vaneck Vectors Ucits Etfs Plc - ', '');
-      name = name.replace('Vanguard Funds Public Limited Company - ', '');
-      name = name.replace('Vanguard Index Funds - ', '');
-      name = name.replace('Xtrackers (IE) Plc - ', '');
+      for (const part of REPLACE_NAME_PARTS) {
+        name = name.replace(part, '');
+      }
+
+      name = name.trim();
     }
 
     if (quoteType === 'FUTURE') {

@@ -1,28 +1,40 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { DEFAULT_REQUEST_TIMEOUT } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   extractNumberFromString,
   getYesterday
 } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
+import {
+  DataProviderInfo,
+  ScraperConfiguration
+} from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
-import got from 'got';
+import got, { Headers } from 'got';
+import jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -34,37 +46,41 @@ export class ManualService implements DataProviderInterface {
   public async getAssetProfile(
     aSymbol: string
   ): Promise<Partial<SymbolProfile>> {
-    return {
+    const assetProfile: Partial<SymbolProfile> = {
       dataSource: this.getName(),
       symbol: aSymbol
     };
+
+    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
+      { dataSource: this.getName(), symbol: aSymbol }
+    ]);
+
+    if (symbolProfile) {
+      assetProfile.currency = symbolProfile.currency;
+      assetProfile.name = symbolProfile.name;
+    }
+
+    return assetProfile;
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
+    };
+  }
+
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    from,
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const symbol = aSymbol;
-
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [{ symbol, dataSource: this.getName() }]
       );
@@ -96,21 +112,7 @@ export class ManualService implements DataProviderInterface {
         return {};
       }
 
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
-
-      const { body } = await got(url, {
-        headers,
-        // @ts-ignore
-        signal: abortController.signal
-      });
-
-      const $ = cheerio.load(body);
-
-      const value = extractNumberFromString($(selector).text());
+      const value = await this.scrape(symbolProfile.scraperConfiguration);
 
       return {
         [symbol]: {
@@ -121,7 +123,7 @@ export class ManualService implements DataProviderInterface {
       };
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -134,12 +136,8 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
@@ -190,12 +188,8 @@ export class ManualService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     let items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,
@@ -230,6 +224,57 @@ export class ManualService implements DataProviderInterface {
       return !isUUID(symbol);
     });
 
-    return { items };
+    return {
+      items: items.map((item) => {
+        return { ...item, dataProviderInfo: this.getDataProviderInfo() };
+      })
+    };
+  }
+
+  public async test(scraperConfiguration: ScraperConfiguration) {
+    return this.scrape(scraperConfiguration);
+  }
+
+  private async scrape(
+    scraperConfiguration: ScraperConfiguration
+  ): Promise<number> {
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
+
+      let locale = scraperConfiguration.locale;
+      const { body, headers } = await got(scraperConfiguration.url, {
+        headers: scraperConfiguration.headers as Headers,
+        // @ts-ignore
+        signal: abortController.signal
+      });
+
+      if (headers['content-type'] === 'application/json') {
+        const data = JSON.parse(body);
+        const value = String(
+          jsonpath.query(data, scraperConfiguration.selector)[0]
+        );
+
+        return extractNumberFromString({ locale, value });
+      } else {
+        const $ = cheerio.load(body);
+
+        if (!locale) {
+          try {
+            locale = $('html').attr('lang');
+          } catch {}
+        }
+
+        return extractNumberFromString({
+          locale,
+          value: $(scraperConfiguration.selector).first().text()
+        });
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 }

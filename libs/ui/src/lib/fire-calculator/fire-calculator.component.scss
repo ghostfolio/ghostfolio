@@ -13,7 +13,7 @@
     .mdc-text-field--disabled {
       .mdc-floating-label,
       .mdc-text-field__input {
-        color: inherit;
+        color: inherit !important;
       }
 
       .mdc-notched-outline__leading,

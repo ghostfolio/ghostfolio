@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,3 +1,5 @@
+import { ToggleOption } from '@ghostfolio/common/types';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,7 +10,6 @@ import {
   Output
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ToggleOption } from '@ghostfolio/common/types';
 
 @Component({
   selector: 'gf-toggle',
@@ -31,17 +32,17 @@ export class ToggleComponent implements OnChanges, OnInit {
 
   @Output() change = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
-  public option = new FormControl<string>(undefined);
+  public optionFormControl = new FormControl<string>(undefined);
 
   public constructor() {}
 
   public ngOnInit() {}
 
   public ngOnChanges() {
-    this.option.setValue(this.defaultValue);
+    this.optionFormControl.setValue(this.defaultValue);
   }
 
   public onValueChange() {
-    this.change.emit({ value: this.option.value });
+    this.change.emit({ value: this.optionFormControl.value });
   }
 }

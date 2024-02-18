@@ -1,3 +1,5 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -6,7 +8,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 
 import { ActivitiesFilterComponent } from './activities-filter.component';
 

@@ -28,6 +28,7 @@ import type {
   GroupBy,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Controller,
   Get,
@@ -74,6 +75,11 @@ export class PortfolioController {
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasDetails = true;
     let hasError = false;
+    const hasReadRestrictedAccessPermission =
+      this.userService.hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      });
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails = this.request.user.subscription.type === 'Premium';
@@ -108,7 +114,7 @@ export class PortfolioController {
     let portfolioSummary = summary;
 
     if (
-      impersonationId ||
+      hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
@@ -148,20 +154,23 @@ export class PortfolioController {
 
     if (
       hasDetails === false ||
-      impersonationId ||
+      hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
         'currentGrossPerformance',
+        'currentGrossPerformanceWithCurrencyEffect',
         'currentNetPerformance',
+        'currentNetPerformanceWithCurrencyEffect',
         'currentValue',
         'dividend',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
         'fireWealth',
+        'interest',
         'items',
         'liabilities',
         'netWorth',
@@ -214,6 +223,12 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividends> {
+    const hasReadRestrictedAccessPermission =
+      this.userService.hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      });
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -228,7 +243,7 @@ export class PortfolioController {
     });
 
     if (
-      impersonationId ||
+      hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       const maxDividend = dividends.reduce(
@@ -264,6 +279,12 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestments> {
+    const hasReadRestrictedAccessPermission =
+      this.userService.hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      });
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -279,7 +300,7 @@ export class PortfolioController {
     });
 
     if (
-      impersonationId ||
+      hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
       const maxInvestment = investments.reduce(
@@ -327,6 +348,12 @@ export class PortfolioController {
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccounts = false
   ): Promise<PortfolioPerformanceResponse> {
+    const hasReadRestrictedAccessPermission =
+      this.userService.hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      });
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -342,7 +369,7 @@ export class PortfolioController {
     });
 
     if (
-      impersonationId ||
+      hasReadRestrictedAccessPermission ||
       this.request.user.Settings.settings.viewMode === 'ZEN' ||
       this.userService.isRestrictedView(this.request.user)
     ) {
@@ -383,7 +410,9 @@ export class PortfolioController {
         performanceInformation.performance,
         [
           'currentGrossPerformance',
+          'currentGrossPerformanceWithCurrencyEffect',
           'currentNetPerformance',
+          'currentNetPerformanceWithCurrencyEffect',
           'currentNetWorth',
           'currentValue',
           'totalInvestment'

@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
@@ -19,11 +20,12 @@ import {
   AdminMarketDataDetails,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type {
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -31,6 +33,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Logger,
   Param,
   Patch,
   Post,
@@ -56,6 +59,7 @@ export class AdminController {
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly manualService: ManualService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -179,8 +183,8 @@ export class AdminController {
   }
 
   @Get('market-data')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getMarketData(
     @Query('assetSubClasses') filterByAssetSubClasses?: string,
     @Query('presetId') presetId?: MarketDataPreset,
@@ -216,6 +220,30 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
+  @Post('market-data/:dataSource/:symbol/test')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async testMarketData(
+    @Body() data: { scraperConfiguration: string },
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<{ price: number }> {
+    try {
+      const scraperConfiguration = JSON.parse(data.scraperConfiguration);
+      const price = await this.manualService.test(scraperConfiguration);
+
+      if (price) {
+        return { price };
+      }
+
+      throw new Error('Could not parse the current market price');
+    } catch (error) {
+      Logger.error(error);
+
+      throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
+    }
+  }
+
+  @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateMarketData(
@@ -228,7 +256,7 @@ export class AdminController {
         dataSource,
         marketPrice,
         symbol,
-        date: resetHours(parseISO(date)),
+        date: parseISO(date),
         state: 'CLOSE'
       })
     );

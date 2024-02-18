@@ -1,4 +1,5 @@
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import { Role } from '@prisma/client';
 
 export const permissions = {

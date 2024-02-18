@@ -21,8 +21,10 @@ import {
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
-  OrderWithAccount
+  OrderWithAccount,
+  UserWithSettings
 } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -138,17 +140,16 @@ export class ImportService {
     activitiesDto,
     isDryRun = false,
     maxActivitiesToImport,
-    userCurrency,
-    userId
+    user
   }: {
     accountsDto: Partial<CreateAccountDto>[];
     activitiesDto: Partial<CreateOrderDto>[];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
-    userCurrency: string;
-    userId: string;
+    user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
+    const userCurrency = user.Settings.settings.baseCurrency;
 
     if (!isDryRun && accountsDto?.length) {
       const [existingAccounts, existingPlatforms] = await Promise.all([
@@ -171,7 +172,7 @@ export class ImportService {
         );
 
         // If there is no account or if the account belongs to a different user then create a new account
-        if (!accountWithSameId || accountWithSameId.userId !== userId) {
+        if (!accountWithSameId || accountWithSameId.userId !== user.id) {
           let oldAccountId: string;
           const platformId = account.platformId;
 
@@ -184,7 +185,7 @@ export class ImportService {
 
           let accountObject: Prisma.AccountCreateInput = {
             ...account,
-            User: { connect: { id: userId } }
+            User: { connect: { id: user.id } }
           };
 
           if (
@@ -200,7 +201,7 @@ export class ImportService {
 
           const newAccount = await this.accountService.createAccount(
             accountObject,
-            userId
+            user.id
           );
 
           // Store the new to old account ID mappings for updating activities
@@ -231,16 +232,17 @@ export class ImportService {
 
     const assetProfiles = await this.validateActivities({
       activitiesDto,
-      maxActivitiesToImport
+      maxActivitiesToImport,
+      user
     });
 
     const activitiesExtendedWithErrors = await this.extendActivitiesWithErrors({
       activitiesDto,
       userCurrency,
-      userId
+      userId: user.id
     });
 
-    const accounts = (await this.accountService.getAccounts(userId)).map(
+    const accounts = (await this.accountService.getAccounts(user.id)).map(
       ({ id, name }) => {
         return { id, name };
       }
@@ -345,7 +347,6 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
-          userId,
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
@@ -374,7 +375,8 @@ export class ImportService {
           },
           Account: validatedAccount,
           symbolProfileId: undefined,
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          userId: user.id
         };
       } else {
         if (error) {
@@ -388,7 +390,6 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
-          userId,
           accountId: validatedAccount?.id,
           SymbolProfile: {
             connectOrCreate: {
@@ -406,7 +407,8 @@ export class ImportService {
             }
           },
           updateAccountBalance: false,
-          User: { connect: { id: userId } }
+          User: { connect: { id: user.id } },
+          userId: user.id
         });
       }
 
@@ -553,10 +555,12 @@ export class ImportService {
 
   private async validateActivities({
     activitiesDto,
-    maxActivitiesToImport
+    maxActivitiesToImport,
+    user
   }: {
     activitiesDto: Partial<CreateOrderDto>[];
     maxActivitiesToImport: number;
+    user: UserWithSettings;
   }) {
     if (activitiesDto?.length > maxActivitiesToImport) {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
@@ -575,7 +579,7 @@ export class ImportService {
 
     for (const [
       index,
-      { currency, dataSource, symbol }
+      { currency, dataSource, symbol, type }
     ] of uniqueActivitiesDto.entries()) {
       if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
         throw new Error(
@@ -583,13 +587,31 @@ export class ImportService {
         );
       }
 
-      if (dataSource !== 'MANUAL') {
-        const assetProfile = (
+      if (
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user.subscription.type === 'Basic'
+      ) {
+        const dataProvider = this.dataProviderService.getDataProvider(
+          DataSource[dataSource]
+        );
+
+        if (dataProvider.getDataProviderInfo().isPremium) {
+          throw new Error(
+            `activities.${index}.dataSource ("${dataSource}") is not valid`
+          );
+        }
+      }
+
+      const assetProfile = {
+        currency,
+        ...(
           await this.dataProviderService.getAssetProfiles([
             { dataSource, symbol }
           ])
-        )?.[symbol];
+        )?.[symbol]
+      };
 
+      if (type === 'BUY' || type === 'DIVIDEND' || type === 'SELL') {
         if (!assetProfile?.name) {
           throw new Error(
             `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
@@ -607,10 +629,10 @@ export class ImportService {
             `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
           );
         }
-
-        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
-          assetProfile;
       }
+
+      assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
+        assetProfile;
     }
 
     return assetProfiles;

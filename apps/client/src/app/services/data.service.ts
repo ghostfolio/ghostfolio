@@ -1,6 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material/sort';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -39,6 +36,11 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
+
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -278,8 +280,14 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
   }
 
-  public fetchExport(activityIds?: string[]) {
-    let params = new HttpParams();
+  public fetchExport({
+    activityIds,
+    filters
+  }: {
+    activityIds?: string[];
+    filters?: Filter[];
+  } = {}) {
+    let params = this.buildFiltersAsQueryParams({ filters });
 
     if (activityIds) {
       params = params.append('activityIds', activityIds.join(','));
@@ -399,6 +407,14 @@ export class DataService {
 
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
               response.holdings[symbol].dateOfFirstActivity = response.holdings[
                 symbol
               ].dateOfFirstActivity

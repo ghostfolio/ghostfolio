@@ -18,6 +18,7 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';

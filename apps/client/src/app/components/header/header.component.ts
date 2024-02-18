@@ -1,3 +1,19 @@
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import {
+  KEY_STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
+import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,17 +27,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import {
-  KEY_STAY_SIGNED_IN,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { InfoItem, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -86,9 +91,11 @@ export class HeaderComponent implements OnChanges {
     private dataService: DataService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private layoutService: LayoutService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private userService: UserService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -142,6 +149,56 @@ export class HeaderComponent implements OnChanges {
     }
 
     window.location.reload();
+  }
+
+  public onDateRangeChange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+      });
+  }
+
+  public onFiltersChanged(filters: Filter[]) {
+    const userSetting: UpdateUserSettingDto = {};
+
+    for (const filter of filters) {
+      let filtersType: string;
+
+      if (filter.type === 'ACCOUNT') {
+        filtersType = 'accounts';
+      } else if (filter.type === 'ASSET_CLASS') {
+        filtersType = 'assetClasses';
+      } else if (filter.type === 'TAG') {
+        filtersType = 'tags';
+      }
+
+      userSetting[`filters.${filtersType}`] = filter.id ? [filter.id] : null;
+    }
+
+    this.dataService
+      .putUserSetting(userSetting)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+      });
+  }
+
+  public onLogoClick() {
+    if (this.currentRoute === 'home' || this.currentRoute === 'zen') {
+      this.layoutService.getShouldReloadSubject().next();
+    }
   }
 
   public onMenuClosed() {

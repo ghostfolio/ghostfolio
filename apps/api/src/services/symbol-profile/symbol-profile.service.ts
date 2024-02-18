@@ -7,6 +7,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
+
 import { Injectable } from '@nestjs/common';
 import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
 import { continents, countries } from 'countries-list';
@@ -89,9 +90,12 @@ export class SymbolProfileService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
+    currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
@@ -100,8 +104,11 @@ export class SymbolProfileService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
+        currency,
         name,
         scraperConfiguration,
+        sectors,
         symbolMapping
       },
       where: { dataSource_symbol: { dataSource, symbol } }
@@ -200,6 +207,7 @@ export class SymbolProfileService {
         defaultMarketPrice: scraperConfiguration.defaultMarketPrice as number,
         headers:
           scraperConfiguration.headers as ScraperConfiguration['headers'],
+        locale: scraperConfiguration.locale as string,
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };

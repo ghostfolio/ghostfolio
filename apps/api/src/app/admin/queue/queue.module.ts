@@ -1,4 +1,5 @@
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
+
 import { Module } from '@nestjs/common';
 
 import { QueueController } from './queue.controller';

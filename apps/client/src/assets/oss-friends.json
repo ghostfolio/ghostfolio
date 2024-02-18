@@ -1,6 +1,16 @@
 {
-  "createdAt": "2023-11-30T00:00:00.000Z",
+  "createdAt": "2024-01-29T00:00:00.000Z",
   "data": [
+    {
+      "name": "Aptabase",
+      "description": "Analytics for Apps, open source, simple and privacy-friendly. SDKs for Swift, React Native, Electron, Flutter and many others.",
+      "href": "https://aptabase.com"
+    },
+    {
+      "name": "Argos",
+      "description": "Argos provides the developer tools to debug tests and detect visual regressions..",
+      "href": "https://argos-ci.com"
+    },
     {
       "name": "BoxyHQ",
       "description": "BoxyHQ’s suite of APIs for security and privacy helps engineering teams build and ship compliant cloud applications faster.",
@@ -72,9 +82,24 @@
       "href": "https://htmx.org"
     },
     {
+      "name": "Inbox Zero",
+      "description": "Inbox Zero makes it easy to clean up your inbox and reach inbox zero fast. It provides bulk newsletter unsubscribe, cold email blocking, email analytics, and AI automations.",
+      "href": "https://getinboxzero.com"
+    },
+    {
       "name": "Infisical",
       "description": "Open source, end-to-end encrypted platform that lets you securely manage secrets and configs across your team, devices, and infrastructure.",
       "href": "https://infisical.com"
+    },
+    {
+      "name": "Langfuse",
+      "description": "Open source LLM engineering platform. Debug, analyze and iterate together.",
+      "href": "https://langfuse.com"
+    },
+    {
+      "name": "Lost Pixel",
+      "description": "Open source visual regression testing alternative to Percy & Chromatic",
+      "href": "https://lost-pixel.com"
     },
     {
       "name": "Mockoon",

@@ -1,5 +1,6 @@
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import { InfoItem } from '@ghostfolio/common/interfaces';
+
 import { Controller, Get, UseInterceptors } from '@nestjs/common';
 
 import { InfoService } from './info.service';

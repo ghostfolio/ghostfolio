@@ -1,12 +1,4 @@
 <div class="container justify-content-center p-3">
-  <div class="mb-3 text-center">
-    <gf-toggle
-      [defaultValue]="user?.settings?.dateRange"
-      [isLoading]="positions === undefined"
-      [options]="dateRangeOptions"
-      (change)="onChangeDateRange($event.value)"
-    ></gf-toggle>
-  </div>
   <div class="row">
     <div class="align-items-center col-xs-12 col-md-8 offset-md-2">
       <mat-card appearance="outlined">
@@ -18,7 +10,7 @@
             [locale]="user?.settings?.locale"
             [positions]="positions"
             [range]="user?.settings?.dateRange"
-          ></gf-positions>
+          />
         </mat-card-content>
       </mat-card>
       <div *ngIf="hasPermissionToCreateOrder" class="text-center">

@@ -8,7 +8,6 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
-  DEFAULT_REQUEST_TIMEOUT,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -29,6 +28,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as cheerio from 'cheerio';
@@ -59,10 +59,6 @@ export class InfoService {
     });
 
     const globalPermissions: string[] = [];
-
-    if (this.configurationService.get('ENABLE_FEATURE_BLOG')) {
-      globalPermissions.push(permissions.enableBlog);
-    }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -162,7 +158,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
@@ -187,7 +183,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
         // @ts-ignore
@@ -196,11 +192,11 @@ export class InfoService {
 
       const $ = cheerio.load(body);
 
-      return extractNumberFromString(
-        $(
+      return extractNumberFromString({
+        value: $(
           `a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter`
         ).text()
-      );
+      });
     } catch (error) {
       Logger.error(error, 'InfoService - GitHub');
 
@@ -214,7 +210,7 @@ export class InfoService {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
@@ -342,7 +338,7 @@ export class InfoService {
 
         setTimeout(() => {
           abortController.abort();
-        }, DEFAULT_REQUEST_TIMEOUT);
+        }, this.configurationService.get('REQUEST_TIMEOUT'));
 
         const { data } = await got(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
@@ -352,7 +348,7 @@ export class InfoService {
           {
             headers: {
               Authorization: `Bearer ${this.configurationService.get(
-                'BETTER_UPTIME_API_KEY'
+                'API_KEY_BETTER_UPTIME'
               )}`
             },
             // @ts-ignore

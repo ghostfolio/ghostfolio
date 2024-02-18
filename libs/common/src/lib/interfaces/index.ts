@@ -11,6 +11,7 @@ import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
+import type { Currency } from './currency.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 import type { Export } from './export.interface';
@@ -18,6 +19,7 @@ import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { InfoItem } from './info-item.interface';
+import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
@@ -42,8 +44,9 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
-import { SystemMessage } from './system-message.interface';
-import { TabConfiguration } from './tab-configuration.interface';
+import type { SymbolMetrics } from './symbol-metrics.interface';
+import type { SystemMessage } from './system-message.interface';
+import type { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
 import type { UniqueAsset } from './unique-asset.interface';
 import type { UserSettings } from './user-settings.interface';
@@ -63,6 +66,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  Currency,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Export,
@@ -71,6 +75,7 @@ export {
   HistoricalDataItem,
   ImportResponse,
   InfoItem,
+  InvestmentItem,
   LineChartItem,
   OAuthResponse,
   PortfolioChart,
@@ -93,6 +98,7 @@ export {
   Statistics,
   SystemMessage,
   Subscription,
+  SymbolMetrics,
   TabConfiguration,
   TimelinePosition,
   UniqueAsset,

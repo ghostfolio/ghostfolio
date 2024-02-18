@@ -1,20 +1,21 @@
 <mat-form-field appearance="outline" class="w-100">
   <button disabled mat-icon-button matPrefix>
-    <ion-icon name="search-outline"></ion-icon>
+    <ion-icon name="search-outline" />
   </button>
   <mat-chip-grid #chipList aria-label="Search keywords">
-    <mat-chip-row
-      *ngFor="let filter of selectedFilters"
-      class="mx-1 my-0 px-2 py-0"
-      matChipRemove
-      [removable]="true"
-      (removed)="onRemoveFilter(filter)"
-    >
-      {{ filter.label | gfSymbol }}
-      <button matChipRemove>
-        <ion-icon name="close-outline"></ion-icon>
-      </button>
-    </mat-chip-row>
+    @for (filter of selectedFilters; track filter) {
+      <mat-chip-row
+        class="mx-1 my-0 px-2 py-0"
+        matChipRemove
+        [removable]="true"
+        (removed)="onRemoveFilter(filter)"
+      >
+        {{ filter.label | gfSymbol }}
+        <button matChipRemove>
+          <ion-icon name="close-outline" />
+        </button>
+      </mat-chip-row>
+    }
     <input
       #searchInput
       name="close-outline"
@@ -30,17 +31,15 @@
     #autocomplete="matAutocomplete"
     (optionSelected)="onSelectFilter($event)"
   >
-    <mat-optgroup
-      *ngFor="let filterGroup of filterGroups$ | async"
-      [label]="filterGroup.name"
-    >
-      <mat-option
-        *ngFor="let filter of filterGroup.filters"
-        [value]="filter.id"
-      >
-        {{ filter.label | gfSymbol }}
-      </mat-option>
-    </mat-optgroup>
+    @for (filterGroup of filterGroups$ | async; track filterGroup) {
+      <mat-optgroup [label]="filterGroup.name">
+        @for (filter of filterGroup.filters; track filter) {
+          <mat-option [value]="filter.id">
+            {{ filter.label | gfSymbol }}
+          </mat-option>
+        }
+      </mat-optgroup>
+    }
   </mat-autocomplete>
 
   <button
@@ -49,6 +48,6 @@
     matSuffix
     [ngClass]="{ 'd-none': !isLoading }"
   >
-    <mat-spinner matSuffix [diameter]="20"></mat-spinner>
+    <mat-spinner matSuffix [diameter]="20" />
   </button>
 </mat-form-field>

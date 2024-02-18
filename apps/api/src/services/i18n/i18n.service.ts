@@ -1,9 +1,9 @@
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
-
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+
 import { Logger } from '@nestjs/common';
 import * as cheerio from 'cheerio';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
 
 export class I18nService {
   private localesPath = join(__dirname, 'assets', 'locales');

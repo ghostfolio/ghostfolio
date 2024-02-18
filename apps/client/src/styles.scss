@@ -379,13 +379,17 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-spacer {
+  flex: 1 1 auto;
+}
+
 .gf-table {
   @include gf-table;
 }
 
 .has-info-message {
   .page.has-tabs {
-    height: calc(100vh - 2 * var(--mat-toolbar-standard-height));
+    height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
   }
 }
 
@@ -505,6 +509,8 @@ ngx-skeleton-loader {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: constant(safe-area-inset-bottom);
 
   .fab-container {
     bottom: 2rem;
@@ -520,9 +526,7 @@ ngx-skeleton-loader {
   }
 
   &.has-tabs {
-    height: calc(100vh - var(--mat-toolbar-standard-height));
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-bottom: constant(safe-area-inset-bottom);
+    height: calc(100svh - var(--mat-toolbar-standard-height));
 
     .fab-container {
       @media (max-width: 575.98px) {

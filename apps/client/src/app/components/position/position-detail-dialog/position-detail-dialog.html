@@ -4,7 +4,7 @@
   [deviceType]="data.deviceType"
   [title]="SymbolProfile?.name ?? SymbolProfile?.symbol"
   (closeButtonClicked)="onClose()"
-></gf-dialog-header>
+/>
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
@@ -16,7 +16,7 @@
           [locale]="data.locale"
           [unit]="data.baseCurrency"
           [value]="value"
-        ></gf-value>
+        />
       </div>
     </div>
 
@@ -33,7 +33,7 @@
       [showXAxis]="true"
       [showYAxis]="true"
       [symbol]="data.symbol"
-    ></gf-line-chart>
+    />
 
     <div class="row">
       <div class="col-6 mb-3">
@@ -186,57 +186,52 @@
       <ng-container
         *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
       >
-        <ng-container
-          *ngIf="SymbolProfile?.countries?.length === 1 && SymbolProfile?.sectors?.length === 1; else charts"
-        >
-          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
-            <gf-value
-              i18n
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.sectors[0].name"
-              >Sector</gf-value
-            >
-          </div>
-          <div
-            *ngIf="SymbolProfile?.countries?.length === 1"
-            class="col-6 mb-3"
+        @if(SymbolProfile?.countries?.length === 1 &&
+        SymbolProfile?.sectors?.length === 1) {
+        <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="SymbolProfile.sectors[0].name"
+            >Sector</gf-value
           >
-            <gf-value
-              i18n
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.countries[0].name"
-              >Country</gf-value
-            >
-          </div>
-        </ng-container>
-        <ng-template #charts>
-          <div class="col-md-6 mb-3">
-            <div class="h5" i18n>Sectors</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="data.baseCurrency"
-              [colorScheme]="data.colorScheme"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="data.locale"
-              [maxItems]="10"
-              [positions]="sectors"
-            ></gf-portfolio-proportion-chart>
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="h5" i18n>Countries</div>
-            <gf-portfolio-proportion-chart
-              [baseCurrency]="data.baseCurrency"
-              [colorScheme]="data.colorScheme"
-              [isInPercent]="true"
-              [keys]="['name']"
-              [locale]="data.locale"
-              [maxItems]="10"
-              [positions]="countries"
-            ></gf-portfolio-proportion-chart>
-          </div>
-        </ng-template>
+        </div>
+        <div *ngIf="SymbolProfile?.countries?.length === 1" class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [locale]="data.locale"
+            [value]="SymbolProfile.countries[0].name"
+            >Country</gf-value
+          >
+        </div>
+        } @else {
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Sectors</div>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="data.baseCurrency"
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [locale]="data.locale"
+            [maxItems]="10"
+            [positions]="sectors"
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="h5" i18n>Countries</div>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="data.baseCurrency"
+            [colorScheme]="data.colorScheme"
+            [isInPercent]="true"
+            [keys]="['name']"
+            [locale]="data.locale"
+            [maxItems]="10"
+            [positions]="countries"
+          />
+        </div>
+        }
       </ng-container>
       <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
         <hr />
@@ -246,16 +241,23 @@
       </div>
     </div>
 
-    <div class="row" [ngClass]="{ 'd-none': !activities?.length }">
-      <div class="col mb-3">
-        <div class="h5 mb-0" i18n>Activities</div>
-        <gf-activities-table-lazy
-          *ngIf="user?.settings?.isExperimentalFeatures === true"
+    <mat-tab-group
+      animationDuration="0"
+      class="mb-3"
+      [mat-stretch-tabs]="false"
+      [ngClass]="{ 'd-none': !activities?.length }"
+    >
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="swap-vertical-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+        </ng-template>
+        <gf-activities-table
           [baseCurrency]="data.baseCurrency"
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
@@ -266,23 +268,27 @@
           [sortDisabled]="true"
           [totalItems]="totalItems"
           (export)="onExport()"
-        ></gf-activities-table-lazy>
-        <gf-activities-table
-          *ngIf="user?.settings?.isExperimentalFeatures !== true"
-          [activities]="activities"
-          [baseCurrency]="data.baseCurrency"
+        />
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="wallet-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Accounts</div>
+        </ng-template>
+        <gf-accounts-table
+          [accounts]="accounts"
+          [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
-          [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="true"
-          [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
-          [locale]="data.locale"
-          [showActions]="false"
-          [showNameColumn]="false"
-          (export)="onExport()"
-        ></gf-activities-table>
-      </div>
-    </div>
+          [locale]="user?.settings?.locale"
+          [showBalance]="false"
+          [showFooter]="false"
+          [showTransactions]="false"
+          [showValue]="false"
+          [showValueInBaseCurrency]="false"
+        />
+      </mat-tab>
+    </mat-tab-group>
 
     <div *ngIf="tags?.length > 0" class="row">
       <div class="col">
@@ -314,4 +320,4 @@
   mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onClose()"
-></gf-dialog-footer>
+/>

@@ -3,7 +3,9 @@ import type {
   DateRange,
   ViewMode
 } from '@ghostfolio/common/types';
+
 import {
+  IsArray,
   IsBoolean,
   IsISO8601,
   IsIn,
@@ -29,13 +31,25 @@ export class UpdateUserSettingDto {
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'ytd'])
+  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd'])
   @IsOptional()
   dateRange?: DateRange;
 
   @IsNumber()
   @IsOptional()
   emergencyFund?: number;
+
+  @IsArray()
+  @IsOptional()
+  'filters.accounts'?: string[];
+
+  @IsArray()
+  @IsOptional()
+  'filters.assetClasses'?: string[];
+
+  @IsArray()
+  @IsOptional()
+  'filters.tags'?: string[];
 
   @IsBoolean()
   @IsOptional()

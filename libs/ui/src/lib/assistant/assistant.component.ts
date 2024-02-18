@@ -1,3 +1,9 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { Filter, User } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
@@ -7,6 +13,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -14,11 +21,9 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { translate } from '@ghostfolio/ui/i18n';
+import { Account, AssetClass } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -38,7 +43,7 @@ import { ISearchResultItem, ISearchResults } from './interfaces/interfaces';
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
-export class AssistantComponent implements OnDestroy, OnInit {
+export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   @HostListener('document:keydown', ['$event']) onKeydown(
     event: KeyboardEvent
   ) {
@@ -73,8 +78,11 @@ export class AssistantComponent implements OnDestroy, OnInit {
 
   @Input() deviceType: string;
   @Input() hasPermissionToAccessAdminControl: boolean;
+  @Input() user: User;
 
   @Output() closed = new EventEmitter<void>();
+  @Output() dateRangeChanged = new EventEmitter<DateRange>();
+  @Output() filtersChanged = new EventEmitter<Filter[]>();
 
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
@@ -84,6 +92,35 @@ export class AssistantComponent implements OnDestroy, OnInit {
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
+  public accounts: Account[] = [];
+  public assetClasses: Filter[] = [];
+  public dateRangeFormControl = new FormControl<string>(undefined);
+  public readonly dateRangeOptions = [
+    { label: $localize`Today`, value: '1d' },
+    {
+      label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
+      value: 'wtd'
+    },
+    {
+      label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
+      value: 'mtd'
+    },
+    {
+      label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
+      value: 'ytd'
+    },
+    { label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')', value: '1y' },
+    {
+      label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
+      value: '5y'
+    },
+    { label: $localize`Max`, value: 'max' }
+  ];
+  public filterForm = this.formBuilder.group({
+    account: new FormControl<string>(undefined),
+    assetClass: new FormControl<string>(undefined),
+    tag: new FormControl<string>(undefined)
+  });
   public isLoading = false;
   public isOpen = false;
   public placeholder = $localize`Find holding...`;
@@ -92,17 +129,36 @@ export class AssistantComponent implements OnDestroy, OnInit {
     assetProfiles: [],
     holdings: []
   };
+  public tags: Filter[] = [];
 
+  private filterTypes: Filter['type'][] = ['ACCOUNT', 'ASSET_CLASS', 'TAG'];
   private keyManager: FocusKeyManager<AssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    private dataService: DataService
+    private dataService: DataService,
+    private formBuilder: FormBuilder
   ) {}
 
   public ngOnInit() {
+    this.accounts = this.user?.accounts;
+    this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
+      return {
+        id: assetClass,
+        label: translate(assetClass),
+        type: 'ASSET_CLASS'
+      };
+    });
+    this.tags = this.user?.tags.map(({ id, name }) => {
+      return {
+        id,
+        label: translate(name),
+        type: 'TAG'
+      };
+    });
+
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
@@ -142,6 +198,27 @@ export class AssistantComponent implements OnDestroy, OnInit {
       });
   }
 
+  public ngOnChanges() {
+    this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
+
+    this.filterForm.setValue(
+      {
+        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
+        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+      },
+      {
+        emitEvent: false
+      }
+    );
+  }
+
+  public hasFilter(aFormValue: { [key: string]: string }) {
+    return Object.values(aFormValue).some((value) => {
+      return !!value;
+    });
+  }
+
   public async initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
@@ -165,10 +242,46 @@ export class AssistantComponent implements OnDestroy, OnInit {
     this.changeDetectorRef.markForCheck();
   }
 
+  public onApplyFilters() {
+    this.filtersChanged.emit([
+      {
+        id: this.filterForm.get('account').value,
+        type: 'ACCOUNT'
+      },
+      {
+        id: this.filterForm.get('assetClass').value,
+        type: 'ASSET_CLASS'
+      },
+      {
+        id: this.filterForm.get('tag').value,
+        type: 'TAG'
+      }
+    ]);
+
+    this.onCloseAssistant();
+  }
+
+  public onChangeDateRange(dateRangeString: string) {
+    this.dateRangeChanged.emit(dateRangeString as DateRange);
+  }
+
   public onCloseAssistant() {
     this.setIsOpen(false);
 
     this.closed.emit();
+  }
+
+  public onResetFilters() {
+    this.filtersChanged.emit(
+      this.filterTypes.map((type) => {
+        return {
+          type,
+          id: null
+        };
+      })
+    );
+
+    this.onCloseAssistant();
   }
 
   public setIsOpen(aIsOpen: boolean) {

@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';

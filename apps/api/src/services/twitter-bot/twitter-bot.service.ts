@@ -9,6 +9,7 @@ import {
   resolveFearAndGreedIndex,
   resolveMarketCondition
 } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { isWeekend } from 'date-fns';
 import { TwitterApi, TwitterApiReadWrite } from 'twitter-api-v2';

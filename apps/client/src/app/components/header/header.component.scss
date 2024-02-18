@@ -32,11 +32,11 @@
 
       ion-icon {
         font-size: 1.5rem;
-      }
-    }
 
-    .spacer {
-      flex: 1 1 auto;
+        &.rotate-90 {
+          transform: rotate(90deg);
+        }
+      }
     }
   }
 }

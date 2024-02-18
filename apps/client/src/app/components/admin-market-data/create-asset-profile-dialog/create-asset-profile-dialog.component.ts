@@ -1,3 +1,5 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +15,6 @@ import {
   Validators
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

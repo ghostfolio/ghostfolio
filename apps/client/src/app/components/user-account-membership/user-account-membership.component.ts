@@ -1,3 +1,9 @@
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,11 +16,6 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';

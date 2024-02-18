@@ -1,3 +1,14 @@
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import {
+  AdminMarketDataDetails,
+  Currency,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,15 +20,6 @@ import {
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
-import {
-  AdminMarketDataDetails,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 import {
   AssetClass,
   AssetSubClass,
@@ -51,11 +53,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    countries: '',
+    currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
     name: ['', Validators.required],
     scraperConfiguration: '',
+    sectors: '',
     symbolMapping: ''
   });
   public assetProfileSubClass: string;
@@ -63,6 +68,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
+  public currencies: Currency[] = [];
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -86,7 +92,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.benchmarks = this.dataService.fetchInfo().benchmarks;
+    const { benchmarks, currencies } = this.dataService.fetchInfo();
+
+    this.benchmarks = benchmarks;
+    this.currencies = currencies.map((currency) => ({
+      label: currency,
+      value: currency
+    }));
 
     this.initialize();
   }
@@ -110,20 +122,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.marketDataDetails = marketData;
         this.sectors = {};
 
-        if (assetProfile?.countries?.length > 0) {
-          for (const country of assetProfile.countries) {
-            this.countries[country.code] = {
-              name: country.name,
-              value: country.weight
+        if (this.assetProfile?.countries?.length > 0) {
+          for (const { code, name, weight } of this.assetProfile.countries) {
+            this.countries[code] = {
+              name,
+              value: weight
             };
           }
         }
 
-        if (assetProfile?.sectors?.length > 0) {
-          for (const sector of assetProfile.sectors) {
-            this.sectors[sector.name] = {
-              name: sector.name,
-              value: sector.weight
+        if (this.assetProfile?.sectors?.length > 0) {
+          for (const { name, weight } of this.assetProfile.sectors) {
+            this.sectors[name] = {
+              name,
+              value: weight
             };
           }
         }
@@ -132,6 +144,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetClass: this.assetProfile.assetClass ?? null,
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
+          countries: JSON.stringify(
+            this.assetProfile?.countries?.map(({ code, weight }) => {
+              return { code, weight };
+            }) ?? []
+          ),
+          currency: this.assetProfile?.currency,
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
@@ -139,6 +157,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
+          sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
@@ -229,13 +248,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onSubmit() {
+    let countries = [];
     let scraperConfiguration = {};
+    let sectors = [];
     let symbolMapping = {};
+
+    try {
+      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+    } catch {}
 
     try {
       scraperConfiguration = JSON.parse(
         this.assetProfileForm.controls['scraperConfiguration'].value
       );
+    } catch {}
+
+    try {
+      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
     } catch {}
 
     try {
@@ -245,12 +274,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
+      countries,
+      scraperConfiguration,
+      sectors,
+      symbolMapping,
       assetClass: this.assetProfileForm.controls['assetClass'].value,
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
       comment: this.assetProfileForm.controls['comment'].value ?? null,
-      name: this.assetProfileForm.controls['name'].value,
-      scraperConfiguration,
-      symbolMapping
+      currency: (<Currency>(
+        (<unknown>this.assetProfileForm.controls['currency'].value)
+      ))?.value,
+      name: this.assetProfileForm.controls['name'].value
     };
 
     this.adminService
@@ -261,6 +295,34 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public onTestMarketData() {
+    this.adminService
+      .testMarketData({
+        dataSource: this.data.dataSource,
+        scraperConfiguration:
+          this.assetProfileForm.controls['scraperConfiguration'].value,
+        symbol: this.data.symbol
+      })
+      .pipe(
+        catchError(({ error }) => {
+          alert(`Error: ${error?.message}`);
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(({ price }) => {
+        alert(
+          $localize`The current market price is` +
+            ' ' +
+            price +
+            ' ' +
+            (<Currency>(
+              (<unknown>this.assetProfileForm.controls['currency'].value)
+            ))?.value
+        );
       });
   }
 

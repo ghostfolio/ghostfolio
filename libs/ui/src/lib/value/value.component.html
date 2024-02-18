@@ -1,5 +1,5 @@
 <div *ngIf="icon" class="align-self-center mr-3">
-  <ion-icon class="h3 m-0" [name]="icon"></ion-icon>
+  <ion-icon class="h3 m-0" [name]="icon" />
 </div>
 <div class="w-100">
   <ng-template #label><ng-content></ng-content></ng-template>
@@ -32,7 +32,7 @@
           }"
         >
           <ng-container *ngIf="value === null">
-            <span class="text-monospace text-muted">***</span>
+            <span class="text-monospace text-muted">*****</span>
           </ng-container>
           <ng-container *ngIf="value !== null">
             {{ formattedValue }}
@@ -67,7 +67,7 @@
         size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
       width: '5rem'
     }"
-  ></ngx-skeleton-loader>
+  />
 
   <ng-container>
     <div *ngIf="size === 'large'">

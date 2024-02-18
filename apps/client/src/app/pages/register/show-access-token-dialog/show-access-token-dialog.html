@@ -22,8 +22,9 @@
           [cdkCopyToClipboard]="data.accessToken"
           (click)="enableAgreeButton()"
         >
-          <ion-icon class="mr-1" name="copy-outline"></ion-icon
-          ><span i18n>Copy to clipboard</span>
+          <ion-icon class="mr-1" name="copy-outline" /><span i18n
+            >Copy to clipboard</span
+          >
         </button>
       </div>
     </mat-form-field>
@@ -42,6 +43,6 @@
     [mat-dialog-close]="data"
   >
     <span i18n>Agree and continue</span>
-    <ion-icon class="ml-1" name="arrow-forward-outline"></ion-icon>
+    <ion-icon class="ml-1" name="arrow-forward-outline" />
   </button>
 </div>

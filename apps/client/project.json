@@ -191,7 +191,7 @@
     "extract-i18n": {
       "executor": "ng-extract-i18n-merge:ng-extract-i18n-merge",
       "options": {
-        "buildTarget": "client:build",
+        "browserTarget": "client:build",
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [

@@ -1,16 +1,20 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import {
-  DEFAULT_REQUEST_TIMEOUT,
-  ghostfolioFearAndGreedIndexSymbol
-} from '@ghostfolio/common/config';
+import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
@@ -23,7 +27,7 @@ export class RapidApiService implements DataProviderInterface {
   ) {}
 
   public canHandle(symbol: string) {
-    return !!this.configurationService.get('RAPID_API_API_KEY');
+    return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 
   public async getAssetProfile(
@@ -35,31 +39,24 @@ export class RapidApiService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
+    };
+  }
+
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    from,
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const symbol = aSymbol;
-
       if (symbol === ghostfolioFearAndGreedIndexSymbol) {
         const fgi = await this.getFearAndGreedIndex();
 
@@ -73,7 +70,7 @@ export class RapidApiService implements DataProviderInterface {
       }
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -88,12 +85,8 @@ export class RapidApiService implements DataProviderInterface {
   }
 
   public async getQuotes({
-    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     if (symbols.length <= 0) {
       return {};
     }
@@ -124,13 +117,7 @@ export class RapidApiService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({
-    includeIndices = false,
-    query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  public async search({}: GetSearchParams): Promise<{ items: LookupItem[] }> {
     return { items: [] };
   }
 
@@ -146,7 +133,7 @@ export class RapidApiService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, DEFAULT_REQUEST_TIMEOUT);
+      }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
@@ -154,7 +141,7 @@ export class RapidApiService implements DataProviderInterface {
           headers: {
             useQueryString: 'true',
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
-            'x-rapidapi-key': this.configurationService.get('RAPID_API_API_KEY')
+            'x-rapidapi-key': this.configurationService.get('API_KEY_RAPID_API')
           },
           // @ts-ignore
           signal: abortController.signal
@@ -166,7 +153,9 @@ export class RapidApiService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${DEFAULT_REQUEST_TIMEOUT}ms`;
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+          'REQUEST_TIMEOUT'
+        )}ms`;
       }
 
       Logger.error(message, 'RapidApiService');

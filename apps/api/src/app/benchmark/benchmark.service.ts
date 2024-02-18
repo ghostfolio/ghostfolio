@@ -1,6 +1,7 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -11,7 +12,8 @@ import {
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
-  calculateBenchmarkTrend
+  calculateBenchmarkTrend,
+  parseDate
 } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -21,11 +23,12 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { format, subDays } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { format, isSameDay, subDays } from 'date-fns';
+import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -34,6 +37,7 @@ export class BenchmarkService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
+    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -203,8 +207,14 @@ export class BenchmarkService {
   public async getMarketDataBySymbol({
     dataSource,
     startDate,
-    symbol
-  }: { startDate: Date } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+    symbol,
+    userCurrency
+  }: {
+    startDate: Date;
+    userCurrency: string;
+  } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+    const marketData: { date: string; value: number }[] = [];
+
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
         dataGatheringItem: {
@@ -226,44 +236,96 @@ export class BenchmarkService {
       })
     ]);
 
+    const exchangeRates =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        startDate,
+        currencies: [currentSymbolItem.currency],
+        targetCurrency: userCurrency
+      });
+
+    const exchangeRateAtStartDate =
+      exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+        format(startDate, DATE_FORMAT)
+      ];
+
+    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
+      return isSameDay(date, startDate);
+    })?.marketPrice;
+
+    if (!marketPriceAtStartDate) {
+      Logger.error(
+        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
+          startDate,
+          DATE_FORMAT
+        )}`,
+        'BenchmarkService'
+      );
+
+      return { marketData };
+    }
+
     const step = Math.round(
       marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
     );
 
-    const marketPriceAtStartDate = marketDataItems?.[0]?.marketPrice ?? 0;
-    const response = {
-      marketData: [
-        ...marketDataItems
-          .filter((marketDataItem, index) => {
-            return index % step === 0;
-          })
-          .map((marketDataItem) => {
-            return {
-              date: format(marketDataItem.date, DATE_FORMAT),
-              value:
-                marketPriceAtStartDate === 0
-                  ? 0
-                  : this.calculateChangeInPercentage(
-                      marketPriceAtStartDate,
-                      marketDataItem.marketPrice
-                    ) * 100
-            };
-          })
-      ]
-    };
+    let i = 0;
 
-    if (currentSymbolItem?.marketPrice) {
-      response.marketData.push({
+    for (let marketDataItem of marketDataItems) {
+      if (i % step !== 0) {
+        continue;
+      }
+
+      const exchangeRate =
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(marketDataItem.date, DATE_FORMAT)
+        ];
+
+      const exchangeRateFactor =
+        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
+          ? exchangeRate / exchangeRateAtStartDate
+          : 1;
+
+      marketData.push({
+        date: format(marketDataItem.date, DATE_FORMAT),
+        value:
+          marketPriceAtStartDate === 0
+            ? 0
+            : this.calculateChangeInPercentage(
+                marketPriceAtStartDate,
+                marketDataItem.marketPrice * exchangeRateFactor
+              ) * 100
+      });
+    }
+
+    const includesToday = isSameDay(
+      parseDate(last(marketData).date),
+      new Date()
+    );
+
+    if (currentSymbolItem?.marketPrice && !includesToday) {
+      const exchangeRate =
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(new Date(), DATE_FORMAT)
+        ];
+
+      const exchangeRateFactor =
+        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
+          ? exchangeRate / exchangeRateAtStartDate
+          : 1;
+
+      marketData.push({
         date: format(new Date(), DATE_FORMAT),
         value:
           this.calculateChangeInPercentage(
             marketPriceAtStartDate,
-            currentSymbolItem.marketPrice
+            currentSymbolItem.marketPrice * exchangeRateFactor
           ) * 100
       });
     }
 
-    return response;
+    return {
+      marketData
+    };
   }
 
   public async addBenchmark({

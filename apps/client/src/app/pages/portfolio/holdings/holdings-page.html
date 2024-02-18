@@ -2,12 +2,6 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Holdings</h1>
-      <gf-activities-filter
-        [allFilters]="allFilters"
-        [isLoading]="isLoading"
-        [placeholder]="placeholder"
-        (valueChanged)="filters$.next($event)"
-      ></gf-activities-filter>
     </div>
   </div>
   <div class="row">
@@ -16,13 +10,11 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+        [holdings]="holdings"
         [locale]="user?.settings?.locale"
-        [positions]="positionsArray"
-      ></gf-holdings-table>
-      <div
-        *ngIf="hasPermissionToCreateOrder && positionsArray?.length > 0"
-        class="text-center"
-      >
+      />
+      @if (hasPermissionToCreateOrder && holdings?.length > 0) {
+      <div class="text-center">
         <a
           class="mt-3"
           i18n
@@ -31,6 +23,7 @@
           >Manage Activities</a
         >
       </div>
+      }
     </div>
   </div>
 </div>

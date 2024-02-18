@@ -1,3 +1,9 @@
+import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -8,12 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
-import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
-import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
-import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
-import { GfActivitiesTableLazyModule } from '@ghostfolio/ui/activities-table-lazy/activities-table-lazy.module';
 
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
@@ -23,7 +23,6 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
     CommonModule,
     FormsModule,
     GfActivitiesTableModule,
-    GfActivitiesTableLazyModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfFileDropModule,
