@@ -21,14 +21,14 @@ export class TokenStorageService {
     );
   }
 
-  public saveToken(token: string, staySignedIn = false): void {
+  public saveToken(token: string, staySignedIn = false) {
     if (staySignedIn) {
       window.localStorage.setItem(KEY_TOKEN, token);
     }
     window.sessionStorage.setItem(KEY_TOKEN, token);
   }
 
-  public signOut(): void {
+  public signOut() {
     const utmSource = window.localStorage.getItem('utm_source');
 
     if (this.webAuthnService.isEnabled()) {

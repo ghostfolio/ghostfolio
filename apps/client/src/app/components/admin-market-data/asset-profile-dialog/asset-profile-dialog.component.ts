@@ -91,7 +91,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
@@ -167,7 +167,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 

@@ -68,7 +68,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
+  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, positionDetailDialog: true }
     });
