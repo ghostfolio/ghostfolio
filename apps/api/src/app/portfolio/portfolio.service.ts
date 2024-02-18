@@ -16,6 +16,7 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -83,14 +84,13 @@ import {
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
+import { CurrentPositions } from './interfaces/current-positions.interface';
 import {
   HistoricalDataContainer,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
-import { CurrentPositions } from './interfaces/current-positions.interface';
-import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
@@ -301,28 +301,21 @@ export class PortfolioService {
       dateRange,
       impersonationId,
       portfolioOrders,
-      transactionPoints,      
+      transactionPoints,
       userCurrency: this.request.user.Settings.settings.baseCurrency,
       userId,
       calculateTimeWeightedPerformance: false,
       withDataDecimation: false
     });
 
-    let investments: InvestmentItem[];
-
-    if (groupBy) {
-      investments = portfolioCalculator.getInvestmentsByGroup({
-        groupBy,
-        data: items
-      });
-    } else {
-      investments = items.map(({ date, investmentValueWithCurrencyEffect }) => {
+    let investments = items.map(
+      ({ date, investmentValueWithCurrencyEffect }) => {
         return {
           date,
           investment: investmentValueWithCurrencyEffect
         };
-      });
-    }
+      }
+    );
 
     let streaks: PortfolioInvestments['streaks'];
 
@@ -1596,8 +1589,8 @@ export class PortfolioService {
       start: startDate,
       end: endDate,
       step,
-      calculateTimeWeightedPerformance}
-    );
+      calculateTimeWeightedPerformance
+    });
 
     return {
       items,
