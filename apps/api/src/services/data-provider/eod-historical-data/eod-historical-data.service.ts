@@ -11,6 +11,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
@@ -35,7 +36,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {
     this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
@@ -228,27 +230,22 @@ export class EodHistoricalDataService implements DataProviderInterface {
           ? [realTimeResponse]
           : realTimeResponse;
 
-      const searchResponse = await Promise.all(
-        eodHistoricalDataSymbols
-          .filter((symbol) => {
-            return !symbol.endsWith('.FOREX');
-          })
-          .map((symbol) => {
-            return this.search({ query: symbol });
-          })
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        symbols.map((symbol) => {
+          return {
+            symbol,
+            dataSource: this.getName()
+          };
+        })
       );
-
-      const lookupItems = searchResponse.flat().map(({ items }) => {
-        return items[0];
-      });
 
       response = quotes.reduce(
         (
           result: { [symbol: string]: IDataProviderResponse },
           { close, code, timestamp }
         ) => {
-          const currency = lookupItems.find((lookupItem) => {
-            return lookupItem.symbol === code;
+          const currency = symbolProfiles.find(({ symbol }) => {
+            return symbol === code;
           })?.currency;
 
           if (isNumber(close)) {
