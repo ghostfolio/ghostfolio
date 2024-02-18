@@ -1,16 +1,3 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -22,6 +9,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -33,6 +21,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -48,8 +37,6 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },

@@ -13,8 +13,9 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
+import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -225,16 +226,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             : this.streaks?.currentStreak === 1
               ? translate('MONTH')
               : translate('MONTHS');
-              ? translate('MONTH')
-              : translate('MONTHS');
         this.unitLongestStreak =
           this.mode === 'year'
             ? this.streaks?.longestStreak === 1
               ? translate('YEAR')
               : translate('YEARS')
             : this.streaks?.longestStreak === 1
-              ? translate('MONTH')
-              : translate('MONTHS');
               ? translate('MONTH')
               : translate('MONTHS');
 
@@ -290,7 +287,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
     this.dataService
       .fetchPortfolioPerformance({
-        filters: this.activeFilters,
+        filters: this.userService.getFilters(),
         range: this.user?.settings?.dateRange,
         timeWeightedPerformance:
           this.timeWeightedPerformance === 'N' ? false : true
