@@ -6,8 +6,10 @@ import {
   ResponseError,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
 
@@ -19,7 +21,8 @@ import { GetValuesParams } from './interfaces/get-values-params.interface';
 export class CurrentRateService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   public async getValues({
@@ -40,7 +43,7 @@ export class CurrentRateService {
     if (includeToday) {
       promises.push(
         this.dataProviderService
-          .getQuotes({ items: dataGatheringItems })
+          .getQuotes({ items: dataGatheringItems, user: this.request.user })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
 

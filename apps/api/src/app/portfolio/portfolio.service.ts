@@ -420,7 +420,7 @@ export class PortfolioService {
     );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
+      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
     ]);
 
@@ -861,6 +861,7 @@ export class PortfolioService {
       };
     } else {
       const currentData = await this.dataProviderService.getQuotes({
+        user,
         items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
       });
       const marketPrice = currentData[aSymbol]?.marketPrice;
@@ -939,6 +940,7 @@ export class PortfolioService {
       return type === 'SEARCH_QUERY';
     })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
@@ -979,7 +981,7 @@ export class PortfolioService {
     });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
+      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(
         positions.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
