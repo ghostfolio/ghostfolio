@@ -10,7 +10,7 @@ describe('PortfolioCalculator', () => {
   let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null);
+    currentRateService = new CurrentRateService(null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
