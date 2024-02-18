@@ -34,13 +34,9 @@
         font-size: 1.5rem;
 
         &.rotate-90 {
-          transform: rotate(-90deg);
+          transform: rotate(90deg);
         }
       }
-    }
-
-    .spacer {
-      flex: 1 1 auto;
     }
   }
 }

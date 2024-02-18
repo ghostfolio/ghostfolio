@@ -1,19 +1,5 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Analysis</h1>
-  <div *ngIf="!user?.settings?.isExperimentalFeatures" class="my-4 text-center">
-    <gf-toggle
-      [defaultValue]="user?.settings?.dateRange"
-      [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
-      [options]="dateRangeOptions"
-      (change)="onChangeDateRange($event.value)"
-    ></gf-toggle>
-  </div>
-  <gf-activities-filter
-    [allFilters]="allFilters"
-    [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
-    [placeholder]="placeholder"
-    (valueChanged)="filters$.next($event)"
-  ></gf-activities-filter>
   <div class="mb-5 row">
     <div class="col-lg">
       <gf-benchmark-comparator
@@ -48,6 +34,108 @@
     </div>
   </div>
 
+  @if (user?.settings?.isExperimentalFeatures) {
+  <div class="mb-5 row">
+    <div class="col">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <div class="d-flex py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Absolute Asset Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="isLoadingInvestmentChart ? undefined : performance?.currentNetPerformance"
+              />
+            </div>
+          </div>
+          <div class="d-flex mb-3 ml-3 py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Asset Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="isLoadingInvestmentChart ? undefined : performance?.currentNetPerformancePercent"
+              />
+            </div>
+          </div>
+          <div class="d-flex py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Absolute Currency Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="isLoadingInvestmentChart ? undefined : (performance?.currentNetPerformanceWithCurrencyEffect === null ? null : performance?.currentNetPerformanceWithCurrencyEffect - performance?.currentNetPerformance)"
+              />
+            </div>
+          </div>
+          <div class="d-flex ml-3 py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Currency Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="isLoadingInvestmentChart ? undefined : performance?.currentNetPerformancePercentWithCurrencyEffect - performance?.currentNetPerformancePercent"
+              />
+            </div>
+          </div>
+          <div><hr /></div>
+          <div class="d-flex py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Absolute Net Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [isCurrency]="true"
+                [locale]="user?.settings?.locale"
+                [unit]="user?.settings?.baseCurrency"
+                [value]="isLoadingInvestmentChart ? undefined : performance?.currentNetPerformanceWithCurrencyEffect"
+              />
+            </div>
+          </div>
+          <div class="d-flex ml-3 py-1">
+            <div class="flex-grow-1 mr-2 text-truncate" i18n>
+              Net Performance
+            </div>
+            <div class="d-flex justify-content-end">
+              <gf-value
+                class="justify-content-end"
+                position="end"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="user?.settings?.locale"
+                [value]="isLoadingInvestmentChart ? undefined : performance?.currentNetPerformancePercentWithCurrencyEffect"
+              />
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  }
+
   <div class="mb-5 row">
     <div class="col-md-6">
       <mat-card appearance="outlined" class="mb-3">
@@ -62,15 +150,13 @@
               <a
                 class="d-flex"
                 [queryParams]="{
-                dataSource: position.dataSource,
-                positionDetailDialog: true,
-                symbol: position.symbol
-              }"
+                  dataSource: position.dataSource,
+                  positionDetailDialog: true,
+                  symbol: position.symbol
+                }"
                 [routerLink]="[]"
               >
-                <div class="flex-grow-1 mr-2 text-truncate">
-                  {{ position.name }}
-                </div>
+                <div class="flex-grow-1 mr-2">{{ position.name }}</div>
                 <div class="d-flex justify-content-end">
                   <gf-value
                     class="justify-content-end"
@@ -79,7 +165,7 @@
                     [isPercent]="true"
                     [locale]="user?.settings?.locale"
                     [value]="position.netPerformancePercentage"
-                  ></gf-value>
+                  />
                 </div>
               </a>
             </li>
@@ -92,7 +178,7 @@
                 height: '1.5rem',
                 width: '100%'
               }"
-            ></ngx-skeleton-loader>
+            />
           </div>
         </mat-card-content>
       </mat-card>
@@ -110,15 +196,13 @@
               <a
                 class="d-flex"
                 [queryParams]="{
-                dataSource: position.dataSource,
-                positionDetailDialog: true,
-                symbol: position.symbol
-              }"
+                  dataSource: position.dataSource,
+                  positionDetailDialog: true,
+                  symbol: position.symbol
+                }"
                 [routerLink]="[]"
               >
-                <div class="flex-grow-1 mr-2 text-truncate">
-                  {{ position.name }}
-                </div>
+                <div class="flex-grow-1 mr-2">{{ position.name }}</div>
                 <div class="d-flex justify-content-end">
                   <gf-value
                     class="justify-content-end"
@@ -127,7 +211,7 @@
                     [isPercent]="true"
                     [locale]="user?.settings?.locale"
                     [value]="position.netPerformancePercentage"
-                  ></gf-value>
+                  />
                 </div>
               </a>
             </li>
@@ -140,7 +224,7 @@
                 height: '1.5rem',
                 width: '100%'
               }"
-            ></ngx-skeleton-loader>
+            />
           </div>
         </mat-card-content>
       </mat-card>
@@ -157,7 +241,7 @@
           <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </div>
       </div>
       <div class="chart-container">
@@ -172,7 +256,7 @@
           [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
-        ></gf-investment-chart>
+        />
       </div>
     </div>
   </div>
@@ -187,7 +271,7 @@
           <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </div>
         <gf-toggle
           class="d-none d-lg-block"
@@ -195,7 +279,7 @@
           [isLoading]="false"
           [options]="modeOptions"
           (change)="onChangeGroupBy($event.value)"
-        ></gf-toggle>
+        />
       </div>
       <div *ngIf="streaks" class="row">
         <div class="col-md-6 col-xs-12 my-2">
@@ -226,10 +310,11 @@
           [daysInMarket]="daysInMarket"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
           [savingsRate]="savingsRate"
-        ></gf-investment-chart>
+        />
       </div>
     </div>
   </div>
@@ -244,7 +329,7 @@
           <gf-premium-indicator
             *ngIf="user?.subscription?.type === 'Basic'"
             class="ml-1"
-          ></gf-premium-indicator>
+          />
         </div>
         <gf-toggle
           class="d-none d-lg-block"
@@ -252,7 +337,7 @@
           [isLoading]="false"
           [options]="modeOptions"
           (change)="onChangeGroupBy($event.value)"
-        ></gf-toggle>
+        />
       </div>
       <div class="chart-container">
         <gf-investment-chart
@@ -263,9 +348,10 @@
           [daysInMarket]="daysInMarket"
           [groupBy]="mode"
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+          [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
           [range]="user?.settings?.dateRange"
-        ></gf-investment-chart>
+        />
       </div>
     </div>
   </div>

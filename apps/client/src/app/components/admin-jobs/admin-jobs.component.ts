@@ -1,3 +1,9 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
+import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
+import { AdminJobs, User } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,11 +13,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
-import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
-import { AdminJobs, User } from '@ghostfolio/common/interfaces';
 import { JobStatus } from 'bull';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

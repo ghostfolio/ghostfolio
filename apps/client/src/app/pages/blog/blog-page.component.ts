@@ -1,6 +1,7 @@
-import { Component, OnDestroy } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({

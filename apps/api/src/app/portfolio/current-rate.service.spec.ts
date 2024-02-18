@@ -1,8 +1,8 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
@@ -67,7 +67,8 @@ jest.mock(
           initialize: () => Promise.resolve(),
           toCurrency: (value: number) => {
             return 1 * value;
-          }
+          },
+          getExchangeRates: () => Promise.resolve()
         };
       })
     };
@@ -87,7 +88,6 @@ jest.mock('@ghostfolio/api/services/property/property.service', () => {
 describe('CurrentRateService', () => {
   let currentRateService: CurrentRateService;
   let dataProviderService: DataProviderService;
-  let exchangeRateDataService: ExchangeRateDataService;
   let marketDataService: MarketDataService;
   let propertyService: PropertyService;
 
@@ -102,19 +102,11 @@ describe('CurrentRateService', () => {
       propertyService,
       null
     );
-    exchangeRateDataService = new ExchangeRateDataService(
-      null,
-      null,
-      null,
-      null
-    );
-    marketDataService = new MarketDataService(null);
 
-    await exchangeRateDataService.initialize();
+    marketDataService = new MarketDataService(null);
 
     currentRateService = new CurrentRateService(
       dataProviderService,
-      exchangeRateDataService,
       marketDataService
     );
   });
@@ -122,13 +114,11 @@ describe('CurrentRateService', () => {
   it('getValues', async () => {
     expect(
       await currentRateService.getValues({
-        currencies: { AMZN: 'USD' },
         dataGatheringItems: [{ dataSource: DataSource.YAHOO, symbol: 'AMZN' }],
         dateQuery: {
           lt: new Date(Date.UTC(2020, 0, 2, 0, 0, 0)),
           gte: new Date(Date.UTC(2020, 0, 1, 0, 0, 0))
-        },
-        userCurrency: 'CHF'
+        }
       })
     ).toMatchObject<GetValuesObject>({
       dataProviderInfos: [],
@@ -137,7 +127,7 @@ describe('CurrentRateService', () => {
         {
           dataSource: 'YAHOO',
           date: undefined,
-          marketPriceInBaseCurrency: 1841.823902,
+          marketPrice: 1841.823902,
           symbol: 'AMZN'
         }
       ]

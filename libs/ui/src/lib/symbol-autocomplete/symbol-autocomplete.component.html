@@ -11,27 +11,30 @@
   [displayWith]="displayFn"
   (optionSelected)="onUpdateSymbol($event)"
 >
-  <ng-container *ngIf="!isLoading">
-    <mat-option
-      *ngFor="let lookupItem of filteredLookupItems"
-      class="line-height-1"
-      [value]="lookupItem"
-    >
-      <span
-        ><b>{{ lookupItem.name }}</b></span
+  @if (!isLoading) {
+    @for (lookupItem of filteredLookupItems; track lookupItem) {
+      <mat-option
+        class="line-height-1"
+        [disabled]="lookupItem.dataProviderInfo.isPremium"
+        [value]="lookupItem"
       >
-      <br />
-      <small class="text-muted"
-        >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency
-        }}<ng-container *ngIf="lookupItem.assetSubClass">
-          · {{ lookupItem.assetSubClassString }}</ng-container
-        ></small
-      >
-    </mat-option>
-  </ng-container>
+        <span class="align-items-center d-flex line-height-1"
+          ><b>{{ lookupItem.name }}</b>
+          @if (lookupItem.dataProviderInfo.isPremium) {
+            <gf-premium-indicator class="ml-1" [enableLink]="false" />
+          }
+        </span>
+        <small class="text-muted"
+          >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency }}
+          @if (lookupItem.assetSubClass) {
+            · {{ lookupItem.assetSubClassString }}
+          }
+        </small>
+      </mat-option>
+    }
+  }
 </mat-autocomplete>
-<mat-spinner
-  *ngIf="isLoading"
-  class="position-absolute"
-  [diameter]="20"
-></mat-spinner>
+
+@if (isLoading) {
+  <mat-spinner class="position-absolute" [diameter]="20" />
+}

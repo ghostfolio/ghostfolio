@@ -20,6 +20,10 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   comment?: string;
 
+  @IsArray()
+  @IsOptional()
+  countries?: Prisma.InputJsonArray;
+
   @IsString()
   @IsOptional()
   currency?: string;
@@ -35,6 +39,10 @@ export class UpdateAssetProfileDto {
   @IsObject()
   @IsOptional()
   scraperConfiguration?: Prisma.InputJsonObject;
+
+  @IsArray()
+  @IsOptional()
+  sectors?: Prisma.InputJsonArray;
 
   @IsObject()
   @IsOptional()

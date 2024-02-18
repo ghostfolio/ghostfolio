@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 

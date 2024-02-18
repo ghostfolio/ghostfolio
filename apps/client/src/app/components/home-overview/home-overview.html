@@ -1,10 +1,8 @@
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
-  <div
-    *ngIf="hasPermissionToCreateOrder && historicalDataItems?.length === 0; else isUserActive"
-    class="justify-content-center row w-100"
-  >
+  @if(hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
+  <div class="justify-content-center row w-100">
     <div class="col introduction">
       <h4 i18n>Welcome to Ghostfolio</h4>
       <p i18n>Ready to take control of your personal finances?</p>
@@ -60,54 +58,43 @@
       </div>
     </div>
   </div>
-  <ng-template #isUserActive>
-    <div class="row w-100">
-      <div class="col p-0">
-        <div class="chart-container mx-auto position-relative">
-          <gf-line-chart
-            class="position-absolute"
-            symbol="Performance"
-            unit="%"
-            [colorScheme]="user?.settings?.colorScheme"
-            [hidden]="historicalDataItems?.length === 0"
-            [historicalDataItems]="historicalDataItems"
-            [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
-            [locale]="user?.settings?.locale"
-            [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
-            [showGradient]="true"
-            [showLoader]="false"
-            [showXAxis]="false"
-            [showYAxis]="false"
-          ></gf-line-chart>
-        </div>
-      </div>
-    </div>
-    <div class="overview-container row mt-1">
-      <div class="col">
-        <gf-portfolio-performance
-          class="pb-4"
-          [deviceType]="deviceType"
-          [errors]="errors"
-          [isAllTimeHigh]="isAllTimeHigh"
-          [isAllTimeLow]="isAllTimeLow"
-          [isLoading]="isLoadingPerformance"
+  } @else {
+  <div class="row w-100">
+    <div class="col p-0">
+      <div class="chart-container mx-auto position-relative">
+        <gf-line-chart
+          class="position-absolute"
+          symbol="Performance"
+          unit="%"
+          [colorScheme]="user?.settings?.colorScheme"
+          [hidden]="historicalDataItems?.length === 0"
+          [historicalDataItems]="historicalDataItems"
+          [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
           [locale]="user?.settings?.locale"
-          [performance]="performance"
-          [showDetails]="showDetails"
-          [unit]="unit"
-        ></gf-portfolio-performance>
-        <div
-          *ngIf="showDetails && !user?.settings?.isExperimentalFeatures"
-          class="text-center"
-        >
-          <gf-toggle
-            [defaultValue]="user?.settings?.dateRange"
-            [isLoading]="isLoadingPerformance"
-            [options]="dateRangeOptions"
-            (change)="onChangeDateRange($event.value)"
-          ></gf-toggle>
-        </div>
+          [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
+          [showGradient]="true"
+          [showLoader]="false"
+          [showXAxis]="false"
+          [showYAxis]="false"
+        />
       </div>
     </div>
-  </ng-template>
+  </div>
+  <div class="overview-container row mt-1">
+    <div class="col">
+      <gf-portfolio-performance
+        class="pb-4"
+        [deviceType]="deviceType"
+        [errors]="errors"
+        [isAllTimeHigh]="isAllTimeHigh"
+        [isAllTimeLow]="isAllTimeLow"
+        [isLoading]="isLoadingPerformance"
+        [locale]="user?.settings?.locale"
+        [performance]="performance"
+        [showDetails]="showDetails"
+        [unit]="unit"
+      />
+    </div>
+  </div>
+  }
 </div>

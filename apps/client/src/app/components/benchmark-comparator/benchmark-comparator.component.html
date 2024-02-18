@@ -7,7 +7,7 @@
       <gf-premium-indicator
         *ngIf="user?.subscription?.type === 'Basic'"
         class="ml-1"
-      ></gf-premium-indicator>
+      />
     </div>
   </div>
   <div class="col-md-6 col-xs-12 d-flex justify-content-end">
@@ -23,7 +23,7 @@
         [value]="benchmark"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
-        <mat-option [value]="null"></mat-option>
+        <mat-option [value]="null" />
         <mat-option
           *ngFor="let symbolProfile of benchmarks"
           [value]="symbolProfile.id"
@@ -31,10 +31,13 @@
         >
         <mat-option
           *ngIf="hasPermissionToAccessAdminControl"
-          i18n
           [routerLink]="['/admin', 'market-data']"
-          >Manage Benchmarks</mat-option
         >
+          <div class="align-items-center d-flex">
+            <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
+            <span i18n>Manage Benchmarks</span>
+          </div>
+        </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -47,7 +50,7 @@
       height: '100%',
       width: '100%'
     }"
-  ></ngx-skeleton-loader>
+  />
   <canvas
     #chartCanvas
     class="h-100"

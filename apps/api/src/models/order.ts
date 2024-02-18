@@ -1,4 +1,5 @@
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
+
 import { Account, SymbolProfile, Type as TypeOfOrder } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 

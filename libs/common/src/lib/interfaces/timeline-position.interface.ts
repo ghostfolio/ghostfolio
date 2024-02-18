@@ -9,12 +9,20 @@ export interface TimelinePosition {
   firstBuyDate: string;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
+  grossPerformancePercentageWithCurrencyEffect: Big;
+  grossPerformanceWithCurrencyEffect: Big;
   investment: Big;
+  investmentWithCurrencyEffect: Big;
   marketPrice: number;
+  marketPriceInBaseCurrency: number;
   netPerformance: Big;
   netPerformancePercentage: Big;
+  netPerformancePercentageWithCurrencyEffect: Big;
+  netPerformanceWithCurrencyEffect: Big;
   quantity: Big;
   symbol: string;
   tags?: Tag[];
+  timeWeightedInvestment: Big;
+  timeWeightedInvestmentWithCurrencyEffect: Big;
   transactionCount: number;
 }

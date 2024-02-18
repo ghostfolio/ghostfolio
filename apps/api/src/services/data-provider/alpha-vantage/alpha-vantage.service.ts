@@ -1,12 +1,19 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { Granularity } from '@ghostfolio/common/types';
+import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as Alphavantage from 'alphavantage';
@@ -22,12 +29,12 @@ export class AlphaVantageService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {
     this.alphaVantage = Alphavantage({
-      key: this.configurationService.get('ALPHA_VANTAGE_API_KEY')
+      key: this.configurationService.get('API_KEY_ALPHA_VANTAGE')
     });
   }
 
   public canHandle(symbol: string) {
-    return !!this.configurationService.get('ALPHA_VANTAGE_API_KEY');
+    return !!this.configurationService.get('API_KEY_ALPHA_VANTAGE');
   }
 
   public async getAssetProfile(
@@ -39,30 +46,23 @@ export class AlphaVantageService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false
+    };
+  }
+
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    from,
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    const symbol = aSymbol;
-
     try {
       const historicalData: {
         [symbol: string]: IAlphaVantageHistoricalResponse[];
@@ -93,7 +93,7 @@ export class AlphaVantageService implements DataProviderInterface {
       return response;
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -105,13 +105,9 @@ export class AlphaVantageService implements DataProviderInterface {
     return DataSource.ALPHA_VANTAGE;
   }
 
-  public async getQuotes({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
-    symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  public async getQuotes({}: GetQuotesParams): Promise<{
+    [symbol: string]: IDataProviderResponse;
+  }> {
     return {};
   }
 
@@ -120,12 +116,8 @@ export class AlphaVantageService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     const result = await this.alphaVantage.data.search(query);
 
     return {
@@ -134,6 +126,7 @@ export class AlphaVantageService implements DataProviderInterface {
           assetClass: undefined,
           assetSubClass: undefined,
           currency: bestMatch['8. currency'],
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: bestMatch['2. name'],
           symbol: bestMatch['1. symbol']

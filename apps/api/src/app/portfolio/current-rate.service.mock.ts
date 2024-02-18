@@ -1,4 +1,5 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
+
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -33,6 +34,15 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'GOOGL':
+      if (isSameDay(parseDate('2023-01-03'), date)) {
+        return { marketPrice: 89.12 };
+      } else if (isSameDay(parseDate('2023-07-10'), date)) {
+        return { marketPrice: 116.45 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'NOVN.SW':
       if (isSameDay(parseDate('2022-04-11'), date)) {
         return { marketPrice: 87.8 };
@@ -62,10 +72,8 @@ export const CurrentRateServiceMock = {
           values.push({
             date,
             dataSource: dataGatheringItem.dataSource,
-            marketPriceInBaseCurrency: mockGetValue(
-              dataGatheringItem.symbol,
-              date
-            ).marketPrice,
+            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
+              .marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }
@@ -76,10 +84,8 @@ export const CurrentRateServiceMock = {
           values.push({
             date,
             dataSource: dataGatheringItem.dataSource,
-            marketPriceInBaseCurrency: mockGetValue(
-              dataGatheringItem.symbol,
-              date
-            ).marketPrice,
+            marketPrice: mockGetValue(dataGatheringItem.symbol, date)
+              .marketPrice,
             symbol: dataGatheringItem.symbol
           });
         }

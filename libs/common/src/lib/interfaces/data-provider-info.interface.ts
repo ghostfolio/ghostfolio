@@ -1,4 +1,5 @@
 export interface DataProviderInfo {
-  name: string;
-  url: string;
+  isPremium: boolean;
+  name?: string;
+  url?: string;
 }

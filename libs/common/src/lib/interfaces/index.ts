@@ -19,6 +19,7 @@ import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
 import type { InfoItem } from './info-item.interface';
+import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
@@ -43,6 +44,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
+import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
 import type { TimelinePosition } from './timeline-position.interface';
@@ -73,6 +75,7 @@ export {
   HistoricalDataItem,
   ImportResponse,
   InfoItem,
+  InvestmentItem,
   LineChartItem,
   OAuthResponse,
   PortfolioChart,
@@ -95,6 +98,7 @@ export {
   Statistics,
   SystemMessage,
   Subscription,
+  SymbolMetrics,
   TabConfiguration,
   TimelinePosition,
   UniqueAsset,

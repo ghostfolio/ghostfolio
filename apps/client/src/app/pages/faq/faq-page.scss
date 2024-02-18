@@ -1,12 +1,7 @@
 :host {
-  display: block;
+  color: rgb(var(--dark-primary-text));
+}
 
-  a {
-    color: rgba(var(--palette-primary-500), 1);
-    font-weight: 500;
-
-    &:hover {
-      color: rgba(var(--palette-primary-300), 1);
-    }
-  }
+:host-context(.is-dark-theme) {
+  color: rgb(var(--light-primary-text));
 }

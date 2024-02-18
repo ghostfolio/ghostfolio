@@ -1,5 +1,4 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
@@ -7,6 +6,7 @@ import {
   ResponseError,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
@@ -22,17 +22,15 @@ export class CurrentRateService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService
   ) {}
 
   public async getValues({
-    currencies,
     dataGatheringItems,
-    dateQuery,
-    userCurrency
+    dateQuery
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
+
     const includeToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
@@ -48,6 +46,7 @@ export class CurrentRateService {
           .getQuotes({ items: dataGatheringItems })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
+
             for (const dataGatheringItem of dataGatheringItems) {
               if (
                 dataResultProvider?.[dataGatheringItem.symbol]?.dataProviderInfo
@@ -61,13 +60,8 @@ export class CurrentRateService {
                 result.push({
                   dataSource: dataGatheringItem.dataSource,
                   date: today,
-                  marketPriceInBaseCurrency:
-                    this.exchangeRateDataService.toCurrency(
-                      dataResultProvider?.[dataGatheringItem.symbol]
-                        ?.marketPrice,
-                      dataResultProvider?.[dataGatheringItem.symbol]?.currency,
-                      userCurrency
-                    ),
+                  marketPrice:
+                    dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice,
                   symbol: dataGatheringItem.symbol
                 });
               } else {
@@ -100,13 +94,8 @@ export class CurrentRateService {
             return {
               dataSource,
               date,
-              symbol,
-              marketPriceInBaseCurrency:
-                this.exchangeRateDataService.toCurrency(
-                  marketPrice,
-                  currencies[symbol],
-                  userCurrency
-                )
+              marketPrice,
+              symbol
             };
           });
         })
@@ -138,7 +127,7 @@ export class CurrentRateService {
               dataSource,
               symbol,
               date: today,
-              marketPriceInBaseCurrency: 0
+              marketPrice: 0
             };
 
             response.values.push(value);
@@ -146,10 +135,7 @@ export class CurrentRateService {
 
           const [latestValue] = response.values
             .filter((currentValue) => {
-              return (
-                currentValue.symbol === symbol &&
-                currentValue.marketPriceInBaseCurrency
-              );
+              return currentValue.symbol === symbol && currentValue.marketPrice;
             })
             .sort((a, b) => {
               if (a.date < b.date) {
@@ -163,8 +149,7 @@ export class CurrentRateService {
               return 0;
             });
 
-          value.marketPriceInBaseCurrency =
-            latestValue.marketPriceInBaseCurrency;
+          value.marketPrice = latestValue.marketPrice;
         } catch {}
       }
     }

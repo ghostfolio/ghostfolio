@@ -1,4 +1,5 @@
 import { SubscriptionOffer } from '@ghostfolio/common/types';
+
 import { Platform, SymbolProfile, Tag } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
@@ -12,6 +13,7 @@ export interface InfoItem {
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
+  isDataGatheringEnabled?: string;
   isReadOnlyMode?: boolean;
   platforms: Platform[];
   statistics: Statistics;

@@ -1,18 +1,14 @@
 <div class="container p-0">
   <div class="no-gutters row">
-    <div
-      class="flex-grow-1 status text-muted text-right"
-      [title]="
-        errors?.length > 0 && !isLoading
-          ? 'Sorry! Our data provider partner is experiencing the hiccups.'
-          : ''
-      "
-      (click)="errors?.length > 0 && onShowErrors()"
-    >
-      <ion-icon
-        *ngIf="errors?.length > 0 && !isLoading"
-        name="alert-circle-outline"
-      ></ion-icon>
+    <div class="status-container text-muted text-right">
+      @if (errors?.length > 0 && !isLoading) {
+        <ion-icon
+          i18n-title
+          name="time-outline"
+          title="Oops! A data provider is experiencing the hiccups."
+          (click)="onShowErrors()"
+        />
+      }
     </div>
     <div *ngIf="isLoading" class="align-items-center d-flex">
       <ngx-skeleton-loader
@@ -22,7 +18,7 @@
           height: '4rem',
           width: '15rem'
         }"
-      ></ngx-skeleton-loader>
+      />
     </div>
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
@@ -34,7 +30,7 @@
     >
       <span #value id="value"></span>
     </div>
-    <div class="flex-grow-1 px-1">
+    <div class="currency-container flex-grow-1 px-1">
       {{ unit }}
     </div>
   </div>
@@ -45,7 +41,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="isLoading ? undefined : performance?.currentNetPerformance"
-      ></gf-value>
+      />
     </div>
     <div class="col">
       <gf-value
@@ -55,7 +51,7 @@
         [value]="
           isLoading ? undefined : performance?.currentNetPerformancePercent
         "
-      ></gf-value>
+      />
     </div>
   </div>
 </div>

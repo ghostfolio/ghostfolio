@@ -10,6 +10,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+
 import { Module } from '@nestjs/common';
 
 import { ImportController } from './import.controller';

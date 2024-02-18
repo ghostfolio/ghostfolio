@@ -23,6 +23,7 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
+
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   AssetSubClass,
@@ -230,7 +231,7 @@ export class AdminService {
       this.prismaService.symbolProfile.count({ where })
     ]);
 
-    let marketData = assetProfiles.map(
+    let marketData: AdminMarketDataItem[] = assetProfiles.map(
       ({
         _count,
         assetClass,
@@ -328,11 +329,13 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     tags,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
@@ -341,22 +344,26 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
         currency,
         dataSource,
         name,
         tags,
         scraperConfiguration,
         symbol,
+        sectors,
         symbolMapping
       });
     } else {
       await this.symbolProfileService.updateSymbolProfile({
         comment,
+        countries,
         dataSource,
         name,
         tags,
         scraperConfiguration,
-        symbol,
+        sectors,
+      symbol,
         symbolMapping
       });
 
@@ -509,7 +516,10 @@ export class AdminService {
         const subscription = this.configurationService.get(
           'ENABLE_FEATURE_SUBSCRIPTION'
         )
-          ? this.subscriptionService.getSubscription(Subscription)
+          ? this.subscriptionService.getSubscription({
+              createdAt,
+              subscriptions: Subscription
+            })
           : undefined;
 
         return {

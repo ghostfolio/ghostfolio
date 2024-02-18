@@ -4,7 +4,7 @@
   [deviceType]="data.deviceType"
   [title]="name"
   (closeButtonClicked)="onClose()"
-></gf-dialog-header>
+/>
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
@@ -16,7 +16,7 @@
           [locale]="user?.settings?.locale"
           [unit]="user?.settings?.baseCurrency"
           [value]="valueInBaseCurrency"
-        ></gf-value>
+        />
       </div>
     </div>
 
@@ -25,10 +25,10 @@
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
-        [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+        [isInPercent]="data.hasImpersonationId || user.settings.isRestrictedView"
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
-      ></gf-investment-chart>
+      />
     </div>
 
     <div class="mb-3 row">
@@ -70,14 +70,28 @@
       [ngClass]="{ 'd-none': isLoadingActivities }"
     >
       <mat-tab>
-        <ng-template i18n mat-tab-label>Activities</ng-template>
-        <gf-activities-table-lazy
-          *ngIf="user?.settings?.isExperimentalFeatures === true"
+        <ng-template mat-tab-label>
+          <ion-icon name="wallet-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Holdings</div>
+        </ng-template>
+        <gf-holdings-table
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="data.deviceType"
+          [holdings]="holdings"
+          [locale]="user?.settings?.locale"
+        />
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="swap-vertical-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Activities</div>
+        </ng-template>
+        <gf-activities-table
           [baseCurrency]="user?.settings?.baseCurrency"
           [dataSource]="dataSource"
-          [deviceType]="deviceType"
+          [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
@@ -87,30 +101,20 @@
           [totalItems]="totalItems"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
-        ></gf-activities-table-lazy>
-        <gf-activities-table
-          *ngIf="user?.settings?.isExperimentalFeatures !== true"
-          [activities]="activities"
-          [baseCurrency]="user?.settings?.baseCurrency"
-          [deviceType]="data.deviceType"
-          [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="true"
-          [hasPermissionToFilter]="false"
-          [hasPermissionToOpenDetails]="false"
-          [locale]="user?.settings?.locale"
-          [showActions]="false"
-          (export)="onExport()"
-        ></gf-activities-table>
+        />
       </mat-tab>
       <mat-tab>
-        <ng-template i18n mat-tab-label>Cash Balances</ng-template>
+        <ng-template mat-tab-label>
+          <ion-icon name="cash-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Cash Balances</div>
+        </ng-template>
         <gf-account-balances
           [accountBalances]="accountBalances"
           [accountId]="data.accountId"
           [locale]="user?.settings?.locale"
-          [showActions]="!hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
+          [showActions]="!data.hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
-        ></gf-account-balances>
+        />
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -120,4 +124,4 @@
   mat-dialog-actions
   [deviceType]="data.deviceType"
   (closeButtonClicked)="onClose()"
-></gf-dialog-footer>
+/>

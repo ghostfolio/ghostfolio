@@ -6,6 +6,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ImportResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -64,16 +65,13 @@ export class ImportController {
       maxActivitiesToImport = Number.MAX_SAFE_INTEGER;
     }
 
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
-
     try {
       const activities = await this.importService.import({
         isDryRun,
         maxActivitiesToImport,
-        userCurrency,
         accountsDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
-        userId: this.request.user.id
+        user: this.request.user
       });
 
       return { activities };

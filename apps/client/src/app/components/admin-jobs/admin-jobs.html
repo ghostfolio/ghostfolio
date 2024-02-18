@@ -4,7 +4,7 @@
       <form class="align-items-center d-flex" [formGroup]="filterForm">
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-select formControlName="status">
-            <mat-option></mat-option>
+            <mat-option />
             <mat-option
               *ngFor="let statusFilterOption of statusFilterOptions"
               [value]="statusFilterOption"
@@ -90,33 +90,24 @@
             <ng-container i18n>Status</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <ion-icon
-              *ngIf="element.state === 'active'"
-              name="play-outline"
-            ></ion-icon>
+            <ion-icon *ngIf="element.state === 'active'" name="play-outline" />
             <ion-icon
               *ngIf="element.state === 'completed'"
               class="text-success"
               name="checkmark-circle-outline"
-            ></ion-icon>
+            />
             <ion-icon
               *ngIf="element.state === 'delayed'"
               name="time-outline"
               [ngClass]="{ 'text-danger': element.stacktrace?.length > 0 }"
-            ></ion-icon>
+            />
             <ion-icon
               *ngIf="element.state === 'failed'"
               class="text-danger"
               name="alert-circle-outline"
-            ></ion-icon>
-            <ion-icon
-              *ngIf="element.state === 'paused'"
-              name="pause-outline"
-            ></ion-icon>
-            <ion-icon
-              *ngIf="element.state === 'waiting'"
-              name="cafe-outline"
-            ></ion-icon>
+            />
+            <ion-icon *ngIf="element.state === 'paused'" name="pause-outline" />
+            <ion-icon *ngIf="element.state === 'waiting'" name="cafe-outline" />
           </td>
         </ng-container>
 
@@ -128,7 +119,7 @@
               [matMenuTriggerFor]="jobsActionsMenu"
               (click)="$event.stopPropagation()"
             >
-              <ion-icon name="ellipsis-vertical"></ion-icon>
+              <ion-icon name="ellipsis-vertical" />
             </button>
             <mat-menu #jobsActionsMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onDeleteJobs()">
@@ -143,7 +134,7 @@
               [matMenuTriggerFor]="jobActionsMenu"
               (click)="$event.stopPropagation()"
             >
-              <ion-icon name="ellipsis-horizontal"></ion-icon>
+              <ion-icon name="ellipsis-horizontal" />
             </button>
             <mat-menu #jobActionsMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onViewData(element.data)">

@@ -20,7 +20,7 @@
             [keys]="['symbol']"
             [positions]="symbols"
             [showLabels]="deviceType !== 'mobile'"
-          ></gf-portfolio-proportion-chart>
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -35,7 +35,7 @@
             [keys]="['currency']"
             [maxItems]="10"
             [positions]="positions"
-          ></gf-portfolio-proportion-chart>
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -50,7 +50,7 @@
             [keys]="['name']"
             [maxItems]="10"
             [positions]="sectors"
-          ></gf-portfolio-proportion-chart>
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -64,7 +64,7 @@
             [isInPercent]="true"
             [keys]="['name']"
             [positions]="continents"
-          ></gf-portfolio-proportion-chart>
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -81,7 +81,7 @@
               format="{0}%"
               [countries]="countries"
               [isInPercent]="true"
-            ></gf-world-map-chart>
+            />
           </div>
           <div class="row">
             <div class="col-xs-12 col-md my-2">
@@ -133,9 +133,9 @@
       <gf-holdings-table
         [deviceType]="deviceType"
         [hasPermissionToShowValues]="false"
+        [holdings]="holdings"
         [pageSize]="7"
-        [positions]="positionsArray"
-      ></gf-holdings-table>
+      />
     </div>
   </div>
   <div class="row my-5">

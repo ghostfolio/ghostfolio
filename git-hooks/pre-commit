@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Will check if "yarn format" is run before executing.
+# Called by "git commit" with no arguments. The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+
+echo "Running yarn format"
+
+# Run the command and loop over its output
+FILES_TO_STAGE=""
+i=0
+while IFS= read -r line; do
+  # Process each line here
+  ((i++))
+  if [ $i -le 2 ]; then
+        continue
+  fi
+  if [[ $line == Done* ]]; then
+        break
+  fi
+  FILES_TO_STAGE="$FILES_TO_STAGE $line"
+
+done < <(yarn format )
+git add $FILES_TO_STAGE
+echo "Files formatted. Committing..."

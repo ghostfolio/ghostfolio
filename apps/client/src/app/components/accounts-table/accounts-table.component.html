@@ -5,7 +5,7 @@
     [disabled]="dataSource?.data.length < 2"
     (click)="onTransferBalance()"
   >
-    <ion-icon class="mr-2" name="arrow-redo-outline"></ion-icon>
+    <ion-icon class="mr-2" name="arrow-redo-outline" />
     <ng-container i18n>Transfer Cash Balance</ng-container>...
   </button>
 </div>
@@ -19,7 +19,7 @@
     ></th>
     <td *matCellDef="let element" class="d-none d-lg-table-cell px-1" mat-cell>
       <div class="d-flex justify-content-center">
-        <ion-icon *ngIf="element.isExcluded" name="eye-off-outline"></ion-icon>
+        <ion-icon *ngIf="element.isExcluded" name="eye-off-outline" />
       </div>
     </td>
     <td
@@ -39,7 +39,7 @@
         class="d-inline d-sm-none mr-1"
         [tooltip]="element.Platform?.name"
         [url]="element.Platform?.url"
-      ></gf-symbol-icon>
+      />
       <span>{{ element.name }} </span>
       <span
         *ngIf="element.isDefault"
@@ -83,7 +83,7 @@
           class="mr-1"
           [tooltip]="element.Platform?.name"
           [url]="element.Platform?.url"
-        ></gf-symbol-icon>
+        />
         <span>{{ element.Platform?.name }}</span>
       </div>
     </td>
@@ -131,7 +131,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.balance"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -143,7 +143,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalBalanceInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 
@@ -166,7 +166,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.value"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -178,7 +178,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalValueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 
@@ -201,7 +201,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="element.valueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
     <td
       *matFooterCellDef
@@ -213,7 +213,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="totalValueInBaseCurrency"
-      ></gf-value>
+      />
     </td>
   </ng-container>
 
@@ -231,7 +231,7 @@
         title="Note"
         (click)="onOpenComment(element.comment); $event.stopPropagation()"
       >
-        <ion-icon name="document-text-outline"></ion-icon>
+        <ion-icon name="document-text-outline" />
       </button>
     </td>
     <td
@@ -250,12 +250,12 @@
         [matMenuTriggerFor]="accountMenu"
         (click)="$event.stopPropagation()"
       >
-        <ion-icon name="ellipsis-horizontal"></ion-icon>
+        <ion-icon name="ellipsis-horizontal" />
       </button>
       <mat-menu #accountMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onUpdateAccount(element)">
           <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="create-outline"></ion-icon>
+            <ion-icon class="mr-2" name="create-outline" />
             <span i18n>Edit</span>
           </span>
         </button>
@@ -265,7 +265,7 @@
           (click)="onDeleteAccount(element.id)"
         >
           <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+            <ion-icon class="mr-2" name="trash-outline" />
             <span i18n>Delete</span>
           </span>
         </button>
@@ -277,14 +277,16 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr
     *matRowDef="let row; columns: displayedColumns"
-    class="cursor-pointer"
     mat-row
+    [ngClass]="{
+      'cursor-pointer': hasPermissionToOpenDetails
+    }"
     (click)="onOpenAccountDetailDialog(row.id)"
   ></tr>
   <tr
     *matFooterRowDef="displayedColumns"
     mat-footer-row
-    [ngClass]="{ 'd-none': isLoading }"
+    [ngClass]="{ 'd-none': isLoading || !showFooter }"
   ></tr>
 </table>
 
@@ -296,4 +298,4 @@
     height: '1.5rem',
     width: '100%'
   }"
-></ngx-skeleton-loader>
+/>

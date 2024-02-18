@@ -6,6 +6,7 @@ export interface AdminMarketData {
 }
 
 export interface AdminMarketDataItem {
+  activitiesCount?: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   countriesCount: number;

@@ -13,6 +13,7 @@ import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-da
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
+
 import { Module } from '@nestjs/common';
 
 import { DataEnhancerModule } from './data-enhancer/data-enhancer.module';

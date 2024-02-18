@@ -1,4 +1,5 @@
 import * as currencies from '@dinero.js/currencies';
+import { NumberParser } from '@internationalized/number';
 import { DataSource, MarketData } from '@prisma/client';
 import Big from 'big.js';
 import {
@@ -19,8 +20,6 @@ import { BenchmarkTrend, ColorScheme } from './types';
 export const DATE_FORMAT = 'yyyy-MM-dd';
 export const DATE_FORMAT_MONTHLY = 'MMMM yyyy';
 export const DATE_FORMAT_YEARLY = 'yyyy';
-
-const NUMERIC_REGEXP = /[-]{0,1}[\d]*[.,]{0,1}[\d]+/g;
 
 export function calculateBenchmarkTrend({
   days,
@@ -120,10 +119,20 @@ export function encodeDataSource(aDataSource: DataSource) {
   return undefined;
 }
 
-export function extractNumberFromString(aString: string): number {
+export function extractNumberFromString({
+  locale = 'en-US',
+  value
+}: {
+  locale?: string;
+  value: string;
+}): number {
   try {
-    const [numberString] = aString.match(NUMERIC_REGEXP);
-    return parseFloat(numberString.trim());
+    // Remove non-numeric characters (excluding international formatting characters)
+    const numericValue = value.replace(/[^\d.,'’\s]/g, '');
+
+    let parser = new NumberParser(locale);
+
+    return parser.parse(numericValue);
   } catch {
     return undefined;
   }

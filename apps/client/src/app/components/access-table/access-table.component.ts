@@ -1,3 +1,6 @@
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
+import { Access } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,8 +11,6 @@ import {
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { Access } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-access-table',

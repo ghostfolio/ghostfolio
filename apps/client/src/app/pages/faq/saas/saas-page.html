@@ -1,0 +1,162 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>
+        Frequently Asked Questions (FAQ)
+      </h1>
+      <p>
+        Find quick answers to commonly asked questions about the fully managed
+        Ghostfolio cloud offering in our Frequently Asked Questions (FAQ)
+        section.
+      </p>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I start?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          You can sign up via the “<a [routerLink]="routerLinkRegister"
+            >Get Started</a
+          >” button at the top of the page. You have multiple options to join
+          Ghostfolio: Create an account with a security token or
+          <i>Google Sign</i>. We will guide you to set up your portfolio.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Will you spam me with emails once I sign up?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content>
+          No, we do not even collect your email address, so you will not receive
+          any spam emails from us.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Is it really free?</mat-card-title></mat-card-header
+        >
+        <mat-card-content
+          >Yes, it is! Our
+          <a [routerLink]="routerLinkPricing">pricing page</a> details
+          everything you get for free.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What is Ghostfolio Premium?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content
+          ><a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> is a fully
+          managed Ghostfolio cloud offering for ambitious investors. Revenue is
+          used to cover the costs of the hosting infrastructure and to fund
+          ongoing development. It is the Open Source code base with some extras
+          like the <a [routerLink]="routerLinkMarkets">markets overview</a> and
+          a professional data provider.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Can I start with a trial version?</mat-card-title
+          ></mat-card-header
+        >
+        <mat-card-content
+          >Yes, you can try
+          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> by signing
+          up for Ghostfolio and applying for a trial (see “My Ghostfolio”). It
+          is easy, free and there is no commitment. You can stop using it at any
+          time.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >How can I get a student discount for Ghostfolio
+            Premium?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >Request your student discount
+          <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a> with
+          your university e-mail address.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Does the Ghostfolio Premium subscription renew
+            automatically?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >No, <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> does
+          not include auto-renewal. Upon expiration, you can choose whether to
+          start a new subscription.</mat-card-content
+        >
+      </mat-card>
+      <mat-card
+        *ngIf="user?.subscription?.type === 'Premium'"
+        appearance="outlined"
+        class="mb-3"
+      >
+        <mat-card-header>
+          <mat-card-title
+            >I cannot find my broker in the list of platforms. What can I
+            do?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          Please send an e-mail with the web address of your broker to
+          <a href="mailto:hi@ghostfol.io">hi&#64;ghostfol.io</a> and we are
+          happy to add it.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Which devices are supported?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >Ghostfolio works in every modern web browser on smartphones, tablets
+          and desktop computers. For <i>Android</i> users of the managed cloud
+          offering, there is a dedicated Ghostfolio app available in the
+          <a
+            href="https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa"
+            >Google Play Store</a
+          >.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Got any other questions?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >Please join the Ghostfolio
+          <a
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            title="Join the Ghostfolio Slack community"
+            >Slack </a
+          >community, post to
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Post to Ghostfolio on X (formerly Twitter)"
+            >&#64;ghostfolio_</a
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
+            >, send an e-mail to
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi&#64;ghostfol.io</a
+            ></ng-container
+          >
+          or start a discussion at
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.</mat-card-content
+        >
+      </mat-card>
+    </div>
+  </div>
+</div>

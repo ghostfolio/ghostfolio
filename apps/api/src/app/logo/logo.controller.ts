@@ -1,4 +1,5 @@
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+
 import {
   Controller,
   Get,

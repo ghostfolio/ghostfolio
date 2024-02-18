@@ -23,6 +23,7 @@ import {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -235,27 +236,17 @@ export class BenchmarkService {
       })
     ]);
 
-    const exchangeRates = await this.exchangeRateDataService.getExchangeRates({
-      currencyFrom: currentSymbolItem.currency,
-      currencyTo: userCurrency,
-      dates: marketDataItems.map(({ date }) => {
-        return date;
-      })
-    });
+    const exchangeRates =
+      await this.exchangeRateDataService.getExchangeRatesByCurrency({
+        startDate,
+        currencies: [currentSymbolItem.currency],
+        targetCurrency: userCurrency
+      });
 
     const exchangeRateAtStartDate =
-      exchangeRates[format(startDate, DATE_FORMAT)];
-
-    if (!exchangeRateAtStartDate) {
-      Logger.error(
-        `No exchange rate has been found for ${
-          currentSymbolItem.currency
-        }${userCurrency} at ${format(startDate, DATE_FORMAT)}`,
-        'BenchmarkService'
-      );
-
-      return { marketData };
-    }
+      exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+        format(startDate, DATE_FORMAT)
+      ];
 
     const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
       return isSameDay(date, startDate);
@@ -285,7 +276,9 @@ export class BenchmarkService {
       }
 
       const exchangeRate =
-        exchangeRates[format(marketDataItem.date, DATE_FORMAT)];
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(marketDataItem.date, DATE_FORMAT)
+        ];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
@@ -310,7 +303,10 @@ export class BenchmarkService {
     );
 
     if (currentSymbolItem?.marketPrice && !includesToday) {
-      const exchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
+      const exchangeRate =
+        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
+          format(new Date(), DATE_FORMAT)
+        ];
 
       const exchangeRateFactor =
         isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)

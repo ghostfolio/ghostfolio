@@ -14,26 +14,31 @@
   </ng-container>
 
   <ng-container matColumnDef="type">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Type</th>
+    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
     <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-      <ng-container>
-        <ion-icon class="mr-1" name="lock-closed-outline"></ion-icon>
-        Restricted View
-      </ng-container>
+      <div class="align-items-center d-flex">
+        @if (element.permissions.includes('READ')) {
+          <ion-icon class="mr-1" name="lock-open-outline" />
+          <ng-container i18n>View</ng-container>
+        } @else if (element.permissions.includes('READ_RESTRICTED')) {
+          <ion-icon class="mr-1" name="lock-closed-outline" />
+          <ng-container i18n>Restricted view</ng-container>
+        }
+      </div>
     </td>
   </ng-container>
 
   <ng-container matColumnDef="details">
     <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
     <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-      <ng-container *ngIf="element.type === 'PUBLIC'">
-        <ion-icon class="mr-1" name="link-outline"></ion-icon>
+      <div *ngIf="element.type === 'PUBLIC'" class="align-items-center d-flex">
+        <ion-icon class="mr-1" name="link-outline" />
         <a
           href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
           target="_blank"
           >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
         >
-      </ng-container>
+      </div>
     </td>
   </ng-container>
 
@@ -47,7 +52,7 @@
         [matMenuTriggerFor]="transactionMenu"
         (click)="$event.stopPropagation()"
       >
-        <ion-icon name="ellipsis-horizontal"></ion-icon>
+        <ion-icon name="ellipsis-horizontal" />
       </button>
       <mat-menu #transactionMenu="matMenu" xPosition="before">
         <button mat-menu-item (click)="onDeleteAccess(element.id)">

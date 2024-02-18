@@ -1,10 +1,11 @@
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
-import { translate } from '@ghostfolio/ui/i18n';
 import { Type as ActivityType } from '@prisma/client';
 
 @Component({

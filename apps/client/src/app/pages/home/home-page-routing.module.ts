@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { HomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
 import { HomeMarketComponent } from '@ghostfolio/client/components/home-market/home-market.component';
 import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 import { HomePageComponent } from './home-page.component';
 

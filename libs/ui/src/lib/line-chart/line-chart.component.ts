@@ -1,15 +1,3 @@
-import 'chartjs-adapter-date-fns';
-
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  ViewChild
-} from '@angular/core';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -27,6 +15,17 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
+
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {
   Chart,
   Filler,
@@ -37,6 +36,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 
 @Component({
   selector: 'gf-line-chart',

@@ -1,10 +1,3 @@
-import { HTTP_INTERCEPTORS, HttpEvent } from '@angular/common/http';
-import {
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest
-} from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import {
@@ -12,6 +5,14 @@ import {
   HEADER_KEY_TIMEZONE,
   HEADER_KEY_TOKEN
 } from '@ghostfolio/common/config';
+
+import { HTTP_INTERCEPTORS, HttpEvent } from '@angular/common/http';
+import {
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable()

@@ -77,7 +77,7 @@
           <mat-option
             *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
             [value]="null"
-          ></mat-option>
+          />
           <mat-option
             *ngFor="let account of data.accounts"
             [value]="account.id"
@@ -88,8 +88,7 @@
                 class="mr-1"
                 [tooltip]="account.Platform?.name"
                 [url]="account.Platform?.url"
-              ></gf-symbol-icon
-              ><span>{{ account.name }}</span>
+              /><span>{{ account.name }}</span>
             </div>
           </mat-option>
         </mat-select>
@@ -146,9 +145,9 @@
             class="text-muted"
             matDatepickerToggleIcon
             name="calendar-clear-outline"
-          ></ion-icon>
+          />
         </mat-datepicker-toggle>
-        <mat-datepicker #date disabled="false"></mat-datepicker>
+        <mat-datepicker #date disabled="false" />
       </mat-form-field>
     </div>
     <div
@@ -219,7 +218,7 @@
           type="button"
           (click)="applyCurrentMarketPrice()"
         >
-          <ion-icon class="text-muted" name="refresh-outline"></ion-icon>
+          <ion-icon class="text-muted" name="refresh-outline" />
         </button>
       </div>
     </div>
@@ -299,7 +298,7 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
-          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="null" />
           <mat-option
             *ngFor="let assetClass of assetClasses"
             [value]="assetClass.id"
@@ -315,7 +314,7 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
-          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="null" />
           <mat-option
             *ngFor="let assetSubClass of assetSubClasses"
             [value]="assetSubClass.id"
@@ -335,7 +334,7 @@
             (removed)="onRemoveTag(tag)"
           >
             {{ tag.name }}
-            <ion-icon class="ml-2" matPrefix name="close-outline"></ion-icon>
+            <ion-icon class="ml-2" matPrefix name="close-outline" />
           </mat-chip-row>
           <input
             #tagInput
@@ -366,7 +365,7 @@
       [locale]="data.user?.settings?.locale"
       [unit]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
       [value]="total"
-    ></gf-value>
+    />
     <div>
       <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>
       <button

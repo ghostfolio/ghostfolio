@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+
 import { Injectable } from '@nestjs/common';
 import { AuthDevice, Prisma } from '@prisma/client';
 

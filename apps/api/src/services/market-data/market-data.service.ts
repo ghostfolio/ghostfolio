@@ -5,6 +5,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import {
   DataSource,

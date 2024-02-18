@@ -18,11 +18,11 @@
         [yMaxLabel]="greedLabel"
         [yMin]="0"
         [yMinLabel]="fearLabel"
-      ></gf-line-chart>
+      />
       <gf-fear-and-greed-index
         class="d-flex justify-content-center"
         [fearAndGreedIndex]="fearAndGreedIndex"
-      ></gf-fear-and-greed-index>
+      />
     </div>
   </div>
 
@@ -32,7 +32,7 @@
         [benchmarks]="benchmarks"
         [locale]="user?.settings?.locale"
         [user]="user"
-      ></gf-benchmark>
+      />
       <ngx-skeleton-loader
         *ngIf="isLoading"
         animation="pulse"
@@ -41,7 +41,7 @@
           height: '1.5rem',
           width: '100%'
         }"
-      ></ngx-skeleton-loader>
+      />
     </div>
   </div>
 </div>

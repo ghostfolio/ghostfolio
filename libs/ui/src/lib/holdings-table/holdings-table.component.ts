@@ -1,20 +1,19 @@
+import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { AssetClass, Order as OrderModel } from '@prisma/client';
+import { AssetClass } from '@prisma/client';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -28,12 +27,9 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToShowValues = true;
+  @Input() holdings: PortfolioPosition[];
   @Input() locale: string;
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
-  @Input() positions: PortfolioPosition[];
-
-  @Output() transactionDeleted = new EventEmitter<string>();
-  @Output() transactionToUpdate = new EventEmitter<OrderModel>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -63,11 +59,11 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
 
     this.isLoading = true;
 
-    if (this.positions) {
-      this.dataSource = new MatTableDataSource(this.positions);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.dataSource = new MatTableDataSource(this.holdings);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
 
+    if (this.holdings) {
       this.isLoading = false;
     }
   }

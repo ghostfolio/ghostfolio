@@ -1,6 +1,12 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
@@ -8,7 +14,7 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
-import { Granularity } from '@ghostfolio/common/types';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -17,15 +23,30 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
-import got from 'got';
+import got, { Headers } from 'got';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
-  private readonly URL = 'https://api.coingecko.com/api/v3';
+  private readonly apiUrl: string;
+  private readonly headers: Headers = {};
 
   public constructor(
     private readonly configurationService: ConfigurationService
-  ) {}
+  ) {
+    const apiKeyDemo = this.configurationService.get('API_KEY_COINGECKO_DEMO');
+    const apiKeyPro = this.configurationService.get('API_KEY_COINGECKO_PRO');
+
+    this.apiUrl = 'https://api.coingecko.com/api/v3';
+
+    if (apiKeyDemo) {
+      this.headers['x-cg-demo-api-key'] = apiKeyDemo;
+    }
+
+    if (apiKeyPro) {
+      this.apiUrl = 'https://pro-api.coingecko.com/api/v3';
+      this.headers['x-cg-pro-api-key'] = apiKeyPro;
+    }
+  }
 
   public canHandle(symbol: string) {
     return true;
@@ -49,7 +70,8 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.URL}/coins/${aSymbol}`, {
+      const { name } = await got(`${this.apiUrl}/coins/${aSymbol}`, {
+        headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
@@ -59,7 +81,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to get the asset profile for ${aSymbol} was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -70,26 +92,24 @@ export class CoinGeckoService implements DataProviderInterface {
     return response;
   }
 
-  public async getDividends({
-    from,
-    granularity = 'day',
-    symbol,
-    to
-  }: {
-    from: Date;
-    granularity: Granularity;
-    symbol: string;
-    to: Date;
-  }) {
+  public getDataProviderInfo(): DataProviderInfo {
+    return {
+      isPremium: false,
+      name: 'CoinGecko',
+      url: 'https://coingecko.com'
+    };
+  }
+
+  public async getDividends({}: GetDividendsParams) {
     return {};
   }
 
-  public async getHistorical(
-    aSymbol: string,
-    aGranularity: Granularity = 'day',
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistorical({
+    from,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
@@ -97,15 +117,16 @@ export class CoinGeckoService implements DataProviderInterface {
 
       setTimeout(() => {
         abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
+      }, requestTimeout);
 
       const { prices } = await got(
         `${
-          this.URL
-        }/coins/${aSymbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
+          this.apiUrl
+        }/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
           from
         )}&to=${getUnixTime(to)}`,
         {
+          headers: this.headers,
           // @ts-ignore
           signal: abortController.signal
         }
@@ -114,11 +135,11 @@ export class CoinGeckoService implements DataProviderInterface {
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
       } = {
-        [aSymbol]: {}
+        [symbol]: {}
       };
 
       for (const [timestamp, marketPrice] of prices) {
-        result[aSymbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
+        result[symbol][format(fromUnixTime(timestamp / 1000), DATE_FORMAT)] = {
           marketPrice
         };
       }
@@ -126,7 +147,7 @@ export class CoinGeckoService implements DataProviderInterface {
       return result;
     } catch (error) {
       throw new Error(
-        `Could not get historical market data for ${aSymbol} (${this.getName()}) from ${format(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
           DATE_FORMAT
         )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
@@ -145,10 +166,7 @@ export class CoinGeckoService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }): Promise<{ [symbol: string]: IDataProviderResponse }> {
+  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
     const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
@@ -163,10 +181,11 @@ export class CoinGeckoService implements DataProviderInterface {
       }, requestTimeout);
 
       const quotes = await got(
-        `${this.URL}/simple/price?ids=${symbols.join(
+        `${this.apiUrl}/simple/price?ids=${symbols.join(
           ','
         )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
+          headers: this.headers,
           // @ts-ignore
           signal: abortController.signal
         }
@@ -185,7 +204,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -201,12 +220,8 @@ export class CoinGeckoService implements DataProviderInterface {
   }
 
   public async search({
-    includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
     let items: LookupItem[] = [];
 
     try {
@@ -216,7 +231,8 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { coins } = await got(`${this.URL}/search?query=${query}`, {
+      const { coins } = await got(`${this.apiUrl}/search?query=${query}`, {
+        headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
       }).json<any>();
@@ -228,6 +244,7 @@ export class CoinGeckoService implements DataProviderInterface {
           assetClass: AssetClass.CASH,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName()
         };
       });
@@ -235,7 +252,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -244,12 +261,5 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     return { items };
-  }
-
-  private getDataProviderInfo(): DataProviderInfo {
-    return {
-      name: 'CoinGecko',
-      url: 'https://coingecko.com'
-    };
   }
 }
