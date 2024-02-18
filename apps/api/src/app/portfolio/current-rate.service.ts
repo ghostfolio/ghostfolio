@@ -6,7 +6,7 @@ import {
   ResponseError,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { RequestWithUser } from '@ghostfolio/common/types';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
