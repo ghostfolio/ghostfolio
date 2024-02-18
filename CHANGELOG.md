@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the holdings table
 - Refactored the query to filter activities of excluded accounts
+- Eliminated the search request to get quotes in the _EOD Historical Data_ service
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.9.1` to `2.10.0`
 
