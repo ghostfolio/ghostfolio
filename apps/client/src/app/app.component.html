@@ -64,7 +64,7 @@
         <div class="h6 mt-2">Ghostfolio</div>
         <ul class="list-unstyled">
           <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
-          <li *ngIf="hasPermissionForBlog">
+          <li *ngIf="hasPermissionForSubscription">
             <a i18n [routerLink]="['/blog']">Blog</a>
           </li>
           <li>

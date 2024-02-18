@@ -13,7 +13,6 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './about-overview-page.html'
 })
 export class AboutOverviewPageComponent implements OnDestroy, OnInit {
-  public hasPermissionForBlog: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
@@ -29,11 +28,6 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     const { globalPermissions } = this.dataService.fetchInfo();
-
-    this.hasPermissionForBlog = hasPermission(
-      globalPermissions,
-      permissions.enableBlog
-    );
 
     this.hasPermissionForStatistics = hasPermission(
       globalPermissions,
