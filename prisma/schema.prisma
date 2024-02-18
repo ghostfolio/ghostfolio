@@ -246,6 +246,7 @@ enum Provider {
 enum Role {
   ADMIN
   DEMO
+  INACTIVE
   USER
 }
 
