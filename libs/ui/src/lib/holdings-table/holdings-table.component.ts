@@ -26,6 +26,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
   @Input() locale: string;
@@ -69,9 +70,11 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
-    this.router.navigate([], {
-      queryParams: { dataSource, symbol, positionDetailDialog: true }
-    });
+    if (this.hasPermissionToOpenDetails) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
   }
 
   public onShowAllPositions() {
