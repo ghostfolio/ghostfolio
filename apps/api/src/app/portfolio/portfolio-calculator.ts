@@ -1193,7 +1193,9 @@ export class PortfolioCalculator {
       maxInvestmentValues,
       timeWeightedInvestmentValues,
       unitPriceAtEndDate,
-      symbol
+      symbol,
+      exchangeRates,
+      currentExchangeRate
     );
 
     return {
@@ -1267,7 +1269,9 @@ export class PortfolioCalculator {
     maxInvestmentValues: { [date: string]: Big },
     timeWeightedInvestmentValues: WithCurrencyEffect<{ [date: string]: Big }>,
     unitPriceAtEndDate: Big,
-    symbol: string
+    symbol: string,
+    exchangeRates: { [dateString: string]: number },
+    currentExchangeRate: number
   ) {
     let totalInvestmentDays = 0;
     let sumOfTimeWeightedInvestments = {
@@ -1318,7 +1322,9 @@ export class PortfolioCalculator {
       investmentValuesAccumulated,
       totalInvestmentDays,
       sumOfTimeWeightedInvestments,
-      timeWeightedInvestmentValues
+      timeWeightedInvestmentValues,
+      exchangeRates,
+      currentExchangeRate
     ));
 
     const totalGrossPerformance = {
@@ -1461,7 +1467,9 @@ export class PortfolioCalculator {
     investmentValuesAccumulated: WithCurrencyEffect<{ [date: string]: Big }>,
     totalInvestmentDays: number,
     sumOfTimeWeightedInvestments: WithCurrencyEffect<Big>,
-    timeWeightedInvestmentValues: WithCurrencyEffect<{ [date: string]: Big }>
+    timeWeightedInvestmentValues: WithCurrencyEffect<{ [date: string]: Big }>,
+    exchangeRates: { [dateString: string]: number },
+    currentExchangeRate: number
   ) {
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
@@ -1488,10 +1496,16 @@ export class PortfolioCalculator {
         unitPriceAtStartDate
       );
 
+      const exchangeRateAtOrderDate = exchangeRates[order.date];
+
+      this.handleFeeAndUnitPriceOfOrder(
+        order,
+        currentExchangeRate,
+        exchangeRateAtOrderDate
+      );
+
       // Calculate the average start price as soon as any units are held
       let transactionInvestment: WithCurrencyEffect<Big>;
-      let valueOfInvestmentWithCurrencyEffect: WithCurrencyEffect<Big>;
-
       let totalInvestmentBeforeTransaction: WithCurrencyEffect<Big>;
 
       let valueOfInvestment;
@@ -1565,9 +1579,9 @@ export class PortfolioCalculator {
         );
       }
 
-      const newGrossPerformance = valueOfInvestment
-        .minus(totalInvestment.Value)
-        .plus(grossPerformanceFromSells.Value);
+      const newGrossPerformance = valueOfInvestment.Value.minus(
+        totalInvestment.Value
+      ).plus(grossPerformanceFromSells.Value);
 
       const newGrossPerformanceWithCurrencyEffect =
         valueOfInvestment.WithCurrencyEffect.minus(
@@ -1644,6 +1658,29 @@ export class PortfolioCalculator {
       fees,
       netPerformanceValuesPercentage
     };
+  }
+
+  private handleFeeAndUnitPriceOfOrder(
+    order: PortfolioOrderItem,
+    currentExchangeRate: number,
+    exchangeRateAtOrderDate: number
+  ) {
+    if (order.fee) {
+      order.feeInBaseCurrency = order.fee.mul(currentExchangeRate ?? 1);
+      order.feeInBaseCurrencyWithCurrencyEffect = order.fee.mul(
+        exchangeRateAtOrderDate ?? 1
+      );
+    }
+
+    if (order.unitPrice) {
+      order.unitPriceInBaseCurrency = order.unitPrice.mul(
+        currentExchangeRate ?? 1
+      );
+
+      order.unitPriceInBaseCurrencyWithCurrencyEffect = order.unitPrice.mul(
+        exchangeRateAtOrderDate ?? 1
+      );
+    }
   }
 
   private calculateNetPerformancePercentageForDateAndSymbol(
