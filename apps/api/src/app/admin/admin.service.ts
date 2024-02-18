@@ -378,10 +378,11 @@ export class AdminService {
       _count: true,
       by: ['dataSource', 'symbol']
     });
-
+    let earliestDate = new Date();
+    let activityCount = 0;
     const marketData: AdminMarketDataItem[] = this.exchangeRateDataService
       .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
+      .map(({ dataSource, symbol, date }) => {
         const marketDataItemCount =
           marketDataItems.find((marketDataItem) => {
             return (
@@ -389,13 +390,17 @@ export class AdminService {
               marketDataItem.symbol === symbol
             );
           })?._count ?? 0;
-
+        if (date < earliestDate) {
+          earliestDate = date;
+        }
         return {
           dataSource,
           marketDataItemCount,
           symbol,
+          activitiesCount: activityCount,
           assetClass: 'CASH',
           countriesCount: 0,
+          date: earliestDate,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
           name: symbol,
           sectorsCount: 0
