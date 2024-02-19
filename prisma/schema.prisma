@@ -39,6 +39,7 @@ model Account {
   Order      Order[]
 
   @@id([id, userId])
+  @@index([id])
 }
 
 model AccountBalance {
@@ -81,6 +82,8 @@ model MarketData {
   symbol      String
 
   @@unique([dataSource, date, symbol])
+  @@index([dataSource])
+  @@index([date])
   @@index([symbol])
 }
 
@@ -103,6 +106,8 @@ model Order {
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   User            User          @relation(fields: [userId], references: [id])
   tags            Tag[]
+
+  @@index([accountId])
 }
 
 model Platform {
