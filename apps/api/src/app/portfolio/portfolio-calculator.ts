@@ -1328,11 +1328,11 @@ export class PortfolioCalculator {
       initialValue,
       marketSymbolMap,
       fees,
+      feesAtStartDate,
       lastAveragePrice,
       grossPerformanceFromSells,
       totalInvestmentWithGrossPerformanceFromSell,
       grossPerformance,
-      feesAtStartDate,
       grossPerformanceAtStartDate,
       isChartMode,
       currentValues,
@@ -1351,9 +1351,9 @@ export class PortfolioCalculator {
     return {
       currentValues: result.currentValues.Value,
       currentValuesWithCurrencyEffect: result.currentValues.WithCurrencyEffect,
-      grossPerformancePercentage: result.grossPerformance.Value,
+      grossPerformancePercentage: result.grossPerformancePercentage.Value,
       grossPerformancePercentageWithCurrencyEffect:
-        result.grossPerformance.WithCurrencyEffect,
+        result.grossPerformancePercentage.WithCurrencyEffect,
       initialValue: result.initialValue.Value,
       initialValueWithCurrencyEffect: result.initialValue.WithCurrencyEffect,
       investmentValuesWithCurrencyEffect:
@@ -1374,7 +1374,7 @@ export class PortfolioCalculator {
       totalInvestment: result.totalInvestment.Value,
       totalInvestmentWithCurrencyEffect:
         result.totalInvestment.WithCurrencyEffect,
-      netPerformanceValuesPercentage: result.netPerformancePercentage,
+      netPerformanceValuesPercentage: result.netPerformanceValuesPercentage,
       investmentValuesAccumulated: result.investmentValuesAccumulated.Value,
       investmentValuesAccumulatedWithCurrencyEffect:
         result.investmentValuesAccumulated.WithCurrencyEffect,
@@ -1404,11 +1404,11 @@ export class PortfolioCalculator {
     initialValue: WithCurrencyEffect<Big>,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     fees: WithCurrencyEffect<Big>,
+    feesAtStartDate: WithCurrencyEffect<Big>,
     lastAveragePrice: WithCurrencyEffect<Big>,
     grossPerformanceFromSells: WithCurrencyEffect<Big>,
     totalInvestmentWithGrossPerformanceFromSell: WithCurrencyEffect<Big>,
     grossPerformance: WithCurrencyEffect<Big>,
-    feesAtStartDate: WithCurrencyEffect<Big>,
     grossPerformanceAtStartDate: WithCurrencyEffect<Big>,
     isChartMode: boolean,
     currentValues: WithCurrencyEffect<{ [date: string]: Big }>,
@@ -1428,6 +1428,7 @@ export class PortfolioCalculator {
       Value: new Big(0),
       WithCurrencyEffect: new Big(0)
     };
+
     ({
       lastAveragePrice,
       grossPerformance,
@@ -1456,13 +1457,13 @@ export class PortfolioCalculator {
       averagePriceAtEndDate,
       initialValue,
       fees,
+      feesAtStartDate,
       indexOfEndOrder,
       marketSymbolMap,
       grossPerformanceFromSells,
       totalInvestmentWithGrossPerformanceFromSell,
       lastAveragePrice,
       grossPerformance,
-      feesAtStartDate,
       grossPerformanceAtStartDate,
       isChartMode,
       currentValues,
@@ -1601,13 +1602,13 @@ export class PortfolioCalculator {
     averagePriceAtEndDate: Big,
     initialValue: WithCurrencyEffect<Big>,
     fees: WithCurrencyEffect<Big>,
+    feesAtStartDate: WithCurrencyEffect<Big>,
     indexOfEndOrder: number,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     grossPerformanceFromSells: WithCurrencyEffect<Big>,
     totalInvestmentWithGrossPerformanceFromSell: WithCurrencyEffect<Big>,
     lastAveragePrice: WithCurrencyEffect<Big>,
     grossPerformance: WithCurrencyEffect<Big>,
-    feesAtStartDate: WithCurrencyEffect<Big>,
     grossPerformanceAtStartDate: WithCurrencyEffect<Big>,
     isChartMode: boolean,
     currentValues: WithCurrencyEffect<{ [date: string]: Big }>,
@@ -1746,9 +1747,11 @@ export class PortfolioCalculator {
         newGrossPerformanceWithCurrencyEffect;
 
       if (order.itemType === 'start') {
-        feesAtStartDate = fees;
-        feesAtStartDate.WithCurrencyEffect = fees.WithCurrencyEffect;
-        grossPerformanceAtStartDate = grossPerformance;
+        feesAtStartDate = {
+          Value: fees.Value,
+          WithCurrencyEffect: fees.WithCurrencyEffect
+        };
+        grossPerformanceAtStartDate.Value = grossPerformance.Value;
 
         grossPerformanceAtStartDate.WithCurrencyEffect =
           grossPerformance.WithCurrencyEffect;
@@ -2301,7 +2304,7 @@ export class PortfolioCalculator {
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     initialValueWithCurrencyEffect: Big
   ) {
-    if (i >= indexOfStartOrder && !initialValue) {
+    if (i >= indexOfStartOrder && initialValue.gt(0)) {
       if (
         i === indexOfStartOrder &&
         !valueOfInvestmentBeforeTransaction.Value.eq(0)
