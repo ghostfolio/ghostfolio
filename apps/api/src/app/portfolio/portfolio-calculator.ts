@@ -1153,10 +1153,7 @@ export class PortfolioCalculator {
     const maxInvestmentValues: { [date: string]: Big } = {};
     let maxTotalInvestment = new Big(0);
     const netPerformanceValuesPercentage: { [date: string]: Big } = {};
-    let initialValue: WithCurrencyEffect<Big> = {
-      Value: new Big(0),
-      WithCurrencyEffect: new Big(0)
-    };
+    let initialValue;
     let investmentAtStartDate;
     const investmentValuesAccumulated: WithCurrencyEffect<{
       [date: string]: Big;
@@ -1507,16 +1504,13 @@ export class PortfolioCalculator {
             )
           : new Big(0)
     };
+
     const grossPerformancePercentage = {
-      Value: this.calculateGrossPerformancePercentage(
-        averagePriceAtStartDate,
-        averagePriceAtEndDate,
-        orders,
-        indexOfStartOrder,
-        maxInvestmentBetweenStartAndEndDate,
-        totalGrossPerformance.Value,
-        unitPriceAtEndDate
-      ),
+      Value: timeWeightedAverageInvestmentBetweenStartAndEndDate.Value.gt(0)
+        ? totalGrossPerformance.Value.div(
+            timeWeightedAverageInvestmentBetweenStartAndEndDate.Value
+          )
+        : new Big(0),
       WithCurrencyEffect:
         timeWeightedAverageInvestmentBetweenStartAndEndDate.WithCurrencyEffect.gt(
           0
@@ -1992,32 +1986,6 @@ export class PortfolioCalculator {
     };
   }
 
-  private calculateGrossPerformancePercentage(
-    averagePriceAtStartDate: Big,
-    averagePriceAtEndDate: Big,
-    orders: PortfolioOrderItem[],
-    indexOfStartOrder: number,
-    maxInvestmentBetweenStartAndEndDate: Big,
-    totalGrossPerformance: Big,
-    unitPriceAtEndDate: Big
-  ) {
-    return PortfolioCalculator.CALCULATE_PERCENTAGE_PERFORMANCE_WITH_MAX_INVESTMENT ||
-      averagePriceAtStartDate.eq(0) ||
-      averagePriceAtEndDate.eq(0) ||
-      orders[indexOfStartOrder].unitPrice.eq(0)
-      ? maxInvestmentBetweenStartAndEndDate.gt(0)
-        ? totalGrossPerformance.div(maxInvestmentBetweenStartAndEndDate)
-        : new Big(0)
-      : // This formula has the issue that buying more units with a price
-
-        // lower than the average buying price results in a positive
-        // performance even if the market price stays constant
-        unitPriceAtEndDate
-          .div(averagePriceAtEndDate)
-          .div(orders[indexOfStartOrder].unitPrice.div(averagePriceAtStartDate))
-          .minus(1);
-  }
-
   private calculateInvestmentSpecificMetrics(
     averagePriceAtStartDate: Big,
     i: number,
@@ -2101,12 +2069,12 @@ export class PortfolioCalculator {
     initialValue = this.calculateInitialValue(
       i,
       indexOfStartOrder,
-      initialValue.Value,
+      initialValue?.Value,
       valueOfInvestmentBeforeTransaction,
       transactionInvestment,
       order,
       marketSymbolMap,
-      initialValue.WithCurrencyEffect
+      initialValue?.WithCurrencyEffect
     );
 
     fees.Value = fees.Value.plus(order.fee);
@@ -2301,7 +2269,7 @@ export class PortfolioCalculator {
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     initialValueWithCurrencyEffect: Big
   ) {
-    if (i >= indexOfStartOrder && initialValue.gt(0)) {
+    if (i >= indexOfStartOrder && !initialValue) {
       if (
         i === indexOfStartOrder &&
         !valueOfInvestmentBeforeTransaction.Value.eq(0)
