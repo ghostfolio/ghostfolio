@@ -1157,10 +1157,7 @@ export class PortfolioCalculator {
       Value: new Big(0),
       WithCurrencyEffect: new Big(0)
     };
-    let investmentAtStartDate: WithCurrencyEffect<Big> = {
-      Value: new Big(0),
-      WithCurrencyEffect: new Big(0)
-    };
+    let investmentAtStartDate;
     const investmentValuesAccumulated: WithCurrencyEffect<{
       [date: string]: Big;
     }> = {
@@ -2053,15 +2050,12 @@ export class PortfolioCalculator {
         order.unitPriceInBaseCurrencyWithCurrencyEffect
       )
     };
-    if (
-      (investmentAtStartDate.Value?.eq(0) ?? true) &&
-      i >= indexOfStartOrder
-    ) {
-      investmentAtStartDate.Value = totalInvestment.Value ?? new Big(0);
+    if (!investmentAtStartDate && i >= indexOfStartOrder) {
+      investmentAtStartDate = {
+        Value: totalInvestment.Value ?? new Big(0),
+        WithCurrencyEffect: totalInvestment.WithCurrencyEffect ?? new Big(0)
+      };
       valueAtStartDate.Value = valueOfInvestmentBeforeTransaction.Value;
-      investmentAtStartDate.WithCurrencyEffect =
-        totalInvestment.WithCurrencyEffect ?? new Big(0);
-
       valueAtStartDate.WithCurrencyEffect =
         valueOfInvestmentBeforeTransaction.WithCurrencyEffect;
     }
