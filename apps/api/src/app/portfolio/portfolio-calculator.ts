@@ -669,13 +669,15 @@ export class PortfolioCalculator {
     currencies: { [symbol: string]: string },
     symbols: { [symbol: string]: boolean }
   ) {
-    for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
-      dataGatheringItems.push({
-        dataSource: item.dataSource,
-        symbol: item.symbol
-      });
-      currencies[item.symbol] = item.currency;
-      symbols[item.symbol] = true;
+    if (transactionPointsBeforeEndDate.length > 0) {
+      for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
+        dataGatheringItems.push({
+          dataSource: item.dataSource,
+          symbol: item.symbol
+        });
+        currencies[item.symbol] = item.currency;
+        symbols[item.symbol] = true;
+      }
     }
   }
 
