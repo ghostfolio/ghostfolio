@@ -422,7 +422,6 @@ export class PortfolioCalculator {
         accumulatedValuesByDate
       );
     }
-    let values;
 
     const {
       investmentValueWithCurrencyEffect,
@@ -1443,7 +1442,8 @@ export class PortfolioCalculator {
       averagePriceAtEndDate,
       initialValue,
       fees,
-      netPerformanceValuesPercentage
+      netPerformanceValuesPercentage,
+      totalInvestmentDays
     } = this.handleOrders(
       orders,
       indexOfStartOrder,
@@ -1757,31 +1757,32 @@ export class PortfolioCalculator {
           grossPerformance.WithCurrencyEffect;
       }
 
-      this.calculatePerformancesForDate(
-        isChartMode,
-        i,
-        indexOfStartOrder,
-        currentValues,
-        order,
-        valueOfInvestment,
-        valueOfInvestmentBeforeTransaction,
-        netPerformanceValues,
-        grossPerformance,
-        grossPerformanceAtStartDate,
-        fees,
-        feesAtStartDate,
-        investmentValues,
-        investmentValuesAccumulated,
-        totalInvestment,
-        timeWeightedInvestmentValues,
-        previousOrderDateString,
-        totalInvestmentDays,
-        sumOfTimeWeightedInvestments,
-        valueAtStartDate,
-        investmentAtStartDate,
-        totalInvestmentBeforeTransaction,
-        transactionInvestment.WithCurrencyEffect
-      );
+      totalInvestmentDays =
+        this.calculatePerformancesForDateAndReturnTotalInvestmentDays(
+          isChartMode,
+          i,
+          indexOfStartOrder,
+          currentValues,
+          order,
+          valueOfInvestment,
+          valueOfInvestmentBeforeTransaction,
+          netPerformanceValues,
+          grossPerformance,
+          grossPerformanceAtStartDate,
+          fees,
+          feesAtStartDate,
+          investmentValues,
+          investmentValuesAccumulated,
+          totalInvestment,
+          timeWeightedInvestmentValues,
+          previousOrderDateString,
+          totalInvestmentDays,
+          sumOfTimeWeightedInvestments,
+          valueAtStartDate,
+          investmentAtStartDate,
+          totalInvestmentBeforeTransaction,
+          transactionInvestment.WithCurrencyEffect
+        );
 
       this.handleLoggingOfInvestmentMetrics(
         totalInvestment,
@@ -1811,7 +1812,8 @@ export class PortfolioCalculator {
       averagePriceAtEndDate,
       initialValue,
       fees,
-      netPerformanceValuesPercentage
+      netPerformanceValuesPercentage,
+      totalInvestmentDays
     };
   }
 
@@ -2147,7 +2149,7 @@ export class PortfolioCalculator {
     };
   }
 
-  private calculatePerformancesForDate(
+  private calculatePerformancesForDateAndReturnTotalInvestmentDays(
     isChartMode: boolean,
     i: number,
     indexOfStartOrder: number,
@@ -2171,7 +2173,7 @@ export class PortfolioCalculator {
     investmentAtStartDate: WithCurrencyEffect<Big>,
     totalInvestmentBeforeTransaction: WithCurrencyEffect<Big>,
     transactionInvestmentWithCurrencyEffect: Big
-  ) {
+  ): number {
     if (i > indexOfStartOrder) {
       if (valueOfInvestmentBeforeTransaction.Value.gt(0)) {
         // Calculate the number of days since the previous order
@@ -2246,6 +2248,7 @@ export class PortfolioCalculator {
             : new Big(0);
       }
     }
+    return totalInvestmentDays;
   }
 
   private calculateSellOrders(
