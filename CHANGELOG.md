@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the setting of a default locale in various components
 - Set the parser to `angular` in the `prettier` options
 
 ## 2.54.0 - 2024-02-19
