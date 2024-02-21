@@ -19,6 +19,9 @@ model Access {
   userId        String
   GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], references: [id])
   User          User               @relation("accessGive", fields: [userId], references: [id])
+
+  @@index([granteeUserId])
+  @@index([userId])
 }
 
 model Account {
@@ -39,7 +42,9 @@ model Account {
   Order      Order[]
 
   @@id([id, userId])
+  @@index([currency])
   @@index([id])
+  @@index([userId])
 }
 
 model AccountBalance {
@@ -51,6 +56,8 @@ model AccountBalance {
   userId    String
   value     Float
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+
+  @@index([accountId])
 }
 
 model Analytics {
@@ -70,6 +77,8 @@ model AuthDevice {
   updatedAt           DateTime @updatedAt
   userId              String
   User                User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model MarketData {
@@ -84,6 +93,7 @@ model MarketData {
   @@unique([dataSource, date, symbol])
   @@index([dataSource])
   @@index([date])
+  @@index([state])
   @@index([symbol])
 }
 
@@ -108,6 +118,8 @@ model Order {
   tags            Tag[]
 
   @@index([accountId])
+  @@index([isDraft])
+  @@index([userId])
 }
 
 model Platform {
@@ -153,6 +165,11 @@ model SymbolProfile {
   SymbolProfileOverrides SymbolProfileOverrides?
 
   @@unique([dataSource, symbol])
+  @@index([assetClass])
+  @@index([dataSource])
+  @@index([isin])
+  @@index([name])
+  @@index([symbol])
 }
 
 model SymbolProfileOverrides {
@@ -175,6 +192,8 @@ model Subscription {
   updatedAt DateTime @updatedAt
   userId    String
   User      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Tag {
@@ -200,6 +219,12 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
+
+  @@index([accessToken])
+  @@index([createdAt])
+  @@index([provider])
+  @@index([role])
+  @@index([thirdPartyId])
 }
 
 enum AccessPermission {
