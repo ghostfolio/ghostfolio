@@ -415,7 +415,7 @@ export class PortfolioCalculator {
         );
       }
 
-      this.accumulatedValuesByDate(
+      accumulatedValuesByDate = this.accumulatedValuesByDate(
         valuesBySymbol,
         symbol,
         dateString,
@@ -566,6 +566,8 @@ export class PortfolioCalculator {
           ?.totalTimeWeightedInvestmentValueWithCurrencyEffect ?? new Big(0)
       ).add(timeWeightedInvestmentValueWithCurrencyEffect)
     };
+
+    return accumulatedValuesByDate;
   }
 
   private populateSymbolMetrics(
