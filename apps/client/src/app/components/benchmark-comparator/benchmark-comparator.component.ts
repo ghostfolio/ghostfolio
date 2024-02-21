@@ -7,6 +7,7 @@ import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -51,7 +52,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() colorScheme: ColorScheme;
   @Input() daysInMarket: number;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
 

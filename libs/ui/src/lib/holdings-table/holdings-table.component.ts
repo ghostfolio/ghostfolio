@@ -1,3 +1,4 @@
+import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 
 import {
@@ -29,7 +30,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

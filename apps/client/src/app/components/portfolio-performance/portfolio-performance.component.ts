@@ -1,4 +1,5 @@
 import {
+  getLocale,
   getNumberFormatDecimal,
   getNumberFormatGroup
 } from '@ghostfolio/common/helper';
@@ -31,7 +32,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
   @Input() showDetails: boolean;
   @Input() unit: string;
