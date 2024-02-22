@@ -10,6 +10,7 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsISO4217CurrencyCode,
   IsISO8601,
   IsNumber,
   IsOptional,
@@ -38,7 +39,7 @@ export class CreateOrderDto {
   )
   comment?: string;
 
-  @IsString()
+  @IsISO4217CurrencyCode()
   currency: string;
 
   @IsOptional()
