@@ -3,14 +3,11 @@ import {
   getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import {
-  locale,
-  primaryColorRgb,
-  secondaryColorRgb
-} from '@ghostfolio/common/config';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
@@ -51,7 +48,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
@@ -105,10 +102,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
-    }
-
-    if (!this.locale) {
-      this.locale = locale;
     }
   }
 
