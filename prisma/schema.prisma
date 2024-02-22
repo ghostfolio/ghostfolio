@@ -20,6 +20,7 @@ model Access {
   GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], references: [id])
   User          User               @relation("accessGive", fields: [userId], references: [id])
 
+  @@index([alias])
   @@index([granteeUserId])
   @@index([userId])
 }
@@ -44,6 +45,7 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
+  @@index([name])
   @@index([userId])
 }
 
@@ -58,6 +60,7 @@ model AccountBalance {
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 
   @@index([accountId])
+  @@index([date])
 }
 
 model Analytics {
@@ -66,6 +69,8 @@ model Analytics {
   updatedAt     DateTime @updatedAt
   userId        String   @id
   User          User     @relation(fields: [userId], references: [id])
+
+  @@index([updatedAt])
 }
 
 model AuthDevice {
@@ -93,6 +98,7 @@ model MarketData {
   @@unique([dataSource, date, symbol])
   @@index([dataSource])
   @@index([date])
+  @@index([marketPrice])
   @@index([state])
   @@index([symbol])
 }
@@ -118,6 +124,7 @@ model Order {
   tags            Tag[]
 
   @@index([accountId])
+  @@index([date])
   @@index([isDraft])
   @@index([userId])
 }
@@ -127,6 +134,8 @@ model Platform {
   name    String?
   url     String    @unique
   Account Account[]
+
+  @@index([name])
 }
 
 model Property {
@@ -166,6 +175,7 @@ model SymbolProfile {
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
+  @@index([currency])
   @@index([dataSource])
   @@index([isin])
   @@index([name])
@@ -200,6 +210,8 @@ model Tag {
   id     String  @id @default(uuid())
   name   String  @unique
   orders Order[]
+
+  @@index([name])
 }
 
 model User {
