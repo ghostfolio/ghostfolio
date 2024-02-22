@@ -438,7 +438,7 @@ export class UserService {
         settings
       },
       where: {
-        userId: userId
+        userId
       }
     });
 

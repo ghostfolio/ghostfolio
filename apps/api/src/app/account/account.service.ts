@@ -21,10 +21,8 @@ export class AccountService {
   public async account({
     id_userId
   }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
-    const { id, userId } = id_userId;
-
     const [account] = await this.accounts({
-      where: { id, userId }
+      where: id_userId
     });
 
     return account;

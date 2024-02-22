@@ -25,7 +25,7 @@
     "database:push": "prisma db push",
     "database:seed": "prisma db seed",
     "database:setup": "yarn database:push && yarn database:seed",
-    "database:validate": "prisma validate",
+    "database:validate-schema": "prisma validate",
     "dep-graph": "nx dep-graph",
     "e2e": "ng e2e",
     "extract-locales": "nx run client:extract-i18n --output-path ./apps/client/src/locales",
