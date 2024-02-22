@@ -9,6 +9,7 @@ import {
   DATE_FORMAT,
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -65,7 +66,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
   @Input() isLoading = false;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() range: DateRange = 'max';
   @Input() savingsRate = 0;
 

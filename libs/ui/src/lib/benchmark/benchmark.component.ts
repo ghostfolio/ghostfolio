@@ -1,4 +1,4 @@
-import { resolveMarketCondition } from '@ghostfolio/common/helper';
+import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import { Benchmark, User } from '@ghostfolio/common/interfaces';
 
 import {
@@ -16,7 +16,7 @@ import {
 })
 export class BenchmarkComponent implements OnChanges {
   @Input() benchmarks: Benchmark[];
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() user: User;
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];

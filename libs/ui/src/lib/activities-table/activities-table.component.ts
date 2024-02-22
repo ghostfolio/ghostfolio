@@ -1,6 +1,6 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
+import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
@@ -40,7 +40,7 @@ export class ActivitiesTableComponent
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions = true;

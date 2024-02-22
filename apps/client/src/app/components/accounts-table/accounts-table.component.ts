@@ -1,3 +1,5 @@
+import { getLocale } from '@ghostfolio/common/helper';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -27,7 +29,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showActions: boolean;
   @Input() showBalance = true;
   @Input() showFooter = true;

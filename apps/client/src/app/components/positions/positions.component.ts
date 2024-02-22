@@ -1,3 +1,4 @@
+import { getLocale } from '@ghostfolio/common/helper';
 import { Position } from '@ghostfolio/common/interfaces';
 
 import {
@@ -18,7 +19,7 @@ export class PositionsComponent implements OnChanges, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateOrder: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() positions: Position[];
   @Input() range: string;
 

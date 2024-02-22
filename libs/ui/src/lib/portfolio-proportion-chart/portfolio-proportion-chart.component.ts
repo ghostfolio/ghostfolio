@@ -1,6 +1,6 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getTextColor } from '@ghostfolio/common/helper';
+import { getLocale, getTextColor } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -41,7 +41,7 @@ export class PortfolioProportionChartComponent
   @Input() cursor: string;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
-  @Input() locale = '';
+  @Input() locale = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
   @Input() positions: {
