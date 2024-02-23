@@ -363,7 +363,7 @@ export class AdminService {
         tags,
         scraperConfiguration,
         sectors,
-      symbol,
+        symbol,
         symbolMapping
       });
 

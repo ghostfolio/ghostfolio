@@ -22,10 +22,10 @@ import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
+import AwaitLock from 'await-lock';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
-import AwaitLock from 'await-lock';
 
 @Injectable()
 export class DataGatheringService {

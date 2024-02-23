@@ -1,3 +1,4 @@
+import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -14,7 +15,6 @@ import { flatten, isEmpty, uniqBy } from 'lodash';
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
-import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 
 @Injectable()
 export class CurrentRateService {
