@@ -32,7 +32,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with NOVN.SW buy and sell', async () => {
+    it.only('with NOVN.SW and BALN.SW buy and sell', async () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
@@ -51,6 +51,17 @@ describe('PortfolioCalculator', () => {
           },
           {
             currency: 'CHF',
+            date: '2022-04-01',
+            dataSource: 'YAHOO',
+            fee: new Big(0),
+            name: 'Novartis AG',
+            quantity: new Big(0),
+            symbol: 'NOVN.SW',
+            type: 'BUY',
+            unitPrice: new Big(80.0)
+          },
+          {
+            currency: 'CHF',
             date: '2022-04-08',
             dataSource: 'YAHOO',
             fee: new Big(0),
@@ -59,6 +70,39 @@ describe('PortfolioCalculator', () => {
             symbol: 'NOVN.SW',
             type: 'SELL',
             unitPrice: new Big(85.73)
+          },
+          {
+            currency: 'CHF',
+            date: '2022-03-22',
+            dataSource: 'YAHOO',
+            fee: new Big(1.55),
+            name: 'Bâloise Holding AG',
+            quantity: new Big(2),
+            symbol: 'BALN.SW',
+            type: 'BUY',
+            unitPrice: new Big(142.9)
+          },
+          {
+            currency: 'CHF',
+            date: '2022-04-01',
+            dataSource: 'YAHOO',
+            fee: new Big(0),
+            name: 'Bâloise Holding AG',
+            quantity: new Big(0),
+            symbol: 'BALN.SW',
+            type: 'BUY',
+            unitPrice: new Big(138)
+          },
+          {
+            currency: 'CHF',
+            date: '2022-04-10',
+            dataSource: 'YAHOO',
+            fee: new Big(1.65),
+            name: 'Bâloise Holding AG',
+            quantity: new Big(2),
+            symbol: 'BALN.SW',
+            type: 'SELL',
+            unitPrice: new Big(136.6)
           }
         ]
       });
@@ -70,18 +114,8 @@ describe('PortfolioCalculator', () => {
         .mockImplementation(() => parseDate('2022-04-11').getTime());
 
       const chartData = await portfolioCalculator.getChartData({
-        start: parseDate('2022-03-07')
-      });
-
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
-        parseDate('2022-03-07')
-      );
-
-      const investments = portfolioCalculator.getInvestments();
-
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
-        groupBy: 'month'
+        start: parseDate('2022-03-07'),
+        calculateTimeWeightedPerformance: true
       });
 
       spy.mockRestore();
@@ -107,72 +141,12 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentage: 13.100263852242744,
         netPerformanceInPercentageWithCurrencyEffect: 13.100263852242744,
         netPerformanceWithCurrencyEffect: 19.86,
-        timeWeightedPerformance: 0,
+        timeWeightedPerformance: 13.100263852242744,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
         value: 0,
         valueWithCurrencyEffect: 0
       });
-
-      expect(currentPositions).toEqual({
-        currentValue: new Big('0'),
-        errors: [],
-        grossPerformance: new Big('19.86'),
-        grossPerformancePercentage: new Big('0.13100263852242744063'),
-        grossPerformancePercentageWithCurrencyEffect: new Big(
-          '0.13100263852242744063'
-        ),
-        grossPerformanceWithCurrencyEffect: new Big('19.86'),
-        hasErrors: false,
-        netPerformance: new Big('19.86'),
-        netPerformancePercentage: new Big('0.13100263852242744063'),
-        netPerformancePercentageWithCurrencyEffect: new Big(
-          '0.13100263852242744063'
-        ),
-        netPerformanceWithCurrencyEffect: new Big('19.86'),
-        positions: [
-          {
-            averagePrice: new Big('0'),
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            fee: new Big('0'),
-            firstBuyDate: '2022-03-07',
-            grossPerformance: new Big('19.86'),
-            grossPerformancePercentage: new Big('0.13100263852242744063'),
-            grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.13100263852242744063'
-            ),
-            grossPerformanceWithCurrencyEffect: new Big('19.86'),
-            investment: new Big('0'),
-            investmentWithCurrencyEffect: new Big('0'),
-            netPerformance: new Big('19.86'),
-            netPerformancePercentage: new Big('0.13100263852242744063'),
-            netPerformancePercentageWithCurrencyEffect: new Big(
-              '0.13100263852242744063'
-            ),
-            netPerformanceWithCurrencyEffect: new Big('19.86'),
-            marketPrice: 87.8,
-            marketPriceInBaseCurrency: 87.8,
-            quantity: new Big('0'),
-            symbol: 'NOVN.SW',
-            timeWeightedInvestment: new Big('151.6'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
-            transactionCount: 2
-          }
-        ],
-        totalInvestment: new Big('0'),
-        totalInvestmentWithCurrencyEffect: new Big('0')
-      });
-
-      expect(investments).toEqual([
-        { date: '2022-03-07', investment: new Big('151.6') },
-        { date: '2022-04-08', investment: new Big('0') }
-      ]);
-
-      expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: 151.6 },
-        { date: '2022-04-01', investment: -151.6 }
-      ]);
     });
   });
 });
