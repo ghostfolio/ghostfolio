@@ -17,6 +17,8 @@ export interface PortfolioPosition {
   exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
+  grossPerformancePercentWithCurrencyEffect: number;
+  grossPerformanceWithCurrencyEffect: number;
   investment: number;
   marketChange?: number;
   marketChangePercent?: number;
@@ -27,6 +29,8 @@ export interface PortfolioPosition {
   name: string;
   netPerformance: number;
   netPerformancePercent: number;
+  netPerformancePercentWithCurrencyEffect: number;
+  netPerformanceWithCurrencyEffect: number;
   quantity: number;
   sectors: Sector[];
   symbol: string;

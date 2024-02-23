@@ -117,17 +117,18 @@ export class PortfolioController {
       hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
+      // TODO: Introduce calculations with currency effect
       const totalInvestment = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return portfolioPosition.investment;
+        .map(({ investment }) => {
+          return investment;
         })
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .map((portfolioPosition) => {
+        .map(({ currency, marketPrice, quantity }) => {
           return this.exchangeRateDataService.toCurrency(
-            portfolioPosition.quantity * portfolioPosition.marketPrice,
-            portfolioPosition.currency,
+            quantity * marketPrice,
+            currency,
             this.request.user.Settings.settings.baseCurrency
           );
         })
@@ -135,9 +136,11 @@ export class PortfolioController {
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.grossPerformance = null;
+        portfolioPosition.grossPerformanceWithCurrencyEffect = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.netPerformance = null;
+        portfolioPosition.netPerformanceWithCurrencyEffect = null;
         portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;

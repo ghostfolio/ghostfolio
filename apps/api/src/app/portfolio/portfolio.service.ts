@@ -529,12 +529,20 @@ export class PortfolioService {
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
+        grossPerformancePercentWithCurrencyEffect:
+          item.grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+        grossPerformanceWithCurrencyEffect:
+          item.grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         investment: item.investment.toNumber(),
         marketPrice: item.marketPrice,
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: symbolProfile.name,
         netPerformance: item.netPerformance?.toNumber() ?? 0,
         netPerformancePercent: item.netPerformancePercentage?.toNumber() ?? 0,
+        netPerformancePercentWithCurrencyEffect:
+          item.netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+        netPerformanceWithCurrencyEffect:
+          item.netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
@@ -1600,12 +1608,16 @@ export class PortfolioService {
       dateOfFirstActivity: undefined,
       grossPerformance: 0,
       grossPerformancePercent: 0,
+      grossPerformancePercentWithCurrencyEffect: 0,
+      grossPerformanceWithCurrencyEffect: 0,
       investment: balance,
       marketPrice: 0,
       marketState: 'open',
       name: currency,
       netPerformance: 0,
       netPerformancePercent: 0,
+      netPerformancePercentWithCurrencyEffect: 0,
+      netPerformanceWithCurrencyEffect: 0,
       quantity: 0,
       sectors: [],
       symbol: currency,
@@ -1814,9 +1826,25 @@ export class PortfolioService {
       })
       ?.toNumber();
 
+    const annualizedPerformancePercentWithCurrencyEffect =
+      new PortfolioCalculator({
+        currency: userCurrency,
+        currentRateService: this.currentRateService,
+        exchangeRateDataService: this.exchangeRateDataService,
+        orders: []
+      })
+        .getAnnualizedPerformancePercent({
+          daysInMarket,
+          netPerformancePercent: new Big(
+            performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+          )
+        })
+        ?.toNumber();
+
     return {
       ...performanceInformation.performance,
       annualizedPerformancePercent,
+      annualizedPerformancePercentWithCurrencyEffect,
       cash,
       dividend,
       excludedAccountsAndActivities,
