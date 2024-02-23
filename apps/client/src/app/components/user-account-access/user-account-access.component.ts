@@ -1,3 +1,8 @@
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { Access, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,11 +12,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Access, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -105,32 +105,22 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       data: {
         access: {
           alias: '',
-          type: 'PUBLIC'
-        }
+          permissions: ['READ_RESTRICTED'],
+          type: 'PRIVATE'
+        },
+        user: this.user
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const access: CreateAccessDto = data?.access;
+    dialogRef.afterClosed().subscribe((access) => {
+      if (access) {
+        this.update();
+      }
 
-        if (access) {
-          this.dataService
-            .postAccess({ alias: access.alias })
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe({
-              next: () => {
-                this.update();
-              }
-            });
-        }
-
-        this.router.navigate(['.'], { relativeTo: this.route });
-      });
+      this.router.navigate(['.'], { relativeTo: this.route });
+    });
   }
 
   private update() {

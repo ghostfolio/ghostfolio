@@ -14,6 +14,7 @@ import type {
   AccountWithValue,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,

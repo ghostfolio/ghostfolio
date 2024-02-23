@@ -18,12 +18,14 @@
         <div class="heading text-muted" i18n>Membership</div>
         <div class="text-truncate value">{{ name }}</div>
       </div>
-      <div *ngIf="expiresAt">
-        <div class="heading text-muted" i18n>Valid until</div>
-        <div class="text-truncate value">
-          {{ expiresAt }}
+      @if (expiresAt) {
+        <div>
+          <div class="heading text-muted" i18n>Valid until</div>
+          <div class="text-truncate value">
+            {{ expiresAt }}
+          </div>
         </div>
-      </div>
+      }
     </div>
   </a>
 </div>

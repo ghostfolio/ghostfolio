@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

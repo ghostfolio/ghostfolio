@@ -1,6 +1,10 @@
 :host {
   display: block;
 
+  .date-range-selector-container {
+    border-bottom: 1px solid rgba(var(--dark-dividers));
+  }
+
   .result-container {
     max-height: 15rem;
   }
@@ -23,6 +27,10 @@
 }
 
 :host-context(.is-dark-theme) {
+  .date-range-selector-container {
+    border-color: rgba(var(--light-dividers));
+  }
+
   .search-container {
     border-color: rgba(var(--light-dividers));
 

@@ -1,6 +1,8 @@
 import { resetHours } from '@ghostfolio/common/helper';
-import { DateQuery } from '../app/portfolio/interfaces/date-query.interface';
+
 import { addDays } from 'date-fns';
+
+import { DateQuery } from '../app/portfolio/interfaces/date-query.interface';
 
 export class DateQueryHelper {
   public handleDateQueryIn(dateQuery: DateQuery): {

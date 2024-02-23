@@ -6,13 +6,13 @@
     <gf-premium-indicator
       *ngIf="user?.subscription?.type === 'Basic'"
       class="ml-1"
-    ></gf-premium-indicator>
+    />
   </h1>
   <gf-access-table
     [accesses]="accesses"
     [showActions]="hasPermissionToDeleteAccess"
     (accessDeleted)="onDeleteAccess($event)"
-  ></gf-access-table>
+  />
   <div *ngIf="hasPermissionToCreateAccess" class="fab-container">
     <a
       class="align-items-center d-flex justify-content-center"
@@ -21,7 +21,7 @@
       [queryParams]="{ createDialog: true }"
       [routerLink]="[]"
     >
-      <ion-icon name="add-outline" size="large"></ion-icon>
+      <ion-icon name="add-outline" size="large" />
     </a>
   </div>
 </div>

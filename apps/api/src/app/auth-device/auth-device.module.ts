@@ -2,6 +2,7 @@ import { AuthDeviceController } from '@ghostfolio/api/app/auth-device/auth-devic
 import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 

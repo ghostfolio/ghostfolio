@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Statistics, User } from '@ghostfolio/common/interfaces';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

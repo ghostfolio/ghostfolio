@@ -6,11 +6,12 @@
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
+        (click)="onLogoClick()"
       >
-        <gf-logo class="px-2" [label]="pageTitle"></gf-logo>
+        <gf-logo class="px-2" [label]="pageTitle" />
       </a>
     </div>
-    <span class="spacer"></span>
+    <span class="gf-spacer"></span>
     <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
@@ -119,11 +120,7 @@
           [matMenuTriggerRestoreFocus]="false"
           (menuOpened)="onOpenAssistant()"
         >
-          @if (user?.settings?.isExperimentalFeatures) {
-            <ion-icon class="rotate-90" name="options-outline" />
-          } @else {
-            <ion-icon name="search-outline" />
-          }
+          <ion-icon class="rotate-90" name="options-outline" />
         </button>
         <mat-menu
           #assistantMenu="matMenu"
@@ -141,6 +138,7 @@
             [user]="user"
             (closed)="closeAssistant()"
             (dateRangeChanged)="onDateRangeChange($event)"
+            (filtersChanged)="onFiltersChanged($event)"
           />
         </mat-menu>
       </li>
@@ -156,14 +154,43 @@
             class="d-none d-sm-block"
             name="person-circle-outline"
             size="large"
-          ></ion-icon>
+          />
           <ion-icon
             class="d-block d-sm-none"
             size="large"
             [name]="isMenuOpen ? 'close-outline' : 'menu-outline'"
-          ></ion-icon>
+          />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
+          <ng-container
+            *ngIf="
+              hasPermissionForSubscription &&
+              user?.subscription?.type === 'Basic'
+            "
+          >
+            <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
+              ><span class="align-items-center d-flex"
+                ><span
+                  ><ng-container
+                    *ngIf="user.subscription.offer === 'default'"
+                    i18n
+                    >Upgrade Plan</ng-container
+                  >
+                  <ng-container
+                    *ngIf="
+                      user.subscription.offer === 'renewal' ||
+                      user.subscription.offer === 'renewal-early-bird'
+                    "
+                    i18n
+                    >Renew Plan</ng-container
+                  ></span
+                >
+                <gf-premium-indicator
+                  class="d-inline-block ml-1"
+                  [enableLink]="false" /></span
+            ></a>
+            <hr class="m-0" />
+          </ng-container>
           <ng-container *ngIf="user?.access?.length > 0">
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
@@ -175,7 +202,7 @@
                       ? 'radio-button-off-outline'
                       : 'radio-button-on-outline'
                   "
-                ></ion-icon>
+                />
                 <span i18n>Me</span>
               </span>
             </button>
@@ -193,7 +220,7 @@
                       ? 'radio-button-on-outline'
                       : 'radio-button-off-outline'
                   "
-                ></ion-icon>
+                />
                 <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
                 <span *ngIf="!accessItem.alias" i18n>User</span>
               </span>
@@ -294,10 +321,10 @@
           class="px-2"
           [label]="pageTitle"
           [showLabel]="currentRoute !== 'register'"
-        ></gf-logo>
+        />
       </a>
     </div>
-    <span class="spacer"></span>
+    <span class="gf-spacer"></span>
     <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a

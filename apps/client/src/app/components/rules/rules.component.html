@@ -7,15 +7,13 @@
         class="my-2 text-center"
       >
         <mat-card-content>
-          <gf-no-transactions-info-indicator
-            [hasBorder]="false"
-          ></gf-no-transactions-info-indicator
-        ></mat-card-content>
+          <gf-no-transactions-info-indicator [hasBorder]="false" />
+        </mat-card-content>
       </mat-card>
 
-      <gf-rule *ngIf="rules?.length === 0" [isLoading]="true"></gf-rule>
+      <gf-rule *ngIf="rules?.length === 0" [isLoading]="true" />
       <ng-container *ngIf="rules !== null && rules !== undefined">
-        <gf-rule *ngFor="let rule of rules" [rule]="rule"></gf-rule>
+        <gf-rule *ngFor="let rule of rules" [rule]="rule" />
       </ng-container>
     </div>
   </div>

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
+
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'gf-base-product-page',

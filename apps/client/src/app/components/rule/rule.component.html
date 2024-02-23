@@ -8,18 +8,15 @@
           height: '2rem',
           width: '2rem'
         }"
-      ></ngx-skeleton-loader>
+      />
     </div>
     <div
       *ngIf="!isLoading"
       class="align-items-center d-flex icon-container mr-2 px-2"
       [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
     >
-      <ion-icon
-        *ngIf="rule?.value === true"
-        name="checkmark-circle-outline"
-      ></ion-icon>
-      <ion-icon *ngIf="rule?.value === false" name="warning-outline"></ion-icon>
+      <ion-icon *ngIf="rule?.value === true" name="checkmark-circle-outline" />
+      <ion-icon *ngIf="rule?.value === false" name="warning-outline" />
     </div>
     <div *ngIf="isLoading" class="flex-grow-1">
       <ngx-skeleton-loader
@@ -29,14 +26,14 @@
           height: '1rem',
           width: '10rem'
         }"
-      ></ngx-skeleton-loader>
+      />
       <ngx-skeleton-loader
         animation="pulse"
         [theme]="{
           height: '1rem',
           width: '15rem'
         }"
-      ></ngx-skeleton-loader>
+      />
     </div>
     <div *ngIf="!isLoading" class="flex-grow-1">
       <div class="h6 my-1">{{ rule?.name }}</div>

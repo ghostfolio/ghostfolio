@@ -3,6 +3,7 @@ import {
   PROPERTY_CURRENCIES,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

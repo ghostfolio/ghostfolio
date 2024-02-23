@@ -25,6 +25,7 @@ import type {
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -227,8 +228,8 @@ export class AdminController {
     @Param('symbol') symbol: string
   ): Promise<{ price: number }> {
     try {
-      const { headers, selector, url } = JSON.parse(data.scraperConfiguration);
-      const price = await this.manualService.test({ headers, selector, url });
+      const scraperConfiguration = JSON.parse(data.scraperConfiguration);
+      const price = await this.manualService.test(scraperConfiguration);
 
       if (price) {
         return { price };
@@ -255,7 +256,7 @@ export class AdminController {
         dataSource,
         marketPrice,
         symbol,
-        date: resetHours(parseISO(date)),
+        date: parseISO(date),
         state: 'CLOSE'
       })
     );

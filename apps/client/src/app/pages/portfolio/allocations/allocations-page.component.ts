@@ -1,6 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
 import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
@@ -11,7 +8,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
-  Filter,
   PortfolioDetails,
   PortfolioPosition,
   UniqueAsset,
@@ -20,11 +16,15 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-allocations-page',
@@ -38,8 +38,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public activeFilters: Filter[] = [];
-  public allFilters: Filter[];
   public continents: {
     [code: string]: { name: string; value: number };
   };
@@ -47,7 +45,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
-  public filters$ = new Subject<Filter[]>();
   public hasImpersonationId: boolean;
   public isLoading = false;
   public markets: {
@@ -60,7 +57,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public placeholder = '';
   public platforms: {
     [id: string]: Pick<Platform, 'name'> & {
       id: string;
@@ -135,80 +131,34 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         this.hasImpersonationId = !!impersonationId;
       });
 
-    this.filters$
-      .pipe(
-        distinctUntilChanged(),
-        switchMap((filters) => {
-          this.isLoading = true;
-          this.activeFilters = filters;
-          this.placeholder =
-            this.activeFilters.length <= 0
-              ? $localize`Filter by account or tag...`
-              : '';
-
-          this.initialize();
-
-          return this.dataService.fetchPortfolioDetails({
-            filters: this.activeFilters
-          });
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe((portfolioDetails) => {
-        this.initialize();
-
-        this.portfolioDetails = portfolioDetails;
-
-        this.initializeAnalysisData();
-
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
 
-          const accountFilters: Filter[] = this.user.accounts.map(
-            ({ id, name }) => {
-              return {
-                id,
-                label: name,
-                type: 'ACCOUNT'
-              };
-            }
-          );
-
-          const assetClassFilters: Filter[] = [];
-          for (const assetClass of Object.keys(AssetClass)) {
-            assetClassFilters.push({
-              id: assetClass,
-              label: translate(assetClass),
-              type: 'ASSET_CLASS'
-            });
-          }
-
-          const tagFilters: Filter[] = this.user.tags.map(({ id, name }) => {
-            return {
-              id,
-              label: translate(name),
-              type: 'TAG'
-            };
-          });
-
-          this.allFilters = [
-            ...accountFilters,
-            ...assetClassFilters,
-            ...tagFilters
-          ];
-
           this.worldMapChartFormat =
             this.hasImpersonationId || this.user.settings.isRestrictedView
               ? `{0}%`
               : `{0} ${this.user?.settings?.baseCurrency}`;
+
+          this.isLoading = true;
+
+          this.initialize();
+
+          this.fetchPortfolioDetails()
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe((portfolioDetails) => {
+              this.initialize();
+
+              this.portfolioDetails = portfolioDetails;
+
+              this.initializeAllocationsData();
+
+              this.isLoading = false;
+
+              this.changeDetectorRef.markForCheck();
+            });
 
           this.changeDetectorRef.markForCheck();
         }
@@ -217,7 +167,49 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public initialize() {
+  public onAccountChartClicked({ symbol }: UniqueAsset) {
+    if (symbol && symbol !== UNKNOWN_KEY) {
+      this.router.navigate([], {
+        queryParams: { accountId: symbol, accountDetailDialog: true }
+      });
+    }
+  }
+
+  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private extractEtfProvider({
+    assetSubClass,
+    name
+  }: {
+    assetSubClass: PortfolioPosition['assetSubClass'];
+    name: string;
+  }) {
+    if (assetSubClass === 'ETF') {
+      const [firstWord] = name.split(' ');
+      return firstWord;
+    }
+
+    return UNKNOWN_KEY;
+  }
+
+  private fetchPortfolioDetails() {
+    return this.dataService.fetchPortfolioDetails({
+      filters: this.userService.getFilters()
+    });
+  }
+
+  private initialize() {
     this.accounts = {};
     this.continents = {
       [UNKNOWN_KEY]: {
@@ -310,7 +302,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     };
   }
 
-  public initializeAnalysisData() {
+  private initializeAllocationsData() {
     for (const [
       id,
       { name, valueInBaseCurrency, valueInPercentage }
@@ -344,9 +336,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.positions[symbol] = {
         value,
         assetClass: position.assetClass,
-        assetClassLabel: translate(position.assetClass),
+        assetClassLabel: position.assetClassLabel,
         assetSubClass: position.assetSubClass,
-        assetSubClassLabel: translate(position.assetSubClass),
+        assetSubClassLabel: position.assetSubClassLabel,
         currency: position.currency,
         etfProvider: this.extractEtfProvider({
           assetSubClass: position.assetSubClass,
@@ -540,27 +532,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets[UNKNOWN_KEY].value / marketsTotal;
   }
 
-  public onAccountChartClicked({ symbol }: UniqueAsset) {
-    if (symbol && symbol !== UNKNOWN_KEY) {
-      this.router.navigate([], {
-        queryParams: { accountId: symbol, accountDetailDialog: true }
-      });
-    }
-  }
-
-  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
-    if (dataSource && symbol) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
-      });
-    }
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open(AccountDetailDialog, {
       autoFocus: false,
@@ -620,20 +591,5 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
-  }
-
-  private extractEtfProvider({
-    assetSubClass,
-    name
-  }: {
-    assetSubClass: PortfolioPosition['assetSubClass'];
-    name: string;
-  }) {
-    if (assetSubClass === 'ETF') {
-      const [firstWord] = name.split(' ');
-      return firstWord;
-    }
-
-    return UNKNOWN_KEY;
   }
 }

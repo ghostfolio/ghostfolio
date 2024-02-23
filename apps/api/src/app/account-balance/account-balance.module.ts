@@ -1,5 +1,6 @@
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+
 import { Module } from '@nestjs/common';
 
 import { AccountBalanceController } from './account-balance.controller';

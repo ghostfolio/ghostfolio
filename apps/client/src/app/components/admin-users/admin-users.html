@@ -46,7 +46,7 @@
                   class="ml-1"
                   [enableLink]="false"
                   [title]="'Expires ' + formatDistanceToNow(element.subscription.expiresAt) + ' (' + (element.subscription.expiresAt | date: defaultDateFormat) + ')'"
-                ></gf-premium-indicator>
+                />
               </div>
             </td>
           </ng-container>
@@ -107,7 +107,7 @@
                 class="d-inline-block justify-content-end"
                 [locale]="user?.settings?.locale"
                 [value]="element.accountCount"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
@@ -128,7 +128,7 @@
                 class="d-inline-block justify-content-end"
                 [locale]="user?.settings?.locale"
                 [value]="element.transactionCount"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
@@ -153,7 +153,7 @@
                 [locale]="user?.settings?.locale"
                 [precision]="0"
                 [value]="element.engagement"
-              ></gf-value>
+              />
             </td>
           </ng-container>
 
@@ -195,7 +195,7 @@
                 [matMenuTriggerFor]="userMenu"
                 (click)="$event.stopPropagation()"
               >
-                <ion-icon name="ellipsis-horizontal"></ion-icon>
+                <ion-icon name="ellipsis-horizontal" />
               </button>
               <mat-menu #userMenu="matMenu" xPosition="before">
                 <button
@@ -204,7 +204,7 @@
                   (click)="onImpersonateUser(element.id)"
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="contract-outline"></ion-icon>
+                    <ion-icon class="mr-2" name="contract-outline" />
                     <span i18n>Impersonate User</span>
                   </span>
                 </button>
@@ -214,7 +214,7 @@
                   (click)="onDeleteUser(element.id)"
                 >
                   <span class="align-items-center d-flex">
-                    <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                    <ion-icon class="mr-2" name="trash-outline" />
                     <span i18n>Delete User</span>
                   </span>
                 </button>

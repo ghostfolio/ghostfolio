@@ -1,7 +1,8 @@
+import { GfLogoModule } from '@ghostfolio/ui/logo';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { GfLogoModule } from '@ghostfolio/ui/logo';
 
 import { MembershipCardComponent } from './membership-card.component';
 

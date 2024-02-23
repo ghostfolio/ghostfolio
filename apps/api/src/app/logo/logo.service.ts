@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import got from 'got';

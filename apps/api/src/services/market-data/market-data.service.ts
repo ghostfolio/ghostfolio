@@ -1,10 +1,12 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
+import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { resetHours } from '@ghostfolio/common/helper';
 import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
+import { resetHours } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import {
   DataSource,
@@ -12,7 +14,6 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
-import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import AwaitLock from 'await-lock';
 
 @Injectable()

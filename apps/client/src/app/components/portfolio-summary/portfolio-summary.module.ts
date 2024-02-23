@@ -1,6 +1,7 @@
+import { GfValueModule } from '@ghostfolio/ui/value';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { PortfolioSummaryComponent } from './portfolio-summary.component';
 

@@ -1,3 +1,10 @@
+import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { getTextColor } from '@ghostfolio/common/helper';
+import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { ColorScheme } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -10,12 +17,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getTextColor } from '@ghostfolio/common/helper';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { ColorScheme } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
 import { DataSource } from '@prisma/client';
 import Big from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';

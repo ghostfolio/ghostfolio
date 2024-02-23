@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import { parseSymbol } from '@ghostfolio/common/helper';
+
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import got, { Headers } from 'got';
@@ -37,9 +38,9 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       dataSource: response.dataSource
     });
 
-    if (this.configurationService.get('OPEN_FIGI_API_KEY')) {
+    if (this.configurationService.get('API_KEY_OPEN_FIGI')) {
       headers['X-OPENFIGI-APIKEY'] =
-        this.configurationService.get('OPEN_FIGI_API_KEY');
+        this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
     let abortController = new AbortController();

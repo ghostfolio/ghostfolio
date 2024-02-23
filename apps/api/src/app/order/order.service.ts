@@ -10,6 +10,7 @@ import {
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import {
   AssetClass,

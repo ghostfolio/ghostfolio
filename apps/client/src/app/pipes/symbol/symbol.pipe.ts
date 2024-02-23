@@ -1,5 +1,6 @@
-import { Pipe, PipeTransform } from '@angular/core';
 import { prettifySymbol } from '@ghostfolio/common/helper';
+
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'gfSymbol' })
 export class SymbolPipe implements PipeTransform {

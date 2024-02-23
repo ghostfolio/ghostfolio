@@ -1,14 +1,14 @@
-import * as fs from 'fs';
-import * as path from 'path';
-
 import {
   DATE_FORMAT,
   getYesterday,
   interpolate
 } from '@ghostfolio/common/helper';
+
 import { Controller, Get, Res, VERSION_NEUTRAL, Version } from '@nestjs/common';
 import { format } from 'date-fns';
 import { Response } from 'express';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Controller('sitemap.xml')
 export class SitemapController {

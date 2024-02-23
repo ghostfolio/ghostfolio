@@ -2,7 +2,7 @@
   mat-dialog-title
   [title]="data.title"
   (closeButtonClicked)="onClose()"
-></gf-dialog-header>
+/>
 
 <div class="py-3" mat-dialog-content>
   <div class="align-items-center d-flex flex-column">
@@ -23,7 +23,7 @@
         >
           <ion-icon
             [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
-          ></ion-icon>
+          />
         </button>
       </mat-form-field>
     </form>

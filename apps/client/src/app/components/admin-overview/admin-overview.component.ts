@@ -1,5 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -7,6 +5,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PROPERTY_COUPONS,
   PROPERTY_CURRENCIES,
+  PROPERTY_IS_DATA_GATHERING_ENABLED,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED,
   PROPERTY_SYSTEM_MESSAGE,
@@ -19,6 +18,9 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import {
   differenceInSeconds,
   formatDistanceToNowStrict,
@@ -43,6 +45,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
   public info: InfoItem;
+  public isDataGatheringEnabled: boolean;
   public permissions = permissions;
   public systemMessage: SystemMessage;
   public transactionCount: number;
@@ -168,6 +171,13 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     }
   }
 
+  public onEnableDataGatheringChange(aEvent: MatSlideToggleChange) {
+    this.putAdminSetting({
+      key: PROPERTY_IS_DATA_GATHERING_ENABLED,
+      value: aEvent.checked ? undefined : false
+    });
+  }
+
   public onFlushCache() {
     const confirmation = confirm(
       $localize`Do you really want to flush the cache?`
@@ -233,6 +243,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
           this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
           this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
           this.exchangeRates = exchangeRates;
+          this.isDataGatheringEnabled =
+            settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false
+              ? false
+              : true;
           this.systemMessage = settings[
             PROPERTY_SYSTEM_MESSAGE
           ] as SystemMessage;

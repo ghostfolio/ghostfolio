@@ -1,5 +1,6 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
+import { AllInvestViewPageComponent } from './products/allinvestview-page.component';
 import { AllvueSystemsPageComponent } from './products/allvue-systems-page.component';
 import { AltooPageComponent } from './products/altoo-page.component';
 import { BasilFinancePageComponent } from './products/basil-finance-page.component';
@@ -14,6 +15,7 @@ import { DivvyDiaryPageComponent } from './products/divvydiary-page.component';
 import { EightFiguresPageComponent } from './products/eightfigures-page.component';
 import { EmpowerPageComponent } from './products/empower-page.component';
 import { ExirioPageComponent } from './products/exirio-page.component';
+import { FinaPageComponent } from './products/fina-page.component';
 import { FinaryPageComponent } from './products/finary-page.component';
 import { FinWisePageComponent } from './products/finwise-page.component';
 import { FolisharePageComponent } from './products/folishare-page.component';
@@ -43,6 +45,7 @@ import { SumioPageComponent } from './products/sumio-page.component';
 import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
+import { WealthfolioPageComponent } from './products/wealthfolio-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { WhalPageComponent } from './products/whal-page.component';
 import { YeekateePageComponent } from './products/yeekatee-page.component';
@@ -70,6 +73,15 @@ export const products: Product[] = [
     region: $localize`Global`,
     slogan: 'Open Source Wealth Management',
     useAnonymously: true
+  },
+  {
+    component: AllInvestViewPageComponent,
+    founded: 2023,
+    hasSelfHostingAbility: false,
+    key: 'allinvestview',
+    languages: ['English'],
+    name: 'AllInvestView',
+    slogan: 'All your Investments in One View'
   },
   {
     component: AllvueSystemsPageComponent,
@@ -208,6 +220,18 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$100',
     slogan: 'All your wealth, in one place.'
+  },
+  {
+    component: FinaPageComponent,
+    founded: 2023,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'fina',
+    languages: ['English'],
+    name: 'Fina',
+    origin: $localize`United States`,
+    pricingPerYear: '$115',
+    slogan: 'Flexible Financial Management'
   },
   {
     component: FinaryPageComponent,
@@ -517,6 +541,14 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$348',
     slogan: 'Virtual Family Office for Smart Wealth Management'
+  },
+  {
+    component: WealthfolioPageComponent,
+    hasSelfHostingAbility: true,
+    key: 'wealthfolio',
+    languages: ['English'],
+    name: 'Wealthfolio',
+    slogan: 'Desktop Investment Tracker'
   },
   {
     component: WealthicaPageComponent,

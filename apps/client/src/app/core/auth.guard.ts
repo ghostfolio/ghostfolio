@@ -1,13 +1,14 @@
+import { paths } from '@ghostfolio/client/app-routing.module';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+
 import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   Router,
   RouterStateSnapshot
 } from '@angular/router';
-import { paths } from '@ghostfolio/client/app-routing.module';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

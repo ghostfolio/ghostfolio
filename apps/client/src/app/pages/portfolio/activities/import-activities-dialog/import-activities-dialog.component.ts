@@ -1,3 +1,9 @@
+import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
+import { Position } from '@ghostfolio/common/interfaces';
+
 import {
   StepperOrientation,
   StepperSelectionEvent
@@ -15,11 +21,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SortDirection } from '@angular/material/sort';
 import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { Position } from '@ghostfolio/common/interfaces';
 import { AssetClass } from '@prisma/client';
 import { isArray, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';

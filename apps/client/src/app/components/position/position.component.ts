@@ -1,3 +1,6 @@
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { Position } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,8 +8,6 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { Position } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 
 @Component({

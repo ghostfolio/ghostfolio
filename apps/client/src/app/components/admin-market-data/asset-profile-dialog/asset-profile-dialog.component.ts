@@ -1,3 +1,15 @@
+import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import {
+  AdminMarketDataDetails,
+  Currency,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
+
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,18 +21,9 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
-import {
-  AdminMarketDataDetails,
-  Currency,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 import {
   AssetClass,
   AssetSubClass,
@@ -34,8 +37,6 @@ import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 import { AssetProfileDialogParams } from './interfaces/interfaces';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -59,6 +60,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
     comment: '',
+    countries: '',
     currency: '',
     historicalData: this.formBuilder.group({
       csvString: ''
@@ -66,6 +68,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     name: ['', Validators.required],
     tags: new FormControl<Tag[]>(undefined),
     scraperConfiguration: '',
+    sectors: '',
     symbolMapping: ''
   });
   public assetProfileSubClass: string;
@@ -141,20 +144,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.marketDataDetails = marketData;
         this.sectors = {};
 
-        if (assetProfile?.countries?.length > 0) {
-          for (const country of assetProfile.countries) {
-            this.countries[country.code] = {
-              name: country.name,
-              value: country.weight
+        if (this.assetProfile?.countries?.length > 0) {
+          for (const { code, name, weight } of this.assetProfile.countries) {
+            this.countries[code] = {
+              name,
+              value: weight
             };
           }
         }
 
-        if (assetProfile?.sectors?.length > 0) {
-          for (const sector of assetProfile.sectors) {
-            this.sectors[sector.name] = {
-              name: sector.name,
-              value: sector.weight
+        if (this.assetProfile?.sectors?.length > 0) {
+          for (const { name, weight } of this.assetProfile.sectors) {
+            this.sectors[name] = {
+              name,
+              value: weight
             };
           }
         }
@@ -164,6 +167,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           tags: this.assetProfile?.tags,
+          countries: JSON.stringify(
+            this.assetProfile?.countries?.map(({ code, weight }) => {
+              return { code, weight };
+            }) ?? []
+          ),
           currency: this.assetProfile?.currency,
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
@@ -172,6 +180,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           scraperConfiguration: JSON.stringify(
             this.assetProfile?.scraperConfiguration ?? {}
           ),
+          sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
         });
 
@@ -262,13 +271,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onSubmit() {
+    let countries = [];
     let scraperConfiguration = {};
+    let sectors = [];
     let symbolMapping = {};
+
+    try {
+      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+    } catch {}
 
     try {
       scraperConfiguration = JSON.parse(
         this.assetProfileForm.controls['scraperConfiguration'].value
       );
+    } catch {}
+
+    try {
+      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
     } catch {}
 
     try {
@@ -278,7 +297,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     const assetProfileData: UpdateAssetProfileDto = {
+      countries,
       scraperConfiguration,
+      sectors,
       symbolMapping,
       assetClass: this.assetProfileForm.controls['assetClass'].value,
       assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,

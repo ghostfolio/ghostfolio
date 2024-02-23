@@ -1,6 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material/sort';
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
@@ -18,6 +15,10 @@ import {
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
@@ -206,10 +207,12 @@ export class AdminService {
     assetClass,
     assetSubClass,
     comment,
+    countries,
     currency,
     dataSource,
     name,
     scraperConfiguration,
+    sectors,
     symbol,
     symbolMapping,
     tags
@@ -220,9 +223,11 @@ export class AdminService {
         assetClass,
         assetSubClass,
         comment,
+        countries,
         currency,
         name,
         scraperConfiguration,
+        sectors,
         symbolMapping,
         tags
       }

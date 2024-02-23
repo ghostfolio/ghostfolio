@@ -2,6 +2,7 @@ import { AuthDeviceService } from '@ghostfolio/api/app/auth-device/auth-device.s
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
+
 import { Controller, Delete, Param, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 

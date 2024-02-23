@@ -75,18 +75,18 @@
               [matMenuTriggerFor]="tagMenu"
               (click)="$event.stopPropagation()"
             >
-              <ion-icon name="ellipsis-horizontal"></ion-icon>
+              <ion-icon name="ellipsis-horizontal" />
             </button>
             <mat-menu #tagMenu="matMenu" xPosition="before">
               <button mat-menu-item (click)="onUpdateTag(element)">
                 <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="create-outline"></ion-icon>
+                  <ion-icon class="mr-2" name="create-outline" />
                   <span i18n>Edit</span>
                 </span>
               </button>
               <button mat-menu-item (click)="onDeleteTag(element.id)">
                 <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="trash-outline"></ion-icon>
+                  <ion-icon class="mr-2" name="trash-outline" />
                   <span i18n>Delete</span>
                 </span>
               </button>

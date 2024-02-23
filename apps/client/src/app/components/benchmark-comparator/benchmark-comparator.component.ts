@@ -1,15 +1,3 @@
-import 'chartjs-adapter-date-fns';
-
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  Output,
-  ViewChild
-} from '@angular/core';
 import {
   getTooltipOptions,
   getTooltipPositionerMapTop,
@@ -25,6 +13,17 @@ import {
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
@@ -36,6 +35,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 @Component({
