@@ -117,7 +117,6 @@ export class PortfolioController {
       hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      // TODO: Introduce calculations with currency effect
       const totalInvestment = Object.values(holdings)
         .map(({ investment }) => {
           return investment;
@@ -125,12 +124,11 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .map(({ currency, marketPrice, quantity }) => {
-          return this.exchangeRateDataService.toCurrency(
-            quantity * marketPrice,
-            currency,
-            this.request.user.Settings.settings.baseCurrency
-          );
+        .filter(({ assetClass, assetSubClass }) => {
+          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+        })
+        .map(({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency;
         })
         .reduce((a, b) => a + b, 0);
 
