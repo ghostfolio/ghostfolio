@@ -40,12 +40,7 @@
         [tooltip]="element.Platform?.name"
         [url]="element.Platform?.url"
       />
-      <span>{{ element.name }} </span>
-      <span
-        *ngIf="element.isDefault"
-        class="d-lg-inline-block d-none text-muted"
-        >(Default)</span
-      >
+      <span>{{ element.name }}</span>
     </td>
     <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
   </ng-container>
@@ -261,7 +256,7 @@
         </button>
         <button
           mat-menu-item
-          [disabled]="element.isDefault || element.transactionCount > 0"
+          [disabled]="element.transactionCount > 0"
           (click)="onDeleteAccount(element.id)"
         >
           <span class="align-items-center d-flex">
