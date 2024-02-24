@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.9.1` to `5.10.2`
 
+### Fixed
+
+- Added the missing default currency to the prepare currencies function in the exchange rate data service
+
 ## 2.55.0 - 2024-02-22
 
 ### Added
