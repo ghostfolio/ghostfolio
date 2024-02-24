@@ -25,7 +25,15 @@ import {
   isSameDay,
   subDays
 } from 'date-fns';
-import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
+import {
+  cloneDeep,
+  first,
+  flowRight,
+  isNumber,
+  last,
+  sortBy,
+  uniq
+} from 'lodash';
 
 import { CurrentRateService } from './current-rate.service';
 import { CurrentPositions } from './interfaces/current-positions.interface';
@@ -2026,7 +2034,7 @@ export class PortfolioCalculator {
     const totalInvestmentBeforeTransaction = { ...totalInvestment };
 
     const valueOfInvestmentBeforeTransaction = {
-      Value: totalUnits.mul(order.unitPrice),
+      Value: totalUnits.mul(order.unitPriceInBaseCurrency),
       WithCurrencyEffect: totalUnits.mul(
         order.unitPriceInBaseCurrencyWithCurrencyEffect
       )
@@ -2101,7 +2109,7 @@ export class PortfolioCalculator {
     );
 
     const valueOfInvestment = {
-      Value: totalUnits.mul(order.unitPrice),
+      Value: totalUnits.mul(order.unitPriceInBaseCurrency),
       WithCurrencyEffect: totalUnits.mul(
         order.unitPriceInBaseCurrencyWithCurrencyEffect
       )
@@ -2331,7 +2339,7 @@ export class PortfolioCalculator {
           .mul(
             withCurrencyEffect
               ? order.unitPriceInBaseCurrencyWithCurrencyEffect
-              : order.unitPrice
+              : order.unitPriceInBaseCurrency
           )
           .mul(this.getFactor(order.type))
       : totalUnits.gt(0)
