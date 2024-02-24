@@ -118,27 +118,23 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return portfolioPosition.investment;
+        .map(({ investment }) => {
+          return investment;
         })
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return this.exchangeRateDataService.toCurrency(
-            portfolioPosition.quantity * portfolioPosition.marketPrice,
-            portfolioPosition.currency,
-            this.request.user.Settings.settings.baseCurrency
-          );
+        .filter(({ assetClass, assetSubClass }) => {
+          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+        })
+        .map(({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency;
         })
         .reduce((a, b) => a + b, 0);
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-        portfolioPosition.netPerformance = null;
-        portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
       }

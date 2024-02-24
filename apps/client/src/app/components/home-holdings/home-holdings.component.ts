@@ -154,8 +154,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPositions({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.positions = response.positions;
+      .subscribe(({ positions }) => {
+        this.positions = positions;
 
         this.changeDetectorRef.markForCheck();
       });

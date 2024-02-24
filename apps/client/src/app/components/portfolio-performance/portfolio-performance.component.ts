@@ -63,7 +63,8 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
       } else if (this.showDetails === false) {
         new CountUp(
           'value',
-          this.performance?.currentNetPerformancePercent * 100,
+          this.performance?.currentNetPerformancePercentWithCurrencyEffect *
+            100,
           {
             decimal: getNumberFormatDecimal(this.locale),
             decimalPlaces: 2,
