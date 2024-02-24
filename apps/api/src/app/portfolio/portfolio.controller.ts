@@ -135,13 +135,8 @@ export class PortfolioController {
         .reduce((a, b) => a + b, 0);
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.grossPerformance = null;
-        portfolioPosition.grossPerformanceWithCurrencyEffect = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-        portfolioPosition.netPerformance = null;
-        portfolioPosition.netPerformanceWithCurrencyEffect = null;
-        portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
       }
