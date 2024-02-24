@@ -30,6 +30,7 @@ export interface Environment extends CleanedEnvAccessors {
   MAX_ACTIVITIES_TO_IMPORT: number;
   MAX_ITEM_IN_CACHE: number;
   PORT: number;
+  REDIS_DB: number;
   REDIS_HOST: string;
   REDIS_PASSWORD: string;
   REDIS_PORT: number;
