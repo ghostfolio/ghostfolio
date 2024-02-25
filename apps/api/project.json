@@ -38,6 +38,9 @@
       "options": {
         "commands": [
           {
+            "command": "shx rm -rf dist/apps/api"
+          },
+          {
             "command": "shx mkdir -p dist/apps/api/assets/locales"
           },
           {
