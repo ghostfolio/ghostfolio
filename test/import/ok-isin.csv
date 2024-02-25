@@ -1,3 +1,3 @@
-Date,Account,Action,DataSource,Code,Quantity,unitPrice,Fee,Currency
+Date,Action,DataSource,Code,Quantity,unitPrice,Fee,Currency
 2024-02-25,buy,YAHOO,DK0060442556,5,275.10,0,DKK
 2024-02-25,buy,YAHOO,SPIC25KL.CO,5,275.10,0,DKK
