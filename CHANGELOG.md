@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the break down of the performance into asset and currency on the analysis page from experimental to general availability
 - Restructured the `copy-assets` `Nx` target
 
 ## 2.56.0 - 2024-02-24
