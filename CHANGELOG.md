@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Restructured the `copy-assets` `Nx` target
 
+### Fixed
+
+- Changed the performances of the _Top 3_ and _Bottom 3_ performers on the analysis page to take the currency effects into account
+
 ## 2.56.0 - 2024-02-24
 
 ### Changed
