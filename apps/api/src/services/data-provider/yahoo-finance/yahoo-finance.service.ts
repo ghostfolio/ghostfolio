@@ -38,17 +38,10 @@ export class YahooFinanceService implements DataProviderInterface {
   }: {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name } =
+    const response =
       await this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
 
-    return {
-      assetClass,
-      assetSubClass,
-      currency,
-      name,
-      symbol,
-      dataSource: this.getName()
-    };
+    return response;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
