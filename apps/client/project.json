@@ -149,7 +149,8 @@
           {
             "command": "shx cp LICENSE dist/apps/client/assets"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve": {
