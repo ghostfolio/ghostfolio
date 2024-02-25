@@ -13,6 +13,7 @@
         "deleteOutputPath": false,
         "main": "apps/api/src/main.ts",
         "outputPath": "dist/apps/api",
+        "sourceMap": true,
         "target": "node",
         "tsConfig": "apps/api/tsconfig.app.json",
         "webpackConfig": "apps/api/webpack.config.js"
