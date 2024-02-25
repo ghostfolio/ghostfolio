@@ -46,7 +46,8 @@
           {
             "command": "shx cp -r apps/client/src/locales/* dist/apps/api/assets/locales"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve": {
