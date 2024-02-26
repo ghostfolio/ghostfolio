@@ -425,6 +425,10 @@ export class PortfolioController {
           return nullifyValuesInObject(item, ['totalInvestment', 'value']);
         }
       );
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentNetPerformance', 'currentNetPerformancePercent']
+      );
     }
 
     return performanceInformation;
