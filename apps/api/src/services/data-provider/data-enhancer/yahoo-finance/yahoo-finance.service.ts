@@ -235,10 +235,6 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         );
       }
 
-      /*
-
-      */
-
       const url = assetProfile.summaryProfile?.website;
       if (url) {
         response.url = url;
