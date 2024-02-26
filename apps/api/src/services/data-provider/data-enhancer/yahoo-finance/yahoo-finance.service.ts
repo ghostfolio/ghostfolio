@@ -228,7 +228,16 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             { name: assetProfile.summaryProfile?.sector, weight: 1 }
           ];
         }
+      } else if (assetSubClass == AssetSubClass.CRYPTOCURRENCY) {
+        response.symbol = response.symbol.replace(
+          new RegExp(`-${DEFAULT_CURRENCY}$`),
+          DEFAULT_CURRENCY
+        );
       }
+
+      /*
+
+      */
 
       const url = assetProfile.summaryProfile?.website;
       if (url) {
