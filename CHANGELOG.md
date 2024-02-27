@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the query to filter activities of excluded accounts
+- Improved the asset profile validation in the activities import
 
 ## 2.57.0 - 2024-02-25
 
