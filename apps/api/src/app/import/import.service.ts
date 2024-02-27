@@ -570,17 +570,10 @@ export class ImportService {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
     } = {};
 
-    const uniqueActivitiesDto = uniqBy(
-      activitiesDto,
-      ({ dataSource, symbol }) => {
-        return getAssetProfileIdentifier({ dataSource, symbol });
-      }
-    );
-
     for (const [
       index,
       { currency, dataSource, symbol, type }
-    ] of uniqueActivitiesDto.entries()) {
+    ] of activitiesDto.entries()) {
       if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
         throw new Error(
           `activities.${index}.dataSource ("${dataSource}") is not valid`
@@ -602,37 +595,33 @@ export class ImportService {
         }
       }
 
-      const assetProfile = {
-        currency,
-        ...(
-          await this.dataProviderService.getAssetProfiles([
-            { dataSource, symbol }
-          ])
-        )?.[symbol]
-      };
+      if (!assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })]) {
+        const assetProfile = {
+          currency,
+          ...(
+            await this.dataProviderService.getAssetProfiles([
+              { dataSource, symbol }
+            ])
+          )?.[symbol]
+        };
 
-      if (type === 'BUY' || type === 'DIVIDEND' || type === 'SELL') {
-        if (!assetProfile?.name) {
-          throw new Error(
-            `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
-          );
+        if (type === 'BUY' || type === 'DIVIDEND' || type === 'SELL') {
+          if (!assetProfile?.name) {
+            throw new Error(
+              `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
+            );
+          }
+
+          if (assetProfile.currency !== currency) {
+            throw new Error(
+              `activities.${index}.currency ("${currency}") does not match with currency of ${assetProfile.symbol} ("${assetProfile.currency}")`
+            );
+          }
         }
 
-        if (
-          assetProfile.currency !== currency &&
-          !this.exchangeRateDataService.hasCurrencyPair(
-            currency,
-            assetProfile.currency
-          )
-        ) {
-          throw new Error(
-            `activities.${index}.currency ("${currency}") does not match with "${assetProfile.currency}" and no exchange rate is available from "${currency}" to "${assetProfile.currency}"`
-          );
-        }
+        assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
+          assetProfile;
       }
-
-      assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =
-        assetProfile;
     }
 
     return assetProfiles;
