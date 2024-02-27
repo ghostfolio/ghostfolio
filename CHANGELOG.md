@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the handling of activities without account
 
+### Fixed
+
+- Improved the asset profile validation in the activities import
+
 ## 2.57.0 - 2024-02-25
 
 ### Changed
