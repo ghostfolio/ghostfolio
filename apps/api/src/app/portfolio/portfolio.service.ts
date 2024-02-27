@@ -749,7 +749,9 @@ export class PortfolioService {
       } = position;
 
       const accounts: PortfolioPositionDetail['accounts'] = uniqBy(
-        orders,
+        orders.filter(({ Account }) => {
+          return Account;
+        }),
         'Account.id'
       ).map(({ Account }) => {
         return Account;
