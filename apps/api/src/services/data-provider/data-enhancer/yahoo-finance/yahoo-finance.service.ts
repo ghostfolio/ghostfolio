@@ -196,7 +196,9 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         shortName: assetProfile.price.shortName,
         symbol: assetProfile.price.symbol
       });
-      response.symbol = assetProfile.price.symbol;
+      response.symbol = this.convertFromYahooFinanceSymbol(
+        assetProfile.price.symbol
+      );
 
       if (assetSubClass === AssetSubClass.MUTUALFUND) {
         response.sectors = [];
@@ -229,10 +231,6 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           ];
         }
       }
-
-      response.symbol = this.convertFromYahooFinanceSymbol(
-        assetProfile.price.symbol
-      );
 
       const url = assetProfile.summaryProfile?.website;
       if (url) {
