@@ -44,6 +44,7 @@ model Account {
   @@id([id, userId])
   @@index([currency])
   @@index([id])
+  @@index([isExcluded])
   @@index([name])
   @@index([userId])
 }

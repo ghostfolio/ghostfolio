@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an index for `isExcluded` to the account database table
+
 ### Changed
 
 - Improved the activities import by `isin` in the _Yahoo Finance_ service
