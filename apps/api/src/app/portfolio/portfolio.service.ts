@@ -119,7 +119,7 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<AccountWithValue[]> {
-    const where: Prisma.AccountWhereInput = { userId: userId };
+    const where: Prisma.AccountWhereInput = { userId };
 
     const accountFilter = filters?.find(({ type }) => {
       return type === 'ACCOUNT';
@@ -227,18 +227,24 @@ export class PortfolioService {
     impersonationId: string;
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { activities } = await this.orderService.getOrders({
       filters,
+      userCurrency,
       userId,
-      types: ['DIVIDEND'],
-      userCurrency: this.request.user.Settings.settings.baseCurrency
+      types: ['DIVIDEND']
     });
 
-    let dividends = activities.map((dividend) => {
+    let dividends = activities.map(({ date, SymbolProfile, value }) => {
       return {
-        date: format(dividend.date, DATE_FORMAT),
-        investment: dividend.valueInBaseCurrency
+        date: format(date, DATE_FORMAT),
+        investment: this.exchangeRateDataService.toCurrency(
+          value,
+          SymbolProfile.currency,
+          userCurrency
+        )
       };
     });
 
@@ -762,8 +768,14 @@ export class PortfolioService {
           .filter(({ type }) => {
             return type === 'DIVIDEND';
           })
-          .map(({ valueInBaseCurrency }) => {
-            return new Big(valueInBaseCurrency);
+          .map(({ SymbolProfile, value }) => {
+            return new Big(
+              this.exchangeRateDataService.toCurrency(
+                value,
+                SymbolProfile.currency,
+                userCurrency
+              )
+            );
           })
       );
 
@@ -1992,7 +2004,7 @@ export class PortfolioService {
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
-    orders: OrderWithAccount[];
+    orders: Activity[];
     portfolioItemsNow: { [p: string]: TimelinePosition };
     userCurrency: string;
     userId: string;
@@ -2088,41 +2100,50 @@ export class PortfolioService {
         };
       }
 
-      for (const order of ordersByAccount) {
-        let currentValueOfSymbolInBaseCurrency =
-          order.quantity *
-          (portfolioItemsNow[order.SymbolProfile.symbol]
-            ?.marketPriceInBaseCurrency ??
-            order.unitPrice ??
-            0);
+      for (const {
+        Account,
+        quantity,
+        SymbolProfile,
+        type,
+        unitPrice
+      } of ordersByAccount) {
+        const unitPriceInBaseCurrency =
+          portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
+          this.exchangeRateDataService.toCurrency(
+            unitPrice,
+            SymbolProfile.currency,
+            userCurrency
+          ) ??
+          0;
 
-        if (order.type === 'LIABILITY' || order.type === 'SELL') {
+        let currentValueOfSymbolInBaseCurrency =
+          quantity * unitPriceInBaseCurrency;
+
+        if (type === 'LIABILITY' || type === 'SELL') {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 
-        if (accounts[order.Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          accounts[order.Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+        if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
+          accounts[Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
         } else {
-          accounts[order.Account?.id || UNKNOWN_KEY] = {
+          accounts[Account?.id || UNKNOWN_KEY] = {
             balance: 0,
-            currency: order.Account?.currency,
+            currency: Account?.currency,
             name: account.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
 
         if (
-          platforms[order.Account?.Platform?.id || UNKNOWN_KEY]
-            ?.valueInBaseCurrency
+          platforms[Account?.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency
         ) {
-          platforms[
-            order.Account?.Platform?.id || UNKNOWN_KEY
-          ].valueInBaseCurrency += currentValueOfSymbolInBaseCurrency;
+          platforms[Account?.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+            currentValueOfSymbolInBaseCurrency;
         } else {
-          platforms[order.Account?.Platform?.id || UNKNOWN_KEY] = {
+          platforms[Account?.Platform?.id || UNKNOWN_KEY] = {
             balance: 0,
-            currency: order.Account?.currency,
+            currency: Account?.currency,
             name: account.Platform?.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
