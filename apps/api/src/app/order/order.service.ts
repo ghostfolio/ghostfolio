@@ -292,19 +292,14 @@ export class OrderService {
     }
 
     if (types) {
-      where.OR = types.map((type) => {
-        return {
-          type: {
-            equals: type
-          }
-        };
-      });
+      where.type = { in: types };
     }
 
     if (withExcludedAccounts === false) {
-      where.Account = {
-        NOT: { isExcluded: true }
-      };
+      where.OR = [
+        { Account: null },
+        { Account: { NOT: { isExcluded: true } } }
+      ];
     }
 
     const [orders, count] = await Promise.all([
