@@ -237,14 +237,10 @@ export class PortfolioService {
       types: ['DIVIDEND']
     });
 
-    let dividends = activities.map(({ date, SymbolProfile, value }) => {
+    let dividends = activities.map(({ date, valueInBaseCurrency }) => {
       return {
         date: format(date, DATE_FORMAT),
-        investment: this.exchangeRateDataService.toCurrency(
-          value,
-          SymbolProfile.currency,
-          userCurrency
-        )
+        investment: valueInBaseCurrency
       };
     });
 
@@ -768,14 +764,8 @@ export class PortfolioService {
           .filter(({ type }) => {
             return type === 'DIVIDEND';
           })
-          .map(({ SymbolProfile, value }) => {
-            return new Big(
-              this.exchangeRateDataService.toCurrency(
-                value,
-                SymbolProfile.currency,
-                userCurrency
-              )
-            );
+          .map(({ valueInBaseCurrency }) => {
+            return new Big(valueInBaseCurrency);
           })
       );
 
@@ -2105,15 +2095,11 @@ export class PortfolioService {
         quantity,
         SymbolProfile,
         type,
-        unitPrice
+        valueInBaseCurrency
       } of ordersByAccount) {
         const unitPriceInBaseCurrency =
           portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
-          this.exchangeRateDataService.toCurrency(
-            unitPrice,
-            SymbolProfile.currency,
-            userCurrency
-          ) ??
+          valueInBaseCurrency ??
           0;
 
         let currentValueOfSymbolInBaseCurrency =
