@@ -102,7 +102,10 @@
     <th *matHeaderCellDef mat-header-cell></th>
     <td *matCellDef="let element" class="px-0" mat-cell>
       @if (element?.marketCondition) {
-        <div class="text-center" [title]="element?.marketCondition">
+        <div
+          class="text-center"
+          [title]="resolveMarketCondition(element.marketCondition).label"
+        >
           {{ resolveMarketCondition(element.marketCondition).emoji }}
         </div>
       }

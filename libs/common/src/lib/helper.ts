@@ -1,3 +1,5 @@
+import { translate } from '@ghostfolio/ui/i18n';
+
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
 import { DataSource, MarketData } from '@prisma/client';
@@ -389,10 +391,10 @@ export function resolveMarketCondition(
   aMarketCondition: Benchmark['marketCondition']
 ) {
   if (aMarketCondition === 'ALL_TIME_HIGH') {
-    return { emoji: '🎉' };
+    return { emoji: '🎉', label: translate(aMarketCondition) };
   } else if (aMarketCondition === 'BEAR_MARKET') {
-    return { emoji: '🐻' };
+    return { emoji: '🐻', label: translate(aMarketCondition) };
   } else {
-    return { emoji: '⚪' };
+    return { emoji: undefined, label: undefined };
   }
 }
