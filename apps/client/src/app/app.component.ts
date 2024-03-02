@@ -193,10 +193,12 @@ export class AppComponent implements OnDestroy, OnInit {
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
     this.toggleThemeStyleClass(isDarkTheme);
+    this.toggleMetaThemeColor(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {
         this.toggleThemeStyleClass(event.matches);
+        this.toggleMetaThemeColor(event.matches);
       }
     });
   }
@@ -207,5 +209,11 @@ export class AppComponent implements OnDestroy, OnInit {
     } else {
       this.document.body.classList.remove('is-dark-theme');
     }
+  }
+
+  private toggleMetaThemeColor(isDarkTheme: boolean) {
+    const color = isDarkTheme ? 'rgb(25, 25, 25)' : 'rgb(255, 255, 255)';
+    const metaTag = this.document.querySelector('meta[name="theme-color"]');
+    metaTag.setAttribute('content', color);
   }
 }
