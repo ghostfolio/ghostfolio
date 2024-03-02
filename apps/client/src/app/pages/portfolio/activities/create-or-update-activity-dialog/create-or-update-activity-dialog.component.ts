@@ -20,6 +20,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
+import { isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -48,6 +49,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public defaultDateFormat: string;
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
+  public isToday = isToday;
   public platforms: { id: string; name: string }[];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tags: Tag[] = [];

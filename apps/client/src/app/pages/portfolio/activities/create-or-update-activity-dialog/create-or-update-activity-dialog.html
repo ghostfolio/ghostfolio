@@ -240,7 +240,8 @@
         <button
           *ngIf="
             currentMarketPrice &&
-            (data.activity.type === 'BUY' || data.activity.type === 'SELL')
+            (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
+            isToday(activityForm.controls['date']?.value)
           "
           class="ml-2 mt-1 no-min-width"
           mat-button

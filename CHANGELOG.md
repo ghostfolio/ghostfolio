@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed a missing value in the activities table on mobile
+- Displayed the button to fetch the current market price only if the activity is from today
 
 ## 2.59.0 - 2024-02-29
 
