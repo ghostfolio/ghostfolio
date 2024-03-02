@@ -490,22 +490,21 @@ export class PortfolioService {
       });
     }
 
+    var netWorth =
+      summary?.netWorth ??
+      (await this.getNetWorth(impersonationId, userId, userCurrency));
+
     return {
       accounts,
       holdings,
       platforms,
       summary,
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
-      filteredValueInPercentage: summary?.netWorth
-        ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
+      filteredValueInPercentage: netWorth
+        ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : 0,
       hasErrors: currentPositions.hasErrors,
-      totalValueInBaseCurrency:
-        summary?.netWorth ??
-        Object.keys(holdings).reduce(
-          (s, k) => s + holdings[k].valueInBaseCurrency ?? 0,
-          0
-        )
+      totalValueInBaseCurrency: netWorth
     };
   }
 
@@ -1868,6 +1867,42 @@ export class PortfolioService {
   }
 
   @LogPerformance
+  private async getNetWorth(
+    impersonationId: string,
+    userId: string,
+    userCurrency: string
+  ) {
+    userId = await this.getUserId(impersonationId, userId);
+
+    const { orders, portfolioOrders, transactionPoints } =
+      await this.getTransactionPoints({
+        userId,
+        withExcludedAccounts: true
+      });
+
+    const portfolioCalculator = new PortfolioCalculator({
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      exchangeRateDataService: this.exchangeRateDataService,
+      orders: portfolioOrders
+    });
+
+    const portfolioStart = parseDate(
+      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    );
+
+    portfolioCalculator.setTransactionPoints(transactionPoints);
+
+    const { currentValue } = await portfolioCalculator.getCurrentPositions(
+      portfolioStart,
+      new Date(Date.now()),
+      false
+    );
+
+    return currentValue;
+  }
+
+  @LogPerformance
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
@@ -1883,11 +1918,26 @@ export class PortfolioService {
   }): Promise<PortfolioSummary> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
-
-    const performanceInformation = await this.getPerformance({
-      impersonationId,
-      userId
-    });
+    let performanceInformation: PortfolioPerformanceResponse = {
+      chart: [],
+      firstOrderDate: undefined,
+      performance: {
+        annualizedPerformancePercent: 0,
+        currentGrossPerformance: 0,
+        currentGrossPerformancePercent: 0,
+        currentGrossPerformancePercentWithCurrencyEffect: 0,
+        currentGrossPerformanceWithCurrencyEffect: 0,
+        currentNetPerformance: 0,
+        currentNetPerformancePercent: 0,
+        currentNetPerformancePercentWithCurrencyEffect: 0,
+        currentNetPerformanceWithCurrencyEffect: 0,
+        currentNetWorth: 0,
+        currentValue: 0,
+        totalInvestment: 0
+      },
+      errors: [],
+      hasErrors: false
+    };
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
@@ -1906,6 +1956,13 @@ export class PortfolioService {
     let totalSell = 0;
     let activitiesUsed: Activity[] = [];
     let ordersCount = 0;
+    let excludedAccountsAndActivities = 0;
+    const firstOrderDate = activities[0]?.date;
+
+    performanceInformation = await this.getPerformance({
+      impersonationId,
+      userId
+    });
     for (let order of activities) {
       if (order.Account?.isExcluded ?? false) {
         excludedActivities.push(order);
@@ -1952,8 +2009,6 @@ export class PortfolioService {
       )
     );
 
-    const firstOrderDate = activitiesUsed[0]?.date;
-
     const cash = new Big(balanceInBaseCurrency)
       .minus(emergencyFund)
       .plus(emergencyFundPositionsValueInBaseCurrency)
@@ -1977,12 +2032,11 @@ export class PortfolioService {
         currency: userCurrency,
         withExcludedAccounts: true
       });
-
     const excludedBalanceInBaseCurrency = new Big(
       cashDetailsWithExcludedAccounts.balanceInBaseCurrency
     ).minus(balanceInBaseCurrency);
 
-    const excludedAccountsAndActivities = excludedBalanceInBaseCurrency
+    excludedAccountsAndActivities = excludedBalanceInBaseCurrency
       .plus(totalOfExcludedActivities)
       .toNumber();
 
