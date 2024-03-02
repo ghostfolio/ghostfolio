@@ -393,6 +393,6 @@ export function resolveMarketCondition(
   } else if (aMarketCondition === 'BEAR_MARKET') {
     return { emoji: '🐻' };
   } else {
-    return { emoji: '⚪' };
+    return { emoji: undefined };
   }
 }
