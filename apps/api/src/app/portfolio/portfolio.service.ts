@@ -62,6 +62,7 @@ import {
   Tag
 } from '@prisma/client';
 import Big from 'big.js';
+import { isUUID } from 'class-validator';
 import {
   differenceInDays,
   format,
@@ -617,6 +618,7 @@ export class PortfolioService {
     }
 
     const summary = await this.getSummary({
+      holdings,
       impersonationId,
       userCurrency,
       userId,
@@ -1708,12 +1710,14 @@ export class PortfolioService {
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
+    holdings,
     impersonationId,
     userCurrency,
     userId
   }: {
     balanceInBaseCurrency: number;
     emergencyFundPositionsValueInBaseCurrency: number;
+    holdings: PortfolioDetails['holdings'];
     impersonationId: string;
     userCurrency: string;
     userId: string;
@@ -1728,42 +1732,56 @@ export class PortfolioService {
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
-      userId
-    });
-
-    let { activities: excludedActivities } = await this.orderService.getOrders({
-      userCurrency,
       userId,
       withExcludedAccounts: true
     });
 
-    excludedActivities = excludedActivities.filter(({ Account: account }) => {
-      return account?.isExcluded ?? false;
-    });
+    const excludedActivities: Activity[] = [];
+    const nonExcludedActivities: Activity[] = [];
+
+    for (const activity of activities) {
+      if (activity.Account?.isExcluded) {
+        excludedActivities.push(activity);
+      } else {
+        nonExcludedActivities.push(activity);
+      }
+    }
 
     const dividend = this.getSumOfActivityType({
       activities,
       userCurrency,
       activityType: 'DIVIDEND'
     }).toNumber();
+
     const emergencyFund = new Big(
       Math.max(
         emergencyFundPositionsValueInBaseCurrency,
         (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
       )
     );
+
     const fees = this.getFees({ activities, userCurrency }).toNumber();
     const firstOrderDate = activities[0]?.date;
+
     const interest = this.getSumOfActivityType({
       activities,
       userCurrency,
       activityType: 'INTEREST'
     }).toNumber();
-    const items = this.getSumOfActivityType({
-      activities,
-      userCurrency,
-      activityType: 'ITEM'
-    }).toNumber();
+
+    const items = Object.keys(holdings)
+      .filter((symbol) => {
+        return isUUID(symbol) && holdings[symbol].dataSource === 'MANUAL';
+      })
+      .map((symbol) => {
+        return holdings[symbol].valueInBaseCurrency;
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      )
+      .toNumber();
+
     const liabilities = this.getSumOfActivityType({
       activities,
       userCurrency,
@@ -1771,12 +1789,13 @@ export class PortfolioService {
     }).toNumber();
 
     const totalBuy = this.getSumOfActivityType({
-      activities,
+      activities: nonExcludedActivities,
       userCurrency,
       activityType: 'BUY'
     }).toNumber();
+
     const totalSell = this.getSumOfActivityType({
-      activities,
+      activities: nonExcludedActivities,
       userCurrency,
       activityType: 'SELL'
     }).toNumber();
@@ -1785,7 +1804,9 @@ export class PortfolioService {
       .minus(emergencyFund)
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
+
     const committedFunds = new Big(totalBuy).minus(totalSell);
+
     const totalOfExcludedActivities = this.getSumOfActivityType({
       userCurrency,
       activities: excludedActivities,
