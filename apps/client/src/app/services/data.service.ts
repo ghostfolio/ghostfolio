@@ -389,13 +389,25 @@ export class DataService {
   }
 
   public fetchPortfolioDetails({
-    filters
+    filters,
+    parameters
   }: {
     filters?: Filter[];
+    parameters?: {
+      [param: string]:
+        | string
+        | number
+        | boolean
+        | readonly (string | number | boolean)[];
+    };
   } = {}): Observable<PortfolioDetails> {
+    let params = this.buildFiltersAsQueryParams({ filters }).appendAll(
+      parameters
+    );
+
     return this.http
       .get<any>('/api/v1/portfolio/details', {
-        params: this.buildFiltersAsQueryParams({ filters })
+        params
       })
       .pipe(
         map((response) => {

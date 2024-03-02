@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
@@ -39,6 +40,7 @@ export class SymbolProfileService {
     });
   }
 
+  @LogPerformance
   public async getSymbolProfiles(
     aUniqueAssets: UniqueAsset[]
   ): Promise<EnhancedSymbolProfile[]> {

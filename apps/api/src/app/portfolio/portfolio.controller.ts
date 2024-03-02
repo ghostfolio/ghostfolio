@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
@@ -71,7 +72,8 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('isAllocation') isAllocation: boolean = false
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     let hasDetails = true;
     let hasError = false;
@@ -104,7 +106,8 @@ export class PortfolioController {
       dateRange,
       filters,
       impersonationId,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      isAllocation
     });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
@@ -375,6 +378,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @Version('2')
+  @LogPerformance
   public async getPerformanceV2(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,

@@ -22,6 +22,7 @@ export class ConfigurationService {
       API_KEY_RAPID_API: str({ default: '' }),
       CACHE_QUOTES_TTL: num({ default: 1 }),
       CACHE_TTL: num({ default: 1 }),
+      LOG_LEVEL: str({ default: '' }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({

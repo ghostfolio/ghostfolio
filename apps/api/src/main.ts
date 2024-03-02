@@ -5,6 +5,7 @@ import type { NestExpressApplication } from '@nestjs/platform-express';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 
+import { LoggingInterceptor } from './aop/logging.interceptor';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { HtmlTemplateMiddleware } from './middlewares/html-template.middleware';
@@ -13,10 +14,34 @@ async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
 
+  let logLevelArray = [];
+  let logLevel = configService.get<string>('LOG_LEVEL');
+
+  switch (logLevel) {
+    case 'verbose':
+      logLevelArray.push(['debug', 'error', 'log', 'verbose', 'warn']);
+      break;
+    case 'debug':
+      logLevelArray.push(['debug', 'error', 'log', 'warn']);
+      break;
+    case 'log':
+      logLevelArray.push([, 'error', 'log', 'warn']);
+      break;
+    case 'warn':
+      logLevelArray.push(['error', 'warn']);
+      break;
+    case 'error':
+      logLevelArray.push(['error']);
+      break;
+    default:
+      logLevelArray = environment.production
+        ? ['error', 'log', 'warn']
+        : ['debug', 'error', 'log', 'verbose', 'warn'];
+      break;
+  }
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: environment.production
-      ? ['error', 'log', 'warn']
-      : ['debug', 'error', 'log', 'verbose', 'warn']
+    logger: logLevelArray
   });
 
   app.enableCors();
@@ -25,6 +50,7 @@ async function bootstrap() {
     type: VersioningType.URI
   });
   app.setGlobalPrefix('api', { exclude: ['sitemap.xml'] });
+  app.useGlobalInterceptors(new LoggingInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,

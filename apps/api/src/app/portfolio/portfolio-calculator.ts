@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
@@ -80,6 +81,7 @@ export class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
@@ -123,6 +125,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private getCurrentTransactionPointItem(
     oldAccumulatedSymbol: TransactionPointSymbol,
     order: PortfolioOrder,
@@ -154,6 +157,7 @@ export class PortfolioCalculator {
     return currentTransactionPointItem;
   }
 
+  @LogPerformance
   private handleSubsequentTransactions(
     order: PortfolioOrder,
     factor: number,
@@ -196,6 +200,7 @@ export class PortfolioCalculator {
     return currentTransactionPointItem;
   }
 
+  @LogPerformance
   public getAnnualizedPerformancePercent({
     daysInMarket,
     netPerformancePercent
@@ -221,6 +226,7 @@ export class PortfolioCalculator {
     this.transactionPoints = transactionPoints;
   }
 
+  @LogPerformance
   public async getChartData({
     start,
     end = new Date(Date.now()),
@@ -345,6 +351,7 @@ export class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   private calculatePerformance(
     date: Date,
     previousDate: Date,
@@ -479,6 +486,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private accumulatedValuesByDate(
     valuesBySymbol: {
       [symbol: string]: {
@@ -587,6 +595,7 @@ export class PortfolioCalculator {
     return accumulatedValuesByDate;
   }
 
+  @LogPerformance
   private populateSymbolMetrics(
     symbols: { [symbol: string]: boolean },
     end: Date,
@@ -648,6 +657,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private populateMarketSymbolMap(
     marketSymbols: GetValueObject[],
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } }
@@ -665,6 +675,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private async getInformationFromCurrentRateService(
     currencies: { [symbol: string]: string },
     dataGatheringItems: IDataGatheringItem[],
@@ -681,6 +692,7 @@ export class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   private pushDataGatheringsSymbols(
     transactionPointsBeforeEndDate: TransactionPoint[],
     firstIndex: number,
@@ -700,6 +712,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private getRelevantStartAndEndDates(
     start: Date,
     end: Date,
@@ -718,9 +731,11 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   public async getCurrentPositions(
     start: Date,
-    end = new Date(Date.now())
+    end = new Date(Date.now()),
+    calculatePerformance = true
   ): Promise<CurrentPositions> {
     const transactionPointsBeforeEndDate =
       this.transactionPoints?.filter((transactionPoint) => {
@@ -883,7 +898,8 @@ export class PortfolioCalculator {
         start,
         exchangeRates:
           exchangeRatesByCurrency[`${item.currency}${this.currency}`],
-        symbol: item.symbol
+        symbol: item.symbol,
+        calculatePerformance
       });
 
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
@@ -956,6 +972,7 @@ export class PortfolioCalculator {
     return this.dataProviderInfos;
   }
 
+  @LogPerformance
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -973,6 +990,7 @@ export class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public getInvestmentsByGroup({
     data,
     groupBy
@@ -996,6 +1014,7 @@ export class PortfolioCalculator {
     }));
   }
 
+  @LogPerformance
   private calculateOverallPerformance(positions: TimelinePosition[]) {
     let currentValue = new Big(0);
     let grossPerformance = new Big(0);
@@ -1121,6 +1140,7 @@ export class PortfolioCalculator {
     return factor;
   }
 
+  @LogPerformance
   private getSymbolMetrics({
     end,
     exchangeRates,
@@ -1128,7 +1148,8 @@ export class PortfolioCalculator {
     marketSymbolMap,
     start,
     step = 1,
-    symbol
+    symbol,
+    calculatePerformance = true
   }: {
     end: Date;
     exchangeRates: { [dateString: string]: number };
@@ -1139,6 +1160,7 @@ export class PortfolioCalculator {
     start: Date;
     step?: number;
     symbol: string;
+    calculatePerformance?: boolean;
   }): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: WithCurrencyEffect<{ [date: string]: Big }> = {
@@ -1359,7 +1381,8 @@ export class PortfolioCalculator {
       unitPriceAtEndDate,
       symbol,
       exchangeRates,
-      currentExchangeRate
+      currentExchangeRate,
+      calculatePerformance
     );
 
     return {
@@ -1403,6 +1426,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private calculatePerformanceOfSymbol(
     orders: PortfolioOrderItem[],
     indexOfStartOrder: number,
@@ -1435,7 +1459,8 @@ export class PortfolioCalculator {
     unitPriceAtEndDate: Big,
     symbol: string,
     exchangeRates: { [dateString: string]: number },
-    currentExchangeRate: number
+    currentExchangeRate: number,
+    calculatePerformance: boolean
   ) {
     let totalInvestmentDays = 0;
     let sumOfTimeWeightedInvestments = {
@@ -1490,8 +1515,50 @@ export class PortfolioCalculator {
       sumOfTimeWeightedInvestments,
       timeWeightedInvestmentValues,
       exchangeRates,
-      currentExchangeRate
+      currentExchangeRate,
+      calculatePerformance
     ));
+
+    if (!calculatePerformance) {
+      return {
+        currentValues,
+        grossPerformancePercentage: {
+          Value: new Big(0),
+          WithCurrencyEffect: new Big(0)
+        },
+        initialValue,
+        investmentValues,
+        maxInvestmentValues,
+        netPerformancePercentage: {
+          Value: new Big(0),
+          WithCurrencyEffect: new Big(0)
+        },
+        netPerformanceValues,
+        grossPerformance: { Value: new Big(0), WithCurrencyEffect: new Big(0) },
+        hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
+        netPerformance: { Value: new Big(0), WithCurrencyEffect: new Big(0) },
+        averagePriceAtStartDate,
+        totalUnits,
+        totalInvestment,
+        investmentAtStartDate,
+        valueAtStartDate,
+        maxTotalInvestment,
+        averagePriceAtEndDate,
+        fees,
+        lastAveragePrice,
+        grossPerformanceFromSells,
+        totalInvestmentWithGrossPerformanceFromSell,
+        feesAtStartDate,
+        grossPerformanceAtStartDate,
+        netPerformanceValuesPercentage,
+        investmentValuesAccumulated,
+        timeWeightedInvestmentValues,
+        timeWeightedAverageInvestmentBetweenStartAndEndDate: {
+          Value: new Big(0),
+          WithCurrencyEffect: new Big(0)
+        }
+      };
+    }
 
     const totalGrossPerformance = {
       Value: grossPerformance.Value.minus(grossPerformanceAtStartDate.Value),
@@ -1601,6 +1668,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private handleOrders(
     orders: PortfolioOrderItem[],
     indexOfStartOrder: number,
@@ -1632,18 +1700,21 @@ export class PortfolioCalculator {
     sumOfTimeWeightedInvestments: WithCurrencyEffect<Big>,
     timeWeightedInvestmentValues: WithCurrencyEffect<{ [date: string]: Big }>,
     exchangeRates: { [dateString: string]: number },
-    currentExchangeRate: number
+    currentExchangeRate: number,
+    calculatePerformance: boolean
   ) {
     for (let i = 0; i < orders.length; i += 1) {
       const order = orders[i];
       const previousOrderDateString = i > 0 ? orders[i - 1].date : '';
-      this.calculateNetPerformancePercentageForDateAndSymbol(
-        i,
-        orders,
-        order,
-        netPerformanceValuesPercentage,
-        marketSymbolMap
-      );
+      if (calculatePerformance) {
+        this.calculateNetPerformancePercentageForDateAndSymbol(
+          i,
+          orders,
+          order,
+          netPerformanceValuesPercentage,
+          marketSymbolMap
+        );
+      }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log();
@@ -1704,16 +1775,18 @@ export class PortfolioCalculator {
         fees
       ));
 
-      ({
-        grossPerformanceFromSells,
-        totalInvestmentWithGrossPerformanceFromSell
-      } = this.calculateSellOrders(
-        order,
-        lastAveragePrice,
-        grossPerformanceFromSells,
-        totalInvestmentWithGrossPerformanceFromSell,
-        transactionInvestment
-      ));
+      if (calculatePerformance) {
+        ({
+          grossPerformanceFromSells,
+          totalInvestmentWithGrossPerformanceFromSell
+        } = this.calculateSellOrders(
+          order,
+          lastAveragePrice,
+          grossPerformanceFromSells,
+          totalInvestmentWithGrossPerformanceFromSell,
+          transactionInvestment
+        ));
+      }
 
       lastAveragePrice.Value = totalUnits.eq(0)
         ? new Big(0)
@@ -1742,6 +1815,26 @@ export class PortfolioCalculator {
           'grossPerformanceFromSellsWithCurrencyEffect',
           grossPerformanceFromSells.WithCurrencyEffect.toNumber()
         );
+      }
+
+      if (!calculatePerformance) {
+        return {
+          lastAveragePrice,
+          grossPerformance,
+          feesAtStartDate,
+          grossPerformanceAtStartDate,
+          averagePriceAtStartDate,
+          totalUnits,
+          totalInvestment,
+          investmentAtStartDate,
+          valueAtStartDate,
+          maxTotalInvestment,
+          averagePriceAtEndDate,
+          initialValue,
+          fees,
+          netPerformanceValuesPercentage,
+          totalInvestmentDays
+        };
       }
 
       const newGrossPerformance = valueOfInvestment.Value.minus(
@@ -1829,6 +1922,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private handleFeeAndUnitPriceOfOrder(
     order: PortfolioOrderItem,
     currentExchangeRate: number,
@@ -1852,6 +1946,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private calculateNetPerformancePercentageForDateAndSymbol(
     i: number,
     orders: PortfolioOrderItem[],
@@ -1895,6 +1990,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private handleIfPreviousOrderIsStake(
     netPerformanceValuesPercentage: { [date: string]: Big },
     order: PortfolioOrderItem,
@@ -1906,6 +2002,7 @@ export class PortfolioCalculator {
       .minus(1);
   }
 
+  @LogPerformance
   private stakeHandling(
     previousOrder: PortfolioOrderItem,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
@@ -1925,6 +2022,7 @@ export class PortfolioCalculator {
       : new Big(0);
   }
 
+  @LogPerformance
   private ispreviousOrderStakeAndHasInformation(
     previousOrder: PortfolioOrderItem,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } }
@@ -1936,6 +2034,7 @@ export class PortfolioCalculator {
     );
   }
 
+  @LogPerformance
   private needsStakeHandling(
     order: PortfolioOrderItem,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
@@ -1952,6 +2051,7 @@ export class PortfolioCalculator {
     );
   }
 
+  @LogPerformance
   private handleLoggingOfInvestmentMetrics(
     totalInvestment: WithCurrencyEffect<Big>,
     order: PortfolioOrderItem,
@@ -1986,6 +2086,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private calculateNetPerformancePercentage(
     timeWeightedAverageInvestmentBetweenStartAndEndDate: WithCurrencyEffect<Big>,
     totalNetPerformance: WithCurrencyEffect<Big>
@@ -2007,6 +2108,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private calculateInvestmentSpecificMetrics(
     averagePriceAtStartDate: Big,
     i: number,
@@ -2132,6 +2234,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private calculatePerformancesForDateAndReturnTotalInvestmentDays(
     isChartMode: boolean,
     i: number,
@@ -2234,6 +2337,7 @@ export class PortfolioCalculator {
     return totalInvestmentDays;
   }
 
+  @LogPerformance
   private calculateSellOrders(
     order: PortfolioOrderItem,
     lastAveragePrice: WithCurrencyEffect<Big>,
@@ -2280,6 +2384,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private calculateInitialValue(
     i: number,
     indexOfStartOrder: number,
@@ -2315,6 +2420,7 @@ export class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private calculateAveragePriceAtEnd(
     i: number,
     indexOfEndOrder: number,
@@ -2328,6 +2434,7 @@ export class PortfolioCalculator {
     return averagePriceAtEndDate;
   }
 
+  @LogPerformance
   private getTransactionInvestment(
     order: PortfolioOrderItem,
     totalUnits: Big,
@@ -2350,6 +2457,7 @@ export class PortfolioCalculator {
         : new Big(0);
   }
 
+  @LogPerformance
   private calculateAveragePrice(
     averagePriceAtStartDate: Big,
     i: number,
@@ -2367,6 +2475,7 @@ export class PortfolioCalculator {
     return averagePriceAtStartDate;
   }
 
+  @LogPerformance
   private handleStartOrder(
     order: PortfolioOrderItem,
     indexOfStartOrder: number,
@@ -2384,6 +2493,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private handleLogging(
     symbol: string,
     orders: PortfolioOrderItem[],
@@ -2429,6 +2539,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private sortOrdersByTime(orders: PortfolioOrderItem[]) {
     return sortBy(orders, (order) => {
       let sortIndex = new Date(order.date);
@@ -2445,6 +2556,7 @@ export class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   private handleChartMode(
     isChartMode: boolean,
     orders: PortfolioOrderItem[],
@@ -2480,6 +2592,7 @@ export class PortfolioCalculator {
     return { day, lastUnitPrice };
   }
 
+  @LogPerformance
   private handleDay(
     datesWithOrders: {},
     day: Date,
@@ -2519,6 +2632,7 @@ export class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private addSyntheticStartAndEndOrders(
     orders: PortfolioOrderItem[],
     symbol: string,
