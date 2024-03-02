@@ -1,5 +1,6 @@
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 
 import {
   ChangeDetectionStrategy,
@@ -21,6 +22,7 @@ export class BenchmarkComponent implements OnChanges {
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];
   public resolveMarketCondition = resolveMarketCondition;
+  public translate = translate;
 
   public constructor() {}
 
