@@ -825,6 +825,7 @@ export class PortfolioCalculator {
 
     switch (type) {
       case 'BUY':
+      case 'ITEM':
         factor = 1;
         break;
       case 'SELL':

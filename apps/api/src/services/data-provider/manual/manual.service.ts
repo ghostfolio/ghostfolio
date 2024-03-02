@@ -166,13 +166,29 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      for (const symbolProfile of symbolProfiles) {
-        response[symbolProfile.symbol] = {
-          currency: symbolProfile.currency,
+      for (const { currency, symbol } of symbolProfiles) {
+        let marketPrice = marketData.find((marketDataItem) => {
+          return marketDataItem.symbol === symbol;
+        })?.marketPrice;
+
+        if (!marketPrice) {
+          // Fallback to unit price of last activity
+          const lastActivity = await this.prismaService.order.findFirst({
+            orderBy: {
+              date: 'desc'
+            },
+            where: {
+              SymbolProfile: { symbol }
+            }
+          });
+
+          marketPrice = lastActivity?.unitPrice;
+        }
+
+        response[symbol] = {
+          currency,
+          marketPrice,
           dataSource: this.getName(),
-          marketPrice: marketData.find((marketDataItem) => {
-            return marketDataItem.symbol === symbolProfile.symbol;
-          })?.marketPrice,
           marketState: 'delayed'
         };
       }

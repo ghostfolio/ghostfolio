@@ -342,7 +342,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccounts = false
+    @Query('withExcludedAccounts') withExcludedAccounts = false,
+    @Query('withItems') withItems = false
   ): Promise<PortfolioPerformanceResponse> {
     const hasReadRestrictedAccessPermission =
       this.userService.hasReadRestrictedAccessPermission({
@@ -361,6 +362,7 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
+      withItems,
       userId: this.request.user.id
     });
 
@@ -515,7 +517,8 @@ export class PortfolioController {
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
-        netPerformancePercent: portfolioPosition.netPerformancePercent,
+        netPerformancePercentWithCurrencyEffect:
+          portfolioPosition.netPerformancePercentWithCurrencyEffect,
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,

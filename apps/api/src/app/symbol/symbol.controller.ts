@@ -39,7 +39,7 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query('includeIndices') includeIndices: boolean = false,
+    @Query('includeIndices') includeIndices = false,
     @Query('query') query = ''
   ): Promise<{ items: LookupItem[] }> {
     try {
