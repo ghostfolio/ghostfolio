@@ -328,7 +328,17 @@ export class OrderService {
 
       return {
         ...order,
-        value
+        value,
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.SymbolProfile.currency,
+          userCurrency
+        ),
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          value,
+          order.SymbolProfile.currency,
+          userCurrency
+        )
       };
     });
 
