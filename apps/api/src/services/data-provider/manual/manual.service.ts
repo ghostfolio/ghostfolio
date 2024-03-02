@@ -166,13 +166,15 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      for (const symbolProfile of symbolProfiles) {
-        response[symbolProfile.symbol] = {
-          currency: symbolProfile.currency,
+      for (const { currency, symbol } of symbolProfiles) {
+        let marketPrice = marketData.find((marketDataItem) => {
+          return marketDataItem.symbol === symbol;
+        })?.marketPrice;
+
+        response[symbol] = {
+          currency,
+          marketPrice,
           dataSource: this.getName(),
-          marketPrice: marketData.find((marketDataItem) => {
-            return marketDataItem.symbol === symbolProfile.symbol;
-          })?.marketPrice,
           marketState: 'delayed'
         };
       }

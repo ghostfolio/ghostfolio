@@ -277,7 +277,8 @@ export class PortfolioService {
       await this.getTransactionPoints({
         filters,
         userId,
-        includeDrafts: true
+        includeDrafts: true,
+        types: ['BUY', 'SELL']
       });
 
     if (transactionPoints.length === 0) {
@@ -702,7 +703,7 @@ export class PortfolioService {
       .filter((order) => {
         tags = tags.concat(order.tags);
 
-        return order.type === 'BUY' || order.type === 'SELL';
+        return ['BUY', 'ITEM', 'SELL'].includes(order.type);
       })
       .map((order) => ({
         currency: order.SymbolProfile.currency,
@@ -957,7 +958,8 @@ export class PortfolioService {
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
-        userId
+        userId,
+        types: ['BUY', 'SELL']
       });
 
     if (transactionPoints?.length <= 0) {
@@ -1087,13 +1089,15 @@ export class PortfolioService {
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    withItems = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    withItems?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1128,7 +1132,8 @@ export class PortfolioService {
       await this.getTransactionPoints({
         filters,
         userId,
-        withExcludedAccounts
+        withExcludedAccounts,
+        types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1280,7 +1285,8 @@ export class PortfolioService {
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
-        userId
+        userId,
+        types: ['BUY', 'SELL']
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1913,11 +1919,13 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
+    types = ['BUY', 'ITEM', 'SELL'],
     userId,
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    types?: ActivityType[];
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<{
@@ -1931,10 +1939,10 @@ export class PortfolioService {
     const { activities, count } = await this.orderService.getOrders({
       filters,
       includeDrafts,
+      types,
       userCurrency,
       userId,
-      withExcludedAccounts,
-      types: ['BUY', 'SELL']
+      withExcludedAccounts
     });
 
     if (count <= 0) {
@@ -2006,7 +2014,7 @@ export class PortfolioService {
         userCurrency,
         userId,
         withExcludedAccounts,
-        types: ['ITEM', 'LIABILITY']
+        types: ['LIABILITY']
       });
 
     const accounts: PortfolioDetails['accounts'] = {};
@@ -2094,18 +2102,14 @@ export class PortfolioService {
         Account,
         quantity,
         SymbolProfile,
-        type,
-        valueInBaseCurrency
+        type
       } of ordersByAccount) {
-        const unitPriceInBaseCurrency =
-          portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
-          valueInBaseCurrency ??
-          0;
-
         let currentValueOfSymbolInBaseCurrency =
-          quantity * unitPriceInBaseCurrency;
+          quantity *
+            portfolioItemsNow[SymbolProfile.symbol]
+              ?.marketPriceInBaseCurrency ?? 0;
 
-        if (type === 'LIABILITY' || type === 'SELL') {
+        if (['LIABILITY', 'SELL'].includes(type)) {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 
