@@ -8,7 +8,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -198,6 +198,17 @@ export class OrderService {
     });
 
     return count;
+  }
+
+  public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
+    return this.prismaService.order.findFirst({
+      orderBy: {
+        date: 'desc'
+      },
+      where: {
+        SymbolProfile: { dataSource, symbol }
+      }
+    });
   }
 
   public async getOrders({
