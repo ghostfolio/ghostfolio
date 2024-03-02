@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.60.0 - 2024-03-02
 
+### Added
+
 - Added support for the cryptocurrency _Uniswap_ (`UNI7083-USD`)
 
 ### Changed
