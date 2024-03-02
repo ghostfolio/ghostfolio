@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the usability of the benchmarks in the markets overview
+
 ### Fixed
 
 - Displayed the button to fetch the current market price only if the activity is from today
