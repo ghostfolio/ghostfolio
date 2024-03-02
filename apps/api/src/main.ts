@@ -16,8 +16,9 @@ async function bootstrap() {
 
   let logLevelArray = [];
   let logLevel = configService.get<string>('LOG_LEVEL');
+  Logger.log(`Log-Level: ${logLevel}`);
 
-  switch (logLevel) {
+  switch (logLevel?.toLowerCase()) {
     case 'verbose':
       logLevelArray.push(['debug', 'error', 'log', 'verbose', 'warn']);
       break;
@@ -25,7 +26,7 @@ async function bootstrap() {
       logLevelArray.push(['debug', 'error', 'log', 'warn']);
       break;
     case 'log':
-      logLevelArray.push([, 'error', 'log', 'warn']);
+      logLevelArray.push(['error', 'log', 'warn']);
       break;
     case 'warn':
       logLevelArray.push(['error', 'warn']);
