@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { AccountBalancesResponse, Filter } from '@ghostfolio/common/interfaces';
@@ -40,6 +41,7 @@ export class AccountBalanceService {
     });
   }
 
+  @LogPerformance
   public async getAccountBalances({
     filters,
     user,
