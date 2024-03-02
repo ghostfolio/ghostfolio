@@ -20,19 +20,19 @@ async function bootstrap() {
 
   switch (logLevel?.toLowerCase()) {
     case 'verbose':
-      logLevelArray.push(['debug', 'error', 'log', 'verbose', 'warn']);
+      logLevelArray = ['debug', 'error', 'log', 'verbose', 'warn'];
       break;
     case 'debug':
-      logLevelArray.push(['debug', 'error', 'log', 'warn']);
+      logLevelArray = ['debug', 'error', 'log', 'warn'];
       break;
     case 'log':
-      logLevelArray.push(['error', 'log', 'warn']);
+      logLevelArray = ['error', 'log', 'warn'];
       break;
     case 'warn':
-      logLevelArray.push(['error', 'warn']);
+      logLevelArray = ['error', 'warn'];
       break;
     case 'error':
-      logLevelArray.push(['error']);
+      logLevelArray = ['error'];
       break;
     default:
       logLevelArray = environment.production
