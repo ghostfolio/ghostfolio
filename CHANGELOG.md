@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Added support for the cryptocurrency _Uniswap_ (`UNI7083-USD`)
+
 ### Changed
 
 - Improved the usability of the benchmarks in the markets overview
 - Integrated (wealth) items into the transaction point concept in the portfolio service
+- Refreshed the cryptocurrencies list
 
 ### Fixed
 
