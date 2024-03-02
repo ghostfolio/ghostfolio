@@ -12,11 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the benchmarks in the markets overview
+- Integrated (wealth) items into the transaction point concept in the portfolio service
 - Refreshed the cryptocurrencies list
 
 ### Fixed
 
 - Fixed a missing value in the activities table on mobile
+- Fixed a missing value on the public page
 - Displayed the button to fetch the current market price only if the activity is from today
 
 ## 2.59.0 - 2024-02-29
