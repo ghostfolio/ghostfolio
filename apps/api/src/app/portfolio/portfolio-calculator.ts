@@ -622,9 +622,7 @@ export class PortfolioCalculator {
         dividendInBaseCurrency,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
-        averagePrice: item.quantity.eq(0)
-          ? new Big(0)
-          : item.investment.div(item.quantity),
+        averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
         fee: item.fee,
