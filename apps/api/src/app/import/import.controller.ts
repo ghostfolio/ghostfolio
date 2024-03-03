@@ -43,7 +43,7 @@ export class ImportController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
     @Body() importData: ImportDataDto,
-    @Query('dryRun') isDryRun?: boolean
+    @Query('dryRun') isDryRun = false
   ): Promise<ImportResponse> {
     if (
       !hasPermission(this.request.user.permissions, permissions.createAccount)

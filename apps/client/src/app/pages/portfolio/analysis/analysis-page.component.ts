@@ -270,23 +270,28 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           index,
           {
             date,
-            netPerformanceInPercentage,
-            totalInvestment,
-            value,
-            valueInPercentage
+            netPerformanceInPercentageWithCurrencyEffect,
+            totalInvestmentValueWithCurrencyEffect,
+            valueInPercentage,
+            valueWithCurrencyEffect
           }
         ] of chart.entries()) {
           if (index > 0 || this.user?.settings?.dateRange === 'max') {
             // Ignore first item where value is 0
-            this.investments.push({ date, investment: totalInvestment });
+            this.investments.push({
+              date,
+              investment: totalInvestmentValueWithCurrencyEffect
+            });
             this.performanceDataItems.push({
               date,
-              value: isNumber(value) ? value : valueInPercentage
+              value: isNumber(valueWithCurrencyEffect)
+                ? valueWithCurrencyEffect
+                : valueInPercentage
             });
           }
           this.performanceDataItemsInPercentage.push({
             date,
-            value: netPerformanceInPercentage
+            value: netPerformanceInPercentageWithCurrencyEffect
           });
         }
 
@@ -305,10 +310,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ positions }) => {
         const positionsSorted = sortBy(
-          positions.filter(({ netPerformancePercentage }) => {
-            return isNumber(netPerformancePercentage);
+          positions.filter(({ netPerformancePercentageWithCurrencyEffect }) => {
+            return isNumber(netPerformancePercentageWithCurrencyEffect);
           }),
-          'netPerformancePercentage'
+          'netPerformancePercentageWithCurrencyEffect'
         ).reverse();
 
         this.top3 = positionsSorted.slice(0, 3);

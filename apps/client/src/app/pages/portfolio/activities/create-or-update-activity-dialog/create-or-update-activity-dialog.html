@@ -11,48 +11,61 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-select-trigger
-            >{{ typesTranslationMap[activityForm.controls['type'].value]
-            }}</mat-select-trigger
-          >
+          <mat-select-trigger>{{
+            typesTranslationMap[activityForm.controls['type'].value]
+          }}</mat-select-trigger>
           <mat-option value="BUY">
-            <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['BUY'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
           <mat-option value="FEE">
-            <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['FEE'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >One-time fee, annual account fees</small
             >
           </mat-option>
           <mat-option value="DIVIDEND">
-            <span><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Distribution of corporate earnings</small
             >
           </mat-option>
           <mat-option value="INTEREST">
-            <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['INTEREST'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Revenue for lending out money</small
             >
           </mat-option>
           <mat-option value="LIABILITY">
-            <span><b>{{ typesTranslationMap['LIABILITY'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['LIABILITY'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Mortgages, personal loans, credit cards</small
             >
           </mat-option>
           <mat-option value="SELL">
-            <span><b>{{ typesTranslationMap['SELL'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['SELL'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
           <mat-option value="ITEM">
-            <span><b>{{ typesTranslationMap['ITEM'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['ITEM'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Luxury items, real estate, private companies</small
             >
@@ -60,16 +73,20 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{'mb-3': data.activity.id}">
+    <div [ngClass]="{ 'mb-3': data.activity.id }">
       <mat-form-field
         appearance="outline"
         class="w-100"
-        [ngClass]="{'mb-1 without-hint': !data.activity.id}"
+        [ngClass]="{ 'mb-1 without-hint': !data.activity.id }"
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
           <mat-option
-            *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
+            *ngIf="
+              !activityForm.controls['accountId'].hasValidator(
+                Validators.required
+              )
+            "
             [value]="null"
           />
           <mat-option
@@ -88,14 +105,18 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{'d-none': data.activity.id}">
+    <div class="mb-3" [ngClass]="{ 'd-none': data.activity.id }">
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
         >Update Cash Balance</mat-checkbox
       >
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': !activityForm.controls['searchSymbol'].hasValidator(Validators.required) }"
+      [ngClass]="{
+        'd-none': !activityForm.controls['searchSymbol'].hasValidator(
+          Validators.required
+        )
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name, symbol or ISIN</mat-label>
@@ -107,7 +128,11 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': !activityForm.controls['name'].hasValidator(Validators.required) }"
+      [ngClass]="{
+        'd-none': !activityForm.controls['name'].hasValidator(
+          Validators.required
+        )
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
@@ -118,9 +143,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
         <mat-select formControlName="currency">
-          <mat-option *ngFor="let currency of currencies" [value]="currency"
-            >{{ currency }}</mat-option
-          >
+          <mat-option *ngFor="let currency of currencies" [value]="currency">{{
+            currency
+          }}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -146,7 +171,13 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' || activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{
+        'd-none':
+          activityForm.controls['type']?.value === 'FEE' ||
+          activityForm.controls['type']?.value === 'INTEREST' ||
+          activityForm.controls['type']?.value === 'ITEM' ||
+          activityForm.controls['type']?.value === 'LIABILITY'
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
@@ -155,7 +186,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
+      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
     >
       <div class="align-items-start d-flex">
         <mat-form-field appearance="outline" class="w-100">
@@ -192,17 +223,26 @@
             </mat-select>
           </div>
           <mat-error
-            *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
+            *ngIf="
+              activityForm.controls['unitPriceInCustomCurrency'].hasError(
+                'invalid'
+              )
+            "
             ><ng-container i18n
               >Oops! Could not get the historical exchange rate
               from</ng-container
             >
-            {{ activityForm.controls['date']?.value | date: defaultDateFormat
+            {{
+              activityForm.controls['date']?.value | date: defaultDateFormat
             }}</mat-error
           >
         </mat-form-field>
         <button
-          *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
+          *ngIf="
+            currentMarketPrice &&
+            (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
+            isToday(activityForm.controls['date']?.value)
+          "
           class="ml-2 mt-1 no-min-width"
           mat-button
           title="Apply current market price"
@@ -228,14 +268,19 @@
           </ng-container>
         </mat-label>
         <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix
-          >{{ activityForm.controls['currency'].value }}</span
-        >
+        <span class="ml-2" matTextSuffix>{{
+          activityForm.controls['currency'].value
+        }}</span>
       </mat-form-field>
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{
+        'd-none':
+          activityForm.controls['type']?.value === 'INTEREST' ||
+          activityForm.controls['type']?.value === 'ITEM' ||
+          activityForm.controls['type']?.value === 'LIABILITY'
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
@@ -252,11 +297,14 @@
           </mat-select>
         </div>
         <mat-error
-          *ngIf="activityForm.controls['feeInCustomCurrency'].hasError('invalid')"
+          *ngIf="
+            activityForm.controls['feeInCustomCurrency'].hasError('invalid')
+          "
           ><ng-container i18n
             >Oops! Could not get the historical exchange rate from</ng-container
           >
-          {{ activityForm.controls['date']?.value | date: defaultDateFormat
+          {{
+            activityForm.controls['date']?.value | date: defaultDateFormat
           }}</mat-error
         >
       </mat-form-field>
@@ -265,9 +313,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
-        <span class="ml-2" matTextSuffix
-          >{{ activityForm.controls['currency'].value }}</span
-        >
+        <span class="ml-2" matTextSuffix>{{
+          activityForm.controls['currency'].value
+        }}</span>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -340,7 +388,7 @@
           (optionSelected)="onAddTag($event)"
         >
           <mat-option
-            *ngFor="let tag of filteredTagsObservable | async"
+            *ngFor="let tag of filteredTagsObservable | async"
             [value]="tag.id"
           >
             {{ tag.name }}
@@ -354,7 +402,10 @@
       class="flex-grow-1"
       [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
-      [unit]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
+      [unit]="
+        activityForm.controls['currency']?.value ??
+        data.user?.settings?.baseCurrency
+      "
       [value]="total"
     />
     <div>

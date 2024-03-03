@@ -18,6 +18,8 @@ export interface Position {
   name?: string;
   netPerformance?: number;
   netPerformancePercentage?: number;
+  netPerformancePercentageWithCurrencyEffect?: number;
+  netPerformanceWithCurrencyEffect?: number;
   quantity: number;
   symbol: string;
   transactionCount: number;

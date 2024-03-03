@@ -1,3 +1,4 @@
+import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 
 import {
@@ -26,9 +27,10 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -68,10 +70,12 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
-    this.router.navigate([], {
-      queryParams: { dataSource, symbol, positionDetailDialog: true }
-    });
+  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
+    if (this.hasPermissionToOpenDetails) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, positionDetailDialog: true }
+      });
+    }
   }
 
   public onShowAllPositions() {

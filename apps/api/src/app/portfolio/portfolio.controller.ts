@@ -118,27 +118,23 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return portfolioPosition.investment;
+        .map(({ investment }) => {
+          return investment;
         })
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return this.exchangeRateDataService.toCurrency(
-            portfolioPosition.quantity * portfolioPosition.marketPrice,
-            portfolioPosition.currency,
-            this.request.user.Settings.settings.baseCurrency
-          );
+        .filter(({ assetClass, assetSubClass }) => {
+          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+        })
+        .map(({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency;
         })
         .reduce((a, b) => a + b, 0);
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-        portfolioPosition.netPerformance = null;
-        portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
       }
@@ -346,7 +342,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccounts = false
+    @Query('withExcludedAccounts') withExcludedAccounts = false,
+    @Query('withItems') withItems = false
   ): Promise<PortfolioPerformanceResponse> {
     const hasReadRestrictedAccessPermission =
       this.userService.hasReadRestrictedAccessPermission({
@@ -365,6 +362,7 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
+      withItems,
       userId: this.request.user.id
     });
 
@@ -428,6 +426,10 @@ export class PortfolioController {
         (item) => {
           return nullifyValuesInObject(item, ['totalInvestment', 'value']);
         }
+      );
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentNetPerformance', 'currentNetPerformancePercent']
       );
     }
 
@@ -515,7 +517,8 @@ export class PortfolioController {
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
-        netPerformancePercent: portfolioPosition.netPerformancePercent,
+        netPerformancePercentWithCurrencyEffect:
+          portfolioPosition.netPerformancePercentWithCurrencyEffect,
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,

@@ -35,14 +35,14 @@ const locales = {
   LIABILITY: $localize`Liability`,
   SELL: $localize`Sell`,
 
-  // enum AssetClass
+  // AssetClass (enum)
   CASH: $localize`Cash`,
   COMMODITY: $localize`Commodity`,
   EQUITY: $localize`Equity`,
   FIXED_INCOME: $localize`Fixed Income`,
   REAL_ESTATE: $localize`Real Estate`,
 
-  // enum AssetSubClass
+  // AssetSubClass (enum)
   BOND: $localize`Bond`,
   CRYPTOCURRENCY: $localize`Cryptocurrency`,
   ETF: $localize`ETF`,
@@ -50,6 +50,10 @@ const locales = {
   PRECIOUS_METAL: $localize`Precious Metal`,
   PRIVATE_EQUITY: $localize`Private Equity`,
   STOCK: $localize`Stock`,
+
+  // Benchmark
+  ALL_TIME_HIGH: 'All time high',
+  BEAR_MARKET: 'Bear market',
 
   // Continents
   Africa: $localize`Africa`,

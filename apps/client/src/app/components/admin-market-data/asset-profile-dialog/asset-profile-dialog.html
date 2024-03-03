@@ -25,7 +25,9 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherSymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
+        "
       >
         <ng-container i18n>Gather Historical Data</ng-container>
       </button>
@@ -33,7 +35,12 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherProfileDataBySymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherProfileDataBySymbol({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
       >
         <ng-container i18n>Gather Profile Data</ng-container>
       </button>
@@ -73,7 +80,12 @@
         color="accent"
         mat-flat-button
         type="button"
-        [disabled]="!assetProfileForm.controls['historicalData']?.controls['csvString'].touched || assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
+        [disabled]="
+          !assetProfileForm.controls['historicalData']?.controls['csvString']
+            .touched ||
+          assetProfileForm.controls['historicalData']?.controls['csvString']
+            ?.value === ''
+        "
         (click)="onImportHistoricalData()"
       >
         <ng-container i18n>Import</ng-container>
@@ -129,49 +141,54 @@
         >
       </div>
       <ng-container
-        *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
+        *ngIf="
+          assetProfile?.countries?.length > 0 ||
+          assetProfile?.sectors?.length > 0
+        "
       >
-        @if (assetProfile?.countries?.length === 1 &&
-        assetProfile?.sectors?.length === 1 ) {
-        <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.sectors[0].name"
-            >Sector</gf-value
-          >
-        </div>
-        <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.countries[0].name"
-            >Country</gf-value
-          >
-        </div>
+        @if (
+          assetProfile?.countries?.length === 1 &&
+          assetProfile?.sectors?.length === 1
+        ) {
+          <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="assetProfile?.sectors[0].name"
+              >Sector</gf-value
+            >
+          </div>
+          <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="assetProfile?.countries[0].name"
+              >Country</gf-value
+            >
+          </div>
         } @else {
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Sectors</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="sectors"
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Countries</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="countries"
-          />
-        </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="sectors"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="countries"
+            />
+          </div>
         }
       </ng-container>
     </div>
@@ -222,7 +239,17 @@
           color="primary"
           i18n
           [checked]="isBenchmark"
-          (change)="isBenchmark ? onUnsetBenchmark({dataSource: data.dataSource, symbol: data.symbol}) : onSetBenchmark({dataSource: data.dataSource, symbol: data.symbol})"
+          (change)="
+            isBenchmark
+              ? onUnsetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+              : onSetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+          "
           >Benchmark</mat-checkbox
         >
       </div>
@@ -253,7 +280,9 @@
             color="accent"
             mat-flat-button
             type="button"
-            [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
+            [disabled]="
+              assetProfileForm.controls['scraperConfiguration'].value === '{}'
+            "
             (click)="onTestMarketData()"
           >
             <ng-container i18n>Test</ng-container>

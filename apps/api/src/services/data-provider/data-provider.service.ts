@@ -92,7 +92,9 @@ export class DataProviderService {
 
       for (const symbol of symbols) {
         const promise = Promise.resolve(
-          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile({
+            symbol
+          })
         );
 
         promises.push(
@@ -335,11 +337,13 @@ export class DataProviderService {
   public async getQuotes({
     items,
     requestTimeout,
-    useCache = true
+    useCache = true,
+    user
   }: {
     items: UniqueAsset[];
     requestTimeout?: number;
     useCache?: boolean;
+    user?: UserWithSettings;
   }): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
@@ -404,6 +408,14 @@ export class DataProviderService {
       itemsGroupedByDataSource
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
+
+      if (
+        dataProvider.getDataProviderInfo().isPremium &&
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user?.subscription.type === 'Basic'
+      ) {
+        continue;
+      }
 
       const symbols = dataGatheringItems.map((dataGatheringItem) => {
         return dataGatheringItem.symbol;

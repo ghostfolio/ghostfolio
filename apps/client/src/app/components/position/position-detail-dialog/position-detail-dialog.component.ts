@@ -50,15 +50,13 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public dividendInBaseCurrency: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
-  public grossPerformance: number;
-  public grossPerformancePercent: number;
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
-  public netPerformance: number;
-  public netPerformancePercent: number;
+  public netPerformancePercentWithCurrencyEffect: number;
+  public netPerformanceWithCurrencyEffect: number;
   public quantity: number;
   public quantityPrecision = 2;
   public reportDataGlitchMail: string;
@@ -84,7 +82,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     private userService: UserService
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.dataService
       .fetchPositionDetail({
         dataSource: this.data.dataSource,
@@ -99,15 +97,13 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           dividendInBaseCurrency,
           feeInBaseCurrency,
           firstBuyDate,
-          grossPerformance,
-          grossPerformancePercent,
           historicalData,
           investment,
           marketPrice,
           maxPrice,
           minPrice,
-          netPerformance,
-          netPerformancePercent,
+          netPerformancePercentWithCurrencyEffect,
+          netPerformanceWithCurrencyEffect,
           orders,
           quantity,
           SymbolProfile,
@@ -125,8 +121,6 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.dividendInBaseCurrency = dividendInBaseCurrency;
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
-          this.grossPerformance = grossPerformance;
-          this.grossPerformancePercent = grossPerformancePercent;
           this.historicalDataItems = historicalData.map(
             (historicalDataItem) => {
               this.benchmarkDataItems.push({
@@ -144,8 +138,10 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
-          this.netPerformance = netPerformance;
-          this.netPerformancePercent = netPerformancePercent;
+          this.netPerformancePercentWithCurrencyEffect =
+            netPerformancePercentWithCurrencyEffect;
+          this.netPerformanceWithCurrencyEffect =
+            netPerformanceWithCurrencyEffect;
           this.quantity = quantity;
           this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
@@ -267,7 +263,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 

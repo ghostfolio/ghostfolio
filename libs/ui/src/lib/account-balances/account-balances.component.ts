@@ -1,3 +1,4 @@
+import { getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
 import {
@@ -25,7 +26,7 @@ import { Subject } from 'rxjs';
 export class AccountBalancesComponent implements OnChanges, OnDestroy, OnInit {
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountId: string;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showActions = true;
 
   @Output() accountBalanceDeleted = new EventEmitter<string>();

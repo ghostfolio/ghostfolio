@@ -43,16 +43,18 @@ export class ManualService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
     const assetProfile: Partial<SymbolProfile> = {
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
 
     const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      { dataSource: this.getName(), symbol: aSymbol }
+      { symbol, dataSource: this.getName() }
     ]);
 
     if (symbolProfile) {
@@ -164,13 +166,15 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      for (const symbolProfile of symbolProfiles) {
-        response[symbolProfile.symbol] = {
-          currency: symbolProfile.currency,
+      for (const { currency, symbol } of symbolProfiles) {
+        let marketPrice = marketData.find((marketDataItem) => {
+          return marketDataItem.symbol === symbol;
+        })?.marketPrice;
+
+        response[symbol] = {
+          currency,
+          marketPrice,
           dataSource: this.getName(),
-          marketPrice: marketData.find((marketDataItem) => {
-            return marketDataItem.symbol === symbolProfile.symbol;
-          })?.marketPrice,
           marketState: 'delayed'
         };
       }

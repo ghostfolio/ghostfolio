@@ -100,7 +100,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateAccessDialog(): void {
+  private openCreateAccessDialog() {
     const dialogRef = this.dialog.open(CreateOrUpdateAccessDialog, {
       data: {
         access: {
