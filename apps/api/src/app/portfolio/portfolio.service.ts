@@ -486,6 +486,7 @@ export class PortfolioService {
         impersonationId,
         userCurrency,
         userId,
+        holdings,
         balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
         emergencyFundPositionsValueInBaseCurrency:
           this.getEmergencyFundPositionsValueInBaseCurrency({
@@ -2176,7 +2177,7 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
-    types = ['BUY', 'ITEM', 'SELL'],
+    types = ['BUY', 'ITEM', 'SELL', 'STAKE'],
     userId,
     withExcludedAccounts = false
   }: {
@@ -2199,8 +2200,7 @@ export class PortfolioService {
       types,
       userCurrency,
       userId,
-      withExcludedAccounts,
-      types: ['BUY', 'SELL', 'STAKE']
+      withExcludedAccounts
     });
 
     if (count <= 0) {
