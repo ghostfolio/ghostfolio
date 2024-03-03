@@ -78,32 +78,29 @@ export class PortfolioCalculator {
       const oldAccumulatedSymbol = symbols[order.symbol];
 
       const factor = getFactor(order.type);
-      const unitPrice = new Big(order.unitPrice);
 
       if (oldAccumulatedSymbol) {
+        let investment = oldAccumulatedSymbol.investment;
+
         const newQuantity = order.quantity
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
 
-        let investment = oldAccumulatedSymbol.investment;
-
-        if (newQuantity.gt(0)) {
-          if (order.type === 'BUY') {
-            investment = oldAccumulatedSymbol.investment.plus(
-              order.quantity.mul(unitPrice)
-            );
-          } else if (order.type === 'SELL') {
-            const averagePrice = oldAccumulatedSymbol.investment.div(
-              oldAccumulatedSymbol.quantity
-            );
-            investment = oldAccumulatedSymbol.investment.minus(
-              order.quantity.mul(averagePrice)
-            );
-          }
+        if (order.type === 'BUY') {
+          investment = oldAccumulatedSymbol.investment.plus(
+            order.quantity.mul(order.unitPrice)
+          );
+        } else if (order.type === 'SELL') {
+          investment = oldAccumulatedSymbol.investment.minus(
+            order.quantity.mul(oldAccumulatedSymbol.averagePrice)
+          );
         }
 
         currentTransactionPointItem = {
           investment,
+          averagePrice: newQuantity.gt(0)
+            ? investment.div(newQuantity)
+            : new Big(0),
           currency: order.currency,
           dataSource: order.dataSource,
           dividend: new Big(0),
@@ -116,12 +113,13 @@ export class PortfolioCalculator {
         };
       } else {
         currentTransactionPointItem = {
+          averagePrice: order.unitPrice,
           currency: order.currency,
           dataSource: order.dataSource,
           dividend: new Big(0),
           fee: order.fee,
           firstBuyDate: order.date,
-          investment: unitPrice.mul(order.quantity).mul(factor),
+          investment: order.unitPrice.mul(order.quantity).mul(factor),
           quantity: order.quantity.mul(factor),
           symbol: order.symbol,
           tags: order.tags,
@@ -132,22 +130,28 @@ export class PortfolioCalculator {
       symbols[order.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
+
       const newItems = items.filter(
         (transactionPointItem) => transactionPointItem.symbol !== order.symbol
       );
+
       newItems.push(currentTransactionPointItem);
+
       newItems.sort((a, b) => {
         return a.symbol?.localeCompare(b.symbol);
       });
+
       if (lastDate !== currentDate || lastTransactionPoint === null) {
         lastTransactionPoint = {
           date: currentDate,
           items: newItems
         };
+
         this.transactionPoints.push(lastTransactionPoint);
       } else {
         lastTransactionPoint.items = newItems;
       }
+
       lastDate = currentDate;
     }
   }

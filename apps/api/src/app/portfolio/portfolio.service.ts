@@ -753,7 +753,6 @@ export class PortfolioService {
         averagePrice,
         currency,
         dataSource,
-        dividend,
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
@@ -804,9 +803,7 @@ export class PortfolioService {
           );
 
           if (currentSymbol) {
-            currentAveragePrice = currentSymbol.quantity.eq(0)
-              ? 0
-              : currentSymbol.investment.div(currentSymbol.quantity).toNumber();
+            currentAveragePrice = currentSymbol.averagePrice.toNumber();
             currentQuantity = currentSymbol.quantity.toNumber();
           }
 
