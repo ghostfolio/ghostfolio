@@ -217,9 +217,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.languages?.length
-    ? navigator.languages[0]
-    : navigator.language ?? locale;
+  return navigator.language ?? locale;
 }
 
 export function getNumberFormatDecimal(aLocale?: string) {
@@ -230,7 +228,7 @@ export function getNumberFormatDecimal(aLocale?: string) {
   }).value;
 }
 
-export function getNumberFormatGroup(aLocale?: string) {
+export function getNumberFormatGroup(aLocale = getLocale()) {
   const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
 
   return formatObject.find((object) => {
@@ -395,6 +393,6 @@ export function resolveMarketCondition(
   } else if (aMarketCondition === 'BEAR_MARKET') {
     return { emoji: '🐻' };
   } else {
-    return { emoji: '⚪' };
+    return { emoji: undefined };
   }
 }

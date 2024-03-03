@@ -2,6 +2,7 @@ import { PortfolioPerformance } from './portfolio-performance.interface';
 
 export interface PortfolioSummary extends PortfolioPerformance {
   annualizedPerformancePercent: number;
+  annualizedPerformancePercentWithCurrencyEffect: number;
   cash: number;
   committedFunds: number;
   dividend: number;

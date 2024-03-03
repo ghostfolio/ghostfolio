@@ -64,6 +64,7 @@ import {
   Tag
 } from '@prisma/client';
 import Big from 'big.js';
+import { isUUID } from 'class-validator';
 import {
   differenceInDays,
   format,
@@ -124,7 +125,7 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<AccountWithValue[]> {
-    const where: Prisma.AccountWhereInput = { userId: userId };
+    const where: Prisma.AccountWhereInput = { userId };
 
     const accountFilter = filters?.find(({ type }) => {
       return type === 'ACCOUNT';
@@ -234,18 +235,20 @@ export class PortfolioService {
     impersonationId: string;
   }): Promise<InvestmentItem[]> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { activities } = await this.orderService.getOrders({
       filters,
+      userCurrency,
       userId,
-      types: ['DIVIDEND'],
-      userCurrency: this.request.user.Settings.settings.baseCurrency
+      types: ['DIVIDEND']
     });
 
-    let dividends = activities.map((dividend) => {
+    let dividends = activities.map(({ date, valueInBaseCurrency }) => {
       return {
-        date: format(dividend.date, DATE_FORMAT),
-        investment: dividend.valueInBaseCurrency
+        date: format(date, DATE_FORMAT),
+        investment: valueInBaseCurrency
       };
     });
 
@@ -283,7 +286,8 @@ export class PortfolioService {
       await this.getTransactionPoints({
         filters,
         userId,
-        includeDrafts: true
+        includeDrafts: true,
+        types: ['BUY', 'SELL']
       });
 
     if (transactionPoints.length === 0) {
@@ -428,7 +432,7 @@ export class PortfolioService {
     );
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
+      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
     ]);
 
@@ -568,12 +572,20 @@ export class PortfolioService {
         grossPerformance: item.grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent:
           item.grossPerformancePercentage?.toNumber() ?? 0,
+        grossPerformancePercentWithCurrencyEffect:
+          item.grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+        grossPerformanceWithCurrencyEffect:
+          item.grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         investment: item.investment.toNumber(),
         marketPrice: item.marketPrice,
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: symbolProfile.name,
         netPerformance: item.netPerformance?.toNumber() ?? 0,
         netPerformancePercent: item.netPerformancePercentage?.toNumber() ?? 0,
+        netPerformancePercentWithCurrencyEffect:
+          item.netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+        netPerformanceWithCurrencyEffect:
+          item.netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         quantity: item.quantity.toNumber(),
         sectors: symbolProfile.sectors,
         symbol: item.symbol,
@@ -807,7 +819,8 @@ export class PortfolioService {
         return (
           order.type === 'BUY' ||
           order.type === 'SELL' ||
-          order.type === 'STAKE'
+          order.type === 'STAKE' ||
+          order.type === 'ITEM'
         );
       })
       .map((order) => ({
@@ -857,7 +870,9 @@ export class PortfolioService {
       } = position;
 
       const accounts: PortfolioPositionDetail['accounts'] = uniqBy(
-        orders,
+        orders.filter(({ Account }) => {
+          return Account;
+        }),
         'Account.id'
       ).map(({ Account }) => {
         return Account;
@@ -1005,6 +1020,7 @@ export class PortfolioService {
       };
     } else {
       const currentData = await this.dataProviderService.getQuotes({
+        user,
         items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
       });
       const marketPrice = currentData[aSymbol]?.marketPrice;
@@ -1085,11 +1101,13 @@ export class PortfolioService {
       return type === 'SEARCH_QUERY';
     })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
 
     const { portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
-        userId
+        userId,
+        types: ['BUY', 'SELL']
       });
 
     if (transactionPoints?.length <= 0) {
@@ -1125,7 +1143,7 @@ export class PortfolioService {
     });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ items: dataGatheringItems }),
+      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(
         positions.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };
@@ -1222,7 +1240,8 @@ export class PortfolioService {
     impersonationId,
     userId,
     withExcludedAccounts = false,
-    calculateTimeWeightedPerformance = false
+    calculateTimeWeightedPerformance = false,
+    withItems = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
@@ -1230,6 +1249,7 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
     calculateTimeWeightedPerformance?: boolean;
+    withItems?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1264,7 +1284,8 @@ export class PortfolioService {
       await this.getTransactionPoints({
         filters,
         userId,
-        withExcludedAccounts
+        withExcludedAccounts,
+        types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1418,7 +1439,8 @@ export class PortfolioService {
 
     const { orders, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
-        userId
+        userId,
+        types: ['BUY', 'SELL']
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1759,12 +1781,16 @@ export class PortfolioService {
       dateOfFirstActivity: undefined,
       grossPerformance: 0,
       grossPerformancePercent: 0,
+      grossPerformancePercentWithCurrencyEffect: 0,
+      grossPerformanceWithCurrencyEffect: 0,
       investment: balance,
       marketPrice: 0,
       marketState: 'open',
       name: currency,
       netPerformance: 0,
       netPerformancePercent: 0,
+      netPerformancePercentWithCurrencyEffect: 0,
+      netPerformanceWithCurrencyEffect: 0,
       quantity: 0,
       sectors: [],
       symbol: currency,
@@ -1906,12 +1932,14 @@ export class PortfolioService {
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
+    holdings,
     impersonationId,
     userCurrency,
     userId
   }: {
     balanceInBaseCurrency: number;
     emergencyFundPositionsValueInBaseCurrency: number;
+    holdings: PortfolioDetails['holdings'];
     impersonationId: string;
     userCurrency: string;
     userId: string;
@@ -2013,7 +2041,9 @@ export class PortfolioService {
       .minus(emergencyFund)
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
+
     const committedFunds = new Big(totalBuy).minus(totalSell);
+
     const totalOfExcludedActivities = this.getSumOfActivityType({
       userCurrency,
       activities: excludedActivities,
@@ -2063,9 +2093,25 @@ export class PortfolioService {
       })
       ?.toNumber();
 
+    const annualizedPerformancePercentWithCurrencyEffect =
+      new PortfolioCalculator({
+        currency: userCurrency,
+        currentRateService: this.currentRateService,
+        exchangeRateDataService: this.exchangeRateDataService,
+        orders: []
+      })
+        .getAnnualizedPerformancePercent({
+          daysInMarket,
+          netPerformancePercent: new Big(
+            performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+          )
+        })
+        ?.toNumber();
+
     return {
       ...performanceInformation.performance,
       annualizedPerformancePercent,
+      annualizedPerformancePercentWithCurrencyEffect,
       cash,
       dividend,
       excludedAccountsAndActivities,
@@ -2130,11 +2176,13 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
+    types = ['BUY', 'ITEM', 'SELL'],
     userId,
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
     includeDrafts?: boolean;
+    types?: ActivityType[];
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<{
@@ -2148,6 +2196,7 @@ export class PortfolioService {
     const { activities, count } = await this.orderService.getOrders({
       filters,
       includeDrafts,
+      types,
       userCurrency,
       userId,
       withExcludedAccounts,
@@ -2212,7 +2261,7 @@ export class PortfolioService {
     withExcludedAccounts = false
   }: {
     filters?: Filter[];
-    orders: OrderWithAccount[];
+    orders: Activity[];
     portfolioItemsNow: { [p: string]: TimelinePosition };
     userCurrency: string;
     userId: string;
@@ -2224,7 +2273,7 @@ export class PortfolioService {
         userCurrency,
         userId,
         withExcludedAccounts,
-        types: ['ITEM', 'LIABILITY']
+        types: ['LIABILITY']
       });
 
     const accounts: PortfolioDetails['accounts'] = {};
@@ -2308,41 +2357,42 @@ export class PortfolioService {
         };
       }
 
-      for (const order of ordersByAccount) {
+      for (const {
+        Account,
+        quantity,
+        SymbolProfile,
+        type
+      } of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
-          order.quantity *
-          (portfolioItemsNow[order.SymbolProfile.symbol]
-            ?.marketPriceInBaseCurrency ??
-            order.unitPrice ??
-            0);
+          quantity *
+            portfolioItemsNow[SymbolProfile.symbol]
+              ?.marketPriceInBaseCurrency ?? 0;
 
-        if (order.type === 'LIABILITY' || order.type === 'SELL') {
+        if (['LIABILITY', 'SELL'].includes(type)) {
           currentValueOfSymbolInBaseCurrency *= -1;
         }
 
-        if (accounts[order.Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          accounts[order.Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+        if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
+          accounts[Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
         } else {
-          accounts[order.Account?.id || UNKNOWN_KEY] = {
+          accounts[Account?.id || UNKNOWN_KEY] = {
             balance: 0,
-            currency: order.Account?.currency,
+            currency: Account?.currency,
             name: account.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
 
         if (
-          platforms[order.Account?.Platform?.id || UNKNOWN_KEY]
-            ?.valueInBaseCurrency
+          platforms[Account?.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency
         ) {
-          platforms[
-            order.Account?.Platform?.id || UNKNOWN_KEY
-          ].valueInBaseCurrency += currentValueOfSymbolInBaseCurrency;
+          platforms[Account?.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+            currentValueOfSymbolInBaseCurrency;
         } else {
-          platforms[order.Account?.Platform?.id || UNKNOWN_KEY] = {
+          platforms[Account?.Platform?.id || UNKNOWN_KEY] = {
             balance: 0,
-            currency: order.Account?.currency,
+            currency: Account?.currency,
             name: account.Platform?.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };

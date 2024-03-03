@@ -72,7 +72,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onAddFilter({ input, value }: MatChipInputEvent): void {
+  public onAddFilter({ input, value }: MatChipInputEvent) {
     if (value?.trim()) {
       this.updateFilters();
     }
@@ -85,7 +85,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.searchControl.setValue(undefined);
   }
 
-  public onRemoveFilter(aFilter: Filter): void {
+  public onRemoveFilter(aFilter: Filter) {
     this.selectedFilters = this.selectedFilters.filter((filter) => {
       return filter.id !== aFilter.id;
     });
@@ -93,7 +93,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.updateFilters();
   }
 
-  public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
+  public onSelectFilter(event: MatAutocompleteSelectedEvent) {
     this.selectedFilters.push(
       this.allFilters.find((filter) => {
         return filter.id === event.option.value;

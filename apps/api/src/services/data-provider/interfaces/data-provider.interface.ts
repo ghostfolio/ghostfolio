@@ -11,7 +11,11 @@ import { DataSource, SymbolProfile } from '@prisma/client';
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
 
-  getAssetProfile(aSymbol: string): Promise<Partial<SymbolProfile>>;
+  getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>>;
 
   getDataProviderInfo(): DataProviderInfo;
 

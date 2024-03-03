@@ -150,7 +150,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   }: {
     files: FileList;
     stepper: MatStepper;
-  }): void {
+  }) {
     if (files.length === 0) {
       return;
     }

@@ -8,7 +8,7 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -200,6 +200,17 @@ export class OrderService {
     return count;
   }
 
+  public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
+    return this.prismaService.order.findFirst({
+      orderBy: {
+        date: 'desc'
+      },
+      where: {
+        SymbolProfile: { dataSource, symbol }
+      }
+    });
+  }
+
   public async getOrders({
     filters,
     includeDrafts = false,
@@ -313,13 +324,14 @@ export class OrderService {
     }
 
     if (types) {
-      where.OR = types.map((type) => {
-        return {
-          type: {
-            equals: type
-          }
-        };
-      });
+      where.type = { in: types };
+    }
+
+    if (withExcludedAccounts === false) {
+      where.OR = [
+        { Account: null },
+        { Account: { NOT: { isExcluded: true } } }
+      ];
     }
 
     const [orders, count] = await Promise.all([
@@ -347,32 +359,24 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
-    const activities = orders
-      .filter((order) => {
-        return (
-          withExcludedAccounts ||
-          !order.Account ||
-          order.Account?.isExcluded === false
-        );
-      })
-      .map((order) => {
-        const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+    const activities = orders.map((order) => {
+      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
-        return {
-          ...order,
+      return {
+        ...order,
+        value,
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.SymbolProfile.currency,
+          userCurrency
+        ),
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            order.fee,
-            order.SymbolProfile.currency,
-            userCurrency
-          ),
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            value,
-            order.SymbolProfile.currency,
-            userCurrency
-          )
-        };
-      });
+          order.SymbolProfile.currency,
+          userCurrency
+        )
+      };
+    });
 
     return { activities, count };
   }

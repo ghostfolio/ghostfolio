@@ -1,6 +1,7 @@
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsBoolean,
+  IsISO4217CurrencyCode,
   IsNumber,
   IsOptional,
   IsString,
@@ -19,7 +20,7 @@ export class UpdateAccountDto {
   )
   comment?: string;
 
-  @IsString()
+  @IsISO4217CurrencyCode()
   currency: string;
 
   @IsString()

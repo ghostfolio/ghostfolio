@@ -2,6 +2,7 @@ import { AssetClass, AssetSubClass, Prisma, Tag } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
+  IsISO4217CurrencyCode,
   IsObject,
   IsOptional,
   IsString
@@ -24,7 +25,7 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   countries?: Prisma.InputJsonArray;
 
-  @IsString()
+  @IsISO4217CurrencyCode()
   @IsOptional()
   currency?: string;
 

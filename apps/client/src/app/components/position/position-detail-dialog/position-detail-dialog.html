@@ -44,7 +44,7 @@
           [isCurrency]="true"
           [locale]="data.locale"
           [unit]="data.baseCurrency"
-          [value]="netPerformance"
+          [value]="netPerformanceWithCurrencyEffect"
           >Change</gf-value
         >
       </div>
@@ -55,7 +55,7 @@
           [colorizeSign]="true"
           [isPercent]="true"
           [locale]="data.locale"
-          [value]="netPerformancePercent"
+          [value]="netPerformancePercentWithCurrencyEffect"
           >Performance</gf-value
         >
       </div>
@@ -87,7 +87,11 @@
           size="medium"
           [isCurrency]="true"
           [locale]="data.locale"
-          [ngClass]="{ 'text-danger': minPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [ngClass]="{
+            'text-danger':
+              minPrice?.toFixed(2) === marketPrice?.toFixed(2) &&
+              maxPrice?.toFixed(2) !== minPrice?.toFixed(2)
+          }"
           [unit]="SymbolProfile?.currency"
           [value]="minPrice"
           >Minimum Price</gf-value
@@ -99,7 +103,11 @@
           size="medium"
           [isCurrency]="true"
           [locale]="data.locale"
-          [ngClass]="{ 'text-success': maxPrice?.toFixed(2) === marketPrice?.toFixed(2) && maxPrice?.toFixed(2) !== minPrice?.toFixed(2) }"
+          [ngClass]="{
+            'text-success':
+              maxPrice?.toFixed(2) === marketPrice?.toFixed(2) &&
+              maxPrice?.toFixed(2) !== minPrice?.toFixed(2)
+          }"
           [unit]="SymbolProfile?.currency"
           [value]="maxPrice"
           >Maximum Price</gf-value
@@ -201,53 +209,61 @@
         >
       </div>
       <ng-container
-        *ngIf="SymbolProfile?.countries?.length > 0 || SymbolProfile?.sectors?.length > 0"
+        *ngIf="
+          SymbolProfile?.countries?.length > 0 ||
+          SymbolProfile?.sectors?.length > 0
+        "
       >
-        @if(SymbolProfile?.countries?.length === 1 &&
-        SymbolProfile?.sectors?.length === 1) {
-        <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="SymbolProfile.sectors[0].name"
-            >Sector</gf-value
+        @if (
+          SymbolProfile?.countries?.length === 1 &&
+          SymbolProfile?.sectors?.length === 1
+        ) {
+          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.sectors[0].name"
+              >Sector</gf-value
+            >
+          </div>
+          <div
+            *ngIf="SymbolProfile?.countries?.length === 1"
+            class="col-6 mb-3"
           >
-        </div>
-        <div *ngIf="SymbolProfile?.countries?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="SymbolProfile.countries[0].name"
-            >Country</gf-value
-          >
-        </div>
+            <gf-value
+              i18n
+              size="medium"
+              [locale]="data.locale"
+              [value]="SymbolProfile.countries[0].name"
+              >Country</gf-value
+            >
+          </div>
         } @else {
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Sectors</div>
-          <gf-portfolio-proportion-chart
-            [baseCurrency]="data.baseCurrency"
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [locale]="data.locale"
-            [maxItems]="10"
-            [positions]="sectors"
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Countries</div>
-          <gf-portfolio-proportion-chart
-            [baseCurrency]="data.baseCurrency"
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [locale]="data.locale"
-            [maxItems]="10"
-            [positions]="countries"
-          />
-        </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="data.baseCurrency"
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="data.locale"
+              [maxItems]="10"
+              [positions]="sectors"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [baseCurrency]="data.baseCurrency"
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [locale]="data.locale"
+              [maxItems]="10"
+              [positions]="countries"
+            />
+          </div>
         }
       </ng-container>
       <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
@@ -274,7 +290,9 @@
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToExportActivities]="
+            !data.hasImpersonationId && !user.settings.isRestrictedView
+          "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
@@ -311,15 +329,17 @@
       <div class="col">
         <div class="h5" i18n>Tags</div>
         <mat-chip-listbox>
-          <mat-chip-option *ngFor="let tag of tags" disabled
-            >{{ tag.name }}</mat-chip-option
-          >
+          <mat-chip-option *ngFor="let tag of tags" disabled>{{
+            tag.name
+          }}</mat-chip-option>
         </mat-chip-listbox>
       </div>
     </div>
 
     <div
-      *ngIf="activities?.length > 0 && data.hasPermissionToReportDataGlitch === true"
+      *ngIf="
+        activities?.length > 0 && data.hasPermissionToReportDataGlitch === true
+      "
       class="row"
     >
       <div class="col">

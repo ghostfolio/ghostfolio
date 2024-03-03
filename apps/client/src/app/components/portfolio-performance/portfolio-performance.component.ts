@@ -1,4 +1,5 @@
 import {
+  getLocale,
   getNumberFormatDecimal,
   getNumberFormatGroup
 } from '@ghostfolio/common/helper';
@@ -31,7 +32,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() isAllTimeHigh: boolean;
   @Input() isAllTimeLow: boolean;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
   @Input() showDetails: boolean;
   @Input() unit: string;
@@ -62,7 +63,8 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
       } else if (this.showDetails === false) {
         new CountUp(
           'value',
-          this.performance?.currentNetPerformancePercent * 100,
+          this.performance?.currentNetPerformancePercentWithCurrencyEffect *
+            100,
           {
             decimal: getNumberFormatDecimal(this.locale),
             decimalPlaces: 2,

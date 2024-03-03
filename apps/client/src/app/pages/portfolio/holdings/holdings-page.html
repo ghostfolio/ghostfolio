@@ -14,15 +14,15 @@
         [locale]="user?.settings?.locale"
       />
       @if (hasPermissionToCreateOrder && holdings?.length > 0) {
-      <div class="text-center">
-        <a
-          class="mt-3"
-          i18n
-          mat-stroked-button
-          [routerLink]="['/portfolio', 'activities']"
-          >Manage Activities</a
-        >
-      </div>
+        <div class="text-center">
+          <a
+            class="mt-3"
+            i18n
+            mat-stroked-button
+            [routerLink]="['/portfolio', 'activities']"
+            >Manage Activities</a
+          >
+        </div>
       }
     </div>
   </div>

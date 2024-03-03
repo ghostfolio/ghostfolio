@@ -1142,6 +1142,7 @@ export class PortfolioCalculator {
     switch (type) {
       case 'BUY':
       case 'STAKE':
+      case 'ITEM':
         factor = 1;
         break;
       case 'SELL':

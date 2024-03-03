@@ -7,6 +7,7 @@ import type {
 import {
   IsArray,
   IsBoolean,
+  IsISO4217CurrencyCode,
   IsISO8601,
   IsIn,
   IsNumber,
@@ -19,8 +20,8 @@ export class UpdateUserSettingDto {
   @IsOptional()
   annualInterestRate?: number;
 
+  @IsISO4217CurrencyCode()
   @IsOptional()
-  @IsString()
   baseCurrency?: string;
 
   @IsString()

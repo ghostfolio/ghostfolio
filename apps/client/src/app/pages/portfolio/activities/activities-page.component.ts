@@ -36,7 +36,6 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
   public dataSource: MatTableDataSource<Activity>;
-  public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
@@ -274,7 +273,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity): void {
+  public openUpdateActivityDialog(activity: Activity) {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
@@ -311,7 +310,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateActivityDialog(aActivity?: Activity): void {
+  private openCreateActivityDialog(aActivity?: Activity) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -323,7 +322,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             accounts: this.user?.accounts,
             activity: {
               ...aActivity,
-              accountId: aActivity?.accountId ?? this.defaultAccountId,
+              accountId: aActivity?.accountId,
               date: new Date(),
               id: null,
               fee: 0,
@@ -398,10 +397,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   private updateUser(aUser: User) {
     this.user = aUser;
-
-    this.defaultAccountId = this.user?.accounts.find((account) => {
-      return account.isDefault;
-    })?.id;
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&
