@@ -317,6 +317,7 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValues: { [date: string]: Big };
         timeWeightedInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValuesPercentage: { [date: string]: Big };
+        unitPrices: { [date: string]: Big };
       };
     } = {};
 
@@ -367,6 +368,7 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValues: { [date: string]: Big };
         timeWeightedInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValuesPercentage: { [date: string]: Big };
+        unitPrices: { [date: string]: Big };
       };
     },
     calculateTimeWeightedPerformance: boolean,
@@ -416,8 +418,12 @@ export class PortfolioCalculator {
         const previousValue =
           symbolValues.currentValues?.[previousDateString] ?? new Big(0);
         const netPerformance =
-          symbolValues.netPerformanceValuesPercentage?.[dateString] ??
-          new Big(0);
+          symbolValues.unitPrices?.[dateString] &&
+          symbolValues.unitPrices?.[previousDateString]
+            ? symbolValues.unitPrices[dateString]
+                .div(symbolValues.unitPrices[previousDateString])
+                .minus(1)
+            : new Big(0);
         timeWeightedPerformanceContribution = previousValue
           .div(previousTotalInvestmentValue)
           .mul(netPerformance);
@@ -621,6 +627,7 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValues: { [date: string]: Big };
         timeWeightedInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
         netPerformanceValuesPercentage: { [date: string]: Big };
+        unitPrices: { [date: string]: Big };
       };
     },
     currencies: { [symbol: string]: string }
@@ -636,7 +643,8 @@ export class PortfolioCalculator {
         netPerformanceValuesWithCurrencyEffect,
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect,
-        netPerformanceValuesPercentage
+        netPerformanceValuesPercentage,
+        unitPrices
       } = this.getSymbolMetrics({
         end,
         marketSymbolMap,
@@ -658,7 +666,8 @@ export class PortfolioCalculator {
         netPerformanceValuesWithCurrencyEffect,
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect,
-        netPerformanceValuesPercentage
+        netPerformanceValuesPercentage,
+        unitPrices
       };
     }
   }
@@ -1251,7 +1260,8 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
-        netPerformanceValuesPercentage: {}
+        netPerformanceValuesPercentage: {},
+        unitPrices: {}
       };
     }
 
@@ -1292,7 +1302,8 @@ export class PortfolioCalculator {
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
-        netPerformanceValuesPercentage: {}
+        netPerformanceValuesPercentage: {},
+        unitPrices: {}
       };
     }
 
@@ -1368,6 +1379,12 @@ export class PortfolioCalculator {
       calculatePerformance
     );
 
+    let unitPrices = Object.keys(marketSymbolMap).reduce(
+      (obj, date) =>
+        (obj = Object.assign(obj, { [date]: marketSymbolMap[date][symbol] })),
+      {}
+    );
+
     return {
       currentValues: result.currentValues.Value,
       currentValuesWithCurrencyEffect: result.currentValues.WithCurrencyEffect,
@@ -1405,7 +1422,8 @@ export class PortfolioCalculator {
         result.timeWeightedAverageInvestmentBetweenStartAndEndDate.Value,
       timeWeightedInvestmentWithCurrencyEffect:
         result.timeWeightedAverageInvestmentBetweenStartAndEndDate
-          .WithCurrencyEffect
+          .WithCurrencyEffect,
+      unitPrices
     };
   }
 
