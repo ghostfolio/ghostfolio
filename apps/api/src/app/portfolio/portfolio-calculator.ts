@@ -13,7 +13,6 @@ import {
 import { GroupBy } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
-import { Type as ActivityType } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -971,7 +970,7 @@ export class PortfolioCalculator {
       itemType: 'start',
       name: '',
       quantity: new Big(0),
-      type: ActivityType.BUY,
+      type: 'BUY',
       unitPrice: unitPriceAtStartDate
     });
 
@@ -985,7 +984,7 @@ export class PortfolioCalculator {
       itemType: 'end',
       name: '',
       quantity: new Big(0),
-      type: ActivityType.BUY,
+      type: 'BUY',
       unitPrice: unitPriceAtEndDate
     });
 
@@ -1012,7 +1011,7 @@ export class PortfolioCalculator {
             feeInBaseCurrency: new Big(0),
             name: '',
             quantity: new Big(0),
-            type: ActivityType.BUY,
+            type: 'BUY',
             unitPrice:
               marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
               lastUnitPrice
@@ -1194,14 +1193,14 @@ export class PortfolioCalculator {
       );
 
       const grossPerformanceFromSell =
-        order.type === ActivityType.SELL
+        order.type === 'SELL'
           ? order.unitPriceInBaseCurrency
               .minus(lastAveragePrice)
               .mul(order.quantity)
           : new Big(0);
 
       const grossPerformanceFromSellWithCurrencyEffect =
-        order.type === ActivityType.SELL
+        order.type === 'SELL'
           ? order.unitPriceInBaseCurrencyWithCurrencyEffect
               .minus(lastAveragePriceWithCurrencyEffect)
               .mul(order.quantity)
