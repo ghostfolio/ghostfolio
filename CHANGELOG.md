@@ -7,12 +7,121 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Optimized the calculation of the portfolio summary
+
+## 2.60.0 - 2024-03-02
+
 ### Added
 
-- Added an accounts tab to the position detail dialog
+- Added support for the cryptocurrency _Uniswap_ (`UNI7083-USD`)
 
 ### Changed
 
+- Improved the usability of the benchmarks in the markets overview
+- Integrated (wealth) items into the transaction point concept in the portfolio service
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Fixed a missing value in the activities table on mobile
+- Fixed a missing value on the public page
+- Displayed the button to fetch the current market price only if the activity is from today
+
+## 2.59.0 - 2024-02-29
+
+### Added
+
+- Added an index for `isExcluded` to the account database table
+- Extended the content of the _Self-Hosting_ section on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Improved the activities import by `isin` in the _Yahoo Finance_ service
+
+### Fixed
+
+- Fixed an issue with the exchange rate calculation of (wealth) items in accounts
+
+## 2.58.0 - 2024-02-27
+
+### Changed
+
+- Improved the handling of activities without account
+
+### Fixed
+
+- Fixed the query to filter activities of excluded accounts
+- Improved the asset profile validation in the activities import
+
+## 2.57.0 - 2024-02-25
+
+### Changed
+
+- Moved the break down of the performance into asset and currency on the analysis page from experimental to general availability
+- Restructured the `copy-assets` `Nx` target
+
+### Fixed
+
+- Changed the performances of the _Top 3_ and _Bottom 3_ performers on the analysis page to take the currency effects into account
+
+## 2.56.0 - 2024-02-24
+
+### Changed
+
+- Switched the performance calculations to take the currency effects into account
+- Removed the `isDefault` flag from the `Account` database schema
+- Exposed the database index of _Redis_ as an environment variable (`REDIS_DB`)
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.9.1` to `5.10.2`
+
+### Fixed
+
+- Added the missing default currency to the prepare currencies function in the exchange rate data service
+
+## 2.55.0 - 2024-02-22
+
+### Added
+
+- Added indexes for `alias`, `granteeUserId` and `userId` to the access database table
+- Added indexes for `currency`, `name` and `userId` to the account database table
+- Added indexes for `accountId`, `date` and `updatedAt` to the account balance database table
+- Added an index for `userId` to the auth device database table
+- Added indexes for `marketPrice` and `state` to the market data database table
+- Added indexes for `date`, `isDraft` and `userId` to the order database table
+- Added an index for `name` to the platform database table
+- Added indexes for `assetClass`, `currency`, `dataSource`, `isin`, `name` and `symbol` to the symbol profile database table
+- Added an index for `userId` to the subscription database table
+- Added an index for `name` to the tag database table
+- Added indexes for `accessToken`, `createdAt`, `provider`, `role` and `thirdPartyId` to the user database table
+
+### Changed
+
+- Improved the validation for `currency` in various endpoints
+- Harmonized the setting of a default locale in various components
+- Set the parser to `angular` in the `prettier` options
+
+## 2.54.0 - 2024-02-19
+
+### Added
+
+- Added an index for `id` to the account database table
+- Added indexes for `dataSource` and `date` to the market data database table
+- Added an index for `accountId` to the order database table
+
+## 2.53.1 - 2024-02-18
+
+### Added
+
+- Added an accounts tab to the position detail dialog
+- Added `INACTIVE` as a new user role
+
+### Changed
+
+- Improved the usability of the holdings table
+- Refactored the query to filter activities of excluded accounts
+- Eliminated the search request to get quotes in the _EOD Historical Data_ service
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.9.1` to `2.10.0`
 

@@ -10,7 +10,7 @@ export class CarouselItem implements FocusableOption {
 
   public constructor(readonly element: ElementRef<HTMLElement>) {}
 
-  public focus(): void {
+  public focus() {
     this.element.nativeElement.focus({ preventScroll: true });
   }
 }

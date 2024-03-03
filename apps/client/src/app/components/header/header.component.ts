@@ -223,7 +223,7 @@ export class HeaderComponent implements OnChanges {
     this.signOut.next();
   }
 
-  public openLoginDialog(): void {
+  public openLoginDialog() {
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
       data: {

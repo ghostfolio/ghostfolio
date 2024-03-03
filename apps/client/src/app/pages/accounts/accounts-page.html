@@ -8,7 +8,11 @@
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
           [locale]="user?.settings?.locale"
-          [showActions]="!hasImpersonationId && hasPermissionToUpdateAccount && !user.settings.isRestrictedView"
+          [showActions]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateAccount &&
+            !user.settings.isRestrictedView
+          "
           [totalBalanceInBaseCurrency]="totalBalanceInBaseCurrency"
           [totalValueInBaseCurrency]="totalValueInBaseCurrency"
           [transactionCount]="transactionCount"
@@ -21,7 +25,11 @@
   </div>
 
   <div
-    *ngIf="!hasImpersonationId && hasPermissionToCreateAccount && !user.settings.isRestrictedView"
+    *ngIf="
+      !hasImpersonationId &&
+      hasPermissionToCreateAccount &&
+      !user.settings.isRestrictedView
+    "
     class="fab-container"
   >
     <a

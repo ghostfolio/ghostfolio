@@ -159,7 +159,7 @@ export class CurrencySelectorComponent
 
   private validateRequired() {
     const requiredCheck = super.required
-      ? !super.value.label || !super.value.value
+      ? !super.value?.label || !super.value?.value
       : false;
 
     if (requiredCheck) {

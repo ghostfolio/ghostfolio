@@ -1,3 +1,4 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -7,8 +8,10 @@ import {
   ResponseError,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
 
@@ -22,9 +25,12 @@ export class CurrentRateService {
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly orderService: OrderService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  // TODO: Pass user instead of using this.request.user
   public async getValues({
     dataGatheringItems,
     dateQuery
@@ -43,7 +49,7 @@ export class CurrentRateService {
     if (includeToday) {
       promises.push(
         this.dataProviderService
-          .getQuotes({ items: dataGatheringItems })
+          .getQuotes({ items: dataGatheringItems, user: this.request?.user })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
 
@@ -123,11 +129,17 @@ export class CurrentRateService {
           });
 
           if (!value) {
+            // Fallback to unit price of latest activity
+            const latestActivity = await this.orderService.getLatestOrder({
+              dataSource,
+              symbol
+            });
+
             value = {
               dataSource,
               symbol,
               date: today,
-              marketPrice: 0
+              marketPrice: latestActivity?.unitPrice ?? 0
             };
 
             response.values.push(value);

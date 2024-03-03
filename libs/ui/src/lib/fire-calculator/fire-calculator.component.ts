@@ -3,6 +3,7 @@ import {
   transformTickToAbbreviation
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb } from '@ghostfolio/common/config';
+import { getLocale } from '@ghostfolio/common/helper';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
@@ -55,7 +56,7 @@ export class FireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() deviceType: string;
   @Input() fireWealth: number;
   @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() projectedTotalAmount = 0;
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;

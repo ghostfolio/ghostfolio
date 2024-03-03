@@ -140,7 +140,7 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Portfolio Calculations</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -159,7 +159,7 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Portfolio Allocations</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -197,24 +197,24 @@
           </mat-card>
         </div>
         @if (hasPermissionForSubscription) {
-        <div class="col-xs-12 col-md-4 mb-3">
-          <mat-card appearance="outlined" class="d-flex flex-column h-100">
-            <mat-card-content>
-              <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
-                  <span i18n>Market Mood</span>
-                  <gf-premium-indicator class="ml-1" />
-                </h4>
-                <p class="m-0">
-                  Check the current market mood (<a
-                    [routerLink]="routerLinkResources"
-                    >Fear & Greed Index</a
-                  >) within the app.
-                </p>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+          <div class="col-xs-12 col-md-4 mb-3">
+            <mat-card appearance="outlined" class="d-flex flex-column h-100">
+              <mat-card-content>
+                <div class="flex-grow-1">
+                  <h4 class="align-items-center d-flex">
+                    <span i18n>Market Mood</span>
+                    <gf-premium-indicator class="ml-1" />
+                  </h4>
+                  <p class="m-0">
+                    Check the current market mood (<a
+                      [routerLink]="routerLinkResources"
+                      >Fear & Greed Index</a
+                    >) within the app.
+                  </p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         }
         <div class="col-xs-12 col-md-4 mb-3">
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
@@ -223,7 +223,7 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Static Analysis</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -290,12 +290,16 @@
     </div>
   </div>
   @if (!user) {
-  <div class="row">
-    <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="routerLinkRegister"
-        >Get Started</a
-      >
+    <div class="row">
+      <div class="col mt-3 text-center">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+          >Get Started</a
+        >
+      </div>
     </div>
-  </div>
   }
 </div>

@@ -11,26 +11,28 @@
       </h1>
       <div class="row">
         @for (ossFriend of ossFriends; track ossFriend) {
-        <div class="col-xs-12 col-md-4 mb-3">
-          <a target="_blank" [href]="ossFriend.href">
-            <mat-card appearance="outlined" class="d-flex flex-column h-100">
-              <mat-card-header>
-                <mat-card-title class="h4">{{ ossFriend.name }}</mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="flex-grow-1">
-                <p>{{ ossFriend.description }}</p>
-              </mat-card-content>
-              <mat-card-actions class="justify-content-end">
-                <a mat-button target="_blank" [href]="ossFriend.href">
-                  <span
-                    ><ng-container i18n>Visit</ng-container> {{ ossFriend.name
-                    }}</span
-                  ><ion-icon class="ml-1" name="arrow-forward-outline" />
-                </a>
-              </mat-card-actions>
-            </mat-card>
-          </a>
-        </div>
+          <div class="col-xs-12 col-md-4 mb-3">
+            <a target="_blank" [href]="ossFriend.href">
+              <mat-card appearance="outlined" class="d-flex flex-column h-100">
+                <mat-card-header>
+                  <mat-card-title class="h4">{{
+                    ossFriend.name
+                  }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="flex-grow-1">
+                  <p>{{ ossFriend.description }}</p>
+                </mat-card-content>
+                <mat-card-actions class="justify-content-end">
+                  <a mat-button target="_blank" [href]="ossFriend.href">
+                    <span
+                      ><ng-container i18n>Visit</ng-container>
+                      {{ ossFriend.name }}</span
+                    ><ion-icon class="ml-1" name="arrow-forward-outline" />
+                  </a>
+                </mat-card-actions>
+              </mat-card>
+            </a>
+          </div>
         }
       </div>
     </div>

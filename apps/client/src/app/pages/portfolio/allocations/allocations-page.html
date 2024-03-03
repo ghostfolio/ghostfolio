@@ -15,13 +15,20 @@
             class="justify-content-end l-2"
             size="medium"
             [isPercent]="true"
-            [value]="isLoading ? undefined : portfolioDetails?.filteredValueInPercentage"
+            [value]="
+              isLoading
+                ? undefined
+                : portfolioDetails?.filteredValueInPercentage
+            "
           />
         </mat-card-header>
         <mat-card-content>
           <mat-progress-bar
             mode="determinate"
-            [title]="(portfolioDetails?.filteredValueInPercentage * 100).toFixed(2) + '%'"
+            [title]="
+              (portfolioDetails?.filteredValueInPercentage * 100).toFixed(2) +
+              '%'
+            "
             [value]="portfolioDetails?.filteredValueInPercentage * 100"
           />
         </mat-card-content>
@@ -204,7 +211,9 @@
             <gf-world-map-chart
               [countries]="countries"
               [format]="worldMapChartFormat"
-              [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+              [isInPercent]="
+                hasImpersonationId || user.settings.isRestrictedView
+              "
               [locale]="user?.settings?.locale"
             />
           </div>

@@ -11,8 +11,9 @@
         </div>
         <section class="mb-4">
           <p i18n>
-            Are you looking for an open source alternative to {{ product2.name
-            }}? <a [routerLink]="routerLinkAbout">Ghostfolio</a> is a powerful
+            Are you looking for an open source alternative to
+            {{ product2.name }}?
+            <a [routerLink]="routerLinkAbout">Ghostfolio</a> is a powerful
             portfolio management tool that provides individuals with a
             comprehensive platform to track, analyze, and optimize their
             investments. Whether you are an experienced investor or just
@@ -35,18 +36,22 @@
             its capabilities, security, and user experience.
           </p>
           <p i18n>
-            Let’s dive deeper into the detailed Ghostfolio vs {{ product2.name
-            }} comparison table below to gain a thorough understanding of how
-            Ghostfolio positions itself relative to {{ product2.name }}. We will
-            explore various aspects such as features, data privacy, pricing, and
-            more, allowing you to make a well-informed choice for your personal
-            requirements.
+            Let’s dive deeper into the detailed Ghostfolio vs
+            {{ product2.name }} comparison table below to gain a thorough
+            understanding of how Ghostfolio positions itself relative to
+            {{ product2.name }}. We will explore various aspects such as
+            features, data privacy, pricing, and more, allowing you to make a
+            well-informed choice for your personal requirements.
           </p>
         </section>
         <section class="mb-4">
           <table class="gf-table w-100">
             <caption class="text-center" i18n>
-              Ghostfolio vs {{ product2.name }} comparison table
+              Ghostfolio vs
+              {{
+                product2.name
+              }}
+              comparison table
             </caption>
             <thead>
               <tr class="mat-mdc-header-row">
@@ -187,8 +192,9 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   <ng-container *ngIf="product2.pricingPerYear"
-                    ><span i18n>Starting from</span> {{ product2.pricingPerYear
-                    }} / <span i18n>year</span></ng-container
+                    ><span i18n>Starting from</span>
+                    {{ product2.pricingPerYear }} /
+                    <span i18n>year</span></ng-container
                   >
                 </td>
               </tr>
@@ -202,13 +208,13 @@
         </section>
         <section class="mb-4">
           <p i18n>
-            Please note that the information provided in the Ghostfolio vs {{
-            product2.name }} comparison table is based on our independent
-            research and analysis. This website is not affiliated with {{
-            product2.name }} or any other product mentioned in the comparison.
-            As the landscape of personal finance tools evolves, it is essential
-            to verify any specific details or changes directly from the
-            respective product page. Data needs a refresh? Help us maintain
+            Please note that the information provided in the Ghostfolio vs
+            {{ product2.name }} comparison table is based on our independent
+            research and analysis. This website is not affiliated with
+            {{ product2.name }} or any other product mentioned in the
+            comparison. As the landscape of personal finance tools evolves, it
+            is essential to verify any specific details or changes directly from
+            the respective product page. Data needs a refresh? Help us maintain
             accurate data on
             <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>.
           </p>

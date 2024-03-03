@@ -32,7 +32,9 @@
                   name="baseCurrency"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="user.settings.baseCurrency"
-                  (selectionChange)="onChangeUserSetting('baseCurrency', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('baseCurrency', $event.value)
+                  "
                 >
                   <mat-option
                     *ngFor="let currency of currencies"
@@ -53,7 +55,9 @@
               >
                 If a translation is missing, kindly support us in extending it
                 <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{language}}.xlf"
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
+                    language
+                  }}.xlf"
                   target="_blank"
                   >here</a
                 >.
@@ -65,7 +69,9 @@
                   name="language"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="language"
-                  (selectionChange)="onChangeUserSetting('language', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('language', $event.value)
+                  "
                 >
                   <mat-option [value]="null" />
                   <mat-option value="de">Deutsch</mat-option>
@@ -115,12 +121,14 @@
                   name="locale"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="user.settings.locale"
-                  (selectionChange)="onChangeUserSetting('locale', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('locale', $event.value)
+                  "
                 >
                   <mat-option [value]="null" />
-                  <mat-option *ngFor="let locale of locales" [value]="locale"
-                    >{{ locale }}</mat-option
-                  >
+                  <mat-option *ngFor="let locale of locales" [value]="locale">{{
+                    locale
+                  }}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -137,7 +145,9 @@
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [placeholder]="appearancePlaceholder"
                   [value]="user?.settings?.colorScheme"
-                  (selectionChange)="onChangeUserSetting('colorScheme', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('colorScheme', $event.value)
+                  "
                 >
                   <mat-option i18n [value]="null">Auto</mat-option>
                   <mat-option i18n value="LIGHT">Light</mat-option>

@@ -127,10 +127,10 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
         this.isLoadingPerformance = false;
 
         this.historicalDataItems = chart.map(
-          ({ date, netPerformanceInPercentage }) => {
+          ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
             return {
               date,
-              value: netPerformanceInPercentage
+              value: netPerformanceInPercentageWithCurrencyEffect
             };
           }
         );

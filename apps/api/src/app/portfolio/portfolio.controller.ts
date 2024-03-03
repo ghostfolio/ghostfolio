@@ -154,11 +154,8 @@ export class PortfolioController {
       }
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-        portfolioPosition.netPerformance = null;
-        portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
         (portfolioPosition.assetClass = hasDetails
@@ -386,7 +383,8 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccounts = false,
-    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false
+    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false,
+    @Query('withItems') withItems = false
   ): Promise<PortfolioPerformanceResponse> {
     const hasReadRestrictedAccessPermission =
       this.userService.hasReadRestrictedAccessPermission({
@@ -405,6 +403,7 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
+      withItems,
       userId: this.request.user.id,
       calculateTimeWeightedPerformance
     });
@@ -469,6 +468,10 @@ export class PortfolioController {
         (item) => {
           return nullifyValuesInObject(item, ['totalInvestment', 'value']);
         }
+      );
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentNetPerformance', 'currentNetPerformancePercent']
       );
     }
 
@@ -556,7 +559,8 @@ export class PortfolioController {
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
-        netPerformancePercent: portfolioPosition.netPerformancePercent,
+        netPerformancePercentWithCurrencyEffect:
+          portfolioPosition.netPerformancePercentWithCurrencyEffect,
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,
