@@ -401,9 +401,8 @@ export class DataService {
         | readonly (string | number | boolean)[];
     };
   } = {}): Observable<PortfolioDetails> {
-    let params = this.buildFiltersAsQueryParams({ filters }).appendAll(
-      parameters
-    );
+    let params = this.buildFiltersAsQueryParams({ filters });
+    params = parameters ? params.appendAll(parameters) : params;
 
     return this.http
       .get<any>('/api/v1/portfolio/details', {
