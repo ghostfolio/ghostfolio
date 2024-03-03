@@ -5,6 +5,8 @@ export interface TimelinePosition {
   averagePrice: Big;
   currency: string;
   dataSource: DataSource;
+  dividend: Big;
+  dividendInBaseCurrency: Big;
   fee: Big;
   firstBuyDate: string;
   grossPerformance: Big;

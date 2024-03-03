@@ -14,6 +14,7 @@ export interface PortfolioPosition {
   currency: string;
   dataSource: DataSource;
   dateOfFirstActivity: Date;
+  dividend: number;
   exchange?: string;
   grossPerformance: number;
   grossPerformancePercent: number;
