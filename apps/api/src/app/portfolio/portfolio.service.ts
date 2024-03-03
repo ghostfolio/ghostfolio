@@ -1789,14 +1789,14 @@ export class PortfolioService {
     }).toNumber();
 
     const totalBuy = this.getSumOfActivityType({
-      activities: nonExcludedActivities,
       userCurrency,
+      activities: nonExcludedActivities,
       activityType: 'BUY'
     }).toNumber();
 
     const totalSell = this.getSumOfActivityType({
-      activities: nonExcludedActivities,
       userCurrency,
+      activities: nonExcludedActivities,
       activityType: 'SELL'
     }).toNumber();
 
