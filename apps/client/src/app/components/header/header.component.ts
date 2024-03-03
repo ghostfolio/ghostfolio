@@ -179,7 +179,9 @@ export class HeaderComponent implements OnChanges {
         filtersType = 'tags';
       }
 
-      userSetting[`filters.${filtersType}`] = filter.id ? [filter.id] : null;
+      userSetting[`filters.${filtersType}`] = filters
+        .filter((f) => f.type === filter.type)
+        .map((f) => f.id);
     }
 
     this.dataService
