@@ -19,7 +19,7 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
@@ -229,7 +229,7 @@ export class OrderService {
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
     take?: number;
-    types?: TypeOfOrder[];
+    types?: ActivityType[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;

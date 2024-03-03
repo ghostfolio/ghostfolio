@@ -7,6 +7,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -2131,7 +2132,7 @@ export class PortfolioService {
               ?.marketPriceInBaseCurrency ?? 0;
 
         if (['LIABILITY', 'SELL'].includes(type)) {
-          currentValueOfSymbolInBaseCurrency *= -1;
+          currentValueOfSymbolInBaseCurrency *= getFactor(type);
         }
 
         if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
