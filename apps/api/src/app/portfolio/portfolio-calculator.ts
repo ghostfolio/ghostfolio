@@ -1,3 +1,4 @@
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
@@ -12,7 +13,6 @@ import {
 import { GroupBy } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
-import { Type as TypeOfOrder } from '@prisma/client';
 import Big from 'big.js';
 import {
   addDays,
@@ -76,7 +76,7 @@ export class PortfolioCalculator {
       let currentTransactionPointItem: TransactionPointSymbol;
       const oldAccumulatedSymbol = symbols[order.symbol];
 
-      const factor = this.getFactor(order.type);
+      const factor = getFactor(order.type);
       const unitPrice = new Big(order.unitPrice);
       if (oldAccumulatedSymbol) {
         const newQuantity = order.quantity
@@ -820,25 +820,6 @@ export class PortfolioCalculator {
     };
   }
 
-  private getFactor(type: TypeOfOrder) {
-    let factor: number;
-
-    switch (type) {
-      case 'BUY':
-      case 'ITEM':
-        factor = 1;
-        break;
-      case 'SELL':
-        factor = -1;
-        break;
-      default:
-        factor = 0;
-        break;
-    }
-
-    return factor;
-  }
-
   private getSymbolMetrics({
     end,
     exchangeRates,
@@ -989,7 +970,7 @@ export class PortfolioCalculator {
       itemType: 'start',
       name: '',
       quantity: new Big(0),
-      type: TypeOfOrder.BUY,
+      type: 'BUY',
       unitPrice: unitPriceAtStartDate
     });
 
@@ -1003,7 +984,7 @@ export class PortfolioCalculator {
       itemType: 'end',
       name: '',
       quantity: new Big(0),
-      type: TypeOfOrder.BUY,
+      type: 'BUY',
       unitPrice: unitPriceAtEndDate
     });
 
@@ -1030,7 +1011,7 @@ export class PortfolioCalculator {
             feeInBaseCurrency: new Big(0),
             name: '',
             quantity: new Big(0),
-            type: TypeOfOrder.BUY,
+            type: 'BUY',
             unitPrice:
               marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
               lastUnitPrice
@@ -1131,24 +1112,24 @@ export class PortfolioCalculator {
         order.type === 'BUY'
           ? order.quantity
               .mul(order.unitPriceInBaseCurrency)
-              .mul(this.getFactor(order.type))
+              .mul(getFactor(order.type))
           : totalUnits.gt(0)
             ? totalInvestment
                 .div(totalUnits)
                 .mul(order.quantity)
-                .mul(this.getFactor(order.type))
+                .mul(getFactor(order.type))
             : new Big(0);
 
       const transactionInvestmentWithCurrencyEffect =
         order.type === 'BUY'
           ? order.quantity
               .mul(order.unitPriceInBaseCurrencyWithCurrencyEffect)
-              .mul(this.getFactor(order.type))
+              .mul(getFactor(order.type))
           : totalUnits.gt(0)
             ? totalInvestmentWithCurrencyEffect
                 .div(totalUnits)
                 .mul(order.quantity)
-                .mul(this.getFactor(order.type))
+                .mul(getFactor(order.type))
             : new Big(0);
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -1203,9 +1184,7 @@ export class PortfolioCalculator {
         order.feeInBaseCurrencyWithCurrencyEffect ?? 0
       );
 
-      totalUnits = totalUnits.plus(
-        order.quantity.mul(this.getFactor(order.type))
-      );
+      totalUnits = totalUnits.plus(order.quantity.mul(getFactor(order.type)));
 
       const valueOfInvestment = totalUnits.mul(order.unitPriceInBaseCurrency);
 
@@ -1214,14 +1193,14 @@ export class PortfolioCalculator {
       );
 
       const grossPerformanceFromSell =
-        order.type === TypeOfOrder.SELL
+        order.type === 'SELL'
           ? order.unitPriceInBaseCurrency
               .minus(lastAveragePrice)
               .mul(order.quantity)
           : new Big(0);
 
       const grossPerformanceFromSellWithCurrencyEffect =
-        order.type === TypeOfOrder.SELL
+        order.type === 'SELL'
           ? order.unitPriceInBaseCurrencyWithCurrencyEffect
               .minus(lastAveragePriceWithCurrencyEffect)
               .mul(order.quantity)
