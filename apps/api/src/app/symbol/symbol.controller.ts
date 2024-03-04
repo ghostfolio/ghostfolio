@@ -39,9 +39,11 @@ export class SymbolController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async lookupSymbol(
-    @Query('includeIndices') includeIndices = false,
+    @Query('includeIndices') includeIndicesParam = 'false',
     @Query('query') query = ''
   ): Promise<{ items: LookupItem[] }> {
+    const includeIndices = includeIndicesParam === 'true';
+
     try {
       return this.symbolService.lookup({
         includeIndices,
