@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optimized the calculation of the portfolio summary
 
+### Fixed
+
+- Fixed the the activities import (query parameter handling)
+
 ## 2.60.0 - 2024-03-02
 
 ### Added
