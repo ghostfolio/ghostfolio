@@ -108,6 +108,9 @@
       "options": {
         "commands": [
           {
+            "command": "shx rm -rf dist/apps/client"
+          },
+          {
             "command": "shx mkdir -p dist/apps/client/.well-known"
           },
           {
@@ -150,7 +153,7 @@
             "command": "shx cp LICENSE dist/apps/client/assets"
           }
         ],
-        "parallel": true
+        "parallel": false
       }
     },
     "serve": {
