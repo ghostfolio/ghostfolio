@@ -39,6 +39,9 @@
       "options": {
         "commands": [
           {
+            "command": "shx rm -rf dist/apps/api"
+          },
+          {
             "command": "shx mkdir -p dist/apps/api/assets/locales"
           },
           {
@@ -48,7 +51,7 @@
             "command": "shx cp -r apps/client/src/locales/* dist/apps/api/assets/locales"
           }
         ],
-        "parallel": true
+        "parallel": false
       }
     },
     "serve": {
