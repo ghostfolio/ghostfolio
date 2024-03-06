@@ -1286,7 +1286,9 @@ export class PortfolioService {
         filters,
         userId,
         withExcludedAccounts,
-        types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
+        types: withItems
+          ? ['BUY', 'ITEM', 'STAKE', 'SELL']
+          : ['BUY', 'STAKE', 'SELL']
       });
 
     const portfolioCalculator = new PortfolioCalculator({
