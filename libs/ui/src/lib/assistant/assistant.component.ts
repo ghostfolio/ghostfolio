@@ -244,18 +244,25 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onApplyFilters() {
-    let accountFilters = this.filterForm
-      .get('account')
-      .value?.reduce((arr, val) => [...arr, { id: val, type: 'ACCOUNT' }], []);
-    let assetClassFilters = this.filterForm
-      .get('assetClass')
-      .value?.reduce(
-        (arr, val) => [...arr, { id: val, type: 'ASSET_CLASS' }],
-        []
-      );
-    let tagFilters = this.filterForm
-      .get('tag')
-      .value?.reduce((arr, val) => [...arr, { id: val, type: 'TAG' }], []);
+    let accountFilters =
+      this.filterForm
+        .get('account')
+        .value?.reduce(
+          (arr, val) => [...arr, { id: val, type: 'ACCOUNT' }],
+          []
+        ) ?? [];
+    let assetClassFilters =
+      this.filterForm
+        .get('assetClass')
+        .value?.reduce(
+          (arr, val) => [...arr, { id: val, type: 'ASSET_CLASS' }],
+          []
+        ) ?? [];
+    let tagFilters =
+      this.filterForm
+        .get('tag')
+        .value?.reduce((arr, val) => [...arr, { id: val, type: 'TAG' }], []) ??
+      [];
     let filters = [...accountFilters, ...assetClassFilters];
     filters = [...filters, ...tagFilters];
     this.filtersChanged.emit(filters);
