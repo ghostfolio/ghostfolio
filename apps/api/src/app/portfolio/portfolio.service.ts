@@ -439,15 +439,33 @@ export class PortfolioService {
       portfolioItemsNow[position.symbol] = position;
     }
 
-    for (const item of currentPositions.positions) {
-      if (item.quantity.lte(0)) {
+    for (const {
+      currency,
+      firstBuyDate,
+      grossPerformance,
+      grossPerformanceWithCurrencyEffect,
+      grossPerformancePercentage,
+      grossPerformancePercentageWithCurrencyEffect,
+      investment,
+      marketPrice,
+      marketPriceInBaseCurrency,
+      netPerformance,
+      netPerformancePercentage,
+      netPerformancePercentageWithCurrencyEffect,
+      netPerformanceWithCurrencyEffect,
+      quantity,
+      symbol,
+      tags,
+      transactionCount
+    } of currentPositions.positions) {
+      if (quantity.eq(0)) {
         // Ignore positions without any quantity
         continue;
       }
 
-      const value = item.quantity.mul(item.marketPriceInBaseCurrency ?? 0);
-      const symbolProfile = symbolProfileMap[item.symbol];
-      const dataProviderResponse = dataProviderResponses[item.symbol];
+      const value = quantity.mul(marketPriceInBaseCurrency ?? 0);
+      const symbolProfile = symbolProfileMap[symbol];
+      const dataProviderResponse = dataProviderResponses[symbol];
 
       const markets: PortfolioPosition['markets'] = {
         [UNKNOWN_KEY]: 0,
@@ -519,40 +537,39 @@ export class PortfolioService {
           .toNumber();
       }
 
-      holdings[item.symbol] = {
+      holdings[symbol] = {
+        currency,
         markets,
         marketsAdvanced,
+        marketPrice,
+        symbol,
+        tags,
+        transactionCount,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : value.div(filteredValueInBaseCurrency).toNumber(),
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
-        currency: item.currency,
         dataSource: symbolProfile.dataSource,
-        dateOfFirstActivity: parseDate(item.firstBuyDate),
-        grossPerformance: item.grossPerformance?.toNumber() ?? 0,
-        grossPerformancePercent:
-          item.grossPerformancePercentage?.toNumber() ?? 0,
+        dateOfFirstActivity: parseDate(firstBuyDate),
+        grossPerformance: grossPerformance?.toNumber() ?? 0,
+        grossPerformancePercent: grossPerformancePercentage?.toNumber() ?? 0,
         grossPerformancePercentWithCurrencyEffect:
-          item.grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+          grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
-          item.grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
-        investment: item.investment.toNumber(),
-        marketPrice: item.marketPrice,
+          grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+        investment: investment.toNumber(),
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: symbolProfile.name,
-        netPerformance: item.netPerformance?.toNumber() ?? 0,
-        netPerformancePercent: item.netPerformancePercentage?.toNumber() ?? 0,
+        netPerformance: netPerformance?.toNumber() ?? 0,
+        netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
-          item.netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+          netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         netPerformanceWithCurrencyEffect:
-          item.netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
-        quantity: item.quantity.toNumber(),
+          netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+        quantity: quantity.toNumber(),
         sectors: symbolProfile.sectors,
-        symbol: item.symbol,
-        tags: item.tags,
-        transactionCount: item.transactionCount,
         url: symbolProfile.url,
         valueInBaseCurrency: value.toNumber()
       };
@@ -1772,10 +1789,14 @@ export class PortfolioService {
 
     const items = Object.keys(holdings)
       .filter((symbol) => {
-        return isUUID(symbol) && holdings[symbol].dataSource === 'MANUAL';
+        return (
+          isUUID(symbol) &&
+          holdings[symbol].dataSource === 'MANUAL' &&
+          holdings[symbol].valueInBaseCurrency > 0
+        );
       })
       .map((symbol) => {
-        return holdings[symbol].valueInBaseCurrency;
+        return Math.abs(holdings[symbol].valueInBaseCurrency);
       })
       .reduce(
         (previous, current) => new Big(previous).plus(current),
@@ -1783,11 +1804,22 @@ export class PortfolioService {
       )
       .toNumber();
 
-    const liabilities = this.getSumOfActivityType({
-      activities,
-      userCurrency,
-      activityType: 'LIABILITY'
-    }).toNumber();
+    const liabilities = Object.keys(holdings)
+      .filter((symbol) => {
+        return (
+          isUUID(symbol) &&
+          holdings[symbol].dataSource === 'MANUAL' &&
+          holdings[symbol].valueInBaseCurrency < 0
+        );
+      })
+      .map((symbol) => {
+        return Math.abs(holdings[symbol].valueInBaseCurrency);
+      })
+      .reduce(
+        (previous, current) => new Big(previous).plus(current),
+        new Big(0)
+      )
+      .toNumber();
 
     const totalBuy = this.getSumOfActivityType({
       userCurrency,
