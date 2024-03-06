@@ -1941,7 +1941,7 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
-    types = ['BUY', 'ITEM', 'SELL'],
+    types = ['BUY', 'ITEM', 'LIABILITY', 'SELL'],
     userId,
     withExcludedAccounts = false
   }: {
@@ -2076,18 +2076,9 @@ export class PortfolioService {
     });
 
     for (const account of currentAccounts) {
-      let ordersByAccount = orders.filter(({ accountId }) => {
+      const ordersByAccount = orders.filter(({ accountId }) => {
         return accountId === account.id;
       });
-
-      const ordersOfTypeItemOrLiabilityByAccount =
-        ordersOfTypeItemOrLiability.filter(({ accountId }) => {
-          return accountId === account.id;
-        });
-
-      ordersByAccount = ordersByAccount.concat(
-        ordersOfTypeItemOrLiabilityByAccount
-      );
 
       accounts[account.id] = {
         balance: account.balance,
@@ -2128,8 +2119,8 @@ export class PortfolioService {
       } of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
           quantity *
-            portfolioItemsNow[SymbolProfile.symbol]
-              ?.marketPriceInBaseCurrency ?? 0;
+          (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
+            0);
 
         if (['LIABILITY', 'SELL'].includes(type)) {
           currentValueOfSymbolInBaseCurrency *= getFactor(type);
