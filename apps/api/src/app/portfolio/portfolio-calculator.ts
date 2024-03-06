@@ -1044,7 +1044,7 @@ export class PortfolioCalculator {
 
     for (const currentPosition of positions) {
       if (
-        currentPosition.investment &&
+        currentPosition.quantity &&
         currentPosition.marketPriceInBaseCurrency
       ) {
         currentValue = currentValue.plus(
