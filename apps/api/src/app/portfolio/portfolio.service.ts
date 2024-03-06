@@ -1787,39 +1787,33 @@ export class PortfolioService {
       activityType: 'INTEREST'
     }).toNumber();
 
-    const items = Object.keys(holdings)
-      .filter((symbol) => {
-        return (
-          isUUID(symbol) &&
-          holdings[symbol].dataSource === 'MANUAL' &&
-          holdings[symbol].valueInBaseCurrency > 0
-        );
-      })
-      .map((symbol) => {
-        return Math.abs(holdings[symbol].valueInBaseCurrency);
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      )
-      .toNumber();
+    const items = getSum(
+      Object.keys(holdings)
+        .filter((symbol) => {
+          return (
+            isUUID(symbol) &&
+            holdings[symbol].dataSource === 'MANUAL' &&
+            holdings[symbol].valueInBaseCurrency > 0
+          );
+        })
+        .map((symbol) => {
+          return new Big(holdings[symbol].valueInBaseCurrency).abs();
+        })
+    ).toNumber();
 
-    const liabilities = Object.keys(holdings)
-      .filter((symbol) => {
-        return (
-          isUUID(symbol) &&
-          holdings[symbol].dataSource === 'MANUAL' &&
-          holdings[symbol].valueInBaseCurrency < 0
-        );
-      })
-      .map((symbol) => {
-        return Math.abs(holdings[symbol].valueInBaseCurrency);
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      )
-      .toNumber();
+    const liabilities = getSum(
+      Object.keys(holdings)
+        .filter((symbol) => {
+          return (
+            isUUID(symbol) &&
+            holdings[symbol].dataSource === 'MANUAL' &&
+            holdings[symbol].valueInBaseCurrency < 0
+          );
+        })
+        .map((symbol) => {
+          return new Big(holdings[symbol].valueInBaseCurrency).abs();
+        })
+    ).toNumber();
 
     const totalBuy = this.getSumOfActivityType({
       userCurrency,
