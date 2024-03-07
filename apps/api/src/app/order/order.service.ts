@@ -369,6 +369,9 @@ export class OrderService {
     where
   }: {
     data: Prisma.OrderUpdateInput & {
+      Account?:
+        | { connect: { id_userId: { id: string; userId: string } } }
+        | { disconnect: true };
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
@@ -378,10 +381,6 @@ export class OrderService {
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
-    if (data.Account.connect.id_userId.id === null) {
-      delete data.Account;
-    }
-
     if (!data.comment) {
       data.comment = null;
     }
@@ -397,6 +396,10 @@ export class OrderService {
       data.type === 'LIABILITY'
     ) {
       delete data.SymbolProfile.connect;
+      console.log('llega aqui');
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
     } else {
       delete data.SymbolProfile.update;
 
