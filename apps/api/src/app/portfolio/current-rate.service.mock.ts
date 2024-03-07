@@ -43,6 +43,15 @@ function mockGetValue(symbol: string, date: Date) {
 
       return { marketPrice: 0 };
 
+    case 'MSFT':
+      if (isSameDay(parseDate('2021-09-16'), date)) {
+        return { marketPrice: 89.12 };
+      } else if (isSameDay(parseDate('2023-07-10'), date)) {
+        return { marketPrice: 331.83 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'NOVN.SW':
       if (isSameDay(parseDate('2022-04-11'), date)) {
         return { marketPrice: 87.8 };

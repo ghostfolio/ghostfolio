@@ -218,27 +218,14 @@ export class PortfolioService {
   }
 
   public async getDividends({
-    dateRange,
-    filters,
-    groupBy,
-    impersonationId
+    activities,
+    dateRange = 'max',
+    groupBy
   }: {
-    dateRange: DateRange;
-    filters?: Filter[];
+    activities: Activity[];
+    dateRange?: DateRange;
     groupBy?: GroupBy;
-    impersonationId: string;
   }): Promise<InvestmentItem[]> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-    const userCurrency = this.getUserCurrency(user);
-
-    const { activities } = await this.orderService.getOrders({
-      filters,
-      userCurrency,
-      userId,
-      types: ['DIVIDEND']
-    });
-
     let dividends = activities.map(({ date, valueInBaseCurrency }) => {
       return {
         date: format(date, DATE_FORMAT),
@@ -441,6 +428,7 @@ export class PortfolioService {
 
     for (const {
       currency,
+      dividend,
       firstBuyDate,
       grossPerformance,
       grossPerformanceWithCurrencyEffect,
@@ -553,6 +541,7 @@ export class PortfolioService {
         countries: symbolProfile.countries,
         dataSource: symbolProfile.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
+        dividend: dividend?.toNumber() ?? 0,
         grossPerformance: grossPerformance?.toNumber() ?? 0,
         grossPerformancePercent: grossPerformancePercentage?.toNumber() ?? 0,
         grossPerformancePercentWithCurrencyEffect:
@@ -723,7 +712,7 @@ export class PortfolioService {
       .filter((order) => {
         tags = tags.concat(order.tags);
 
-        return ['BUY', 'ITEM', 'SELL'].includes(order.type);
+        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       })
       .map((order) => ({
         currency: order.SymbolProfile.currency,
@@ -764,6 +753,7 @@ export class PortfolioService {
         averagePrice,
         currency,
         dataSource,
+        dividendInBaseCurrency,
         fee,
         firstBuyDate,
         marketPrice,
@@ -779,16 +769,6 @@ export class PortfolioService {
       ).map(({ Account }) => {
         return Account;
       });
-
-      const dividendInBaseCurrency = getSum(
-        orders
-          .filter(({ type }) => {
-            return type === 'DIVIDEND';
-          })
-          .map(({ valueInBaseCurrency }) => {
-            return new Big(valueInBaseCurrency);
-          })
-      );
 
       const historicalData = await this.dataProviderService.getHistorical(
         [{ dataSource, symbol: aSymbol }],
@@ -823,9 +803,7 @@ export class PortfolioService {
           );
 
           if (currentSymbol) {
-            currentAveragePrice = currentSymbol.quantity.eq(0)
-              ? 0
-              : currentSymbol.investment.div(currentSymbol.quantity).toNumber();
+            currentAveragePrice = currentSymbol.averagePrice.toNumber();
             currentQuantity = currentSymbol.quantity.toNumber();
           }
 
@@ -1636,6 +1614,7 @@ export class PortfolioService {
       countries: [],
       dataSource: undefined,
       dateOfFirstActivity: undefined,
+      dividend: 0,
       grossPerformance: 0,
       grossPerformancePercent: 0,
       grossPerformancePercentWithCurrencyEffect: 0,
@@ -1765,11 +1744,16 @@ export class PortfolioService {
       }
     }
 
-    const dividend = this.getSumOfActivityType({
-      activities,
-      userCurrency,
-      activityType: 'DIVIDEND'
-    }).toNumber();
+    const dividendInBaseCurrency = (
+      await this.getDividends({
+        activities: activities.filter(({ type }) => {
+          return type === 'DIVIDEND';
+        })
+      })
+    ).reduce(
+      (previous, current) => new Big(previous).plus(current.investment),
+      new Big(0)
+    );
 
     const emergencyFund = new Big(
       Math.max(
@@ -1904,7 +1888,6 @@ export class PortfolioService {
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
-      dividend,
       excludedAccountsAndActivities,
       fees,
       firstOrderDate,
@@ -1915,6 +1898,7 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
+      dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
         assets: emergencyFundPositionsValueInBaseCurrency,
         cash: emergencyFund
@@ -1967,7 +1951,7 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
-    types = ['BUY', 'ITEM', 'LIABILITY', 'SELL'],
+    types = ['BUY', 'DIVIDEND', 'ITEM', 'LIABILITY', 'SELL'],
     userId,
     withExcludedAccounts = false
   }: {
@@ -2144,13 +2128,10 @@ export class PortfolioService {
         type
       } of ordersByAccount) {
         let currentValueOfSymbolInBaseCurrency =
+          getFactor(type) *
           quantity *
           (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
             0);
-
-        if (['LIABILITY', 'SELL'].includes(type)) {
-          currentValueOfSymbolInBaseCurrency *= getFactor(type);
-        }
 
         if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
           accounts[Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=

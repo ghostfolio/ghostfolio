@@ -1,4 +1,5 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -11,6 +12,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
   DEFAULT_CURRENCY,
   HEADER_KEY_IMPERSONATION
@@ -57,6 +59,8 @@ export class PortfolioController {
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly impersonationService: ImpersonationService,
+    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -161,7 +165,7 @@ export class PortfolioController {
         'currentNetPerformance',
         'currentNetPerformanceWithCurrencyEffect',
         'currentValue',
-        'dividend',
+        'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
@@ -231,11 +235,21 @@ export class PortfolioController {
       filterByTags
     });
 
-    let dividends = await this.portfolioService.getDividends({
-      dateRange,
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const { activities } = await this.orderService.getOrders({
       filters,
-      groupBy,
-      impersonationId
+      userCurrency,
+      userId: impersonationUserId || this.request.user.id,
+      types: ['DIVIDEND']
+    });
+
+    let dividends = await this.portfolioService.getDividends({
+      activities,
+      dateRange,
+      groupBy
     });
 
     if (
