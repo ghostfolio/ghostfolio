@@ -587,6 +587,10 @@ ngx-skeleton-loader {
   text-decoration: underline !important;
 }
 
+.text-line-through {
+  text-decoration: line-through;
+}
+
 .with-placeholder-as-option {
   .mat-mdc-select-placeholder {
     color: rgba(var(--dark-primary-text));
