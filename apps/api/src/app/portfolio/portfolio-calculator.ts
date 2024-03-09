@@ -449,16 +449,18 @@ export class PortfolioCalculator {
 
   public async getCurrentPositions(
     start: Date,
-    end = new Date(Date.now())
+    end?: Date
   ): Promise<CurrentPositions> {
-    const transactionPointsBeforeEndDate =
-      this.transactionPoints?.filter((transactionPoint) => {
-        return isBefore(parseDate(transactionPoint.date), end);
-      }) ?? [];
+    const transactionPoints =
+      (end
+        ? this.transactionPoints?.filter(({ date }) => {
+            return isBefore(parseDate(date), end);
+          })
+        : this.transactionPoints) ?? [];
 
-    if (!transactionPointsBeforeEndDate.length) {
+    if (!transactionPoints.length) {
       return {
-        currentValue: new Big(0),
+        currentValueInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -473,41 +475,43 @@ export class PortfolioCalculator {
       };
     }
 
-    const lastTransactionPoint =
-      transactionPointsBeforeEndDate[transactionPointsBeforeEndDate.length - 1];
+    const lastTransactionPoint = last(transactionPoints);
 
     const currencies: { [symbol: string]: string } = {};
     const dataGatheringItems: IDataGatheringItem[] = [];
     let dates: Date[] = [];
-    let firstIndex = transactionPointsBeforeEndDate.length;
+    const endDate = parseDate(lastTransactionPoint.date);
+    let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
 
     dates.push(resetHours(start));
-    for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
+
+    for (const { currency, dataSource, symbol } of transactionPoints[
+      firstIndex - 1
+    ].items) {
       dataGatheringItems.push({
-        dataSource: item.dataSource,
-        symbol: item.symbol
+        dataSource,
+        symbol
       });
 
-      currencies[item.symbol] = item.currency;
+      currencies[symbol] = currency;
     }
 
-    for (let i = 0; i < transactionPointsBeforeEndDate.length; i++) {
+    for (let i = 0; i < transactionPoints.length; i++) {
       if (
-        !isBefore(parseDate(transactionPointsBeforeEndDate[i].date), start) &&
+        !isBefore(parseDate(transactionPoints[i].date), start) &&
         firstTransactionPoint === null
       ) {
-        firstTransactionPoint = transactionPointsBeforeEndDate[i];
+        firstTransactionPoint = transactionPoints[i];
         firstIndex = i;
       }
+
       if (firstTransactionPoint !== null) {
-        dates.push(
-          resetHours(parseDate(transactionPointsBeforeEndDate[i].date))
-        );
+        dates.push(resetHours(parseDate(transactionPoints[i].date)));
       }
     }
 
-    dates.push(resetHours(end));
+    dates.push(resetHours(endDate));
 
     // Add dates of last week for fallback
     dates.push(subDays(resetHours(new Date()), 7));
@@ -534,7 +538,7 @@ export class PortfolioCalculator {
     let exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: uniq(Object.values(currencies)),
-        endDate: endOfDay(end),
+        endDate: endOfDay(endDate),
         startDate: parseDate(this.transactionPoints?.[0]?.date),
         targetCurrency: this.currency
       });
@@ -570,7 +574,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const endDateString = format(end, DATE_FORMAT);
+    const endDateString = format(endDate, DATE_FORMAT);
 
     if (firstIndex > 0) {
       firstIndex--;
@@ -582,9 +586,9 @@ export class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
-      const marketPriceInBaseCurrency = marketSymbolMap[endDateString]?.[
-        item.symbol
-      ]?.mul(
+      const marketPriceInBaseCurrency = (
+        marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
+      ).mul(
         exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
           endDateString
         ]
@@ -607,9 +611,9 @@ export class PortfolioCalculator {
         totalInvestment,
         totalInvestmentWithCurrencyEffect
       } = this.getSymbolMetrics({
-        end,
         marketSymbolMap,
         start,
+        end: endDate,
         exchangeRates:
           exchangeRatesByCurrency[`${item.currency}${this.currency}`],
         symbol: item.symbol
@@ -656,7 +660,10 @@ export class PortfolioCalculator {
         quantity: item.quantity,
         symbol: item.symbol,
         tags: item.tags,
-        transactionCount: item.transactionCount
+        transactionCount: item.transactionCount,
+        valueInBaseCurrency: new Big(marketPriceInBaseCurrency).mul(
+          item.quantity
+        )
       });
 
       if (
@@ -725,7 +732,7 @@ export class PortfolioCalculator {
   }
 
   private calculateOverallPerformance(positions: TimelinePosition[]) {
-    let currentValue = new Big(0);
+    let currentValueInBaseCurrency = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
@@ -737,14 +744,9 @@ export class PortfolioCalculator {
     let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
-      if (
-        currentPosition.investment &&
-        currentPosition.marketPriceInBaseCurrency
-      ) {
-        currentValue = currentValue.plus(
-          new Big(currentPosition.marketPriceInBaseCurrency).mul(
-            currentPosition.quantity
-          )
+      if (currentPosition.valueInBaseCurrency) {
+        currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
+          currentPosition.valueInBaseCurrency
         );
       } else {
         hasErrors = true;
@@ -801,7 +803,7 @@ export class PortfolioCalculator {
     }
 
     return {
-      currentValue,
+      currentValueInBaseCurrency,
       grossPerformance,
       grossPerformanceWithCurrencyEffect,
       hasErrors,
