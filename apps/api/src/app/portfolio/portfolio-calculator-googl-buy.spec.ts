@@ -134,7 +134,8 @@ describe('PortfolioCalculator', () => {
             tags: undefined,
             timeWeightedInvestment: new Big('89.12'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('103.10483')
           }
         ],
         totalInvestment: new Big('89.12'),

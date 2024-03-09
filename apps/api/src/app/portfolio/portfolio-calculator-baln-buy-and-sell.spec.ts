@@ -131,7 +131,8 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW',
             timeWeightedInvestment: new Big('285.8'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('285.8'),
-            transactionCount: 2
+            transactionCount: 2,
+            valueInBaseCurrency: new Big('0')
           }
         ],
         totalInvestment: new Big('0'),
