@@ -76,7 +76,7 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('297.8'),
+        currentValueInBaseCurrency: new Big('297.8'),
         errors: [],
         grossPerformance: new Big('24.6'),
         grossPerformancePercentage: new Big('0.09004392386530014641'),
@@ -120,7 +120,8 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW',
             timeWeightedInvestment: new Big('273.2'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('273.2'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('297.8')
           }
         ],
         totalInvestment: new Big('273.2'),

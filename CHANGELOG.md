@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integrated dividend into the transaction point concept in the portfolio service
 - Removed the environment variable `WEB_AUTH_RP_ID`
 
+### Fixed
+
+- Fixed an issue in the calculation of the portfolio summary caused by future liabilities
+
 ## 2.61.1 - 2024-03-06
 
 ### Fixed

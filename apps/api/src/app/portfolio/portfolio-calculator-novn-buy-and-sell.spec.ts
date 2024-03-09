@@ -113,7 +113,7 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('0'),
+        currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('19.86'),
         grossPerformancePercentage: new Big('0.13100263852242744063'),
@@ -157,7 +157,8 @@ describe('PortfolioCalculator', () => {
             symbol: 'NOVN.SW',
             timeWeightedInvestment: new Big('151.6'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
-            transactionCount: 2
+            transactionCount: 2,
+            valueInBaseCurrency: new Big('0')
           }
         ],
         totalInvestment: new Big('0'),

@@ -26,6 +26,7 @@ export const ExchangeRateDataServiceMock = {
       return Promise.resolve({
         USDUSD: {
           '2018-01-01': 1,
+          '2021-11-16': 1,
           '2023-07-10': 1
         }
       });

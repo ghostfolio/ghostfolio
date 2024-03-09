@@ -378,9 +378,10 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
-    const totalValueInBaseCurrency = currentPositions.currentValue.plus(
-      cashDetails.balanceInBaseCurrency
-    );
+    const totalValueInBaseCurrency =
+      currentPositions.currentValueInBaseCurrency.plus(
+        cashDetails.balanceInBaseCurrency
+      );
 
     const isFilteredByAccount =
       filters?.some((filter) => {
@@ -389,7 +390,7 @@ export class PortfolioService {
 
     let filteredValueInBaseCurrency = isFilteredByAccount
       ? totalValueInBaseCurrency
-      : currentPositions.currentValue;
+      : currentPositions.currentValueInBaseCurrency;
 
     if (
       filters?.length === 0 ||
@@ -444,14 +445,14 @@ export class PortfolioService {
       quantity,
       symbol,
       tags,
-      transactionCount
+      transactionCount,
+      valueInBaseCurrency
     } of currentPositions.positions) {
       if (quantity.eq(0)) {
         // Ignore positions without any quantity
         continue;
       }
 
-      const value = quantity.mul(marketPriceInBaseCurrency ?? 0);
       const symbolProfile = symbolProfileMap[symbol];
       const dataProviderResponse = dataProviderResponses[symbol];
 
@@ -517,11 +518,11 @@ export class PortfolioService {
         }
       } else {
         markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
-          .plus(value)
+          .plus(valueInBaseCurrency)
           .toNumber();
 
         marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
-          .plus(value)
+          .plus(valueInBaseCurrency)
           .toNumber();
       }
 
@@ -535,7 +536,7 @@ export class PortfolioService {
         transactionCount,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
-          : value.div(filteredValueInBaseCurrency).toNumber(),
+          : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
         assetClass: symbolProfile.assetClass,
         assetSubClass: symbolProfile.assetSubClass,
         countries: symbolProfile.countries,
@@ -560,7 +561,7 @@ export class PortfolioService {
         quantity: quantity.toNumber(),
         sectors: symbolProfile.sectors,
         url: symbolProfile.url,
-        valueInBaseCurrency: value.toNumber()
+        valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
 
@@ -1175,7 +1176,7 @@ export class PortfolioService {
 
     const startDate = this.getStartDate(dateRange, portfolioStart);
     const {
-      currentValue,
+      currentValueInBaseCurrency,
       errors,
       grossPerformance,
       grossPerformancePercentage,
@@ -1270,7 +1271,7 @@ export class PortfolioService {
           currentNetPerformancePercentWithCurrencyEffect.toNumber(),
         currentNetPerformanceWithCurrencyEffect:
           currentNetPerformanceWithCurrencyEffect.toNumber(),
-        currentValue: currentValue.toNumber(),
+        currentValue: currentValueInBaseCurrency.toNumber(),
         totalInvestment: totalInvestment.toNumber()
       }
     };

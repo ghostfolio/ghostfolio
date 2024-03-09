@@ -27,4 +27,5 @@ export interface TimelinePosition {
   timeWeightedInvestment: Big;
   timeWeightedInvestmentWithCurrencyEffect: Big;
   transactionCount: number;
+  valueInBaseCurrency: Big;
 }
