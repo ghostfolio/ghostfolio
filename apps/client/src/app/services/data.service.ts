@@ -27,6 +27,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -226,6 +227,19 @@ export class DataService {
   }) {
     return this.http.get<IDataProviderHistoricalResponse>(
       `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT)}`
+    );
+  }
+
+  public fetchHoldings({
+    filters
+  }: {
+    filters?: Filter[];
+  } = {}) {
+    return this.http.get<PortfolioHoldingsResponse>(
+      '/api/v1/portfolio/holdings',
+      {
+        params: this.buildFiltersAsQueryParams({ filters })
+      }
     );
   }
 
