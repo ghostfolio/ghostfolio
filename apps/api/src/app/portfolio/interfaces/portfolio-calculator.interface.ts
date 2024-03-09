@@ -5,7 +5,7 @@ import { PortfolioOrder } from './portfolio-order.interface';
 export interface PortfolioOrderItem extends PortfolioOrder {
   feeInBaseCurrency?: Big;
   feeInBaseCurrencyWithCurrencyEffect?: Big;
-  itemType?: '' | 'start' | 'end';
+  itemType?: 'between' | 'end' | 'start';
   unitPriceInBaseCurrency?: Big;
   unitPriceInBaseCurrencyWithCurrencyEffect?: Big;
 }
