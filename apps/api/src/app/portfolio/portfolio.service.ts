@@ -1575,29 +1575,26 @@ export class PortfolioService {
 
   private getFees({
     activities,
-    date = new Date(0),
     userCurrency
   }: {
     activities: OrderWithAccount[];
-    date?: Date;
     userCurrency: string;
   }) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts)
-        return isBefore(date, new Date(activity.date));
-      })
-      .map(({ fee, SymbolProfile }) => {
-        return this.exchangeRateDataService.toCurrency(
-          fee,
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
+    return getSum(
+      activities
+        .filter(({ isDraft }) => {
+          return isDraft === false;
+        })
+        .map(({ fee, SymbolProfile }) => {
+          return new Big(
+            this.exchangeRateDataService.toCurrency(
+              fee,
+              SymbolProfile.currency,
+              userCurrency
+            )
+          );
+        })
+    );
   }
 
   private getInitialCashPosition({
@@ -1745,15 +1742,16 @@ export class PortfolioService {
       }
     }
 
-    const dividendInBaseCurrency = (
-      await this.getDividends({
-        activities: activities.filter(({ type }) => {
-          return type === 'DIVIDEND';
+    const dividendInBaseCurrency = getSum(
+      (
+        await this.getDividends({
+          activities: activities.filter(({ type }) => {
+            return type === 'DIVIDEND';
+          })
         })
+      ).map(({ investment }) => {
+        return new Big(investment);
       })
-    ).reduce(
-      (previous, current) => new Big(previous).plus(current.investment),
-      new Big(0)
     );
 
     const emergencyFund = new Big(
@@ -1919,34 +1917,27 @@ export class PortfolioService {
   private getSumOfActivityType({
     activities,
     activityType,
-    date = new Date(0),
     userCurrency
   }: {
     activities: OrderWithAccount[];
     activityType: ActivityType;
-    date?: Date;
     userCurrency: string;
   }) {
-    return activities
-      .filter((activity) => {
-        // Filter out all activities before given date (drafts) and
-        // activity type
-        return (
-          isBefore(date, new Date(activity.date)) &&
-          activity.type === activityType
-        );
-      })
-      .map(({ quantity, SymbolProfile, unitPrice }) => {
-        return this.exchangeRateDataService.toCurrency(
-          new Big(quantity).mul(unitPrice).toNumber(),
-          SymbolProfile.currency,
-          userCurrency
-        );
-      })
-      .reduce(
-        (previous, current) => new Big(previous).plus(current),
-        new Big(0)
-      );
+    return getSum(
+      activities
+        .filter(({ isDraft, type }) => {
+          return isDraft === false && type === activityType;
+        })
+        .map(({ quantity, SymbolProfile, unitPrice }) => {
+          return new Big(
+            this.exchangeRateDataService.toCurrency(
+              new Big(quantity).mul(unitPrice).toNumber(),
+              SymbolProfile.currency,
+              userCurrency
+            )
+          );
+        })
+    );
   }
 
   private async getTransactionPoints({
