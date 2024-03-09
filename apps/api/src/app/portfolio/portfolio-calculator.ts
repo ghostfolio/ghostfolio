@@ -22,6 +22,7 @@ import {
   format,
   isBefore,
   isSameDay,
+  max,
   subDays
 } from 'date-fns';
 import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
@@ -451,12 +452,21 @@ export class PortfolioCalculator {
     start: Date,
     end?: Date
   ): Promise<CurrentPositions> {
-    const transactionPoints =
-      (end
-        ? this.transactionPoints?.filter(({ date }) => {
-            return isBefore(parseDate(date), end);
-          })
-        : this.transactionPoints) ?? [];
+    const lastTransactionPoint = last(this.transactionPoints);
+
+    let endDate = end;
+
+    if (!endDate) {
+      endDate = new Date(Date.now());
+
+      if (lastTransactionPoint) {
+        endDate = max([endDate, parseDate(lastTransactionPoint.date)]);
+      }
+    }
+
+    const transactionPoints = this.transactionPoints?.filter(({ date }) => {
+      return isBefore(parseDate(date), endDate);
+    });
 
     if (!transactionPoints.length) {
       return {
@@ -475,12 +485,9 @@ export class PortfolioCalculator {
       };
     }
 
-    const lastTransactionPoint = last(transactionPoints);
-
     const currencies: { [symbol: string]: string } = {};
     const dataGatheringItems: IDataGatheringItem[] = [];
     let dates: Date[] = [];
-    const endDate = parseDate(lastTransactionPoint.date);
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
 
