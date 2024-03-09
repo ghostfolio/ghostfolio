@@ -303,7 +303,6 @@ export class PortfolioController {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
       impersonationId,
-      dateRange: 'max',
       userId: this.request.user.id
     });
 
@@ -533,7 +532,6 @@ export class PortfolioController {
     }
 
     const { holdings } = await this.portfolioService.getDetails({
-      dateRange: 'max',
       filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
       impersonationId: access.userId,
       userId: user.id
