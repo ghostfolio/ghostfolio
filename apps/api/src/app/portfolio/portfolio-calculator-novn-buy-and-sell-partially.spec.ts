@@ -87,7 +87,7 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('87.8'),
+        currentValueInBaseCurrency: new Big('87.8'),
         errors: [],
         grossPerformance: new Big('21.93'),
         grossPerformancePercentage: new Big('0.15113417083448194384'),

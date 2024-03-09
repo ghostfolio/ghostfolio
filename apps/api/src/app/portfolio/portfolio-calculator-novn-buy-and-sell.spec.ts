@@ -113,7 +113,7 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('0'),
+        currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('19.86'),
         grossPerformancePercentage: new Big('0.13100263852242744063'),
