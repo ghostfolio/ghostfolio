@@ -73,14 +73,17 @@ export class ExchangeRateDataService {
           currencyTo: targetCurrency
         });
 
-      const keys = Object.keys(
+      const dateStrings = Object.keys(
         exchangeRatesByCurrency[`${currency}${targetCurrency}`]
       );
-      const lastDate = keys.reduce((a, b) => (a > b ? a : b));
+      const lastDateString = dateStrings.reduce((a, b) => {
+        return a > b ? a : b;
+      });
 
       let previousExchangeRate =
-        exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[lastDate] ??
-        1;
+        exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[
+          lastDateString
+        ] ?? 1;
 
       // Start from the most recent date and fill in missing exchange rates
       // using the latest available rate
