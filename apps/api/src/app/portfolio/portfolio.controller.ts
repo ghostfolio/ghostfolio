@@ -108,7 +108,8 @@ export class PortfolioController {
       dateRange,
       filters,
       impersonationId,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      withSummary: true
     });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
