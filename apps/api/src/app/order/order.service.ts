@@ -326,11 +326,13 @@ export class OrderService {
       return {
         ...order,
         value,
+        // TODO: Use exchange rate of date
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           order.fee,
           order.SymbolProfile.currency,
           userCurrency
         ),
+        // TODO: Use exchange rate of date
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
           order.SymbolProfile.currency,

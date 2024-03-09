@@ -89,7 +89,7 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('103.10483'),
+        currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
         grossPerformance: new Big('27.33'),
         grossPerformancePercentage: new Big('0.3066651705565529623'),
@@ -109,6 +109,8 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
             fee: new Big('1'),
             firstBuyDate: '2023-01-03',
             grossPerformance: new Big('27.33'),
@@ -132,7 +134,8 @@ describe('PortfolioCalculator', () => {
             tags: undefined,
             timeWeightedInvestment: new Big('89.12'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('103.10483')
           }
         ],
         totalInvestment: new Big('89.12'),
