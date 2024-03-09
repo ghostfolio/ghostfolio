@@ -20,6 +20,7 @@ import {
 import {
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -95,21 +96,15 @@ export class PortfolioController {
       filterByTags
     });
 
-    const {
-      accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
-      hasErrors,
-      holdings,
-      platforms,
-      summary,
-      totalValueInBaseCurrency
-    } = await this.portfolioService.getDetails({
-      dateRange,
-      filters,
-      impersonationId,
-      userId: this.request.user.id
-    });
+    const { accounts, hasErrors, holdings, platforms, summary } =
+      await this.portfolioService.getDetails({
+        dateRange,
+        filters,
+        impersonationId,
+        userId: this.request.user.id,
+        withLiabilities: true,
+        withSummary: true
+      });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -164,19 +159,21 @@ export class PortfolioController {
         'currentGrossPerformanceWithCurrencyEffect',
         'currentNetPerformance',
         'currentNetPerformanceWithCurrencyEffect',
+        'currentNetWorth',
         'currentValue',
         'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'filteredValueInBaseCurrency',
         'fireWealth',
         'interest',
         'items',
         'liabilities',
-        'netWorth',
         'totalBuy',
         'totalInvestment',
-        'totalSell'
+        'totalSell',
+        'totalValueInBaseCurrency'
       ]);
     }
 
@@ -203,12 +200,9 @@ export class PortfolioController {
 
     return {
       accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
       hasError,
       holdings,
       platforms,
-      totalValueInBaseCurrency,
       summary: portfolioSummary
     };
   }
@@ -277,6 +271,33 @@ export class PortfolioController {
     }
 
     return { dividends };
+  }
+
+  @Get('holdings')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getHoldings(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('query') filterBySearchQuery?: string,
+    @Query('tags') filterByTags?: string
+  ): Promise<PortfolioHoldingsResponse> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterBySearchQuery,
+      filterByTags
+    });
+
+    const { holdings } = await this.portfolioService.getDetails({
+      filters,
+      impersonationId,
+      userId: this.request.user.id
+    });
+
+    return { holdings: Object.values(holdings) };
   }
 
   @Get('investments')
@@ -502,7 +523,6 @@ export class PortfolioController {
     }
 
     const { holdings } = await this.portfolioService.getDetails({
-      dateRange: 'max',
       filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
       impersonationId: access.userId,
       userId: user.id

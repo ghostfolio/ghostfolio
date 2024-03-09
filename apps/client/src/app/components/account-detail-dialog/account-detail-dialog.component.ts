@@ -115,7 +115,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       );
 
     this.dataService
-      .fetchPortfolioDetails({
+      .fetchPortfolioHoldings({
         filters: [
           {
             type: 'ACCOUNT',
@@ -125,11 +125,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
-        this.holdings = [];
-
-        for (const [symbol, holding] of Object.entries(holdings)) {
-          this.holdings.push(holding);
-        }
+        this.holdings = holdings;
 
         this.changeDetectorRef.markForCheck();
       });

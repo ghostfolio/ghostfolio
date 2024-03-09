@@ -3,11 +3,7 @@ import { PositionDetailDialog } from '@ghostfolio/client/components/position/pos
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  PortfolioDetails,
-  PortfolioPosition,
-  User
-} from '@ghostfolio/common/interfaces';
+import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -28,8 +24,6 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public holdings: PortfolioPosition[];
-  public isLoading = false;
-  public portfolioDetails: PortfolioDetails;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -83,12 +77,10 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
 
           this.holdings = undefined;
 
-          this.fetchPortfolioDetails()
+          this.fetchHoldings()
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe((portfolioDetails) => {
-              this.portfolioDetails = portfolioDetails;
-
-              this.initialize();
+            .subscribe(({ holdings }) => {
+              this.holdings = holdings;
 
               this.changeDetectorRef.markForCheck();
             });
@@ -103,20 +95,10 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchPortfolioDetails() {
-    return this.dataService.fetchPortfolioDetails({
+  private fetchHoldings() {
+    return this.dataService.fetchPortfolioHoldings({
       filters: this.userService.getFilters()
     });
-  }
-
-  private initialize() {
-    this.holdings = [];
-
-    for (const [symbol, holding] of Object.entries(
-      this.portfolioDetails.holdings
-    )) {
-      this.holdings.push(holding);
-    }
   }
 
   private openPositionDialog({

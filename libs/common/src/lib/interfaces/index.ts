@@ -40,6 +40,7 @@ import type { BenchmarkResponse } from './responses/benchmark-response.interface
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
@@ -81,6 +82,7 @@ export {
   PortfolioChart,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioItem,
   PortfolioOverview,

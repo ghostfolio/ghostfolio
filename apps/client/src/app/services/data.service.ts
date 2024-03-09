@@ -27,6 +27,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -405,6 +406,46 @@ export class DataService {
             );
           }
 
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
+
+              response.holdings[symbol].value = isNumber(
+                response.holdings[symbol].value
+              )
+                ? response.holdings[symbol].value
+                : response.holdings[symbol].valueInPercentage;
+            }
+          }
+
+          return response;
+        })
+      );
+  }
+
+  public fetchPortfolioHoldings({
+    filters
+  }: {
+    filters?: Filter[];
+  } = {}) {
+    return this.http
+      .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
+        params: this.buildFiltersAsQueryParams({ filters })
+      })
+      .pipe(
+        map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
               response.holdings[symbol].assetClassLabel = translate(
