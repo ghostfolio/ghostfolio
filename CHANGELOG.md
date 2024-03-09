@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed an issue with removing a linked account from a (wealth) item activity
+
 ## 2.61.1 - 2024-03-06
 
 ### Fixed
@@ -19,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed the the activities import (query parameter handling)
+- Fixed the activities import (query parameter handling)
 
 ## 2.60.0 - 2024-03-02
 
