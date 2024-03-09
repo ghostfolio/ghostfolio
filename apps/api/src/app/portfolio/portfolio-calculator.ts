@@ -1049,28 +1049,26 @@ export class PortfolioCalculator {
       }
     }
 
-    // Sort orders so that the start and end placeholder order are at the right
+    // Sort orders so that the start and end placeholder order are at the correct
     // position
-    orders = sortBy(orders, (order) => {
-      let sortIndex = new Date(order.date);
+    orders = sortBy(orders, ({ date, itemType }) => {
+      let sortIndex = new Date(date);
 
-      if (order.itemType === 'start') {
-        sortIndex = addMilliseconds(sortIndex, -1);
-      }
-
-      if (order.itemType === 'end') {
+      if (itemType === 'end') {
         sortIndex = addMilliseconds(sortIndex, 1);
+      } else if (itemType === 'start') {
+        sortIndex = addMilliseconds(sortIndex, -1);
       }
 
       return sortIndex.getTime();
     });
 
-    const indexOfStartOrder = orders.findIndex((order) => {
-      return order.itemType === 'start';
+    const indexOfStartOrder = orders.findIndex(({ itemType }) => {
+      return itemType === 'start';
     });
 
-    const indexOfEndOrder = orders.findIndex((order) => {
-      return order.itemType === 'end';
+    const indexOfEndOrder = orders.findIndex(({ itemType }) => {
+      return itemType === 'end';
     });
 
     let totalInvestmentDays = 0;
