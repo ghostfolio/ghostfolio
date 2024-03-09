@@ -96,7 +96,7 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   }
 
   private fetchHoldings() {
-    return this.dataService.fetchHoldings({
+    return this.dataService.fetchPortfolioHoldings({
       filters: this.userService.getFilters()
     });
   }

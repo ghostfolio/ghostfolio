@@ -1,6 +1,6 @@
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
 import Big from 'big.js';
 import {
   getDate,
@@ -136,6 +136,10 @@ export function extractNumberFromString({
   } catch {
     return undefined;
   }
+}
+
+export function getAllActivityTypes(): ActivityType[] {
+  return ['BUY', 'DIVIDEND', 'FEE', 'ITEM', 'LIABILITY', 'SELL'];
 }
 
 export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {

@@ -110,6 +110,7 @@ export class PortfolioController {
       filters,
       impersonationId,
       userId: this.request.user.id,
+      withLiabilities: true,
       withSummary: true
     });
 

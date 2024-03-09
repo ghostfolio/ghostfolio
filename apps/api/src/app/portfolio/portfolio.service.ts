@@ -24,7 +24,12 @@ import {
   MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAllActivityTypes,
+  getSum,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
@@ -141,7 +146,8 @@ export class PortfolioService {
         filters,
         withExcludedAccounts,
         impersonationId: userId,
-        userId: this.request.user.id
+        userId: this.request.user.id,
+        withLiabilities: true
       })
     ]);
 
@@ -333,6 +339,7 @@ export class PortfolioService {
     impersonationId,
     userId,
     withExcludedAccounts = false,
+    withLiabilities = false,
     withSummary = false
   }: {
     dateRange?: DateRange;
@@ -340,6 +347,7 @@ export class PortfolioService {
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    withLiabilities?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
     userId = await this.getUserId(impersonationId, userId);
@@ -354,7 +362,12 @@ export class PortfolioService {
       await this.getTransactionPoints({
         filters,
         userId,
-        withExcludedAccounts
+        withExcludedAccounts,
+        types: withLiabilities
+          ? undefined
+          : getAllActivityTypes().filter((activityType) => {
+              return activityType !== 'LIABILITY';
+            })
       });
 
     const portfolioCalculator = new PortfolioCalculator({
@@ -1949,7 +1962,7 @@ export class PortfolioService {
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
-    types = ['BUY', 'DIVIDEND', 'ITEM', 'LIABILITY', 'SELL'],
+    types = getAllActivityTypes(),
     userId,
     withExcludedAccounts = false
   }: {
