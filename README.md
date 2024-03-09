@@ -154,7 +154,7 @@ Ghostfolio is available for various home server systems, including [Runtipi](htt
 - [Node.js](https://nodejs.org/en/download) (version 18+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - Create a local copy of this Git repository (clone)
-- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
+- Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
 ### Setup
 
