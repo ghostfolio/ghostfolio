@@ -348,7 +348,7 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    const { orders, portfolioOrders, transactionPoints } =
+    const { activities, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
         userId,
@@ -582,8 +582,8 @@ export class PortfolioService {
     }
 
     const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
+      activities,
       filters,
-      orders,
       portfolioItemsNow,
       userCurrency,
       userId,
@@ -1282,7 +1282,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { orders, portfolioOrders, transactionPoints } =
+    const { activities, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         userId,
         types: ['BUY', 'SELL']
@@ -1314,7 +1314,7 @@ export class PortfolioService {
     }
 
     const { accounts } = await this.getValueOfAccountsAndPlatforms({
-      orders,
+      activities,
       portfolioItemsNow,
       userCurrency,
       userId
@@ -1324,7 +1324,7 @@ export class PortfolioService {
 
     return {
       rules: {
-        accountClusterRisk: isEmpty(orders)
+        accountClusterRisk: isEmpty(activities)
           ? undefined
           : await this.rulesService.evaluate(
               [
@@ -1339,7 +1339,7 @@ export class PortfolioService {
               ],
               userSettings
             ),
-        currencyClusterRisk: isEmpty(orders)
+        currencyClusterRisk: isEmpty(activities)
           ? undefined
           : await this.rulesService.evaluate(
               [
@@ -1368,7 +1368,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               currentPositions.totalInvestment.toNumber(),
-              this.getFees({ userCurrency, activities: orders }).toNumber()
+              this.getFees({ activities, userCurrency }).toNumber()
             )
           ],
           userSettings
@@ -1953,8 +1953,8 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<{
+    activities: Activity[];
     transactionPoints: TransactionPoint[];
-    orders: Activity[];
     portfolioOrders: PortfolioOrder[];
   }> {
     const userCurrency =
@@ -1970,7 +1970,7 @@ export class PortfolioService {
     });
 
     if (count <= 0) {
-      return { transactionPoints: [], orders: [], portfolioOrders: [] };
+      return { activities: [], transactionPoints: [], portfolioOrders: [] };
     }
 
     const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
@@ -1996,8 +1996,8 @@ export class PortfolioService {
     portfolioCalculator.computeTransactionPoints();
 
     return {
+      activities,
       portfolioOrders,
-      orders: activities,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
   }
@@ -2018,29 +2018,20 @@ export class PortfolioService {
   }
 
   private async getValueOfAccountsAndPlatforms({
+    activities,
     filters = [],
-    orders,
     portfolioItemsNow,
     userCurrency,
     userId,
     withExcludedAccounts = false
   }: {
+    activities: Activity[];
     filters?: Filter[];
-    orders: Activity[];
     portfolioItemsNow: { [p: string]: TimelinePosition };
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }) {
-    const { activities: ordersOfTypeItemOrLiability } =
-      await this.orderService.getOrders({
-        filters,
-        userCurrency,
-        userId,
-        withExcludedAccounts,
-        types: ['LIABILITY']
-      });
-
     const accounts: PortfolioDetails['accounts'] = {};
     const platforms: PortfolioDetails['platforms'] = {};
 
@@ -2058,7 +2049,7 @@ export class PortfolioService {
       });
     } else {
       const accountIds = uniq(
-        orders
+        activities
           .filter(({ accountId }) => {
             return accountId;
           })
@@ -2078,7 +2069,7 @@ export class PortfolioService {
     });
 
     for (const account of currentAccounts) {
-      const ordersByAccount = orders.filter(({ accountId }) => {
+      const ordersByAccount = activities.filter(({ accountId }) => {
         return accountId === account.id;
       });
 
