@@ -70,12 +70,7 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       currency = data.SymbolProfile.connectOrCreate.create.currency;
@@ -130,13 +125,9 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft =
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
+    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+      ? false
+      : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
@@ -180,12 +171,7 @@ export class OrderService {
       where
     });
 
-    if (
-      order.type === 'FEE' ||
-      order.type === 'INTEREST' ||
-      order.type === 'ITEM' ||
-      order.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -369,15 +355,13 @@ export class OrderService {
     where
   }: {
     data: Prisma.OrderUpdateInput & {
-      Account?:
-        | { connect: { id_userId: { id: string; userId: string } } }
-        | { disconnect: true };
       assetClass?: AssetClass;
       assetSubClass?: AssetSubClass;
       currency?: string;
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      type?: ActivityType;
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
@@ -389,14 +373,9 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
-      console.log('llega aqui');
+
       if (data.Account?.connect?.id_userId?.id === null) {
         data.Account = { disconnect: true };
       }
