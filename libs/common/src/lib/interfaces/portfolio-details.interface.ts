@@ -13,8 +13,6 @@ export interface PortfolioDetails {
       valueInPercentage?: number;
     };
   };
-  filteredValueInBaseCurrency?: number;
-  filteredValueInPercentage?: number;
   holdings: { [symbol: string]: PortfolioPosition };
   platforms: {
     [id: string]: {
@@ -26,5 +24,4 @@ export interface PortfolioDetails {
     };
   };
   summary?: PortfolioSummary;
-  totalValueInBaseCurrency?: number;
 }

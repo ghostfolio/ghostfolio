@@ -18,7 +18,7 @@
             [value]="
               isLoading
                 ? undefined
-                : portfolioDetails?.filteredValueInPercentage
+                : portfolioDetails?.summary?.filteredValueInPercentage
             "
           />
         </mat-card-header>
@@ -26,10 +26,11 @@
           <mat-progress-bar
             mode="determinate"
             [title]="
-              (portfolioDetails?.filteredValueInPercentage * 100).toFixed(2) +
-              '%'
+              (
+                portfolioDetails?.summary?.filteredValueInPercentage * 100
+              ).toFixed(2) + '%'
             "
-            [value]="portfolioDetails?.filteredValueInPercentage * 100"
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
           />
         </mat-card-content>
       </mat-card>

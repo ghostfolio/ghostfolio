@@ -96,23 +96,15 @@ export class PortfolioController {
       filterByTags
     });
 
-    const {
-      accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
-      hasErrors,
-      holdings,
-      platforms,
-      summary,
-      totalValueInBaseCurrency
-    } = await this.portfolioService.getDetails({
-      dateRange,
-      filters,
-      impersonationId,
-      userId: this.request.user.id,
-      withLiabilities: true,
-      withSummary: true
-    });
+    const { accounts, hasErrors, holdings, platforms, summary } =
+      await this.portfolioService.getDetails({
+        dateRange,
+        filters,
+        impersonationId,
+        userId: this.request.user.id,
+        withLiabilities: true,
+        withSummary: true
+      });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -167,19 +159,21 @@ export class PortfolioController {
         'currentGrossPerformanceWithCurrencyEffect',
         'currentNetPerformance',
         'currentNetPerformanceWithCurrencyEffect',
+        'currentNetWorth',
         'currentValue',
         'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'filteredValueInBaseCurrency',
         'fireWealth',
         'interest',
         'items',
         'liabilities',
-        'netWorth',
         'totalBuy',
         'totalInvestment',
-        'totalSell'
+        'totalSell',
+        'totalValueInBaseCurrency'
       ]);
     }
 
@@ -206,12 +200,9 @@ export class PortfolioController {
 
     return {
       accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
       hasError,
       holdings,
       platforms,
-      totalValueInBaseCurrency,
       summary: portfolioSummary
     };
   }

@@ -644,6 +644,7 @@ export class PortfolioService {
 
     if (withSummary) {
       summary = await this.getSummary({
+        filteredValueInBaseCurrency,
         holdings,
         impersonationId,
         userCurrency,
@@ -661,12 +662,7 @@ export class PortfolioService {
       holdings,
       platforms,
       summary,
-      filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
-      filteredValueInPercentage: summary?.netWorth
-        ? filteredValueInBaseCurrency.div(summary.netWorth).toNumber()
-        : undefined,
-      hasErrors: currentPositions.hasErrors,
-      totalValueInBaseCurrency: summary?.netWorth
+      hasErrors: currentPositions.hasErrors
     };
   }
 
@@ -1724,6 +1720,7 @@ export class PortfolioService {
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
+    filteredValueInBaseCurrency,
     holdings,
     impersonationId,
     userCurrency,
@@ -1731,6 +1728,7 @@ export class PortfolioService {
   }: {
     balanceInBaseCurrency: number;
     emergencyFundPositionsValueInBaseCurrency: number;
+    filteredValueInBaseCurrency: Big;
     holdings: PortfolioDetails['holdings'];
     impersonationId: string;
     userCurrency: string;
@@ -1912,7 +1910,6 @@ export class PortfolioService {
       interest,
       items,
       liabilities,
-      netWorth,
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
@@ -1924,12 +1921,17 @@ export class PortfolioService {
           .toNumber(),
         total: emergencyFund.toNumber()
       },
+      filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
+      filteredValueInPercentage: netWorth
+        ? filteredValueInBaseCurrency.div(netWorth).toNumber()
+        : undefined,
       fireWealth: new Big(performanceInformation.performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
-      }).length
+      }).length,
+      totalValueInBaseCurrency: netWorth
     };
   }
 
