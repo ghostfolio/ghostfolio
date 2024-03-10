@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _Self-Hosting_ section by available home server systems on the Frequently Asked Questions (FAQ) page
 
+### Changed
+
+- Upgraded `countries-list` from version `2.6.1` to `3.1.0`
+
 ### Fixed
 
 - Fixed an issue in the performance calculation caused by multiple `SELL` activities on the same day
