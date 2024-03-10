@@ -893,13 +893,10 @@ export class PortfolioCalculator {
     } = {};
 
     let totalInvestment = new Big(0);
+    let totalInvestmentFromBuyTransactions = new Big(0);
+    let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalInvestmentWithGrossPerformanceFromSell = new Big(0);
-
-    let totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect = new Big(
-      0
-    );
-
+    let totalQuantityFromBuyTransactions = new Big(0);
     let totalUnits = new Big(0);
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
@@ -1138,9 +1135,21 @@ export class PortfolioCalculator {
         transactionInvestment = order.quantity
           .mul(order.unitPriceInBaseCurrency)
           .mul(getFactor(order.type));
+
         transactionInvestmentWithCurrencyEffect = order.quantity
           .mul(order.unitPriceInBaseCurrencyWithCurrencyEffect)
           .mul(getFactor(order.type));
+
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.plus(order.quantity);
+
+        totalInvestmentFromBuyTransactions =
+          totalInvestmentFromBuyTransactions.plus(transactionInvestment);
+
+        totalInvestmentFromBuyTransactionsWithCurrencyEffect =
+          totalInvestmentFromBuyTransactionsWithCurrencyEffect.plus(
+            transactionInvestmentWithCurrencyEffect
+          );
       } else if (order.type === 'SELL') {
         if (totalUnits.gt(0)) {
           transactionInvestment = totalInvestment
@@ -1245,35 +1254,21 @@ export class PortfolioCalculator {
           grossPerformanceFromSellWithCurrencyEffect
         );
 
-      totalInvestmentWithGrossPerformanceFromSell =
-        totalInvestmentWithGrossPerformanceFromSell
-          .plus(transactionInvestment)
-          .plus(grossPerformanceFromSell);
-
-      totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect =
-        totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect
-          .plus(transactionInvestmentWithCurrencyEffect)
-          .plus(grossPerformanceFromSellWithCurrencyEffect);
-
-      lastAveragePrice = totalUnits.eq(0)
+      lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
         ? new Big(0)
-        : totalInvestmentWithGrossPerformanceFromSell.div(totalUnits);
+        : totalInvestmentFromBuyTransactions.div(
+            totalQuantityFromBuyTransactions
+          );
 
-      lastAveragePriceWithCurrencyEffect = totalUnits.eq(0)
+      lastAveragePriceWithCurrencyEffect = totalQuantityFromBuyTransactions.eq(
+        0
+      )
         ? new Big(0)
-        : totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect.div(
-            totalUnits
+        : totalInvestmentFromBuyTransactionsWithCurrencyEffect.div(
+            totalQuantityFromBuyTransactions
           );
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log(
-          'totalInvestmentWithGrossPerformanceFromSell',
-          totalInvestmentWithGrossPerformanceFromSell.toNumber()
-        );
-        console.log(
-          'totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect',
-          totalInvestmentWithGrossPerformanceFromSellWithCurrencyEffect.toNumber()
-        );
         console.log(
           'grossPerformanceFromSells',
           grossPerformanceFromSells.toNumber()
@@ -1319,11 +1314,10 @@ export class PortfolioCalculator {
             orderDate,
             previousOrderDate
           );
-
-          // Set to at least 1 day, otherwise the transactions on the same day
-          // would not be considered in the time weighted calculation
           if (daysSinceLastOrder <= 0) {
-            daysSinceLastOrder = 1;
+            // The time between two activities on the same day is unknown
+            // -> Set it to the smallest floating point number greater than 0
+            daysSinceLastOrder = Number.EPSILON;
           }
 
           // Sum up the total investment days since the start date to calculate
