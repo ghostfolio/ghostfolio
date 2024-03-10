@@ -1315,9 +1315,9 @@ export class PortfolioCalculator {
             previousOrderDate
           );
           if (daysSinceLastOrder <= 0) {
-            // The time between two transactions on the same day is unknown
-            // -> Set it to an arbitrary value of 0.25 (= 6 hours)
-            daysSinceLastOrder = 0.25;
+            // The time between two activities on the same day is unknown
+            // -> Set it to the smallest floating point number greater than 0
+            daysSinceLastOrder = Number.EPSILON;
           }
 
           // Sum up the total investment days since the start date to calculate
