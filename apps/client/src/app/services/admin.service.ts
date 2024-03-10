@@ -192,13 +192,10 @@ export class AdminService {
     symbol
   }: {
     dataSource: DataSource;
-    date: Date;
+    date: string;
     symbol: string;
   }) {
-    const url = `/api/v1/symbol/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
+    const url = `/api/v1/symbol/${dataSource}/${symbol}/${date}`;
 
     return this.http.get<IDataProviderHistoricalResponse>(url);
   }

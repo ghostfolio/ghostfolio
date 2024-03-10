@@ -63,7 +63,7 @@ export class MarketDataDetailDialog implements OnDestroy {
         marketData: {
           marketData: [
             {
-              date: this.data.date.toISOString(),
+              date: this.data.date,
               marketPrice: this.data.marketPrice
             }
           ]
