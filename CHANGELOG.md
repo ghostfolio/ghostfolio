@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `yahoo-finance2` from version `2.9.1` to `2.10.0`
+
 ### Fixed
 
 - Fixed an issue in the performance calculation caused by multiple `SELL` activities on the same day
