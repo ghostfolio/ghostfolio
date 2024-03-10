@@ -101,16 +101,16 @@ describe('PortfolioCalculator', () => {
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('-12.6'),
-        grossPerformancePercentage: new Big('-0.0447650320288528826'),
+        grossPerformancePercentage: new Big('-0.04408677396780965649'),
         grossPerformancePercentageWithCurrencyEffect: new Big(
-          '-0.0447650320288528826'
+          '-0.04408677396780965649'
         ),
         grossPerformanceWithCurrencyEffect: new Big('-12.6'),
         hasErrors: false,
         netPerformance: new Big('-15.8'),
-        netPerformancePercentage: new Big('-0.05613392905205361468'),
+        netPerformancePercentage: new Big('-0.05528341497550734703'),
         netPerformancePercentageWithCurrencyEffect: new Big(
-          '-0.05613392905205361468'
+          '-0.05528341497550734703'
         ),
         netPerformanceWithCurrencyEffect: new Big('-15.8'),
         positions: [
@@ -123,26 +123,26 @@ describe('PortfolioCalculator', () => {
             fee: new Big('3.2'),
             firstBuyDate: '2021-11-22',
             grossPerformance: new Big('-12.6'),
-            grossPerformancePercentage: new Big('-0.0447650320288528826'),
+            grossPerformancePercentage: new Big('-0.04408677396780965649'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '-0.0447650320288528826'
+              '-0.04408677396780965649'
             ),
             grossPerformanceWithCurrencyEffect: new Big('-12.6'),
             investment: new Big('0'),
             investmentWithCurrencyEffect: new Big('0'),
             netPerformance: new Big('-15.8'),
-            netPerformancePercentage: new Big('-0.05613392905205361468'),
+            netPerformancePercentage: new Big('-0.05528341497550734703'),
             netPerformancePercentageWithCurrencyEffect: new Big(
-              '-0.05613392905205361468'
+              '-0.05528341497550734703'
             ),
             netPerformanceWithCurrencyEffect: new Big('-15.8'),
             marketPrice: 148.9,
             marketPriceInBaseCurrency: 148.9,
             quantity: new Big('0'),
             symbol: 'BALN.SW',
-            timeWeightedInvestment: new Big('281.46969696969696969697'),
+            timeWeightedInvestment: new Big('285.80000000000000396627'),
             timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '281.46969696969696969697'
+              '285.80000000000000396627'
             ),
             transactionCount: 3,
             valueInBaseCurrency: new Big('0')
