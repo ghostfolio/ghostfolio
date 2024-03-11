@@ -76,8 +76,11 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('withLiabilities') withLiabilitiesParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
+    const withLiabilities = withLiabilitiesParam === 'true';
+
     let hasDetails = true;
     let hasError = false;
     const hasReadRestrictedAccessPermission =
@@ -101,8 +104,8 @@ export class PortfolioController {
         dateRange,
         filters,
         impersonationId,
+        withLiabilities,
         userId: this.request.user.id,
-        withLiabilities: true,
         withSummary: true
       });
 

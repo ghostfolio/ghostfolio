@@ -146,8 +146,7 @@ export class PortfolioService {
         filters,
         withExcludedAccounts,
         impersonationId: userId,
-        userId: this.request.user.id,
-        withLiabilities: true
+        userId: this.request.user.id
       })
     ]);
 
@@ -393,6 +392,7 @@ export class PortfolioService {
     });
 
     const holdings: PortfolioDetails['holdings'] = {};
+
     const totalValueInBaseCurrency =
       currentPositions.currentValueInBaseCurrency.plus(
         cashDetails.balanceInBaseCurrency
