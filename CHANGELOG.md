@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the content of the _Self-Hosting_ section by available home server systems on the Frequently Asked Questions (FAQ) page
+- Added support for the cryptocurrency _Real Smurf Cat_ (`SMURFCAT-USD`)
 
 ### Changed
 
