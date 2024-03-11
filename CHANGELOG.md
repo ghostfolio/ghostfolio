@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the performance calculation caused by multiple `SELL` activities on the same day
+- Fixed an issue in the calculation on the allocations page caused by liabilities
 
 ## 2.62.0 - 2024-03-09
 
