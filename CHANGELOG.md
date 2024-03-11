@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.63.0 - 2024-03-11
+## 2.63.1 - 2024-03-11
 
 ### Added
 
 - Extended the content of the _Self-Hosting_ section by available home server systems on the Frequently Asked Questions (FAQ) page
+- Added support for the cryptocurrency _Real Smurf Cat_ (`SMURFCAT-USD`)
 
 ### Changed
 
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue in the performance calculation caused by multiple `SELL` activities on the same day
 - Fixed an issue in the calculation on the allocations page caused by liabilities
+- Fixed an issue with the currency in the request to get quotes from _EOD Historical Data_
 
 ## 2.62.0 - 2024-03-09
 
