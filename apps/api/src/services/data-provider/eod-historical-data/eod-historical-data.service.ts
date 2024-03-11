@@ -11,7 +11,6 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
@@ -36,8 +35,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly configurationService: ConfigurationService
   ) {
     this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
@@ -232,29 +230,24 @@ export class EodHistoricalDataService implements DataProviderInterface {
           ? [realTimeResponse]
           : realTimeResponse;
 
-      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
-        symbols.map((symbol) => {
-          return {
-            symbol,
-            dataSource: this.getName()
-          };
-        })
-      );
-
       response = quotes.reduce(
-        (
+        async (
           result: { [symbol: string]: IDataProviderResponse },
           { close, code, timestamp }
         ) => {
-          const currency = symbolProfiles.find(({ symbol }) => {
-            return symbol === code;
-          })?.currency;
+          let currency: string;
+
+          if (symbols.length === 1) {
+            const { items } = await this.search({ query: symbols[0] });
+
+            if (items.length === 1) {
+              currency = items[0].currency;
+            }
+          }
 
           if (isNumber(close)) {
             result[this.convertFromEodSymbol(code)] = {
-              currency:
-                currency ??
-                this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
+              currency,
               dataSource: this.getName(),
               marketPrice: close,
               marketState: isToday(new Date(timestamp * 1000))
