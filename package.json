@@ -102,7 +102,7 @@
     "class-validator": "0.14.0",
     "color": "4.2.3",
     "countries-and-timezones": "3.4.1",
-    "countries-list": "2.6.1",
+    "countries-list": "3.1.0",
     "countup.js": "2.3.2",
     "date-fns": "2.29.3",
     "envalid": "7.3.1",
@@ -131,7 +131,7 @@
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.1",
-    "yahoo-finance2": "2.9.1",
+    "yahoo-finance2": "2.10.0",
     "zone.js": "0.14.3"
   },
   "devDependencies": {
