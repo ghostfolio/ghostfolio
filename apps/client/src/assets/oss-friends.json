@@ -1,5 +1,5 @@
 {
-  "createdAt": "2024-02-29T00:00:00.000Z",
+  "createdAt": "2024-03-11T00:00:00.000Z",
   "data": [
     {
       "name": "Aptabase",
@@ -8,7 +8,7 @@
     },
     {
       "name": "Argos",
-      "description": "Argos provides the developer tools to debug tests and detect visual regressions..",
+      "description": "Argos provides the developer tools to debug tests and detect visual regressions.",
       "href": "https://argos-ci.com"
     },
     {
