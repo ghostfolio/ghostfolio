@@ -9739,10 +9739,10 @@ countries-and-timezones@3.4.1:
   resolved "https://registry.yarnpkg.com/countries-and-timezones/-/countries-and-timezones-3.4.1.tgz#0ec2540f57e42f0f740eb2acaede786043347fe1"
   integrity sha512-INeHGCony4XUUR8iGL/lmt9s1Oi+n+gFHeJAMfbV5hJfYeDOB8JG1oxz5xFQu5oBZoRCJe/87k1Vzue9DoIauA==
 
-countries-list@2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/countries-list/-/countries-list-2.6.1.tgz#d479757ac873b1e596ccea0a925962d20396c0cb"
-  integrity sha512-jXM1Nv3U56dPQ1DsUSsEaGmLHburo4fnB7m+1yhWDUVvx5gXCd1ok/y3gXCjXzhqyawG+igcPYcAl4qjkvopaQ==
+countries-list@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/countries-list/-/countries-list-3.1.0.tgz#1cbe32f58659c7d6a1e744917689f24c84333ea8"
+  integrity sha512-HpTBLZba1VPTZSjUnUwR7SykxV7Z/7/+ZM5x5wi5tO99Qvom6bE2SC+AQ18016ujg3jSlYBbMITrHNnPAHSM9Q==
 
 countup.js@2.3.2:
   version "2.3.2"
