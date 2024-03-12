@@ -15,6 +15,7 @@ import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
+import { GetValueRangeParams } from './interfaces/get-value-range-params.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
@@ -161,6 +162,34 @@ export class CurrentRateService {
     }
 
     return response;
+  }
+
+  public async getValueRange({
+    dataGatheringItems,
+    dateRange
+  }: GetValueRangeParams): Promise<GetValuesObject> {
+    const values = await this.marketDataService
+      .getDecimatedRange({
+        dateRange,
+        dataSources: dataGatheringItems.map((x) => x.dataSource),
+        symbols: dataGatheringItems.map((x) => x.symbol)
+      })
+      .then((data) => {
+        return data.map(({ dataSource, date, marketPrice, symbol }) => {
+          return {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          };
+        });
+      });
+
+    return {
+      dataProviderInfos: [],
+      errors: [],
+      values
+    };
   }
 
   private containsToday(dates: Date[]): boolean {
