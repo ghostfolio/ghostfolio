@@ -27,7 +27,7 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
-import { format, isSameDay, subDays } from 'date-fns';
+import { differenceInDays, format, isSameDay, subDays } from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -217,6 +217,10 @@ export class BenchmarkService {
   } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
 
+    const endDate = new Date(Date.now());
+    const days = differenceInDays(endDate, startDate);
+    const step = Math.round(days / Math.min(days, MAX_CHART_ITEMS));
+
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
         dataGatheringItem: {
@@ -224,17 +228,10 @@ export class BenchmarkService {
           symbol
         }
       }),
-      this.marketDataService.marketDataItems({
-        orderBy: {
-          date: 'asc'
-        },
-        where: {
-          dataSource,
-          symbol,
-          date: {
-            gte: startDate
-          }
-        }
+      this.marketDataService.getDecimatedRange({
+        dateRange: { start: startDate, end: endDate, step },
+        symbols: [symbol],
+        dataSources: [dataSource]
       })
     ]);
 
@@ -266,17 +263,7 @@ export class BenchmarkService {
       return { marketData };
     }
 
-    const step = Math.round(
-      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
-    );
-
-    let i = 0;
-
-    for (let marketDataItem of marketDataItems) {
-      if (i % step !== 0) {
-        continue;
-      }
-
+    for (const marketDataItem of marketDataItems) {
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
           format(marketDataItem.date, DATE_FORMAT)
