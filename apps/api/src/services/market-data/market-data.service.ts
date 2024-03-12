@@ -1,5 +1,6 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
+import { DateRange } from '@ghostfolio/api/app/portfolio/interfaces/date-range.interface';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -88,6 +89,49 @@ export class MarketDataService {
         }
       }
     });
+  }
+
+  public async getDecimatedRange({
+    dateRange: { start, end, step },
+    symbols,
+    dataSources
+  }: {
+    dateRange: DateRange;
+    symbols: string[];
+    dataSources: DataSource[];
+  }): Promise<MarketData[]> {
+    return this.prismaService.$queryRaw`
+      WITH "lastDate" AS (
+        SELECT "date" FROM "MarketData"
+        WHERE "date" BETWEEN ${start} AND ${end}
+        ORDER BY "date" DESC LIMIT 1
+      ), "lastRows" AS (
+        SELECT * FROM "MarketData"
+        WHERE "date" = (SELECT "date" FROM "lastDate")
+          AND "symbol" IN (${Prisma.join(symbols)})
+          AND "dataSource"::text IN (${Prisma.join(dataSources)})
+      )
+      SELECT DISTINCT
+        FIRST_VALUE("createdAt")    OVER w AS "createdAt",
+        FIRST_VALUE("dataSource")   OVER w AS "dataSource",
+        FIRST_VALUE("date")         OVER w AS "date",
+        FIRST_VALUE("id")           OVER w AS "id",
+        FIRST_VALUE("marketPrice")  OVER w AS "marketPrice",
+        FIRST_VALUE("state")        OVER w AS "state",
+        FIRST_VALUE("symbol")       OVER w AS "symbol"
+      FROM "MarketData"
+      WHERE "date" BETWEEN ${start} AND ${end} 
+        AND "symbol" IN (${Prisma.join(symbols)})
+        AND "dataSource"::text IN (${Prisma.join(dataSources)})
+      WINDOW w AS (
+        PARTITION BY "symbol", FLOOR(
+          (EXTRACT(EPOCH FROM "date") - EXTRACT(EPOCH FROM ${start})) -- Subtract {start} to make it first value
+            / (60 * 60 * 24 * ${step})                                -- Divide by {step} number of days
+        ) ORDER BY "date"                                             -- Round down to make every {step} values equal
+      )
+      UNION SELECT * FROM "lastRows"                                  -- Add rows with the end date
+      ORDER BY "date"
+    `;
   }
 
   public async marketDataItems(params: {
