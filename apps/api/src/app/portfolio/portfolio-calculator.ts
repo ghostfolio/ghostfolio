@@ -199,20 +199,8 @@ export class PortfolioCalculator {
       }) ?? [];
 
     const currencies: { [symbol: string]: string } = {};
-    const dates: Date[] = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const firstIndex = transactionPointsBeforeEndDate.length;
-
-    let day = start;
-
-    while (isBefore(day, end)) {
-      dates.push(resetHours(day));
-      day = addDays(day, step);
-    }
-
-    if (!isSameDay(last(dates), end)) {
-      dates.push(resetHours(end));
-    }
 
     if (transactionPointsBeforeEndDate.length > 0) {
       for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {
@@ -226,10 +214,12 @@ export class PortfolioCalculator {
     }
 
     const { dataProviderInfos, values: marketSymbols } =
-      await this.currentRateService.getValues({
+      await this.currentRateService.getValueRange({
         dataGatheringItems,
-        dateQuery: {
-          in: dates
+        dateRange: {
+          start,
+          end,
+          step
         }
       });
 
@@ -322,9 +312,7 @@ export class PortfolioCalculator {
       };
     }
 
-    for (const currentDate of dates) {
-      const dateString = format(currentDate, DATE_FORMAT);
-
+    for (const dateString of Object.keys(marketSymbolMap)) {
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
 
