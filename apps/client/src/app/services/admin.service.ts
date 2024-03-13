@@ -188,17 +188,14 @@ export class AdminService {
 
   public fetchSymbolForDate({
     dataSource,
-    date,
+    dateString,
     symbol
   }: {
     dataSource: DataSource;
-    date: Date;
+    dateString: string;
     symbol: string;
   }) {
-    const url = `/api/v1/symbol/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
+    const url = `/api/v1/symbol/${dataSource}/${symbol}/${dateString}`;
 
     return this.http.get<IDataProviderHistoricalResponse>(url);
   }

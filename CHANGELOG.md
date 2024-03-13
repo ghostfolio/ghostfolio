@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _General_ section by the product roadmap on the Frequently Asked Questions (FAQ) page
 
+### Fixed
+
+- Fixed the date conversion of the import of historical market data in the admin control panel
+
 ## 2.63.2 - 2024-03-12
 
 ### Added
