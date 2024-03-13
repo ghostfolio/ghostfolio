@@ -374,8 +374,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
           }
 
-          this.activityForm.controls['updateAccountBalance'].disable();
-          this.activityForm.controls['updateAccountBalance'].setValue(false);
+          if (type === 'INTEREST') {
+            this.activityForm.controls['updateAccountBalance'].enable();
+
+          }else {
+            this.activityForm.controls['updateAccountBalance'].disable();
+            this.activityForm.controls['updateAccountBalance'].setValue(false);
+          }
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required
