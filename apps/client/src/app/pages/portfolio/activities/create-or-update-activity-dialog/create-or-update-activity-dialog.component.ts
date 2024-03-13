@@ -376,8 +376,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
           if (type === 'INTEREST') {
             this.activityForm.controls['updateAccountBalance'].enable();
-
-          }else {
+          } else {
             this.activityForm.controls['updateAccountBalance'].disable();
             this.activityForm.controls['updateAccountBalance'].setValue(false);
           }
