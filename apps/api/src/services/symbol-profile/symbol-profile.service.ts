@@ -189,9 +189,8 @@ export class SymbolProfileService {
       return {
         code,
         weight,
-        continent:
-          continents[countries[code as string]?.continent] ?? UNKNOWN_KEY,
-        name: countries[code as string]?.name ?? UNKNOWN_KEY
+        continent: continents[countries[code]?.continent] ?? UNKNOWN_KEY,
+        name: countries[code]?.name ?? UNKNOWN_KEY
       };
     });
   }

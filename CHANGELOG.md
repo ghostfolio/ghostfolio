@@ -7,14 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Fixed the date conversion of the import of historical market data in the admin control panel
+
+## 2.63.2 - 2024-03-12
+
 ### Added
 
 - Extended the content of the _Self-Hosting_ section by available home server systems on the Frequently Asked Questions (FAQ) page
+- Added support for the cryptocurrency _Real Smurf Cat_ (`SMURFCAT-USD`)
+
+### Changed
+
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `8.3` to `9.0`
+- Upgraded `countries-list` from version `2.6.1` to `3.1.0`
+- Upgraded `yahoo-finance2` from version `2.9.1` to `2.10.0`
 
 ### Fixed
 
 - Fixed an issue in the performance calculation caused by multiple `SELL` activities on the same day
-- Fixed the date conversion of the import of historical market data in the admin control panel
+- Fixed an issue in the calculation on the allocations page caused by liabilities
+- Fixed an issue with the currency in the request to get quotes from _EOD Historical Data_
 
 ## 2.62.0 - 2024-03-09
 
