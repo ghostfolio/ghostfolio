@@ -285,6 +285,7 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('query') filterBySearchQuery?: string,
+    @Query('pastInvestments') pastInvestments: boolean = false,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -297,6 +298,7 @@ export class PortfolioController {
     const { holdings } = await this.portfolioService.getDetails({
       filters,
       impersonationId,
+      pastInvestments,
       userId: this.request.user.id
     });
 

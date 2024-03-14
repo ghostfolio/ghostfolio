@@ -336,6 +336,7 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
+    pastInvestments,
     userId,
     withExcludedAccounts = false,
     withLiabilities = false,
@@ -344,6 +345,7 @@ export class PortfolioService {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
+    pastInvestments?: boolean;
     userId: string;
     withExcludedAccounts?: boolean;
     withLiabilities?: boolean;
@@ -463,8 +465,10 @@ export class PortfolioService {
       transactionCount,
       valueInBaseCurrency
     } of currentPositions.positions) {
-      if (quantity.eq(0)) {
-        // Ignore positions without any quantity
+      if (quantity.eq(0) && pastInvestments === false) {
+        // Ignore positions without any quantity if past investments are not requested
+        continue;
+      } else if (!quantity.eq(0) && pastInvestments === true) {
         continue;
       }
 
