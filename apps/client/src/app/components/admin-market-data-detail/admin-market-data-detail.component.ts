@@ -155,15 +155,14 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     day: string;
     yearMonth: string;
   }) {
-    const date = parseISO(`${yearMonth}-${day}`);
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
       data: <MarketDataDetailDialogParams>{
-        date,
         marketPrice,
         currency: this.currency,
         dataSource: this.dataSource,
+        dateString: `${yearMonth}-${day}`,
         symbol: this.symbol,
         user: this.user
       },
