@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the content of the _General_ section by the product roadmap on the Frequently Asked Questions (FAQ) page
 
+### Changed
+
+- Improved the usability of the platform management in the admin control panel
+- Improved the usability of the tag management in the admin control panel
+
 ### Fixed
 
 - Fixed the date conversion of the import of historical market data in the admin control panel
