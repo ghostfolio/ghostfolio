@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support to update the cash balance of an account when adding a fee activity
+- Added support to update the cash balance of an account when adding an interest activity
 - Extended the content of the _General_ section by the product roadmap on the Frequently Asked Questions (FAQ) page
 
 ### Changed
