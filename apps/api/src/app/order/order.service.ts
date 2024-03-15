@@ -148,7 +148,7 @@ export class OrderService {
         .plus(data.fee)
         .toNumber();
 
-      if (data.type === 'BUY') {
+      if (['BUY', 'FEE'].includes(data.type)) {
         amount = new Big(amount).mul(-1).toNumber();
       }
 

@@ -260,6 +260,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['currency'].setValue(currency);
           this.activityForm.controls['currencyOfFee'].setValue(currency);
           this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
+          if (['FEE', 'INTEREST'].includes(type)) {
+            if (this.activityForm.controls['accountId'].value) {
+              this.activityForm.controls['updateAccountBalance'].enable();
+            } else {
+              this.activityForm.controls['updateAccountBalance'].disable();
+              this.activityForm.controls['updateAccountBalance'].setValue(
+                false
+              );
+            }
+          }
         }
       }
     );
@@ -374,7 +385,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
           }
 
-          if (type === 'INTEREST') {
+          if (
+            ['FEE', 'INTEREST'].includes(type) &&
+            this.activityForm.controls['accountId'].value
+          ) {
             this.activityForm.controls['updateAccountBalance'].enable();
           } else {
             this.activityForm.controls['updateAccountBalance'].disable();
