@@ -110,7 +110,9 @@ export class BenchmarkService {
     const quotes = await this.dataProviderService.getQuotes({
       items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
-      })
+      }),
+      requestTimeout: ms('30 seconds'),
+      useCache: false
     });
 
     for (const { dataSource, symbol } of benchmarkAssetProfiles) {
@@ -163,7 +165,7 @@ export class BenchmarkService {
       await this.redisCacheService.set(
         this.CACHE_KEY_BENCHMARKS,
         JSON.stringify(benchmarks),
-        ms('4 hours') / 1000
+        ms('2 hours') / 1000
       );
     }
 

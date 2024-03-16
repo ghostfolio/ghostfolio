@@ -71,7 +71,7 @@ export class AdminService {
         );
       }
 
-      return await this.symbolProfileService.add(
+      return this.symbolProfileService.add(
         assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
       );
     } catch (error) {

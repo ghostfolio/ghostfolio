@@ -135,7 +135,7 @@ export class UserController {
       }
     }
 
-    return await this.userService.updateUserSetting({
+    return this.userService.updateUserSetting({
       userSettings,
       userId: this.request.user.id
     });
