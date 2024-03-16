@@ -43,7 +43,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 
     const baseCurrencyValueRatio = baseCurrencyItem?.value / totalValue || 0;
 
-    if (maxItem.groupKey !== ruleSettings.baseCurrency) {
+    if (maxItem?.groupKey !== ruleSettings.baseCurrency) {
       return {
         evaluation: `The major part of your current investment is not in your base currency (${(
           baseCurrencyValueRatio * 100
