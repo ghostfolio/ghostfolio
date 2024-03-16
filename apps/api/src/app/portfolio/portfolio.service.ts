@@ -294,10 +294,9 @@ export class PortfolioService {
     const { items } = await this.getChart({
       dateRange,
       impersonationId,
-      portfolioOrders,
+      portfolioCalculator,
       transactionPoints,
       userId,
-      userCurrency: this.request.user.Settings.settings.baseCurrency,
       withDataDecimation: false
     });
 
@@ -1218,9 +1217,8 @@ export class PortfolioService {
     const { items } = await this.getChart({
       dateRange,
       impersonationId,
-      portfolioOrders,
+      portfolioCalculator,
       transactionPoints,
-      userCurrency,
       userId
     });
 
@@ -1445,17 +1443,15 @@ export class PortfolioService {
   private async getChart({
     dateRange = 'max',
     impersonationId,
-    portfolioOrders,
+    portfolioCalculator,
     transactionPoints,
-    userCurrency,
     userId,
     withDataDecimation = true
   }: {
     dateRange?: DateRange;
     impersonationId: string;
-    portfolioOrders: PortfolioOrder[];
+    portfolioCalculator: PortfolioCalculator;
     transactionPoints: TransactionPoint[];
-    userCurrency: string;
     userId: string;
     withDataDecimation?: boolean;
   }): Promise<HistoricalDataContainer> {
@@ -1468,15 +1464,6 @@ export class PortfolioService {
     }
 
     userId = await this.getUserId(impersonationId, userId);
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
-    });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const endDate = new Date();
 
