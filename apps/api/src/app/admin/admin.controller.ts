@@ -339,6 +339,6 @@ export class AdminController {
     @Param('key') key: string,
     @Body() data: PropertyDto
   ) {
-    return await this.adminService.putSetting(key, data.value);
+    return this.adminService.putSetting(key, data.value);
   }
 }

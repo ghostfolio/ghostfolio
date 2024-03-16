@@ -83,7 +83,7 @@ export class AccessController {
     }
 
     try {
-      return await this.accessService.createAccess({
+      return this.accessService.createAccess({
         alias: data.alias || undefined,
         GranteeUser: data.granteeUserId
           ? { connect: { id: data.granteeUserId } }
