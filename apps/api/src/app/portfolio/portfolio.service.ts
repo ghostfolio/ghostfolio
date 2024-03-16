@@ -398,8 +398,17 @@ export class PortfolioService {
       );
 
     const isFilteredByAccount =
-      filters?.some((filter) => {
-        return filter.type === 'ACCOUNT';
+      filters?.some(({ type }) => {
+        return type === 'ACCOUNT';
+      }) ?? false;
+
+    const isFilteredByCash = filters?.some(({ id, type }) => {
+      return id === 'CASH' && type === 'ASSET_CLASS';
+    });
+
+    const isFilteredByClosedHoldings =
+      filters?.some(({ id, type }) => {
+        return id === 'CLOSED' && type === 'HOLDING_TYPE';
       }) ?? false;
 
     let filteredValueInBaseCurrency = isFilteredByAccount
@@ -451,7 +460,6 @@ export class PortfolioService {
       grossPerformancePercentageWithCurrencyEffect,
       investment,
       marketPrice,
-      marketPriceInBaseCurrency,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -462,9 +470,16 @@ export class PortfolioService {
       transactionCount,
       valueInBaseCurrency
     } of currentPositions.positions) {
-      if (quantity.eq(0)) {
-        // Ignore positions without any quantity
-        continue;
+      if (isFilteredByClosedHoldings === true) {
+        if (!quantity.eq(0)) {
+          // Ignore positions with a quantity
+          continue;
+        }
+      } else {
+        if (quantity.eq(0)) {
+          // Ignore positions without any quantity
+          continue;
+        }
       }
 
       const symbolProfile = symbolProfileMap[symbol];
@@ -578,10 +593,6 @@ export class PortfolioService {
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
-
-    const isFilteredByCash = filters?.some((filter) => {
-      return filter.type === 'ASSET_CLASS' && filter.id === 'CASH';
-    });
 
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = await this.getCashPositions({
