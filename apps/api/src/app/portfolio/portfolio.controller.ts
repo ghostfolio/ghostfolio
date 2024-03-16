@@ -284,14 +284,14 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('quantity') filterByQuantity?: string,
+    @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByQuantity,
+      filterByHoldingType,
       filterBySearchQuery,
       filterByTags
     });

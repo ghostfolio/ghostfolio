@@ -5,7 +5,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { HoldingMode, ToggleOption } from '@ghostfolio/common/types';
+import { HoldingType, ToggleOption } from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,8 +25,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;
   public holdings: PortfolioPosition[];
-  public mode: HoldingMode = 'ACTIVE';
-  public modeOptions: ToggleOption[] = [
+  public holdingType: HoldingType = 'ACTIVE';
+  public holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
@@ -96,8 +96,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeMode(aMode: HoldingMode) {
-    this.mode = aMode;
+  public onChangeHoldingType(aHoldingType: HoldingType) {
+    this.holdingType = aHoldingType;
 
     this.holdings = undefined;
 
@@ -118,8 +118,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
   private fetchHoldings() {
     const filters = this.userService.getFilters();
 
-    if (this.mode === 'CLOSED') {
-      filters.push({ id: '0', type: 'QUANTITY' });
+    if (this.holdingType === 'CLOSED') {
+      filters.push({ id: 'CLOSED', type: 'HOLDING_TYPE' });
     }
 
     return this.dataService.fetchPortfolioHoldings({

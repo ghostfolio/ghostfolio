@@ -406,9 +406,9 @@ export class PortfolioService {
       return id === 'CASH' && type === 'ASSET_CLASS';
     });
 
-    const isFilteredByQuantityEqualsZero =
+    const isFilteredByClosedHoldings =
       filters?.some(({ id, type }) => {
-        return id === '0' && type === 'QUANTITY';
+        return id === 'CLOSED' && type === 'HOLDING_TYPE';
       }) ?? false;
 
     let filteredValueInBaseCurrency = isFilteredByAccount
@@ -470,7 +470,7 @@ export class PortfolioService {
       transactionCount,
       valueInBaseCurrency
     } of currentPositions.positions) {
-      if (isFilteredByQuantityEqualsZero === true) {
+      if (isFilteredByClosedHoldings === true) {
         if (!quantity.eq(0)) {
           // Ignore positions with a quantity
           continue;

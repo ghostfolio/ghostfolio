@@ -5,8 +5,8 @@ export interface Filter {
     | 'ACCOUNT'
     | 'ASSET_CLASS'
     | 'ASSET_SUB_CLASS'
+    | 'HOLDING_TYPE'
     | 'PRESET_ID'
-    | 'QUANTITY'
     | 'SEARCH_QUERY'
     | 'SYMBOL'
     | 'TAG';

@@ -10,21 +10,21 @@ export class ApiService {
     filterByAccounts,
     filterByAssetClasses,
     filterByAssetSubClasses,
-    filterByQuantity,
+    filterByHoldingType,
     filterBySearchQuery,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
     filterByAssetSubClasses?: string;
-    filterByQuantity?: string;
+    filterByHoldingType?: string;
     filterBySearchQuery?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
-    const quantity = filterByQuantity;
+    const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const tagIds = filterByTags?.split(',') ?? [];
 
@@ -55,10 +55,10 @@ export class ApiService {
       })
     ];
 
-    if (quantity) {
+    if (holdingType) {
       filters.push({
-        id: quantity,
-        type: 'QUANTITY'
+        id: holdingType,
+        type: 'HOLDING_TYPE'
       });
     }
 

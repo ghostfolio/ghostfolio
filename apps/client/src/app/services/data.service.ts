@@ -62,8 +62,8 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
-        QUANTITY: filtersBySearchQuantity,
         SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
@@ -103,12 +103,12 @@ export class DataService {
         );
       }
 
-      if (filtersByPresetId) {
-        params = params.append('presetId', filtersByPresetId[0].id);
+      if (filtersByHoldingType) {
+        params = params.append('holdingType', filtersByHoldingType[0].id);
       }
 
-      if (filtersBySearchQuantity) {
-        params = params.append('quantity', filtersBySearchQuantity[0].id);
+      if (filtersByPresetId) {
+        params = params.append('presetId', filtersByPresetId[0].id);
       }
 
       if (filtersBySearchQuery) {
