@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the dividend calculation of the portfolio holdings
 - Fixed the date conversion of the import of historical market data in the admin control panel
 
 ## 2.63.2 - 2024-03-12
