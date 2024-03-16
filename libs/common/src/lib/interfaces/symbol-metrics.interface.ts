@@ -7,8 +7,6 @@ export interface SymbolMetrics {
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
-  dividend: Big;
-  dividendInBaseCurrency: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;
@@ -41,6 +39,8 @@ export interface SymbolMetrics {
     [date: string]: Big;
   };
   timeWeightedInvestmentWithCurrencyEffect: Big;
+  totalDividend: Big;
+  totalDividendInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
 }

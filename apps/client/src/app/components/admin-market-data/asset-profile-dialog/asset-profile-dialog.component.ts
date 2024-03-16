@@ -1,4 +1,5 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
@@ -195,15 +196,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-      ).data;
+      ).data as UpdateMarketDataDto[];
 
       this.adminService
         .postMarketData({
           dataSource: this.data.dataSource,
           marketData: {
-            marketData: marketData.map(({ date, marketPrice }) => {
-              return { marketPrice, date: parseDate(date).toISOString() };
-            })
+            marketData
           },
           symbol: this.data.symbol
         })
