@@ -204,13 +204,14 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT *
-                        FROM "MarketData"
-                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-                          AND "symbol" IN ('${symbols.join(
-                            `','`
-                          )}') ${granularityQuery} ${rangeQuery}
-                        ORDER BY date;`;
+      const queryRaw = `
+        SELECT *
+        FROM "MarketData"
+        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+          AND "symbol" IN ('${symbols.join(
+            `','`
+          )}') ${granularityQuery} ${rangeQuery}
+        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRawUnsafe(queryRaw);
