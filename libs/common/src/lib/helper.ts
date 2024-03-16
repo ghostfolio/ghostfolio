@@ -139,7 +139,7 @@ export function extractNumberFromString({
 }
 
 export function getAllActivityTypes(): ActivityType[] {
-  return ['BUY', 'DIVIDEND', 'FEE', 'ITEM', 'LIABILITY', 'SELL'];
+  return Object.values(ActivityType);
 }
 
 export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {

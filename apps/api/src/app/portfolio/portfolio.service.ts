@@ -356,16 +356,22 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
+    let types = getAllActivityTypes().filter((activityType) => {
+      return activityType !== 'FEE';
+    });
+
+    if (withLiabilities === false) {
+      types = types.filter((activityType) => {
+        return activityType !== 'LIABILITY';
+      });
+    }
+
     const { activities, portfolioOrders, transactionPoints } =
       await this.getTransactionPoints({
         filters,
+        types,
         userId,
-        withExcludedAccounts,
-        types: withLiabilities
-          ? undefined
-          : getAllActivityTypes().filter((activityType) => {
-              return activityType !== 'LIABILITY';
-            })
+        withExcludedAccounts
       });
 
     const portfolioCalculator = new PortfolioCalculator({
