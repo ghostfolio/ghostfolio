@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the platform management in the admin control panel
 - Improved the usability of the tag management in the admin control panel
+- Improved the exception handling of various rules in the _X-ray_ section
 
 ### Fixed
 
