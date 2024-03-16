@@ -10,18 +10,21 @@ export class ApiService {
     filterByAccounts,
     filterByAssetClasses,
     filterByAssetSubClasses,
+    filterByQuantity,
     filterBySearchQuery,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
     filterByAssetSubClasses?: string;
+    filterByQuantity?: string;
     filterBySearchQuery?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
+    const quantity = filterByQuantity;
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const tagIds = filterByTags?.split(',') ?? [];
 
@@ -51,6 +54,13 @@ export class ApiService {
         };
       })
     ];
+
+    if (quantity) {
+      filters.push({
+        id: quantity,
+        type: 'QUANTITY'
+      });
+    }
 
     if (searchQuery) {
       filters.push({

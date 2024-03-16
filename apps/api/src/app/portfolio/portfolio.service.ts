@@ -336,7 +336,6 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    pastInvestments,
     userId,
     withExcludedAccounts = false,
     withLiabilities = false,
@@ -345,7 +344,6 @@ export class PortfolioService {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
-    pastInvestments?: boolean;
     userId: string;
     withExcludedAccounts?: boolean;
     withLiabilities?: boolean;
@@ -401,8 +399,17 @@ export class PortfolioService {
       );
 
     const isFilteredByAccount =
-      filters?.some((filter) => {
-        return filter.type === 'ACCOUNT';
+      filters?.some(({ type }) => {
+        return type === 'ACCOUNT';
+      }) ?? false;
+
+    const isFilteredByCash = filters?.some(({ id, type }) => {
+      return id === 'CASH' && type === 'ASSET_CLASS';
+    });
+
+    const isFilteredByQuantityEqualsZero =
+      filters?.some(({ id, type }) => {
+        return id === '0' && type === 'QUANTITY';
       }) ?? false;
 
     let filteredValueInBaseCurrency = isFilteredByAccount
@@ -454,7 +461,6 @@ export class PortfolioService {
       grossPerformancePercentageWithCurrencyEffect,
       investment,
       marketPrice,
-      marketPriceInBaseCurrency,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -465,11 +471,16 @@ export class PortfolioService {
       transactionCount,
       valueInBaseCurrency
     } of currentPositions.positions) {
-      if (quantity.eq(0) && pastInvestments === false) {
-        // Ignore positions without any quantity if past investments are not requested
-        continue;
-      } else if (!quantity.eq(0) && pastInvestments === true) {
-        continue;
+      if (isFilteredByQuantityEqualsZero === true) {
+        if (!quantity.eq(0)) {
+          // Ignore positions with a quantity
+          continue;
+        }
+      } else {
+        if (quantity.eq(0)) {
+          // Ignore positions without any quantity
+          continue;
+        }
       }
 
       const symbolProfile = symbolProfileMap[symbol];
@@ -583,10 +594,6 @@ export class PortfolioService {
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
-
-    const isFilteredByCash = filters?.some((filter) => {
-      return filter.type === 'ASSET_CLASS' && filter.id === 'CASH';
-    });
 
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = await this.getCashPositions({
