@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
+import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -192,28 +193,25 @@ export class AppComponent implements OnDestroy, OnInit {
       ? userPreferredColorScheme === 'DARK'
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    this.toggleThemeStyleClass(isDarkTheme);
-    this.toggleMetaThemeColor(isDarkTheme);
+    this.toggleTheme(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {
-        this.toggleThemeStyleClass(event.matches);
-        this.toggleMetaThemeColor(event.matches);
+        this.toggleTheme(event.matches);
       }
     });
   }
 
-  private toggleThemeStyleClass(isDarkTheme: boolean) {
+  private toggleTheme(isDarkTheme: boolean) {
+    const themeColor = getCssVariable(
+      isDarkTheme ? '--dark-background' : '--light-background'
+    );
+    const metaTag = this.document.querySelector('meta[name="theme-color"]');
     if (isDarkTheme) {
       this.document.body.classList.add('is-dark-theme');
     } else {
       this.document.body.classList.remove('is-dark-theme');
     }
-  }
-
-  private toggleMetaThemeColor(isDarkTheme: boolean) {
-    const color = isDarkTheme ? 'rgb(25, 25, 25)' : 'rgb(255, 255, 255)';
-    const metaTag = this.document.querySelector('meta[name="theme-color"]');
-    metaTag.setAttribute('content', color);
+    metaTag.setAttribute('content', themeColor);
   }
 }
