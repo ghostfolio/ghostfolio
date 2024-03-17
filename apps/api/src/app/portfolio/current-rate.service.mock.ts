@@ -3,6 +3,7 @@ import { parseDate, resetHours } from '@ghostfolio/common/helper';
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
+import { GetValueRangeParams } from './interfaces/get-value-range-params.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 import { GetValuesParams } from './interfaces/get-values-params.interface';
 
@@ -100,6 +101,29 @@ export const CurrentRateServiceMock = {
             symbol: dataGatheringItem.symbol
           });
         }
+      }
+    }
+
+    return Promise.resolve({ values, dataProviderInfos: [], errors: [] });
+  },
+  getValueRange: ({
+    dataGatheringItems,
+    dateRange: { start, end, step }
+  }: GetValueRangeParams): Promise<GetValuesObject> => {
+    const values: GetValueObject[] = [];
+
+    for (
+      let date = resetHours(start);
+      isBefore(date, endOfDay(end));
+      date = addDays(date, step)
+    ) {
+      for (const dataGatheringItem of dataGatheringItems) {
+        values.push({
+          date,
+          dataSource: dataGatheringItem.dataSource,
+          marketPrice: mockGetValue(dataGatheringItem.symbol, date).marketPrice,
+          symbol: dataGatheringItem.symbol
+        });
       }
     }
 
