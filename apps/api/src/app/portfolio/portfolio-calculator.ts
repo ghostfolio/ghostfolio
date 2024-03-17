@@ -223,6 +223,8 @@ export class PortfolioCalculator {
         }
       });
 
+    const dates = uniq(marketSymbols.map((x) => x.date));
+
     this.dataProviderInfos = dataProviderInfos;
 
     const marketSymbolMap: {
@@ -289,10 +291,10 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect
       } = this.getSymbolMetrics({
-        end,
+        end: dates?.[dates.length - 1] ?? end,
         marketSymbolMap,
-        start,
-        step,
+        start: dates?.[0] ?? start,
+        step: dates.length > 1 ? differenceInDays(dates[1], dates[0]) : 1,
         symbol,
         exchangeRates:
           exchangeRatesByCurrency[`${currencies[symbol]}${this.currency}`],

@@ -91,6 +91,13 @@ export class MarketDataService {
     });
   }
 
+  private getDecimationFilter(step: number): Prisma.Sql {
+    if (step > 200) return Prisma.sql`AND EXTRACT(DOY FROM "date") = 1`;
+    if (step > 20) return Prisma.sql`AND EXTRACT(DAY FROM "date") = 1`;
+    if (step > 2) return Prisma.sql`AND EXTRACT(DOW FROM "date") = 1`;
+    return Prisma.empty;
+  }
+
   public async getDecimatedRange({
     dateRange: { start, end, step },
     symbols,
@@ -101,35 +108,11 @@ export class MarketDataService {
     dataSources: DataSource[];
   }): Promise<MarketData[]> {
     return this.prismaService.$queryRaw`
-      WITH "lastDate" AS (
-        SELECT "date" FROM "MarketData"
-        WHERE "date" BETWEEN ${start} AND ${end}
-        ORDER BY "date" DESC LIMIT 1
-      ), "lastRows" AS (
-        SELECT * FROM "MarketData"
-        WHERE "date" = (SELECT "date" FROM "lastDate")
-          AND "symbol" IN (${Prisma.join(symbols)})
-          AND "dataSource"::text IN (${Prisma.join(dataSources)})
-      )
-      SELECT DISTINCT
-        FIRST_VALUE("createdAt")    OVER w AS "createdAt",
-        FIRST_VALUE("dataSource")   OVER w AS "dataSource",
-        FIRST_VALUE("date")         OVER w AS "date",
-        FIRST_VALUE("id")           OVER w AS "id",
-        FIRST_VALUE("marketPrice")  OVER w AS "marketPrice",
-        FIRST_VALUE("state")        OVER w AS "state",
-        FIRST_VALUE("symbol")       OVER w AS "symbol"
-      FROM "MarketData"
-      WHERE "date" BETWEEN ${start} AND ${end} 
+      SELECT * FROM "MarketData"
+      WHERE "date" BETWEEN ${start} AND ${end}
         AND "symbol" IN (${Prisma.join(symbols)})
         AND "dataSource"::text IN (${Prisma.join(dataSources)})
-      WINDOW w AS (
-        PARTITION BY "symbol", FLOOR(
-          (EXTRACT(EPOCH FROM "date") - EXTRACT(EPOCH FROM ${start})) -- Subtract {start} to make it first value
-            / (60 * 60 * 24 * ${step})                                -- Divide by {step} number of days
-        ) ORDER BY "date"                                             -- Round down to make every {step} values equal
-      )
-      UNION SELECT * FROM "lastRows"                                  -- Add rows with the end date
+        ${this.getDecimationFilter(step)}
       ORDER BY "date"
     `;
   }
