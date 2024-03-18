@@ -291,10 +291,8 @@ export class PortfolioCalculator {
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect
       } = this.getSymbolMetrics({
-        end: dates?.[dates.length - 1] ?? end,
+        dates,
         marketSymbolMap,
-        start: dates?.[0] ?? start,
-        step: dates.length > 1 ? differenceInDays(dates[1], dates[0]) : 1,
         symbol,
         exchangeRates:
           exchangeRatesByCurrency[`${currencies[symbol]}${this.currency}`],
@@ -444,18 +442,16 @@ export class PortfolioCalculator {
   ): Promise<CurrentPositions> {
     const lastTransactionPoint = last(this.transactionPoints);
 
-    let endDate = end;
+    if (!end) {
+      const now = new Date(Date.now());
 
-    if (!endDate) {
-      endDate = new Date(Date.now());
-
-      if (lastTransactionPoint) {
-        endDate = max([endDate, parseDate(lastTransactionPoint.date)]);
-      }
+      end = lastTransactionPoint
+        ? max([now, parseDate(lastTransactionPoint.date)])
+        : now;
     }
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
-      return isBefore(parseDate(date), endDate);
+      return isBefore(parseDate(date), end);
     });
 
     if (!transactionPoints.length) {
@@ -508,7 +504,7 @@ export class PortfolioCalculator {
       }
     }
 
-    dates.push(resetHours(endDate));
+    dates.push(resetHours(end));
 
     // Add dates of last week for fallback
     dates.push(subDays(resetHours(new Date()), 7));
@@ -535,7 +531,7 @@ export class PortfolioCalculator {
     let exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: uniq(Object.values(currencies)),
-        endDate: endOfDay(endDate),
+        endDate: endOfDay(end),
         startDate: parseDate(this.transactionPoints?.[0]?.date),
         targetCurrency: this.currency
       });
@@ -571,7 +567,7 @@ export class PortfolioCalculator {
       }
     }
 
-    const endDateString = format(endDate, DATE_FORMAT);
+    const endDateString = format(end, DATE_FORMAT);
 
     if (firstIndex > 0) {
       firstIndex--;
@@ -608,9 +604,10 @@ export class PortfolioCalculator {
         totalInvestment,
         totalInvestmentWithCurrencyEffect
       } = this.getSymbolMetrics({
+        dates: Array.from({ length: differenceInDays(end, start) + 1 }).map(
+          (_, i) => addDays(start, i)
+        ),
         marketSymbolMap,
-        start,
-        end: endDate,
         exchangeRates:
           exchangeRatesByCurrency[`${item.currency}${this.currency}`],
         symbol: item.symbol
@@ -830,24 +827,21 @@ export class PortfolioCalculator {
   }
 
   private getSymbolMetrics({
-    end,
+    dates,
     exchangeRates,
     isChartMode = false,
     marketSymbolMap,
-    start,
-    step = 1,
     symbol
   }: {
-    end: Date;
+    dates: Date[];
     exchangeRates: { [dateString: string]: number };
     isChartMode?: boolean;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
-    start: Date;
-    step?: number;
     symbol: string;
   }): SymbolMetrics {
+    const [start, end] = [first(dates), last(dates)];
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
@@ -1000,39 +994,30 @@ export class PortfolioCalculator {
       unitPrice: unitPriceAtEndDate
     });
 
-    let day = start;
     let lastUnitPrice: Big;
 
     if (isChartMode) {
-      const datesWithOrders = {};
+      const datesWithOrders = new Set(orders.map((x) => x.date));
 
-      for (const order of orders) {
-        datesWithOrders[order.date] = true;
-      }
+      for (const day of dates.slice(0, -1)) {
+        const dateString = format(day, DATE_FORMAT);
 
-      while (isBefore(day, end)) {
-        const hasDate = datesWithOrders[format(day, DATE_FORMAT)];
-
-        if (!hasDate) {
+        if (!datesWithOrders.has(dateString)) {
           orders.push({
             symbol,
             currency: null,
-            date: format(day, DATE_FORMAT),
+            date: dateString,
             dataSource: null,
             fee: new Big(0),
             feeInBaseCurrency: new Big(0),
             name: '',
             quantity: new Big(0),
             type: 'BUY',
-            unitPrice:
-              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
-              lastUnitPrice
+            unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice
           });
         }
 
         lastUnitPrice = last(orders).unitPrice;
-
-        day = addDays(day, step);
       }
     }
 
