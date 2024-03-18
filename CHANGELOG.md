@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the symbol and ISIN number to the position detail dialog
+
 ### Changed
 
 - Improved the usability to edit market data in the admin control panel
