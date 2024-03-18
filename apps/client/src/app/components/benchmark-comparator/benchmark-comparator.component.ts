@@ -228,7 +228,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         locale: this.locale,
         unit: '%'
       }),
-      mode: 'x',
+      mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',
       yAlign: 'bottom'
