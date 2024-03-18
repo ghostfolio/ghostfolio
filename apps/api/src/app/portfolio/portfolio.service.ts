@@ -1482,17 +1482,13 @@ export class PortfolioService {
 
     userId = await this.getUserId(impersonationId, userId);
 
-    const endDate = new Date();
-
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
-
-    let step = 1;
-
-    if (withDataDecimation) {
-      const daysInMarket = differenceInDays(new Date(), startDate);
-      step = Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS));
-    }
+    const endDate = new Date();
+    const daysInMarket = differenceInDays(endDate, startDate) + 1;
+    const step = withDataDecimation
+      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      : 1;
 
     const items = await portfolioCalculator.getChartData({
       step,

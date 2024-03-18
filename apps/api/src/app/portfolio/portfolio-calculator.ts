@@ -18,6 +18,7 @@ import {
   addDays,
   addMilliseconds,
   differenceInDays,
+  eachDayOfInterval,
   endOfDay,
   format,
   isBefore,
@@ -199,16 +200,10 @@ export class PortfolioCalculator {
       }) ?? [];
 
     const currencies: { [symbol: string]: string } = {};
-    const dates: Date[] = [];
     const dataGatheringItems: IDataGatheringItem[] = [];
     const firstIndex = transactionPointsBeforeEndDate.length;
 
-    let day = start;
-
-    while (isBefore(day, end)) {
-      dates.push(resetHours(day));
-      day = addDays(day, step);
-    }
+    const dates = eachDayOfInterval({ start, end }, { step });
 
     if (!isSameDay(last(dates), end)) {
       dates.push(resetHours(end));
