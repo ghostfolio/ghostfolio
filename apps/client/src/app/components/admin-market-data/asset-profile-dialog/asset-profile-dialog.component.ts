@@ -1,8 +1,9 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   Currency,
@@ -83,6 +84,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
@@ -169,6 +171,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onClose() {
+    this.dialogRef.close();
+  }
+
+  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+
     this.dialogRef.close();
   }
 

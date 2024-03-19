@@ -26,6 +26,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
+import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
@@ -108,6 +109,7 @@ export class AdminMarketDataComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private deviceService: DeviceDetectorService,
@@ -181,20 +183,7 @@ export class AdminMarketDataComponent
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this asset profile?`
-    );
-
-    if (confirmation) {
-      this.adminService
-        .deleteProfileData({ dataSource, symbol })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        });
-    }
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
   }
 
   public onGather7Days() {
