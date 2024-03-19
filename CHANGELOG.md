@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the support to grant private access with permissions from experimental to general availability
 - Set the meta theme color dynamically to respect the appearance (dark mode)
+- Improved the usability to edit market data in the admin control panel
 
 ## 2.64.0 - 2024-03-16
 
