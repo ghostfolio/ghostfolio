@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the support to grant private access with permissions from experimental to general availability
 - Improved the usability to edit market data in the admin control panel
 
 ## 2.64.0 - 2024-03-16
