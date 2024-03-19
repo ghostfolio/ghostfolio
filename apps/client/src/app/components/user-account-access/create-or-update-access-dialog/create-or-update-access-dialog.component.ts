@@ -29,7 +29,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccessDialogParams,
+    @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
     private dataService: DataService,
     private formBuilder: FormBuilder
