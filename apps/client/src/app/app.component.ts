@@ -201,12 +201,15 @@ export class AppComponent implements OnDestroy, OnInit {
     const themeColor = getCssVariable(
       isDarkTheme ? '--dark-background' : '--light-background'
     );
-    const metaTag = this.document.querySelector('meta[name="theme-color"]');
+
     if (isDarkTheme) {
       this.document.body.classList.add('is-dark-theme');
     } else {
       this.document.body.classList.remove('is-dark-theme');
     }
-    metaTag.setAttribute('content', themeColor);
+
+    this.document
+      .querySelector('meta[name="theme-color"]')
+      .setAttribute('content', themeColor);
   }
 }
