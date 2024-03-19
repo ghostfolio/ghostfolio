@@ -28,6 +28,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { SubscriptionOffer } from '@ghostfolio/common/types';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as cheerio from 'cheerio';
@@ -58,10 +59,6 @@ export class InfoService {
     });
 
     const globalPermissions: string[] = [];
-
-    if (this.configurationService.get('ENABLE_FEATURE_BLOG')) {
-      globalPermissions.push(permissions.enableBlog);
-    }
 
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -351,7 +348,7 @@ export class InfoService {
           {
             headers: {
               Authorization: `Bearer ${this.configurationService.get(
-                'BETTER_UPTIME_API_KEY'
+                'API_KEY_BETTER_UPTIME'
               )}`
             },
             // @ts-ignore

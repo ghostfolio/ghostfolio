@@ -17,6 +17,7 @@ import {
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
+
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import Big from 'big.js';
@@ -91,7 +92,9 @@ export class DataProviderService {
 
       for (const symbol of symbols) {
         const promise = Promise.resolve(
-          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile({
+            symbol
+          })
         );
 
         promises.push(
@@ -201,13 +204,14 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT *
-                        FROM "MarketData"
-                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-                          AND "symbol" IN ('${symbols.join(
-                            `','`
-                          )}') ${granularityQuery} ${rangeQuery}
-                        ORDER BY date;`;
+      const queryRaw = `
+        SELECT *
+        FROM "MarketData"
+        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+          AND "symbol" IN ('${symbols.join(
+            `','`
+          )}') ${granularityQuery} ${rangeQuery}
+        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRawUnsafe(queryRaw);
@@ -334,11 +338,13 @@ export class DataProviderService {
   public async getQuotes({
     items,
     requestTimeout,
-    useCache = true
+    useCache = true,
+    user
   }: {
     items: UniqueAsset[];
     requestTimeout?: number;
     useCache?: boolean;
+    user?: UserWithSettings;
   }): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
@@ -403,6 +409,14 @@ export class DataProviderService {
       itemsGroupedByDataSource
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
+
+      if (
+        dataProvider.getDataProviderInfo().isPremium &&
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user?.subscription.type === 'Basic'
+      ) {
+        continue;
+      }
 
       const symbols = dataGatheringItems.map((dataGatheringItem) => {
         return dataGatheringItem.symbol;

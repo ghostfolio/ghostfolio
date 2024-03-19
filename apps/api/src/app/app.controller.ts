@@ -1,4 +1,5 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+
 import { Controller } from '@nestjs/common';
 
 @Controller()

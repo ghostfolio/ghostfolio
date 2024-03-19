@@ -39,6 +39,8 @@ export interface SymbolMetrics {
     [date: string]: Big;
   };
   timeWeightedInvestmentWithCurrencyEffect: Big;
+  totalDividend: Big;
+  totalDividendInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
 }

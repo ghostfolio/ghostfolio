@@ -1,6 +1,6 @@
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
-import { DataSource, MarketData } from '@prisma/client';
+import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
 import Big from 'big.js';
 import {
   getDate,
@@ -138,6 +138,10 @@ export function extractNumberFromString({
   }
 }
 
+export function getAllActivityTypes(): ActivityType[] {
+  return Object.values(ActivityType);
+}
+
 export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {
   return `${dataSource}-${symbol}`;
 }
@@ -217,9 +221,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.languages?.length
-    ? navigator.languages[0]
-    : navigator.language ?? locale;
+  return navigator.language ?? locale;
 }
 
 export function getNumberFormatDecimal(aLocale?: string) {
@@ -230,7 +232,7 @@ export function getNumberFormatDecimal(aLocale?: string) {
   }).value;
 }
 
-export function getNumberFormatGroup(aLocale?: string) {
+export function getNumberFormatGroup(aLocale = getLocale()) {
   const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
 
   return formatObject.find((object) => {
@@ -395,6 +397,6 @@ export function resolveMarketCondition(
   } else if (aMarketCondition === 'BEAR_MARKET') {
     return { emoji: '🐻' };
   } else {
-    return { emoji: '⚪' };
+    return { emoji: undefined };
   }
 }

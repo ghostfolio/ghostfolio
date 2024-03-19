@@ -4,9 +4,11 @@ import {
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { Tag } from '@prisma/client';
+
+import { Account, Tag } from '@prisma/client';
 
 export interface PortfolioPositionDetail {
+  accounts: Account[];
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;

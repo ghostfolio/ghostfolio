@@ -1,4 +1,5 @@
 import { Filter } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -9,18 +10,21 @@ export class ApiService {
     filterByAccounts,
     filterByAssetClasses,
     filterByAssetSubClasses,
+    filterByHoldingType,
     filterBySearchQuery,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
     filterByAssetSubClasses?: string;
+    filterByHoldingType?: string;
     filterBySearchQuery?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
+    const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
     const tagIds = filterByTags?.split(',') ?? [];
 
@@ -50,6 +54,13 @@ export class ApiService {
         };
       })
     ];
+
+    if (holdingType) {
+      filters.push({
+        id: holdingType,
+        type: 'HOLDING_TYPE'
+      });
+    }
 
     if (searchQuery) {
       filters.push({

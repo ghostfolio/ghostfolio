@@ -1,5 +1,3 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
@@ -8,6 +6,9 @@ import {
   PortfolioPublicDetails
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
+
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StatusCodes } from 'http-status-codes';
 import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';

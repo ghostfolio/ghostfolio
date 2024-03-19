@@ -2,6 +2,7 @@ import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/accou
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { Filter } from '@ghostfolio/common/interfaces';
+
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import Big from 'big.js';
@@ -20,10 +21,8 @@ export class AccountService {
   public async account({
     id_userId
   }: Prisma.AccountWhereUniqueInput): Promise<Account | null> {
-    const { id, userId } = id_userId;
-
     const [account] = await this.accounts({
-      where: { id, userId }
+      where: id_userId
     });
 
     return account;

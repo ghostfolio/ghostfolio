@@ -1,4 +1,5 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+
 import Big from 'big.js';
 
 import { CurrentRateService } from './current-rate.service';
@@ -9,7 +10,7 @@ describe('PortfolioCalculator', () => {
   let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null);
+    currentRateService = new CurrentRateService(null, null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,

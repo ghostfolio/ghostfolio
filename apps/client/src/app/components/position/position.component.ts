@@ -1,3 +1,7 @@
+import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { getLocale } from '@ghostfolio/common/helper';
+import { Position } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,8 +9,6 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { Position } from '@ghostfolio/common/interfaces';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -19,7 +21,7 @@ export class PositionComponent implements OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() position: Position;
   @Input() range: string;
 

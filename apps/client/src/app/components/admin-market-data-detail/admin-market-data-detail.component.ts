@@ -1,3 +1,11 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import {
+  DATE_FORMAT,
+  getDateFormatString,
+  getLocale
+} from '@ghostfolio/common/helper';
+import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,13 +16,6 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DATE_FORMAT,
-  getDateFormatString,
-  getLocale
-} from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
@@ -154,15 +155,14 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     day: string;
     yearMonth: string;
   }) {
-    const date = parseISO(`${yearMonth}-${day}`);
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
       data: <MarketDataDetailDialogParams>{
-        date,
         marketPrice,
         currency: this.currency,
         dataSource: this.dataSource,
+        dateString: `${yearMonth}-${day}`,
         symbol: this.symbol,
         user: this.user
       },

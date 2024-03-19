@@ -1,4 +1,17 @@
-import 'chartjs-adapter-date-fns';
+import {
+  getTooltipOptions,
+  getTooltipPositionerMapTop,
+  getVerticalHoverLinePlugin
+} from '@ghostfolio/common/chart-helper';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import {
+  getBackgroundColor,
+  getDateFormatString,
+  getLocale,
+  getTextColor
+} from '@ghostfolio/common/helper';
+import { LineChartItem } from '@ghostfolio/common/interfaces';
+import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
   AfterViewInit,
@@ -11,23 +24,6 @@ import {
   ViewChild
 } from '@angular/core';
 import {
-  getTooltipOptions,
-  getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
-} from '@ghostfolio/common/chart-helper';
-import {
-  locale,
-  primaryColorRgb,
-  secondaryColorRgb
-} from '@ghostfolio/common/config';
-import {
-  getBackgroundColor,
-  getDateFormatString,
-  getTextColor
-} from '@ghostfolio/common/helper';
-import { LineChartItem } from '@ghostfolio/common/interfaces';
-import { ColorScheme } from '@ghostfolio/common/types';
-import {
   Chart,
   Filler,
   LineController,
@@ -37,6 +33,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 
 @Component({
   selector: 'gf-line-chart',
@@ -51,7 +48,7 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
@@ -105,10 +102,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
-    }
-
-    if (!this.locale) {
-      this.locale = locale;
     }
   }
 

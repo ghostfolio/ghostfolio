@@ -3,6 +3,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 

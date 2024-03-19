@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { InternetIdentityService } from '@ghostfolio/client/services/internet-identity.service';
 import {
   KEY_STAY_SIGNED_IN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gf-login-with-access-token-dialog',

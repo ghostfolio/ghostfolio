@@ -2,6 +2,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import {
   CallHandler,
   ExecutionContext,
@@ -48,14 +49,14 @@ export class RedactValuesInResponseInterceptor<T>
               'dividendInBaseCurrency',
               'fee',
               'feeInBaseCurrency',
-              'filteredValueInBaseCurrency',
               'grossPerformance',
+              'grossPerformanceWithCurrencyEffect',
               'investment',
               'netPerformance',
+              'netPerformanceWithCurrencyEffect',
               'quantity',
               'symbolMapping',
               'totalBalanceInBaseCurrency',
-              'totalValueInBaseCurrency',
               'unitPrice',
               'value',
               'valueInBaseCurrency'

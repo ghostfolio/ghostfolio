@@ -1,3 +1,6 @@
+import { Currency } from '@ghostfolio/common/interfaces';
+import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
+
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
@@ -16,10 +19,9 @@ import {
 } from '@angular/material/autocomplete';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { Currency } from '@ghostfolio/common/interfaces';
-import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 import { Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
@@ -157,7 +159,7 @@ export class CurrencySelectorComponent
 
   private validateRequired() {
     const requiredCheck = super.required
-      ? !super.value.label || !super.value.value
+      ? !super.value?.label || !super.value?.value
       : false;
 
     if (requiredCheck) {

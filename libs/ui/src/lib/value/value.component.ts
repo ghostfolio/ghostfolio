@@ -1,10 +1,11 @@
+import { getLocale } from '@ghostfolio/common/helper';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
-import { getLocale } from '@ghostfolio/common/helper';
 import { isNumber } from 'lodash';
 
 @Component({
@@ -20,7 +21,7 @@ export class ValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale: string | undefined;
+  @Input() locale = getLocale();
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
@@ -128,11 +129,6 @@ export class ValueComponent implements OnChanges {
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
-
-    if (!this.locale) {
-      this.locale = getLocale();
-    }
-
     this.useAbsoluteValue = false;
   }
 }

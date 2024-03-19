@@ -1,3 +1,6 @@
+import { getLocale } from '@ghostfolio/common/helper';
+import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,7 +14,6 @@ import {
 } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 
@@ -24,7 +26,7 @@ import { Subject } from 'rxjs';
 export class AccountBalancesComponent implements OnChanges, OnDestroy, OnInit {
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountId: string;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showActions = true;
 
   @Output() accountBalanceDeleted = new EventEmitter<string>();

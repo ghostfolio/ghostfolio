@@ -8,8 +8,9 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
+import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import {
   AssetClass,
@@ -18,7 +19,7 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
 import Big from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
@@ -69,12 +70,7 @@ export class OrderService {
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
       currency = data.SymbolProfile.connectOrCreate.create.currency;
@@ -129,13 +125,9 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft =
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
+    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+      ? false
+      : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
@@ -156,7 +148,7 @@ export class OrderService {
         .plus(data.fee)
         .toNumber();
 
-      if (data.type === 'BUY') {
+      if (['BUY', 'FEE'].includes(data.type)) {
         amount = new Big(amount).mul(-1).toNumber();
       }
 
@@ -179,12 +171,7 @@ export class OrderService {
       where
     });
 
-    if (
-      order.type === 'FEE' ||
-      order.type === 'INTEREST' ||
-      order.type === 'ITEM' ||
-      order.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -197,6 +184,17 @@ export class OrderService {
     });
 
     return count;
+  }
+
+  public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
+    return this.prismaService.order.findFirst({
+      orderBy: {
+        date: 'desc'
+      },
+      where: {
+        SymbolProfile: { dataSource, symbol }
+      }
+    });
   }
 
   public async getOrders({
@@ -217,7 +215,7 @@ export class OrderService {
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
     take?: number;
-    types?: TypeOfOrder[];
+    types?: ActivityType[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
@@ -291,13 +289,14 @@ export class OrderService {
     }
 
     if (types) {
-      where.OR = types.map((type) => {
-        return {
-          type: {
-            equals: type
-          }
-        };
-      });
+      where.type = { in: types };
+    }
+
+    if (withExcludedAccounts === false) {
+      where.OR = [
+        { Account: null },
+        { Account: { NOT: { isExcluded: true } } }
+      ];
     }
 
     const [orders, count] = await Promise.all([
@@ -321,32 +320,26 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
-    const activities = orders
-      .filter((order) => {
-        return (
-          withExcludedAccounts ||
-          !order.Account ||
-          order.Account?.isExcluded === false
-        );
-      })
-      .map((order) => {
-        const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+    const activities = orders.map((order) => {
+      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
-        return {
-          ...order,
+      return {
+        ...order,
+        value,
+        // TODO: Use exchange rate of date
+        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          order.fee,
+          order.SymbolProfile.currency,
+          userCurrency
+        ),
+        // TODO: Use exchange rate of date
+        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            order.fee,
-            order.SymbolProfile.currency,
-            userCurrency
-          ),
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            value,
-            order.SymbolProfile.currency,
-            userCurrency
-          )
-        };
-      });
+          order.SymbolProfile.currency,
+          userCurrency
+        )
+      };
+    });
 
     return { activities, count };
   }
@@ -370,13 +363,10 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      type?: ActivityType;
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
-    if (data.Account.connect.id_userId.id === null) {
-      delete data.Account;
-    }
-
     if (!data.comment) {
       data.comment = null;
     }
@@ -385,13 +375,12 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
+
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
     } else {
       delete data.SymbolProfile.update;
 

@@ -1,0 +1,173 @@
+<div class="container">
+  <div class="mb-5 row">
+    <div class="col">
+      <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>
+        Frequently Asked Questions (FAQ)
+      </h1>
+      <p>
+        Find quick answers to commonly asked questions about Ghostfolio in our
+        Frequently Asked Questions (FAQ) section. Discover what Ghostfolio is,
+        explore its features, and learn about our privacy practices. Get all the
+        information you need in one place.
+      </p>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is Ghostfolio?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Ghostfolio is a lightweight, open source wealth management application
+          for individuals to keep track of their net worth. The software
+          empowers you to make solid, data-driven investment decisions.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What assets can I track with Ghostfolio?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          With Ghostfolio, you can keep track of various assets like stocks,
+          ETFs, bonds, cryptocurrencies and commodities.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What else is included in Ghostfolio?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Please find a feature overview to manage your wealth
+          <a [routerLink]="routerLinkFeatures">here</a>.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Can I use Ghostfolio anonymously?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Yes, the authentication system via security token enables you to sign
+          in securely and anonymously to Ghostfolio. There is no need for an
+          e-mail address, phone number, or a username.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How can Ghostfolio be free?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >This project is driven by the efforts of contributors from around the
+          world. The
+          <a href="https://github.com/ghostfolio/ghostfolio">source code</a> is
+          fully available as open source software (OSS). Thanks to our generous
+          <a href="https://ghostfol.io/en/pricing">Ghostfolio Premium</a> users
+          and <a href="https://www.buymeacoffee.com/ghostfolio">sponsors</a> we
+          have the ability to run a free, limited plan for novice
+          investors.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Do you monetize or sell my financial data?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >No, we value your privacy. We do not sell or share your financial
+          data with any third parties.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is your business model?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >By offering
+          <a href="https://ghostfol.io/en/pricing">Ghostfolio Premium</a>, a
+          subscription plan with a managed hosting service and enhanced
+          features, we fund our business while providing added value to our
+          users.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is your product roadmap?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >At this time, we do not have a public roadmap
+          available.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Ghostfolio sounds cool, how can I get involved?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >Any support for Ghostfolio is welcome. Be it with a
+          <a href="https://ghostfol.io/en/pricing">Ghostfolio Premium</a>
+          subscription to finance the hosting infrastructure, a positive rating
+          in the
+          <a
+            href="https://play.google.com/store/apps/details?id=ch.dotsilver.ghostfolio.twa"
+            >Google Play Store</a
+          >, a star on
+          <a href="https://github.com/ghostfolio/ghostfolio">GitHub</a>,
+          feedback, bug reports, feature requests and of course contributions!
+          You can reach us via Ghostfolio
+          <a
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            title="Join the Ghostfolio Slack community"
+            >Slack</a
+          >
+          community,
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Post to Ghostfolio on X (formerly Twitter)"
+            >&#64;ghostfolio_</a
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
+            >,
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi&#64;ghostfol.io</a
+            ></ng-container
+          >
+          or
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Got any other questions?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >Please join the Ghostfolio
+          <a
+            href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+            title="Join the Ghostfolio Slack community"
+            >Slack </a
+          >community, post to
+          <a
+            href="https://twitter.com/ghostfolio_"
+            title="Post to Ghostfolio on X (formerly Twitter)"
+            >&#64;ghostfolio_</a
+          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
+            >, send an e-mail to
+            <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
+              >hi&#64;ghostfol.io</a
+            ></ng-container
+          >
+          or start a discussion at
+          <a
+            href="https://github.com/ghostfolio/ghostfolio"
+            title="Find Ghostfolio on GitHub"
+            >GitHub</a
+          >.</mat-card-content
+        >
+      </mat-card>
+    </div>
+  </div>
+</div>

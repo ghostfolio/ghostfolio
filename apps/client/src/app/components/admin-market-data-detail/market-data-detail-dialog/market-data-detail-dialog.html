@@ -9,7 +9,7 @@
           matInput
           name="date"
           [matDatepicker]="date"
-          [(ngModel)]="data.date"
+          [(ngModel)]="data.dateString"
         />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
@@ -18,7 +18,7 @@
             name="calendar-clear-outline"
           />
         </mat-datepicker-toggle>
-        <mat-datepicker #date disabled="true"></mat-datepicker>
+        <mat-datepicker #date disabled="true" />
       </mat-form-field>
     </div>
     <div class="align-items-start d-flex">

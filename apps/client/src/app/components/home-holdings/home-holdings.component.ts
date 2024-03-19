@@ -1,6 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -9,6 +6,10 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Position, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -153,8 +154,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPositions({ range: this.user?.settings?.dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.positions = response.positions;
+      .subscribe(({ positions }) => {
+        this.positions = positions;
 
         this.changeDetectorRef.markForCheck();
       });

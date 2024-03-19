@@ -1,4 +1,5 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+
 import { Injectable } from '@nestjs/common';
 import { Platform, Prisma } from '@prisma/client';
 

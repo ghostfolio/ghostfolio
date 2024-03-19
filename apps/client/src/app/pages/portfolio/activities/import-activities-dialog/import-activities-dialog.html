@@ -24,7 +24,7 @@
         >
       </ng-template>
       <div class="pt-3">
-        <ng-container *ngIf="mode === 'DIVIDEND'; else selectFile">
+        @if (mode === 'DIVIDEND') {
           <form
             [formGroup]="uniqueAssetForm"
             (ngSubmit)="onLoadDividends(stepper)"
@@ -32,20 +32,25 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label i18n>Holding</mat-label>
               <mat-select formControlName="uniqueAsset">
-                <mat-select-trigger
-                  >{{ uniqueAssetForm.controls['uniqueAsset']?.value?.name
-                  }}</mat-select-trigger
-                >
+                <mat-select-trigger>{{
+                  uniqueAssetForm.controls['uniqueAsset']?.value?.name
+                }}</mat-select-trigger>
                 <mat-option
                   *ngFor="let holding of holdings"
                   class="line-height-1"
-                  [value]="{ dataSource: holding.dataSource, name: holding.name, symbol: holding.symbol }"
+                  [value]="{
+                    dataSource: holding.dataSource,
+                    name: holding.name,
+                    symbol: holding.symbol
+                  }"
                 >
-                  <span><b>{{ holding.name }}</b></span>
+                  <span
+                    ><b>{{ holding.name }}</b></span
+                  >
                   <br />
                   <small class="text-muted"
-                    >{{ holding.symbol | gfSymbol }} · {{ holding.currency
-                    }}</small
+                    >{{ holding.symbol | gfSymbol }} ·
+                    {{ holding.currency }}</small
                   >
                 </mat-option>
               </mat-select>
@@ -53,7 +58,7 @@
                 *ngIf="isLoading"
                 class="position-absolute"
                 [diameter]="20"
-              ></mat-spinner>
+              />
             </mat-form-field>
             <div class="d-flex flex-column justify-content-center">
               <button
@@ -66,14 +71,13 @@
               </button>
             </div>
           </form>
-        </ng-container>
-        <ng-template #selectFile>
+        } @else {
           <div class="d-flex flex-column justify-content-center">
             <button
               class="drop-area p-4 text-center text-muted"
               gfFileDrop
               (click)="onSelectFile(stepper)"
-              (filesDropped)="onFilesDropped({stepper, files: $event})"
+              (filesDropped)="onFilesDropped({ stepper, files: $event })"
             >
               <div
                 class="align-items-center d-flex flex-column justify-content-center"
@@ -101,7 +105,7 @@
               </small>
             </p>
           </div>
-        </ng-template>
+        }
       </div>
     </mat-step>
 
@@ -115,9 +119,9 @@
         >
       </ng-template>
       <div class="pt-3">
-        <ng-container *ngIf="errorMessages?.length === 0; else errorMessage">
-          <gf-activities-table-lazy
-            *ngIf="importStep === 1 && data?.user?.settings?.isExperimentalFeatures === true"
+        @if (errorMessages?.length === 0) {
+          <gf-activities-table
+            *ngIf="importStep === 1"
             [baseCurrency]="data?.user?.settings?.baseCurrency"
             [dataSource]="dataSource"
             [deviceType]="data?.deviceType"
@@ -129,29 +133,11 @@
             [pageSize]="maxSafeInteger"
             [showActions]="false"
             [showCheckbox]="true"
-            [showFooter]="false"
             [showSymbolColumn]="false"
             [sortColumn]="sortColumn"
             [sortDirection]="sortDirection"
             [sortDisabled]="true"
             [totalItems]="totalItems"
-            (selectedActivities)="updateSelection($event)"
-          />
-          <gf-activities-table
-            *ngIf="importStep === 1 && data?.user?.settings?.isExperimentalFeatures !== true"
-            [activities]="activities"
-            [baseCurrency]="data?.user?.settings?.baseCurrency"
-            [deviceType]="data?.deviceType"
-            [hasPermissionToCreateActivity]="false"
-            [hasPermissionToExportActivities]="false"
-            [hasPermissionToFilter]="false"
-            [hasPermissionToOpenDetails]="false"
-            [locale]="data?.user?.settings?.locale"
-            [pageSize]="maxSafeInteger"
-            [showActions]="false"
-            [showCheckbox]="true"
-            [showFooter]="false"
-            [showSymbolColumn]="false"
             (selectedActivities)="updateSelection($event)"
           />
           <div class="d-flex justify-content-end mt-3">
@@ -168,8 +154,7 @@
               <ng-container i18n>Import</ng-container>
             </button>
           </div>
-        </ng-container>
-        <ng-template #errorMessage>
+        } @else {
           <mat-accordion displayMode="flat">
             <mat-expansion-panel
               *ngFor="let message of errorMessages; let i = index"
@@ -204,7 +189,7 @@
               <ng-container i18n>Import</ng-container>
             </button>
           </div>
-        </ng-template>
+        }
       </div>
     </mat-step>
   </mat-stepper>

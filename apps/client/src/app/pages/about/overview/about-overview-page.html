@@ -133,23 +133,29 @@
   </div>
 
   <div class="row">
-    <div *ngIf="hasPermissionForSubscription" class="col-md-6 col-xs-12 my-2">
+    <div
+      class="col-md-6 col-xs-12 my-2"
+      [ngClass]="{ 'offset-md-3': hasPermissionForSubscription === false }"
+    >
       <a
         class="py-4 w-100"
         color="primary"
+        i18n
         mat-flat-button
         [routerLink]="routerLinkFaq"
         >Frequently Asked Questions (FAQ)</a
       >
     </div>
-    <div *ngIf="hasPermissionForBlog" class="col-md-6 col-xs-12 my-2">
-      <a
-        class="py-4 w-100"
-        color="primary"
-        mat-flat-button
-        [routerLink]="['/blog']"
-        >Blog</a
-      >
-    </div>
+    @if (hasPermissionForSubscription) {
+      <div class="col-md-6 col-xs-12 my-2">
+        <a
+          class="py-4 w-100"
+          color="primary"
+          mat-flat-button
+          [routerLink]="['/blog']"
+          >Blog</a
+        >
+      </div>
+    }
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
+
 import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
@@ -38,6 +39,17 @@ function mockGetValue(symbol: string, date: Date) {
         return { marketPrice: 89.12 };
       } else if (isSameDay(parseDate('2023-07-10'), date)) {
         return { marketPrice: 116.45 };
+      }
+
+      return { marketPrice: 0 };
+
+    case 'MSFT':
+      if (isSameDay(parseDate('2021-09-16'), date)) {
+        return { marketPrice: 89.12 };
+      } else if (isSameDay(parseDate('2021-11-16'), date)) {
+        return { marketPrice: 339.51 };
+      } else if (isSameDay(parseDate('2023-07-10'), date)) {
+        return { marketPrice: 331.83 };
       }
 
       return { marketPrice: 0 };

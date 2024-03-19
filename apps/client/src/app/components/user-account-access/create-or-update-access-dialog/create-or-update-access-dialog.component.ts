@@ -1,3 +1,6 @@
+import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { DataService } from '@ghostfolio/client/services/data.service';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -7,8 +10,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { StatusCodes } from 'http-status-codes';
 import { EMPTY, Subject, catchError, takeUntil } from 'rxjs';
 
@@ -28,7 +29,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateAccessDialogParams,
+    @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
     private dataService: DataService,
     private formBuilder: FormBuilder

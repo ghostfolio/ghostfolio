@@ -4,8 +4,11 @@
   (keyup.enter)="accountForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 *ngIf="data.account.id" i18n mat-dialog-title>Update account</h1>
-  <h1 *ngIf="!data.account.id" i18n mat-dialog-title>Add account</h1>
+  @if (data.account.id) {
+    <h1 i18n mat-dialog-title>Update account</h1>
+  } @else {
+    <h1 i18n mat-dialog-title>Add account</h1>
+  }
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">
@@ -35,9 +38,9 @@
           type="number"
           (keydown.enter)="$event.stopPropagation()"
         />
-        <span class="ml-2" matTextSuffix
-          >{{ accountForm.controls['currency']?.value?.value }}</span
-        >
+        <span class="ml-2" matTextSuffix>{{
+          accountForm.controls['currency']?.value?.value
+        }}</span>
       </mat-form-field>
     </div>
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
@@ -52,19 +55,21 @@
           (keydown.enter)="$event.stopPropagation()"
         />
         <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          <mat-option
-            *ngFor="let platformEntry of filteredPlatforms | async"
-            [value]="platformEntry"
-          >
-            <span class="d-flex">
-              <gf-symbol-icon
-                class="mr-1"
-                [tooltip]="platformEntry.name"
-                [url]="platformEntry.url"
-              />
-              <span>{{ platformEntry.name }}</span>
-            </span>
-          </mat-option>
+          @for (
+            platformEntry of filteredPlatforms | async;
+            track platformEntry
+          ) {
+            <mat-option [value]="platformEntry">
+              <span class="d-flex">
+                <gf-symbol-icon
+                  class="mr-1"
+                  [tooltip]="platformEntry.name"
+                  [url]="platformEntry.url"
+                />
+                <span>{{ platformEntry.name }}</span>
+              </span>
+            </mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
     </div>
@@ -85,12 +90,14 @@
         >Exclude from Analysis</mat-checkbox
       >
     </div>
-    <div *ngIf="data.account.id">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Account ID</mat-label>
-        <input formControlName="accountId" matInput />
-      </mat-form-field>
-    </div>
+    @if (data.account.id) {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Account ID</mat-label>
+          <input formControlName="accountId" matInput />
+        </mat-form-field>
+      </div>
+    }
   </div>
   <div class="justify-content-end" mat-dialog-actions>
     <button i18n mat-button type="button" (click)="onCancel()">Cancel</button>

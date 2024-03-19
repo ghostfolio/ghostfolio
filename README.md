@@ -99,6 +99,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | `POSTGRES_DB`            |               | The name of the _PostgreSQL_ database                                                                                               |
 | `POSTGRES_PASSWORD`      |               | The password of the _PostgreSQL_ database                                                                                           |
 | `POSTGRES_USER`          |               | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_DB`               | `0`           | The database index of _Redis_                                                                                                       |
 | `REDIS_HOST`             |               | The host where _Redis_ is running                                                                                                   |
 | `REDIS_PASSWORD`         |               | The password of _Redis_                                                                                                             |
 | `REDIS_PORT`             |               | The port where _Redis_ is running                                                                                                   |
@@ -143,7 +144,7 @@ docker compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 
 ### Home Server Systems (Community)
 
-Ghostfolio is available for various home server systems, including [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
+Ghostfolio is available for various home server systems, including [CasaOS](https://github.com/bigbeartechworld/big-bear-casaos), [Runtipi](https://www.runtipi.io/docs/apps-available), [TrueCharts](https://truecharts.org/charts/stable/ghostfolio), [Umbrel](https://apps.umbrel.com/app/ghostfolio), and [Unraid](https://unraid.net/community/apps?q=ghostfolio).
 
 ## Development
 
@@ -153,7 +154,7 @@ Ghostfolio is available for various home server systems, including [Runtipi](htt
 - [Node.js](https://nodejs.org/en/download) (version 18+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - Create a local copy of this Git repository (clone)
-- Copy the file `.env.example` to `.env` and populate it with your data (`cp .env.example .env`)
+- Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
 ### Setup
 
@@ -279,6 +280,10 @@ Ghostfolio is **100% free** and **open source**. We encourage and support an act
 Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://twitter.com/ghostfolio_) on _X_. We would love to hear from you.
 
 If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
+
+## Analytics
+
+![Alt](https://repobeats.axiom.co/api/embed/281a80b2d0c4af1162866c24c803f1f18e5ed60e.svg 'Repobeats analytics image')
 
 ## License
 

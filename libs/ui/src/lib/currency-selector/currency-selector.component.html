@@ -11,11 +11,9 @@
   [displayWith]="displayFn"
   (optionSelected)="onUpdateCurrency($event)"
 >
-  <mat-option
-    *ngFor="let currencyItem of filteredCurrencies"
-    class="line-height-1"
-    [value]="currencyItem"
-  >
-    {{ currencyItem.label }}
-  </mat-option>
+  @for (currencyItem of filteredCurrencies; track currencyItem) {
+    <mat-option class="line-height-1" [value]="currencyItem">
+      {{ currencyItem.label }}
+    </mat-option>
+  }
 </mat-autocomplete>

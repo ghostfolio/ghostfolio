@@ -1,4 +1,10 @@
-import 'chartjs-adapter-date-fns';
+import {
+  getTooltipOptions,
+  transformTickToAbbreviation
+} from '@ghostfolio/common/chart-helper';
+import { primaryColorRgb } from '@ghostfolio/common/config';
+import { getLocale } from '@ghostfolio/common/helper';
+import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -14,12 +20,6 @@ import {
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatDatepicker } from '@angular/material/datepicker';
 import {
-  getTooltipOptions,
-  transformTickToAbbreviation
-} from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb } from '@ghostfolio/common/config';
-import { ColorScheme } from '@ghostfolio/common/types';
-import {
   BarController,
   BarElement,
   CategoryScale,
@@ -27,6 +27,7 @@ import {
   LinearScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import * as Color from 'color';
 import {
   add,
@@ -55,7 +56,7 @@ export class FireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() deviceType: string;
   @Input() fireWealth: number;
   @Input() hasPermissionToUpdateUserSettings: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() projectedTotalAmount = 0;
   @Input() retirementDate: Date;
   @Input() savingsRate = 0;

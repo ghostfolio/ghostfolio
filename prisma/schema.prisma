@@ -19,6 +19,10 @@ model Access {
   userId        String
   GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], references: [id])
   User          User               @relation("accessGive", fields: [userId], references: [id])
+
+  @@index([alias])
+  @@index([granteeUserId])
+  @@index([userId])
 }
 
 model Account {
@@ -28,7 +32,6 @@ model Account {
   createdAt  DateTime         @default(now())
   currency   String?
   id         String           @default(uuid())
-  isDefault  Boolean          @default(false)
   isExcluded Boolean          @default(false)
   name       String?
   platformId String?
@@ -39,6 +42,11 @@ model Account {
   Order      Order[]
 
   @@id([id, userId])
+  @@index([currency])
+  @@index([id])
+  @@index([isExcluded])
+  @@index([name])
+  @@index([userId])
 }
 
 model AccountBalance {
@@ -50,6 +58,9 @@ model AccountBalance {
   userId    String
   value     Float
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
+
+  @@index([accountId])
+  @@index([date])
 }
 
 model Analytics {
@@ -58,6 +69,8 @@ model Analytics {
   updatedAt     DateTime @updatedAt
   userId        String   @id
   User          User     @relation(fields: [userId], references: [id])
+
+  @@index([updatedAt])
 }
 
 model AuthDevice {
@@ -69,6 +82,8 @@ model AuthDevice {
   updatedAt           DateTime @updatedAt
   userId              String
   User                User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model MarketData {
@@ -81,6 +96,10 @@ model MarketData {
   symbol      String
 
   @@unique([dataSource, date, symbol])
+  @@index([dataSource])
+  @@index([date])
+  @@index([marketPrice])
+  @@index([state])
   @@index([symbol])
 }
 
@@ -103,6 +122,11 @@ model Order {
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   User            User          @relation(fields: [userId], references: [id])
   tags            Tag[]
+
+  @@index([accountId])
+  @@index([date])
+  @@index([isDraft])
+  @@index([userId])
 }
 
 model Platform {
@@ -110,6 +134,8 @@ model Platform {
   name    String?
   url     String    @unique
   Account Account[]
+
+  @@index([name])
 }
 
 model Property {
@@ -148,6 +174,12 @@ model SymbolProfile {
   SymbolProfileOverrides SymbolProfileOverrides?
 
   @@unique([dataSource, symbol])
+  @@index([assetClass])
+  @@index([currency])
+  @@index([dataSource])
+  @@index([isin])
+  @@index([name])
+  @@index([symbol])
 }
 
 model SymbolProfileOverrides {
@@ -170,12 +202,16 @@ model Subscription {
   updatedAt DateTime @updatedAt
   userId    String
   User      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Tag {
   id     String  @id @default(uuid())
   name   String  @unique
   orders Order[]
+
+  @@index([name])
 }
 
 model User {
@@ -195,6 +231,12 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
+
+  @@index([accessToken])
+  @@index([createdAt])
+  @@index([provider])
+  @@index([role])
+  @@index([thirdPartyId])
 }
 
 enum AccessPermission {
@@ -246,6 +288,7 @@ enum Provider {
 enum Role {
   ADMIN
   DEMO
+  INACTIVE
   USER
 }
 

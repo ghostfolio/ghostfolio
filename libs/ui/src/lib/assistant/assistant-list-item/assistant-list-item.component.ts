@@ -1,3 +1,5 @@
+import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
+
 import { FocusableOption } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
@@ -12,7 +14,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { Params } from '@angular/router';
-import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

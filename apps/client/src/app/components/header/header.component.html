@@ -6,11 +6,12 @@
         mat-button
         [ngClass]="{ 'w-100': hasTabs }"
         [routerLink]="['/']"
+        (click)="onLogoClick()"
       >
         <gf-logo class="px-2" [label]="pageTitle" />
       </a>
     </div>
-    <span class="spacer"></span>
+    <span class="gf-spacer"></span>
     <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a
@@ -119,11 +120,7 @@
           [matMenuTriggerRestoreFocus]="false"
           (menuOpened)="onOpenAssistant()"
         >
-          @if (user?.settings?.isExperimentalFeatures) {
-            <ion-icon class="rotate-90" name="options-outline" />
-          } @else {
-            <ion-icon name="search-outline" />
-          }
+          <ion-icon class="rotate-90" name="options-outline" />
         </button>
         <mat-menu
           #assistantMenu="matMenu"
@@ -180,7 +177,10 @@
                     >Upgrade Plan</ng-container
                   >
                   <ng-container
-                    *ngIf="user.subscription.offer === 'renewal'"
+                    *ngIf="
+                      user.subscription.offer === 'renewal' ||
+                      user.subscription.offer === 'renewal-early-bird'
+                    "
                     i18n
                     >Renew Plan</ng-container
                   ></span
@@ -324,7 +324,7 @@
         />
       </a>
     </div>
-    <span class="spacer"></span>
+    <span class="gf-spacer"></span>
     <ul class="alig-items-center d-flex list-inline m-0 px-2">
       <li class="list-inline-item">
         <a

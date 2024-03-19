@@ -13,6 +13,7 @@ import {
   getYesterday,
   resetHours
 } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   eachDayOfInterval,
@@ -72,7 +73,17 @@ export class ExchangeRateDataService {
           currencyTo: targetCurrency
         });
 
-      let previousExchangeRate = 1;
+      const dateStrings = Object.keys(
+        exchangeRatesByCurrency[`${currency}${targetCurrency}`]
+      );
+      const lastDateString = dateStrings.reduce((a, b) => {
+        return a > b ? a : b;
+      });
+
+      let previousExchangeRate =
+        exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[
+          lastDateString
+        ] ?? 1;
 
       // Start from the most recent date and fill in missing exchange rates
       // using the latest available rate
@@ -93,7 +104,7 @@ export class ExchangeRateDataService {
           exchangeRatesByCurrency[`${currency}${targetCurrency}`][dateString] =
             previousExchangeRate;
 
-          if (currency === DEFAULT_CURRENCY) {
+          if (currency === DEFAULT_CURRENCY && isBefore(date, new Date())) {
             Logger.error(
               `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
               'ExchangeRateDataService'
@@ -432,13 +443,17 @@ export class ExchangeRateDataService {
                 ]) *
               marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)];
 
-            factors[format(date, DATE_FORMAT)] = factor;
+            if (isNaN(factor)) {
+              throw new Error('Exchange rate is not a number');
+            } else {
+              factors[format(date, DATE_FORMAT)] = factor;
+            }
           } catch {
             Logger.error(
               `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
                 date,
                 DATE_FORMAT
-              )}`,
+              )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom} and ${DEFAULT_CURRENCY}${currencyTo}.`,
               'ExchangeRateDataService'
             );
           }
@@ -450,7 +465,7 @@ export class ExchangeRateDataService {
   }
 
   private async prepareCurrencies(): Promise<string[]> {
-    let currencies: string[] = [];
+    let currencies: string[] = [DEFAULT_CURRENCY];
 
     (
       await this.prismaService.account.findMany({

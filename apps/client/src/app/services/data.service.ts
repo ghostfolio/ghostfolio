@@ -1,6 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { SortDirection } from '@angular/material/sort';
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
@@ -30,6 +27,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -40,6 +38,10 @@ import {
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { SortDirection } from '@angular/material/sort';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -60,6 +62,7 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
@@ -98,6 +101,10 @@ export class DataService {
             })
             .join(',')
         );
+      }
+
+      if (filtersByHoldingType) {
+        params = params.append('holdingType', filtersByHoldingType[0].id);
       }
 
       if (filtersByPresetId) {
@@ -388,13 +395,21 @@ export class DataService {
   }
 
   public fetchPortfolioDetails({
-    filters
+    filters,
+    withLiabilities = false
   }: {
     filters?: Filter[];
+    withLiabilities?: boolean;
   } = {}): Observable<PortfolioDetails> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (withLiabilities) {
+      params = params.append('withLiabilities', withLiabilities);
+    }
+
     return this.http
       .get<any>('/api/v1/portfolio/details', {
-        params: this.buildFiltersAsQueryParams({ filters })
+        params
       })
       .pipe(
         map((response) => {
@@ -433,20 +448,66 @@ export class DataService {
       );
   }
 
+  public fetchPortfolioHoldings({
+    filters
+  }: {
+    filters?: Filter[];
+  } = {}) {
+    return this.http
+      .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
+        params: this.buildFiltersAsQueryParams({ filters })
+      })
+      .pipe(
+        map((response) => {
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
+
+              response.holdings[symbol].value = isNumber(
+                response.holdings[symbol].value
+              )
+                ? response.holdings[symbol].value
+                : response.holdings[symbol].valueInPercentage;
+            }
+          }
+
+          return response;
+        })
+      );
+  }
+
   public fetchPortfolioPerformance({
     filters,
     range,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    withItems = false
   }: {
     filters?: Filter[];
     range: DateRange;
     withExcludedAccounts?: boolean;
+    withItems?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
     params = params.append('range', range);
 
     if (withExcludedAccounts) {
       params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
+
+    if (withItems) {
+      params = params.append('withItems', withItems);
     }
 
     return this.http

@@ -25,6 +25,7 @@ import type {
   MarketDataPreset,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -255,7 +256,7 @@ export class AdminController {
         dataSource,
         marketPrice,
         symbol,
-        date: resetHours(parseISO(date)),
+        date: parseISO(date),
         state: 'CLOSE'
       })
     );
@@ -338,6 +339,6 @@ export class AdminController {
     @Param('key') key: string,
     @Body() data: PropertyDto
   ) {
-    return await this.adminService.putSetting(key, data.value);
+    return this.adminService.putSetting(key, data.value);
   }
 }

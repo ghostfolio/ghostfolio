@@ -30,9 +30,9 @@
       <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
         <div class="text-truncate">
           {{ element.name }}
-          <span *ngIf="element.name === element.symbol"
-            >({{ element.assetSubClassLabel }})</span
-          >
+          @if (element.name === element.symbol) {
+            <span>({{ element.assetSubClassLabel }})</span>
+          }
         </div>
         <div>
           <small class="text-muted">{{ element.symbol }}</small>
@@ -114,7 +114,7 @@
         *matHeaderCellDef
         class="justify-content-end px-1"
         mat-header-cell
-        mat-sort-header="netPerformancePercent"
+        mat-sort-header="netPerformancePercentWithCurrencyEffect"
       >
         <span class="d-none d-sm-block" i18n>Performance</span>
         <span class="d-block d-sm-none" title="Performance">±</span>
@@ -125,7 +125,11 @@
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.netPerformancePercent"
+            [value]="
+              isLoading
+                ? undefined
+                : element.netPerformancePercentWithCurrencyEffect
+            "
           />
         </div>
       </td>
@@ -137,12 +141,11 @@
       mat-row
       [ngClass]="{
         'cursor-pointer':
-          hasPermissionToShowValues &&
+          hasPermissionToOpenDetails &&
           !ignoreAssetSubClasses.includes(row.assetSubClass)
       }"
       (click)="
-        hasPermissionToShowValues &&
-          !ignoreAssetSubClasses.includes(row.assetSubClass) &&
+        !ignoreAssetSubClasses.includes(row.assetSubClass) &&
           onOpenPositionDialog({
             dataSource: row.dataSource,
             symbol: row.symbol
@@ -152,32 +155,31 @@
   </table>
 </div>
 
-<mat-paginator class="d-none" [pageSize]="pageSize"></mat-paginator>
+<mat-paginator class="d-none" [pageSize]="pageSize" />
 
-<ngx-skeleton-loader
-  *ngIf="isLoading"
-  animation="pulse"
-  class="px-4 py-3"
-  [theme]="{
-    height: '1.5rem',
-    width: '100%'
-  }"
-/>
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}
 
-<div
-  *ngIf="dataSource.data.length > pageSize && !isLoading"
-  class="my-3 text-center"
->
-  <button mat-stroked-button (click)="onShowAllPositions()">
-    <ng-container i18n>Show all</ng-container>
-  </button>
-</div>
+@if (dataSource.data.length > pageSize && !isLoading) {
+  <div class="my-3 text-center">
+    <button mat-stroked-button (click)="onShowAllPositions()">
+      <ng-container i18n>Show all</ng-container>
+    </button>
+  </div>
+}
 
-<div
-  *ngIf="
-    dataSource.data.length === 0 && hasPermissionToCreateActivity && !isLoading
-  "
-  class="p-3 text-center"
->
-  <gf-no-transactions-info-indicator [hasBorder]="false" />
-</div>
+@if (
+  dataSource.data.length === 0 && hasPermissionToCreateActivity && !isLoading
+) {
+  <div class="p-3 text-center">
+    <gf-no-transactions-info-indicator [hasBorder]="false" />
+  </div>
+}

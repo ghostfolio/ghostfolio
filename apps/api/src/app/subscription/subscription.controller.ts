@@ -7,6 +7,7 @@ import {
 } from '@ghostfolio/common/config';
 import { Coupon } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -115,7 +116,7 @@ export class SubscriptionController {
     @Body() { couponId, priceId }: { couponId: string; priceId: string }
   ) {
     try {
-      return await this.subscriptionService.createCheckoutSession({
+      return this.subscriptionService.createCheckoutSession({
         couponId,
         priceId,
         user: this.request.user

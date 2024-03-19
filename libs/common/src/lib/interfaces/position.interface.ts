@@ -1,4 +1,5 @@
 import { MarketState } from '@ghostfolio/common/types';
+
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 export interface Position {
@@ -17,6 +18,8 @@ export interface Position {
   name?: string;
   netPerformance?: number;
   netPerformancePercentage?: number;
+  netPerformancePercentageWithCurrencyEffect?: number;
+  netPerformanceWithCurrencyEffect?: number;
   quantity: number;
   symbol: string;
   transactionCount: number;

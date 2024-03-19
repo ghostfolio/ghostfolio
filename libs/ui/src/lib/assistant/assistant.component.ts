@@ -1,3 +1,9 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { Filter, User } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import {
   ChangeDetectionStrategy,
@@ -17,12 +23,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { Filter, User } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
-import { translate } from '@ghostfolio/ui/i18n';
-import { Account, AssetClass, Tag } from '@prisma/client';
+import { Account, AssetClass } from '@prisma/client';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -158,25 +159,6 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
       };
     });
 
-    this.filterForm.valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ account, assetClass, tag }) => {
-        this.filtersChanged.emit([
-          {
-            id: account,
-            type: 'ACCOUNT'
-          },
-          {
-            id: assetClass,
-            type: 'ASSET_CLASS'
-          },
-          {
-            id: tag,
-            type: 'TAG'
-          }
-        ]);
-      });
-
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
@@ -258,6 +240,25 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.setIsOpen(true);
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  public onApplyFilters() {
+    this.filtersChanged.emit([
+      {
+        id: this.filterForm.get('account').value,
+        type: 'ACCOUNT'
+      },
+      {
+        id: this.filterForm.get('assetClass').value,
+        type: 'ASSET_CLASS'
+      },
+      {
+        id: this.filterForm.get('tag').value,
+        type: 'TAG'
+      }
+    ]);
+
+    this.onCloseAssistant();
   }
 
   public onChangeDateRange(dateRangeString: string) {

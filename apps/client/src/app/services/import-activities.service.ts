@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
-import { Account, DataSource, Type } from '@prisma/client';
+
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY } from 'rxjs';
@@ -327,26 +328,26 @@ export class ImportActivitiesService {
     content: any[];
     index: number;
     item: any;
-  }) {
+  }): ActivityType {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.TYPE_KEYS) {
       if (item[key]) {
         switch (item[key].toLowerCase()) {
           case 'buy':
-            return Type.BUY;
+            return 'BUY';
           case 'dividend':
-            return Type.DIVIDEND;
+            return 'DIVIDEND';
           case 'fee':
-            return Type.FEE;
+            return 'FEE';
           case 'interest':
-            return Type.INTEREST;
+            return 'INTEREST';
           case 'item':
-            return Type.ITEM;
+            return 'ITEM';
           case 'liability':
-            return Type.LIABILITY;
+            return 'LIABILITY';
           case 'sell':
-            return Type.SELL;
+            return 'SELL';
           default:
             break;
         }

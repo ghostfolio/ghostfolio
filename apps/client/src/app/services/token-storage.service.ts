@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
+
+import { Injectable } from '@angular/core';
 
 import { KEY_TOKEN } from './settings-storage.service';
 import { UserService } from './user/user.service';
@@ -20,14 +21,14 @@ export class TokenStorageService {
     );
   }
 
-  public saveToken(token: string, staySignedIn = false): void {
+  public saveToken(token: string, staySignedIn = false) {
     if (staySignedIn) {
       window.localStorage.setItem(KEY_TOKEN, token);
     }
     window.sessionStorage.setItem(KEY_TOKEN, token);
   }
 
-  public signOut(): void {
+  public signOut() {
     const utmSource = window.localStorage.getItem('utm_source');
 
     if (this.webAuthnService.isEnabled()) {

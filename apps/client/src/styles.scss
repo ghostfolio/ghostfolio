@@ -379,6 +379,10 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-spacer {
+  flex: 1 1 auto;
+}
+
 .gf-table {
   @include gf-table;
 }
@@ -581,6 +585,10 @@ ngx-skeleton-loader {
 
 .text-decoration-underline {
   text-decoration: underline !important;
+}
+
+.text-line-through {
+  text-decoration: line-through;
 }
 
 .with-placeholder-as-option {

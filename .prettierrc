@@ -9,7 +9,26 @@
   ],
   "attributeSort": "ASC",
   "endOfLine": "auto",
-  "plugins": ["prettier-plugin-organize-attributes"],
+  "importOrder": ["^@ghostfolio/(.*)$", "<THIRD_PARTY_MODULES>", "^[./]"],
+  "importOrderSeparation": true,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    },
+    {
+      "files": "*.ts",
+      "options": {
+        "importOrderParserPlugins": ["decorators-legacy", "typescript"]
+      }
+    }
+  ],
+  "plugins": [
+    "prettier-plugin-organize-attributes",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
   "printWidth": 80,
   "singleQuote": true,
   "tabWidth": 2,

@@ -1,3 +1,19 @@
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
+import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import {
+  KEY_STAY_SIGNED_IN,
+  SettingsStorageService
+} from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { DateRange } from '@ghostfolio/common/types';
+import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,20 +27,6 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
-import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import {
-  KEY_STAY_SIGNED_IN,
-  SettingsStorageService
-} from '@ghostfolio/client/services/settings-storage.service';
-import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DateRange } from '@ghostfolio/common/types';
-import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -89,6 +91,7 @@ export class HeaderComponent implements OnChanges {
     private dataService: DataService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private layoutService: LayoutService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
@@ -192,6 +195,12 @@ export class HeaderComponent implements OnChanges {
       });
   }
 
+  public onLogoClick() {
+    if (this.currentRoute === 'home' || this.currentRoute === 'zen') {
+      this.layoutService.getShouldReloadSubject().next();
+    }
+  }
+
   public onMenuClosed() {
     this.isMenuOpen = false;
   }
@@ -208,7 +217,7 @@ export class HeaderComponent implements OnChanges {
     this.signOut.next();
   }
 
-  public openLoginDialog(): void {
+  public openLoginDialog() {
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
       data: {

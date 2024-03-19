@@ -1,12 +1,4 @@
 <div class="container justify-content-center p-3">
-  <div *ngIf="!user?.settings?.isExperimentalFeatures" class="mb-3 text-center">
-    <gf-toggle
-      [defaultValue]="user?.settings?.dateRange"
-      [isLoading]="positions === undefined"
-      [options]="dateRangeOptions"
-      (change)="onChangeDateRange($event.value)"
-    />
-  </div>
   <div class="row">
     <div class="align-items-center col-xs-12 col-md-8 offset-md-2">
       <mat-card appearance="outlined">

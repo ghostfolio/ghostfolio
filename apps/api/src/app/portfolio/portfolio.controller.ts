@@ -1,4 +1,5 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -11,6 +12,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
   DEFAULT_CURRENCY,
   HEADER_KEY_IMPERSONATION
@@ -18,6 +20,7 @@ import {
 import {
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -28,6 +31,7 @@ import type {
   GroupBy,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Controller,
   Get,
@@ -56,6 +60,8 @@ export class PortfolioController {
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly impersonationService: ImpersonationService,
+    private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
@@ -70,8 +76,11 @@ export class PortfolioController {
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('withLiabilities') withLiabilitiesParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
+    const withLiabilities = withLiabilitiesParam === 'true';
+
     let hasDetails = true;
     let hasError = false;
     const hasReadRestrictedAccessPermission =
@@ -90,21 +99,15 @@ export class PortfolioController {
       filterByTags
     });
 
-    const {
-      accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
-      hasErrors,
-      holdings,
-      platforms,
-      summary,
-      totalValueInBaseCurrency
-    } = await this.portfolioService.getDetails({
-      dateRange,
-      filters,
-      impersonationId,
-      userId: this.request.user.id
-    });
+    const { accounts, hasErrors, holdings, platforms, summary } =
+      await this.portfolioService.getDetails({
+        dateRange,
+        filters,
+        impersonationId,
+        withLiabilities,
+        userId: this.request.user.id,
+        withSummary: true
+      });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -117,27 +120,23 @@ export class PortfolioController {
       this.userService.isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return portfolioPosition.investment;
+        .map(({ investment }) => {
+          return investment;
         })
         .reduce((a, b) => a + b, 0);
 
       const totalValue = Object.values(holdings)
-        .map((portfolioPosition) => {
-          return this.exchangeRateDataService.toCurrency(
-            portfolioPosition.quantity * portfolioPosition.marketPrice,
-            portfolioPosition.currency,
-            this.request.user.Settings.settings.baseCurrency
-          );
+        .filter(({ assetClass, assetSubClass }) => {
+          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+        })
+        .map(({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency;
         })
         .reduce((a, b) => a + b, 0);
 
       for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-        portfolioPosition.grossPerformance = null;
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
-        portfolioPosition.netPerformance = null;
-        portfolioPosition.quantity = null;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
       }
@@ -163,19 +162,21 @@ export class PortfolioController {
         'currentGrossPerformanceWithCurrencyEffect',
         'currentNetPerformance',
         'currentNetPerformanceWithCurrencyEffect',
+        'currentNetWorth',
         'currentValue',
-        'dividend',
+        'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
+        'filteredValueInBaseCurrency',
         'fireWealth',
         'interest',
         'items',
         'liabilities',
-        'netWorth',
         'totalBuy',
         'totalInvestment',
-        'totalSell'
+        'totalSell',
+        'totalValueInBaseCurrency'
       ]);
     }
 
@@ -202,12 +203,9 @@ export class PortfolioController {
 
     return {
       accounts,
-      filteredValueInBaseCurrency,
-      filteredValueInPercentage,
       hasError,
       holdings,
       platforms,
-      totalValueInBaseCurrency,
       summary: portfolioSummary
     };
   }
@@ -234,11 +232,21 @@ export class PortfolioController {
       filterByTags
     });
 
-    let dividends = await this.portfolioService.getDividends({
-      dateRange,
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const { activities } = await this.orderService.getOrders({
       filters,
-      groupBy,
-      impersonationId
+      userCurrency,
+      userId: impersonationUserId || this.request.user.id,
+      types: ['DIVIDEND']
+    });
+
+    let dividends = await this.portfolioService.getDividends({
+      activities,
+      dateRange,
+      groupBy
     });
 
     if (
@@ -266,6 +274,35 @@ export class PortfolioController {
     }
 
     return { dividends };
+  }
+
+  @Get('holdings')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getHoldings(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('holdingType') filterByHoldingType?: string,
+    @Query('query') filterBySearchQuery?: string,
+    @Query('tags') filterByTags?: string
+  ): Promise<PortfolioHoldingsResponse> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByHoldingType,
+      filterBySearchQuery,
+      filterByTags
+    });
+
+    const { holdings } = await this.portfolioService.getDetails({
+      filters,
+      impersonationId,
+      userId: this.request.user.id
+    });
+
+    return { holdings: Object.values(holdings) };
   }
 
   @Get('investments')
@@ -345,8 +382,12 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccounts = false
+    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false',
+    @Query('withItems') withItemsParam = 'false'
   ): Promise<PortfolioPerformanceResponse> {
+    const withExcludedAccounts = withExcludedAccountsParam === 'true';
+    const withItems = withItemsParam === 'true';
+
     const hasReadRestrictedAccessPermission =
       this.userService.hasReadRestrictedAccessPermission({
         impersonationId,
@@ -364,6 +405,7 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
+      withItems,
       userId: this.request.user.id
     });
 
@@ -428,6 +470,10 @@ export class PortfolioController {
           return nullifyValuesInObject(item, ['totalInvestment', 'value']);
         }
       );
+      performanceInformation.performance = nullifyValuesInObject(
+        performanceInformation.performance,
+        ['currentNetPerformance', 'currentNetPerformancePercent']
+      );
     }
 
     return performanceInformation;
@@ -482,7 +528,6 @@ export class PortfolioController {
     }
 
     const { holdings } = await this.portfolioService.getDetails({
-      dateRange: 'max',
       filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
       impersonationId: access.userId,
       userId: user.id
@@ -514,7 +559,8 @@ export class PortfolioController {
         dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
         markets: hasDetails ? portfolioPosition.markets : undefined,
         name: portfolioPosition.name,
-        netPerformancePercent: portfolioPosition.netPerformancePercent,
+        netPerformancePercentWithCurrencyEffect:
+          portfolioPosition.netPerformancePercentWithCurrencyEffect,
         sectors: hasDetails ? portfolioPosition.sectors : [],
         symbol: portfolioPosition.symbol,
         url: portfolioPosition.url,

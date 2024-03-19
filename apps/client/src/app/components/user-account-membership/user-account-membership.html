@@ -3,7 +3,7 @@
     <div class="col">
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
-          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
           [name]="user?.subscription?.type"
         />
         <div
@@ -11,13 +11,20 @@
           class="d-flex flex-column mt-5"
         >
           <ng-container
-            *ngIf="hasPermissionForSubscription && hasPermissionToUpdateUserSettings"
+            *ngIf="
+              hasPermissionForSubscription && hasPermissionToUpdateUserSettings
+            "
           >
             <button color="primary" mat-flat-button (click)="onCheckout()">
               <ng-container *ngIf="user.subscription.offer === 'default'" i18n
                 >Upgrade Plan</ng-container
               >
-              <ng-container *ngIf="user.subscription.offer === 'renewal'" i18n
+              <ng-container
+                *ngIf="
+                  user.subscription.offer === 'renewal' ||
+                  user.subscription.offer === 'renewal-early-bird'
+                "
+                i18n
                 >Renew Plan</ng-container
               >
             </button>
@@ -25,7 +32,8 @@
               <ng-container *ngIf="coupon"
                 ><del class="text-muted"
                   >{{ baseCurrency }}&nbsp;{{ price }}</del
-                >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon
+                >&nbsp;{{ baseCurrency }}&nbsp;{{
+                  price - coupon
                 }}</ng-container
               >
               <ng-container *ngIf="!coupon"

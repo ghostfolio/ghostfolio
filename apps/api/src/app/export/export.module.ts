@@ -5,6 +5,7 @@ import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+
 import { Module } from '@nestjs/common';
 
 import { ExportController } from './export.controller';

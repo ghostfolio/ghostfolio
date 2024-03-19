@@ -14,6 +14,7 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
@@ -28,7 +29,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {
     this.apiKey = this.configurationService.get(
-      'FINANCIAL_MODELING_PREP_API_KEY'
+      'API_KEY_FINANCIAL_MODELING_PREP'
     );
   }
 
@@ -36,12 +37,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
     return {
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
   }
 

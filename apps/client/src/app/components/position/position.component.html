@@ -17,7 +17,7 @@
           [isLoading]="isLoading"
           [marketState]="position?.marketState"
           [range]="range"
-          [value]="position?.netPerformancePercentage"
+          [value]="position?.netPerformancePercentageWithCurrencyEffect"
         />
       </div>
       <div *ngIf="isLoading" class="flex-grow-1">
@@ -49,13 +49,13 @@
             [isCurrency]="true"
             [locale]="locale"
             [unit]="baseCurrency"
-            [value]="position?.netPerformance"
+            [value]="position?.netPerformanceWithCurrencyEffect"
           />
           <gf-value
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale"
-            [value]="position?.netPerformancePercentage"
+            [value]="position?.netPerformancePercentageWithCurrencyEffect"
           />
         </div>
       </div>

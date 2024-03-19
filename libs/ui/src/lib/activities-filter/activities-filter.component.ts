@@ -1,3 +1,6 @@
+import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
@@ -17,8 +20,6 @@ import {
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
-import { translate } from '@ghostfolio/ui/i18n';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -71,7 +72,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onAddFilter({ input, value }: MatChipInputEvent): void {
+  public onAddFilter({ input, value }: MatChipInputEvent) {
     if (value?.trim()) {
       this.updateFilters();
     }
@@ -84,7 +85,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.searchControl.setValue(undefined);
   }
 
-  public onRemoveFilter(aFilter: Filter): void {
+  public onRemoveFilter(aFilter: Filter) {
     this.selectedFilters = this.selectedFilters.filter((filter) => {
       return filter.id !== aFilter.id;
     });
@@ -92,7 +93,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.updateFilters();
   }
 
-  public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
+  public onSelectFilter(event: MatAutocompleteSelectedEvent) {
     this.selectedFilters.push(
       this.allFilters.find((filter) => {
         return filter.id === event.option.value;

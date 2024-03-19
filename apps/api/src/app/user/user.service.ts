@@ -1,11 +1,13 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
   locale
@@ -21,6 +23,7 @@ import {
   permissions
 } from '@ghostfolio/common/permissions';
 import { UserWithSettings } from '@ghostfolio/common/types';
+
 import { Injectable } from '@nestjs/common';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
@@ -30,6 +33,8 @@ const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
+  private i18nService = new I18nService();
+
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
@@ -211,8 +216,10 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription =
-        this.subscriptionService.getSubscription(Subscription);
+      user.subscription = this.subscriptionService.getSubscription({
+        createdAt: user.createdAt,
+        subscriptions: Subscription
+      });
 
       if (user.subscription?.type === 'Basic') {
         const daysSinceRegistration = differenceInDays(
@@ -322,8 +329,10 @@ export class UserService {
         Account: {
           create: {
             currency: DEFAULT_CURRENCY,
-            isDefault: true,
-            name: 'Default Account'
+            name: this.i18nService.getTranslation({
+              id: 'myAccount',
+              languageCode: DEFAULT_LANGUAGE_CODE // TODO
+            })
           }
         },
         Settings: {
@@ -435,7 +444,7 @@ export class UserService {
         settings
       },
       where: {
-        userId: userId
+        userId
       }
     });
 

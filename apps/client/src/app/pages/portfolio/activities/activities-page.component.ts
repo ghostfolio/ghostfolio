@@ -1,9 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
-import { Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
@@ -17,6 +11,13 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { downloadAsFile } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+import { Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataSource, Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -35,7 +36,6 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public activities: Activity[];
   public dataSource: MatTableDataSource<Activity>;
-  public defaultAccountId: string;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateActivity: boolean;
@@ -121,43 +121,25 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   }
 
   public fetchActivities() {
-    if (this.user?.settings?.isExperimentalFeatures === true) {
-      this.dataService
-        .fetchActivities({
-          filters: this.userService.getFilters(),
-          skip: this.pageIndex * this.pageSize,
-          sortColumn: this.sortColumn,
-          sortDirection: this.sortDirection,
-          take: this.pageSize
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities, count }) => {
-          this.dataSource = new MatTableDataSource(activities);
-          this.totalItems = count;
+    this.dataService
+      .fetchActivities({
+        filters: this.userService.getFilters(),
+        skip: this.pageIndex * this.pageSize,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection,
+        take: this.pageSize
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities, count }) => {
+        this.dataSource = new MatTableDataSource(activities);
+        this.totalItems = count;
 
-          if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
-            this.router.navigate([], { queryParams: { createDialog: true } });
-          }
+        if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
+          this.router.navigate([], { queryParams: { createDialog: true } });
+        }
 
-          this.changeDetectorRef.markForCheck();
-        });
-    } else {
-      this.dataService
-        .fetchActivities({})
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities }) => {
-          this.activities = activities;
-
-          if (
-            this.hasPermissionToCreateActivity &&
-            this.activities?.length <= 0
-          ) {
-            this.router.navigate([], { queryParams: { createDialog: true } });
-          }
-
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onChangePage(page: PageEvent) {
@@ -291,7 +273,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
-  public openUpdateActivityDialog(activity: Activity): void {
+  public openUpdateActivityDialog(activity: Activity) {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {
         activity,
@@ -328,7 +310,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateActivityDialog(aActivity?: Activity): void {
+  private openCreateActivityDialog(aActivity?: Activity) {
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -340,7 +322,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             accounts: this.user?.accounts,
             activity: {
               ...aActivity,
-              accountId: aActivity?.accountId ?? this.defaultAccountId,
+              accountId: aActivity?.accountId,
               date: new Date(),
               id: null,
               fee: 0,
@@ -415,10 +397,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   private updateUser(aUser: User) {
     this.user = aUser;
-
-    this.defaultAccountId = this.user?.accounts.find((account) => {
-      return account.isDefault;
-    })?.id;
 
     this.hasPermissionToCreateActivity =
       !this.hasImpersonationId &&

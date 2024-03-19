@@ -1,66 +1,64 @@
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
-  <div
-    *ngIf="hasPermissionToCreateOrder && historicalDataItems?.length === 0; else isUserActive"
-    class="justify-content-center row w-100"
-  >
-    <div class="col introduction">
-      <h4 i18n>Welcome to Ghostfolio</h4>
-      <p i18n>Ready to take control of your personal finances?</p>
-      <ol class="font-weight-bold">
-        <li
-          class="mb-2"
-          [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
-        >
-          <a class="d-block" [routerLink]="['/accounts']"
-            ><span i18n>Setup your accounts</span><br />
-            <span class="font-weight-normal" i18n
-              >Get a comprehensive financial overview by adding your bank and
-              brokerage accounts.</span
-            ></a
+  @if (hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
+    <div class="justify-content-center row w-100">
+      <div class="col introduction">
+        <h4 i18n>Welcome to Ghostfolio</h4>
+        <p i18n>Ready to take control of your personal finances?</p>
+        <ol class="font-weight-bold">
+          <li
+            class="mb-2"
+            [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
           >
-        </li>
-        <li class="mb-2">
-          <a class="d-block" [routerLink]="['/portfolio', 'activities']">
-            <span i18n>Capture your activities</span><br />
-            <span class="font-weight-normal" i18n
-              >Record your investment activities to keep your portfolio up to
-              date.</span
-            ></a
-          >
-        </li>
-        <li class="mb-2">
-          <a class="d-block" [routerLink]="['/portfolio']">
-            <span i18n>Monitor and analyze your portfolio</span><br />
-            <span class="font-weight-normal" i18n
-              >Track your progress in real-time with comprehensive analysis and
-              insights.</span
+            <a class="d-block" [routerLink]="['/accounts']"
+              ><span i18n>Setup your accounts</span><br />
+              <span class="font-weight-normal" i18n
+                >Get a comprehensive financial overview by adding your bank and
+                brokerage accounts.</span
+              ></a
             >
+          </li>
+          <li class="mb-2">
+            <a class="d-block" [routerLink]="['/portfolio', 'activities']">
+              <span i18n>Capture your activities</span><br />
+              <span class="font-weight-normal" i18n
+                >Record your investment activities to keep your portfolio up to
+                date.</span
+              ></a
+            >
+          </li>
+          <li class="mb-2">
+            <a class="d-block" [routerLink]="['/portfolio']">
+              <span i18n>Monitor and analyze your portfolio</span><br />
+              <span class="font-weight-normal" i18n
+                >Track your progress in real-time with comprehensive analysis
+                and insights.</span
+              >
+            </a>
+          </li>
+        </ol>
+        <div class="d-flex justify-content-center">
+          <a
+            *ngIf="user?.accounts?.length === 1"
+            color="primary"
+            mat-flat-button
+            [routerLink]="['/accounts']"
+          >
+            <ng-container i18n>Setup accounts</ng-container>
           </a>
-        </li>
-      </ol>
-      <div class="d-flex justify-content-center">
-        <a
-          *ngIf="user?.accounts?.length === 1"
-          color="primary"
-          mat-flat-button
-          [routerLink]="['/accounts']"
-        >
-          <ng-container i18n>Setup accounts</ng-container>
-        </a>
-        <a
-          *ngIf="user?.accounts?.length > 1"
-          color="primary"
-          mat-flat-button
-          [routerLink]="['/portfolio', 'activities']"
-        >
-          <ng-container i18n>Add activity</ng-container>
-        </a>
+          <a
+            *ngIf="user?.accounts?.length > 1"
+            color="primary"
+            mat-flat-button
+            [routerLink]="['/portfolio', 'activities']"
+          >
+            <ng-container i18n>Add activity</ng-container>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-  <ng-template #isUserActive>
+  } @else {
     <div class="row w-100">
       <div class="col p-0">
         <div class="chart-container mx-auto position-relative">
@@ -96,18 +94,7 @@
           [showDetails]="showDetails"
           [unit]="unit"
         />
-        <div
-          *ngIf="showDetails && !user?.settings?.isExperimentalFeatures"
-          class="text-center"
-        >
-          <gf-toggle
-            [defaultValue]="user?.settings?.dateRange"
-            [isLoading]="isLoadingPerformance"
-            [options]="dateRangeOptions"
-            (change)="onChangeDateRange($event.value)"
-          />
-        </div>
       </div>
     </div>
-  </ng-template>
+  }
 </div>

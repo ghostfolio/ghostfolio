@@ -25,7 +25,9 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherSymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
+        "
       >
         <ng-container i18n>Gather Historical Data</ng-container>
       </button>
@@ -33,9 +35,27 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherProfileDataBySymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherProfileDataBySymbol({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
       >
         <ng-container i18n>Gather Profile Data</ng-container>
+      </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="assetProfile?.activitiesCount !== 0"
+        (click)="
+          onDeleteProfileData({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
+      >
+        <ng-container i18n>Delete</ng-container>
       </button>
     </mat-menu>
   </div>
@@ -73,7 +93,12 @@
         color="accent"
         mat-flat-button
         type="button"
-        [disabled]="!assetProfileForm.controls['historicalData']?.controls['csvString'].touched || assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
+        [disabled]="
+          !assetProfileForm.controls['historicalData']?.controls['csvString']
+            .touched ||
+          assetProfileForm.controls['historicalData']?.controls['csvString']
+            ?.value === ''
+        "
         (click)="onImportHistoricalData()"
       >
         <ng-container i18n>Import</ng-container>
@@ -129,11 +154,15 @@
         >
       </div>
       <ng-container
-        *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
+        *ngIf="
+          assetProfile?.countries?.length > 0 ||
+          assetProfile?.sectors?.length > 0
+        "
       >
-        <ng-container
-          *ngIf="assetProfile?.countries?.length === 1 && assetProfile?.sectors?.length === 1; else charts"
-        >
+        @if (
+          assetProfile?.countries?.length === 1 &&
+          assetProfile?.sectors?.length === 1
+        ) {
           <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
             <gf-value
               i18n
@@ -152,8 +181,7 @@
               >Country</gf-value
             >
           </div>
-        </ng-container>
-        <ng-template #charts>
+        } @else {
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
@@ -174,7 +202,7 @@
               [positions]="countries"
             />
           </div>
-        </ng-template>
+        }
       </ng-container>
     </div>
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
@@ -196,7 +224,7 @@
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
-          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="null" />
           <mat-option
             *ngFor="let assetClass of assetClasses"
             [value]="assetClass.id"
@@ -209,7 +237,7 @@
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
-          <mat-option [value]="null"></mat-option>
+          <mat-option [value]="null" />
           <mat-option
             *ngFor="let assetSubClass of assetSubClasses"
             [value]="assetSubClass.id"
@@ -224,7 +252,17 @@
           color="primary"
           i18n
           [checked]="isBenchmark"
-          (change)="isBenchmark ? onUnsetBenchmark({dataSource: data.dataSource, symbol: data.symbol}) : onSetBenchmark({dataSource: data.dataSource, symbol: data.symbol})"
+          (change)="
+            isBenchmark
+              ? onUnsetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+              : onSetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+          "
           >Benchmark</mat-checkbox
         >
       </div>
@@ -255,7 +293,9 @@
             color="accent"
             mat-flat-button
             type="button"
-            [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
+            [disabled]="
+              assetProfileForm.controls['scraperConfiguration'].value === '{}'
+            "
             (click)="onTestMarketData()"
           >
             <ng-container i18n>Test</ng-container>

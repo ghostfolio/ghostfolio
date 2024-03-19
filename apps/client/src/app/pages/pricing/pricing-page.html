@@ -107,7 +107,7 @@
           <mat-card
             appearance="outlined"
             class="h-100"
-            [ngClass]="{ 'active': user?.subscription?.type === 'Basic' }"
+            [ngClass]="{ active: user?.subscription?.type === 'Basic' }"
           >
             <mat-card-content class="d-flex flex-column h-100">
               <div class="flex-grow-1">
@@ -164,7 +164,7 @@
           <mat-card
             appearance="outlined"
             class="h-100"
-            [ngClass]="{ 'active': user?.subscription?.type === 'Premium' }"
+            [ngClass]="{ active: user?.subscription?.type === 'Premium' }"
           >
             <mat-card-content class="d-flex flex-column h-100">
               <div class="flex-grow-1">
@@ -243,19 +243,22 @@
                   <ng-container *ngIf="coupon"
                     ><del class="text-muted"
                       >{{ baseCurrency }}&nbsp;{{ price }}</del
-                    >&nbsp;{{ baseCurrency }}&nbsp;<strong
-                      >{{ price - coupon }}</strong
-                    >
+                    >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
+                      price - coupon
+                    }}</strong>
                   </ng-container>
                   <ng-container *ngIf="!coupon"
-                    >{{ baseCurrency }}&nbsp;<strong
-                      >{{ price }}</strong
-                    ></ng-container
+                    >{{ baseCurrency }}&nbsp;<strong>{{
+                      price
+                    }}</strong></ng-container
                   >&nbsp;<span i18n>per year</span></span
                 >
               </p>
               <div
-                *ngIf="hasPermissionToUpdateUserSettings && user?.subscription?.type === 'Basic'"
+                *ngIf="
+                  hasPermissionToUpdateUserSettings &&
+                  user?.subscription?.type === 'Basic'
+                "
                 class="mt-3 text-center"
               >
                 <button color="primary" mat-flat-button (click)="onCheckout()">
@@ -265,7 +268,10 @@
                     >Upgrade Plan</ng-container
                   >
                   <ng-container
-                    *ngIf="user.subscription.offer === 'renewal'"
+                    *ngIf="
+                      user.subscription.offer === 'renewal' ||
+                      user.subscription.offer === 'renewal-early-bird'
+                    "
                     i18n
                     >Renew Plan</ng-container
                   >

@@ -64,7 +64,11 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentGrossPerformance"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.currentGrossPerformanceWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -85,7 +89,9 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="
-          isLoading ? undefined : summary?.currentGrossPerformancePercent
+          isLoading
+            ? undefined
+            : summary?.currentGrossPerformancePercentWithCurrencyEffect
         "
       />
     </div>
@@ -114,7 +120,11 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentNetPerformance"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.currentNetPerformanceWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -134,7 +144,11 @@
         [colorizeSign]="true"
         [isPercent]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : summary?.currentNetPerformancePercent"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.currentNetPerformancePercentWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -268,7 +282,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.netWorth"
+        [value]="isLoading ? undefined : summary?.totalValueInBaseCurrency"
       />
     </div>
   </div>
@@ -283,7 +297,11 @@
         [colorizeSign]="true"
         [isPercent]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : summary?.annualizedPerformancePercent"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.annualizedPerformancePercentWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -310,7 +328,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.dividend"
+        [value]="isLoading ? undefined : summary?.dividendInBaseCurrency"
       />
     </div>
   </div>

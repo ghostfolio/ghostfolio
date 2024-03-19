@@ -14,6 +14,7 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -51,15 +52,17 @@ export class CoinGeckoService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {
+      symbol,
       assetClass: AssetClass.CASH,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
       currency: DEFAULT_CURRENCY,
-      dataSource: this.getName(),
-      symbol: aSymbol
+      dataSource: this.getName()
     };
 
     try {
@@ -69,7 +72,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.apiUrl}/coins/${aSymbol}`, {
+      const { name } = await got(`${this.apiUrl}/coins/${symbol}`, {
         headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
@@ -80,7 +83,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation to get the asset profile for ${aSymbol} was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -243,6 +246,7 @@ export class CoinGeckoService implements DataProviderInterface {
           assetClass: AssetClass.CASH,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName()
         };
       });

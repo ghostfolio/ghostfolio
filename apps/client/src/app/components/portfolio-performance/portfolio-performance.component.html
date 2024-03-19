@@ -40,7 +40,11 @@
         [colorizeSign]="true"
         [isCurrency]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : performance?.currentNetPerformance"
+        [value]="
+          isLoading
+            ? undefined
+            : performance?.currentNetPerformanceWithCurrencyEffect
+        "
       />
     </div>
     <div class="col">
@@ -49,7 +53,9 @@
         [isPercent]="true"
         [locale]="locale"
         [value]="
-          isLoading ? undefined : performance?.currentNetPerformancePercent
+          isLoading
+            ? undefined
+            : performance?.currentNetPerformancePercentWithCurrencyEffect
         "
       />
     </div>

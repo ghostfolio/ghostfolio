@@ -14,6 +14,7 @@ import type {
   AccountWithValue,
   RequestWithUser
 } from '@ghostfolio/common/types';
+
 import {
   Body,
   Controller,
@@ -62,7 +63,7 @@ export class AccountController {
       { Order: true }
     );
 
-    if (account?.isDefault || account?.Order.length > 0) {
+    if (!account || account?.Order.length > 0) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

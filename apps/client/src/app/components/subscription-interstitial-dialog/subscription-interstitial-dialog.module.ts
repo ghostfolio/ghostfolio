@@ -1,9 +1,10 @@
+import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
 
 import { SubscriptionInterstitialDialog } from './subscription-interstitial-dialog.component';
 

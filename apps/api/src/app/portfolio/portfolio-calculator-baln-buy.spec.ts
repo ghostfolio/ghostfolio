@@ -1,6 +1,7 @@
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
+
 import Big from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
@@ -20,7 +21,7 @@ describe('PortfolioCalculator', () => {
   let exchangeRateDataService: ExchangeRateDataService;
 
   beforeEach(() => {
-    currentRateService = new CurrentRateService(null, null);
+    currentRateService = new CurrentRateService(null, null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
       null,
@@ -75,7 +76,7 @@ describe('PortfolioCalculator', () => {
       spy.mockRestore();
 
       expect(currentPositions).toEqual({
-        currentValue: new Big('297.8'),
+        currentValueInBaseCurrency: new Big('297.8'),
         errors: [],
         grossPerformance: new Big('24.6'),
         grossPerformancePercentage: new Big('0.09004392386530014641'),
@@ -95,6 +96,8 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('136.6'),
             currency: 'CHF',
             dataSource: 'YAHOO',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
             fee: new Big('1.55'),
             firstBuyDate: '2021-11-30',
             grossPerformance: new Big('24.6'),
@@ -117,7 +120,8 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW',
             timeWeightedInvestment: new Big('273.2'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('273.2'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('297.8')
           }
         ],
         totalInvestment: new Big('273.2'),

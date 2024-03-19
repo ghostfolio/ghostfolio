@@ -1,10 +1,3 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -14,6 +7,14 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  MatSnackBar,
+  MatSnackBarRef,
+  TextOnlySnackBar
+} from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -101,7 +102,7 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
     this.isLoading = true;
 
     this.dataService
-      .fetchPortfolioDetails()
+      .fetchPortfolioDetails({ withLiabilities: true })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ summary }) => {
         this.summary = summary;

@@ -1,3 +1,9 @@
+import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -10,11 +16,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
-import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Platform } from '@prisma/client';
 import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';

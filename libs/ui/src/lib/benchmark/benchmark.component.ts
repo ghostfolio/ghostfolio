@@ -1,11 +1,13 @@
+import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
+import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
-import { resolveMarketCondition } from '@ghostfolio/common/helper';
-import { Benchmark, User } from '@ghostfolio/common/interfaces';
 
 @Component({
   selector: 'gf-benchmark',
@@ -15,11 +17,12 @@ import { Benchmark, User } from '@ghostfolio/common/interfaces';
 })
 export class BenchmarkComponent implements OnChanges {
   @Input() benchmarks: Benchmark[];
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() user: User;
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];
   public resolveMarketCondition = resolveMarketCondition;
+  public translate = translate;
 
   public constructor() {}
 

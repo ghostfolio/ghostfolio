@@ -1,3 +1,11 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,19 +20,13 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
-import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
-import { translate } from '@ghostfolio/ui/i18n';
 import { AssetSubClass, DataSource } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
+import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
@@ -107,6 +109,7 @@ export class AdminMarketDataComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private deviceService: DeviceDetectorService,
@@ -180,20 +183,7 @@ export class AdminMarketDataComponent
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this asset profile?`
-    );
-
-    if (confirmation) {
-      this.adminService
-        .deleteProfileData({ dataSource, symbol })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        });
-    }
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
   }
 
   public onGather7Days() {

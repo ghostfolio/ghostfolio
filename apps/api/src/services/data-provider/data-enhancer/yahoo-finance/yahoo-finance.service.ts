@@ -7,6 +7,7 @@ import {
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { isCurrency } from '@ghostfolio/common/helper';
+
 import { Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
@@ -195,7 +196,9 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         shortName: assetProfile.price.shortName,
         symbol: assetProfile.price.symbol
       });
-      response.symbol = assetProfile.price.symbol;
+      response.symbol = this.convertFromYahooFinanceSymbol(
+        assetProfile.price.symbol
+      );
 
       if (assetSubClass === AssetSubClass.MUTUALFUND) {
         response.sectors = [];

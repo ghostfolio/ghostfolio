@@ -1,38 +1,57 @@
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { User } from '@ghostfolio/common/interfaces';
-import { Subject, takeUntil } from 'rxjs';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-faq-page',
   styleUrls: ['./faq-page.scss'],
   templateUrl: './faq-page.html'
 })
-export class FaqPageComponent implements OnDestroy {
-  public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkMarkets = ['/' + $localize`markets`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
-  public routerLinkRegister = ['/' + $localize`register`];
-  public user: User;
+export class FaqPageComponent implements OnDestroy, OnInit {
+  public deviceType: string;
+  public hasPermissionForSubscription: boolean;
+  public tabs: TabConfiguration[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private userService: UserService
-  ) {}
+    private dataService: DataService,
+    private deviceService: DeviceDetectorService
+  ) {
+    const { globalPermissions } = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      globalPermissions,
+      permissions.enableSubscription
+    );
+
+    this.tabs = [
+      {
+        iconName: 'reader-outline',
+        label: $localize`General`,
+        path: ['/' + $localize`faq`]
+      },
+      {
+        iconName: 'cloudy-outline',
+        label: $localize`Cloud` + ' (SaaS)',
+        path: ['/' + $localize`faq`, 'saas'],
+        showCondition: this.hasPermissionForSubscription
+      },
+      {
+        iconName: 'server-outline',
+        label: $localize`Self-Hosting`,
+        path: ['/' + $localize`faq`, $localize`self-hosting`]
+      }
+    ];
+  }
 
   public ngOnInit() {
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      });
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
   public ngOnDestroy() {

@@ -1,3 +1,15 @@
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { downloadAsFile } from '@ghostfolio/common/helper';
+import {
+  AccountBalancesResponse,
+  HistoricalDataItem,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { OrderWithAccount } from '@ghostfolio/common/types';
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,18 +21,6 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { downloadAsFile } from '@ghostfolio/common/helper';
-import {
-  AccountBalancesResponse,
-  HistoricalDataItem,
-  PortfolioPosition,
-  User
-} from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 import Big from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
@@ -43,7 +43,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public currency: string;
   public dataSource: MatTableDataSource<OrderWithAccount>;
   public equity: number;
-  public hasImpersonationId: boolean;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
   public holdings: PortfolioPosition[];
@@ -65,7 +64,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
-    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -117,7 +115,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       );
 
     this.dataService
-      .fetchPortfolioDetails({
+      .fetchPortfolioHoldings({
         filters: [
           {
             type: 'ACCOUNT',
@@ -127,20 +125,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
-        this.holdings = [];
-
-        for (const [symbol, holding] of Object.entries(holdings)) {
-          this.holdings.push(holding);
-        }
+        this.holdings = holdings;
 
         this.changeDetectorRef.markForCheck();
-      });
-
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
       });
 
     this.fetchAccountBalances();
@@ -165,17 +152,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onExport() {
-    let activityIds = [];
-
-    if (this.user?.settings?.isExperimentalFeatures === true) {
-      activityIds = this.dataSource.data.map(({ id }) => {
-        return id;
-      });
-    } else {
-      activityIds = this.activities.map(({ id }) => {
-        return id;
-      });
-    }
+    let activityIds = this.dataSource.data.map(({ id }) => {
+      return id;
+    });
 
     this.dataService
       .fetchExport({ activityIds })
@@ -215,36 +194,21 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   private fetchActivities() {
     this.isLoadingActivities = true;
 
-    if (this.user?.settings?.isExperimentalFeatures === true) {
-      this.dataService
-        .fetchActivities({
-          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
-          sortColumn: this.sortColumn,
-          sortDirection: this.sortDirection
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities, count }) => {
-          this.dataSource = new MatTableDataSource(activities);
-          this.totalItems = count;
+    this.dataService
+      .fetchActivities({
+        filters: [{ id: this.data.accountId, type: 'ACCOUNT' }],
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities, count }) => {
+        this.dataSource = new MatTableDataSource(activities);
+        this.totalItems = count;
 
-          this.isLoadingActivities = false;
+        this.isLoadingActivities = false;
 
-          this.changeDetectorRef.markForCheck();
-        });
-    } else {
-      this.dataService
-        .fetchActivities({
-          filters: [{ id: this.data.accountId, type: 'ACCOUNT' }]
-        })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ activities }) => {
-          this.activities = activities;
-
-          this.isLoadingActivities = false;
-
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private fetchPortfolioPerformance() {
@@ -259,7 +223,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
         ],
         range: 'max',
-        withExcludedAccounts: true
+        withExcludedAccounts: true,
+        withItems: true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
@@ -268,7 +233,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
             return {
               date,
               value:
-                this.hasImpersonationId || this.user.settings.isRestrictedView
+                this.data.hasImpersonationId ||
+                this.user.settings.isRestrictedView
                   ? netWorthInPercentage
                   : netWorth
             };

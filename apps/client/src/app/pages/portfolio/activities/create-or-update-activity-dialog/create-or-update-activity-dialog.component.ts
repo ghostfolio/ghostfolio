@@ -1,3 +1,9 @@
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
+import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { getDateFormatString } from '@ghostfolio/common/helper';
+import { translate } from '@ghostfolio/ui/i18n';
+
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
@@ -12,13 +18,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { translate } from '@ghostfolio/ui/i18n';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
+import { isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -47,6 +49,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public defaultDateFormat: string;
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
+  public isToday = isToday;
   public platforms: { id: string; name: string }[];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tags: Tag[] = [];
@@ -257,6 +260,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls['currency'].setValue(currency);
           this.activityForm.controls['currencyOfFee'].setValue(currency);
           this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+
+          if (['FEE', 'INTEREST'].includes(type)) {
+            if (this.activityForm.controls['accountId'].value) {
+              this.activityForm.controls['updateAccountBalance'].enable();
+            } else {
+              this.activityForm.controls['updateAccountBalance'].disable();
+              this.activityForm.controls['updateAccountBalance'].setValue(
+                false
+              );
+            }
+          }
         }
       }
     );
@@ -371,8 +385,15 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
           }
 
-          this.activityForm.controls['updateAccountBalance'].disable();
-          this.activityForm.controls['updateAccountBalance'].setValue(false);
+          if (
+            ['FEE', 'INTEREST'].includes(type) &&
+            this.activityForm.controls['accountId'].value
+          ) {
+            this.activityForm.controls['updateAccountBalance'].enable();
+          } else {
+            this.activityForm.controls['updateAccountBalance'].disable();
+            this.activityForm.controls['updateAccountBalance'].setValue(false);
+          }
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required

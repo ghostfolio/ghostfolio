@@ -22,6 +22,14 @@ export const ExchangeRateDataServiceMock = {
           '2023-07-10': 0.8854
         }
       });
+    } else if (targetCurrency === 'USD') {
+      return Promise.resolve({
+        USDUSD: {
+          '2018-01-01': 1,
+          '2021-11-16': 1,
+          '2023-07-10': 1
+        }
+      });
     }
 
     return Promise.resolve({});

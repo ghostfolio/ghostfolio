@@ -15,6 +15,7 @@ import {
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
@@ -32,20 +33,12 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name, symbol } =
-      await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
-
-    return {
-      assetClass,
-      assetSubClass,
-      currency,
-      name,
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
+    return this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
   }
 
   public getDataProviderInfo(): DataProviderInfo {

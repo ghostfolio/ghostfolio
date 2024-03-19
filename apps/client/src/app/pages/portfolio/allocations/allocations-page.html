@@ -2,14 +2,6 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-3 text-center" i18n>Allocations</h1>
-      @if (!user?.settings?.isExperimentalFeatures) {
-      <gf-activities-filter
-        [allFilters]="allFilters"
-        [isLoading]="isLoading"
-        [placeholder]="placeholder"
-        (valueChanged)="filters$.next($event)"
-      />
-      }
     </div>
   </div>
   <div class="row">
@@ -23,15 +15,23 @@
             class="justify-content-end l-2"
             size="medium"
             [isPercent]="true"
-            [value]="isLoading ? undefined : portfolioDetails?.filteredValueInPercentage"
+            [value]="
+              isLoading
+                ? undefined
+                : portfolioDetails?.summary?.filteredValueInPercentage
+            "
           />
         </mat-card-header>
         <mat-card-content>
           <mat-progress-bar
             mode="determinate"
-            [title]="(portfolioDetails?.filteredValueInPercentage * 100).toFixed(2) + '%'"
-            [value]="portfolioDetails?.filteredValueInPercentage * 100"
-          ></mat-progress-bar>
+            [title]="
+              (
+                portfolioDetails?.summary?.filteredValueInPercentage * 100
+              ).toFixed(2) + '%'
+            "
+            [value]="portfolioDetails?.summary?.filteredValueInPercentage * 100"
+          />
         </mat-card-content>
       </mat-card>
     </div>
@@ -106,8 +106,8 @@
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate">
-            <ng-container i18n>By Holding</ng-container></mat-card-title
-          >
+            <ng-container i18n>By Holding</ng-container>
+          </mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <gf-portfolio-proportion-chart
@@ -212,7 +212,9 @@
             <gf-world-map-chart
               [countries]="countries"
               [format]="worldMapChartFormat"
-              [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+              [isInPercent]="
+                hasImpersonationId || user.settings.isRestrictedView
+              "
               [locale]="user?.settings?.locale"
             />
           </div>

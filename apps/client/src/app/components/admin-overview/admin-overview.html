@@ -28,7 +28,7 @@
                 [value]="transactionCount"
               />
               <div *ngIf="transactionCount && userCount">
-                {{ transactionCount / userCount | number : '1.2-2' }}
+                {{ transactionCount / userCount | number: '1.2-2' }}
                 <span i18n>per User</span>
               </div>
             </div>
@@ -69,10 +69,10 @@
                       <a
                         mat-menu-item
                         [queryParams]="{
-                        assetProfileDialog: true,
-                        dataSource: exchangeRate.dataSource,
-                        symbol: exchangeRate.symbol
-                      }"
+                          assetProfileDialog: true,
+                          dataSource: exchangeRate.dataSource,
+                          symbol: exchangeRate.symbol
+                        }"
                         [routerLink]="['/admin', 'market-data']"
                       >
                         <span class="align-items-center d-flex">
@@ -112,9 +112,11 @@
               <mat-slide-toggle
                 color="primary"
                 hideIcon="true"
-                [checked]="info.globalPermissions.includes(permissions.createUserAccount)"
+                [checked]="
+                  info.globalPermissions.includes(permissions.createUserAccount)
+                "
                 (change)="onEnableUserSignupModeChange($event)"
-              ></mat-slide-toggle>
+              />
             </div>
           </div>
           <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
@@ -125,14 +127,25 @@
                 hideIcon="true"
                 [checked]="info?.isReadOnlyMode"
                 (change)="onReadOnlyModeChange($event)"
-              ></mat-slide-toggle>
+              />
+            </div>
+          </div>
+          <div class="d-flex my-3">
+            <div class="w-50" i18n>Data Gathering</div>
+            <div class="w-50">
+              <mat-slide-toggle
+                color="primary"
+                hideIcon="true"
+                [checked]="isDataGatheringEnabled"
+                (change)="onEnableDataGatheringChange($event)"
+              />
             </div>
           </div>
           <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
             <div class="w-50" i18n>System Message</div>
             <div class="w-50">
               <div *ngIf="systemMessage" class="align-items-center d-flex">
-                <div class="text-truncate">{{ systemMessage | json }}</div>
+                <div class="text-truncate">{{ systemMessage | json }}</div>
                 <button
                   class="h-100 mx-1 no-min-width px-2"
                   mat-button

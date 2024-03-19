@@ -1,4 +1,19 @@
-import 'chartjs-adapter-date-fns';
+import {
+  getTooltipOptions,
+  getTooltipPositionerMapTop,
+  getVerticalHoverLinePlugin
+} from '@ghostfolio/common/chart-helper';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
+import {
+  getBackgroundColor,
+  getDateFormatString,
+  getLocale,
+  getTextColor,
+  parseDate
+} from '@ghostfolio/common/helper';
+import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { ColorScheme } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -10,21 +25,6 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import {
-  getTooltipOptions,
-  getTooltipPositionerMapTop,
-  getVerticalHoverLinePlugin
-} from '@ghostfolio/common/chart-helper';
-import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
-import {
-  getBackgroundColor,
-  getDateFormatString,
-  getTextColor,
-  parseDate
-} from '@ghostfolio/common/helper';
-import { LineChartItem, User } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { ColorScheme } from '@ghostfolio/common/types';
 import { SymbolProfile } from '@prisma/client';
 import {
   Chart,
@@ -36,6 +36,7 @@ import {
   TimeScale,
   Tooltip
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 
 @Component({
@@ -51,7 +52,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() colorScheme: ColorScheme;
   @Input() daysInMarket: number;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
 

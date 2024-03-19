@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
+import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -13,6 +14,7 @@ import { Subject } from 'rxjs';
 export class ResourcesPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
+  public routerLinkFaq = ['/' + $localize`faq`];
   public routerLinkResourcesPersonalFinanceTools = [
     '/' + $localize`resources`,
     'personal-finance-tools'
