@@ -1,7 +1,4 @@
 {
-  "affected": {
-    "defaultBase": "origin/main"
-  },
   "defaultProject": "api",
   "generators": {
     "@nx/angular:application": {
@@ -73,5 +70,6 @@
     ]
   },
   "nxCloudAccessToken": "Mjg0ZGQ2YjAtNGI4NS00NmYwLThhOWEtMWZmNmQzODM4YzU4fHJlYWQ=",
-  "parallel": 1
+  "parallel": 1,
+  "defaultBase": "origin/main"
 }
