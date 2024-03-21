@@ -1,7 +1,12 @@
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  eachDayOfInterval,
+  parseDate,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   HistoricalDataItem,
@@ -18,7 +23,6 @@ import {
   addDays,
   addMilliseconds,
   differenceInDays,
-  eachDayOfInterval,
   endOfDay,
   format,
   isBefore,
@@ -203,11 +207,7 @@ export class PortfolioCalculator {
     const dataGatheringItems: IDataGatheringItem[] = [];
     const firstIndex = transactionPointsBeforeEndDate.length;
 
-    const dates = eachDayOfInterval({ start, end }, { step });
-
-    if (!isSameDay(last(dates), end)) {
-      dates.push(resetHours(end));
-    }
+    const dates = eachDayOfInterval({ start, end, step, includeEnd: true });
 
     if (transactionPointsBeforeEndDate.length > 0) {
       for (const item of transactionPointsBeforeEndDate[firstIndex - 1].items) {

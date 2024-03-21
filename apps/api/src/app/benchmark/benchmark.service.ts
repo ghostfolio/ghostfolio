@@ -13,6 +13,7 @@ import {
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
+  eachDayOfInterval,
   parseDate,
   resetHours
 } from '@ghostfolio/common/helper';
@@ -28,13 +29,7 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import {
-  differenceInDays,
-  eachDayOfInterval,
-  format,
-  isSameDay,
-  subDays
-} from 'date-fns';
+import { differenceInDays, format, isSameDay, subDays } from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -227,15 +222,12 @@ export class BenchmarkService {
     const marketData: { date: string; value: number }[] = [];
 
     const days = differenceInDays(endDate, startDate) + 1;
-    const step = Math.round(days / Math.min(days, MAX_CHART_ITEMS));
-    const dates = eachDayOfInterval(
-      { start: startDate, end: endDate },
-      { step }
-    );
-
-    if (!isSameDay(last(dates), endDate)) {
-      dates.push(resetHours(endDate));
-    }
+    const dates = eachDayOfInterval({
+      start: startDate,
+      end: endDate,
+      step: Math.round(days / Math.min(days, MAX_CHART_ITEMS)),
+      includeEnd: true
+    });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
