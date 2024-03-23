@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `17.1.3` to `17.2.4`
 - Upgraded `Nx` from version `18.0.4` to `18.1.2`
 
+### Fixed
+
+- Fixed the missing portfolio performance chart in the _Presenter View_ / _Zen Mode_
+
 ## 2.65.0 - 2024-03-19
 
 ### Added
