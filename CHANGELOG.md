@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the chart tooltip of the benchmark comparator by adding the benchmark name
 - Upgraded `angular` from version `17.1.3` to `17.2.4`
+- Upgraded `ionicons` from version `7.1.0` to `7.3.0`
 - Upgraded `Nx` from version `18.0.4` to `18.1.2`
 
 ### Fixed
