@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the symbol and ISIN number to the position detail dialog
 - Added support to delete an asset profile in the asset profile details dialog of the admin control
 
+### Added
+
+- Added support for data decimation in the line chart component
+
 ### Changed
 
 - Moved the support to grant private access with permissions from experimental to general availability
