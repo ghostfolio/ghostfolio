@@ -44,6 +44,19 @@
       >
         <ng-container i18n>Gather Profile Data</ng-container>
       </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="assetProfile?.activitiesCount !== 0"
+        (click)="
+          onDeleteProfileData({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
+      >
+        <ng-container i18n>Delete</ng-container>
+      </button>
     </mat-menu>
   </div>
 

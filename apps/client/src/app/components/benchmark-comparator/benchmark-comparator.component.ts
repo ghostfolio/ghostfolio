@@ -46,8 +46,8 @@ import annotationPlugin from 'chartjs-plugin-annotation';
   styleUrls: ['./benchmark-comparator.component.scss']
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
+  @Input() benchmark: Partial<SymbolProfile>;
   @Input() benchmarkDataItems: LineChartItem[] = [];
-  @Input() benchmark: string;
   @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() colorScheme: ColorScheme;
   @Input() daysInMarket: number;
@@ -116,7 +116,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           data: this.benchmarkDataItems.map(({ date, value }) => {
             return { x: parseDate(date).getTime(), y: value };
           }),
-          label: $localize`Benchmark`
+          label: this.benchmark?.name ?? $localize`Benchmark`
         }
       ]
     };

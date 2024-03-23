@@ -9,8 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the symbol and ISIN number to the position detail dialog
+- Extended the content of the _SaaS_ and _Self-Hosting_ sections by the backup strategy on the Frequently Asked Questions (FAQ) page
 - Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
+- Added an index for `dataSource` / `symbol` to the market data database table
+
+### Changed
+
+- Improved the chart tooltip of the benchmark comparator by adding the benchmark name
+- Upgraded `angular` from version `17.1.3` to `17.2.4`
+- Upgraded `Nx` from version `18.0.4` to `18.1.2`
+
+## 2.65.0 - 2024-03-19
+
+### Added
+
+- Added the symbol and ISIN number to the position detail dialog
+- Added support to delete an asset profile in the asset profile details dialog of the admin control
+
+### Changed
+
+- Moved the support to grant private access with permissions from experimental to general availability
+- Set the meta theme color dynamically to respect the appearance (dark mode)
+- Improved the usability to edit market data in the admin control panel
 
 ## 2.64.0 - 2024-03-16
 
