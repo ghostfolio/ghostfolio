@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the content of the _SaaS_ and _Self-Hosting_ sections by the backup strategy on the Frequently Asked Questions (FAQ) page
 - Added an index for `dataSource` / `symbol` to the market data database table
 
 ### Changed
