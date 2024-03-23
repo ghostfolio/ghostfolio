@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the chart tooltip of the benchmark comparator by adding the benchmark name
 - Upgraded `angular` from version `17.1.3` to `17.2.4`
 - Upgraded `Nx` from version `18.0.4` to `18.1.2`
+- Upgraded `zone.js` from version `0.14.3` to `0.14.4`
 
 ### Fixed
 
