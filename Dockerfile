@@ -64,6 +64,6 @@ RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
-COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
+COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE ${PORT:-3333}
-CMD [ "/ghostfolio/entrypoint.sh" ]
+CMD [ "entrypoint.sh" ]
