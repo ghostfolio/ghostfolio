@@ -317,14 +317,21 @@ export class PortfolioService {
       withDataDecimation: false
     });
 
-    let investments = items.map(
-      ({ date, investmentValueWithCurrencyEffect }) => {
+    let investments: InvestmentItem[];
+
+    if (groupBy) {
+      investments = portfolioCalculator.getInvestmentsByGroup({
+        groupBy,
+        data: items
+      });
+    } else {
+      investments = items.map(({ date, investmentValueWithCurrencyEffect }) => {
         return {
           date,
           investment: investmentValueWithCurrencyEffect
         };
-      }
-    );
+      });
+    }
 
     let streaks: PortfolioInvestments['streaks'];
 

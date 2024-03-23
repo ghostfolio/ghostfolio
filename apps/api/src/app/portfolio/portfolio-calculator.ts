@@ -1382,7 +1382,9 @@ export class PortfolioCalculator {
 
     let unitPrices = Object.keys(marketSymbolMap).reduce(
       (obj, date) =>
-        (obj = Object.assign(obj, { [date]: marketSymbolMap[date][symbol] })),
+        (obj = Object.assign(obj, {
+          [date]: marketSymbolMap[date][symbol]?.mul(exchangeRates[date])
+        })),
       {}
     );
 
