@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the symbol and ISIN number to the position detail dialog
+- Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 
 ## 2.64.0 - 2024-03-16
 
