@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the date range support in the activities table on the portfolio activities page (experimental)
 - Extended the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
+- Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 
 ### Changed
 
