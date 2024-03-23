@@ -5,12 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.66.2 - 2024-03-23
+## 2.66.3 - 2024-03-23
 
 ### Added
 
 - Extended the content of the _SaaS_ and _Self-Hosting_ sections by the backup strategy on the Frequently Asked Questions (FAQ) page
-- Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 - Added an index for `dataSource` / `symbol` to the market data database table
 
 ### Changed
