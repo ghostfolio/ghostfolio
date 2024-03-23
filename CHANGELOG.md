@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an index for `dataSource` / `symbol` to the market data database table
+
 ### Changed
 
 - Upgraded `angular` from version `17.1.3` to `17.2.4`

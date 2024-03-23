@@ -97,6 +97,7 @@ model MarketData {
 
   @@unique([dataSource, date, symbol])
   @@index([dataSource])
+  @@index([dataSource, symbol])
   @@index([date])
   @@index([marketPrice])
   @@index([state])
