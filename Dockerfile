@@ -61,9 +61,9 @@ RUN apt update && apt install -y \
 ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
+ENTRYPOINT [ "/tini", "--" ]
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /entrypoint.sh
 EXPOSE ${PORT:-3333}
-CMD [ "entrypoint.sh" ]
+CMD [ "/entrypoint.sh" ]
