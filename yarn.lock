@@ -6946,10 +6946,10 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/big.js@6.1.6":
-  version "6.1.6"
-  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.1.6.tgz#3d417e758483d55345a03a087f7e0c87137ca444"
-  integrity sha512-0r9J+Zz9rYm2hOTwiMAVkm3XFQ4u5uTK37xrQMhc9bysn/sf/okzovWMYYIBMFTn/yrEZ11pusgLEaoarTlQbA==
+"@types/big.js@6.2.2":
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/@types/big.js/-/big.js-6.2.2.tgz#69422ec9ef59df1330ccfde2106d9e1159a083c3"
+  integrity sha512-e2cOW9YlVzFY2iScnGBBkplKsrn2CsObHQ2Hiw4V1sSyiGbgWL8IyqE3zFi1Pt5o1pdAtYkDAIsF3KKUPjdzaA==
 
 "@types/body-parser@*":
   version "1.19.4"
