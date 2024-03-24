@@ -1178,6 +1178,7 @@ export class PortfolioService {
       })
     );
 
+    // TODO: Refactor to getInterval()?
     const startDate = this.getStartDate(dateRange, portfolioStart);
     const {
       currentValueInBaseCurrency,
@@ -1192,7 +1193,7 @@ export class PortfolioService {
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceWithCurrencyEffect,
       totalInvestment
-    } = await portfolioCalculator.getCurrentPositions(startDate);
+    } = await portfolioCalculator.getCurrentPositions(startDate); // TODO: Provide endDate
 
     let currentNetPerformance = netPerformance;
 
@@ -1452,6 +1453,8 @@ export class PortfolioService {
       dateRange,
       portfolioCalculator.getStartDate()
     );
+
+    // TODO
     const endDate = new Date();
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation
@@ -1618,22 +1621,24 @@ export class PortfolioService {
   }
 
   private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
+    let startDate = portfolioStart;
+
     switch (aDateRange) {
       case '1d':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subDays(new Date().setHours(0, 0, 0, 0), 1)
         ]);
         break;
       case 'mtd':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subDays(startOfMonth(new Date().setHours(0, 0, 0, 0)), 1)
         ]);
         break;
       case 'wtd':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subDays(
             startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 }),
             1
@@ -1641,26 +1646,26 @@ export class PortfolioService {
         ]);
         break;
       case 'ytd':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subDays(startOfYear(new Date().setHours(0, 0, 0, 0)), 1)
         ]);
         break;
       case '1y':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subYears(new Date().setHours(0, 0, 0, 0), 1)
         ]);
         break;
       case '5y':
-        portfolioStart = max([
-          portfolioStart,
+        startDate = max([
+          startDate,
           subYears(new Date().setHours(0, 0, 0, 0), 5)
         ]);
         break;
     }
 
-    return portfolioStart;
+    return startDate;
   }
 
   private getStreaks({
