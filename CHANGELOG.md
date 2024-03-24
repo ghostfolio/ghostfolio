@@ -7,8 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for the cryptocurrency _Toncoin_ (`TON11419-USD`)
+
 ### Changed
 
+- Upgraded `ionicons` from version `7.1.0` to `7.3.0`
+- Upgraded `yahoo-finance2` from version `2.10.0` to `2.11.0`
 - Upgraded `zone.js` from version `0.14.3` to `0.14.4`
 
 ## 2.66.3 - 2024-03-23
