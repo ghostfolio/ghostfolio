@@ -5868,10 +5868,10 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
-"@stencil/core@^2.18.0":
-  version "2.22.3"
-  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-2.22.3.tgz#83987e20bba855c450f6d6780e3a20192603f13f"
-  integrity sha512-kmVA0M/HojwsfkeHsifvHVIYe4l5tin7J5+DLgtl8h6WWfiMClND5K3ifCXXI2ETDNKiEk21p6jql3Fx9o2rng==
+"@stencil/core@^4.0.3":
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/@stencil/core/-/core-4.13.0.tgz#31654b9c601ce8b74194903fe28ed4bcb66b576e"
+  integrity sha512-gg+gtBWekQ08mDja8GVAUHNu+rrFhQaKZDvfhnS3l/5JbYiJddTimuDPPhuc0sR0JZL1iRdJTJSa+JbvmnQ1cQ==
 
 "@storybook/addon-actions@7.6.5":
   version "7.6.5"
@@ -12962,12 +12962,12 @@ invariant@^2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
-ionicons@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.1.0.tgz#25daa91345acedcb0f4fb7da670f5aff2e1f266a"
-  integrity sha512-iE4GuEdEHARJpp0sWL7WJZCzNCf5VxpNRhAjW0fLnZPnNL5qZOJUcfup2Z2Ty7Jk8Q5hacrHfGEB1lCwOdXqGg==
+ionicons@7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.3.0.tgz#d2385e87dbe6a8c79fd44fb2e7c87b0de4a2cbcb"
+  integrity sha512-l9quySYi+o4T6mFzhKRyU/1nKc2Zs0zxs7jWcq9iVRhRPQondV11jYqLTed0lVVXHfGrBCfnedKl9D6BCnA1UQ==
   dependencies:
-    "@stencil/core" "^2.18.0"
+    "@stencil/core" "^4.0.3"
 
 ioredis@^5.0.0:
   version "5.3.2"
