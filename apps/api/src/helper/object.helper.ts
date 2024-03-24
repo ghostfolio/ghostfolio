@@ -1,4 +1,4 @@
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { cloneDeep, isArray, isObject } from 'lodash';
 
 export function hasNotDefinedValuesInObject(aObject: Object): boolean {

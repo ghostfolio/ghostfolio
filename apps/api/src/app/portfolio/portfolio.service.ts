@@ -67,7 +67,7 @@ import {
   Prisma,
   Tag
 } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
 import {
   differenceInDays,

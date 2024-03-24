@@ -26,7 +26,7 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { format, isSameDay, subDays } from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
