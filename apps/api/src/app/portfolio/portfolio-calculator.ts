@@ -13,7 +13,7 @@ import {
 import { GroupBy } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import {
   addDays,
   addMilliseconds,
