@@ -243,7 +243,6 @@ export class AccountService {
 
     if (amountInCurrencyOfAccount) {
       await this.accountBalanceService.createAccountBalance({
-        date,
         Account: {
           connect: {
             id_userId: {
