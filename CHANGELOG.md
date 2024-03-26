@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replaced `Math.random()` with `crypto.randomBytes()` for generating cryptographically secure random strings
 - Upgraded `ionicons` from version `7.1.0` to `7.3.0`
 - Upgraded `yahoo-finance2` from version `2.10.0` to `2.11.0`
 - Upgraded `zone.js` from version `0.14.3` to `0.14.4`
