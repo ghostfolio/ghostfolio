@@ -3,7 +3,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 
-import Big from 'big.js';
+import { Big } from 'big.js';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';

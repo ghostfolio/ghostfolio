@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.65.0",
+  "version": "2.66.3",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -110,7 +110,7 @@
     "got": "11.8.6",
     "helmet": "7.0.0",
     "http-status-codes": "2.3.0",
-    "ionicons": "7.1.0",
+    "ionicons": "7.3.0",
     "jsonpath": "1.1.1",
     "lodash": "4.17.21",
     "marked": "9.1.6",
@@ -131,8 +131,8 @@
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.1",
-    "yahoo-finance2": "2.10.0",
-    "zone.js": "0.14.3"
+    "yahoo-finance2": "2.11.0",
+    "zone.js": "0.14.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "17.2.3",
@@ -164,7 +164,7 @@
     "@storybook/angular": "7.6.5",
     "@storybook/core-server": "7.6.5",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
-    "@types/big.js": "6.1.6",
+    "@types/big.js": "6.2.2",
     "@types/body-parser": "1.19.2",
     "@types/cache-manager": "3.4.2",
     "@types/color": "3.0.3",

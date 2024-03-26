@@ -5,7 +5,7 @@ import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';

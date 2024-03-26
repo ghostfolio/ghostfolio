@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for the cryptocurrency _Toncoin_ (`TON11419-USD`)
+
+### Changed
+
+- Upgraded `ionicons` from version `7.1.0` to `7.3.0`
+- Upgraded `yahoo-finance2` from version `2.10.0` to `2.11.0`
+- Upgraded `zone.js` from version `0.14.3` to `0.14.4`
+
+## 2.66.3 - 2024-03-23
+
+### Added
+
 - Extended the content of the _SaaS_ and _Self-Hosting_ sections by the backup strategy on the Frequently Asked Questions (FAQ) page
 - Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 - Added an index for `dataSource` / `symbol` to the market data database table
@@ -18,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the chart tooltip of the benchmark comparator by adding the benchmark name
 - Upgraded `angular` from version `17.1.3` to `17.2.4`
 - Upgraded `Nx` from version `18.0.4` to `18.1.2`
+
+### Fixed
+
+- Fixed the missing portfolio performance chart in the _Presenter View_ / _Zen Mode_
 
 ## 2.65.0 - 2024-03-19
 

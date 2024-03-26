@@ -18,7 +18,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';

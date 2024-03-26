@@ -1,5 +1,5 @@
 import { DataSource, Tag, Type as ActivityType } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 
 export interface PortfolioOrder {
   currency: string;

@@ -46,7 +46,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
@@ -418,6 +418,7 @@ export class PortfolioController {
         ({
           date,
           netPerformanceInPercentage,
+          netPerformanceInPercentageWithCurrencyEffect,
           netWorth,
           totalInvestment,
           value
@@ -425,6 +426,7 @@ export class PortfolioController {
           return {
             date,
             netPerformanceInPercentage,
+            netPerformanceInPercentageWithCurrencyEffect,
             netWorthInPercentage:
               performanceInformation.performance.currentNetWorth === 0
                 ? 0

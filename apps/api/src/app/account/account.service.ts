@@ -5,7 +5,7 @@ import { Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';

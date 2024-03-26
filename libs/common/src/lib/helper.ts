@@ -1,7 +1,7 @@
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
 import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import {
   getDate,
   getMonth,
