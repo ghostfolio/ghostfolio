@@ -65,5 +65,6 @@ ENTRYPOINT ["/tini", "--"]
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
+WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
 CMD [ "/ghostfolio/entrypoint.sh" ]
