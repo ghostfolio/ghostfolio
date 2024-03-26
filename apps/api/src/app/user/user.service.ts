@@ -452,14 +452,15 @@ export class UserService {
   }
 
   private getRandomString(length: number) {
+    const bytes = crypto.randomBytes(length);
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const result = [];
 
     for (let i = 0; i < length; i++) {
-      result.push(
-        characters.charAt(Math.floor(Math.random() * characters.length))
-      );
+      const randomByte = bytes[i];
+      result.push(characters[randomByte % characters.length]);
     }
+
     return result.join('');
   }
 }
