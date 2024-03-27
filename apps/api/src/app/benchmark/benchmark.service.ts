@@ -13,7 +13,6 @@ import {
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
-  eachDayOfInterval,
   parseDate,
   resetHours
 } from '@ghostfolio/common/helper';
@@ -29,7 +28,13 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import { differenceInDays, format, isSameDay, subDays } from 'date-fns';
+import {
+  differenceInDays,
+  eachDayOfInterval,
+  format,
+  isSameDay,
+  subDays
+} from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -210,23 +215,26 @@ export class BenchmarkService {
 
   public async getMarketDataBySymbol({
     dataSource,
-    startDate,
     endDate = new Date(),
+    startDate,
     symbol,
     userCurrency
   }: {
-    startDate: Date;
     endDate?: Date;
+    startDate: Date;
     userCurrency: string;
   } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
 
     const days = differenceInDays(endDate, startDate) + 1;
-    const dates = eachDayOfInterval({
-      start: startDate,
-      end: endDate,
-      step: Math.round(days / Math.min(days, MAX_CHART_ITEMS)),
-      includeEnd: true
+    const dates = eachDayOfInterval(
+      {
+        start: startDate,
+        end: endDate
+      },
+      { step: Math.round(days / Math.min(days, MAX_CHART_ITEMS)) }
+    ).map((date) => {
+      return resetHours(date);
     });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
@@ -301,9 +309,12 @@ export class BenchmarkService {
       });
     }
 
-    const includesToday = isSameDay(parseDate(last(marketData).date), endDate);
+    const includesEndDate = isSameDay(
+      parseDate(last(marketData).date),
+      endDate
+    );
 
-    if (currentSymbolItem?.marketPrice && !includesToday) {
+    if (currentSymbolItem?.marketPrice && !includesEndDate) {
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
           format(endDate, DATE_FORMAT)

@@ -375,35 +375,6 @@ export function resetHours(aDate: Date) {
   return new Date(Date.UTC(year, month, day));
 }
 
-export function eachDayOfInterval({
-  start,
-  end,
-  step = 1,
-  includeEnd = false
-}: {
-  start: Date | string | number;
-  end: Date | string | number;
-  step?: number;
-  includeEnd?: boolean;
-}) {
-  [start, end] = [new Date(start), new Date(end)];
-  [start, end] = [resetHours(start), resetHours(end)];
-  [start, end] = [start.getTime(), end.getTime()];
-
-  const DAY_IN_MS = 1000 * 60 * 60 * 24;
-  const dates: number[] = [];
-
-  for (let date = start; date <= end; date += step * DAY_IN_MS) {
-    dates.push(date);
-  }
-
-  if (includeEnd && end !== dates?.[dates.length - 1]) {
-    dates.push(end);
-  }
-
-  return dates.map((date) => new Date(date));
-}
-
 export function resolveFearAndGreedIndex(aValue: number) {
   if (aValue <= 25) {
     return { emoji: '🥵', key: 'EXTREME_FEAR', text: 'Extreme Fear' };
