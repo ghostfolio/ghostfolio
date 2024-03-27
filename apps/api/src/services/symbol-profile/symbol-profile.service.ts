@@ -97,7 +97,8 @@ export class SymbolProfileService {
     scraperConfiguration,
     sectors,
     symbol,
-    symbolMapping
+    symbolMapping,
+    SymbolProfileOverrides
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     return this.prismaService.symbolProfile.update({
       data: {
@@ -109,7 +110,8 @@ export class SymbolProfileService {
         name,
         scraperConfiguration,
         sectors,
-        symbolMapping
+        symbolMapping,
+        SymbolProfileOverrides
       },
       where: { dataSource_symbol: { dataSource, symbol } }
     });
