@@ -14,6 +14,7 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
+import { eachYearOfInterval, format } from 'date-fns';
 
 export class UpdateUserSettingDto {
   @IsNumber()
@@ -32,7 +33,20 @@ export class UpdateUserSettingDto {
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd'])
+  @IsIn(<DateRange[]>[
+    '1d',
+    '1y',
+    '5y',
+    'max',
+    'mtd',
+    'wtd',
+    'ytd',
+    ...eachYearOfInterval({ end: new Date(1900), start: new Date() }).map(
+      (date) => {
+        return format(date, 'yyyy');
+      }
+    )
+  ])
   @IsOptional()
   dateRange?: DateRange;
 
