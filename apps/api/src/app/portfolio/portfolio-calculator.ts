@@ -23,7 +23,6 @@ import {
   format,
   isBefore,
   isSameDay,
-  isToday,
   max,
   subDays
 } from 'date-fns';
