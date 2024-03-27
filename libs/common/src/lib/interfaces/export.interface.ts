@@ -16,4 +16,5 @@ export interface Export {
     | 'updatedAt'
     | 'userId'
   > & { date: string; symbol: string })[];
+  user: { settings: { currency: string } };
 }
