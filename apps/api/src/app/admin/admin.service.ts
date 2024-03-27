@@ -331,39 +331,33 @@ export class AdminService {
     symbol,
     symbolMapping
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
-    let updatedSymbolProfile: Prisma.SymbolProfileUpdateInput & UniqueAsset = {
-      assetClass,
-      assetSubClass,
-      comment,
-      countries,
-      currency,
-      dataSource,
-      scraperConfiguration,
-      sectors,
-      symbol,
-      symbolMapping
-    };
-
-    if (dataSource === 'MANUAL') {
-      updatedSymbolProfile = {
-        ...updatedSymbolProfile,
-        name
+    const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput & UniqueAsset =
+      {
+        assetClass,
+        assetSubClass,
+        comment,
+        countries,
+        currency,
+        dataSource,
+        scraperConfiguration,
+        sectors,
+        symbol,
+        symbolMapping,
+        ...(dataSource === 'MANUAL'
+          ? { name }
+          : {
+              SymbolProfileOverrides: {
+                upsert: {
+                  create: {
+                    name: name as string
+                  },
+                  update: {
+                    name: name as string
+                  }
+                }
+              }
+            })
       };
-    } else {
-      updatedSymbolProfile = {
-        ...updatedSymbolProfile,
-        SymbolProfileOverrides: {
-          upsert: {
-            create: {
-              name: name as string
-            },
-            update: {
-              name: name as string
-            }
-          }
-        }
-      };
-    }
 
     await this.symbolProfileService.updateSymbolProfile(updatedSymbolProfile);
 
