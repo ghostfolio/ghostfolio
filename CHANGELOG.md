@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the chart tooltip of the benchmark comparator
+- Fixed an issue with names in the activities table on the portfolio activities page while using symbol profile overrides
 
 ## 2.67.0 - 2024-03-26
 
