@@ -13,7 +13,8 @@ import {
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
-  parseDate
+  parseDate,
+  resetHours
 } from '@ghostfolio/common/helper';
 import {
   Benchmark,
@@ -27,7 +28,13 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import { format, isSameDay, subDays } from 'date-fns';
+import {
+  differenceInDays,
+  eachDayOfInterval,
+  format,
+  isSameDay,
+  subDays
+} from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -208,14 +215,27 @@ export class BenchmarkService {
 
   public async getMarketDataBySymbol({
     dataSource,
+    endDate = new Date(),
     startDate,
     symbol,
     userCurrency
   }: {
+    endDate?: Date;
     startDate: Date;
     userCurrency: string;
   } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
+
+    const days = differenceInDays(endDate, startDate) + 1;
+    const dates = eachDayOfInterval(
+      {
+        start: startDate,
+        end: endDate
+      },
+      { step: Math.round(days / Math.min(days, MAX_CHART_ITEMS)) }
+    ).map((date) => {
+      return resetHours(date);
+    });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
@@ -232,7 +252,7 @@ export class BenchmarkService {
           dataSource,
           symbol,
           date: {
-            gte: startDate
+            in: dates
           }
         }
       })
@@ -266,17 +286,7 @@ export class BenchmarkService {
       return { marketData };
     }
 
-    const step = Math.round(
-      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
-    );
-
-    let i = 0;
-
     for (let marketDataItem of marketDataItems) {
-      if (i % step !== 0) {
-        continue;
-      }
-
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
           format(marketDataItem.date, DATE_FORMAT)
@@ -299,15 +309,15 @@ export class BenchmarkService {
       });
     }
 
-    const includesToday = isSameDay(
+    const includesEndDate = isSameDay(
       parseDate(last(marketData).date),
-      new Date()
+      endDate
     );
 
-    if (currentSymbolItem?.marketPrice && !includesToday) {
+    if (currentSymbolItem?.marketPrice && !includesEndDate) {
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(new Date(), DATE_FORMAT)
+          format(endDate, DATE_FORMAT)
         ];
 
       const exchangeRateFactor =
@@ -316,7 +326,7 @@ export class BenchmarkService {
           : 1;
 
       marketData.push({
-        date: format(new Date(), DATE_FORMAT),
+        date: format(endDate, DATE_FORMAT),
         value:
           this.calculateChangeInPercentage(
             marketPriceAtStartDate,

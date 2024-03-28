@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the export functionality by the user account’s currency
 
+### Fixed
+
+- Fixed the chart tooltip of the benchmark comparator
+
 ## 2.67.0 - 2024-03-26
 
 ### Added

@@ -3,6 +3,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { subDays } from 'date-fns';
 
 import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
@@ -46,13 +47,12 @@ describe('PortfolioCalculator', () => {
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
 
-      const chartData = await portfolioCalculator.getChartData({
-        start: new Date()
-      });
+      const start = subDays(new Date(Date.now()), 10);
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
-        new Date()
-      );
+      const chartData = await portfolioCalculator.getChartData({ start });
+
+      const currentPositions =
+        await portfolioCalculator.getCurrentPositions(start);
 
       const investments = portfolioCalculator.getInvestments();
 
