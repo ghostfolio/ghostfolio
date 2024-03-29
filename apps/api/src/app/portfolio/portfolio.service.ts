@@ -86,11 +86,11 @@ import {
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
+import { PortfolioCalculator } from './calculator/twr/portfolio-calculator';
 import {
   HistoricalDataContainer,
   PortfolioPositionDetail
 } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioCalculator } from './portfolio-calculator';
 import { RulesService } from './rules.service';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
