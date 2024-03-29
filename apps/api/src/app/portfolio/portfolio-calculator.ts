@@ -776,70 +776,75 @@ export class PortfolioCalculator {
     let lastDate: string = null;
     let lastTransactionPoint: TransactionPoint = null;
 
-    for (const order of this.orders) {
-      const currentDate = order.date;
-
+    for (const {
+      fee,
+      date,
+      quantity,
+      SymbolProfile,
+      tags,
+      type,
+      unitPrice
+    } of this.orders) {
       let currentTransactionPointItem: TransactionPointSymbol;
-      const oldAccumulatedSymbol = symbols[order.SymbolProfile.symbol];
+      const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
-      const factor = getFactor(order.type);
+      const factor = getFactor(type);
 
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
 
-        const newQuantity = order.quantity
+        const newQuantity = quantity
           .mul(factor)
           .plus(oldAccumulatedSymbol.quantity);
 
-        if (order.type === 'BUY') {
+        if (type === 'BUY') {
           investment = oldAccumulatedSymbol.investment.plus(
-            order.quantity.mul(order.unitPrice)
+            quantity.mul(unitPrice)
           );
-        } else if (order.type === 'SELL') {
+        } else if (type === 'SELL') {
           investment = oldAccumulatedSymbol.investment.minus(
-            order.quantity.mul(oldAccumulatedSymbol.averagePrice)
+            quantity.mul(oldAccumulatedSymbol.averagePrice)
           );
         }
 
         currentTransactionPointItem = {
           investment,
+          tags,
           averagePrice: newQuantity.gt(0)
             ? investment.div(newQuantity)
             : new Big(0),
-          currency: order.SymbolProfile.currency,
-          dataSource: order.SymbolProfile.dataSource,
+          currency: SymbolProfile.currency,
+          dataSource: SymbolProfile.dataSource,
           dividend: new Big(0),
-          fee: order.fee.plus(oldAccumulatedSymbol.fee),
+          fee: fee.plus(oldAccumulatedSymbol.fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           quantity: newQuantity,
-          symbol: order.SymbolProfile.symbol,
-          tags: order.tags,
+          symbol: SymbolProfile.symbol,
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
         currentTransactionPointItem = {
-          averagePrice: order.unitPrice,
-          currency: order.SymbolProfile.currency,
-          dataSource: order.SymbolProfile.dataSource,
+          fee,
+          tags,
+          averagePrice: unitPrice,
+          currency: SymbolProfile.currency,
+          dataSource: SymbolProfile.dataSource,
           dividend: new Big(0),
-          fee: order.fee,
-          firstBuyDate: order.date,
-          investment: order.unitPrice.mul(order.quantity).mul(factor),
-          quantity: order.quantity.mul(factor),
-          symbol: order.SymbolProfile.symbol,
-          tags: order.tags,
+          firstBuyDate: date,
+          investment: unitPrice.mul(quantity).mul(factor),
+          quantity: quantity.mul(factor),
+          symbol: SymbolProfile.symbol,
           transactionCount: 1
         };
       }
 
-      symbols[order.SymbolProfile.symbol] = currentTransactionPointItem;
+      symbols[SymbolProfile.symbol] = currentTransactionPointItem;
 
       const items = lastTransactionPoint?.items ?? [];
 
-      const newItems = items.filter(
-        (transactionPointItem) =>
-          transactionPointItem.symbol !== order.SymbolProfile.symbol
-      );
+      const newItems = items.filter(({ symbol }) => {
+        return symbol !== SymbolProfile.symbol;
+      });
 
       newItems.push(currentTransactionPointItem);
 
@@ -847,9 +852,9 @@ export class PortfolioCalculator {
         return a.symbol?.localeCompare(b.symbol);
       });
 
-      if (lastDate !== currentDate || lastTransactionPoint === null) {
+      if (lastDate !== date || lastTransactionPoint === null) {
         lastTransactionPoint = {
-          date: currentDate,
+          date,
           items: newItems
         };
 
@@ -858,7 +863,7 @@ export class PortfolioCalculator {
         lastTransactionPoint.items = newItems;
       }
 
-      lastDate = currentDate;
+      lastDate = date;
     }
   }
 
