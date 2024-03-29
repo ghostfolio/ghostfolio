@@ -4,8 +4,6 @@ import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
-import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
@@ -266,11 +264,12 @@ export class PortfolioService {
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
-    const { activities } = await this.getTransactionPoints({
+    const { activities } = await this.orderService.getOrders({
       filters,
       userId,
       includeDrafts: true,
-      types: ['BUY', 'SELL']
+      types: ['BUY', 'SELL'],
+      userCurrency: this.getUserCurrency()
     });
 
     if (activities.length === 0) {
@@ -361,9 +360,10 @@ export class PortfolioService {
       });
     }
 
-    const { activities } = await this.getTransactionPoints({
+    const { activities } = await this.orderService.getOrders({
       filters,
       types,
+      userCurrency,
       userId,
       withExcludedAccounts
     });
@@ -745,9 +745,8 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
+    const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
-
-    const portfolioStart = parseDate(transactionPoints[0].date);
 
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(portfolioStart);
@@ -961,10 +960,11 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { activities } = await this.getTransactionPoints({
+    const { activities } = await this.orderService.getOrders({
       filters,
       userId,
-      types: ['BUY', 'SELL']
+      types: ['BUY', 'SELL'],
+      userCurrency: this.getUserCurrency()
     });
 
     if (activities?.length <= 0) {
@@ -1133,8 +1133,9 @@ export class PortfolioService {
       )
     );
 
-    const { activities } = await this.getTransactionPoints({
+    const { activities } = await this.orderService.getOrders({
       filters,
+      userCurrency,
       userId,
       withExcludedAccounts,
       types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
@@ -1283,7 +1284,8 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities } = await this.getTransactionPoints({
+    const { activities } = await this.orderService.getOrders({
+      userCurrency,
       userId,
       types: ['BUY', 'SELL']
     });
@@ -1927,42 +1929,9 @@ export class PortfolioService {
     );
   }
 
-  // TODO: Eliminate
-  private async getTransactionPoints({
-    filters,
-    includeDrafts = false,
-    types = getAllActivityTypes(),
-    userId,
-    withExcludedAccounts = false
-  }: {
-    filters?: Filter[];
-    includeDrafts?: boolean;
-    types?: ActivityType[];
-    userId: string;
-    withExcludedAccounts?: boolean;
-  }): Promise<{
-    activities: Activity[];
-  }> {
-    const userCurrency =
-      this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
-
-    const { activities } = await this.orderService.getOrders({
-      filters,
-      includeDrafts,
-      types,
-      userCurrency,
-      userId,
-      withExcludedAccounts
-    });
-
-    return {
-      activities
-    };
-  }
-
-  private getUserCurrency(aUser: UserWithSettings) {
+  private getUserCurrency(aUser?: UserWithSettings) {
     return (
-      aUser.Settings?.settings.baseCurrency ??
+      aUser?.Settings?.settings.baseCurrency ??
       this.request.user?.Settings?.settings.baseCurrency ??
       DEFAULT_CURRENCY
     );
