@@ -37,11 +37,9 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
-        currency: 'CHF',
-        orders: []
+        activities: [],
+        currency: 'CHF'
       });
-
-      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')
