@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the export functionality by the user account’s currency
+- Added support to override the name of an asset profile in the asset profile details dialog of the admin control
 
 ### Fixed
 
