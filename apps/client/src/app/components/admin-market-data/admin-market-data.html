@@ -177,7 +177,11 @@
               </a>
               <button
                 mat-menu-item
-                [disabled]="element.activitiesCount !== 0"
+                [disabled]="
+                  element.activitiesCount !== 0 ||
+                  element.isBenchmark ||
+                  element.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+                "
                 (click)="
                   onDeleteProfileData({
                     dataSource: element.dataSource,
