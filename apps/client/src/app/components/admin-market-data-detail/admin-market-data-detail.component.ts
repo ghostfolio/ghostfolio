@@ -139,7 +139,7 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     }
 
     if (this.dateOfFirstActivity) {
-      // Fill up missing gaps
+      // Fill up missing months
       const dates = Object.keys(this.marketDataByMonth).sort();
       const startDate = min([
         parseISO(this.dateOfFirstActivity),
