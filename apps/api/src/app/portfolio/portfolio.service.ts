@@ -1945,7 +1945,6 @@ export class PortfolioService {
   }): Promise<{
     activities: Activity[];
     transactionPoints: TransactionPoint[];
-    portfolioOrders: PortfolioOrder[];
   }> {
     const userCurrency =
       this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
@@ -1960,7 +1959,7 @@ export class PortfolioService {
     });
 
     if (count <= 0) {
-      return { activities: [], transactionPoints: [], portfolioOrders: [] };
+      return { activities: [], transactionPoints: [] };
     }
 
     const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
@@ -1986,7 +1985,6 @@ export class PortfolioService {
 
     return {
       activities,
-      portfolioOrders,
       transactionPoints: portfolioCalculator.getTransactionPoints()
     };
   }
