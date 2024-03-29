@@ -266,14 +266,14 @@ export class PortfolioService {
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
-    const { activities, transactionPoints } = await this.getTransactionPoints({
+    const { activities } = await this.getTransactionPoints({
       filters,
       userId,
       includeDrafts: true,
       types: ['BUY', 'SELL']
     });
 
-    if (transactionPoints.length === 0) {
+    if (activities.length === 0) {
       return {
         investments: [],
         streaks: { currentStreak: 0, longestStreak: 0 }
@@ -291,7 +291,6 @@ export class PortfolioService {
       dateRange,
       impersonationId,
       portfolioCalculator,
-      transactionPoints,
       userId,
       withDataDecimation: false
     });
@@ -362,7 +361,7 @@ export class PortfolioService {
       });
     }
 
-    const { activities, transactionPoints } = await this.getTransactionPoints({
+    const { activities } = await this.getTransactionPoints({
       filters,
       types,
       userId,
@@ -376,10 +375,10 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const portfolioStart = parseDate(
-      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    const startDate = this.getStartDate(
+      dateRange,
+      portfolioCalculator.getStartDate()
     );
-    const startDate = this.getStartDate(dateRange, portfolioStart);
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(startDate);
 
@@ -962,13 +961,13 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { activities, transactionPoints } = await this.getTransactionPoints({
+    const { activities } = await this.getTransactionPoints({
       filters,
       userId,
       types: ['BUY', 'SELL']
     });
 
-    if (transactionPoints?.length <= 0) {
+    if (activities?.length <= 0) {
       return {
         hasErrors: false,
         positions: []
@@ -982,8 +981,10 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(dateRange, portfolioStart);
+    const startDate = this.getStartDate(
+      dateRange,
+      portfolioCalculator.getStartDate()
+    );
     const currentPositions =
       await portfolioCalculator.getCurrentPositions(startDate);
 
@@ -1132,14 +1133,14 @@ export class PortfolioService {
       )
     );
 
-    const { activities, transactionPoints } = await this.getTransactionPoints({
+    const { activities } = await this.getTransactionPoints({
       filters,
       userId,
       withExcludedAccounts,
       types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
     });
 
-    if (accountBalanceItems?.length <= 0 && transactionPoints?.length <= 0) {
+    if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
       return {
         chart: [],
         firstOrderDate: undefined,
@@ -1170,7 +1171,7 @@ export class PortfolioService {
     const portfolioStart = min(
       [
         parseDate(accountBalanceItems[0]?.date),
-        parseDate(transactionPoints[0]?.date)
+        portfolioCalculator.getStartDate()
       ].filter((date) => {
         return isValid(date);
       })
@@ -1206,7 +1207,6 @@ export class PortfolioService {
       dateRange,
       impersonationId,
       portfolioCalculator,
-      transactionPoints,
       userId
     });
 
@@ -1283,7 +1283,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities, transactionPoints } = await this.getTransactionPoints({
+    const { activities } = await this.getTransactionPoints({
       userId,
       types: ['BUY', 'SELL']
     });
@@ -1295,11 +1295,9 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const portfolioStart = parseDate(
-      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      portfolioCalculator.getStartDate()
     );
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(portfolioStart);
 
     const positions = currentPositions.positions.filter(
       (item) => !item.quantity.eq(0)
@@ -1429,18 +1427,16 @@ export class PortfolioService {
     dateRange = 'max',
     impersonationId,
     portfolioCalculator,
-    transactionPoints,
     userId,
     withDataDecimation = true
   }: {
     dateRange?: DateRange;
     impersonationId: string;
     portfolioCalculator: PortfolioCalculator;
-    transactionPoints: TransactionPoint[];
     userId: string;
     withDataDecimation?: boolean;
   }): Promise<HistoricalDataContainer> {
-    if (transactionPoints.length === 0) {
+    if (portfolioCalculator.getTransactionPoints().length === 0) {
       return {
         isAllTimeHigh: false,
         isAllTimeLow: false,
@@ -1450,8 +1446,10 @@ export class PortfolioService {
 
     userId = await this.getUserId(impersonationId, userId);
 
-    const portfolioStart = parseDate(transactionPoints[0].date);
-    const startDate = this.getStartDate(dateRange, portfolioStart);
+    const startDate = this.getStartDate(
+      dateRange,
+      portfolioCalculator.getStartDate()
+    );
     const endDate = new Date();
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation
@@ -1944,12 +1942,11 @@ export class PortfolioService {
     withExcludedAccounts?: boolean;
   }): Promise<{
     activities: Activity[];
-    transactionPoints: TransactionPoint[];
   }> {
     const userCurrency =
       this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY;
 
-    const { activities, count } = await this.orderService.getOrders({
+    const { activities } = await this.orderService.getOrders({
       filters,
       includeDrafts,
       types,
@@ -1958,34 +1955,8 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    if (count <= 0) {
-      return { activities: [], transactionPoints: [] };
-    }
-
-    const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
-      // currency: order.SymbolProfile.currency,
-      // dataSource: order.SymbolProfile.dataSource,
-      date: format(order.date, DATE_FORMAT),
-      fee: new Big(order.fee),
-      // name: order.SymbolProfile?.name,
-      quantity: new Big(order.quantity),
-      // symbol: order.SymbolProfile.symbol,
-      SymbolProfile: order.SymbolProfile,
-      // tags: order.tags,
-      type: order.type,
-      unitPrice: new Big(order.unitPrice)
-    }));
-
-    const portfolioCalculator = new PortfolioCalculator({
-      activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
-    });
-
     return {
-      activities,
-      transactionPoints: portfolioCalculator.getTransactionPoints()
+      activities
     };
   }
 
