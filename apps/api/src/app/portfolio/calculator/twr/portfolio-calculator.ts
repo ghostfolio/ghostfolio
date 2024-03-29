@@ -1,4 +1,10 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/current-positions.interface';
+import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-calculator.interface';
+import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
+import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -29,13 +35,6 @@ import {
   subDays
 } from 'date-fns';
 import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
-
-import { CurrentRateService } from '../../current-rate.service';
-import { CurrentPositions } from '../../interfaces/current-positions.interface';
-import { PortfolioOrderItem } from '../../interfaces/portfolio-calculator.interface';
-import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
-import { TransactionPointSymbol } from '../../interfaces/transaction-point-symbol.interface';
-import { TransactionPoint } from '../../interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
   private static readonly ENABLE_LOGGING = false;
