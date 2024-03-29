@@ -266,13 +266,12 @@ export class PortfolioService {
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        userId,
-        includeDrafts: true,
-        types: ['BUY', 'SELL']
-      });
+    const { activities, transactionPoints } = await this.getTransactionPoints({
+      filters,
+      userId,
+      includeDrafts: true,
+      types: ['BUY', 'SELL']
+    });
 
     if (transactionPoints.length === 0) {
       return {
@@ -282,11 +281,10 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
-      transactionPoints,
+      activities,
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
     const { items } = await this.getChart({
@@ -364,20 +362,18 @@ export class PortfolioService {
       });
     }
 
-    const { activities, portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        types,
-        userId,
-        withExcludedAccounts
-      });
+    const { activities, transactionPoints } = await this.getTransactionPoints({
+      filters,
+      types,
+      userId,
+      withExcludedAccounts
+    });
 
     const portfolioCalculator = new PortfolioCalculator({
-      transactionPoints,
+      activities,
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
     const portfolioStart = parseDate(
@@ -737,35 +733,19 @@ export class PortfolioService {
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
 
-    const portfolioOrders: PortfolioOrder[] = orders
-      .filter((order) => {
-        tags = tags.concat(order.tags);
-
-        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
-      })
-      .map((order) => ({
-        currency: order.SymbolProfile.currency,
-        dataSource: order.SymbolProfile.dataSource,
-        date: format(order.date, DATE_FORMAT),
-        fee: new Big(order.fee),
-        name: order.SymbolProfile?.name,
-        quantity: new Big(order.quantity),
-        symbol: order.SymbolProfile.symbol,
-        tags: order.tags,
-        type: order.type,
-        unitPrice: new Big(order.unitPrice)
-      }));
-
     tags = uniqBy(tags, 'id');
 
     const portfolioCalculator = new PortfolioCalculator({
+      activities: orders.filter((order) => {
+        tags = tags.concat(order.tags);
+
+        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
+      }),
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
-    portfolioCalculator.computeTransactionPoints();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
     const portfolioStart = parseDate(transactionPoints[0].date);
@@ -982,12 +962,11 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        userId,
-        types: ['BUY', 'SELL']
-      });
+    const { activities, transactionPoints } = await this.getTransactionPoints({
+      filters,
+      userId,
+      types: ['BUY', 'SELL']
+    });
 
     if (transactionPoints?.length <= 0) {
       return {
@@ -997,11 +976,10 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
-      transactionPoints,
+      activities,
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
     const portfolioStart = parseDate(transactionPoints[0].date);
@@ -1154,13 +1132,12 @@ export class PortfolioService {
       )
     );
 
-    const { portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        filters,
-        userId,
-        withExcludedAccounts,
-        types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
-      });
+    const { activities, transactionPoints } = await this.getTransactionPoints({
+      filters,
+      userId,
+      withExcludedAccounts,
+      types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
+    });
 
     if (accountBalanceItems?.length <= 0 && transactionPoints?.length <= 0) {
       return {
@@ -1184,11 +1161,10 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
-      transactionPoints,
+      activities,
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
     const portfolioStart = min(
@@ -1307,18 +1283,16 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities, portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        userId,
-        types: ['BUY', 'SELL']
-      });
+    const { activities, transactionPoints } = await this.getTransactionPoints({
+      userId,
+      types: ['BUY', 'SELL']
+    });
 
     const portfolioCalculator = new PortfolioCalculator({
-      transactionPoints,
+      activities,
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
 
     const portfolioStart = parseDate(
@@ -1865,10 +1839,10 @@ export class PortfolioService {
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
     const annualizedPerformancePercent = new PortfolioCalculator({
+      activities: [],
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: []
+      exchangeRateDataService: this.exchangeRateDataService
     })
       .getAnnualizedPerformancePercent({
         daysInMarket,
@@ -1880,10 +1854,10 @@ export class PortfolioService {
 
     const annualizedPerformancePercentWithCurrencyEffect =
       new PortfolioCalculator({
+        activities: [],
         currency: userCurrency,
         currentRateService: this.currentRateService,
-        exchangeRateDataService: this.exchangeRateDataService,
-        orders: []
+        exchangeRateDataService: this.exchangeRateDataService
       })
         .getAnnualizedPerformancePercent({
           daysInMarket,
@@ -1955,6 +1929,7 @@ export class PortfolioService {
     );
   }
 
+  // TODO: Eliminate
   private async getTransactionPoints({
     filters,
     includeDrafts = false,
@@ -1989,26 +1964,25 @@ export class PortfolioService {
     }
 
     const portfolioOrders: PortfolioOrder[] = activities.map((order) => ({
-      currency: order.SymbolProfile.currency,
-      dataSource: order.SymbolProfile.dataSource,
+      // currency: order.SymbolProfile.currency,
+      // dataSource: order.SymbolProfile.dataSource,
       date: format(order.date, DATE_FORMAT),
       fee: new Big(order.fee),
-      name: order.SymbolProfile?.name,
+      // name: order.SymbolProfile?.name,
       quantity: new Big(order.quantity),
-      symbol: order.SymbolProfile.symbol,
-      tags: order.tags,
+      // symbol: order.SymbolProfile.symbol,
+      SymbolProfile: order.SymbolProfile,
+      // tags: order.tags,
       type: order.type,
       unitPrice: new Big(order.unitPrice)
     }));
 
     const portfolioCalculator = new PortfolioCalculator({
+      activities,
       currency: userCurrency,
       currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
+      exchangeRateDataService: this.exchangeRateDataService
     });
-
-    portfolioCalculator.computeTransactionPoints();
 
     return {
       activities,

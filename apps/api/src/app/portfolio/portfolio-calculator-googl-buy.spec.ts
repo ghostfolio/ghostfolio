@@ -1,3 +1,4 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
@@ -49,23 +50,23 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
+        activities: <Activity[]>[
           {
-            currency: 'USD',
-            date: '2023-01-03',
-            dataSource: 'YAHOO',
-            fee: new Big(1),
-            name: 'Alphabet Inc.',
-            quantity: new Big(1),
-            symbol: 'GOOGL',
+            date: new Date('2023-01-03'),
+            fee: 1,
+            quantity: 1,
+            SymbolProfile: {
+              currency: 'USD',
+              dataSource: 'YAHOO',
+              name: 'Alphabet Inc.',
+              symbol: 'GOOGL'
+            },
             type: 'BUY',
-            unitPrice: new Big(89.12)
+            unitPrice: 89.12
           }
-        ]
+        ],
+        currency: 'CHF'
       });
-
-      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')

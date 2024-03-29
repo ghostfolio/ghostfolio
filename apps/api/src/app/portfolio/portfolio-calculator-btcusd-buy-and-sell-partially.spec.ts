@@ -1,3 +1,4 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
@@ -49,34 +50,36 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
+        activities: <Activity[]>[
           {
-            currency: 'USD',
-            date: '2015-01-01',
-            dataSource: 'YAHOO',
-            fee: new Big(0),
-            name: 'Bitcoin USD',
-            quantity: new Big(2),
-            symbol: 'BTCUSD',
+            date: new Date('2015-01-01'),
+            fee: 0,
+            quantity: 2,
+            SymbolProfile: {
+              currency: 'USD',
+              dataSource: 'YAHOO',
+              name: 'Bitcoin USD',
+              symbol: 'BTCUSD'
+            },
             type: 'BUY',
-            unitPrice: new Big(320.43)
+            unitPrice: 320.43
           },
           {
-            currency: 'USD',
-            date: '2017-12-31',
-            dataSource: 'YAHOO',
-            fee: new Big(0),
-            name: 'Bitcoin USD',
-            quantity: new Big(1),
-            symbol: 'BTCUSD',
+            date: new Date('2017-12-31'),
+            fee: 0,
+            quantity: 1,
+            SymbolProfile: {
+              currency: 'USD',
+              dataSource: 'YAHOO',
+              name: 'Bitcoin USD',
+              symbol: 'BTCUSD'
+            },
             type: 'SELL',
-            unitPrice: new Big(14156.4)
+            unitPrice: 14156.4
           }
-        ]
+        ],
+        currency: 'CHF'
       });
-
-      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')

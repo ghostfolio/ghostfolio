@@ -22,10 +22,10 @@ describe('PortfolioCalculator', () => {
 
   describe('annualized performance percentage', () => {
     const portfolioCalculator = new PortfolioCalculator({
+      activities: [],
       currentRateService,
       exchangeRateDataService,
-      currency: 'USD',
-      orders: []
+      currency: 'USD'
     });
 
     it('Get annualized performance', async () => {
