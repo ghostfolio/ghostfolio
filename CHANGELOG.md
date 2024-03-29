@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed the chart tooltip of the benchmark comparator
 - Fixed an issue with names in the activities table on the portfolio activities page while using symbol profile overrides
+- Added missing dates to edit historical market data in the asset profile details dialog of the admin control panel
 
 ## 2.67.0 - 2024-03-26
 
