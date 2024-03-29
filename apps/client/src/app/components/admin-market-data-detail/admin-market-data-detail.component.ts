@@ -21,15 +21,15 @@ import {
   addDays,
   addMonths,
   format,
-  isAfter,
   isBefore,
   isSameDay,
   isToday,
   isValid,
+  min,
   parse,
   parseISO
 } from 'date-fns';
-import { last } from 'lodash';
+import { first, last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -138,17 +138,25 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
       };
     }
 
-    const dates = Object.keys(this.marketDataByMonth).sort();
-    const startDate = parseISO(dates[0]);
-    const endDate = parseISO(last(dates));
+    if (this.dateOfFirstActivity) {
+      // Fill up missing gaps
+      const dates = Object.keys(this.marketDataByMonth).sort();
+      const startDate = min([
+        parseISO(this.dateOfFirstActivity),
+        parseISO(first(dates))
+      ]);
+      const endDate = parseISO(last(dates));
 
-    let currentDate = startDate;
-    while (!isAfter(currentDate, endDate)) {
-      const key = format(currentDate, 'yyyy-MM');
-      if (!this.marketDataByMonth[key]) {
-        this.marketDataByMonth[key] = {};
+      let currentDate = startDate;
+
+      while (isBefore(currentDate, endDate)) {
+        const key = format(currentDate, 'yyyy-MM');
+        if (!this.marketDataByMonth[key]) {
+          this.marketDataByMonth[key] = {};
+        }
+
+        currentDate = addMonths(currentDate, 1);
       }
-      currentDate = addMonths(currentDate, 1);
     }
   }
 
