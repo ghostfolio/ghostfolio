@@ -49,12 +49,14 @@ export class PortfolioCalculator {
     currency,
     currentRateService,
     exchangeRateDataService,
-    orders
+    orders,
+    transactionPoints
   }: {
     currency: string;
     currentRateService: CurrentRateService;
     exchangeRateDataService: ExchangeRateDataService;
     orders: PortfolioOrder[];
+    transactionPoints?: TransactionPoint[];
   }) {
     this.currency = currency;
     this.currentRateService = currentRateService;
@@ -64,6 +66,10 @@ export class PortfolioCalculator {
     this.orders.sort((a, b) => {
       return a.date?.localeCompare(b.date);
     });
+
+    if (transactionPoints) {
+      this.transactionPoints = transactionPoints;
+    }
   }
 
   public computeTransactionPoints() {
@@ -177,10 +183,6 @@ export class PortfolioCalculator {
 
   public getTransactionPoints(): TransactionPoint[] {
     return this.transactionPoints;
-  }
-
-  public setTransactionPoints(transactionPoints: TransactionPoint[]) {
-    this.transactionPoints = transactionPoints;
   }
 
   public async getChartData({

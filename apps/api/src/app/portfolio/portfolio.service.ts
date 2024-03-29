@@ -282,13 +282,12 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
+      transactionPoints,
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       exchangeRateDataService: this.exchangeRateDataService,
       orders: portfolioOrders
     });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const { items } = await this.getChart({
       dateRange,
@@ -374,13 +373,12 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
+      transactionPoints,
       currency: userCurrency,
       currentRateService: this.currentRateService,
       exchangeRateDataService: this.exchangeRateDataService,
       orders: portfolioOrders
     });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
@@ -999,13 +997,12 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = new PortfolioCalculator({
+      transactionPoints,
       currency: this.request.user.Settings.settings.baseCurrency,
       currentRateService: this.currentRateService,
       exchangeRateDataService: this.exchangeRateDataService,
       orders: portfolioOrders
     });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(transactionPoints[0].date);
     const startDate = this.getStartDate(dateRange, portfolioStart);
@@ -1165,13 +1162,6 @@ export class PortfolioService {
         types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
       });
 
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
-    });
-
     if (accountBalanceItems?.length <= 0 && transactionPoints?.length <= 0) {
       return {
         chart: [],
@@ -1193,7 +1183,13 @@ export class PortfolioService {
       };
     }
 
-    portfolioCalculator.setTransactionPoints(transactionPoints);
+    const portfolioCalculator = new PortfolioCalculator({
+      transactionPoints,
+      currency: userCurrency,
+      currentRateService: this.currentRateService,
+      exchangeRateDataService: this.exchangeRateDataService,
+      orders: portfolioOrders
+    });
 
     const portfolioStart = min(
       [
@@ -1318,13 +1314,12 @@ export class PortfolioService {
       });
 
     const portfolioCalculator = new PortfolioCalculator({
+      transactionPoints,
       currency: userCurrency,
       currentRateService: this.currentRateService,
       exchangeRateDataService: this.exchangeRateDataService,
       orders: portfolioOrders
     });
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
 
     const portfolioStart = parseDate(
       transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
