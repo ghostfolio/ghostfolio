@@ -741,7 +741,9 @@ export class PortfolioService {
       .filter((order) => {
         tags = tags.concat(order.tags);
 
-        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
+        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL', 'SPLIT'].includes(
+          order.type
+        );
       })
       .map((order) => ({
         currency: order.SymbolProfile.currency,

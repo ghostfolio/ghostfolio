@@ -90,9 +90,12 @@ export class PortfolioCalculator {
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
 
-        const newQuantity = order.quantity
-          .mul(factor)
-          .plus(oldAccumulatedSymbol.quantity);
+        const newQuantity =
+          order.type === 'SPLIT'
+            ? order.quantity.s === 1
+              ? oldAccumulatedSymbol.quantity.mul(order.quantity)
+              : oldAccumulatedSymbol.quantity.div(order.quantity)
+            : order.quantity.mul(factor).plus(oldAccumulatedSymbol.quantity);
 
         if (order.type === 'BUY') {
           investment = oldAccumulatedSymbol.investment.plus(
