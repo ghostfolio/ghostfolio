@@ -117,7 +117,7 @@ export class ImportService {
           feeInBaseCurrency: 0,
           id: assetProfile.id,
           isDraft: false,
-          SymbolProfile: <SymbolProfile>(<unknown>assetProfile),
+          SymbolProfile: assetProfile,
           symbolProfileId: assetProfile.id,
           type: 'DIVIDEND',
           unitPrice: marketPrice,
@@ -521,22 +521,14 @@ export class ImportService {
             currency,
             dataSource,
             symbol,
-            assetClass: null,
-            assetSubClass: null,
-            comment: null,
-            countries: null,
+            activitiesCount: undefined,
+            assetClass: undefined,
+            assetSubClass: undefined,
+            countries: undefined,
             createdAt: undefined,
-            figi: null,
-            figiComposite: null,
-            figiShareClass: null,
             id: undefined,
-            isin: null,
-            name: null,
-            scraperConfiguration: null,
-            sectors: null,
-            symbolMapping: null,
-            updatedAt: undefined,
-            url: null
+            sectors: undefined,
+            updatedAt: undefined
           }
         };
       }

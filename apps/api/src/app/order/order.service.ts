@@ -339,24 +339,7 @@ export class OrderService {
       await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
 
     const activities = orders.map((order) => {
-      const {
-        assetClass,
-        assetSubClass,
-        comment,
-        createdAt,
-        currency,
-        dataSource,
-        figi,
-        figiComposite,
-        figiShareClass,
-        id,
-        isin,
-        name,
-        symbol,
-        symbolMapping,
-        updatedAt,
-        url
-      } = assetProfiles.find(({ dataSource, symbol }) => {
+      const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
         return (
           dataSource === order.SymbolProfile.dataSource &&
           symbol === order.SymbolProfile.symbol
@@ -374,27 +357,7 @@ export class OrderService {
           order.SymbolProfile.currency,
           userCurrency
         ),
-        SymbolProfile: {
-          assetClass,
-          assetSubClass,
-          comment,
-          createdAt,
-          currency,
-          dataSource,
-          figi,
-          figiComposite,
-          figiShareClass,
-          id,
-          isin,
-          name,
-          symbol,
-          symbolMapping,
-          updatedAt,
-          url,
-          countries: null,
-          scraperConfiguration: null,
-          sectors: null
-        },
+        SymbolProfile: assetProfile,
         // TODO: Use exchange rate of date
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,

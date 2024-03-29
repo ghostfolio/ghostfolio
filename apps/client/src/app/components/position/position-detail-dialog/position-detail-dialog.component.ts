@@ -1,3 +1,4 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -7,7 +8,6 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import {
@@ -37,7 +37,7 @@ import { PositionDetailDialogParams } from './interfaces/interfaces';
 })
 export class PositionDetailDialog implements OnDestroy, OnInit {
   public accounts: Account[];
-  public activities: OrderWithAccount[];
+  public activities: Activity[];
   public assetClass: string;
   public assetSubClass: string;
   public averagePrice: number;
@@ -46,7 +46,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public dataProviderInfo: DataProviderInfo;
-  public dataSource: MatTableDataSource<OrderWithAccount>;
+  public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
