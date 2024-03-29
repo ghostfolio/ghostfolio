@@ -19,7 +19,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
+  addMonths,
   format,
+  isAfter,
   isBefore,
   isSameDay,
   isToday,
@@ -134,6 +136,19 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         day: currentDay,
         marketPrice: marketDataItem.marketPrice
       };
+    }
+
+    const dates = Object.keys(this.marketDataByMonth).sort();
+    const startDate = parseISO(dates[0]);
+    const endDate = parseISO(last(dates));
+
+    let currentDate = startDate;
+    while (!isAfter(currentDate, endDate)) {
+      const key = format(currentDate, 'yyyy-MM');
+      if (!this.marketDataByMonth[key]) {
+        this.marketDataByMonth[key] = {};
+      }
+      currentDate = addMonths(currentDate, 1);
     }
   }
 
