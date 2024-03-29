@@ -1,3 +1,4 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -41,7 +42,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
-  public dataSource: MatTableDataSource<OrderWithAccount>;
+  public dataSource: MatTableDataSource<Activity>;
   public equity: number;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];

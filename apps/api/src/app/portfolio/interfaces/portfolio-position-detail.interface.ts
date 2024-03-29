@@ -1,9 +1,9 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   DataProviderInfo,
   EnhancedSymbolProfile,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Account, Tag } from '@prisma/client';
 
@@ -27,7 +27,7 @@ export interface PortfolioPositionDetail {
   netPerformancePercent: number;
   netPerformancePercentWithCurrencyEffect: number;
   netPerformanceWithCurrencyEffect: number;
-  orders: OrderWithAccount[];
+  orders: Activity[];
   quantity: number;
   SymbolProfile: EnhancedSymbolProfile;
   tags: Tag[];

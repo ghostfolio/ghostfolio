@@ -50,7 +50,6 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
-  OrderWithAccount,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
@@ -1592,7 +1591,7 @@ export class PortfolioService {
     activities,
     userCurrency
   }: {
-    activities: OrderWithAccount[];
+    activities: Activity[];
     userCurrency: string;
   }) {
     return getSum(
@@ -1940,7 +1939,7 @@ export class PortfolioService {
     activityType,
     userCurrency
   }: {
-    activities: OrderWithAccount[];
+    activities: Activity[];
     activityType: ActivityType;
     userCurrency: string;
   }) {
