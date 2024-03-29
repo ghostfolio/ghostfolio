@@ -5,7 +5,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { CurrentRateServiceMock } from './current-rate.service.mock';
+import { CurrentRateServiceMock } from '../../current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {

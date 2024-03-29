@@ -30,12 +30,12 @@ import {
 } from 'date-fns';
 import { cloneDeep, first, isNumber, last, sortBy, uniq } from 'lodash';
 
-import { CurrentRateService } from './current-rate.service';
-import { CurrentPositions } from './interfaces/current-positions.interface';
-import { PortfolioOrderItem } from './interfaces/portfolio-calculator.interface';
-import { PortfolioOrder } from './interfaces/portfolio-order.interface';
-import { TransactionPointSymbol } from './interfaces/transaction-point-symbol.interface';
-import { TransactionPoint } from './interfaces/transaction-point.interface';
+import { CurrentRateService } from '../../current-rate.service';
+import { CurrentPositions } from '../../interfaces/current-positions.interface';
+import { PortfolioOrderItem } from '../../interfaces/portfolio-calculator.interface';
+import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
+import { TransactionPointSymbol } from '../../interfaces/transaction-point-symbol.interface';
+import { TransactionPoint } from '../../interfaces/transaction-point.interface';
 
 export class PortfolioCalculator {
   private static readonly ENABLE_LOGGING = false;

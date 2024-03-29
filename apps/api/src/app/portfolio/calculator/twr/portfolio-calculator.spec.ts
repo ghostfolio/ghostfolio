@@ -2,7 +2,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 
 import { Big } from 'big.js';
 
-import { CurrentRateService } from './current-rate.service';
+import { CurrentRateService } from '../../current-rate.service';
 import { PortfolioCalculator } from './portfolio-calculator';
 
 describe('PortfolioCalculator', () => {
