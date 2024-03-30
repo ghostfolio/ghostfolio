@@ -47,7 +47,11 @@
       <button
         mat-menu-item
         type="button"
-        [disabled]="assetProfile?.activitiesCount !== 0"
+        [disabled]="
+          assetProfile?.activitiesCount !== 0 ||
+          isBenchmark ||
+          data.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+        "
         (click)="
           onDeleteProfileData({
             dataSource: data.dataSource,

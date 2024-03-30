@@ -1,6 +1,10 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_PAGE_SIZE,
+  ghostfolioScraperApiSymbolPrefix
+} from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
@@ -20,7 +24,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -79,6 +83,7 @@ export class AdminMarketDataComponent
         type: <Filter['type']>'PRESET_ID'
       }
     ]);
+  public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -99,6 +104,7 @@ export class AdminMarketDataComponent
     'actions'
   ];
   public filters$ = new Subject<Filter[]>();
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isLoading = false;
   public isUUID = isUUID;
   public placeholder = '';
@@ -112,6 +118,7 @@ export class AdminMarketDataComponent
     private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -171,6 +178,9 @@ export class AdminMarketDataComponent
   }
 
   public ngOnInit() {
+    const { benchmarks } = this.dataService.fetchInfo();
+
+    this.benchmarks = benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
@@ -282,7 +292,16 @@ export class AdminMarketDataComponent
       .subscribe(({ count, marketData }) => {
         this.totalItems = count;
 
-        this.dataSource = new MatTableDataSource(marketData);
+        this.dataSource = new MatTableDataSource(
+          marketData.map((marketDataItem) => {
+            return {
+              ...marketDataItem,
+              isBenchmark: this.benchmarks.some(({ id }) => {
+                return id === marketDataItem.id;
+              })
+            };
+          })
+        );
         this.dataSource.sort = this.sort;
 
         this.isLoading = false;

@@ -212,6 +212,7 @@ export class AdminService {
           countries: true,
           currency: true,
           dataSource: true,
+          id: true,
           name: true,
           Order: {
             orderBy: [{ date: 'asc' }],
@@ -235,6 +236,7 @@ export class AdminService {
         countries,
         currency,
         dataSource,
+        id,
         name,
         Order,
         sectors,
@@ -257,6 +259,7 @@ export class AdminService {
           currency,
           countriesCount,
           dataSource,
+          id,
           name,
           symbol,
           marketDataItemCount,
@@ -413,6 +416,7 @@ export class AdminService {
           assetClass: 'CASH',
           countriesCount: 0,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
+          id: undefined,
           name: symbol,
           sectorsCount: 0
         };
