@@ -7,7 +7,14 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { PortfolioCalculator } from './portfolio-calculator';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '../portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -33,6 +40,7 @@ jest.mock(
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -43,41 +51,51 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        activities: <Activity[]>[
-          {
-            date: new Date('2015-01-01'),
-            fee: 0,
-            quantity: 2,
-            SymbolProfile: {
-              currency: 'USD',
-              dataSource: 'YAHOO',
-              name: 'Bitcoin USD',
-              symbol: 'BTCUSD'
-            },
-            type: 'BUY',
-            unitPrice: 320.43
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2015-01-01'),
+          fee: 0,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Bitcoin USD',
+            symbol: 'BTCUSD'
           },
-          {
-            date: new Date('2017-12-31'),
-            fee: 0,
-            quantity: 1,
-            SymbolProfile: {
-              currency: 'USD',
-              dataSource: 'YAHOO',
-              name: 'Bitcoin USD',
-              symbol: 'BTCUSD'
-            },
-            type: 'SELL',
-            unitPrice: 14156.4
-          }
-        ],
+          type: 'BUY',
+          unitPrice: 320.43
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2017-12-31'),
+          fee: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Bitcoin USD',
+            symbol: 'BTCUSD'
+          },
+          type: 'SELL',
+          unitPrice: 14156.4
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
+        activities,
         currency: 'CHF'
       });
 

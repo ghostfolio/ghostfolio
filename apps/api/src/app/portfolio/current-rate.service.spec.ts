@@ -1,3 +1,4 @@
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -5,7 +6,6 @@ import { UniqueAsset } from '@ghostfolio/common/interfaces';
 
 import { DataSource, MarketData } from '@prisma/client';
 
-import { CurrentRateService } from './current-rate.service';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 
 jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {

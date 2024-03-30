@@ -7,7 +7,14 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { PortfolioCalculator } from './portfolio-calculator';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '../portfolio-calculator-test-utils';
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -33,6 +40,7 @@ jest.mock(
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -43,41 +51,51 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with MSFT buy', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        activities: <Activity[]>[
-          {
-            date: new Date('2021-09-16'),
-            fee: 19,
-            quantity: 1,
-            SymbolProfile: {
-              currency: 'USD',
-              dataSource: 'YAHOO',
-              name: 'Microsoft Inc.',
-              symbol: 'MSFT'
-            },
-            type: 'BUY',
-            unitPrice: 298.58
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-09-16'),
+          fee: 19,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
           },
-          {
-            date: new Date('2021-11-16'),
-            fee: 0,
-            quantity: 1,
-            SymbolProfile: {
-              currency: 'USD',
-              dataSource: 'YAHOO',
-              name: 'Microsoft Inc.',
-              symbol: 'MSFT'
-            },
-            type: 'DIVIDEND',
-            unitPrice: 0.62
-          }
-        ],
+          type: 'BUY',
+          unitPrice: 298.58
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-16'),
+          fee: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPrice: 0.62
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
+        activities,
         currency: 'USD'
       });
 

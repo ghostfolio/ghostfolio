@@ -7,7 +7,14 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { PortfolioCalculator } from './portfolio-calculator';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '../portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -33,6 +40,7 @@ jest.mock(
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -43,28 +51,36 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        activities: <Activity[]>[
-          {
-            date: new Date('2023-01-03'),
-            fee: 1,
-            quantity: 1,
-            SymbolProfile: {
-              currency: 'USD',
-              dataSource: 'YAHOO',
-              name: 'Alphabet Inc.',
-              symbol: 'GOOGL'
-            },
-            type: 'BUY',
-            unitPrice: 89.12
-          }
-        ],
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2023-01-03'),
+          fee: 1,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          type: 'BUY',
+          unitPrice: 89.12
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
+        activities,
         currency: 'CHF'
       });
 

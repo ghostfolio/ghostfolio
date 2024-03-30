@@ -76,12 +76,24 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
+  isValid,
+  max,
+  min,
   parseISO,
-  set
+  set,
+  startOfWeek,
+  startOfMonth,
+  startOfYear,
+  subDays,
+  subYears
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
-import { PortfolioCalculator } from './calculator/twr/portfolio-calculator';
+import { PortfolioCalculator } from './calculator/portfolio-calculator';
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from './calculator/portfolio-calculator.factory';
 import {
   HistoricalDataContainer,
   PortfolioPositionDetail
@@ -106,7 +118,8 @@ export class PortfolioService {
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private readonly calculatorFactory: PortfolioCalculatorFactory
   ) {}
 
   public async getAccounts({
@@ -265,11 +278,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
       activities,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const { items } = await this.getChart({
@@ -354,11 +366,10 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      currency: userCurrency
     });
 
     const { startDate } = getInterval(
@@ -720,15 +731,15 @@ export class PortfolioService {
 
     tags = uniqBy(tags, 'id');
 
-    const portfolioCalculator = new PortfolioCalculator({
-      activities: orders.filter((order) => {
-        tags = tags.concat(order.tags);
+    const filteredActivities = orders.filter((order) => {
+      tags = tags.concat(order.tags);
+      return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
+    });
 
-        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
-      }),
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
+      activities: filteredActivities,
+      currency: userCurrency
     });
 
     const portfolioStart = portfolioCalculator.getStartDate();
@@ -947,7 +958,6 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
 
     const { endDate, startDate } = getInterval(dateRange);
-
     const { activities } = await this.orderService.getOrders({
       endDate,
       filters,
@@ -963,11 +973,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
       activities,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const currentPositions = await portfolioCalculator.getCurrentPositions(
@@ -1123,7 +1132,6 @@ export class PortfolioService {
     const { endDate, startDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
-      endDate,
       filters,
       userCurrency,
       userId,
@@ -1152,11 +1160,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      currency: userCurrency
     });
 
     const {
@@ -1270,11 +1277,10 @@ export class PortfolioService {
       types: ['BUY', 'SELL']
     });
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      calculationType: PerformanceCalculationType.TWR,
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const currentPositions = await portfolioCalculator.getCurrentPositions(
@@ -1772,12 +1778,12 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = new PortfolioCalculator({
-      activities: [],
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
-    })
+    const annualizedPerformancePercent = this.calculatorFactory
+      .createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
+        activities: [],
+        currency: userCurrency
+      })
       .getAnnualizedPerformancePercent({
         daysInMarket,
         netPerformancePercent: new Big(
@@ -1787,12 +1793,12 @@ export class PortfolioService {
       ?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
-      new PortfolioCalculator({
-        activities: [],
-        currency: userCurrency,
-        currentRateService: this.currentRateService,
-        exchangeRateDataService: this.exchangeRateDataService
-      })
+      this.calculatorFactory
+        .createCalculator({
+          calculationType: PerformanceCalculationType.TWR,
+          activities: [],
+          currency: userCurrency
+        })
         .getAnnualizedPerformancePercent({
           daysInMarket,
           netPerformancePercent: new Big(

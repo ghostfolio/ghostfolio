@@ -6,7 +6,10 @@ import { parseDate } from '@ghostfolio/common/helper';
 import { Big } from 'big.js';
 import { subDays } from 'date-fns';
 
-import { PortfolioCalculator } from './portfolio-calculator';
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -20,6 +23,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -30,13 +34,17 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
+      const portfolioCalculator = factory.createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
         activities: [],
         currency: 'CHF'
       });

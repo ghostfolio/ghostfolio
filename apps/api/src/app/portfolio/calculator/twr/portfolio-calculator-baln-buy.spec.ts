@@ -6,7 +6,14 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { PortfolioCalculator } from './portfolio-calculator';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '../portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -20,6 +27,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -30,28 +38,36 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with BALN.SW buy', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        activities: <Activity[]>[
-          {
-            date: new Date('2021-11-30'),
-            fee: 1.55,
-            quantity: 2,
-            SymbolProfile: {
-              currency: 'CHF',
-              dataSource: 'YAHOO',
-              name: 'Bâloise Holding AG',
-              symbol: 'BALN.SW'
-            },
-            type: 'BUY',
-            unitPrice: 136.6
-          }
-        ],
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-30'),
+          fee: 1.55,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          type: 'BUY',
+          unitPrice: 136.6
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        calculationType: PerformanceCalculationType.TWR,
+        activities,
         currency: 'CHF'
       });
 
