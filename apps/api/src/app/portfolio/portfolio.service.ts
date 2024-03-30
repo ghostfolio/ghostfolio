@@ -5,7 +5,10 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import {
+  getFactor,
+  getInterval
+} from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -73,16 +76,8 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
-  isValid,
-  max,
-  min,
   parseISO,
-  set,
-  startOfWeek,
-  startOfMonth,
-  startOfYear,
-  subDays,
-  subYears
+  set
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
@@ -221,11 +216,9 @@ export class PortfolioService {
 
   public async getDividends({
     activities,
-    dateRange = 'max',
     groupBy
   }: {
     activities: Activity[];
-    dateRange?: DateRange;
     groupBy?: GroupBy;
   }): Promise<InvestmentItem[]> {
     let dividends = activities.map(({ date, valueInBaseCurrency }) => {
@@ -239,14 +232,7 @@ export class PortfolioService {
       dividends = this.getDividendsByGroup({ dividends, groupBy });
     }
 
-    const startDate = this.getStartDate(
-      dateRange,
-      parseDate(dividends[0]?.date)
-    );
-
-    return dividends.filter(({ date }) => {
-      return !isBefore(parseDate(date), startDate);
-    });
+    return dividends;
   }
 
   public async getInvestments({
@@ -375,7 +361,7 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const startDate = this.getStartDate(
+    const { startDate } = getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
@@ -960,7 +946,10 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
+    const { endDate, startDate } = getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
       userId,
       types: ['BUY', 'SELL'],
@@ -981,12 +970,10 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const startDate = this.getStartDate(
-      dateRange,
-      portfolioCalculator.getStartDate()
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate,
+      endDate
     );
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(startDate);
 
     let positions = currentPositions.positions.filter(({ quantity }) => {
       return !quantity.eq(0);
@@ -1133,7 +1120,10 @@ export class PortfolioService {
       )
     );
 
+    const { endDate, startDate } = getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
       userCurrency,
       userId,
@@ -1169,16 +1159,6 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const portfolioStart = min(
-      [
-        parseDate(accountBalanceItems[0]?.date),
-        portfolioCalculator.getStartDate()
-      ].filter((date) => {
-        return isValid(date);
-      })
-    );
-
-    const startDate = this.getStartDate(dateRange, portfolioStart);
     const {
       currentValueInBaseCurrency,
       errors,
@@ -1192,7 +1172,7 @@ export class PortfolioService {
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceWithCurrencyEffect,
       totalInvestment
-    } = await portfolioCalculator.getCurrentPositions(startDate);
+    } = await portfolioCalculator.getCurrentPositions(startDate, endDate);
 
     let currentNetPerformance = netPerformance;
 
@@ -1448,11 +1428,11 @@ export class PortfolioService {
 
     userId = await this.getUserId(impersonationId, userId);
 
-    const startDate = this.getStartDate(
+    const { endDate, startDate } = getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
-    const endDate = new Date();
+
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation
       ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
@@ -1615,52 +1595,6 @@ export class PortfolioService {
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
-  }
-
-  private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
-    switch (aDateRange) {
-      case '1d':
-        portfolioStart = max([
-          portfolioStart,
-          subDays(new Date().setHours(0, 0, 0, 0), 1)
-        ]);
-        break;
-      case 'mtd':
-        portfolioStart = max([
-          portfolioStart,
-          subDays(startOfMonth(new Date().setHours(0, 0, 0, 0)), 1)
-        ]);
-        break;
-      case 'wtd':
-        portfolioStart = max([
-          portfolioStart,
-          subDays(
-            startOfWeek(new Date().setHours(0, 0, 0, 0), { weekStartsOn: 1 }),
-            1
-          )
-        ]);
-        break;
-      case 'ytd':
-        portfolioStart = max([
-          portfolioStart,
-          subDays(startOfYear(new Date().setHours(0, 0, 0, 0)), 1)
-        ]);
-        break;
-      case '1y':
-        portfolioStart = max([
-          portfolioStart,
-          subYears(new Date().setHours(0, 0, 0, 0), 1)
-        ]);
-        break;
-      case '5y':
-        portfolioStart = max([
-          portfolioStart,
-          subYears(new Date().setHours(0, 0, 0, 0), 5)
-        ]);
-        break;
-    }
-
-    return portfolioStart;
   }
 
   private getStreaks({

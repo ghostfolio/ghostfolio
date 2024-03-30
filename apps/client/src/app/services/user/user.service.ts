@@ -82,6 +82,10 @@ export class UserService extends ObservableStore<UserStoreState> {
   private fetchUser(): Observable<User> {
     return this.http.get<any>('/api/v1/user').pipe(
       map((user) => {
+        if (user.dateOfFirstActivity) {
+          user.dateOfFirstActivity = parseISO(user.dateOfFirstActivity);
+        }
+
         if (user.settings?.retirementDate) {
           user.settings.retirementDate = parseISO(user.settings.retirementDate);
         }

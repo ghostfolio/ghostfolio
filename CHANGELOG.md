@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the date range support in the activities table on the portfolio activities page (experimental)
+- Extended the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
+
 ### Changed
 
 - Improved the usability to delete an asset profile in the historical market data table and the asset profile details dialog of the admin control

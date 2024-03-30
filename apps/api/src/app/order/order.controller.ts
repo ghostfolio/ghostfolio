@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
@@ -8,7 +9,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/da
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -84,6 +85,7 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
@@ -96,14 +98,18 @@ export class OrderController {
       filterByTags
     });
 
+    const { endDate, startDate } = getInterval(dateRange);
+
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     const { activities, count } = await this.orderService.getOrders({
+      endDate,
       filters,
       sortColumn,
       sortDirection,
+      startDate,
       userCurrency,
       includeDrafts: true,
       skip: isNaN(skip) ? undefined : skip,

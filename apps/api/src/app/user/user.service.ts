@@ -51,13 +51,22 @@ export class UserService {
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
-    const access = await this.prismaService.access.findMany({
-      include: {
-        User: true
-      },
-      orderBy: { alias: 'asc' },
-      where: { GranteeUser: { id } }
-    });
+    let [access, firstActivity, tags] = await Promise.all([
+      this.prismaService.access.findMany({
+        include: {
+          User: true
+        },
+        orderBy: { alias: 'asc' },
+        where: { GranteeUser: { id } }
+      }),
+      this.prismaService.order.findFirst({
+        orderBy: {
+          date: 'asc'
+        },
+        where: { userId: id }
+      }),
+      this.tagService.getByUser(id)
+    ]);
 
     let systemMessage: SystemMessage;
 
@@ -68,8 +77,6 @@ export class UserService {
     if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
     }
-
-    let tags = await this.tagService.getByUser(id);
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
@@ -91,6 +98,7 @@ export class UserService {
         };
       }),
       accounts: Account,
+      dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(<UserSettings>Settings.settings),
         locale: (<UserSettings>Settings.settings)?.locale ?? aLocale
