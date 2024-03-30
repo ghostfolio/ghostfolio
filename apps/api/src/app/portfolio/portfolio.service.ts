@@ -87,7 +87,7 @@ import {
   endOfDay,
   endOfYear
 } from 'date-fns';
-import { isEmpty, last, uniq, uniqBy } from 'lodash';
+import { first, isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/twr/portfolio-calculator';
 import {
@@ -224,11 +224,9 @@ export class PortfolioService {
 
   public async getDividends({
     activities,
-    dateRange = 'max',
     groupBy
   }: {
     activities: Activity[];
-    dateRange?: DateRange;
     groupBy?: GroupBy;
   }): Promise<InvestmentItem[]> {
     let dividends = activities.map(({ date, valueInBaseCurrency }) => {
@@ -242,14 +240,50 @@ export class PortfolioService {
       dividends = this.getDividendsByGroup({ dividends, groupBy });
     }
 
-    const { startDate } = this.getInterval(
-      dateRange,
-      parseDate(dividends[0]?.date)
-    );
+    return dividends;
+  }
 
-    return dividends.filter(({ date }) => {
-      return !isBefore(parseDate(date), startDate);
-    });
+  public getInterval(aDateRange: DateRange, portfolioStart = new Date(0)) {
+    let endDate = endOfDay(new Date());
+    let startDate = portfolioStart;
+
+    switch (aDateRange) {
+      case '1d':
+        startDate = max([startDate, subDays(resetHours(new Date()), 1)]);
+        break;
+      case 'mtd':
+        startDate = max([
+          startDate,
+          subDays(startOfMonth(resetHours(new Date())), 1)
+        ]);
+        break;
+      case 'wtd':
+        startDate = max([
+          startDate,
+          subDays(startOfWeek(resetHours(new Date()), { weekStartsOn: 1 }), 1)
+        ]);
+        break;
+      case 'ytd':
+        startDate = max([
+          startDate,
+          subDays(startOfYear(resetHours(new Date())), 1)
+        ]);
+        break;
+      case '1y':
+        startDate = max([startDate, subYears(resetHours(new Date()), 1)]);
+        break;
+      case '5y':
+        startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
+        break;
+      case 'max':
+        break;
+      default:
+        // '2024', '2023', '2022', etc.
+        endDate = endOfYear(new Date(aDateRange));
+        startDate = max([startDate, new Date(aDateRange)]);
+    }
+
+    return { endDate, startDate };
   }
 
   public async getInvestments({
@@ -963,7 +997,10 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
+    const { endDate, startDate } = this.getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
       userId,
       types: ['BUY', 'SELL'],
@@ -984,12 +1021,10 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const { startDate } = this.getInterval(
-      dateRange,
-      portfolioCalculator.getStartDate()
+    const currentPositions = await portfolioCalculator.getCurrentPositions(
+      startDate,
+      endDate
     );
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(startDate);
 
     let positions = currentPositions.positions.filter(({ quantity }) => {
       return !quantity.eq(0);
@@ -1136,7 +1171,10 @@ export class PortfolioService {
       )
     );
 
+    const { endDate, startDate } = this.getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
       userCurrency,
       userId,
@@ -1172,16 +1210,6 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const portfolioStart = min(
-      [
-        parseDate(accountBalanceItems[0]?.date),
-        portfolioCalculator.getStartDate()
-      ].filter((date) => {
-        return isValid(date);
-      })
-    );
-
-    const { startDate } = this.getInterval(dateRange, portfolioStart);
     const {
       currentValueInBaseCurrency,
       errors,
@@ -1195,7 +1223,7 @@ export class PortfolioService {
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceWithCurrencyEffect,
       totalInvestment
-    } = await portfolioCalculator.getCurrentPositions(startDate); // TODO: Provide endDate
+    } = await portfolioCalculator.getCurrentPositions(startDate, endDate);
 
     let currentNetPerformance = netPerformance;
 
@@ -1618,49 +1646,6 @@ export class PortfolioService {
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
-  }
-
-  private getInterval(aDateRange: DateRange, portfolioStart: Date) {
-    let endDate = endOfDay(new Date());
-    let startDate = portfolioStart;
-
-    switch (aDateRange) {
-      case '1d':
-        startDate = max([startDate, subDays(resetHours(new Date()), 1)]);
-        break;
-      case 'mtd':
-        startDate = max([
-          startDate,
-          subDays(startOfMonth(resetHours(new Date())), 1)
-        ]);
-        break;
-      case 'wtd':
-        startDate = max([
-          startDate,
-          subDays(startOfWeek(resetHours(new Date()), { weekStartsOn: 1 }), 1)
-        ]);
-        break;
-      case 'ytd':
-        startDate = max([
-          startDate,
-          subDays(startOfYear(resetHours(new Date())), 1)
-        ]);
-        break;
-      case '1y':
-        startDate = max([startDate, subYears(resetHours(new Date()), 1)]);
-        break;
-      case '5y':
-        startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
-        break;
-      case 'max':
-        break;
-      default:
-        // '2024', '2023', '2022', etc.
-        endDate = endOfYear(new Date(aDateRange));
-        startDate = max([startDate, new Date(aDateRange)]);
-    }
-
-    return { endDate, startDate };
   }
 
   private getStreaks({

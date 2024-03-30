@@ -236,8 +236,12 @@ export class PortfolioController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
+    const { endDate, startDate } = this.portfolioService.getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
+      startDate,
       userCurrency,
       userId: impersonationUserId || this.request.user.id,
       types: ['DIVIDEND']
@@ -245,7 +249,6 @@ export class PortfolioController {
 
     let dividends = await this.portfolioService.getDividends({
       activities,
-      dateRange,
       groupBy
     });
 

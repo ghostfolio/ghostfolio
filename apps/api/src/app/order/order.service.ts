@@ -198,22 +198,26 @@ export class OrderService {
   }
 
   public async getOrders({
+    endDate,
     filters,
     includeDrafts = false,
     skip,
     sortColumn,
     sortDirection,
+    startDate,
     take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
     withExcludedAccounts = false
   }: {
+    endDate?: Date;
     filters?: Filter[];
     includeDrafts?: boolean;
     skip?: number;
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
+    startDate?: Date;
     take?: number;
     types?: ActivityType[];
     userCurrency: string;
@@ -224,6 +228,18 @@ export class OrderService {
       { date: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
+
+    if (endDate || startDate) {
+      where.AND = [];
+
+      if (endDate) {
+        where.AND.push({ date: { lte: endDate } });
+      }
+
+      if (startDate) {
+        where.AND.push({ date: { gt: startDate } });
+      }
+    }
 
     const {
       ACCOUNT: filtersByAccount,
