@@ -1652,7 +1652,10 @@ export class PortfolioService {
       case '5y':
         startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
         break;
+      case 'max':
+        break;
       default:
+        // '2024', '2023', '2022', etc.
         endDate = endOfYear(new Date(aDateRange));
         startDate = max([startDate, new Date(aDateRange)]);
     }
