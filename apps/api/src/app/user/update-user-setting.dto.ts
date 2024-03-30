@@ -41,7 +41,7 @@ export class UpdateUserSettingDto {
     'mtd',
     'wtd',
     'ytd',
-    ...eachYearOfInterval({ end: new Date(1900), start: new Date() }).map(
+    ...eachYearOfInterval({ end: new Date(), start: new Date(1900) }).map(
       (date) => {
         return format(date, 'yyyy');
       }
