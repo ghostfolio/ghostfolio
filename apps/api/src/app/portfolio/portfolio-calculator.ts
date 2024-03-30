@@ -94,7 +94,7 @@ export class PortfolioCalculator {
           order.type === 'SPLIT'
             ? order.quantity.s === 1
               ? oldAccumulatedSymbol.quantity.mul(order.quantity)
-              : oldAccumulatedSymbol.quantity.div(order.quantity)
+              : oldAccumulatedSymbol.quantity.div(order.quantity.abs())
             : order.quantity.mul(factor).plus(oldAccumulatedSymbol.quantity);
 
         if (order.type === 'BUY') {
