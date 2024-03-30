@@ -159,18 +159,24 @@ export class DataService {
 
   public fetchActivities({
     filters,
+    range,
     skip,
     sortColumn,
     sortDirection,
     take
   }: {
     filters?: Filter[];
+    range?: DateRange;
     skip?: number;
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
   }): Observable<Activities> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     if (skip) {
       params = params.append('skip', skip);
@@ -277,7 +283,10 @@ export class DataService {
     startDate: Date;
   } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
     let params = new HttpParams();
-    params = params.append('range', range);
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     return this.http.get<BenchmarkMarketDataDetails>(
       `/api/v1/benchmark/${dataSource}/${symbol}/${format(

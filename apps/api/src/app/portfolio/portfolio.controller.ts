@@ -6,6 +6,7 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
+import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
@@ -236,7 +237,7 @@ export class PortfolioController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const { endDate, startDate } = this.portfolioService.getInterval(dateRange);
+    const { endDate, startDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,

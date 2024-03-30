@@ -1,4 +1,3 @@
-import { PortfolioModule } from '@ghostfolio/api/app/portfolio/portfolio.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -22,7 +21,6 @@ import { BenchmarkService } from './benchmark.service';
     DataProviderModule,
     ExchangeRateDataModule,
     MarketDataModule,
-    PortfolioModule,
     PrismaModule,
     PropertyModule,
     RedisCacheModule,

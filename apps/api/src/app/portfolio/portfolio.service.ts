@@ -5,7 +5,10 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import {
+  getFactor,
+  getInterval
+} from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -26,8 +29,7 @@ import {
   DATE_FORMAT,
   getAllActivityTypes,
   getSum,
-  parseDate,
-  resetHours
+  parseDate
 } from '@ghostfolio/common/helper';
 import {
   Accounts,
@@ -74,20 +76,10 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
-  isValid,
-  max,
-  min,
   parseISO,
-  set,
-  startOfWeek,
-  startOfMonth,
-  startOfYear,
-  subDays,
-  subYears,
-  endOfDay,
-  endOfYear
+  set
 } from 'date-fns';
-import { first, isEmpty, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/twr/portfolio-calculator';
 import {
@@ -243,49 +235,6 @@ export class PortfolioService {
     return dividends;
   }
 
-  public getInterval(aDateRange: DateRange, portfolioStart = new Date(0)) {
-    let endDate = endOfDay(new Date());
-    let startDate = portfolioStart;
-
-    switch (aDateRange) {
-      case '1d':
-        startDate = max([startDate, subDays(resetHours(new Date()), 1)]);
-        break;
-      case 'mtd':
-        startDate = max([
-          startDate,
-          subDays(startOfMonth(resetHours(new Date())), 1)
-        ]);
-        break;
-      case 'wtd':
-        startDate = max([
-          startDate,
-          subDays(startOfWeek(resetHours(new Date()), { weekStartsOn: 1 }), 1)
-        ]);
-        break;
-      case 'ytd':
-        startDate = max([
-          startDate,
-          subDays(startOfYear(resetHours(new Date())), 1)
-        ]);
-        break;
-      case '1y':
-        startDate = max([startDate, subYears(resetHours(new Date()), 1)]);
-        break;
-      case '5y':
-        startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
-        break;
-      case 'max':
-        break;
-      default:
-        // '2024', '2023', '2022', etc.
-        endDate = endOfYear(new Date(aDateRange));
-        startDate = max([startDate, new Date(aDateRange)]);
-    }
-
-    return { endDate, startDate };
-  }
-
   public async getInvestments({
     dateRange,
     filters,
@@ -412,7 +361,7 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const { startDate } = this.getInterval(
+    const { startDate } = getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
@@ -997,7 +946,7 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { endDate, startDate } = this.getInterval(dateRange);
+    const { endDate, startDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -1171,7 +1120,7 @@ export class PortfolioService {
       )
     );
 
-    const { endDate, startDate } = this.getInterval(dateRange);
+    const { endDate, startDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -1479,7 +1428,7 @@ export class PortfolioService {
 
     userId = await this.getUserId(impersonationId, userId);
 
-    const { endDate, startDate } = this.getInterval(
+    const { endDate, startDate } = getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );

@@ -1,6 +1,6 @@
-import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
 import type {
@@ -35,7 +35,6 @@ import { BenchmarkService } from './benchmark.service';
 export class BenchmarkController {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
-    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -112,7 +111,7 @@ export class BenchmarkController {
     @Param('symbol') symbol: string,
     @Query('range') dateRange: DateRange = 'max'
   ): Promise<BenchmarkMarketDataDetails> {
-    const { endDate, startDate } = this.portfolioService.getInterval(
+    const { endDate, startDate } = getInterval(
       dateRange,
       new Date(startDateString)
     );
