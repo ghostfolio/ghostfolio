@@ -83,7 +83,9 @@ import {
   startOfMonth,
   startOfYear,
   subDays,
-  subYears
+  subYears,
+  endOfDay,
+  endOfYear
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
@@ -240,7 +242,7 @@ export class PortfolioService {
       dividends = this.getDividendsByGroup({ dividends, groupBy });
     }
 
-    const startDate = this.getStartDate(
+    const { startDate } = this.getInterval(
       dateRange,
       parseDate(dividends[0]?.date)
     );
@@ -376,7 +378,7 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const startDate = this.getStartDate(
+    const { startDate } = this.getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
@@ -982,7 +984,7 @@ export class PortfolioService {
       exchangeRateDataService: this.exchangeRateDataService
     });
 
-    const startDate = this.getStartDate(
+    const { startDate } = this.getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
@@ -1179,8 +1181,7 @@ export class PortfolioService {
       })
     );
 
-    // TODO: Refactor to getInterval()?
-    const startDate = this.getStartDate(dateRange, portfolioStart);
+    const { startDate } = this.getInterval(dateRange, portfolioStart);
     const {
       currentValueInBaseCurrency,
       errors,
@@ -1450,13 +1451,11 @@ export class PortfolioService {
 
     userId = await this.getUserId(impersonationId, userId);
 
-    const startDate = this.getStartDate(
+    const { endDate, startDate } = this.getInterval(
       dateRange,
       portfolioCalculator.getStartDate()
     );
 
-    // TODO
-    const endDate = new Date();
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation
       ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
@@ -1621,7 +1620,8 @@ export class PortfolioService {
     };
   }
 
-  private getStartDate(aDateRange: DateRange, portfolioStart: Date) {
+  private getInterval(aDateRange: DateRange, portfolioStart: Date) {
+    let endDate = endOfDay(new Date());
     let startDate = portfolioStart;
 
     switch (aDateRange) {
@@ -1653,10 +1653,11 @@ export class PortfolioService {
         startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
         break;
       default:
+        endDate = endOfYear(new Date(aDateRange));
         startDate = max([startDate, new Date(aDateRange)]);
     }
 
-    return startDate;
+    return { endDate, startDate };
   }
 
   private getStreaks({
