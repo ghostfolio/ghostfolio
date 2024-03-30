@@ -1,3 +1,4 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
@@ -8,7 +9,7 @@ import type {
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -19,6 +20,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -33,6 +35,7 @@ import { BenchmarkService } from './benchmark.service';
 export class BenchmarkController {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
+    private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -106,13 +109,18 @@ export class BenchmarkController {
   public async getBenchmarkMarketDataBySymbol(
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<BenchmarkMarketDataDetails> {
-    const startDate = new Date(startDateString);
+    const { endDate, startDate } = this.portfolioService.getInterval(
+      dateRange,
+      new Date(startDateString)
+    );
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     return this.benchmarkService.getMarketDataBySymbol({
       dataSource,
+      endDate,
       startDate,
       symbol,
       userCurrency

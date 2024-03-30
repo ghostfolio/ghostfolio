@@ -269,16 +269,22 @@ export class DataService {
 
   public fetchBenchmarkBySymbol({
     dataSource,
+    range,
     startDate,
     symbol
   }: {
+    range: DateRange;
     startDate: Date;
   } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
+    let params = new HttpParams();
+    params = params.append('range', range);
+
     return this.http.get<BenchmarkMarketDataDetails>(
       `/api/v1/benchmark/${dataSource}/${symbol}/${format(
         startDate,
         DATE_FORMAT
-      )}`
+      )}`,
+      { params }
     );
   }
 
