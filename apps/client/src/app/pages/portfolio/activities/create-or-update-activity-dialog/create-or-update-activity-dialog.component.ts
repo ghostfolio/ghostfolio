@@ -424,11 +424,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             'feeInCustomCurrency'
           ].updateValueAndValidity();
 
-          // this.activityForm.controls['searchSymbol'].removeValidators(
-          //   Validators.required
-          // );
-          // this.activityForm.controls['searchSymbol'].updateValueAndValidity();
-
           this.activityForm.controls['unitPrice'].removeValidators(
             Validators.required
           );
@@ -440,13 +435,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.controls[
             'unitPriceInCustomCurrency'
           ].updateValueAndValidity();
-
-          // this.activityForm.controls['dataSource'].removeValidators(
-          //   Validators.required
-          // );
-          // this.activityForm.controls['dataSource'].updateValueAndValidity();
-
-          this.activityForm.controls['quantity'].setValue(1);
 
           this.activityForm.controls['updateAccountBalance'].disable();
           this.activityForm.controls['updateAccountBalance'].setValue(false);
