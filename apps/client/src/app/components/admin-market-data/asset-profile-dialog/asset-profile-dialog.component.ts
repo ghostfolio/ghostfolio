@@ -64,7 +64,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     name: ['', Validators.required],
     scraperConfiguration: '',
     sectors: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    url: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -163,7 +164,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfile?.scraperConfiguration ?? {}
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          url: this.assetProfile?.url
         });
 
         this.assetProfileForm.markAsPristine();
@@ -293,7 +295,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
       ))?.value,
-      name: this.assetProfileForm.controls['name'].value
+      name: this.assetProfileForm.controls['name'].value,
+      url: this.assetProfileForm.controls['url'].value
     };
 
     this.adminService

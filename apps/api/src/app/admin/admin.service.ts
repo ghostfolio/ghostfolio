@@ -333,12 +333,14 @@ export class AdminService {
     scraperConfiguration,
     sectors,
     symbol,
-    symbolMapping
+    symbolMapping,
+    url
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     const symbolProfileOverride = {
       name: name as string,
       assetClass: assetClass as $Enums.AssetClass,
-      assetSubClass: assetSubClass as $Enums.AssetSubClass
+      assetSubClass: assetSubClass as $Enums.AssetSubClass,
+      url: url as string
     };
 
     const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput & UniqueAsset =
@@ -352,7 +354,7 @@ export class AdminService {
         symbol,
         symbolMapping,
         ...(dataSource === 'MANUAL'
-          ? { name, assetClass, assetSubClass }
+          ? { name, assetClass, assetSubClass, url }
           : {
               SymbolProfileOverrides: {
                 upsert: {
