@@ -1,10 +1,11 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -36,34 +37,36 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
+        activities: <Activity[]>[
           {
-            currency: 'CHF',
-            date: '2022-03-07',
-            dataSource: 'YAHOO',
-            fee: new Big(1.3),
-            name: 'Novartis AG',
-            quantity: new Big(2),
-            symbol: 'NOVN.SW',
+            date: new Date('2022-03-07'),
+            fee: 1.3,
+            quantity: 2,
+            SymbolProfile: {
+              currency: 'CHF',
+              dataSource: 'YAHOO',
+              name: 'Novartis AG',
+              symbol: 'NOVN.SW'
+            },
             type: 'BUY',
-            unitPrice: new Big(75.8)
+            unitPrice: 75.8
           },
           {
-            currency: 'CHF',
-            date: '2022-04-08',
-            dataSource: 'YAHOO',
-            fee: new Big(2.95),
-            name: 'Novartis AG',
-            quantity: new Big(1),
-            symbol: 'NOVN.SW',
+            date: new Date('2022-04-08'),
+            fee: 2.95,
+            quantity: 1,
+            SymbolProfile: {
+              currency: 'CHF',
+              dataSource: 'YAHOO',
+              name: 'Novartis AG',
+              symbol: 'NOVN.SW'
+            },
             type: 'SELL',
-            unitPrice: new Big(85.73)
+            unitPrice: 85.73
           }
-        ]
+        ],
+        currency: 'CHF'
       });
-
-      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')

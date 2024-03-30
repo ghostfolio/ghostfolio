@@ -1,8 +1,8 @@
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 import { Big } from 'big.js';
 
-import { CurrentRateService } from './current-rate.service';
 import { PortfolioCalculator } from './portfolio-calculator';
 
 describe('PortfolioCalculator', () => {
@@ -22,10 +22,10 @@ describe('PortfolioCalculator', () => {
 
   describe('annualized performance percentage', () => {
     const portfolioCalculator = new PortfolioCalculator({
+      activities: [],
       currentRateService,
       exchangeRateDataService,
-      currency: 'USD',
-      orders: []
+      currency: 'USD'
     });
 
     it('Get annualized performance', async () => {

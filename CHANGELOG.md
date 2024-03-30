@@ -7,10 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Added missing dates to edit historical market data in the asset profile details dialog of the admin control panel
+
+## 2.68.0 - 2024-03-29
+
 ### Added
 
 - Extended the export functionality by the user account’s currency
 - Added support to override the name of an asset profile in the asset profile details dialog of the admin control
+
+### Changed
+
+- Optimized the portfolio calculations
 
 ### Fixed
 

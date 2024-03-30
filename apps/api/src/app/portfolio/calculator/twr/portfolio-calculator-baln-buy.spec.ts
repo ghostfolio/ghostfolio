@@ -1,10 +1,11 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 
-import { CurrentRateServiceMock } from './current-rate.service.mock';
 import { PortfolioCalculator } from './portfolio-calculator';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
@@ -36,23 +37,23 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = new PortfolioCalculator({
         currentRateService,
         exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
+        activities: <Activity[]>[
           {
-            currency: 'CHF',
-            date: '2021-11-30',
-            dataSource: 'YAHOO',
-            fee: new Big(1.55),
-            name: 'Bâloise Holding AG',
-            quantity: new Big(2),
-            symbol: 'BALN.SW',
+            date: new Date('2021-11-30'),
+            fee: 1.55,
+            quantity: 2,
+            SymbolProfile: {
+              currency: 'CHF',
+              dataSource: 'YAHOO',
+              name: 'Bâloise Holding AG',
+              symbol: 'BALN.SW'
+            },
             type: 'BUY',
-            unitPrice: new Big(136.6)
+            unitPrice: 136.6
           }
-        ]
+        ],
+        currency: 'CHF'
       });
-
-      portfolioCalculator.computeTransactionPoints();
 
       const spy = jest
         .spyOn(Date, 'now')
