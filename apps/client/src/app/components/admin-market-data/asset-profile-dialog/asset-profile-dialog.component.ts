@@ -3,6 +3,7 @@ import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-dat
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -71,6 +72,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public currencies: Currency[] = [];
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
