@@ -1232,10 +1232,12 @@
     <loc>https://ghostfol.io/nl/veelgestelde-vragen</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
+  <!--
   <url>
     <loc>https://ghostfol.io/pl</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
+  -->
   <url>
     <loc>https://ghostfol.io/pt</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
@@ -1296,4 +1298,10 @@
     <loc>https://ghostfol.io/tr</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
+  <!--
+  <url>
+    <loc>https://ghostfol.io/zh</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  -->
 </urlset>

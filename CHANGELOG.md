@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the language localization for Chinese (`zh`)
+
 ### Changed
 
 - Improved the usability of the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
