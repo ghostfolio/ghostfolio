@@ -219,6 +219,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
             return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
           })
           .slice(0, -1)
+          .reverse()
       );
     }
 
