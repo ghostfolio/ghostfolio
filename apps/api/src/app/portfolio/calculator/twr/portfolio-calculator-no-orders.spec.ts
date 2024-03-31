@@ -1,3 +1,7 @@
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -5,11 +9,6 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 import { subDays } from 'date-fns';
-
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -44,8 +43,8 @@ describe('PortfolioCalculator', () => {
   describe('get current positions', () => {
     it('with no orders', async () => {
       const portfolioCalculator = factory.createCalculator({
-        calculationType: PerformanceCalculationType.TWR,
         activities: [],
+        calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF'
       });
 
@@ -81,7 +80,8 @@ describe('PortfolioCalculator', () => {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
-        totalInvestment: new Big(0)
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0)
       });
 
       expect(investments).toEqual([]);

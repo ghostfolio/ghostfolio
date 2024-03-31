@@ -1,4 +1,12 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -6,15 +14,6 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
-
-import {
-  activityDummyData,
-  symbolProfileDummyData
-} from '../portfolio-calculator-test-utils';
-import {
-  PortfolioCalculatorFactory,
-  PerformanceCalculationType
-} from '../portfolio-calculator.factory';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -94,8 +93,8 @@ describe('PortfolioCalculator', () => {
       ];
 
       const portfolioCalculator = factory.createCalculator({
-        calculationType: PerformanceCalculationType.TWR,
         activities,
+        calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF'
       });
 

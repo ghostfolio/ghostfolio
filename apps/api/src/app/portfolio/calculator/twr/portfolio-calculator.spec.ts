@@ -1,12 +1,11 @@
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 
 import { Big } from 'big.js';
-
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '../portfolio-calculator.factory';
 
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
@@ -32,8 +31,8 @@ describe('PortfolioCalculator', () => {
   describe('annualized performance percentage', () => {
     it('Get annualized performance', async () => {
       const portfolioCalculator = factory.createCalculator({
-        calculationType: PerformanceCalculationType.TWR,
         activities: [],
+        calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF'
       });
 

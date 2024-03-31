@@ -15,30 +15,30 @@ export enum PerformanceCalculationType {
 
 @Injectable()
 export class PortfolioCalculatorFactory {
-  constructor(
+  public constructor(
     private readonly currentRateService: CurrentRateService,
     private readonly exchangeRateDataService: ExchangeRateDataService
   ) {}
 
-  createCalculator({
-    calculationType,
+  public createCalculator({
     activities,
+    calculationType,
     currency
   }: {
-    calculationType: PerformanceCalculationType;
     activities: Activity[];
+    calculationType: PerformanceCalculationType;
     currency: string;
   }): PortfolioCalculator {
     switch (calculationType) {
-      case PerformanceCalculationType.TWR:
-        return new TWRPortfolioCalculator({
+      case PerformanceCalculationType.MWR:
+        return new MWRPortfolioCalculator({
           activities,
           currency,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService
         });
-      case PerformanceCalculationType.MWR:
-        return new MWRPortfolioCalculator({
+      case PerformanceCalculationType.TWR:
+        return new TWRPortfolioCalculator({
           activities,
           currency,
           currentRateService: this.currentRateService,

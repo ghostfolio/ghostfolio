@@ -3,7 +3,6 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   getFactor,
@@ -76,16 +75,8 @@ import {
   isBefore,
   isSameMonth,
   isSameYear,
-  isValid,
-  max,
-  min,
   parseISO,
-  set,
-  startOfWeek,
-  startOfMonth,
-  startOfYear,
-  subDays,
-  subYears
+  set
 } from 'date-fns';
 import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
@@ -110,7 +101,7 @@ export class PortfolioService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
-    private readonly currentRateService: CurrentRateService,
+    private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
@@ -118,8 +109,7 @@ export class PortfolioService {
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
     private readonly symbolProfileService: SymbolProfileService,
-    private readonly userService: UserService,
-    private readonly calculatorFactory: PortfolioCalculatorFactory
+    private readonly userService: UserService
   ) {}
 
   public async getAccounts({
@@ -279,8 +269,8 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
-      calculationType: PerformanceCalculationType.TWR,
       activities,
+      calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
@@ -367,8 +357,8 @@ export class PortfolioService {
     });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
-      calculationType: PerformanceCalculationType.TWR,
       activities,
+      calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
 
@@ -731,14 +721,13 @@ export class PortfolioService {
 
     tags = uniqBy(tags, 'id');
 
-    const filteredActivities = orders.filter((order) => {
-      tags = tags.concat(order.tags);
-      return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
-    });
-
     const portfolioCalculator = this.calculatorFactory.createCalculator({
+      activities: orders.filter((order) => {
+        tags = tags.concat(order.tags);
+
+        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
+      }),
       calculationType: PerformanceCalculationType.TWR,
-      activities: filteredActivities,
       currency: userCurrency
     });
 
@@ -974,8 +963,8 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
-      calculationType: PerformanceCalculationType.TWR,
       activities,
+      calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
@@ -1161,8 +1150,8 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
-      calculationType: PerformanceCalculationType.TWR,
       activities,
+      calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
 
@@ -1278,8 +1267,8 @@ export class PortfolioService {
     });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
-      calculationType: PerformanceCalculationType.TWR,
       activities,
+      calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 

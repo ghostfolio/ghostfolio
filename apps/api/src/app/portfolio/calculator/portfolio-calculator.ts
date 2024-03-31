@@ -34,11 +34,12 @@ import { isNumber, last, uniq } from 'lodash';
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
+  protected orders: PortfolioOrder[];
+
   private currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private exchangeRateDataService: ExchangeRateDataService;
-  protected orders: PortfolioOrder[];
   private transactionPoints: TransactionPoint[];
 
   public constructor({
@@ -74,6 +75,10 @@ export abstract class PortfolioCalculator {
 
     this.computeTransactionPoints();
   }
+
+  protected abstract calculateOverallPerformance(
+    positions: TimelinePosition[]
+  ): CurrentPositions;
 
   public getAnnualizedPerformancePercent({
     daysInMarket,
@@ -394,7 +399,8 @@ export abstract class PortfolioCalculator {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
-        totalInvestment: new Big(0)
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0)
       };
     }
 
@@ -652,19 +658,11 @@ export abstract class PortfolioCalculator {
     }));
   }
 
-  public getTransactionPoints() {
-    return this.transactionPoints;
-  }
-
   public getStartDate() {
     return this.transactionPoints.length > 0
       ? parseDate(this.transactionPoints[0].date)
       : new Date();
   }
-
-  protected abstract calculateOverallPerformance(
-    positions: TimelinePosition[]
-  ): CurrentPositions;
 
   protected abstract getSymbolMetrics({
     dataSource,
@@ -685,6 +683,10 @@ export abstract class PortfolioCalculator {
     start: Date;
     step?: number;
   } & UniqueAsset): SymbolMetrics;
+
+  public getTransactionPoints() {
+    return this.transactionPoints;
+  }
 
   private computeTransactionPoints() {
     this.transactionPoints = [];

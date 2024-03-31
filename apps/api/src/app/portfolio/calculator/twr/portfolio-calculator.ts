@@ -1,3 +1,4 @@
+import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/current-positions.interface';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -18,8 +19,6 @@ import {
   isBefore
 } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
-
-import { PortfolioCalculator } from '../portfolio-calculator';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
