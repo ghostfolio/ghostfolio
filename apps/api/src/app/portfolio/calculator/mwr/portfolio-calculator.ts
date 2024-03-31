@@ -1,9 +1,9 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/current-positions.interface';
 import {
+  SymbolMetrics,
   TimelinePosition,
-  UniqueAsset,
-  SymbolMetrics
+  UniqueAsset
 } from '@ghostfolio/common/interfaces';
 
 export class MWRPortfolioCalculator extends PortfolioCalculator {

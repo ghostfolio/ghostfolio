@@ -947,6 +947,7 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
 
     const { endDate, startDate } = getInterval(dateRange);
+
     const { activities } = await this.orderService.getOrders({
       endDate,
       filters,
@@ -1121,6 +1122,7 @@ export class PortfolioService {
     const { endDate, startDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
+      endDate,
       filters,
       userCurrency,
       userId,
@@ -1769,8 +1771,8 @@ export class PortfolioService {
 
     const annualizedPerformancePercent = this.calculatorFactory
       .createCalculator({
-        calculationType: PerformanceCalculationType.TWR,
         activities: [],
+        calculationType: PerformanceCalculationType.TWR,
         currency: userCurrency
       })
       .getAnnualizedPerformancePercent({
@@ -1784,8 +1786,8 @@ export class PortfolioService {
     const annualizedPerformancePercentWithCurrencyEffect =
       this.calculatorFactory
         .createCalculator({
-          calculationType: PerformanceCalculationType.TWR,
           activities: [],
+          calculationType: PerformanceCalculationType.TWR,
           currency: userCurrency
         })
         .getAnnualizedPerformancePercent({

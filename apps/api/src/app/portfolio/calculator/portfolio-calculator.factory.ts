@@ -9,8 +9,8 @@ import { PortfolioCalculator } from './portfolio-calculator';
 import { TWRPortfolioCalculator } from './twr/portfolio-calculator';
 
 export enum PerformanceCalculationType {
-  TWR = 'TWR', // Time-Weighted Rate of Return
-  MWR = 'MWR' // Money-Weighted Rate of Return
+  MWR = 'MWR', // Money-Weighted Rate of Return
+  TWR = 'TWR' // Time-Weighted Rate of Return
 }
 
 @Injectable()

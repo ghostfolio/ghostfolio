@@ -2,7 +2,6 @@ import { AccessModule } from '@ghostfolio/api/app/access/access.module';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
-import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
@@ -17,6 +16,7 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 import { Module } from '@nestjs/common';
 
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
+import { CurrentRateService } from './current-rate.service';
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
 import { RulesService } from './rules.service';
