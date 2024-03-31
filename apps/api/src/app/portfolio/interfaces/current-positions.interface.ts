@@ -16,4 +16,5 @@ export interface CurrentPositions extends ResponseError {
   netPerformancePercentageWithCurrencyEffect: Big;
   positions: TimelinePosition[];
   totalInvestment: Big;
+  totalInvestmentWithCurrencyEffect: Big;
 }
