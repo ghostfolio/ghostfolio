@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up the language localization for Chinese (`zh`)
+- Set up _Webpack Bundle Analyzer_
 
 ### Changed
 
