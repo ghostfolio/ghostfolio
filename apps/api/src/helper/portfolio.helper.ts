@@ -19,6 +19,7 @@ export function getFactor(activityType: ActivityType) {
   switch (activityType) {
     case 'BUY':
     case 'ITEM':
+    case 'SPLIT':
       factor = 1;
       break;
     case 'LIABILITY':

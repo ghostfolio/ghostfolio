@@ -279,7 +279,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       if (this.activityForm.controls['searchSymbol'].invalid) {
         this.data.activity.SymbolProfile = null;
       } else if (
-        ['BUY', 'DIVIDEND', 'SELL'].includes(
+        ['BUY', 'DIVIDEND', 'SELL', 'SPLIT'].includes(
           this.activityForm.controls['type'].value
         )
       ) {
@@ -394,6 +394,50 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             this.activityForm.controls['updateAccountBalance'].disable();
             this.activityForm.controls['updateAccountBalance'].setValue(false);
           }
+        } else if (type === 'SPLIT') {
+          this.activityForm.controls['currency'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['currency'].updateValueAndValidity();
+
+          this.activityForm.controls['currencyOfFee'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['currencyOfFee'].updateValueAndValidity();
+
+          this.activityForm.controls['currencyOfUnitPrice'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls[
+            'currencyOfUnitPrice'
+          ].updateValueAndValidity();
+
+          this.activityForm.controls['fee'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['fee'].updateValueAndValidity();
+
+          this.activityForm.controls['feeInCustomCurrency'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls[
+            'feeInCustomCurrency'
+          ].updateValueAndValidity();
+
+          this.activityForm.controls['unitPrice'].removeValidators(
+            Validators.required
+          );
+          this.activityForm.controls['unitPrice'].updateValueAndValidity();
+
+          this.activityForm.controls[
+            'unitPriceInCustomCurrency'
+          ].removeValidators(Validators.required);
+          this.activityForm.controls[
+            'unitPriceInCustomCurrency'
+          ].updateValueAndValidity();
+
+          this.activityForm.controls['updateAccountBalance'].disable();
+          this.activityForm.controls['updateAccountBalance'].setValue(false);
         } else {
           this.activityForm.controls['accountId'].setValidators(
             Validators.required

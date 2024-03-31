@@ -301,6 +301,7 @@ enum Type {
   ITEM
   LIABILITY
   SELL
+  SPLIT
 }
 
 enum ViewMode {

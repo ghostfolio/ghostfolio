@@ -792,9 +792,12 @@ export class PortfolioCalculator {
       if (oldAccumulatedSymbol) {
         let investment = oldAccumulatedSymbol.investment;
 
-        const newQuantity = quantity
-          .mul(factor)
-          .plus(oldAccumulatedSymbol.quantity);
+        const newQuantity =
+          type === 'SPLIT'
+            ? quantity.s === 1
+              ? oldAccumulatedSymbol.quantity.mul(quantity)
+              : oldAccumulatedSymbol.quantity.div(quantity.abs())
+            : quantity.mul(factor).plus(oldAccumulatedSymbol.quantity);
 
         if (type === 'BUY') {
           investment = oldAccumulatedSymbol.investment.plus(

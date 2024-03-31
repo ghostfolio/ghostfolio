@@ -724,7 +724,9 @@ export class PortfolioService {
       activities: orders.filter((order) => {
         tags = tags.concat(order.tags);
 
-        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
+        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL', 'SPLIT'].includes(
+          order.type
+        );
       }),
       currency: userCurrency,
       currentRateService: this.currentRateService,

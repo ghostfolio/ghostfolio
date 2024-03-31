@@ -7,7 +7,8 @@
     interest: activityType === 'INTEREST',
     item: activityType === 'ITEM',
     liability: activityType === 'LIABILITY',
-    sell: activityType === 'SELL'
+    sell: activityType === 'SELL',
+    split: activityType === 'SPLIT'
   }"
 >
   @if (activityType === 'BUY') {
@@ -22,6 +23,8 @@
     <ion-icon name="flame-outline" />
   } @else if (activityType === 'SELL') {
     <ion-icon name="arrow-down-circle-outline" />
+  } @else if (activityType === 'SPLIT') {
+    <ion-icon name="git-branch-outline" />
   }
   <span class="d-none d-lg-block mx-1">{{ activityTypeLabel }}</span>
 </div>

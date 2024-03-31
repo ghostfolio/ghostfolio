@@ -15,9 +15,32 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Min
+  Min,
+  ValidationArguments,
+  ValidationOptions,
+  registerDecorator
 } from 'class-validator';
 import { isString } from 'lodash';
+
+function IsQuantityValid(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'isQuantityValid',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          const order = args.object as CreateOrderDto;
+          return order.type !== 'SPLIT' ? value >= 0 : true;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return `Quantity must not be less than 0 unless the type is ${Type.SPLIT}`;
+        }
+      }
+    });
+  };
+}
 
 export class CreateOrderDto {
   @IsOptional()
@@ -54,7 +77,7 @@ export class CreateOrderDto {
   fee: number;
 
   @IsNumber()
-  @Min(0)
+  @IsQuantityValid()
   quantity: number;
 
   @IsString()
