@@ -356,6 +356,7 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
+    // TODO: 1. Create portfolio calculator
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       calculationType: PerformanceCalculationType.TWR,
@@ -1151,6 +1152,7 @@ export class PortfolioService {
       };
     }
 
+    // TODO: 2. Create portfolio calculator
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       calculationType: PerformanceCalculationType.TWR,
@@ -1769,12 +1771,14 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = this.calculatorFactory
-      .createCalculator({
-        activities: [],
-        calculationType: PerformanceCalculationType.TWR,
-        currency: userCurrency
-      })
+    // TODO: 3. Create portfolio calculator
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      activities: [],
+      calculationType: PerformanceCalculationType.TWR,
+      currency: userCurrency
+    });
+
+    const annualizedPerformancePercent = portfolioCalculator
       .getAnnualizedPerformancePercent({
         daysInMarket,
         netPerformancePercent: new Big(
@@ -1783,20 +1787,14 @@ export class PortfolioService {
       })
       ?.toNumber();
 
-    const annualizedPerformancePercentWithCurrencyEffect =
-      this.calculatorFactory
-        .createCalculator({
-          activities: [],
-          calculationType: PerformanceCalculationType.TWR,
-          currency: userCurrency
-        })
-        .getAnnualizedPerformancePercent({
-          daysInMarket,
-          netPerformancePercent: new Big(
-            performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
-          )
-        })
-        ?.toNumber();
+    const annualizedPerformancePercentWithCurrencyEffect = portfolioCalculator
+      .getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercent: new Big(
+          performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+        )
+      })
+      ?.toNumber();
 
     return {
       ...performanceInformation.performance,
