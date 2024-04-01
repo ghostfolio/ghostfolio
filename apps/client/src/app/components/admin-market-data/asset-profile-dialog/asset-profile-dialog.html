@@ -7,9 +7,6 @@
   <div class="d-flex mb-3">
     <h1 class="flex-grow-1 m-0" mat-dialog-title>
       {{ assetProfile?.name ?? data.symbol }}
-      <small *ngIf="assetProfile?.url" class="text-body-secondary"
-        ><a target="_blank" [href]="assetProfile?.url">Go to webpage</a></small
-      >
     </h1>
     <button
       class="mx-1 no-min-width px-2"
@@ -218,12 +215,6 @@
         <input formControlName="name" matInput type="text" />
       </mat-form-field>
     </div>
-    <div class="mt-3">
-      <mat-form-field appearance="outline" class="w-100 without-hint">
-        <mat-label i18n>URL</mat-label>
-        <input formControlName="url" matInput type="text" />
-      </mat-form-field>
-    </div>
     <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Currency</mat-label>
@@ -339,6 +330,12 @@
       </mat-form-field>
     </div>
     <div>
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>URL</mat-label>
+        <input formControlName="url" matInput type="text" />
+      </mat-form-field>
+    </div>
+    <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Note</mat-label>
         <textarea

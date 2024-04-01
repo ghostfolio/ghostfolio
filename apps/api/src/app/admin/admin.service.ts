@@ -25,7 +25,7 @@ import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
-  $Enums,
+  AssetClass,
   AssetSubClass,
   DataSource,
   Prisma,
@@ -336,10 +336,10 @@ export class AdminService {
     symbolMapping,
     url
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
-    const symbolProfileOverride = {
+    const symbolProfileOverrides = {
+      assetClass: assetClass as AssetClass,
+      assetSubClass: assetSubClass as AssetSubClass,
       name: name as string,
-      assetClass: assetClass as $Enums.AssetClass,
-      assetSubClass: assetSubClass as $Enums.AssetSubClass,
       url: url as string
     };
 
@@ -354,12 +354,12 @@ export class AdminService {
         symbol,
         symbolMapping,
         ...(dataSource === 'MANUAL'
-          ? { name, assetClass, assetSubClass, url }
+          ? { assetClass, assetSubClass, name, url }
           : {
               SymbolProfileOverrides: {
                 upsert: {
-                  create: symbolProfileOverride,
-                  update: symbolProfileOverride
+                  create: symbolProfileOverrides,
+                  update: symbolProfileOverrides
                 }
               }
             })

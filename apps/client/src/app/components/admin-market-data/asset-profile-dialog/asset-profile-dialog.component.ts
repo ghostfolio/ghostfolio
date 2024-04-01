@@ -165,7 +165,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
-          url: this.assetProfile?.url
+          url: this.assetProfile?.url ?? ''
         });
 
         this.assetProfileForm.markAsPristine();
