@@ -1,6 +1,7 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/validation.util';
 import { Currency } from '@ghostfolio/common/interfaces';
 
 import {
@@ -115,8 +116,14 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
     if (this.data.account.id) {
       (account as UpdateAccountDto).id = this.data.account.id;
+      validateObjectForForm(account, UpdateAccountDto, this.accountForm, () => {
+        this.dialogRef.close({ account });
+      });
     } else {
       delete (account as CreateAccountDto).id;
+      validateObjectForForm(account, CreateAccountDto, this.accountForm, () => {
+        this.dialogRef.close({ account });
+      });
     }
 
     this.dialogRef.close({ account });

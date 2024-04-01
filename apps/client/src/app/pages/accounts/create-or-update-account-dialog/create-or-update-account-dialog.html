@@ -18,6 +18,9 @@
           matInput
           (keydown.enter)="$event.stopPropagation()"
         />
+        <mat-error *ngIf="accountForm.controls['name'].errors?.validationError">
+          {{ accountForm.controls['name'].errors?.validationError }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div>
@@ -27,6 +30,11 @@
           formControlName="currency"
           [currencies]="currencies"
         />
+        <mat-error
+          *ngIf="accountForm.controls['currency'].errors?.validationError"
+        >
+          {{ accountForm.controls['currency'].errors?.validationError }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div>
@@ -41,6 +49,11 @@
         <span class="ml-2" matTextSuffix>{{
           accountForm.controls['currency']?.value?.value
         }}</span>
+        <mat-error
+          *ngIf="accountForm.controls['balance'].errors?.validationError"
+        >
+          {{ accountForm.controls['balance'].errors?.validationError }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div [ngClass]="{ 'd-none': platforms?.length < 1 }">
@@ -71,6 +84,11 @@
             </mat-option>
           }
         </mat-autocomplete>
+        <mat-error
+          *ngIf="accountForm.controls['platformId'].errors?.validationError"
+        >
+          {{ accountForm.controls['platformId'].errors?.validationError }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div>
@@ -83,6 +101,11 @@
           matInput
           (keyup.enter)="$event.stopPropagation()"
         ></textarea>
+        <mat-error
+          *ngIf="accountForm.controls['comment'].errors?.validationError"
+        >
+          {{ accountForm.controls['comment'].errors?.validationError }}
+        </mat-error>
       </mat-form-field>
     </div>
     <div class="mb-3 px-2">
@@ -95,6 +118,11 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Account ID</mat-label>
           <input formControlName="accountId" matInput />
+          <mat-error
+            *ngIf="accountForm.controls['accountId'].errors?.validationError"
+          >
+            {{ accountForm.controls['accountId'].errors?.validationError }}
+          </mat-error>
         </mat-form-field>
       </div>
     }
