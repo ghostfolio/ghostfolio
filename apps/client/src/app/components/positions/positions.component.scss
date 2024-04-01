@@ -1,11 +1,9 @@
-@import 'apps/client/src/styles/ghostfolio-style';
-
 :host {
   display: block;
 
   gf-position {
     &:nth-child(even) {
-      background-color: rgba(0, 0, 0, $alpha-hover);
+      background-color: rgba(0, 0, 0, var(--gf-theme-alpha-hover));
     }
   }
 }
@@ -13,7 +11,7 @@
 :host-context(.is-dark-theme) {
   gf-position {
     &:nth-child(even) {
-      background-color: rgba(255, 255, 255, $alpha-hover);
+      background-color: rgba(255, 255, 255, var(--gf-theme-alpha-hover));
     }
   }
 }
