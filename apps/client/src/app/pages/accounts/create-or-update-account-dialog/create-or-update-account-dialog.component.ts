@@ -125,8 +125,6 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
         this.dialogRef.close({ account });
       });
     }
-
-    this.dialogRef.close({ account });
   }
 
   public ngOnDestroy() {
