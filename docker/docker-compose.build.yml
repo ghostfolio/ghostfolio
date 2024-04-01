@@ -2,6 +2,7 @@ version: '3.9'
 services:
   ghostfolio:
     build: ../
+    init: true
     env_file:
       - ../.env
     environment:
