@@ -719,8 +719,6 @@ export class PortfolioService {
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
 
-    tags = uniqBy(tags, 'id');
-
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities: orders.filter((order) => {
         tags = tags.concat(order.tags);
@@ -730,6 +728,8 @@ export class PortfolioService {
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
+
+    tags = uniqBy(tags, 'id');
 
     const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();

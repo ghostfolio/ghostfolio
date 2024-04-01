@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
 - Introduced a factory for the portfolio calculations to support different algorithms in future
 
+### Fixed
+
+- Fixed the duplicated tags in the position detail dialog
+
 ## 2.69.0 - 2024-03-30
 
 ### Added
