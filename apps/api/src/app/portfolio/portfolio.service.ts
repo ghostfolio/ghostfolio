@@ -226,6 +226,7 @@ export class PortfolioService {
   }): Big {
     if (isNumber(daysInMarket) && daysInMarket > 0) {
       const exponent = new Big(365).div(daysInMarket).toNumber();
+
       return new Big(
         Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
       ).minus(1);
