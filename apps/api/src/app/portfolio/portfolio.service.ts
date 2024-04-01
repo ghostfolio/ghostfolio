@@ -78,7 +78,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -215,6 +215,24 @@ export class PortfolioService {
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
+  }
+
+  public getAnnualizedPerformancePercent({
+    daysInMarket,
+    netPerformancePercent
+  }: {
+    daysInMarket: number;
+    netPerformancePercent: Big;
+  }): Big {
+    if (isNumber(daysInMarket) && daysInMarket > 0) {
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+
+      return new Big(
+        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+      ).minus(1);
+    }
+
+    return new Big(0);
   }
 
   public async getDividends({
@@ -1769,34 +1787,20 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = this.calculatorFactory
-      .createCalculator({
-        activities: [],
-        calculationType: PerformanceCalculationType.TWR,
-        currency: userCurrency
-      })
-      .getAnnualizedPerformancePercent({
-        daysInMarket,
-        netPerformancePercent: new Big(
-          performanceInformation.performance.currentNetPerformancePercent
-        )
-      })
-      ?.toNumber();
+    const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
+      daysInMarket,
+      netPerformancePercent: new Big(
+        performanceInformation.performance.currentNetPerformancePercent
+      )
+    })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
-      this.calculatorFactory
-        .createCalculator({
-          activities: [],
-          calculationType: PerformanceCalculationType.TWR,
-          currency: userCurrency
-        })
-        .getAnnualizedPerformancePercent({
-          daysInMarket,
-          netPerformancePercent: new Big(
-            performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
-          )
-        })
-        ?.toNumber();
+      this.getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercent: new Big(
+          performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+        )
+      })?.toNumber();
 
     return {
       ...performanceInformation.performance,

@@ -29,7 +29,7 @@ import {
   max,
   subDays
 } from 'date-fns';
-import { isNumber, last, uniq } from 'lodash';
+import { last, uniq } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -79,23 +79,6 @@ export abstract class PortfolioCalculator {
   protected abstract calculateOverallPerformance(
     positions: TimelinePosition[]
   ): CurrentPositions;
-
-  public getAnnualizedPerformancePercent({
-    daysInMarket,
-    netPerformancePercent
-  }: {
-    daysInMarket: number;
-    netPerformancePercent: Big;
-  }): Big {
-    if (isNumber(daysInMarket) && daysInMarket > 0) {
-      const exponent = new Big(365).div(daysInMarket).toNumber();
-      return new Big(
-        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
-      ).minus(1);
-    }
-
-    return new Big(0);
-  }
 
   public async getChartData({
     end = new Date(Date.now()),
