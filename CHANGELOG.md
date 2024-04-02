@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Disabled the option to update the cash balance of an account if date is not today
 - Improved the usability of the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
 - Introduced a factory for the portfolio calculations to support different algorithms in future
 

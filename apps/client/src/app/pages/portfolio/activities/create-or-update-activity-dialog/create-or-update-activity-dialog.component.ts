@@ -275,6 +275,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       }
     );
 
+    this.activityForm.controls['date'].valueChanges.subscribe(() => {
+      if (isToday(this.activityForm.controls['date'].value)) {
+        this.activityForm.controls['updateAccountBalance'].enable();
+      } else {
+        this.activityForm.controls['updateAccountBalance'].disable();
+        this.activityForm.controls['updateAccountBalance'].setValue(false);
+      }
+
+      this.changeDetectorRef.markForCheck();
+    });
+
     this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
       if (this.activityForm.controls['searchSymbol'].invalid) {
         this.data.activity.SymbolProfile = null;
