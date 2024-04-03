@@ -48,9 +48,10 @@ export class UpdateAssetProfileDto {
     [dataProvider: string]: string;
   };
 
-  @IsUrl({
-    protocols: ['http', 'https']
-  })
   @IsOptional()
+  @IsUrl({
+    protocols: ['https'],
+    require_protocol: true
+  })
   url?: string;
 }
