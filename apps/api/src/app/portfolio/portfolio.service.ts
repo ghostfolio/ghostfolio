@@ -768,9 +768,9 @@ export class PortfolioService {
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
-        investment,
         marketPrice,
         quantity,
+        timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
       } = position;
 
@@ -785,7 +785,9 @@ export class PortfolioService {
 
       const dividendYieldPercent = this.getAnnualizedPerformancePercent({
         daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
-        netPerformancePercent: dividendInBaseCurrency.mul(100).div(investment)
+        netPerformancePercent: dividendInBaseCurrency.div(
+          timeWeightedInvestmentWithCurrencyEffect
+        )
       });
 
       const historicalData = await this.dataProviderService.getHistorical(
