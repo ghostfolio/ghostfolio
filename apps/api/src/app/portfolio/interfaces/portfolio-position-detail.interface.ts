@@ -13,6 +13,7 @@ export interface PortfolioPositionDetail {
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;
   dividendYieldPercent: number;
+  dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
   firstBuyDate: string;
   grossPerformance: number;
