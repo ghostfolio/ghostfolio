@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the dividend yield to the position detail dialog
+- Added the dividend yield to the position detail dialog (experimental)
 
 ## 2.70.0 - 2024-04-02
 
