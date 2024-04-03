@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the dividend yield to the position detail dialog (experimental)
+- Added support to override the asset class of an asset profile in the asset profile details dialog of the admin control
+- Added support to override the asset sub class of an asset profile in the asset profile details dialog of the admin control
+- Added support to override the url of an asset profile in the asset profile details dialog of the admin control
 
 ## 2.70.0 - 2024-04-02
 
