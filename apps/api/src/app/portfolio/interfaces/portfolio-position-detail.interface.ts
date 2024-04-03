@@ -12,7 +12,7 @@ export interface PortfolioPositionDetail {
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;
-  dividendYieldInPercent: number;
+  dividendYieldPercent: number;
   feeInBaseCurrency: number;
   firstBuyDate: string;
   grossPerformance: number;

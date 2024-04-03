@@ -710,7 +710,7 @@ export class PortfolioService {
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
-        dividendYieldInPercent: undefined,
+        dividendYieldPercent: undefined,
         feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -782,7 +782,7 @@ export class PortfolioService {
         return Account;
       });
 
-      const dividendYieldInPercent = dividendInBaseCurrency
+      const dividendYieldPercent = dividendInBaseCurrency
         .mul(100)
         .div(marketPrice);
 
@@ -859,7 +859,7 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
-        dividendYieldInPercent: dividendYieldInPercent.toNumber(),
+        dividendYieldPercent: dividendYieldPercent.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
@@ -936,7 +936,7 @@ export class PortfolioService {
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
-        dividendYieldInPercent: 0,
+        dividendYieldPercent: 0,
         feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
