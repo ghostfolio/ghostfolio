@@ -710,6 +710,8 @@ export class PortfolioService {
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
+        dividendYieldPercent: undefined,
+        dividendYieldPercentWithCurrencyEffect: undefined,
         feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -769,6 +771,8 @@ export class PortfolioService {
         firstBuyDate,
         marketPrice,
         quantity,
+        timeWeightedInvestment,
+        timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
       } = position;
 
@@ -780,6 +784,21 @@ export class PortfolioService {
       ).map(({ Account }) => {
         return Account;
       });
+
+      const dividendYieldPercent = this.getAnnualizedPerformancePercent({
+        daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
+        netPerformancePercent: dividendInBaseCurrency.div(
+          timeWeightedInvestment
+        )
+      });
+
+      const dividendYieldPercentWithCurrencyEffect =
+        this.getAnnualizedPerformancePercent({
+          daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
+          netPerformancePercent: dividendInBaseCurrency.div(
+            timeWeightedInvestmentWithCurrencyEffect
+          )
+        });
 
       const historicalData = await this.dataProviderService.getHistorical(
         [{ dataSource, symbol: aSymbol }],
@@ -854,6 +873,9 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        dividendYieldPercent: dividendYieldPercent.toNumber(),
+        dividendYieldPercentWithCurrencyEffect:
+          dividendYieldPercentWithCurrencyEffect.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
@@ -930,6 +952,8 @@ export class PortfolioService {
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
+        dividendYieldPercent: 0,
+        dividendYieldPercentWithCurrencyEffect: 0,
         feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
