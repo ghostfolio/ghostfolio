@@ -15,6 +15,7 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 
 import { Module } from '@nestjs/common';
 
+import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { CurrentRateService } from './current-rate.service';
 import { PortfolioController } from './portfolio.controller';
 import { PortfolioService } from './portfolio.service';
@@ -41,6 +42,7 @@ import { RulesService } from './rules.service';
     AccountBalanceService,
     AccountService,
     CurrentRateService,
+    PortfolioCalculatorFactory,
     PortfolioService,
     RulesService
   ]

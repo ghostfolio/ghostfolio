@@ -9,16 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added the dividend yield to the position detail dialog (experimental)
 - Added support to override the asset class of an asset profile in the asset profile details dialog of the admin control
 - Added support to override the asset sub class of an asset profile in the asset profile details dialog of the admin control
 - Added support to override the url of an asset profile in the asset profile details dialog of the admin control
+
+## 2.70.0 - 2024-04-02
+
+### Added
+
+- Set up the language localization for Chinese (`zh`)
+- Added `init: true` to the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`) to avoid zombie processes
+- Set up _Webpack Bundle Analyzer_
+
+### Changed
+
+- Disabled the option to update the cash balance of an account if date is not today
+- Improved the usability of the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
+- Introduced a factory for the portfolio calculations to support different algorithms in future
+
+### Fixed
+
+- Fixed the duplicated tags in the position detail dialog
+- Removed `Tini` from the docker image
 
 ## 2.69.0 - 2024-03-30
 
 ### Added
 
 - Added the date range support in the activities table on the portfolio activities page (experimental)
-- Extended the date range support by specific years (`2023`, `2022`, `2021`, etc.) in the assistant (experimental)
+- Extended the date range support by specific years (`2021`, `2022`, `2023`, etc.) in the assistant (experimental)
 - Set up `Tini` to avoid zombie processes and perform signal forwarding in docker image
 
 ### Changed

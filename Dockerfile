@@ -56,13 +56,6 @@ RUN apt update && apt install -y \
     openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# Add tini, which is an init process that handles signaling within the container
-# and with the host. See https://github.com/krallin/tini
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
-ENTRYPOINT ["/tini", "--"]
-
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 WORKDIR /ghostfolio/apps/api

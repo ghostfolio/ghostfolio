@@ -3,7 +3,6 @@ import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   getFactor,
@@ -79,9 +78,13 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
-import { PortfolioCalculator } from './calculator/twr/portfolio-calculator';
+import { PortfolioCalculator } from './calculator/portfolio-calculator';
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from './calculator/portfolio-calculator.factory';
 import {
   HistoricalDataContainer,
   PortfolioPositionDetail
@@ -98,7 +101,7 @@ export class PortfolioService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
-    private readonly currentRateService: CurrentRateService,
+    private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
@@ -214,6 +217,24 @@ export class PortfolioService {
     };
   }
 
+  public getAnnualizedPerformancePercent({
+    daysInMarket,
+    netPerformancePercent
+  }: {
+    daysInMarket: number;
+    netPerformancePercent: Big;
+  }): Big {
+    if (isNumber(daysInMarket) && daysInMarket > 0) {
+      const exponent = new Big(365).div(daysInMarket).toNumber();
+
+      return new Big(
+        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+      ).minus(1);
+    }
+
+    return new Big(0);
+  }
+
   public async getDividends({
     activities,
     groupBy
@@ -265,11 +286,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const { items } = await this.getChart({
@@ -354,11 +374,10 @@ export class PortfolioService {
       withExcludedAccounts
     });
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: userCurrency
     });
 
     const { startDate } = getInterval(
@@ -691,6 +710,8 @@ export class PortfolioService {
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
+        dividendYieldPercent: undefined,
+        dividendYieldPercentWithCurrencyEffect: undefined,
         feeInBaseCurrency: undefined,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -718,18 +739,17 @@ export class PortfolioService {
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
 
-    tags = uniqBy(tags, 'id');
-
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities: orders.filter((order) => {
         tags = tags.concat(order.tags);
 
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: userCurrency
     });
+
+    tags = uniqBy(tags, 'id');
 
     const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
@@ -751,6 +771,8 @@ export class PortfolioService {
         firstBuyDate,
         marketPrice,
         quantity,
+        timeWeightedInvestment,
+        timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
       } = position;
 
@@ -762,6 +784,21 @@ export class PortfolioService {
       ).map(({ Account }) => {
         return Account;
       });
+
+      const dividendYieldPercent = this.getAnnualizedPerformancePercent({
+        daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
+        netPerformancePercent: dividendInBaseCurrency.div(
+          timeWeightedInvestment
+        )
+      });
+
+      const dividendYieldPercentWithCurrencyEffect =
+        this.getAnnualizedPerformancePercent({
+          daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
+          netPerformancePercent: dividendInBaseCurrency.div(
+            timeWeightedInvestmentWithCurrencyEffect
+          )
+        });
 
       const historicalData = await this.dataProviderService.getHistorical(
         [{ dataSource, symbol: aSymbol }],
@@ -836,6 +873,9 @@ export class PortfolioService {
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
+        dividendYieldPercent: dividendYieldPercent.toNumber(),
+        dividendYieldPercentWithCurrencyEffect:
+          dividendYieldPercentWithCurrencyEffect.toNumber(),
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee.toNumber(),
           SymbolProfile.currency,
@@ -912,6 +952,8 @@ export class PortfolioService {
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
+        dividendYieldPercent: 0,
+        dividendYieldPercentWithCurrencyEffect: 0,
         feeInBaseCurrency: 0,
         firstBuyDate: undefined,
         grossPerformance: undefined,
@@ -963,11 +1005,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const currentPositions = await portfolioCalculator.getCurrentPositions(
@@ -1152,11 +1193,10 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: userCurrency
     });
 
     const {
@@ -1270,11 +1310,10 @@ export class PortfolioService {
       types: ['BUY', 'SELL']
     });
 
-    const portfolioCalculator = new PortfolioCalculator({
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
+      calculationType: PerformanceCalculationType.TWR,
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const currentPositions = await portfolioCalculator.getCurrentPositions(
@@ -1772,34 +1811,20 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = new PortfolioCalculator({
-      activities: [],
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService
-    })
-      .getAnnualizedPerformancePercent({
-        daysInMarket,
-        netPerformancePercent: new Big(
-          performanceInformation.performance.currentNetPerformancePercent
-        )
-      })
-      ?.toNumber();
+    const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
+      daysInMarket,
+      netPerformancePercent: new Big(
+        performanceInformation.performance.currentNetPerformancePercent
+      )
+    })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
-      new PortfolioCalculator({
-        activities: [],
-        currency: userCurrency,
-        currentRateService: this.currentRateService,
-        exchangeRateDataService: this.exchangeRateDataService
-      })
-        .getAnnualizedPerformancePercent({
-          daysInMarket,
-          netPerformancePercent: new Big(
-            performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
-          )
-        })
-        ?.toNumber();
+      this.getAnnualizedPerformancePercent({
+        daysInMarket,
+        netPerformancePercent: new Big(
+          performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+        )
+      })?.toNumber();
 
     return {
       ...performanceInformation.performance,

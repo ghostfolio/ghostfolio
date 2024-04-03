@@ -1,3 +1,7 @@
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -5,8 +9,6 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 import { subDays } from 'date-fns';
-
-import { PortfolioCalculator } from './portfolio-calculator';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -20,6 +22,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -30,14 +33,18 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
+      const portfolioCalculator = factory.createCalculator({
         activities: [],
+        calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF'
       });
 
@@ -73,7 +80,8 @@ describe('PortfolioCalculator', () => {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
-        totalInvestment: new Big(0)
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0)
       });
 
       expect(investments).toEqual([]);

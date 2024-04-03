@@ -48,6 +48,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public dataProviderInfo: DataProviderInfo;
   public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
+  public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public historicalDataItems: LineChartItem[];
@@ -95,6 +96,7 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
+          dividendYieldPercentWithCurrencyEffect,
           feeInBaseCurrency,
           firstBuyDate,
           historicalData,
@@ -119,6 +121,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.dataProviderInfo = dataProviderInfo;
           this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.dividendYieldPercentWithCurrencyEffect =
+            dividendYieldPercentWithCurrencyEffect;
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.historicalDataItems = historicalData.map(

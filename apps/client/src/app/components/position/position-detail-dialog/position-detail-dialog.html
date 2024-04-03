@@ -134,17 +134,29 @@
           >Investment</gf-value
         >
       </div>
-      <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [isCurrency]="true"
-          [locale]="data.locale"
-          [unit]="data.baseCurrency"
-          [value]="dividendInBaseCurrency"
-          >Dividend</gf-value
-        >
-      </div>
+      @if (dividendInBaseCurrency && user?.settings?.isExperimentalFeatures) {
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isCurrency]="true"
+            [locale]="data.locale"
+            [unit]="data.baseCurrency"
+            [value]="dividendInBaseCurrency"
+            >Dividend</gf-value
+          >
+        </div>
+        <div class="col-6 mb-3">
+          <gf-value
+            i18n
+            size="medium"
+            [isPercent]="true"
+            [locale]="data.locale"
+            [value]="dividendYieldPercentWithCurrencyEffect"
+            >Dividend Yield</gf-value
+          >
+        </div>
+      }
       <div class="col-6 mb-3">
         <gf-value
           i18n
@@ -179,6 +191,9 @@
           }
         </gf-value>
       </div>
+      @if (user?.settings?.isExperimentalFeatures) {
+        <div class="col-6 mb-3"></div>
+      }
       <div class="col-6 mb-3">
         <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
           >Asset Class</gf-value
@@ -292,7 +307,7 @@
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user.settings.isRestrictedView
+            !data.hasImpersonationId && !user?.settings?.isRestrictedView
           "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
