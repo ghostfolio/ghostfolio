@@ -768,6 +768,7 @@ export class PortfolioService {
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
+        investment,
         marketPrice,
         quantity,
         transactionCount
@@ -782,9 +783,10 @@ export class PortfolioService {
         return Account;
       });
 
-      const dividendYieldPercent = dividendInBaseCurrency
-        .mul(100)
-        .div(marketPrice);
+      const dividendYieldPercent = this.getAnnualizedPerformancePercent({
+        daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
+        netPerformancePercent: dividendInBaseCurrency.mul(100).div(investment)
+      });
 
       const historicalData = await this.dataProviderService.getHistorical(
         [{ dataSource, symbol: aSymbol }],
