@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to override the asset class of an asset profile in the asset profile details dialog of the admin control
 - Added support to override the asset sub class of an asset profile in the asset profile details dialog of the admin control
 - Added support to override the url of an asset profile in the asset profile details dialog of the admin control
+- Added the platform icon to the create or update platform dialog of the admin control
 
 ### Changed
 
