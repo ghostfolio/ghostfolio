@@ -175,6 +175,7 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 87.8,
             quantity: new Big('0'),
             symbol: 'NOVN.SW',
+            tags: [],
             timeWeightedInvestment: new Big('151.6'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
             transactionCount: 2,

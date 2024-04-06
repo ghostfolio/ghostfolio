@@ -126,7 +126,7 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 331.83,
             quantity: new Big('1'),
             symbol: 'MSFT',
-            tags: undefined,
+            tags: [],
             transactionCount: 2
           }
         ],
