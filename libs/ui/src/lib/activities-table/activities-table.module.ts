@@ -1,4 +1,4 @@
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivityTypeModule } from '@ghostfolio/ui/activity-type';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
@@ -24,8 +24,8 @@ import { ActivitiesTableComponent } from './activities-table.component';
   imports: [
     CommonModule,
     GfActivityTypeModule,
+    GfAssetProfileIconComponent,
     GfNoTransactionsInfoModule,
-    GfSymbolIconModule,
     GfSymbolModule,
     GfValueModule,
     MatButtonModule,

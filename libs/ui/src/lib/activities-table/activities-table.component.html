@@ -122,7 +122,7 @@
     <ng-container matColumnDef="icon">
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <gf-symbol-icon
+        <gf-asset-profile-icon
           [dataSource]="element.SymbolProfile?.dataSource"
           [symbol]="element.SymbolProfile?.symbol"
           [tooltip]="element.SymbolProfile?.name"
@@ -308,7 +308,7 @@
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
           @if (element.Account?.Platform?.url) {
-            <gf-symbol-icon
+            <gf-asset-profile-icon
               class="mr-1"
               [tooltip]="element.Account?.Platform?.name"
               [url]="element.Account?.Platform?.url"
