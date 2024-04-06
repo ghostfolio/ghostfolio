@@ -63,8 +63,7 @@ import {
   DataSource,
   Order,
   Platform,
-  Prisma,
-  Tag
+  Prisma
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
@@ -701,11 +700,8 @@ export class PortfolioService {
       );
     });
 
-    let tags: Tag[] = [];
-
     if (orders.length <= 0) {
       return {
-        tags,
         accounts: [],
         averagePrice: undefined,
         dataProviderInfo: undefined,
@@ -730,6 +726,7 @@ export class PortfolioService {
         orders: [],
         quantity: undefined,
         SymbolProfile: undefined,
+        tags: [],
         transactionCount: undefined,
         value: undefined
       };
@@ -741,15 +738,11 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities: orders.filter((order) => {
-        tags = tags.concat(order.tags);
-
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
-
-    tags = uniqBy(tags, 'id');
 
     const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
@@ -771,6 +764,7 @@ export class PortfolioService {
         firstBuyDate,
         marketPrice,
         quantity,
+        tags,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
@@ -947,7 +941,6 @@ export class PortfolioService {
         minPrice,
         orders,
         SymbolProfile,
-        tags,
         accounts: [],
         averagePrice: 0,
         dataProviderInfo: undefined,
@@ -967,6 +960,7 @@ export class PortfolioService {
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
         quantity: 0,
+        tags: [],
         transactionCount: undefined,
         value: 0
       };
