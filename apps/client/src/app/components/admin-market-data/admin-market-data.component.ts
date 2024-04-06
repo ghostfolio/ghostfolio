@@ -328,6 +328,7 @@ export class AdminMarketDataComponent
           data: <AssetProfileDialogParams>{
             dataSource,
             symbol,
+            colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
           },
