@@ -166,7 +166,7 @@ describe('PortfolioCalculator', () => {
             ),
             quantity: new Big('1'),
             symbol: 'BTCUSD',
-            tags: undefined,
+            tags: [],
             timeWeightedInvestment: new Big('640.56763686131386861314'),
             timeWeightedInvestmentWithCurrencyEffect: new Big(
               '636.79469348020066587024'

@@ -149,6 +149,7 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 148.9,
             quantity: new Big('0'),
             symbol: 'BALN.SW',
+            tags: [],
             timeWeightedInvestment: new Big('285.8'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('285.8'),
             transactionCount: 2,

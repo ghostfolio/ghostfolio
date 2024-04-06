@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the url validation in the create and update platform endpoint
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed the missing tags in the portfolio calculations
+
 ## 2.70.0 - 2024-04-02
 
 ### Added

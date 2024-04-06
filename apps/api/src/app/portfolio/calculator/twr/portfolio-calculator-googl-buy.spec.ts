@@ -147,7 +147,7 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
             symbol: 'GOOGL',
-            tags: undefined,
+            tags: [],
             timeWeightedInvestment: new Big('89.12'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             transactionCount: 1,
