@@ -29,7 +29,7 @@ import {
   max,
   subDays
 } from 'date-fns';
-import { last, uniq } from 'lodash';
+import { last, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -57,9 +57,10 @@ export abstract class PortfolioCalculator {
     this.currentRateService = currentRateService;
     this.exchangeRateDataService = exchangeRateDataService;
     this.orders = activities.map(
-      ({ date, fee, quantity, SymbolProfile, type, unitPrice }) => {
+      ({ date, fee, quantity, SymbolProfile, tags = [], type, unitPrice }) => {
         return {
           SymbolProfile,
+          tags,
           type,
           date: format(date, DATE_FORMAT),
           fee: new Big(fee),
@@ -711,17 +712,17 @@ export abstract class PortfolioCalculator {
 
         currentTransactionPointItem = {
           investment,
-          tags,
           averagePrice: newQuantity.gt(0)
             ? investment.div(newQuantity)
             : new Big(0),
           currency: SymbolProfile.currency,
           dataSource: SymbolProfile.dataSource,
           dividend: new Big(0),
-          fee: fee.plus(oldAccumulatedSymbol.fee),
+          fee: oldAccumulatedSymbol.fee.plus(fee),
           firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
           quantity: newQuantity,
           symbol: SymbolProfile.symbol,
+          tags: oldAccumulatedSymbol.tags.concat(tags),
           transactionCount: oldAccumulatedSymbol.transactionCount + 1
         };
       } else {
@@ -739,6 +740,11 @@ export abstract class PortfolioCalculator {
           transactionCount: 1
         };
       }
+
+      currentTransactionPointItem.tags = uniqBy(
+        currentTransactionPointItem.tags,
+        'id'
+      );
 
       symbols[SymbolProfile.symbol] = currentTransactionPointItem;
 
