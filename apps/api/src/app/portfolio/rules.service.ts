@@ -17,8 +17,16 @@ export class RulesService {
         return rule.getSettings(aUserSettings)?.isActive;
       })
       .map((rule) => {
-        const evaluationResult = rule.evaluate(rule.getSettings(aUserSettings));
-        return { ...evaluationResult, name: rule.getName() };
+        const { evaluation, value } = rule.evaluate(
+          rule.getSettings(aUserSettings)
+        );
+
+        return {
+          evaluation,
+          value,
+          key: rule.getKey(),
+          name: rule.getName()
+        };
       });
   }
 }

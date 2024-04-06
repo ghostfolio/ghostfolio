@@ -7,17 +7,25 @@ import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
+  private key: string;
   private name: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
+      key,
       name
     }: {
+      key: string;
       name: string;
     }
   ) {
+    this.key = key;
     this.name = name;
+  }
+
+  public getKey() {
+    return this.key;
   }
 
   public getName() {
