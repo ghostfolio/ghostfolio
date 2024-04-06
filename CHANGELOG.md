@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support to override the url of an asset profile in the asset profile details dialog of the admin control
 - Added the asset profile icon to the asset profile details dialog of the admin control
 - Added the platform icon to the create or update platform dialog of the admin control
+- Extended the rules in the _X-ray_ section by a `key`
 - Extended the content of the _Self-Hosting_ section by the data providers on the Frequently Asked Questions (FAQ) page
 
 ### Changed
