@@ -411,15 +411,21 @@ export class DataService {
 
   public fetchPortfolioDetails({
     filters,
-    withLiabilities = false
+    withLiabilities = false,
+    withMarkets = false
   }: {
     filters?: Filter[];
     withLiabilities?: boolean;
+    withMarkets?: boolean;
   } = {}): Observable<PortfolioDetails> {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (withLiabilities) {
       params = params.append('withLiabilities', withLiabilities);
+    }
+
+    if (withMarkets) {
+      params = params.append('withMarkets', withMarkets);
     }
 
     return this.http
