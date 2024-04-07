@@ -63,7 +63,8 @@ import {
   DataSource,
   Order,
   Platform,
-  Prisma
+  Prisma,
+  SymbolProfile
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
@@ -337,6 +338,7 @@ export class PortfolioService {
     userId,
     withExcludedAccounts = false,
     withLiabilities = false,
+    withMarkets = false,
     withSummary = false
   }: {
     dateRange?: DateRange;
@@ -345,6 +347,7 @@ export class PortfolioService {
     userId: string;
     withExcludedAccounts?: boolean;
     withLiabilities?: boolean;
+    withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
     userId = await this.getUserId(impersonationId, userId);
@@ -484,77 +487,17 @@ export class PortfolioService {
         }
       }
 
-      const symbolProfile = symbolProfileMap[symbol];
+      const assetProfile = symbolProfileMap[symbol];
       const dataProviderResponse = dataProviderResponses[symbol];
 
-      const markets: PortfolioPosition['markets'] = {
-        [UNKNOWN_KEY]: 0,
-        developedMarkets: 0,
-        emergingMarkets: 0,
-        otherMarkets: 0
-      };
-      const marketsAdvanced: PortfolioPosition['marketsAdvanced'] = {
-        [UNKNOWN_KEY]: 0,
-        asiaPacific: 0,
-        emergingMarkets: 0,
-        europe: 0,
-        japan: 0,
-        northAmerica: 0,
-        otherMarkets: 0
-      };
+      let markets: PortfolioPosition['markets'];
+      let marketsAdvanced: PortfolioPosition['marketsAdvanced'];
 
-      if (symbolProfile.countries.length > 0) {
-        for (const country of symbolProfile.countries) {
-          if (developedMarkets.includes(country.code)) {
-            markets.developedMarkets = new Big(markets.developedMarkets)
-              .plus(country.weight)
-              .toNumber();
-          } else if (emergingMarkets.includes(country.code)) {
-            markets.emergingMarkets = new Big(markets.emergingMarkets)
-              .plus(country.weight)
-              .toNumber();
-          } else {
-            markets.otherMarkets = new Big(markets.otherMarkets)
-              .plus(country.weight)
-              .toNumber();
-          }
-
-          if (country.code === 'JP') {
-            marketsAdvanced.japan = new Big(marketsAdvanced.japan)
-              .plus(country.weight)
-              .toNumber();
-          } else if (country.code === 'CA' || country.code === 'US') {
-            marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
-              .plus(country.weight)
-              .toNumber();
-          } else if (asiaPacificMarkets.includes(country.code)) {
-            marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
-              .plus(country.weight)
-              .toNumber();
-          } else if (emergingMarkets.includes(country.code)) {
-            marketsAdvanced.emergingMarkets = new Big(
-              marketsAdvanced.emergingMarkets
-            )
-              .plus(country.weight)
-              .toNumber();
-          } else if (europeMarkets.includes(country.code)) {
-            marketsAdvanced.europe = new Big(marketsAdvanced.europe)
-              .plus(country.weight)
-              .toNumber();
-          } else {
-            marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
-              .plus(country.weight)
-              .toNumber();
-          }
-        }
-      } else {
-        markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
-          .plus(valueInBaseCurrency)
-          .toNumber();
-
-        marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
-          .plus(valueInBaseCurrency)
-          .toNumber();
+      if (withMarkets) {
+        ({ markets, marketsAdvanced } = this.getMarkets({
+          assetProfile,
+          valueInBaseCurrency
+        }));
       }
 
       holdings[symbol] = {
@@ -568,10 +511,10 @@ export class PortfolioService {
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
           : valueInBaseCurrency.div(filteredValueInBaseCurrency).toNumber(),
-        assetClass: symbolProfile.assetClass,
-        assetSubClass: symbolProfile.assetSubClass,
-        countries: symbolProfile.countries,
-        dataSource: symbolProfile.dataSource,
+        assetClass: assetProfile.assetClass,
+        assetSubClass: assetProfile.assetSubClass,
+        countries: assetProfile.countries,
+        dataSource: assetProfile.dataSource,
         dateOfFirstActivity: parseDate(firstBuyDate),
         dividend: dividend?.toNumber() ?? 0,
         grossPerformance: grossPerformance?.toNumber() ?? 0,
@@ -582,7 +525,7 @@ export class PortfolioService {
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         investment: investment.toNumber(),
         marketState: dataProviderResponse?.marketState ?? 'delayed',
-        name: symbolProfile.name,
+        name: assetProfile.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
@@ -590,8 +533,8 @@ export class PortfolioService {
         netPerformanceWithCurrencyEffect:
           netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
-        sectors: symbolProfile.sectors,
-        url: symbolProfile.url,
+        sectors: assetProfile.sectors,
+        url: assetProfile.url,
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
@@ -1628,6 +1571,86 @@ export class PortfolioService {
       transactionCount: 0,
       valueInBaseCurrency: balance
     };
+  }
+
+  private getMarkets({
+    assetProfile,
+    valueInBaseCurrency
+  }: {
+    assetProfile: EnhancedSymbolProfile;
+    valueInBaseCurrency: Big;
+  }) {
+    const markets = {
+      [UNKNOWN_KEY]: 0,
+      developedMarkets: 0,
+      emergingMarkets: 0,
+      otherMarkets: 0
+    };
+    const marketsAdvanced = {
+      [UNKNOWN_KEY]: 0,
+      asiaPacific: 0,
+      emergingMarkets: 0,
+      europe: 0,
+      japan: 0,
+      northAmerica: 0,
+      otherMarkets: 0
+    };
+
+    if (assetProfile.countries.length > 0) {
+      for (const country of assetProfile.countries) {
+        if (developedMarkets.includes(country.code)) {
+          markets.developedMarkets = new Big(markets.developedMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          markets.emergingMarkets = new Big(markets.emergingMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          markets.otherMarkets = new Big(markets.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
+
+        if (country.code === 'JP') {
+          marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+            .plus(country.weight)
+            .toNumber();
+        } else if (country.code === 'CA' || country.code === 'US') {
+          marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+            .plus(country.weight)
+            .toNumber();
+        } else if (asiaPacificMarkets.includes(country.code)) {
+          marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          marketsAdvanced.emergingMarkets = new Big(
+            marketsAdvanced.emergingMarkets
+          )
+            .plus(country.weight)
+            .toNumber();
+        } else if (europeMarkets.includes(country.code)) {
+          marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
+      }
+    } else {
+      markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
+        .plus(valueInBaseCurrency)
+        .toNumber();
+
+      marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
+        .plus(valueInBaseCurrency)
+        .toNumber();
+    }
+
+    return { markets, marketsAdvanced };
   }
 
   private getStreaks({

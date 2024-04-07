@@ -205,7 +205,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
   private fetchPortfolioDetails() {
     return this.dataService.fetchPortfolioDetails({
-      filters: this.userService.getFilters()
+      filters: this.userService.getFilters(),
+      withMarkets: true
     });
   }
 

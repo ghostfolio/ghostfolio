@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the calculation of allocations by market
 - Improved the url validation in the create and update platform endpoint
 - Improved the language localization for German (`de`)
 
