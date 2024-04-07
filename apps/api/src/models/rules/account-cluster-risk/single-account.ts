@@ -11,6 +11,7 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      key: AccountClusterRiskSingleAccount.name,
       name: 'Single Account'
     });
 

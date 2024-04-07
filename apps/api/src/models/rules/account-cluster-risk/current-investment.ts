@@ -15,6 +15,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      key: AccountClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 

@@ -13,6 +13,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     fees: number
   ) {
     super(exchangeRateDataService, {
+      key: FeeRatioInitialInvestment.name,
       name: 'Fee Ratio'
     });
 
