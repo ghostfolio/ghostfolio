@@ -21,7 +21,6 @@ import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/sy
 import {
   DEFAULT_CURRENCY,
   EMERGENCY_FUND_TAG_ID,
-  MAX_CHART_ITEMS,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import {
@@ -63,8 +62,7 @@ import {
   DataSource,
   Order,
   Platform,
-  Prisma,
-  SymbolProfile
+  Prisma
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { isUUID } from 'class-validator';
@@ -80,15 +78,11 @@ import {
 } from 'date-fns';
 import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
-import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
 } from './calculator/portfolio-calculator.factory';
-import {
-  HistoricalDataContainer,
-  PortfolioPositionDetail
-} from './interfaces/portfolio-position-detail.interface';
+import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
 import { RulesService } from './rules.service';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
@@ -292,11 +286,8 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const { items } = await this.getChart({
+    const items = await portfolioCalculator.getChart({
       dateRange,
-      impersonationId,
-      portfolioCalculator,
-      userId,
       withDataDecimation: false
     });
 
@@ -1161,11 +1152,8 @@ export class PortfolioService {
     let currentNetPerformanceWithCurrencyEffect =
       netPerformanceWithCurrencyEffect;
 
-    const { items } = await this.getChart({
-      dateRange,
-      impersonationId,
-      portfolioCalculator,
-      userId
+    const items = await portfolioCalculator.getChart({
+      dateRange
     });
 
     const itemOfToday = items.find(({ date }) => {
@@ -1379,52 +1367,6 @@ export class PortfolioService {
     }
 
     return cashPositions;
-  }
-
-  private async getChart({
-    dateRange = 'max',
-    impersonationId,
-    portfolioCalculator,
-    userId,
-    withDataDecimation = true
-  }: {
-    dateRange?: DateRange;
-    impersonationId: string;
-    portfolioCalculator: PortfolioCalculator;
-    userId: string;
-    withDataDecimation?: boolean;
-  }): Promise<HistoricalDataContainer> {
-    if (portfolioCalculator.getTransactionPoints().length === 0) {
-      return {
-        isAllTimeHigh: false,
-        isAllTimeLow: false,
-        items: []
-      };
-    }
-
-    userId = await this.getUserId(impersonationId, userId);
-
-    const { endDate, startDate } = getInterval(
-      dateRange,
-      portfolioCalculator.getStartDate()
-    );
-
-    const daysInMarket = differenceInDays(endDate, startDate) + 1;
-    const step = withDataDecimation
-      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
-      : 1;
-
-    const items = await portfolioCalculator.getChartData({
-      step,
-      end: endDate,
-      start: startDate
-    });
-
-    return {
-      items,
-      isAllTimeHigh: false,
-      isAllTimeLow: false
-    };
   }
 
   private getDividendsByGroup({

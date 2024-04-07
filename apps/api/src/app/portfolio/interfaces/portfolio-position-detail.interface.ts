@@ -36,9 +36,3 @@ export interface PortfolioPositionDetail {
   transactionCount: number;
   value: number;
 }
-
-export interface HistoricalDataContainer {
-  isAllTimeHigh: boolean;
-  isAllTimeLow: boolean;
-  items: HistoricalDataItem[];
-}

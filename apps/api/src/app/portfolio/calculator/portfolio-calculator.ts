@@ -4,9 +4,13 @@ import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/curre
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import {
+  getFactor,
+  getInterval
+} from '@ghostfolio/api/helper/portfolio.helper';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -17,10 +21,11 @@ import {
   TimelinePosition,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
-import { GroupBy } from '@ghostfolio/common/types';
+import { DateRange, GroupBy } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
 import {
+  differenceInDays,
   eachDayOfInterval,
   endOfDay,
   format,
@@ -80,6 +85,31 @@ export abstract class PortfolioCalculator {
   protected abstract calculateOverallPerformance(
     positions: TimelinePosition[]
   ): CurrentPositions;
+
+  public async getChart({
+    dateRange = 'max',
+    withDataDecimation = true
+  }: {
+    dateRange?: DateRange;
+    withDataDecimation?: boolean;
+  }): Promise<HistoricalDataItem[]> {
+    if (this.getTransactionPoints().length === 0) {
+      return [];
+    }
+
+    const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
+
+    const daysInMarket = differenceInDays(endDate, startDate) + 1;
+    const step = withDataDecimation
+      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      : 1;
+
+    return this.getChartData({
+      step,
+      end: endDate,
+      start: startDate
+    });
+  }
 
   public async getChartData({
     end = new Date(Date.now()),
