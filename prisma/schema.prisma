@@ -109,6 +109,7 @@ model Order {
   accountUserId   String?
   comment         String?
   createdAt       DateTime      @default(now())
+  currency        String?
   date            DateTime
   fee             Float
   id              String        @id @default(uuid())

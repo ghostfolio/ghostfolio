@@ -112,6 +112,7 @@ export class ImportService {
           accountId: Account?.id,
           accountUserId: undefined,
           comment: undefined,
+          currency: undefined,
           createdAt: undefined,
           fee: 0,
           feeInBaseCurrency: 0,
@@ -261,6 +262,7 @@ export class ImportService {
       {
         accountId,
         comment,
+        currency,
         date,
         error,
         fee,
@@ -285,7 +287,6 @@ export class ImportService {
         assetSubClass,
         countries,
         createdAt,
-        currency,
         dataSource,
         figi,
         figiComposite,
@@ -342,6 +343,7 @@ export class ImportService {
       if (isDryRun) {
         order = {
           comment,
+          currency,
           date,
           fee,
           quantity,
@@ -357,7 +359,6 @@ export class ImportService {
             assetSubClass,
             countries,
             createdAt,
-            currency,
             dataSource,
             figi,
             figiComposite,
@@ -371,6 +372,7 @@ export class ImportService {
             symbolMapping,
             updatedAt,
             url,
+            currency: assetProfile.currency,
             comment: assetProfile.comment
           },
           Account: validatedAccount,
@@ -394,9 +396,9 @@ export class ImportService {
           SymbolProfile: {
             connectOrCreate: {
               create: {
-                currency,
                 dataSource,
-                symbol
+                symbol,
+                currency: assetProfile.currency
               },
               where: {
                 dataSource_symbol: {
@@ -420,14 +422,14 @@ export class ImportService {
         value,
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           fee,
-          currency,
+          assetProfile.currency,
           userCurrency
         ),
         // @ts-ignore
         SymbolProfile: assetProfile,
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
-          currency,
+          assetProfile.currency,
           userCurrency
         )
       });

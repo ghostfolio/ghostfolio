@@ -126,13 +126,22 @@ export class OrderController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createOrder(@Body() data: CreateOrderDto): Promise<OrderModel> {
+    const currency = data.currency;
+    const customCurrency = data.customCurrency;
+
+    if (customCurrency) {
+      data.currency = customCurrency;
+
+      delete data.customCurrency;
+    }
+
     const order = await this.orderService.createOrder({
       ...data,
       date: parseISO(data.date),
       SymbolProfile: {
         connectOrCreate: {
           create: {
-            currency: data.currency,
+            currency,
             dataSource: data.dataSource,
             symbol: data.symbol
           },
@@ -182,7 +191,15 @@ export class OrderController {
     const date = parseISO(data.date);
 
     const accountId = data.accountId;
+    const customCurrency = data.customCurrency;
+
     delete data.accountId;
+
+    if (customCurrency) {
+      data.currency = customCurrency;
+
+      delete data.customCurrency;
+    }
 
     return this.orderService.updateOrder({
       data: {

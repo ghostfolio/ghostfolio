@@ -98,10 +98,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
-      currencyOfFee: [
-        this.data.activity?.SymbolProfile?.currency,
-        Validators.required
-      ],
       currencyOfUnitPrice: [
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
@@ -149,44 +145,15 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(async () => {
-        let exchangeRateOfFee = 1;
         let exchangeRateOfUnitPrice = 1;
 
         this.activityForm.controls['feeInCustomCurrency'].setErrors(null);
         this.activityForm.controls['unitPriceInCustomCurrency'].setErrors(null);
 
         const currency = this.activityForm.controls['currency'].value;
-        const currencyOfFee = this.activityForm.controls['currencyOfFee'].value;
         const currencyOfUnitPrice =
           this.activityForm.controls['currencyOfUnitPrice'].value;
         const date = this.activityForm.controls['date'].value;
-
-        if (currency && currencyOfFee && currency !== currencyOfFee && date) {
-          try {
-            const { marketPrice } = await lastValueFrom(
-              this.dataService
-                .fetchExchangeRateForDate({
-                  date,
-                  symbol: `${currencyOfFee}-${currency}`
-                })
-                .pipe(takeUntil(this.unsubscribeSubject))
-            );
-
-            exchangeRateOfFee = marketPrice;
-          } catch {
-            this.activityForm.controls['feeInCustomCurrency'].setErrors({
-              invalid: true
-            });
-          }
-        }
-
-        const feeInCustomCurrency =
-          this.activityForm.controls['feeInCustomCurrency'].value *
-          exchangeRateOfFee;
-
-        this.activityForm.controls['fee'].setValue(feeInCustomCurrency, {
-          emitEvent: false
-        });
 
         if (
           currency &&
@@ -212,9 +179,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           }
         }
 
+        const feeInCustomCurrency =
+          this.activityForm.controls['feeInCustomCurrency'].value *
+          exchangeRateOfUnitPrice;
+
         const unitPriceInCustomCurrency =
           this.activityForm.controls['unitPriceInCustomCurrency'].value *
           exchangeRateOfUnitPrice;
+
+        this.activityForm.controls['fee'].setValue(feeInCustomCurrency, {
+          emitEvent: false
+        });
 
         this.activityForm.controls['unitPrice'].setValue(
           unitPriceInCustomCurrency,
@@ -258,7 +233,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             })?.currency ?? this.data.user.settings.baseCurrency;
 
           this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
           this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
 
           if (['FEE', 'INTEREST'].includes(type)) {
@@ -328,7 +302,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             })?.currency ?? this.data.user.settings.baseCurrency;
 
           this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
           this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
 
           this.activityForm.controls['dataSource'].removeValidators(
@@ -361,7 +334,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             })?.currency ?? this.data.user.settings.baseCurrency;
 
           this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
           this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
 
           this.activityForm.controls['dataSource'].removeValidators(
@@ -486,6 +458,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       assetSubClass: this.activityForm.controls['assetSubClass'].value,
       comment: this.activityForm.controls['comment'].value,
       currency: this.activityForm.controls['currency'].value,
+      customCurrency: this.activityForm.controls['currencyOfUnitPrice'].value,
       date: this.activityForm.controls['date'].value,
       dataSource: this.activityForm.controls['dataSource'].value,
       fee: this.activityForm.controls['fee'].value,
@@ -549,7 +522,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
         this.activityForm.controls['currency'].setValue(currency);
-        this.activityForm.controls['currencyOfFee'].setValue(currency);
         this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
         this.activityForm.controls['dataSource'].setValue(dataSource);
 
