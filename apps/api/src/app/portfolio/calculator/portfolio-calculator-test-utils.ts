@@ -3,6 +3,7 @@ export const activityDummyData = {
   accountUserId: undefined,
   comment: undefined,
   createdAt: new Date(),
+  currency: undefined,
   feeInBaseCurrency: undefined,
   id: undefined,
   isDraft: false,
