@@ -42,6 +42,10 @@ export class CreateOrderDto {
   @IsISO4217CurrencyCode()
   currency: string;
 
+  @IsISO4217CurrencyCode()
+  @IsOptional()
+  customCurrency?: string;
+
   @IsOptional()
   @IsEnum(DataSource, { each: true })
   dataSource?: DataSource;
