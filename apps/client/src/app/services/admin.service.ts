@@ -72,6 +72,10 @@ export class AdminService {
     return this.http.delete<void>(`/api/v1/tag/${aId}`);
   }
 
+  public executeJob(aId: string) {
+    return this.http.get<void>(`/api/v1/admin/queue/job/${aId}/execute`);
+  }
+
   public fetchAdminData() {
     return this.http.get<AdminData>('/api/v1/admin');
   }
