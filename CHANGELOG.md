@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to immediately execute a queue job from the admin control panel
+
 ### Changed
 
 - Upgraded `angular` from version `17.2.4` to `17.3.3`
