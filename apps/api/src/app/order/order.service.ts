@@ -4,6 +4,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
@@ -101,7 +102,8 @@ export class OrderService {
           jobId: getAssetProfileIdentifier({
             dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
             symbol: data.SymbolProfile.connectOrCreate.create.symbol
-          })
+          }),
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
         }
       });
     }
@@ -427,13 +429,17 @@ export class OrderService {
 
       if (!isDraft) {
         // Gather symbol data of order in the background, if not draft
-        this.dataGatheringService.gatherSymbols([
-          {
-            dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
-            date: <Date>data.date,
-            symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
-          }
-        ]);
+        this.dataGatheringService.gatherSymbols({
+          dataGatheringItems: [
+            {
+              dataSource:
+                data.SymbolProfile.connect.dataSource_symbol.dataSource,
+              date: <Date>data.date,
+              symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
+            }
+          ],
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        });
       }
     }
 

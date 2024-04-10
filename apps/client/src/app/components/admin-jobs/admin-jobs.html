@@ -58,6 +58,25 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="priority">
+          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+            <ng-container i18n>Priority</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 py-2" mat-cell>
+            @if (element.opts.priority === DATA_GATHERING_QUEUE_PRIORITY_LOW) {
+              <ion-icon class="h6 mb-0" name="chevron-down-circle-outline" />
+            } @else if (
+              element.opts.priority === DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
+            ) {
+              <ion-icon class="h6 mb-0" name="remove-circle-outline" />
+            } @else if (
+              element.opts.priority === DATA_GATHERING_QUEUE_PRIORITY_HIGH
+            ) {
+              <ion-icon class="h6 mb-0" name="chevron-up-circle-outline" />
+            }
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="attempts">
           <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
             <ng-container i18n>Attempts</ng-container>
@@ -90,24 +109,37 @@
             <ng-container i18n>Status</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <ion-icon *ngIf="element.state === 'active'" name="play-outline" />
+            <ion-icon
+              *ngIf="element.state === 'active'"
+              class="h6 mb-0"
+              name="play-outline"
+            />
             <ion-icon
               *ngIf="element.state === 'completed'"
-              class="text-success"
+              class="h6 mb-0 text-success"
               name="checkmark-circle-outline"
             />
             <ion-icon
               *ngIf="element.state === 'delayed'"
+              class="h6 mb-0"
               name="time-outline"
               [ngClass]="{ 'text-danger': element.stacktrace?.length > 0 }"
             />
             <ion-icon
               *ngIf="element.state === 'failed'"
-              class="text-danger"
+              class="h6 mb-0 text-danger"
               name="alert-circle-outline"
             />
-            <ion-icon *ngIf="element.state === 'paused'" name="pause-outline" />
-            <ion-icon *ngIf="element.state === 'waiting'" name="cafe-outline" />
+            <ion-icon
+              *ngIf="element.state === 'paused'"
+              class="h6 mb-0"
+              name="pause-outline"
+            />
+            <ion-icon
+              *ngIf="element.state === 'waiting'"
+              class="h6 mb-0"
+              name="cafe-outline"
+            />
           </td>
         </ng-container>
 
