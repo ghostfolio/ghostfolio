@@ -32,6 +32,10 @@ export class QueueService {
     }
   }
 
+  public async executeJob(aId: string) {
+    return (await this.dataGatheringQueue.getJob(aId))?.promote();
+  }
+
   public async getJobs({
     limit = 1000,
     status = QUEUE_JOB_STATUS_LIST

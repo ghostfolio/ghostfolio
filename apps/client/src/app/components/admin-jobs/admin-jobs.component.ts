@@ -109,6 +109,15 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onExecuteJob(aId: string) {
+    this.adminService
+      .executeJob(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchJobs();
+      });
+  }
+
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {
     alert(JSON.stringify(aData, null, '  '));
   }
