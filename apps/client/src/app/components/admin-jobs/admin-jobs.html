@@ -147,6 +147,9 @@
               >
                 <ng-container i18n>View Stacktrace</ng-container>
               </button>
+              <button mat-menu-item (click)="onExecuteJob(element.id)">
+                <ng-container i18n>Execute Job</ng-container>
+              </button>
               <button mat-menu-item (click)="onDeleteJob(element.id)">
                 <ng-container i18n>Delete Job</ng-container>
               </button>
