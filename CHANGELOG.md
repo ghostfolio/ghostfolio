@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the dividend calculations into the portfolio calculator
 - Upgraded `angular` from version `17.2.4` to `17.3.3`
 - Upgraded `Nx` from version `18.1.2` to `18.2.3`
 - Upgraded `prisma` from version `5.11.0` to `5.12.1`
