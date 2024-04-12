@@ -539,7 +539,8 @@ export class PortfolioController {
     const { holdings } = await this.portfolioService.getDetails({
       filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
       impersonationId: access.userId,
-      userId: user.id
+      userId: user.id,
+      withMarkets: true
     });
 
     const portfolioPublicDetails: PortfolioPublicDetails = {
