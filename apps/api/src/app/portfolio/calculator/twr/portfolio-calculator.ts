@@ -1,6 +1,6 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/current-positions.interface';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
+import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -23,7 +23,7 @@ import { cloneDeep, first, last, sortBy } from 'lodash';
 export class TWRPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
     positions: TimelinePosition[]
-  ): CurrentPositions {
+  ): PortfolioSnapshot {
     let currentValueInBaseCurrency = new Big(0);
     let grossPerformance = new Big(0);
     let grossPerformanceWithCurrencyEffect = new Big(0);

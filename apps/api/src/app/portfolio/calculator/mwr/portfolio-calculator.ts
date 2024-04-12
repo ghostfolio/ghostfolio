@@ -1,5 +1,5 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { CurrentPositions } from '@ghostfolio/api/app/portfolio/interfaces/current-positions.interface';
+import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import {
   SymbolMetrics,
   TimelinePosition,
@@ -9,7 +9,7 @@ import {
 export class MWRPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(
     positions: TimelinePosition[]
-  ): CurrentPositions {
+  ): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
 

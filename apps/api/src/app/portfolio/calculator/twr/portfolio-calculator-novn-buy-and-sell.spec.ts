@@ -46,6 +46,10 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell', async () => {
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => parseDate('2022-04-11').getTime());
+
       const activities: Activity[] = [
         {
           ...activityDummyData,
@@ -85,15 +89,11 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF'
       });
 
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2022-04-11').getTime());
-
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2022-03-07')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2022-03-07')
       );
 
@@ -132,7 +132,7 @@ describe('PortfolioCalculator', () => {
         valueWithCurrencyEffect: 0
       });
 
-      expect(currentPositions).toEqual({
+      expect(portfolioSnapshot).toEqual({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('19.86'),

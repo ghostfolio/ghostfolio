@@ -107,7 +107,8 @@ export class PortfolioController {
         dateRange,
         filters,
         impersonationId,
-        withLiabilities,
+        // TODO
+        // withLiabilities,
         withMarkets,
         userId: this.request.user.id,
         withSummary: true
