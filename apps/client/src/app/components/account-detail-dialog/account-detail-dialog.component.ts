@@ -140,6 +140,31 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
+  public onAddAccountBalance({
+    date,
+    balance
+  }: {
+    date: string;
+    balance: number;
+  }) {
+    const formattedDate = new Date(date);
+    this.dataService
+      .postAccountBalance({
+        userId: this.user.id,
+        accountId: this.data.accountId,
+        balance: balance,
+        currency: this.currency,
+        date: formattedDate
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          this.fetchAccountBalances();
+          this.fetchPortfolioPerformance();
+        }
+      });
+  }
+
   public onDeleteAccountBalance(aId: string) {
     this.dataService
       .deleteAccountBalance(aId)

@@ -5,6 +5,8 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Controller,
+  Body,
+  Post,
   Delete,
   HttpException,
   Inject,
@@ -45,5 +47,27 @@ export class AccountBalanceController {
     return this.accountBalanceService.deleteAccountBalance({
       id
     });
+  }
+
+  @HasPermission(permissions.createAccountBalance)
+  @Post()
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async createAccountBalance(
+    @Body() body: any
+  ): Promise<AccountBalance> {
+    const account = body.Account.connect.id_userId;
+    const data = {
+      Account: {
+        connect: {
+          id_userId: {
+            id: account.id,
+            userId: account.userId
+          }
+        }
+      },
+      value: body.balance,
+      date: body.date
+    };
+    return this.accountBalanceService.createAccountBalance(data);
   }
 }

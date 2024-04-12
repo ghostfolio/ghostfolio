@@ -611,6 +611,34 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
+  public postAccountBalance({
+    date,
+    accountId,
+    balance,
+    currency,
+    userId
+  }: {
+    date: Date;
+    accountId: string;
+    balance: number;
+    currency: string;
+    userId: string;
+  }) {
+    return this.http.post<any>(`/api/v1/account-balance`, {
+      Account: {
+        connect: {
+          id_userId: {
+            id: accountId,
+            userId
+          }
+        }
+      },
+      currency,
+      date,
+      balance: balance
+    });
+  }
+
   public postBenchmark(benchmark: UniqueAsset) {
     return this.http.post(`/api/v1/benchmark`, benchmark);
   }

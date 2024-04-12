@@ -122,6 +122,7 @@
             hasPermissionToDeleteAccountBalance &&
             !user.settings.isRestrictedView
           "
+          (accountBalanceCreated)="onAddAccountBalance($event)"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
         />
       </mat-tab>
