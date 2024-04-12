@@ -375,7 +375,8 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const currentPositions = await portfolioCalculator.getSnapshot();
+    const { currentValueInBaseCurrency, hasErrors, positions } =
+      await portfolioCalculator.getSnapshot();
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -385,10 +386,9 @@ export class PortfolioService {
 
     const holdings: PortfolioDetails['holdings'] = {};
 
-    const totalValueInBaseCurrency =
-      currentPositions.currentValueInBaseCurrency.plus(
-        cashDetails.balanceInBaseCurrency
-      );
+    const totalValueInBaseCurrency = currentValueInBaseCurrency.plus(
+      cashDetails.balanceInBaseCurrency
+    );
 
     const isFilteredByAccount =
       filters?.some(({ type }) => {
@@ -406,7 +406,7 @@ export class PortfolioService {
 
     let filteredValueInBaseCurrency = isFilteredByAccount
       ? totalValueInBaseCurrency
-      : currentPositions.currentValueInBaseCurrency;
+      : currentValueInBaseCurrency;
 
     if (
       filters?.length === 0 ||
@@ -419,14 +419,12 @@ export class PortfolioService {
       );
     }
 
-    const dataGatheringItems = currentPositions.positions.map(
-      ({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol
-        };
-      }
-    );
+    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
+      return {
+        dataSource,
+        symbol
+      };
+    });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
@@ -439,7 +437,7 @@ export class PortfolioService {
     }
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-    for (const position of currentPositions.positions) {
+    for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
 
@@ -462,7 +460,7 @@ export class PortfolioService {
       tags,
       transactionCount,
       valueInBaseCurrency
-    } of currentPositions.positions) {
+    } of positions) {
       if (isFilteredByClosedHoldings === true) {
         if (!quantity.eq(0)) {
           // Ignore positions with a quantity
@@ -603,10 +601,10 @@ export class PortfolioService {
 
     return {
       accounts,
+      hasErrors,
       holdings,
       platforms,
-      summary,
-      hasErrors: currentPositions.hasErrors
+      summary
     };
   }
 
@@ -679,9 +677,9 @@ export class PortfolioService {
     const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
-    const currentPositions = await portfolioCalculator.getSnapshot();
+    const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = currentPositions.positions.find(({ symbol }) => {
+    const position = positions.find(({ symbol }) => {
       return symbol === aSymbol;
     });
 
@@ -937,9 +935,9 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const currentPositions = await portfolioCalculator.getSnapshot();
+    let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
 
-    let positions = currentPositions.positions.filter(({ quantity }) => {
+    positions = positions.filter(({ quantity }) => {
       return !quantity.eq(0);
     });
 
@@ -978,7 +976,7 @@ export class PortfolioService {
     }
 
     return {
-      hasErrors: currentPositions.hasErrors,
+      hasErrors,
       positions: positions.map(
         ({
           averagePrice,
@@ -1239,11 +1237,10 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const currentPositions = await portfolioCalculator.getSnapshot();
+    let { positions, totalInvestment } =
+      await portfolioCalculator.getSnapshot();
 
-    const positions = currentPositions.positions.filter(
-      (item) => !item.quantity.eq(0)
-    );
+    positions = positions.filter((item) => !item.quantity.eq(0));
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
 
@@ -1305,7 +1302,7 @@ export class PortfolioService {
           [
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions.totalInvestment.toNumber(),
+              totalInvestment.toNumber(),
               this.getFees({ activities, userCurrency }).toNumber()
             )
           ],
