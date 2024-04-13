@@ -78,10 +78,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('withLiabilities') withLiabilitiesParam = 'false',
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
-    const withLiabilities = withLiabilitiesParam === 'true';
     const withMarkets = withMarketsParam === 'true';
 
     let hasDetails = true;
@@ -107,8 +105,6 @@ export class PortfolioController {
         dateRange,
         filters,
         impersonationId,
-        // TODO
-        // withLiabilities,
         withMarkets,
         userId: this.request.user.id,
         withSummary: true

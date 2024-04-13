@@ -323,7 +323,6 @@ export class PortfolioService {
     impersonationId,
     userId,
     withExcludedAccounts = false,
-    withLiabilities = false,
     withMarkets = false,
     withSummary = false
   }: {
@@ -332,7 +331,6 @@ export class PortfolioService {
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    withLiabilities?: boolean;
     withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
