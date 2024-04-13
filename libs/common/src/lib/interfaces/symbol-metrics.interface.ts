@@ -46,4 +46,6 @@ export interface SymbolMetrics {
   totalInterestInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
+  totalValuables: Big;
+  totalValuablesInBaseCurrency: Big;
 }

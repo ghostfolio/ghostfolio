@@ -161,7 +161,8 @@ describe('PortfolioCalculator', () => {
         totalFeesWithCurrencyEffect: new Big('4.25'),
         totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('75.80'),
-        totalInvestmentWithCurrencyEffect: new Big('75.80')
+        totalInvestmentWithCurrencyEffect: new Big('75.80'),
+        totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([
