@@ -71,11 +71,6 @@
             >
           </mat-option>
         </mat-select>
-        <mat-error
-          *ngIf="activityForm.controls['type'].errors?.validationError"
-        >
-          {{ activityForm.controls['type'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div [ngClass]="{ 'mb-3': data.activity.id }">
@@ -108,11 +103,6 @@
             </div>
           </mat-option>
         </mat-select>
-        <mat-error
-          *ngIf="activityForm.controls['accountId'].errors?.validationError"
-        >
-          {{ activityForm.controls['accountId'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="mb-3" [ngClass]="{ 'd-none': data.activity.id }">
@@ -134,11 +124,6 @@
           formControlName="searchSymbol"
           [isLoading]="isLoading"
         />
-        <mat-error
-          *ngIf="activityForm.controls['searchSymbol'].errors?.validationError"
-        >
-          {{ activityForm.controls['searchSymbol'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -152,11 +137,6 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
         <input formControlName="name" matInput />
-        <mat-error
-          *ngIf="activityForm.controls['name'].errors?.validationError"
-        >
-          {{ activityForm.controls['name'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="d-none">
@@ -167,11 +147,6 @@
             currency
           }}</mat-option>
         </mat-select>
-        <mat-error
-          *ngIf="activityForm.controls['currency'].errors?.validationError"
-        >
-          {{ activityForm.controls['currency'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="d-none">
@@ -197,11 +172,6 @@
           />
         </mat-datepicker-toggle>
         <mat-datepicker #date disabled="false" />
-        <mat-error
-          *ngIf="activityForm.controls['date'].errors?.validationError"
-        >
-          {{ activityForm.controls['date'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -217,11 +187,6 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
         <input formControlName="quantity" matInput type="number" />
-        <mat-error
-          *ngIf="activityForm.controls['quantity'].errors?.validationError"
-        >
-          {{ activityForm.controls['quantity'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -262,20 +227,6 @@
               </mat-option>
             </mat-select>
           </div>
-          <mat-error
-            *ngIf="
-              activityForm.controls['unitPriceInCustomCurrency'].hasError(
-                'invalid'
-              )
-            "
-            ><ng-container i18n
-              >Oops! Could not get the historical exchange rate
-              from</ng-container
-            >
-            {{
-              activityForm.controls['date']?.value | date: defaultDateFormat
-            }}</mat-error
-          >
         </mat-form-field>
         <button
           *ngIf="
@@ -311,11 +262,6 @@
         <span class="ml-2" matTextSuffix>{{
           activityForm.controls['currency'].value
         }}</span>
-        <mat-error
-          *ngIf="activityForm.controls['unitPrice'].errors?.validationError"
-        >
-          {{ activityForm.controls['unitPrice'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -337,17 +283,6 @@
         >
           {{ activityForm.controls['currencyOfUnitPrice'].value }}
         </div>
-        <mat-error
-          *ngIf="
-            activityForm.controls['feeInCustomCurrency'].hasError('invalid')
-          "
-          ><ng-container i18n
-            >Oops! Could not get the historical exchange rate from</ng-container
-          >
-          {{
-            activityForm.controls['date']?.value | date: defaultDateFormat
-          }}</mat-error
-        >
       </mat-form-field>
     </div>
     <div class="d-none">
@@ -357,9 +292,6 @@
         <span class="ml-2" matTextSuffix>{{
           activityForm.controls['currency'].value
         }}</span>
-        <mat-error *ngIf="activityForm.controls['fee'].errors?.validationError">
-          {{ activityForm.controls['fee'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -372,11 +304,6 @@
           matInput
           (keyup.enter)="$event.stopPropagation()"
         ></textarea>
-        <mat-error
-          *ngIf="activityForm.controls['comment'].errors?.validationError"
-        >
-          {{ activityForm.controls['comment'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -393,11 +320,6 @@
             >{{ assetClass.label }}</mat-option
           >
         </mat-select>
-        <mat-error
-          *ngIf="activityForm.controls['assetClass'].errors?.validationError"
-        >
-          {{ activityForm.controls['assetClass'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div
@@ -414,11 +336,6 @@
             >{{ assetSubClass.label }}</mat-option
           >
         </mat-select>
-        <mat-error
-          *ngIf="activityForm.controls['assetSubClass'].errors?.validationError"
-        >
-          {{ activityForm.controls['assetSubClass'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">

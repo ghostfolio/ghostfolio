@@ -1,7 +1,7 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/validation.util';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -477,15 +477,19 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     if (this.data.activity.id) {
       (activity as UpdateOrderDto).id = this.data.activity.id;
-      validateObjectForForm(activity, UpdateOrderDto, this.activityForm, () => {
-        this.dialogRef.close({ activity });
-      });
+      validateObjectForForm(activity, UpdateOrderDto, this.activityForm).then(
+        () => {
+          this.dialogRef.close({ activity });
+        }
+      );
     } else {
       (activity as CreateOrderDto).updateAccountBalance =
         this.activityForm.controls['updateAccountBalance'].value;
-      validateObjectForForm(activity, CreateOrderDto, this.activityForm, () => {
-        this.dialogRef.close({ activity });
-      });
+      validateObjectForForm(activity, CreateOrderDto, this.activityForm).then(
+        () => {
+          this.dialogRef.close({ activity });
+        }
+      );
     }
   }
 
