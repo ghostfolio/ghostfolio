@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the dividend calculations into the portfolio calculator
 - Moved the fee calculations into the portfolio calculator
 - Moved the interest calculations into the portfolio calculator
+- Moved the (wealth) item calculations into the portfolio calculator
 
 ## 2.72.0 - 2024-04-13
 
