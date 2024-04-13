@@ -23,12 +23,7 @@ import {
   EMERGENCY_FUND_TAG_ID,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getAllActivityTypes,
-  getSum,
-  parseDate
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
@@ -78,6 +73,7 @@ import {
 } from 'date-fns';
 import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
+import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
@@ -349,19 +345,8 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    let types = getAllActivityTypes().filter((activityType) => {
-      return activityType !== 'FEE';
-    });
-
-    if (withLiabilities === false) {
-      types = types.filter((activityType) => {
-        return activityType !== 'LIABILITY';
-      });
-    }
-
     const { activities } = await this.orderService.getOrders({
       filters,
-      types,
       userCurrency,
       userId,
       withExcludedAccounts
@@ -369,16 +354,13 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      dateRange,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
 
-    const { startDate } = getInterval(
-      dateRange,
-      portfolioCalculator.getStartDate()
-    );
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(startDate);
+    const { currentValueInBaseCurrency, hasErrors, positions } =
+      await portfolioCalculator.getSnapshot();
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -388,10 +370,9 @@ export class PortfolioService {
 
     const holdings: PortfolioDetails['holdings'] = {};
 
-    const totalValueInBaseCurrency =
-      currentPositions.currentValueInBaseCurrency.plus(
-        cashDetails.balanceInBaseCurrency
-      );
+    const totalValueInBaseCurrency = currentValueInBaseCurrency.plus(
+      cashDetails.balanceInBaseCurrency
+    );
 
     const isFilteredByAccount =
       filters?.some(({ type }) => {
@@ -409,7 +390,7 @@ export class PortfolioService {
 
     let filteredValueInBaseCurrency = isFilteredByAccount
       ? totalValueInBaseCurrency
-      : currentPositions.currentValueInBaseCurrency;
+      : currentValueInBaseCurrency;
 
     if (
       filters?.length === 0 ||
@@ -422,14 +403,12 @@ export class PortfolioService {
       );
     }
 
-    const dataGatheringItems = currentPositions.positions.map(
-      ({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol
-        };
-      }
-    );
+    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
+      return {
+        dataSource,
+        symbol
+      };
+    });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
@@ -442,7 +421,7 @@ export class PortfolioService {
     }
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-    for (const position of currentPositions.positions) {
+    for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
 
@@ -465,7 +444,7 @@ export class PortfolioService {
       tags,
       transactionCount,
       valueInBaseCurrency
-    } of currentPositions.positions) {
+    } of positions) {
       if (isFilteredByClosedHoldings === true) {
         if (!quantity.eq(0)) {
           // Ignore positions with a quantity
@@ -593,6 +572,7 @@ export class PortfolioService {
         filteredValueInBaseCurrency,
         holdings,
         impersonationId,
+        portfolioCalculator,
         userCurrency,
         userId,
         balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
@@ -605,10 +585,10 @@ export class PortfolioService {
 
     return {
       accounts,
+      hasErrors,
       holdings,
       platforms,
-      summary,
-      hasErrors: currentPositions.hasErrors
+      summary
     };
   }
 
@@ -681,10 +661,9 @@ export class PortfolioService {
     const portfolioStart = portfolioCalculator.getStartDate();
     const transactionPoints = portfolioCalculator.getTransactionPoints();
 
-    const currentPositions =
-      await portfolioCalculator.getCurrentPositions(portfolioStart);
+    const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = currentPositions.positions.find(({ symbol }) => {
+    const position = positions.find(({ symbol }) => {
       return symbol === aSymbol;
     });
 
@@ -916,13 +895,12 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
       filters,
       userId,
-      types: ['BUY', 'SELL'],
       userCurrency: this.getUserCurrency()
     });
 
@@ -935,16 +913,14 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      dateRange,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      startDate,
-      endDate
-    );
+    let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
 
-    let positions = currentPositions.positions.filter(({ quantity }) => {
+    positions = positions.filter(({ quantity }) => {
       return !quantity.eq(0);
     });
 
@@ -983,7 +959,7 @@ export class PortfolioService {
     }
 
     return {
-      hasErrors: currentPositions.hasErrors,
+      hasErrors,
       positions: positions.map(
         ({
           averagePrice,
@@ -1050,15 +1026,13 @@ export class PortfolioService {
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false,
-    withItems = false
+    withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    withItems?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1096,8 +1070,7 @@ export class PortfolioService {
       filters,
       userCurrency,
       userId,
-      withExcludedAccounts,
-      types: withItems ? ['BUY', 'ITEM', 'SELL'] : ['BUY', 'SELL']
+      withExcludedAccounts
     });
 
     if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
@@ -1123,6 +1096,7 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      dateRange,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
@@ -1140,7 +1114,7 @@ export class PortfolioService {
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceWithCurrencyEffect,
       totalInvestment
-    } = await portfolioCalculator.getCurrentPositions(startDate, endDate);
+    } = await portfolioCalculator.getSnapshot();
 
     let currentNetPerformance = netPerformance;
 
@@ -1231,8 +1205,7 @@ export class PortfolioService {
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
-      userId,
-      types: ['BUY', 'SELL']
+      userId
     });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
@@ -1241,13 +1214,10 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const currentPositions = await portfolioCalculator.getCurrentPositions(
-      portfolioCalculator.getStartDate()
-    );
+    let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
+      await portfolioCalculator.getSnapshot();
 
-    const positions = currentPositions.positions.filter(
-      (item) => !item.quantity.eq(0)
-    );
+    positions = positions.filter((item) => !item.quantity.eq(0));
 
     const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
 
@@ -1309,8 +1279,8 @@ export class PortfolioService {
           [
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
-              currentPositions.totalInvestment.toNumber(),
-              this.getFees({ activities, userCurrency }).toNumber()
+              totalInvestment.toNumber(),
+              totalFeesWithCurrencyEffect.toNumber()
             )
           ],
           userSettings
@@ -1452,30 +1422,6 @@ export class PortfolioService {
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
-  }
-
-  private getFees({
-    activities,
-    userCurrency
-  }: {
-    activities: Activity[];
-    userCurrency: string;
-  }) {
-    return getSum(
-      activities
-        .filter(({ isDraft }) => {
-          return isDraft === false;
-        })
-        .map(({ fee, SymbolProfile }) => {
-          return new Big(
-            this.exchangeRateDataService.toCurrency(
-              fee,
-              SymbolProfile.currency,
-              userCurrency
-            )
-          );
-        })
-    );
   }
 
   private getInitialCashPosition({
@@ -1623,6 +1569,7 @@ export class PortfolioService {
     filteredValueInBaseCurrency,
     holdings,
     impersonationId,
+    portfolioCalculator,
     userCurrency,
     userId
   }: {
@@ -1631,6 +1578,7 @@ export class PortfolioService {
     filteredValueInBaseCurrency: Big;
     holdings: PortfolioDetails['holdings'];
     impersonationId: string;
+    portfolioCalculator: PortfolioCalculator;
     userCurrency: string;
     userId: string;
   }): Promise<PortfolioSummary> {
@@ -1659,17 +1607,8 @@ export class PortfolioService {
       }
     }
 
-    const dividendInBaseCurrency = getSum(
-      (
-        await this.getDividends({
-          activities: activities.filter(({ type }) => {
-            return type === 'DIVIDEND';
-          })
-        })
-      ).map(({ investment }) => {
-        return new Big(investment);
-      })
-    );
+    const dividendInBaseCurrency =
+      await portfolioCalculator.getDividendInBaseCurrency();
 
     const emergencyFund = new Big(
       Math.max(
@@ -1678,15 +1617,13 @@ export class PortfolioService {
       )
     );
 
-    const fees = this.getFees({ activities, userCurrency }).toNumber();
-    const firstOrderDate = activities[0]?.date;
+    const fees = await portfolioCalculator.getFeesInBaseCurrency();
 
-    const interest = this.getSumOfActivityType({
-      activities,
-      userCurrency,
-      activityType: 'INTEREST'
-    }).toNumber();
+    const firstOrderDate = portfolioCalculator.getStartDate();
 
+    const interest = await portfolioCalculator.getInterestInBaseCurrency();
+
+    // TODO: Move to portfolio calculator
     const items = getSum(
       Object.keys(holdings)
         .filter((symbol) => {
@@ -1701,6 +1638,7 @@ export class PortfolioService {
         })
     ).toNumber();
 
+    // TODO: Move to portfolio calculator
     const liabilities = getSum(
       Object.keys(holdings)
         .filter((symbol) => {
@@ -1791,9 +1729,7 @@ export class PortfolioService {
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
       excludedAccountsAndActivities,
-      fees,
       firstOrderDate,
-      interest,
       items,
       liabilities,
       totalBuy,
@@ -1807,6 +1743,7 @@ export class PortfolioService {
           .toNumber(),
         total: emergencyFund.toNumber()
       },
+      fees: fees.toNumber(),
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
@@ -1814,6 +1751,7 @@ export class PortfolioService {
       fireWealth: new Big(performanceInformation.performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
+      interest: interest.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length,

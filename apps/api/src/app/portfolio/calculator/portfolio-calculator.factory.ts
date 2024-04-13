@@ -1,6 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
@@ -23,17 +24,20 @@ export class PortfolioCalculatorFactory {
   public createCalculator({
     activities,
     calculationType,
-    currency
+    currency,
+    dateRange = 'max'
   }: {
     activities: Activity[];
     calculationType: PerformanceCalculationType;
     currency: string;
+    dateRange?: DateRange;
   }): PortfolioCalculator {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
         return new MWRPortfolioCalculator({
           activities,
           currency,
+          dateRange,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService
         });
@@ -42,6 +46,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           currentRateService: this.currentRateService,
+          dateRange,
           exchangeRateDataService: this.exchangeRateDataService
         });
       default:

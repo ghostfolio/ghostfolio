@@ -59,6 +59,10 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => parseDate('2018-01-01').getTime());
+
       const activities: Activity[] = [
         {
           ...activityDummyData,
@@ -98,15 +102,11 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF'
       });
 
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2018-01-01').getTime());
-
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2015-01-01')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2015-01-01')
       );
 
@@ -119,7 +119,7 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
+      expect(portfolioSnapshot).toEqual({
         currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
         grossPerformance: new Big('27172.74'),
@@ -175,6 +175,8 @@ describe('PortfolioCalculator', () => {
             valueInBaseCurrency: new Big('13298.425356')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('320.43'),
         totalInvestmentWithCurrencyEffect: new Big('318.542667299999967957')
       });

@@ -46,6 +46,10 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with BALN.SW buy and sell', async () => {
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => parseDate('2021-12-18').getTime());
+
       const activities: Activity[] = [
         {
           ...activityDummyData,
@@ -85,15 +89,11 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF'
       });
 
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
-
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2021-11-22')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2021-11-22')
       );
 
@@ -106,7 +106,7 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
+      expect(portfolioSnapshot).toEqual({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('-12.6'),
@@ -156,6 +156,8 @@ describe('PortfolioCalculator', () => {
             valueInBaseCurrency: new Big('0')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('3.2'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('0'),
         totalInvestmentWithCurrencyEffect: new Big('0')
       });

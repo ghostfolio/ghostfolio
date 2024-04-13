@@ -59,6 +59,10 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => parseDate('2023-07-10').getTime());
+
       const activities: Activity[] = [
         {
           ...activityDummyData,
@@ -83,15 +87,11 @@ describe('PortfolioCalculator', () => {
         currency: 'CHF'
       });
 
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2023-07-10').getTime());
-
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2023-01-03')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2023-01-03')
       );
 
@@ -104,7 +104,7 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
+      expect(portfolioSnapshot).toEqual({
         currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
         grossPerformance: new Big('27.33'),
@@ -154,6 +154,8 @@ describe('PortfolioCalculator', () => {
             valueInBaseCurrency: new Big('103.10483')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('1'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('89.12'),
         totalInvestmentWithCurrencyEffect: new Big('82.329056')
       });

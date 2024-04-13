@@ -42,22 +42,22 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it('with no orders', async () => {
+      const spy = jest
+        .spyOn(Date, 'now')
+        .mockImplementation(() => parseDate('2021-12-18').getTime());
+
       const portfolioCalculator = factory.createCalculator({
         activities: [],
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF'
       });
 
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
-
       const start = subDays(new Date(Date.now()), 10);
 
       const chartData = await portfolioCalculator.getChartData({ start });
 
-      const currentPositions =
-        await portfolioCalculator.getCurrentPositions(start);
+      const portfolioSnapshot =
+        await portfolioCalculator.computeSnapshot(start);
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -68,7 +68,7 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
+      expect(portfolioSnapshot).toEqual({
         currentValueInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
@@ -80,6 +80,8 @@ describe('PortfolioCalculator', () => {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       });
