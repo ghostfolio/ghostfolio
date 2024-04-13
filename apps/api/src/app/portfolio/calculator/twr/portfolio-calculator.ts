@@ -102,6 +102,11 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
+    console.log(
+      'Overall: totalTimeWeightedInvestmentValue',
+      totalTimeWeightedInvestment.toFixed()
+    );
+
     return {
       currentValueInBaseCurrency,
       grossPerformance,
@@ -114,6 +119,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       totalInterestWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
+      chartData: [],
       netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
         ? new Big(0)
         : netPerformance.div(totalTimeWeightedInvestment),

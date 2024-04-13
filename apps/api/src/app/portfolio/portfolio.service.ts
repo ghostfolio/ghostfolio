@@ -334,6 +334,8 @@ export class PortfolioService {
     withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
+    console.time('-- PortfolioService.getDetails - 1');
+
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -356,8 +358,15 @@ export class PortfolioService {
       currency: userCurrency
     });
 
+    console.timeEnd('-- PortfolioService.getDetails - 1');
+
+    console.time('-- PortfolioService.getDetails - 2');
+
     const { currentValueInBaseCurrency, hasErrors, positions } =
       await portfolioCalculator.getSnapshot();
+
+    console.timeEnd('-- PortfolioService.getDetails - 2');
+    console.time('-- PortfolioService.getDetails - 3');
 
     const cashDetails = await this.accountService.getCashDetails({
       filters,
@@ -407,6 +416,9 @@ export class PortfolioService {
       };
     });
 
+    console.timeEnd('-- PortfolioService.getDetails - 3');
+    console.time('-- PortfolioService.getDetails - 4');
+
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
       this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
       this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
@@ -421,6 +433,9 @@ export class PortfolioService {
     for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
+
+    console.timeEnd('-- PortfolioService.getDetails - 4');
+    console.time('-- PortfolioService.getDetails - 5');
 
     for (const {
       currency,
@@ -562,6 +577,10 @@ export class PortfolioService {
       };
     }
 
+    console.timeEnd('-- PortfolioService.getDetails - 5');
+
+    console.time('-- PortfolioService.getDetails - 6');
+
     let summary: PortfolioSummary;
 
     if (withSummary) {
@@ -579,6 +598,8 @@ export class PortfolioService {
           })
       });
     }
+
+    console.timeEnd('-- PortfolioService.getDetails - 6');
 
     return {
       accounts,
@@ -1022,15 +1043,20 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
+    portfolioCalculator,
     userId,
     withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
+    portfolioCalculator?: PortfolioCalculator;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
+    // OPTIMIZE (1.34s)
+    console.time('------ PortfolioService.getPerformance');
+
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -1062,6 +1088,8 @@ export class PortfolioService {
 
     const { endDate, startDate } = getInterval(dateRange);
 
+    console.time('------- PortfolioService.getPerformance - 2');
+
     const { activities } = await this.orderService.getOrders({
       endDate,
       filters,
@@ -1069,6 +1097,9 @@ export class PortfolioService {
       userId,
       withExcludedAccounts
     });
+
+    console.timeEnd('------- PortfolioService.getPerformance - 2');
+    console.time('------- PortfolioService.getPerformance - 3');
 
     if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
       return {
@@ -1091,14 +1122,17 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
-      dateRange,
-      calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency
-    });
+    portfolioCalculator =
+      portfolioCalculator ??
+      this.calculatorFactory.createCalculator({
+        activities,
+        dateRange,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: userCurrency
+      });
 
     const {
+      chartData,
       currentValueInBaseCurrency,
       errors,
       grossPerformance,
@@ -1113,6 +1147,9 @@ export class PortfolioService {
       totalInvestment
     } = await portfolioCalculator.getSnapshot();
 
+    console.timeEnd('------- PortfolioService.getPerformance - 3');
+    console.time('------- PortfolioService.getPerformance - 4');
+
     let currentNetPerformance = netPerformance;
 
     let currentNetPerformancePercent = netPerformancePercentage;
@@ -1123,11 +1160,10 @@ export class PortfolioService {
     let currentNetPerformanceWithCurrencyEffect =
       netPerformanceWithCurrencyEffect;
 
-    const items = await portfolioCalculator.getChart({
-      dateRange
-    });
+    console.timeEnd('------- PortfolioService.getPerformance - 4');
+    console.time('------- PortfolioService.getPerformance - 5');
 
-    const itemOfToday = items.find(({ date }) => {
+    const itemOfToday = chartData.find(({ date }) => {
       return date === format(new Date(), DATE_FORMAT);
     });
 
@@ -1162,19 +1198,25 @@ export class PortfolioService {
       });
     }
 
+    console.timeEnd('------- PortfolioService.getPerformance - 5');
+    console.time('------- PortfolioService.getPerformance - 6');
+
     const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
       accountBalanceItems,
-      items
+      chartData
     );
 
     const currentHistoricalDataItem = last(mergedHistoricalDataItems);
     const currentNetWorth = currentHistoricalDataItem?.netWorth ?? 0;
 
+    console.timeEnd('------- PortfolioService.getPerformance - 6');
+    console.timeEnd('------ PortfolioService.getPerformance');
+
     return {
       errors,
       hasErrors,
       chart: mergedHistoricalDataItems,
-      firstOrderDate: parseDate(items[0]?.date),
+      firstOrderDate: parseDate(chartData[0]?.date),
       performance: {
         currentNetWorth,
         currentGrossPerformance: grossPerformance.toNumber(),
@@ -1579,11 +1621,17 @@ export class PortfolioService {
     userCurrency: string;
     userId: string;
   }): Promise<PortfolioSummary> {
+    // OPTIMIZE (1.1 s)
+    console.time('---- PortfolioService.getSummary');
+
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
+    console.time('----- PortfolioService.getSummary - 1');
+
     const performanceInformation = await this.getPerformance({
       impersonationId,
+      portfolioCalculator,
       userId
     });
 
@@ -1592,6 +1640,9 @@ export class PortfolioService {
       userId,
       withExcludedAccounts: true
     });
+
+    console.timeEnd('----- PortfolioService.getSummary - 1');
+    console.time('----- PortfolioService.getSummary - 2');
 
     const excludedActivities: Activity[] = [];
     const nonExcludedActivities: Activity[] = [];
@@ -1619,6 +1670,9 @@ export class PortfolioService {
     const firstOrderDate = portfolioCalculator.getStartDate();
 
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
+
+    console.timeEnd('----- PortfolioService.getSummary - 2');
+    console.time('----- PortfolioService.getSummary - 3');
 
     const liabilities =
       await portfolioCalculator.getLiabilitiesInBaseCurrency();
@@ -1655,6 +1709,9 @@ export class PortfolioService {
         activityType: 'SELL'
       })
     );
+
+    console.timeEnd('----- PortfolioService.getSummary - 3');
+    console.time('----- PortfolioService.getSummary - 4');
 
     const cashDetailsWithExcludedAccounts =
       await this.accountService.getCashDetails({
@@ -1694,6 +1751,10 @@ export class PortfolioService {
           performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
         )
       })?.toNumber();
+
+    console.timeEnd('----- PortfolioService.getSummary - 4');
+
+    console.timeEnd('---- PortfolioService.getSummary');
 
     return {
       ...performanceInformation.performance,

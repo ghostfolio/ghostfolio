@@ -1,8 +1,13 @@
-import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
+import {
+  HistoricalDataItem,
+  ResponseError,
+  TimelinePosition
+} from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
 
 export interface PortfolioSnapshot extends ResponseError {
+  chartData: HistoricalDataItem[];
   currentValueInBaseCurrency: Big;
   grossPerformance: Big;
   grossPerformanceWithCurrencyEffect: Big;
