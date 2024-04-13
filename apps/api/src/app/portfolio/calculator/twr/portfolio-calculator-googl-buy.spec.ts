@@ -158,6 +158,7 @@ describe('PortfolioCalculator', () => {
         totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('89.12'),
         totalInvestmentWithCurrencyEffect: new Big('82.329056'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 

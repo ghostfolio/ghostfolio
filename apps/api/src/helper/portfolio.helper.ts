@@ -20,7 +20,6 @@ export function getFactor(activityType: ActivityType) {
     case 'BUY':
       factor = 1;
       break;
-    case 'LIABILITY':
     case 'SELL':
       factor = -1;
       break;

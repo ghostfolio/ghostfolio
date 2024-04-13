@@ -60,7 +60,6 @@ import {
   Prisma
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import {
   differenceInDays,
   format,
@@ -1623,22 +1622,10 @@ export class PortfolioService {
 
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
 
-    const valuables = await portfolioCalculator.getValuablesInBaseCurrency();
+    const liabilities =
+      await portfolioCalculator.getLiabilitiesInBaseCurrency();
 
-    // TODO: Move to portfolio calculator
-    const liabilities = getSum(
-      Object.keys(holdings)
-        .filter((symbol) => {
-          return (
-            isUUID(symbol) &&
-            holdings[symbol].dataSource === 'MANUAL' &&
-            holdings[symbol].valueInBaseCurrency < 0
-          );
-        })
-        .map((symbol) => {
-          return new Big(holdings[symbol].valueInBaseCurrency).abs();
-        })
-    ).toNumber();
+    const valuables = await portfolioCalculator.getValuablesInBaseCurrency();
 
     const totalBuy = this.getSumOfActivityType({
       userCurrency,
@@ -1717,7 +1704,6 @@ export class PortfolioService {
       cash,
       excludedAccountsAndActivities,
       firstOrderDate,
-      liabilities,
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
@@ -1739,6 +1725,7 @@ export class PortfolioService {
         .toNumber(),
       interest: interest.toNumber(),
       items: valuables.toNumber(),
+      liabilities: liabilities.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length,

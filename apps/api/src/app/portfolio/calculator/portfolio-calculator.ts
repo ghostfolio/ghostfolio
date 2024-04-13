@@ -141,6 +141,7 @@ export abstract class PortfolioCalculator {
         totalInterestWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big(0),
         totalValuablesWithCurrencyEffect: new Big(0)
       };
     }
@@ -151,6 +152,7 @@ export abstract class PortfolioCalculator {
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
     let totalInterestWithCurrencyEffect = new Big(0);
+    let totalLiabilitiesWithCurrencyEffect = new Big(0);
     let totalValuablesWithCurrencyEffect = new Big(0);
 
     dates.push(resetHours(start));
@@ -280,6 +282,7 @@ export abstract class PortfolioCalculator {
         totalInterestInBaseCurrency,
         totalInvestment,
         totalInvestmentWithCurrencyEffect,
+        totalLiabilitiesInBaseCurrency,
         totalValuablesInBaseCurrency
       } = this.getSymbolMetrics({
         marketSymbolMap,
@@ -342,6 +345,9 @@ export abstract class PortfolioCalculator {
         totalInterestInBaseCurrency
       );
 
+      totalLiabilitiesWithCurrencyEffect =
+        totalLiabilitiesWithCurrencyEffect.plus(totalLiabilitiesInBaseCurrency);
+
       totalValuablesWithCurrencyEffect = totalValuablesWithCurrencyEffect.plus(
         totalValuablesInBaseCurrency
       );
@@ -364,6 +370,7 @@ export abstract class PortfolioCalculator {
       errors,
       positions,
       totalInterestWithCurrencyEffect,
+      totalLiabilitiesWithCurrencyEffect,
       totalValuablesWithCurrencyEffect,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
@@ -729,6 +736,12 @@ export abstract class PortfolioCalculator {
     }));
   }
 
+  public async getLiabilitiesInBaseCurrency() {
+    await this.snapshotPromise;
+
+    return this.snapshot.totalLiabilitiesWithCurrencyEffect;
+  }
+
   public async getSnapshot() {
     await this.snapshotPromise;
 
@@ -787,13 +800,6 @@ export abstract class PortfolioCalculator {
       type,
       unitPrice
     } of this.orders) {
-      if (
-        // TODO
-        ['LIABILITY'].includes(type)
-      ) {
-        continue;
-      }
-
       let currentTransactionPointItem: TransactionPointSymbol;
       const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
@@ -878,6 +884,12 @@ export abstract class PortfolioCalculator {
         interest = quantity.mul(unitPrice);
       }
 
+      let liabilities = new Big(0);
+
+      if (type === 'LIABILITY') {
+        liabilities = quantity.mul(unitPrice);
+      }
+
       let valuables = new Big(0);
 
       if (type === 'ITEM') {
@@ -889,6 +901,7 @@ export abstract class PortfolioCalculator {
           date,
           fees,
           interest,
+          liabilities,
           valuables,
           items: newItems
         };
@@ -899,6 +912,8 @@ export abstract class PortfolioCalculator {
         lastTransactionPoint.interest =
           lastTransactionPoint.interest.plus(interest);
         lastTransactionPoint.items = newItems;
+        lastTransactionPoint.liabilities =
+          lastTransactionPoint.liabilities.plus(liabilities);
         lastTransactionPoint.valuables =
           lastTransactionPoint.valuables.plus(valuables);
       }
