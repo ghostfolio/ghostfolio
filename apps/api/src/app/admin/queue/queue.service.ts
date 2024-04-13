@@ -58,6 +58,7 @@ export class QueueService {
             finishedOn: job.finishedOn,
             id: job.id,
             name: job.name,
+            opts: job.opts,
             stacktrace: job.stacktrace,
             state: await job.getState(),
             timestamp: job.timestamp

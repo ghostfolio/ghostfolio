@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support to immediately execute a queue job from the admin control panel
+- Added a priority column to the queue jobs view in the admin control panel
 
 ### Changed
 
+- Adapted the priorities of queue jobs
 - Upgraded `angular` from version `17.2.4` to `17.3.3`
 - Upgraded `Nx` from version `18.1.2` to `18.2.3`
 - Upgraded `prisma` from version `5.11.0` to `5.12.1`
