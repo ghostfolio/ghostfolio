@@ -16,6 +16,7 @@ export interface PortfolioSnapshot extends ResponseError {
   netPerformancePercentageWithCurrencyEffect: Big;
   positions: TimelinePosition[];
   totalFeesWithCurrencyEffect: Big;
+  totalInterestWithCurrencyEffect: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
 }

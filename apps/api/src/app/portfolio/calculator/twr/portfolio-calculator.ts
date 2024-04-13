@@ -31,6 +31,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let netPerformance = new Big(0);
     let netPerformanceWithCurrencyEffect = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
+    let totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalTimeWeightedInvestment = new Big(0);
@@ -109,6 +110,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       netPerformance,
       netPerformanceWithCurrencyEffect,
       totalFeesWithCurrencyEffect,
+      totalInterestWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
       netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
@@ -186,6 +188,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
 
     let totalDividend = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
+    let totalInterest = new Big(0);
+    let totalInterestInBaseCurrency = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentFromBuyTransactions = new Big(0);
     let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
@@ -229,6 +233,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
         totalDividend: new Big(0),
         totalDividendInBaseCurrency: new Big(0),
+        totalInterest: new Big(0),
+        totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       };
@@ -272,6 +278,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
         totalDividend: new Big(0),
         totalDividendInBaseCurrency: new Big(0),
+        totalInterest: new Big(0),
+        totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       };
@@ -520,6 +528,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalDividend = totalDividend.plus(dividend);
         totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
           dividend.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'INTEREST') {
+        const interest = order.quantity.mul(order.unitPrice);
+
+        totalInterest = totalInterest.plus(interest);
+        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+          interest.mul(exchangeRateAtOrderDate ?? 1)
         );
       }
 
@@ -834,6 +849,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       timeWeightedInvestmentValuesWithCurrencyEffect,
       totalDividend,
       totalDividendInBaseCurrency,
+      totalInterest,
+      totalInterestInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
       grossPerformance: totalGrossPerformance,

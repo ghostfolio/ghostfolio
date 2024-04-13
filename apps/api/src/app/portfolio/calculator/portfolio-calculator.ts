@@ -138,6 +138,7 @@ export abstract class PortfolioCalculator {
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
         totalFeesWithCurrencyEffect: new Big(0),
+        totalInterestWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       };
@@ -260,7 +261,6 @@ export abstract class PortfolioCalculator {
       );
 
       const {
-        feesWithCurrencyEffect,
         grossPerformance,
         grossPerformancePercentage,
         grossPerformancePercentageWithCurrencyEffect,
@@ -350,7 +350,8 @@ export abstract class PortfolioCalculator {
       ...overall,
       errors,
       positions,
-      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
+      hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors,
+      totalInterestWithCurrencyEffect: lastTransactionPoint.interest
     };
   }
 
@@ -668,6 +669,12 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalFeesWithCurrencyEffect;
   }
 
+  public async getInterestInBaseCurrency() {
+    await this.snapshotPromise;
+
+    return this.snapshot.totalInterestWithCurrencyEffect;
+  }
+
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -761,7 +768,7 @@ export abstract class PortfolioCalculator {
       unitPrice
     } of this.orders) {
       if (
-        [/*'DIVIDEND', 'FEE',*/ 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
+        [/*'DIVIDEND', 'FEE', 'INTEREST',*/ 'ITEM', 'LIABILITY'].includes(type)
       ) {
         continue;
       }
@@ -844,16 +851,25 @@ export abstract class PortfolioCalculator {
         fees = fee;
       }
 
+      let interest = new Big(0);
+
+      if (type === 'INTEREST') {
+        interest = quantity.mul(unitPrice);
+      }
+
       if (lastDate !== date || lastTransactionPoint === null) {
         lastTransactionPoint = {
           date,
           fees,
+          interest,
           items: newItems
         };
 
         this.transactionPoints.push(lastTransactionPoint);
       } else {
         lastTransactionPoint.fees = lastTransactionPoint.fees.plus(fees);
+        lastTransactionPoint.interest =
+          lastTransactionPoint.interest.plus(interest);
         lastTransactionPoint.items = newItems;
       }
 

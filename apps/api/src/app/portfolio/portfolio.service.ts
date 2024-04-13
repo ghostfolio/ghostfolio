@@ -1621,14 +1621,7 @@ export class PortfolioService {
 
     const firstOrderDate = portfolioCalculator.getStartDate();
 
-    // TODO
-    const interest = this.getSumOfActivityType({
-      activities,
-      userCurrency,
-      activityType: 'INTEREST'
-    }).toNumber();
-
-    console.log(interest);
+    const interest = await portfolioCalculator.getInterestInBaseCurrency();
 
     // TODO
     const items = getSum(
@@ -1737,7 +1730,6 @@ export class PortfolioService {
       cash,
       excludedAccountsAndActivities,
       firstOrderDate,
-      interest,
       items,
       liabilities,
       totalBuy,
@@ -1759,6 +1751,7 @@ export class PortfolioService {
       fireWealth: new Big(performanceInformation.performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
+      interest: interest.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length,
