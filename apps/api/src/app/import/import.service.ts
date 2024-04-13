@@ -14,6 +14,10 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
+} from '@ghostfolio/common/config';
+import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   parseDate
@@ -448,15 +452,16 @@ export class ImportService {
         });
       });
 
-      this.dataGatheringService.gatherSymbols(
-        uniqueActivities.map(({ date, SymbolProfile }) => {
+      this.dataGatheringService.gatherSymbols({
+        dataGatheringItems: uniqueActivities.map(({ date, SymbolProfile }) => {
           return {
             date,
             dataSource: SymbolProfile.dataSource,
             symbol: SymbolProfile.symbol
           };
-        })
-      );
+        }),
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+      });
     }
 
     return activities;

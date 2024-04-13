@@ -32,8 +32,11 @@ export const warnColorRgb = {
 };
 
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
-export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
+export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
+export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
+  DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
+);
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
@@ -69,7 +72,6 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   removeOnComplete: true
 };
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
@@ -80,7 +82,6 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  priority: DATA_GATHERING_QUEUE_PRIORITY_LOW,
   removeOnComplete: true
 };
 
