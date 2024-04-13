@@ -130,6 +130,7 @@ describe('PortfolioCalculator', () => {
             transactionCount: 2
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('19'),
         totalInvestment: new Big('298.58'),
         totalInvestmentWithCurrencyEffect: new Big('298.58')
       });

@@ -7,6 +7,7 @@ export interface SymbolMetrics {
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
+  feesWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;

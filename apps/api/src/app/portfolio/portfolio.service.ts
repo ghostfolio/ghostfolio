@@ -23,12 +23,7 @@ import {
   EMERGENCY_FUND_TAG_ID,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getAllActivityTypes,
-  getSum,
-  parseDate
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
@@ -350,19 +345,8 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    let types = getAllActivityTypes().filter((activityType) => {
-      return activityType !== 'FEE';
-    });
-
-    if (withLiabilities === false) {
-      types = types.filter((activityType) => {
-        return activityType !== 'LIABILITY';
-      });
-    }
-
     const { activities } = await this.orderService.getOrders({
       filters,
-      types,
       userCurrency,
       userId,
       withExcludedAccounts
@@ -917,7 +901,6 @@ export class PortfolioService {
       endDate,
       filters,
       userId,
-      types: ['BUY', 'SELL'],
       userCurrency: this.getUserCurrency()
     });
 
@@ -1043,15 +1026,13 @@ export class PortfolioService {
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false,
-    withItems = false
+    withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    withItems?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1089,10 +1070,7 @@ export class PortfolioService {
       filters,
       userCurrency,
       userId,
-      withExcludedAccounts,
-      types: withItems
-        ? ['BUY', 'DIVIDEND', 'ITEM', 'SELL']
-        : ['BUY', 'DIVIDEND', 'SELL']
+      withExcludedAccounts
     });
 
     if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
@@ -1227,8 +1205,7 @@ export class PortfolioService {
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,
-      userId,
-      types: ['BUY', 'SELL']
+      userId
     });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
@@ -1237,7 +1214,7 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    let { positions, totalInvestment } =
+    let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
       await portfolioCalculator.getSnapshot();
 
     positions = positions.filter((item) => !item.quantity.eq(0));
@@ -1303,7 +1280,7 @@ export class PortfolioService {
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
               totalInvestment.toNumber(),
-              this.getFees({ activities, userCurrency }).toNumber()
+              totalFeesWithCurrencyEffect.toNumber()
             )
           ],
           userSettings
@@ -1445,30 +1422,6 @@ export class PortfolioService {
     }
 
     return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
-  }
-
-  private getFees({
-    activities,
-    userCurrency
-  }: {
-    activities: Activity[];
-    userCurrency: string;
-  }) {
-    return getSum(
-      activities
-        .filter(({ isDraft }) => {
-          return isDraft === false;
-        })
-        .map(({ fee, SymbolProfile }) => {
-          return new Big(
-            this.exchangeRateDataService.toCurrency(
-              fee,
-              SymbolProfile.currency,
-              userCurrency
-            )
-          );
-        })
-    );
   }
 
   private getInitialCashPosition({
@@ -1664,15 +1617,20 @@ export class PortfolioService {
       )
     );
 
-    const fees = this.getFees({ activities, userCurrency }).toNumber();
-    const firstOrderDate = activities[0]?.date;
+    const fees = await portfolioCalculator.getFeesInBaseCurrency();
 
+    const firstOrderDate = portfolioCalculator.getStartDate();
+
+    // TODO
     const interest = this.getSumOfActivityType({
       activities,
       userCurrency,
       activityType: 'INTEREST'
     }).toNumber();
 
+    console.log(interest);
+
+    // TODO
     const items = getSum(
       Object.keys(holdings)
         .filter((symbol) => {
@@ -1687,6 +1645,7 @@ export class PortfolioService {
         })
     ).toNumber();
 
+    // TODO
     const liabilities = getSum(
       Object.keys(holdings)
         .filter((symbol) => {
@@ -1777,7 +1736,6 @@ export class PortfolioService {
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
       excludedAccountsAndActivities,
-      fees,
       firstOrderDate,
       interest,
       items,
@@ -1793,6 +1751,7 @@ export class PortfolioService {
           .toNumber(),
         total: emergencyFund.toNumber()
       },
+      fees: fees.toNumber(),
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()

@@ -80,6 +80,7 @@ describe('PortfolioCalculator', () => {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
+        totalFeesWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       });

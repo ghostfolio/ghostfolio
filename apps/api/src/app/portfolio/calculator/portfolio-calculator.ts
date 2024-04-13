@@ -137,6 +137,7 @@ export abstract class PortfolioCalculator {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
+        totalFeesWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0)
       };
@@ -259,6 +260,7 @@ export abstract class PortfolioCalculator {
       );
 
       const {
+        feesWithCurrencyEffect,
         grossPerformance,
         grossPerformancePercentage,
         grossPerformancePercentageWithCurrencyEffect,
@@ -660,6 +662,12 @@ export abstract class PortfolioCalculator {
     );
   }
 
+  public async getFeesInBaseCurrency() {
+    await this.snapshotPromise;
+
+    return this.snapshot.totalFeesWithCurrencyEffect;
+  }
+
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -752,6 +760,12 @@ export abstract class PortfolioCalculator {
       type,
       unitPrice
     } of this.orders) {
+      if (
+        [/*'DIVIDEND', 'FEE',*/ 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
+      ) {
+        continue;
+      }
+
       let currentTransactionPointItem: TransactionPointSymbol;
       const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
@@ -824,14 +838,22 @@ export abstract class PortfolioCalculator {
         return a.symbol?.localeCompare(b.symbol);
       });
 
+      let fees = new Big(0);
+
+      if (type === 'FEE') {
+        fees = fee;
+      }
+
       if (lastDate !== date || lastTransactionPoint === null) {
         lastTransactionPoint = {
           date,
+          fees,
           items: newItems
         };
 
         this.transactionPoints.push(lastTransactionPoint);
       } else {
+        lastTransactionPoint.fees = lastTransactionPoint.fees.plus(fees);
         lastTransactionPoint.items = newItems;
       }
 

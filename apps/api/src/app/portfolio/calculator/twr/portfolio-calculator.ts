@@ -30,12 +30,19 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let hasErrors = false;
     let netPerformance = new Big(0);
     let netPerformanceWithCurrencyEffect = new Big(0);
+    let totalFeesWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalTimeWeightedInvestment = new Big(0);
     let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
+      if (currentPosition.fee) {
+        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
+          currentPosition.fee
+        );
+      }
+
       if (currentPosition.valueInBaseCurrency) {
         currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
           currentPosition.valueInBaseCurrency
@@ -101,6 +108,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       hasErrors,
       netPerformance,
       netPerformanceWithCurrencyEffect,
+      totalFeesWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
       netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
@@ -198,6 +206,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       return {
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
+        feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -240,6 +249,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       return {
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
+        feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -808,6 +818,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     return {
       currentValues,
       currentValuesWithCurrencyEffect,
+      feesWithCurrencyEffect,
       grossPerformancePercentage,
       grossPerformancePercentageWithCurrencyEffect,
       initialValue,
