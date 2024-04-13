@@ -1623,7 +1623,7 @@ export class PortfolioService {
 
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
 
-    // TODO
+    // TODO: Move to portfolio calculator
     const items = getSum(
       Object.keys(holdings)
         .filter((symbol) => {
@@ -1638,7 +1638,7 @@ export class PortfolioService {
         })
     ).toNumber();
 
-    // TODO
+    // TODO: Move to portfolio calculator
     const liabilities = getSum(
       Object.keys(holdings)
         .filter((symbol) => {

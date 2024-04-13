@@ -768,7 +768,8 @@ export abstract class PortfolioCalculator {
       unitPrice
     } of this.orders) {
       if (
-        [/*'DIVIDEND', 'FEE', 'INTEREST',*/ 'ITEM', 'LIABILITY'].includes(type)
+        // TODO
+        ['ITEM', 'LIABILITY'].includes(type)
       ) {
         continue;
       }
