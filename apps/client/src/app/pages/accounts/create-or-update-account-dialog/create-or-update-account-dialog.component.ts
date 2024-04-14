@@ -114,25 +114,29 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       platformId: this.accountForm.controls['platformId'].value?.id ?? null
     };
 
-    if (this.data.account.id) {
-      (account as UpdateAccountDto).id = this.data.account.id;
+    try {
+      if (this.data.account.id) {
+        (account as UpdateAccountDto).id = this.data.account.id;
 
-      await validateObjectForForm({
-        classDto: UpdateAccountDto,
-        form: this.accountForm,
-        object: account
-      });
-    } else {
-      delete (account as CreateAccountDto).id;
+        await validateObjectForForm({
+          classDto: UpdateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+      } else {
+        delete (account as CreateAccountDto).id;
 
-      await validateObjectForForm({
-        classDto: CreateAccountDto,
-        form: this.accountForm,
-        object: account
-      });
+        await validateObjectForForm({
+          classDto: CreateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+      }
+
+      this.dialogRef.close({ account });
+    } catch (error) {
+      console.error(error);
     }
-
-    this.dialogRef.close({ account });
   }
 
   public ngOnDestroy() {

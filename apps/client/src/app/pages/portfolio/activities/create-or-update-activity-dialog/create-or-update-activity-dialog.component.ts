@@ -475,28 +475,32 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       unitPrice: this.activityForm.controls['unitPrice'].value
     };
 
-    if (this.data.activity.id) {
-      (activity as UpdateOrderDto).id = this.data.activity.id;
+    try {
+      if (this.data.activity.id) {
+        (activity as UpdateOrderDto).id = this.data.activity.id;
 
-      await validateObjectForForm({
-        classDto: UpdateOrderDto,
-        form: this.activityForm,
-        ignoreFields: ['dataSource', 'date'],
-        object: activity as UpdateOrderDto
-      });
-    } else {
-      (activity as CreateOrderDto).updateAccountBalance =
-        this.activityForm.controls['updateAccountBalance'].value;
+        await validateObjectForForm({
+          classDto: UpdateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity as UpdateOrderDto
+        });
+      } else {
+        (activity as CreateOrderDto).updateAccountBalance =
+          this.activityForm.controls['updateAccountBalance'].value;
 
-      await validateObjectForForm({
-        classDto: CreateOrderDto,
-        form: this.activityForm,
-        ignoreFields: ['dataSource', 'date'],
-        object: activity
-      });
+        await validateObjectForForm({
+          classDto: CreateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity
+        });
+      }
+
+      this.dialogRef.close({ activity });
+    } catch (error) {
+      console.error(error);
     }
-
-    this.dialogRef.close({ activity });
   }
 
   public ngOnDestroy() {
