@@ -103,7 +103,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.controls['balance'].value,
       comment: this.accountForm.controls['comment'].value,
@@ -116,19 +116,21 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
     if (this.data.account.id) {
       (account as UpdateAccountDto).id = this.data.account.id;
-      validateObjectForForm(account, UpdateAccountDto, this.accountForm).then(
-        () => {
-          this.dialogRef.close({ account });
-        }
-      );
+      await validateObjectForForm({
+        classDto: UpdateAccountDto,
+        form: this.accountForm,
+        object: account
+      });
     } else {
       delete (account as CreateAccountDto).id;
-      validateObjectForForm(account, CreateAccountDto, this.accountForm).then(
-        () => {
-          this.dialogRef.close({ account });
-        }
-      );
+      await validateObjectForForm({
+        classDto: CreateAccountDto,
+        form: this.accountForm,
+        object: account
+      });
     }
+
+    this.dialogRef.close({ account });
   }
 
   public ngOnDestroy() {

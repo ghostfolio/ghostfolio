@@ -452,7 +452,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     );
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.controls['accountId'].value,
       assetClass: this.activityForm.controls['assetClass'].value,
@@ -477,20 +477,22 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     if (this.data.activity.id) {
       (activity as UpdateOrderDto).id = this.data.activity.id;
-      validateObjectForForm(activity, UpdateOrderDto, this.activityForm).then(
-        () => {
-          this.dialogRef.close({ activity });
-        }
-      );
+      await validateObjectForForm({
+        classDto: UpdateOrderDto,
+        form: this.activityForm,
+        object: activity as UpdateOrderDto
+      });
     } else {
       (activity as CreateOrderDto).updateAccountBalance =
         this.activityForm.controls['updateAccountBalance'].value;
-      validateObjectForForm(activity, CreateOrderDto, this.activityForm).then(
-        () => {
-          this.dialogRef.close({ activity });
-        }
-      );
+      await validateObjectForForm({
+        classDto: CreateOrderDto,
+        form: this.activityForm,
+        object: activity
+      });
     }
+
+    this.dialogRef.close({ activity });
   }
 
   public ngOnDestroy() {

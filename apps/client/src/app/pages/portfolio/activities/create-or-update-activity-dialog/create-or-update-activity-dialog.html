@@ -153,11 +153,6 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Data Source</mat-label>
         <input formControlName="dataSource" matInput />
-        <mat-error
-          *ngIf="activityForm.controls['dataSource'].errors?.validationError"
-        >
-          {{ activityForm.controls['dataSource'].errors?.validationError }}
-        </mat-error>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -227,6 +222,20 @@
               </mat-option>
             </mat-select>
           </div>
+          <mat-error
+            *ngIf="
+              activityForm.controls['unitPriceInCustomCurrency'].hasError(
+                'invalid'
+              )
+            "
+            ><ng-container i18n
+              >Oops! Could not get the historical exchange rate
+              from</ng-container
+            >
+            {{
+              activityForm.controls['date']?.value | date: defaultDateFormat
+            }}</mat-error
+          >
         </mat-form-field>
         <button
           *ngIf="
@@ -283,6 +292,17 @@
         >
           {{ activityForm.controls['currencyOfUnitPrice'].value }}
         </div>
+        <mat-error
+          *ngIf="
+            activityForm.controls['feeInCustomCurrency'].hasError('invalid')
+          "
+          ><ng-container i18n
+            >Oops! Could not get the historical exchange rate from</ng-container
+          >
+          {{
+            activityForm.controls['date']?.value | date: defaultDateFormat
+          }}</mat-error
+        >
       </mat-form-field>
     </div>
     <div class="d-none">
