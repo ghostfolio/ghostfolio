@@ -116,6 +116,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
     if (this.data.account.id) {
       (account as UpdateAccountDto).id = this.data.account.id;
+
       await validateObjectForForm({
         classDto: UpdateAccountDto,
         form: this.accountForm,
@@ -123,6 +124,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       });
     } else {
       delete (account as CreateAccountDto).id;
+
       await validateObjectForForm({
         classDto: CreateAccountDto,
         form: this.accountForm,
