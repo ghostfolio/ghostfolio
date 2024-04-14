@@ -477,6 +477,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     if (this.data.activity.id) {
       (activity as UpdateOrderDto).id = this.data.activity.id;
+
       await validateObjectForForm({
         classDto: UpdateOrderDto,
         form: this.activityForm,
@@ -485,6 +486,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     } else {
       (activity as CreateOrderDto).updateAccountBalance =
         this.activityForm.controls['updateAccountBalance'].value;
+
       await validateObjectForForm({
         classDto: CreateOrderDto,
         form: this.activityForm,
