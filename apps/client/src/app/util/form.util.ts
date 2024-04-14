@@ -18,12 +18,12 @@ export async function validateObjectForForm<T>({
     return Promise.resolve();
   }
 
-  for (const error of errors) {
-    const formControl = form.get(error.property);
+  for (const { constraints, property } of errors) {
+    const formControl = form.get(property);
 
     if (formControl) {
       formControl.setErrors({
-        validationError: Object.values(error.constraints)[0]
+        validationError: Object.values(constraints)[0]
       });
     }
   }
