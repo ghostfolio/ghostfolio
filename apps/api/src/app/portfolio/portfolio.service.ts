@@ -60,7 +60,6 @@ import {
   Prisma
 } from '@prisma/client';
 import { Big } from 'big.js';
-import { isUUID } from 'class-validator';
 import {
   differenceInDays,
   format,
@@ -324,7 +323,6 @@ export class PortfolioService {
     impersonationId,
     userId,
     withExcludedAccounts = false,
-    withLiabilities = false,
     withMarkets = false,
     withSummary = false
   }: {
@@ -333,7 +331,6 @@ export class PortfolioService {
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    withLiabilities?: boolean;
     withMarkets?: boolean;
     withSummary?: boolean;
   }): Promise<PortfolioDetails & { hasErrors: boolean }> {
@@ -1623,35 +1620,10 @@ export class PortfolioService {
 
     const interest = await portfolioCalculator.getInterestInBaseCurrency();
 
-    // TODO: Move to portfolio calculator
-    const items = getSum(
-      Object.keys(holdings)
-        .filter((symbol) => {
-          return (
-            isUUID(symbol) &&
-            holdings[symbol].dataSource === 'MANUAL' &&
-            holdings[symbol].valueInBaseCurrency > 0
-          );
-        })
-        .map((symbol) => {
-          return new Big(holdings[symbol].valueInBaseCurrency).abs();
-        })
-    ).toNumber();
+    const liabilities =
+      await portfolioCalculator.getLiabilitiesInBaseCurrency();
 
-    // TODO: Move to portfolio calculator
-    const liabilities = getSum(
-      Object.keys(holdings)
-        .filter((symbol) => {
-          return (
-            isUUID(symbol) &&
-            holdings[symbol].dataSource === 'MANUAL' &&
-            holdings[symbol].valueInBaseCurrency < 0
-          );
-        })
-        .map((symbol) => {
-          return new Big(holdings[symbol].valueInBaseCurrency).abs();
-        })
-    ).toNumber();
+    const valuables = await portfolioCalculator.getValuablesInBaseCurrency();
 
     const totalBuy = this.getSumOfActivityType({
       userCurrency,
@@ -1701,7 +1673,7 @@ export class PortfolioService {
 
     const netWorth = new Big(balanceInBaseCurrency)
       .plus(performanceInformation.performance.currentValue)
-      .plus(items)
+      .plus(valuables)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
       .toNumber();
@@ -1730,8 +1702,6 @@ export class PortfolioService {
       cash,
       excludedAccountsAndActivities,
       firstOrderDate,
-      items,
-      liabilities,
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
@@ -1752,6 +1722,8 @@ export class PortfolioService {
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       interest: interest.toNumber(),
+      items: valuables.toNumber(),
+      liabilities: liabilities.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return type === 'BUY' || type === 'SELL';
       }).length,

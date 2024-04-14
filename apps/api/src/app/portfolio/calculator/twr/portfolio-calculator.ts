@@ -109,6 +109,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       hasErrors,
       netPerformance,
       netPerformanceWithCurrencyEffect,
+      positions,
       totalFeesWithCurrencyEffect,
       totalInterestWithCurrencyEffect,
       totalInvestment,
@@ -131,7 +132,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           : grossPerformanceWithCurrencyEffect.div(
               totalTimeWeightedInvestmentWithCurrencyEffect
             ),
-      positions
+      totalLiabilitiesWithCurrencyEffect: new Big(0),
+      totalValuablesWithCurrencyEffect: new Big(0)
     };
   }
 
@@ -194,8 +196,12 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let totalInvestmentFromBuyTransactions = new Big(0);
     let totalInvestmentFromBuyTransactionsWithCurrencyEffect = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
+    let totalLiabilities = new Big(0);
+    let totalLiabilitiesInBaseCurrency = new Big(0);
     let totalQuantityFromBuyTransactions = new Big(0);
     let totalUnits = new Big(0);
+    let totalValuables = new Big(0);
+    let totalValuablesInBaseCurrency = new Big(0);
     let valueAtStartDate: Big;
     let valueAtStartDateWithCurrencyEffect: Big;
 
@@ -236,7 +242,11 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalInterest: new Big(0),
         totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0)
+        totalInvestmentWithCurrencyEffect: new Big(0),
+        totalLiabilities: new Big(0),
+        totalLiabilitiesInBaseCurrency: new Big(0),
+        totalValuables: new Big(0),
+        totalValuablesInBaseCurrency: new Big(0)
       };
     }
 
@@ -281,7 +291,11 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalInterest: new Big(0),
         totalInterestInBaseCurrency: new Big(0),
         totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0)
+        totalInvestmentWithCurrencyEffect: new Big(0),
+        totalLiabilities: new Big(0),
+        totalLiabilitiesInBaseCurrency: new Big(0),
+        totalValuables: new Big(0),
+        totalValuablesInBaseCurrency: new Big(0)
       };
     }
 
@@ -535,6 +549,20 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalInterest = totalInterest.plus(interest);
         totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
           interest.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'ITEM') {
+        const valuables = order.quantity.mul(order.unitPrice);
+
+        totalValuables = totalValuables.plus(valuables);
+        totalValuablesInBaseCurrency = totalValuablesInBaseCurrency.plus(
+          valuables.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'LIABILITY') {
+        const liabilities = order.quantity.mul(order.unitPrice);
+
+        totalLiabilities = totalLiabilities.plus(liabilities);
+        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
+          liabilities.mul(exchangeRateAtOrderDate ?? 1)
         );
       }
 
@@ -853,6 +881,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       totalInterestInBaseCurrency,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
+      totalLiabilities,
+      totalLiabilitiesInBaseCurrency,
+      totalValuables,
+      totalValuablesInBaseCurrency,
       grossPerformance: totalGrossPerformance,
       grossPerformanceWithCurrencyEffect:
         totalGrossPerformanceWithCurrencyEffect,

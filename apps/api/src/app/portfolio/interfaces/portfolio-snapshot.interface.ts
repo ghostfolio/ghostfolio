@@ -19,4 +19,6 @@ export interface PortfolioSnapshot extends ResponseError {
   totalInterestWithCurrencyEffect: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
+  totalLiabilitiesWithCurrencyEffect: Big;
+  totalValuablesWithCurrencyEffect: Big;
 }
