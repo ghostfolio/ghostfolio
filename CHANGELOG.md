@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a form validation against the DTO in the create or update account dialog
-- Added a form validation against the DTO in the create or edit activity dialog
+- Added a form validation against the DTO in the create or update activity dialog
 
 ### Changed
 
