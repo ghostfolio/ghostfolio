@@ -1,6 +1,7 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -451,7 +452,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     );
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
       accountId: this.activityForm.controls['accountId'].value,
       assetClass: this.activityForm.controls['assetClass'].value,
@@ -474,14 +475,32 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       unitPrice: this.activityForm.controls['unitPrice'].value
     };
 
-    if (this.data.activity.id) {
-      (activity as UpdateOrderDto).id = this.data.activity.id;
-    } else {
-      (activity as CreateOrderDto).updateAccountBalance =
-        this.activityForm.controls['updateAccountBalance'].value;
-    }
+    try {
+      if (this.data.activity.id) {
+        (activity as UpdateOrderDto).id = this.data.activity.id;
 
-    this.dialogRef.close({ activity });
+        await validateObjectForForm({
+          classDto: UpdateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity as UpdateOrderDto
+        });
+      } else {
+        (activity as CreateOrderDto).updateAccountBalance =
+          this.activityForm.controls['updateAccountBalance'].value;
+
+        await validateObjectForForm({
+          classDto: CreateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity
+        });
+      }
+
+      this.dialogRef.close({ activity });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public ngOnDestroy() {

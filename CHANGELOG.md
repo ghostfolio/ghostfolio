@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a form validation against the DTO in the create or update account dialog
+- Added a form validation against the DTO in the create or update activity dialog
+
 ### Changed
 
 - Moved the dividend calculations into the portfolio calculator
