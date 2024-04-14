@@ -460,7 +460,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       comment: this.activityForm.controls['comment'].value,
       currency: this.activityForm.controls['currency'].value,
       customCurrency: this.activityForm.controls['currencyOfUnitPrice'].value,
-      date: (this.activityForm.controls['date'].value as Date).toISOString(),
+      date: this.activityForm.controls['date'].value,
       dataSource: this.activityForm.controls['dataSource'].value,
       fee: this.activityForm.controls['fee'].value,
       quantity: this.activityForm.controls['quantity'].value,
@@ -481,6 +481,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       await validateObjectForForm({
         classDto: UpdateOrderDto,
         form: this.activityForm,
+        ignoreFields: ['dataSource', 'date'],
         object: activity as UpdateOrderDto
       });
     } else {
@@ -490,6 +491,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       await validateObjectForForm({
         classDto: CreateOrderDto,
         form: this.activityForm,
+        ignoreFields: ['dataSource', 'date'],
         object: activity
       });
     }
