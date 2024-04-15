@@ -14,6 +14,7 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
+import { eachYearOfInterval, format } from 'date-fns';
 
 export class UpdateUserSettingDto {
   @IsNumber()
@@ -42,7 +43,12 @@ export class UpdateUserSettingDto {
     'max',
     'mtd',
     'wtd',
-    'ytd'
+    'ytd',
+    ...eachYearOfInterval({ end: new Date(), start: new Date(0) }).map(
+      (date) => {
+        return format(date, 'yyyy');
+      }
+    )
   ])
   @IsOptional()
   dateRange?: DateRange;

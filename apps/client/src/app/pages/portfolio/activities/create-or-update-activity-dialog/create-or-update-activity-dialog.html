@@ -102,7 +102,7 @@
             [value]="account.id"
           >
             <div class="d-flex">
-              <gf-symbol-icon
+              <gf-asset-profile-icon
                 *ngIf="account.Platform?.url"
                 class="mr-1"
                 [tooltip]="account.Platform?.name"
@@ -301,11 +301,7 @@
           matTextSuffix
           [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
         >
-          <mat-select formControlName="currencyOfFee">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">
-              {{ currency }}
-            </mat-option>
-          </mat-select>
+          {{ activityForm.controls['currencyOfUnitPrice'].value }}
         </div>
         <mat-error
           *ngIf="

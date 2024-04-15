@@ -8,6 +8,7 @@ export interface AdminJobs {
     | 'finishedOn'
     | 'id'
     | 'name'
+    | 'opts'
     | 'stacktrace'
     | 'timestamp'
   > & {

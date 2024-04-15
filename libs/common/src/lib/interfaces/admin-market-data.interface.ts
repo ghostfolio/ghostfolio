@@ -13,6 +13,8 @@ export interface AdminMarketDataItem {
   currency: string;
   dataSource: DataSource;
   date?: Date;
+  id: string;
+  isBenchmark?: boolean;
   marketDataItemCount: number;
   name: string;
   sectorsCount: number;

@@ -208,7 +208,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       filters: this.userService.getFilters(),
       parameters: {
         isAllocation: true
-      }
+      },
+      withMarkets: true
     });
   }
 
@@ -284,7 +285,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
-      filteredValueInPercentage: 0,
       holdings: {},
       platforms: {},
       summary: undefined

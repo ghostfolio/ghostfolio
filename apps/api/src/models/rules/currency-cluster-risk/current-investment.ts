@@ -11,6 +11,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
+      key: CurrencyClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 
@@ -37,7 +38,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     });
 
-    const maxValueRatio = maxItem.value / totalValue;
+    const maxValueRatio = maxItem?.value / totalValue || 0;
 
     if (maxValueRatio > ruleSettings.threshold) {
       return {
@@ -52,7 +53,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
 
     return {
       evaluation: `The major part of your current investment is in ${
-        maxItem.groupKey
+        maxItem?.groupKey ?? ruleSettings.baseCurrency
       } (${(maxValueRatio * 100).toPrecision(3)}%) and does not exceed ${
         ruleSettings.threshold * 100
       }%`,

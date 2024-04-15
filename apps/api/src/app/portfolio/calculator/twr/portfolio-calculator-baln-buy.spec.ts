@@ -1,11 +1,18 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
-import Big from 'big.js';
-
-import { CurrentRateServiceMock } from './current-rate.service.mock';
-import { PortfolioCalculator } from './portfolio-calculator';
+import { Big } from 'big.js';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -19,6 +26,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -29,40 +37,48 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with BALN.SW buy', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
-          {
-            currency: 'CHF',
-            date: '2021-11-30',
-            dataSource: 'YAHOO',
-            fee: new Big(1.55),
-            name: 'Bâloise Holding AG',
-            quantity: new Big(2),
-            symbol: 'BALN.SW',
-            type: 'BUY',
-            unitPrice: new Big(136.6)
-          }
-        ]
-      });
-
-      portfolioCalculator.computeTransactionPoints();
-
       const spy = jest
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-30'),
+          fee: 1.55,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          type: 'BUY',
+          unitPrice: 136.6
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: 'CHF'
+      });
 
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2021-11-30')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2021-11-30')
       );
 
@@ -75,8 +91,8 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        currentValue: new Big('297.8'),
+      expect(portfolioSnapshot).toEqual({
+        currentValueInBaseCurrency: new Big('297.8'),
         errors: [],
         grossPerformance: new Big('24.6'),
         grossPerformancePercentage: new Big('0.09004392386530014641'),
@@ -96,6 +112,8 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('136.6'),
             currency: 'CHF',
             dataSource: 'YAHOO',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
             fee: new Big('1.55'),
             firstBuyDate: '2021-11-30',
             grossPerformance: new Big('24.6'),
@@ -116,13 +134,19 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 148.9,
             quantity: new Big('2'),
             symbol: 'BALN.SW',
+            tags: [],
             timeWeightedInvestment: new Big('273.2'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('273.2'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('297.8')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('1.55'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('273.2'),
-        totalInvestmentWithCurrencyEffect: new Big('273.2')
+        totalInvestmentWithCurrencyEffect: new Big('273.2'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
+        totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([

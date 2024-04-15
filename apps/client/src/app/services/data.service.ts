@@ -27,6 +27,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
@@ -61,6 +62,7 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
@@ -99,6 +101,10 @@ export class DataService {
             })
             .join(',')
         );
+      }
+
+      if (filtersByHoldingType) {
+        params = params.append('holdingType', filtersByHoldingType[0].id);
       }
 
       if (filtersByPresetId) {
@@ -153,18 +159,24 @@ export class DataService {
 
   public fetchActivities({
     filters,
+    range,
     skip,
     sortColumn,
     sortDirection,
     take
   }: {
     filters?: Filter[];
+    range?: DateRange;
     skip?: number;
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
   }): Observable<Activities> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     if (skip) {
       params = params.append('skip', skip);
@@ -263,16 +275,25 @@ export class DataService {
 
   public fetchBenchmarkBySymbol({
     dataSource,
+    range,
     startDate,
     symbol
   }: {
+    range: DateRange;
     startDate: Date;
   } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
+    let params = new HttpParams();
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
     return this.http.get<BenchmarkMarketDataDetails>(
       `/api/v1/benchmark/${dataSource}/${symbol}/${format(
         startDate,
         DATE_FORMAT
-      )}`
+      )}`,
+      { params }
     );
   }
 
@@ -390,19 +411,19 @@ export class DataService {
 
   public fetchPortfolioDetails({
     filters,
-    parameters
+    parameters,
+    withMarkets = false
   }: {
     filters?: Filter[];
-    parameters?: {
-      [param: string]:
-        | string
-        | number
-        | boolean
-        | readonly (string | number | boolean)[];
-    };
+    parameters?: any;
+    withMarkets?: boolean;
   } = {}): Observable<PortfolioDetails> {
     let params = this.buildFiltersAsQueryParams({ filters });
-    params = parameters ? params.appendAll(parameters) : params;
+
+    if (withMarkets) {
+      params = params.append('withMarkets', withMarkets);
+      params = parameters ? params.appendAll(parameters) : params;
+    }
 
     return this.http
       .get<any>('/api/v1/portfolio/details', {
@@ -416,6 +437,46 @@ export class DataService {
             );
           }
 
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
+
+              response.holdings[symbol].value = isNumber(
+                response.holdings[symbol].value
+              )
+                ? response.holdings[symbol].value
+                : response.holdings[symbol].valueInPercentage;
+            }
+          }
+
+          return response;
+        })
+      );
+  }
+
+  public fetchPortfolioHoldings({
+    filters
+  }: {
+    filters?: Filter[];
+  } = {}) {
+    return this.http
+      .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
+        params: this.buildFiltersAsQueryParams({ filters })
+      })
+      .pipe(
+        map((response) => {
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
               response.holdings[symbol].assetClassLabel = translate(

@@ -21,7 +21,7 @@ import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
@@ -205,13 +205,14 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT *
-                        FROM "MarketData"
-                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-                          AND "symbol" IN ('${symbols.join(
-                            `','`
-                          )}') ${granularityQuery} ${rangeQuery}
-                        ORDER BY date;`;
+      const queryRaw = `
+        SELECT *
+        FROM "MarketData"
+        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+          AND "symbol" IN ('${symbols.join(
+            `','`
+          )}') ${granularityQuery} ${rangeQuery}
+        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRawUnsafe(queryRaw);

@@ -13,7 +13,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
-  testTimeout: 10000,
   testEnvironment: 'node',
   preset: '../../jest.preset.js'
 };

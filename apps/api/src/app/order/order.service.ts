@@ -4,6 +4,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
@@ -19,13 +20,14 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CreateOrderDto } from './create-order.dto';
 import { Activities } from './interfaces/activities.interface';
 
 @Injectable()
@@ -65,20 +67,13 @@ export class OrderService {
     }
 
     const accountId = data.accountId;
-    let currency = data.currency;
     const tags = data.tags ?? [];
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
-      currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -86,7 +81,6 @@ export class OrderService {
       data.id = id;
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
-      data.SymbolProfile.connectOrCreate.create.currency = currency;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
       data.SymbolProfile.connectOrCreate.create.symbol = id;
@@ -108,7 +102,8 @@ export class OrderService {
           jobId: getAssetProfileIdentifier({
             dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
             symbol: data.SymbolProfile.connectOrCreate.create.symbol
-          })
+          }),
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
         }
       });
     }
@@ -121,7 +116,6 @@ export class OrderService {
       delete data.comment;
     }
 
-    delete data.currency;
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
@@ -130,13 +124,9 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft =
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
+    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+      ? false
+      : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
@@ -157,15 +147,15 @@ export class OrderService {
         .plus(data.fee)
         .toNumber();
 
-      if (data.type === 'BUY') {
+      if (['BUY', 'FEE'].includes(data.type)) {
         amount = new Big(amount).mul(-1).toNumber();
       }
 
       await this.accountService.updateAccountBalance({
         accountId,
         amount,
-        currency,
         userId,
+        currency: data.SymbolProfile.connectOrCreate.create.currency,
         date: data.date as Date
       });
     }
@@ -180,12 +170,7 @@ export class OrderService {
       where
     });
 
-    if (
-      order.type === 'FEE' ||
-      order.type === 'INTEREST' ||
-      order.type === 'ITEM' ||
-      order.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -212,24 +197,28 @@ export class OrderService {
   }
 
   public async getOrders({
+    endDate,
     filters,
     includeDrafts = false,
     skip,
     sortColumn,
     sortDirection,
+    startDate,
     take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
     withExcludedAccounts = false
   }: {
+    endDate?: Date;
     filters?: Filter[];
     includeDrafts?: boolean;
     skip?: number;
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
+    startDate?: Date;
     take?: number;
-    types?: TypeOfOrder[];
+    types?: ActivityType[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
@@ -238,6 +227,18 @@ export class OrderService {
       { date: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
+
+    if (endDate || startDate) {
+      where.AND = [];
+
+      if (endDate) {
+        where.AND.push({ date: { lte: endDate } });
+      }
+
+      if (startDate) {
+        where.AND.push({ date: { gt: startDate } });
+      }
+    }
 
     const {
       ACCOUNT: filtersByAccount,
@@ -359,17 +360,45 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
+    const uniqueAssets = uniqBy(
+      orders.map(({ SymbolProfile }) => {
+        return {
+          dataSource: SymbolProfile.dataSource,
+          symbol: SymbolProfile.symbol
+        };
+      }),
+      ({ dataSource, symbol }) => {
+        return getAssetProfileIdentifier({
+          dataSource,
+          symbol
+        });
+      }
+    );
+
+    const assetProfiles =
+      await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
+
     const activities = orders.map((order) => {
+      const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
+        return (
+          dataSource === order.SymbolProfile.dataSource &&
+          symbol === order.SymbolProfile.symbol
+        );
+      });
+
       const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
       return {
         ...order,
         value,
+        // TODO: Use exchange rate of date
         feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
           order.fee,
           order.SymbolProfile.currency,
           userCurrency
         ),
+        SymbolProfile: assetProfile,
+        // TODO: Use exchange rate of date
         valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
           value,
           order.SymbolProfile.currency,
@@ -400,13 +429,10 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      type?: ActivityType;
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
-    if (data.Account.connect.id_userId.id === null) {
-      delete data.Account;
-    }
-
     if (!data.comment) {
       data.comment = null;
     }
@@ -415,13 +441,12 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
+
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
     } else {
       delete data.SymbolProfile.update;
 
@@ -429,19 +454,22 @@ export class OrderService {
 
       if (!isDraft) {
         // Gather symbol data of order in the background, if not draft
-        this.dataGatheringService.gatherSymbols([
-          {
-            dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
-            date: <Date>data.date,
-            symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
-          }
-        ]);
+        this.dataGatheringService.gatherSymbols({
+          dataGatheringItems: [
+            {
+              dataSource:
+                data.SymbolProfile.connect.dataSource_symbol.dataSource,
+              date: <Date>data.date,
+              symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
+            }
+          ],
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        });
       }
     }
 
     delete data.assetClass;
     delete data.assetSubClass;
-    delete data.currency;
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;

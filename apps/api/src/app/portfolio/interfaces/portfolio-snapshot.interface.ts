@@ -1,9 +1,9 @@
 import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
 
-import Big from 'big.js';
+import { Big } from 'big.js';
 
-export interface CurrentPositions extends ResponseError {
-  positions: TimelinePosition[];
+export interface PortfolioSnapshot extends ResponseError {
+  currentValueInBaseCurrency: Big;
   grossPerformance: Big;
   grossPerformanceWithCurrencyEffect: Big;
   grossPerformancePercentage: Big;
@@ -14,6 +14,11 @@ export interface CurrentPositions extends ResponseError {
   netPerformanceWithCurrencyEffect: Big;
   netPerformancePercentage: Big;
   netPerformancePercentageWithCurrencyEffect: Big;
-  currentValue: Big;
+  positions: TimelinePosition[];
+  totalFeesWithCurrencyEffect: Big;
+  totalInterestWithCurrencyEffect: Big;
   totalInvestment: Big;
+  totalInvestmentWithCurrencyEffect: Big;
+  totalLiabilitiesWithCurrencyEffect: Big;
+  totalValuablesWithCurrencyEffect: Big;
 }

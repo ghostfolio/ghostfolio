@@ -1,3 +1,5 @@
+import { Role } from '@prisma/client';
+
 import { UniqueAsset } from './unique-asset.interface';
 
 export interface AdminData {
@@ -16,6 +18,7 @@ export interface AdminData {
     engagement: number;
     id: string;
     lastActivity: Date;
+    role: Role;
     transactionCount: number;
   }[];
   version: string;

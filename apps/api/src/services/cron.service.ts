@@ -1,4 +1,5 @@
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_LOW,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
   PROPERTY_IS_DATA_GATHERING_ENABLED
@@ -56,7 +57,8 @@ export class CronService {
             name: GATHER_ASSET_PROFILE_PROCESS,
             opts: {
               ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-              jobId: getAssetProfileIdentifier({ dataSource, symbol })
+              jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+              priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
             }
           };
         })

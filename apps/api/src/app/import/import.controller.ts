@@ -43,8 +43,10 @@ export class ImportController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async import(
     @Body() importData: ImportDataDto,
-    @Query('dryRun') isDryRun = false
+    @Query('dryRun') isDryRunParam = 'false'
   ): Promise<ImportResponse> {
+    const isDryRun = isDryRunParam === 'true';
+
     if (
       !hasPermission(this.request.user.permissions, permissions.createAccount)
     ) {

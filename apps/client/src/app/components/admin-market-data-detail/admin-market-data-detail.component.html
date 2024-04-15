@@ -9,11 +9,7 @@
     [showYAxis]="true"
     [symbol]="symbol"
   />
-  <div
-    *ngFor="let itemByMonth of marketDataByMonth | keyvalue"
-    class="d-flex"
-    [hidden]="!marketData.length > 0"
-  >
+  <div *ngFor="let itemByMonth of marketDataByMonth | keyvalue" class="d-flex">
     <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
     <div class="align-items-center d-flex flex-grow-1 px-1">
       <div

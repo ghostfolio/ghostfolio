@@ -72,6 +72,10 @@
           "baseHref": "/tr/",
           "localize": ["tr"]
         },
+        "development-zh": {
+          "baseHref": "/zh/",
+          "localize": ["zh"]
+        },
         "production": {
           "fileReplacements": [
             {
@@ -190,6 +194,9 @@
         "development-tr": {
           "browserTarget": "client:build:development-tr"
         },
+        "development-zh": {
+          "buildTarget": "client:build:development-zh"
+        },
         "production": {
           "browserTarget": "client:build:production"
         }
@@ -209,7 +216,8 @@
           "messages.nl.xlf",
           "messages.pl.xlf",
           "messages.pt.xlf",
-          "messages.tr.xlf"
+          "messages.tr.xlf",
+          "messages.zh.xlf"
         ]
       }
     },
@@ -260,6 +268,10 @@
       "tr": {
         "baseHref": "/tr/",
         "translation": "apps/client/src/locales/messages.tr.xlf"
+      },
+      "zh": {
+        "baseHref": "/zh/",
+        "translation": "apps/client/src/locales/messages.zh.xlf"
       }
     },
     "sourceLocale": "en"

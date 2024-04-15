@@ -57,6 +57,7 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
+COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
-CMD [ "yarn", "start:production" ]
+CMD [ "/ghostfolio/entrypoint.sh" ]

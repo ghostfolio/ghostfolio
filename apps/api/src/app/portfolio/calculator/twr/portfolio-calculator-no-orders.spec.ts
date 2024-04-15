@@ -1,11 +1,14 @@
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
-import Big from 'big.js';
-
-import { CurrentRateServiceMock } from './current-rate.service.mock';
-import { PortfolioCalculator } from './portfolio-calculator';
+import { Big } from 'big.js';
+import { subDays } from 'date-fns';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -19,6 +22,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -29,30 +33,31 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        currency: 'CHF',
-        orders: []
-      });
-
-      portfolioCalculator.computeTransactionPoints();
-
       const spy = jest
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2021-12-18').getTime());
 
-      const chartData = await portfolioCalculator.getChartData({
-        start: new Date()
+      const portfolioCalculator = factory.createCalculator({
+        activities: [],
+        calculationType: PerformanceCalculationType.TWR,
+        currency: 'CHF'
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
-        new Date()
-      );
+      const start = subDays(new Date(Date.now()), 10);
+
+      const chartData = await portfolioCalculator.getChartData({ start });
+
+      const portfolioSnapshot =
+        await portfolioCalculator.computeSnapshot(start);
 
       const investments = portfolioCalculator.getInvestments();
 
@@ -63,8 +68,8 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        currentValue: new Big(0),
+      expect(portfolioSnapshot).toEqual({
+        currentValueInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
@@ -75,7 +80,12 @@ describe('PortfolioCalculator', () => {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffect: new Big(0),
         positions: [],
-        totalInvestment: new Big(0)
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
+        totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([]);

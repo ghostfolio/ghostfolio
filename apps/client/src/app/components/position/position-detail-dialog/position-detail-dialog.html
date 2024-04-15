@@ -188,12 +188,15 @@
           size="medium"
           [locale]="data.locale"
           [value]="transactionCount"
-          ><ng-container *ngIf="transactionCount === 1">Activity</ng-container
-          ><ng-container *ngIf="transactionCount !== 1"
-            >Activities</ng-container
-          ></gf-value
         >
+          @if (transactionCount === 1) {
+            <ng-container i18n>Activity</ng-container>
+          } @else {
+            <ng-container i18n>Activities</ng-container>
+          }
+        </gf-value>
       </div>
+      <div class="col-6 mb-3"></div>
       <div class="col-6 mb-3">
         <gf-value i18n size="medium" [hidden]="!assetClass" [value]="assetClass"
           >Asset Class</gf-value
@@ -208,17 +211,15 @@
           >Asset Sub Class</gf-value
         >
       </div>
-      <ng-container
-        *ngIf="
-          SymbolProfile?.countries?.length > 0 ||
-          SymbolProfile?.sectors?.length > 0
-        "
-      >
+      @if (
+        SymbolProfile?.countries?.length > 0 ||
+        SymbolProfile?.sectors?.length > 0
+      ) {
         @if (
           SymbolProfile?.countries?.length === 1 &&
           SymbolProfile?.sectors?.length === 1
         ) {
-          <div *ngIf="SymbolProfile?.sectors?.length === 1" class="col-6 mb-3">
+          <div class="col-6 mb-3">
             <gf-value
               i18n
               size="medium"
@@ -227,18 +228,17 @@
               >Sector</gf-value
             >
           </div>
-          <div
-            *ngIf="SymbolProfile?.countries?.length === 1"
-            class="col-6 mb-3"
-          >
-            <gf-value
-              i18n
-              size="medium"
-              [locale]="data.locale"
-              [value]="SymbolProfile.countries[0].name"
-              >Country</gf-value
-            >
-          </div>
+          @if (SymbolProfile?.countries?.length === 1) {
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [locale]="data.locale"
+                [value]="SymbolProfile.countries[0].name"
+                >Country</gf-value
+              >
+            </div>
+          }
         } @else {
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Sectors</div>
@@ -265,13 +265,32 @@
             />
           </div>
         }
-      </ng-container>
-      <div *ngIf="dataProviderInfo" class="col-md-12 mb-3 text-center">
-        <hr />
-        <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]">
-        </gf-data-provider-credits>
-        <hr />
+      }
+      <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [hidden]="!SymbolProfile?.symbol"
+          [value]="SymbolProfile?.symbol"
+          >Symbol</gf-value
+        >
       </div>
+      <div class="col-6 mb-3">
+        <gf-value
+          size="medium"
+          [hidden]="!SymbolProfile?.isin"
+          [value]="SymbolProfile?.isin"
+          >ISIN</gf-value
+        >
+      </div>
+
+      @if (dataProviderInfo) {
+        <div class="col-md-12 mb-3 text-center">
+          <hr />
+          <gf-data-provider-credits [dataProviderInfos]="[dataProviderInfo]" />
+          <hr />
+        </div>
+      }
     </div>
 
     <mat-tab-group
@@ -291,7 +310,7 @@
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
           [hasPermissionToExportActivities]="
-            !data.hasImpersonationId && !user.settings.isRestrictedView
+            !data.hasImpersonationId && !user?.settings?.isRestrictedView
           "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
@@ -325,31 +344,32 @@
       </mat-tab>
     </mat-tab-group>
 
-    <div *ngIf="tags?.length > 0" class="row">
-      <div class="col">
-        <div class="h5" i18n>Tags</div>
-        <mat-chip-listbox>
-          <mat-chip-option *ngFor="let tag of tags" disabled>{{
-            tag.name
-          }}</mat-chip-option>
-        </mat-chip-listbox>
+    @if (tags?.length > 0) {
+      <div class="row">
+        <div class="col">
+          <div class="h5" i18n>Tags</div>
+          <mat-chip-listbox>
+            <mat-chip-option *ngFor="let tag of tags" disabled>{{
+              tag.name
+            }}</mat-chip-option>
+          </mat-chip-listbox>
+        </div>
       </div>
-    </div>
+    }
 
-    <div
-      *ngIf="
-        activities?.length > 0 && data.hasPermissionToReportDataGlitch === true
-      "
-      class="row"
-    >
-      <div class="col">
-        <hr />
-        <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
-          ><ion-icon class="mr-1" name="flag-outline"></ion-icon
-          ><span i18n>Report Data Glitch</span></a
-        >
+    @if (
+      activities?.length > 0 && data.hasPermissionToReportDataGlitch === true
+    ) {
+      <div class="row">
+        <div class="col">
+          <hr />
+          <a color="warn" mat-stroked-button [href]="reportDataGlitchMail"
+            ><ion-icon class="mr-1" name="flag-outline"></ion-icon
+            ><span i18n>Report Data Glitch</span></a
+          >
+        </div>
       </div>
-    </div>
+    }
   </div>
 </div>
 
