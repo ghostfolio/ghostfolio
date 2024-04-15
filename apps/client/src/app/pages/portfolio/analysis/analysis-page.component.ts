@@ -20,7 +20,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';

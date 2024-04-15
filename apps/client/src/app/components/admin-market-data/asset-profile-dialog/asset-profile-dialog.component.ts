@@ -320,7 +320,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
       ))?.value,
-      name: this.assetProfileForm.controls['name'].value,
       url: this.assetProfileForm.controls['url'].value
     };
 

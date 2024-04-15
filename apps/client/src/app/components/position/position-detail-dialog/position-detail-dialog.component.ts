@@ -110,7 +110,11 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           SymbolProfile,
           tags,
           transactionCount,
-          value
+          value,
+          dividendYieldPercentWithCurrencyEffect,
+          feeInBaseCurrency,
+          firstBuyDate,
+          historicalData
         }) => {
           this.accounts = accounts;
           this.activities = orders;
