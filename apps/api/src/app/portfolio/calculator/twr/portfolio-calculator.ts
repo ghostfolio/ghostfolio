@@ -216,6 +216,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       return {
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
+        unitPrices: {},
         feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
@@ -232,6 +233,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
+        netPerformanceValuesPercentage: {},
         netPerformanceWithCurrencyEffect: new Big(0),
         timeWeightedInvestment: new Big(0),
         timeWeightedInvestmentValues: {},
@@ -265,6 +267,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       return {
         currentValues: {},
         currentValuesWithCurrencyEffect: {},
+        unitPrices: {},
         feesWithCurrencyEffect: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
@@ -281,6 +284,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
+        netPerformanceValuesPercentage: {},
         netPerformanceWithCurrencyEffect: new Big(0),
         timeWeightedInvestment: new Big(0),
         timeWeightedInvestmentValues: {},
@@ -858,9 +862,18 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       );
     }
 
+    let unitPrices = Object.keys(marketSymbolMap)
+      .map((date) => {
+        return { [date]: marketSymbolMap[date][symbol] };
+      })
+      .reduce((map, u) => {
+        return { ...u, ...map };
+      }, {});
+
     return {
       currentValues,
       currentValuesWithCurrencyEffect,
+      unitPrices,
       feesWithCurrencyEffect,
       grossPerformancePercentage,
       grossPerformancePercentageWithCurrencyEffect,
@@ -873,6 +886,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       netPerformancePercentageWithCurrencyEffect,
       netPerformanceValues,
       netPerformanceValuesWithCurrencyEffect,
+      netPerformanceValuesPercentage: {},
       timeWeightedInvestmentValues,
       timeWeightedInvestmentValuesWithCurrencyEffect,
       totalDividend,

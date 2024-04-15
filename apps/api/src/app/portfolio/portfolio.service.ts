@@ -511,7 +511,6 @@ export class PortfolioService {
         valueInBaseCurrency: valueInBaseCurrency.toNumber()
       };
     }
-  }
 
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
       const cashPositions = await this.getCashPositions({
@@ -524,7 +523,6 @@ export class PortfolioService {
         holdings[symbol] = cashPositions[symbol];
       }
     }
-  }
 
     const { accounts, platforms } = await this.getValueOfAccountsAndPlatforms({
       activities,
@@ -698,6 +696,7 @@ export class PortfolioService {
         accounts: [],
         averagePrice: undefined,
         dataProviderInfo: undefined,
+        stakeRewards: undefined,
         dividendInBaseCurrency: undefined,
         dividendYieldPercent: undefined,
         dividendYieldPercentWithCurrencyEffect: undefined,
@@ -885,6 +884,7 @@ export class PortfolioService {
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
+        stakeRewards: stakeRewards.toNumber(),
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
         dividendYieldPercent: dividendYieldPercent.toNumber(),
         dividendYieldPercentWithCurrencyEffect:
@@ -963,6 +963,7 @@ export class PortfolioService {
         accounts: [],
         averagePrice: 0,
         dataProviderInfo: undefined,
+        stakeRewards: 0,
         dividendInBaseCurrency: 0,
         dividendYieldPercent: 0,
         dividendYieldPercentWithCurrencyEffect: 0,
@@ -1135,13 +1136,15 @@ export class PortfolioService {
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    calculateTimeWeightedPerformance = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    calculateTimeWeightedPerformance?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1677,42 +1680,6 @@ export class PortfolioService {
   }
 
   @LogPerformance
-  private async getNetWorth(
-    impersonationId: string,
-    userId: string,
-    userCurrency: string
-  ) {
-    userId = await this.getUserId(impersonationId, userId);
-
-    const { orders, portfolioOrders, transactionPoints } =
-      await this.getTransactionPoints({
-        userId,
-        withExcludedAccounts: true
-      });
-
-    const portfolioCalculator = new PortfolioCalculator({
-      currency: userCurrency,
-      currentRateService: this.currentRateService,
-      exchangeRateDataService: this.exchangeRateDataService,
-      orders: portfolioOrders
-    });
-
-    const portfolioStart = parseDate(
-      transactionPoints[0]?.date ?? format(new Date(), DATE_FORMAT)
-    );
-
-    portfolioCalculator.setTransactionPoints(transactionPoints);
-
-    const { currentValue } = await portfolioCalculator.getCurrentPositions(
-      portfolioStart,
-      new Date(Date.now()),
-      false
-    );
-
-    return currentValue;
-  }
-
-  @LogPerformance
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
@@ -1761,63 +1728,22 @@ export class PortfolioService {
       withExcludedAccounts: true
     });
     const excludedActivities: Activity[] = [];
-    let dividend = 0;
-    let fees = 0;
-    let items = 0;
-    let interest = 0;
+    const nonExcludedActivities: Activity[] = [];
 
-    let liabilities = 0;
+    for (const activity of activities) {
+      if (activity.Account?.isExcluded) {
+        excludedActivities.push(activity);
+      } else {
+        nonExcludedActivities.push(activity);
+      }
+    }
 
-    let totalBuy = 0;
-    let totalSell = 0;
-    let activitiesUsed: Activity[] = [];
-    let ordersCount = 0;
     let excludedAccountsAndActivities = 0;
-    const firstOrderDate = activities[0]?.date;
 
     performanceInformation = await this.getPerformance({
       impersonationId,
       userId
     });
-    for (let order of activities) {
-      if (order.Account?.isExcluded ?? false) {
-        excludedActivities.push(order);
-      } else {
-        activitiesUsed.push(order);
-        fees += this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.SymbolProfile.currency,
-          userCurrency
-        );
-        let amount = this.exchangeRateDataService.toCurrency(
-          new Big(order.quantity).mul(order.unitPrice).toNumber(),
-          order.SymbolProfile.currency,
-          userCurrency
-        );
-        switch (order.type) {
-          case 'DIVIDEND':
-            dividend += amount;
-            break;
-          case 'ITEM':
-            items += amount;
-            break;
-          case 'SELL':
-            totalSell += amount;
-            ordersCount++;
-            break;
-          case 'BUY':
-            totalBuy += amount;
-            ordersCount++;
-            break;
-          case 'LIABILITY':
-            liabilities += amount;
-            break;
-          case 'INTEREST':
-            interest += amount;
-            break;
-        }
-      }
-    }
 
     const dividendInBaseCurrency =
       await portfolioCalculator.getDividendInBaseCurrency();

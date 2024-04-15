@@ -79,7 +79,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('isAllocation') isAllocation: boolean = false
+    @Query('isAllocation') isAllocation: boolean = false,
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     const withMarkets = withMarketsParam === 'true';
@@ -428,10 +428,7 @@ export class PortfolioController {
     @Query('withExcludedAccounts') withExcludedAccounts = false,
     @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false,
     @Query('withItems') withItems = false
-    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
   ): Promise<PortfolioPerformanceResponse> {
-    const withExcludedAccounts = withExcludedAccountsParam === 'true';
-
     const hasReadRestrictedAccessPermission =
       this.userService.hasReadRestrictedAccessPermission({
         impersonationId,
@@ -449,7 +446,6 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
-      withItems,
       userId: this.request.user.id,
       calculateTimeWeightedPerformance
     });
