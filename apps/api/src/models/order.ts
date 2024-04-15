@@ -1,6 +1,6 @@
 import { IOrder } from '@ghostfolio/api/services/interfaces/interfaces';
 
-import { Account, SymbolProfile, Type as TypeOfOrder } from '@prisma/client';
+import { Account, SymbolProfile, Type as ActivityType } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 
 export class Order {
@@ -14,7 +14,7 @@ export class Order {
   private symbol: string;
   private symbolProfile: SymbolProfile;
   private total: number;
-  private type: TypeOfOrder;
+  private type: ActivityType;
   private unitPrice: number;
 
   public constructor(data: IOrder) {

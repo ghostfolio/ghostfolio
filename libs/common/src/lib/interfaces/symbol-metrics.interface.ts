@@ -1,4 +1,4 @@
-import Big from 'big.js';
+import { Big } from 'big.js';
 
 export interface SymbolMetrics {
   currentValues: {
@@ -7,6 +7,7 @@ export interface SymbolMetrics {
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
+  feesWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;
@@ -39,6 +40,14 @@ export interface SymbolMetrics {
     [date: string]: Big;
   };
   timeWeightedInvestmentWithCurrencyEffect: Big;
+  totalDividend: Big;
+  totalDividendInBaseCurrency: Big;
+  totalInterest: Big;
+  totalInterestInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
+  totalLiabilities: Big;
+  totalLiabilitiesInBaseCurrency: Big;
+  totalValuables: Big;
+  totalValuablesInBaseCurrency: Big;
 }

@@ -3,6 +3,8 @@
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
 
+$mat-css-dark-theme-selector: '.is-dark-theme';
+
 $gf-primary: (
   50: var(--gf-theme-primary-50),
   100: var(--gf-theme-primary-100),
@@ -106,6 +108,7 @@ $gf-theme-dark: mat.define-dark-theme(
 }
 
 :root {
+  --gf-theme-alpha-hover: 0.04;
   --gf-theme-primary-500: #36cfcc;
   --gf-theme-primary-500-rgb: 0, 187, 255;
   --gf-theme-secondary-500: #3686cf;

@@ -15,6 +15,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      key: AccountClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 
@@ -35,7 +36,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     }
 
-    let maxItem;
+    let maxItem: (typeof accounts)[0];
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
@@ -52,7 +53,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     }
 
-    const maxInvestmentRatio = maxItem.investment / totalInvestment;
+    const maxInvestmentRatio = maxItem?.investment / totalInvestment || 0;
 
     if (maxInvestmentRatio > ruleSettings.threshold) {
       return {

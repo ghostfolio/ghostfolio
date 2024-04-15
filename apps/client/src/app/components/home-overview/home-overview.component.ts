@@ -124,7 +124,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       .subscribe(({ chart, errors, performance }) => {
         this.errors = errors;
         this.performance = performance;
-        this.isLoadingPerformance = false;
 
         this.historicalDataItems = chart.map(
           ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
@@ -134,6 +133,8 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
             };
           }
         );
+
+        this.isLoadingPerformance = false;
 
         this.changeDetectorRef.markForCheck();
       });

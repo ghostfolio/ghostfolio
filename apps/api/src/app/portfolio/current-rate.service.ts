@@ -34,7 +34,7 @@ export class CurrentRateService {
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
 
-    const includeToday =
+    const includesToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
       (!dateQuery.in || this.containsToday(dateQuery.in));
@@ -43,7 +43,7 @@ export class CurrentRateService {
     const quoteErrors: ResponseError['errors'] = [];
     const today = resetHours(new Date());
 
-    if (includeToday) {
+    if (includesToday) {
       promises.push(
         this.dataProviderService
           .getQuotes({ items: dataGatheringItems, user: this.request?.user })

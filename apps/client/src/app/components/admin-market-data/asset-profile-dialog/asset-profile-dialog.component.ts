@@ -1,7 +1,10 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   Currency,
@@ -61,7 +64,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     name: ['', Validators.required],
     scraperConfiguration: '',
     sectors: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    url: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -69,6 +73,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public currencies: Currency[] = [];
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -82,6 +87,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
@@ -158,7 +164,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfile?.scraperConfiguration ?? {}
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          url: this.assetProfile?.url ?? ''
         });
 
         this.assetProfileForm.markAsPristine();
@@ -168,6 +175,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onClose() {
+    this.dialogRef.close();
+  }
+
+  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+
     this.dialogRef.close();
   }
 
@@ -195,15 +208,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-      ).data;
+      ).data as UpdateMarketDataDto[];
 
       this.adminService
         .postMarketData({
           dataSource: this.data.dataSource,
           marketData: {
-            marketData: marketData.map(({ date, marketPrice }) => {
-              return { marketPrice, date: parseDate(date).toISOString() };
-            })
+            marketData
           },
           symbol: this.data.symbol
         })
@@ -284,7 +295,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.controls['currency'].value)
       ))?.value,
-      name: this.assetProfileForm.controls['name'].value
+      name: this.assetProfileForm.controls['name'].value,
+      url: this.assetProfileForm.controls['url'].value
     };
 
     this.adminService

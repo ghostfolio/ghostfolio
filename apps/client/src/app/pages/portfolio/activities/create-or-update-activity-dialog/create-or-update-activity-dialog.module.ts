@@ -1,4 +1,4 @@
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfSymbolAutocompleteModule } from '@ghostfolio/ui/symbol-autocomplete/symbol-autocomplete.module';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
@@ -22,8 +22,8 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
   imports: [
     CommonModule,
     FormsModule,
+    GfAssetProfileIconComponent,
     GfSymbolAutocompleteModule,
-    GfSymbolIconModule,
     GfValueModule,
     MatAutocompleteModule,
     MatButtonModule,

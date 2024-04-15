@@ -1,5 +1,5 @@
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.module';
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueModule } from '@ghostfolio/ui/value';
@@ -21,9 +21,9 @@ import { HoldingsTableComponent } from './holdings-table.component';
   exports: [HoldingsTableComponent],
   imports: [
     CommonModule,
+    GfAssetProfileIconComponent,
     GfNoTransactionsInfoModule,
     GfPositionDetailDialogModule,
-    GfSymbolIconModule,
     GfSymbolModule,
     GfValueModule,
     MatButtonModule,

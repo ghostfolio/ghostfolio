@@ -1,3 +1,4 @@
+import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
 import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
 
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ import { HoldingsPageComponent } from './holdings-page.component';
   imports: [
     CommonModule,
     GfHoldingsTableModule,
+    GfToggleModule,
     HoldingsPageRoutingModule,
     MatButtonModule
   ],

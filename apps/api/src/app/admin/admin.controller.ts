@@ -7,13 +7,12 @@ import { ManualService } from '@ghostfolio/api/services/data-provider/manual/man
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
-import {
-  getAssetProfileIdentifier,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -94,7 +93,8 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: getAssetProfileIdentifier({ dataSource, symbol })
+            jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+            priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
         };
       })
@@ -119,7 +119,8 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: getAssetProfileIdentifier({ dataSource, symbol })
+            jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+            priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
         };
       })
@@ -141,7 +142,8 @@ export class AdminController {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: getAssetProfileIdentifier({ dataSource, symbol })
+        jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       }
     });
   }
@@ -339,6 +341,6 @@ export class AdminController {
     @Param('key') key: string,
     @Body() data: PropertyDto
   ) {
-    return await this.adminService.putSetting(key, data.value);
+    return this.adminService.putSetting(key, data.value);
   }
 }

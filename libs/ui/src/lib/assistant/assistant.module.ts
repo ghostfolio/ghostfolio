@@ -1,4 +1,4 @@
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -18,8 +18,8 @@ import { AssistantComponent } from './assistant.component';
   imports: [
     CommonModule,
     FormsModule,
+    GfAssetProfileIconComponent,
     GfAssistantListItemModule,
-    GfSymbolIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,

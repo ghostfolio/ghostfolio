@@ -1,12 +1,19 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 
-import Big from 'big.js';
-
-import { CurrentRateServiceMock } from './current-rate.service.mock';
-import { PortfolioCalculator } from './portfolio-calculator';
+import { Big } from 'big.js';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -32,6 +39,7 @@ jest.mock(
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -42,40 +50,48 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
-          {
-            currency: 'USD',
-            date: '2023-01-03',
-            dataSource: 'YAHOO',
-            fee: new Big(1),
-            name: 'Alphabet Inc.',
-            quantity: new Big(1),
-            symbol: 'GOOGL',
-            type: 'BUY',
-            unitPrice: new Big(89.12)
-          }
-        ]
-      });
-
-      portfolioCalculator.computeTransactionPoints();
-
       const spy = jest
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2023-07-10').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2023-01-03'),
+          fee: 1,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
+          },
+          type: 'BUY',
+          unitPrice: 89.12
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: 'CHF'
+      });
 
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2023-01-03')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2023-01-03')
       );
 
@@ -88,8 +104,8 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        currentValue: new Big('103.10483'),
+      expect(portfolioSnapshot).toEqual({
+        currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
         grossPerformance: new Big('27.33'),
         grossPerformancePercentage: new Big('0.3066651705565529623'),
@@ -109,6 +125,8 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
             fee: new Big('1'),
             firstBuyDate: '2023-01-03',
             grossPerformance: new Big('27.33'),
@@ -129,14 +147,19 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
             symbol: 'GOOGL',
-            tags: undefined,
+            tags: [],
             timeWeightedInvestment: new Big('89.12'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
-            transactionCount: 1
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('103.10483')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('1'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('89.12'),
-        totalInvestmentWithCurrencyEffect: new Big('82.329056')
+        totalInvestmentWithCurrencyEffect: new Big('82.329056'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
+        totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([

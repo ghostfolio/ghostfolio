@@ -41,6 +41,10 @@ export class UpdateOrderDto {
   @IsISO4217CurrencyCode()
   currency: string;
 
+  @IsISO4217CurrencyCode()
+  @IsOptional()
+  customCurrency?: string;
+
   @IsString()
   dataSource: DataSource;
 

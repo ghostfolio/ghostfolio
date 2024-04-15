@@ -24,6 +24,7 @@ import {
 import { FormBuilder, FormControl } from '@angular/forms';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Account, AssetClass } from '@prisma/client';
+import { eachYearOfInterval, format } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -35,7 +36,11 @@ import {
 } from 'rxjs/operators';
 
 import { AssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
-import { ISearchResultItem, ISearchResults } from './interfaces/interfaces';
+import {
+  IDateRangeOption,
+  ISearchResultItem,
+  ISearchResults
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,27 +100,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   public accounts: Account[] = [];
   public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
-  public readonly dateRangeOptions = [
-    { label: $localize`Today`, value: '1d' },
-    {
-      label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
-      value: 'wtd'
-    },
-    {
-      label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
-      value: 'mtd'
-    },
-    {
-      label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
-      value: 'ytd'
-    },
-    { label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')', value: '1y' },
-    {
-      label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
-      value: '5y'
-    },
-    { label: $localize`Max`, value: 'max' }
-  ];
+  public dateRangeOptions: IDateRangeOption[] = [];
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
@@ -199,6 +184,45 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
+    this.dateRangeOptions = [
+      { label: $localize`Today`, value: '1d' },
+      {
+        label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
+        value: 'wtd'
+      },
+      {
+        label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
+        value: 'mtd'
+      },
+      {
+        label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
+        value: 'ytd'
+      },
+      {
+        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
+        value: '1y'
+      },
+      {
+        label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
+        value: '5y'
+      },
+      { label: $localize`Max`, value: 'max' }
+    ];
+
+    if (this.user?.settings?.isExperimentalFeatures) {
+      this.dateRangeOptions = this.dateRangeOptions.concat(
+        eachYearOfInterval({
+          end: new Date(),
+          start: this.user?.dateOfFirstActivity ?? new Date()
+        })
+          .map((date) => {
+            return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
+          })
+          .slice(0, -1)
+          .reverse()
+      );
+    }
+
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 
     this.filterForm.setValue(

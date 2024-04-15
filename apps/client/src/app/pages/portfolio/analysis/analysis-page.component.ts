@@ -32,6 +32,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: Position[];
@@ -121,6 +122,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.benchmark = this.benchmarks.find(({ id }) => {
+            return id === this.user.settings?.benchmark;
+          });
 
           this.update();
         }
@@ -347,6 +352,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .fetchBenchmarkBySymbol({
             dataSource,
             symbol,
+            range: this.user?.settings?.dateRange,
             startDate: this.firstOrderDate
           })
           .pipe(takeUntil(this.unsubscribeSubject))

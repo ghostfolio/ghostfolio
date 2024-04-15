@@ -1,12 +1,19 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  activityDummyData,
+  symbolProfileDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 
-import Big from 'big.js';
-
-import { CurrentRateServiceMock } from './current-rate.service.mock';
-import { PortfolioCalculator } from './portfolio-calculator';
+import { Big } from 'big.js';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -32,6 +39,7 @@ jest.mock(
 describe('PortfolioCalculator', () => {
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
+  let factory: PortfolioCalculatorFactory;
 
   beforeEach(() => {
     currentRateService = new CurrentRateService(null, null, null, null);
@@ -42,51 +50,63 @@ describe('PortfolioCalculator', () => {
       null,
       null
     );
+
+    factory = new PortfolioCalculatorFactory(
+      currentRateService,
+      exchangeRateDataService
+    );
   });
 
   describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
-      const portfolioCalculator = new PortfolioCalculator({
-        currentRateService,
-        exchangeRateDataService,
-        currency: 'CHF',
-        orders: [
-          {
-            currency: 'USD',
-            date: '2015-01-01',
-            dataSource: 'YAHOO',
-            fee: new Big(0),
-            name: 'Bitcoin USD',
-            quantity: new Big(2),
-            symbol: 'BTCUSD',
-            type: 'BUY',
-            unitPrice: new Big(320.43)
-          },
-          {
-            currency: 'USD',
-            date: '2017-12-31',
-            dataSource: 'YAHOO',
-            fee: new Big(0),
-            name: 'Bitcoin USD',
-            quantity: new Big(1),
-            symbol: 'BTCUSD',
-            type: 'SELL',
-            unitPrice: new Big(14156.4)
-          }
-        ]
-      });
-
-      portfolioCalculator.computeTransactionPoints();
-
       const spy = jest
         .spyOn(Date, 'now')
         .mockImplementation(() => parseDate('2018-01-01').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2015-01-01'),
+          fee: 0,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Bitcoin USD',
+            symbol: 'BTCUSD'
+          },
+          type: 'BUY',
+          unitPrice: 320.43
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2017-12-31'),
+          fee: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Bitcoin USD',
+            symbol: 'BTCUSD'
+          },
+          type: 'SELL',
+          unitPrice: 14156.4
+        }
+      ];
+
+      const portfolioCalculator = factory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: 'CHF'
+      });
 
       const chartData = await portfolioCalculator.getChartData({
         start: parseDate('2015-01-01')
       });
 
-      const currentPositions = await portfolioCalculator.getCurrentPositions(
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
         parseDate('2015-01-01')
       );
 
@@ -99,8 +119,8 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(currentPositions).toEqual({
-        currentValue: new Big('13298.425356'),
+      expect(portfolioSnapshot).toEqual({
+        currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
         grossPerformance: new Big('27172.74'),
         grossPerformancePercentage: new Big('42.41978276196153750666'),
@@ -120,6 +140,8 @@ describe('PortfolioCalculator', () => {
             averagePrice: new Big('320.43'),
             currency: 'USD',
             dataSource: 'YAHOO',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
             fee: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74'),
@@ -144,16 +166,21 @@ describe('PortfolioCalculator', () => {
             ),
             quantity: new Big('1'),
             symbol: 'BTCUSD',
-            tags: undefined,
+            tags: [],
             timeWeightedInvestment: new Big('640.56763686131386861314'),
             timeWeightedInvestmentWithCurrencyEffect: new Big(
               '636.79469348020066587024'
             ),
-            transactionCount: 2
+            transactionCount: 2,
+            valueInBaseCurrency: new Big('13298.425356')
           }
         ],
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('320.43'),
-        totalInvestmentWithCurrencyEffect: new Big('318.542667299999967957')
+        totalInvestmentWithCurrencyEffect: new Big('318.542667299999967957'),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
+        totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(investments).toEqual([

@@ -11,6 +11,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
     emergencyFund: number
   ) {
     super(exchangeRateDataService, {
+      key: EmergencyFundSetup.name,
       name: 'Emergency Fund: Set up'
     });
 

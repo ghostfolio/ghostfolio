@@ -1,6 +1,7 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { Currency } from '@ghostfolio/common/interfaces';
 
 import {
@@ -102,7 +103,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.controls['balance'].value,
       comment: this.accountForm.controls['comment'].value,
@@ -113,13 +114,29 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       platformId: this.accountForm.controls['platformId'].value?.id ?? null
     };
 
-    if (this.data.account.id) {
-      (account as UpdateAccountDto).id = this.data.account.id;
-    } else {
-      delete (account as CreateAccountDto).id;
-    }
+    try {
+      if (this.data.account.id) {
+        (account as UpdateAccountDto).id = this.data.account.id;
 
-    this.dialogRef.close({ account });
+        await validateObjectForForm({
+          classDto: UpdateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+      } else {
+        delete (account as CreateAccountDto).id;
+
+        await validateObjectForForm({
+          classDto: CreateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+      }
+
+      this.dialogRef.close({ account });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public ngOnDestroy() {

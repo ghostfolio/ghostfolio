@@ -49,7 +49,6 @@ export class RedactValuesInResponseInterceptor<T>
               'dividendInBaseCurrency',
               'fee',
               'feeInBaseCurrency',
-              'filteredValueInBaseCurrency',
               'grossPerformance',
               'grossPerformanceWithCurrencyEffect',
               'investment',
@@ -58,7 +57,6 @@ export class RedactValuesInResponseInterceptor<T>
               'quantity',
               'symbolMapping',
               'totalBalanceInBaseCurrency',
-              'totalValueInBaseCurrency',
               'unitPrice',
               'value',
               'valueInBaseCurrency'

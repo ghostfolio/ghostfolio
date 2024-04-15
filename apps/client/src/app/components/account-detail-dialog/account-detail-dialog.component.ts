@@ -1,3 +1,4 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -21,7 +22,7 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject } from 'rxjs';
@@ -41,7 +42,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
-  public dataSource: MatTableDataSource<OrderWithAccount>;
+  public dataSource: MatTableDataSource<Activity>;
   public equity: number;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
@@ -115,7 +116,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       );
 
     this.dataService
-      .fetchPortfolioDetails({
+      .fetchPortfolioHoldings({
         filters: [
           {
             type: 'ACCOUNT',
@@ -125,11 +126,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
-        this.holdings = [];
-
-        for (const [symbol, holding] of Object.entries(holdings)) {
-          this.holdings.push(holding);
-        }
+        this.holdings = holdings;
 
         this.changeDetectorRef.markForCheck();
       });
