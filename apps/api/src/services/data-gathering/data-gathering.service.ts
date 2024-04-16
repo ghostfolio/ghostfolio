@@ -104,11 +104,11 @@ export class DataGatheringService {
     symbol: string;
   }) {
     try {
-      const historicalData = await this.dataProviderService.getHistoricalRaw(
-        [{ dataSource, symbol }],
-        date,
-        date
-      );
+      const historicalData = await this.dataProviderService.getHistoricalRaw({
+        dataGatheringItems: [{ dataSource, symbol }],
+        from: date,
+        to: date
+      });
 
       const marketPrice =
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
@@ -230,17 +230,12 @@ export class DataGatheringService {
           error,
           'DataGatheringService'
         );
+
+        if (uniqueAssets.length === 1) {
+          throw error;
+        }
       }
     }
-
-    Logger.log(
-      `Asset profile data gathering has been completed for ${uniqueAssets
-        .map(({ dataSource, symbol }) => {
-          return `${symbol} (${dataSource})`;
-        })
-        .join(',')}.`,
-      'DataGatheringService'
-    );
   }
 
   public async gatherSymbols({

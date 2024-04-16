@@ -233,15 +233,17 @@ export class DataProviderService {
     }
   }
 
-  public async getHistoricalRaw(
-    aDataGatheringItems: UniqueAsset[],
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistoricalRaw({
+    dataGatheringItems,
+    from,
+    to
+  }: {
+    dataGatheringItems: UniqueAsset[];
+    from: Date;
+    to: Date;
+  }): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    let dataGatheringItems = aDataGatheringItems;
-
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
         this.hasCurrency({
@@ -330,6 +332,8 @@ export class DataProviderService {
       }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
+
+      throw error;
     }
 
     return result;

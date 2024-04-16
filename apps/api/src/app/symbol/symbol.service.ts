@@ -74,11 +74,21 @@ export class SymbolService {
     date = new Date(),
     symbol
   }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
-    const historicalData = await this.dataProviderService.getHistoricalRaw(
-      [{ dataSource, symbol }],
-      date,
-      date
-    );
+    let historicalData: {
+      [symbol: string]: {
+        [date: string]: IDataProviderHistoricalResponse;
+      };
+    } = {
+      [symbol]: {}
+    };
+
+    try {
+      historicalData = await this.dataProviderService.getHistoricalRaw({
+        dataGatheringItems: [{ dataSource, symbol }],
+        from: date,
+        to: date
+      });
+    } catch {}
 
     return {
       marketPrice:
