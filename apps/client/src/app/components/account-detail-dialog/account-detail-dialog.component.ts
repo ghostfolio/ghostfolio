@@ -150,10 +150,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     const formattedDate = new Date(date);
     this.dataService
       .postAccountBalance({
-        userId: this.user.id,
         accountId: this.data.accountId,
-        balance: balance,
-        currency: this.currency,
+        balance,
         date: formattedDate
       })
       .pipe(takeUntil(this.unsubscribeSubject))

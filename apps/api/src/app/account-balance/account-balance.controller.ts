@@ -19,6 +19,7 @@ import { AccountBalance } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountBalanceService } from './account-balance.service';
+import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Controller('account-balance')
 export class AccountBalanceController {
@@ -53,21 +54,21 @@ export class AccountBalanceController {
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createAccountBalance(
-    @Body() body: any
+    @Body() data: CreateAccountBalanceDto
   ): Promise<AccountBalance> {
-    const account = body.Account.connect.id_userId;
-    const data = {
+    const account = data.Account.connect.id_userId;
+    const body = {
       Account: {
         connect: {
           id_userId: {
             id: account.id,
-            userId: account.userId
+            userId: this.request.user.id
           }
         }
       },
-      value: body.balance,
-      date: body.date
+      value: data.balance,
+      date: data.date
     };
-    return this.accountBalanceService.createAccountBalance(data);
+    return this.accountBalanceService.createAccountBalance(body);
   }
 }

@@ -79,12 +79,12 @@ export class GfAccountBalancesComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private dateAdapter: DateAdapter<any>) {}
-
   public accountBalanceForm = new FormGroup({
     balance: new FormControl(0, Validators.required),
     date: new FormControl(new Date().toISOString(), Validators.required)
   });
+
+  public constructor(private dateAdapter: DateAdapter<any>) {}
 
   public ngOnInit() {
     this.dateAdapter.setLocale(this.locale);

@@ -614,26 +614,20 @@ export class DataService {
   public postAccountBalance({
     date,
     accountId,
-    balance,
-    currency,
-    userId
+    balance
   }: {
     date: Date;
     accountId: string;
     balance: number;
-    currency: string;
-    userId: string;
   }) {
     return this.http.post<any>(`/api/v1/account-balance`, {
       Account: {
         connect: {
           id_userId: {
-            id: accountId,
-            userId
+            id: accountId
           }
         }
       },
-      currency,
       date,
       balance: balance
     });
