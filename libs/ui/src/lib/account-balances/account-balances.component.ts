@@ -57,6 +57,7 @@ export class GfAccountBalancesComponent
   implements OnChanges, OnDestroy, OnInit
 {
   @Input() accountBalances: AccountBalancesResponse['balances'];
+  @Input() accountCurrency: string;
   @Input() accountId: string;
   @Input() locale = getLocale();
   @Input() showActions = true;

@@ -15,8 +15,7 @@
         <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
       </td>
       <td *matFooterCellDef class="px-2" mat-footer-cell>
-        <mat-form-field appearance="outline">
-          <mat-label i18n>Date</mat-label>
+        <mat-form-field appearance="outline" class="py-1 without-hint">
           <input formControlName="date" matInput [matDatepicker]="date" />
           <mat-datepicker-toggle matSuffix [for]="date">
             <ion-icon
@@ -25,7 +24,7 @@
               name="calendar-clear-outline"
             />
           </mat-datepicker-toggle>
-          <mat-datepicker #date disabled="false" />
+          <mat-datepicker #date />
         </mat-form-field>
       </td>
     </ng-container>
@@ -46,13 +45,16 @@
       </td>
       <td *matFooterCellDef class="px-2" mat-footer-cell>
         <div class="d-flex justify-content-end">
-          <mat-form-field apperance="outline">
+          <mat-form-field appearance="outline" class="without-hint">
             <input
               formControlName="balance"
               matInput
               placeholder="Value"
               type="number"
             />
+            <div class="ml-2" matTextSuffix>
+              {{ accountCurrency }}
+            </div>
           </mat-form-field>
         </div>
       </td>
@@ -88,7 +90,6 @@
           type="submit"
           [disabled]="accountBalanceForm.invalid"
         >
-          <ion-icon name="add" />
           <span i18n>Add</span>
         </button>
       </td>
@@ -96,6 +97,10 @@
 
     <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
     <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-    <tr *matFooterRowDef="displayedColumns" mat-footer-row></tr>
+    <tr
+      *matFooterRowDef="displayedColumns"
+      mat-footer-row
+      [hidden]="!showActions"
+    ></tr>
   </table>
 </form>
