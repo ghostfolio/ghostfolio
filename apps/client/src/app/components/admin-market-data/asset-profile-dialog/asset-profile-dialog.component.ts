@@ -188,7 +188,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
-          url: this.assetProfile?.url ?? ''
+          url: this.assetProfile?.url
         });
 
         this.assetProfileForm.markAsPristine();
@@ -322,6 +322,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       ))?.value,
       url: this.assetProfileForm.controls['url'].value
     };
+
+    assetProfileData.url =
+      assetProfileData.url?.length > 0 ? assetProfileData.url : null;
 
     this.adminService
       .patchAssetProfile({
