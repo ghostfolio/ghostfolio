@@ -1,5 +1,5 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
+import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';

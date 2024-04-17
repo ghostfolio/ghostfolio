@@ -1,10 +1,10 @@
 import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsModule } from '@ghostfolio/ui/data-provider-credits/data-provider-credits.module';
-import { GfLineChartModule } from '@ghostfolio/ui/line-chart/line-chart.module';
-import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
+import { GfLineChartModule } from '@ghostfolio/ui/line-chart';
+import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,7 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
   imports: [
     CommonModule,
     GfAccountsTableModule,
-    GfActivitiesTableModule,
+    GfActivitiesTableComponent,
     GfDataProviderCreditsModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
