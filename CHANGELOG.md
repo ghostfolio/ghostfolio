@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the interest calculations into the portfolio calculator
 - Moved the liability calculations into the portfolio calculator
 - Moved the (wealth) item calculations into the portfolio calculator
+- Upgraded `yahoo-finance2` from version `2.11.1` to `2.11.2`
 
 ## 2.72.0 - 2024-04-13
 
