@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the (wealth) item calculations into the portfolio calculator
 - Let queue jobs for asset profile data gathering fail by throwing an error
 - Let queue jobs for historical market data gathering fail by throwing an error
+- Upgraded `yahoo-finance2` from version `2.11.1` to `2.11.2`
 
 ## 2.72.0 - 2024-04-13
 

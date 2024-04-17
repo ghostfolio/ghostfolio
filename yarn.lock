@@ -19620,10 +19620,10 @@ y18n@^5.0.5:
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
   integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
 
-yahoo-finance2@2.11.1:
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.11.1.tgz#97758d4784ef0b4efe4b370a72063929cc4c6342"
-  integrity sha512-YglgpjIDithq1PG8Je/gy8nzJFqkH214x2ZGfr6Y+HV4ymTDFLluq2W9Hsvvyydv1zTv9/Ykedf0J4YIpmO2Zg==
+yahoo-finance2@2.11.2:
+  version "2.11.2"
+  resolved "https://registry.yarnpkg.com/yahoo-finance2/-/yahoo-finance2-2.11.2.tgz#44f35105a2500fd1da22ac4f4393106f2bfec6d1"
+  integrity sha512-S5lHKqneMXMKN/rxowqErEfkvXJE6s/SPuekT7UkOVbsSyRcptea/U3Mud+ikOEXEbKXPiZrU0Jy+iF51ITuSw==
   dependencies:
     "@types/tough-cookie" "^4.0.2"
     ajv "8.10.0"
