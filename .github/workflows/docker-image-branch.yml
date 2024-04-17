@@ -1,4 +1,4 @@
-name: Docker image CD - DEV
+name: Docker image CD - Branch
 
 on:
   push:
