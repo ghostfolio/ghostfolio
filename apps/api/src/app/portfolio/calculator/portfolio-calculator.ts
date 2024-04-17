@@ -450,7 +450,12 @@ export abstract class PortfolioCalculator {
       await this.currentRateService.getValues({
         dataGatheringItems,
         dateQuery: {
-          in: dates
+          in: [
+            ...dates,
+            ...this.transactionPoints.map(({ date }) =>
+              resetHours(parseDate(date))
+            )
+          ]
         }
       });
 

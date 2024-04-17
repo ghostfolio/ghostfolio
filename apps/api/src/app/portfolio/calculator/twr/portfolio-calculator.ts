@@ -189,6 +189,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     } = {};
 
     let totalDividend = new Big(0);
+    let totalStakeRewards = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
     let totalInterest = new Big(0);
     let totalInterestInBaseCurrency = new Big(0);
@@ -421,6 +422,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         );
       }
 
+      if (order.type === 'STAKE') {
+        order.unitPrice = marketSymbolMap[order.date]?.[symbol];
+      }
+
       if (order.unitPrice) {
         order.unitPriceInBaseCurrency = order.unitPrice.mul(
           currentExchangeRate ?? 1
@@ -568,6 +573,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
           liabilities.mul(exchangeRateAtOrderDate ?? 1)
         );
+      } else if (order.type === 'STAKE') {
+        totalStakeRewards = totalStakeRewards.plus(order.quantity);
       }
 
       const valueOfInvestment = totalUnits.mul(order.unitPriceInBaseCurrency);
@@ -647,7 +654,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           grossPerformanceWithCurrencyEffect;
       }
 
-      if (i > indexOfStartOrder && ['BUY', 'SELL'].includes(order.type)) {
+      if (
+        i > indexOfStartOrder &&
+        ['BUY', 'SELL', 'STAKE'].includes(order.type)
+      ) {
         // Only consider periods with an investment for the calculation of
         // the time weighted investment
         if (valueOfInvestmentBeforeTransaction.gt(0)) {
