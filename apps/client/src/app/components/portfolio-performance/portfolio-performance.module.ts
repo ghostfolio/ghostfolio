@@ -1,4 +1,4 @@
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -9,7 +9,7 @@ import { PortfolioPerformanceComponent } from './portfolio-performance.component
 @NgModule({
   declarations: [PortfolioPerformanceComponent],
   exports: [PortfolioPerformanceComponent],
-  imports: [CommonModule, GfValueModule, NgxSkeletonLoaderModule],
+  imports: [CommonModule, GfValueComponent, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class GfPortfolioPerformanceModule {}

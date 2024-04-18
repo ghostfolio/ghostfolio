@@ -5,7 +5,7 @@ import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsModule } from '@ghostfolio/ui/data-provider-credits/data-provider-credits.module';
 import { GfLineChartModule } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -28,7 +28,7 @@ import { PositionDetailDialog } from './position-detail-dialog.component';
     GfDialogHeaderModule,
     GfLineChartModule,
     GfPortfolioProportionChartModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatChipsModule,
     MatDialogModule,

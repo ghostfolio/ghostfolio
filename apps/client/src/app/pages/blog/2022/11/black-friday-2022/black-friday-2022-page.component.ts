@@ -1,4 +1,4 @@
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   host: { class: 'page' },
-  imports: [GfPremiumIndicatorModule, MatButtonModule, RouterModule],
+  imports: [GfPremiumIndicatorComponent, MatButtonModule, RouterModule],
   selector: 'gf-black-friday-2022-page',
   standalone: true,
   templateUrl: './black-friday-2022-page.html'

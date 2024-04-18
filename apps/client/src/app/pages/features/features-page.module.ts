@@ -1,4 +1,4 @@
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -13,7 +13,7 @@ import { FeaturesPageComponent } from './features-page.component';
   imports: [
     CommonModule,
     FeaturesPageRoutingModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     MatButtonModule,
     MatCardModule
   ],

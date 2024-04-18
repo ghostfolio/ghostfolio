@@ -4,7 +4,7 @@ import { MatTableModule } from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { GfTrendIndicatorComponent } from '../trend-indicator';
-import { GfValueModule } from '../value';
+import { GfValueComponent } from '../value';
 import { BenchmarkComponent } from './benchmark.component';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { BenchmarkComponent } from './benchmark.component';
   imports: [
     CommonModule,
     GfTrendIndicatorComponent,
-    GfValueModule,
+    GfValueComponent,
     MatTableModule,
     NgxSkeletonLoaderModule
   ],

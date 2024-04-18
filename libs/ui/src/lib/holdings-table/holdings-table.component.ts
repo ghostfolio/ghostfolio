@@ -3,8 +3,8 @@ import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/posi
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -32,10 +32,10 @@ import { Subject, Subscription } from 'rxjs';
   imports: [
     CommonModule,
     GfAssetProfileIconComponent,
-    GfNoTransactionsInfoModule,
+    GfNoTransactionsInfoComponent,
     GfPositionDetailDialogModule,
     GfSymbolModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatPaginatorModule,

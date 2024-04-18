@@ -1,1 +1,1 @@
-export * from './currency-selector.module';
+export * from './currency-selector.component';

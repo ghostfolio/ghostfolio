@@ -1,4 +1,4 @@
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -14,7 +14,7 @@ import { AccountBalancesComponent } from './account-balances.component';
   exports: [AccountBalancesComponent],
   imports: [
     CommonModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,
