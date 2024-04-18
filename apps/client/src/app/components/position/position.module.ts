@@ -1,5 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { GfTrendIndicatorModule } from '@ghostfolio/ui/trend-indicator';
+import { GfTrendIndicatorComponent } from '@ghostfolio/ui/trend-indicator';
 import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -18,7 +18,7 @@ import { PositionComponent } from './position.component';
     CommonModule,
     GfPositionDetailDialogModule,
     GfSymbolModule,
-    GfTrendIndicatorModule,
+    GfTrendIndicatorComponent,
     GfValueModule,
     MatDialogModule,
     NgxSkeletonLoaderModule,

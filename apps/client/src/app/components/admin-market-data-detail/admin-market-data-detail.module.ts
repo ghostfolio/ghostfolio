@@ -1,4 +1,4 @@
-import { GfLineChartModule } from '@ghostfolio/ui/line-chart/line-chart.module';
+import { GfLineChartModule } from '@ghostfolio/ui/line-chart';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';

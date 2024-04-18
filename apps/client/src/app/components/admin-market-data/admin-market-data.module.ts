@@ -1,5 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
+import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';

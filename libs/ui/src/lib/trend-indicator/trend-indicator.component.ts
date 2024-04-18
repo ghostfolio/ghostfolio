@@ -1,14 +1,24 @@
 import { DateRange, MarketState } from '@ghostfolio/common/types';
 
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectionStrategy,
+  Component,
+  Input
+} from '@angular/core';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-trend-indicator',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './trend-indicator.component.html',
-  styleUrls: ['./trend-indicator.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-trend-indicator',
+  standalone: true,
+  styleUrls: ['./trend-indicator.component.scss'],
+  templateUrl: './trend-indicator.component.html'
 })
-export class TrendIndicatorComponent {
+export class GfTrendIndicatorComponent {
   @Input() isLoading = false;
   @Input() marketState: MarketState = 'open';
   @Input() range: DateRange = 'max';

@@ -1,12 +1,19 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { GfActivityTypeModule } from '@ghostfolio/ui/activity-type';
+import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
+import { GfValueModule } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -17,21 +24,54 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
+import {
+  MatSort,
+  MatSortModule,
+  Sort,
+  SortDirection
+} from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterModule } from '@angular/router';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfActivityTypeModule,
+    GfAssetProfileIconComponent,
+    GfNoTransactionsInfoModule,
+    GfSymbolModule,
+    GfValueModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    MatTooltipModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
+  standalone: true,
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class ActivitiesTableComponent
+export class GfActivitiesTableComponent
   implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
