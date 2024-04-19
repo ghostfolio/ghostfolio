@@ -396,10 +396,45 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       if (PortfolioCalculator.ENABLE_LOGGING) {
         console.log();
         console.log();
-        console.log(i + 1, order.type, order.itemType);
+        console.log(
+          i + 1,
+          order.date,
+          order.type,
+          order.itemType ? `(${order.itemType})` : ''
+        );
       }
 
       const exchangeRateAtOrderDate = exchangeRates[order.date];
+
+      if (order.type === 'DIVIDEND') {
+        const dividend = order.quantity.mul(order.unitPrice);
+
+        totalDividend = totalDividend.plus(dividend);
+        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
+          dividend.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'INTEREST') {
+        const interest = order.quantity.mul(order.unitPrice);
+
+        totalInterest = totalInterest.plus(interest);
+        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
+          interest.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'ITEM') {
+        const valuables = order.quantity.mul(order.unitPrice);
+
+        totalValuables = totalValuables.plus(valuables);
+        totalValuablesInBaseCurrency = totalValuablesInBaseCurrency.plus(
+          valuables.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      } else if (order.type === 'LIABILITY') {
+        const liabilities = order.quantity.mul(order.unitPrice);
+
+        totalLiabilities = totalLiabilities.plus(liabilities);
+        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
+          liabilities.mul(exchangeRateAtOrderDate ?? 1)
+        );
+      }
 
       if (order.itemType === 'start') {
         // Take the unit price of the order as the market price if there are no
@@ -483,13 +518,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
-        console.log('totalInvestment', totalInvestment.toNumber());
-
-        console.log(
-          'totalInvestmentWithCurrencyEffect',
-          totalInvestmentWithCurrencyEffect.toNumber()
-        );
-
         console.log('order.quantity', order.quantity.toNumber());
         console.log('transactionInvestment', transactionInvestment.toNumber());
 
@@ -535,36 +563,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       );
 
       totalUnits = totalUnits.plus(order.quantity.mul(getFactor(order.type)));
-
-      if (order.type === 'DIVIDEND') {
-        const dividend = order.quantity.mul(order.unitPrice);
-
-        totalDividend = totalDividend.plus(dividend);
-        totalDividendInBaseCurrency = totalDividendInBaseCurrency.plus(
-          dividend.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'INTEREST') {
-        const interest = order.quantity.mul(order.unitPrice);
-
-        totalInterest = totalInterest.plus(interest);
-        totalInterestInBaseCurrency = totalInterestInBaseCurrency.plus(
-          interest.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'ITEM') {
-        const valuables = order.quantity.mul(order.unitPrice);
-
-        totalValuables = totalValuables.plus(valuables);
-        totalValuablesInBaseCurrency = totalValuablesInBaseCurrency.plus(
-          valuables.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      } else if (order.type === 'LIABILITY') {
-        const liabilities = order.quantity.mul(order.unitPrice);
-
-        totalLiabilities = totalLiabilities.plus(liabilities);
-        totalLiabilitiesInBaseCurrency = totalLiabilitiesInBaseCurrency.plus(
-          liabilities.mul(exchangeRateAtOrderDate ?? 1)
-        );
-      }
 
       const valueOfInvestment = totalUnits.mul(order.unitPriceInBaseCurrency);
 
