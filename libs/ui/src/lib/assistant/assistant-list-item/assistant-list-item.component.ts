@@ -1,6 +1,8 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
 
 import { FocusableOption } from '@angular/cdk/a11y';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,15 +15,19 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { Params } from '@angular/router';
+import { Params, RouterModule } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, GfSymbolModule, RouterModule],
   selector: 'gf-assistant-list-item',
-  templateUrl: './assistant-list-item.html',
-  styleUrls: ['./assistant-list-item.scss']
+  standalone: true,
+  styleUrls: ['./assistant-list-item.scss'],
+  templateUrl: './assistant-list-item.html'
 })
-export class AssistantListItemComponent implements FocusableOption, OnChanges {
+export class GfAssistantListItemComponent
+  implements FocusableOption, OnChanges
+{
   @HostBinding('attr.tabindex') tabindex = -1;
   @HostBinding('class.has-focus') get getHasFocus() {
     return this.hasFocus;

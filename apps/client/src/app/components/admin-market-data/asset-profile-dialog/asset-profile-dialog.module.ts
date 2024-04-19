@@ -2,7 +2,7 @@ import { GfAdminMarketDataDetailModule } from '@ghostfolio/client/components/adm
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
-import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
@@ -27,7 +27,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     GfAdminMarketDataDetailModule,
     GfAssetProfileIconComponent,
     GfCurrencySelectorComponent,
-    GfPortfolioProportionChartModule,
+    GfPortfolioProportionChartComponent,
     GfValueComponent,
     MatButtonModule,
     MatCheckboxModule,

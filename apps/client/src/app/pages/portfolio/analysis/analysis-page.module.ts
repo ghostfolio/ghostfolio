@@ -1,7 +1,7 @@
 import { GfBenchmarkComparatorModule } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
-import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter';
+import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -18,7 +18,7 @@ import { AnalysisPageComponent } from './analysis-page.component';
   imports: [
     AnalysisPageRoutingModule,
     CommonModule,
-    GfActivitiesFilterModule,
+    GfActivitiesFilterComponent,
     GfBenchmarkComparatorModule,
     GfInvestmentChartModule,
     GfPremiumIndicatorComponent,

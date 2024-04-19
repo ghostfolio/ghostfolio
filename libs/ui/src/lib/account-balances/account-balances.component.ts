@@ -1,7 +1,9 @@
 import { getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -12,18 +14,34 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 
+import { GfValueComponent } from '../value';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfValueComponent,
+    MatButtonModule,
+    MatMenuModule,
+    MatSortModule,
+    MatTableModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-account-balances',
+  standalone: true,
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })
-export class AccountBalancesComponent implements OnChanges, OnDestroy, OnInit {
+export class GfAccountBalancesComponent
+  implements OnChanges, OnDestroy, OnInit
+{
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountId: string;
   @Input() locale = getLocale();

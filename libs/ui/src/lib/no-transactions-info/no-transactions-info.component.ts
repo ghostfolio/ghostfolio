@@ -9,11 +9,11 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
-import { GfLogoModule } from '../logo';
+import { GfLogoComponent } from '../logo';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfLogoModule, MatButtonModule, RouterModule],
+  imports: [CommonModule, GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-no-transactions-info-indicator',
   standalone: true,

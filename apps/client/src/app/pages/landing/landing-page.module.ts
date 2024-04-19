@@ -1,6 +1,6 @@
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
-import { GfCarouselModule } from '@ghostfolio/ui/carousel';
-import { GfLogoModule } from '@ghostfolio/ui/logo';
+import { GfCarouselComponent } from '@ghostfolio/ui/carousel';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -16,8 +16,8 @@ import { LandingPageComponent } from './landing-page.component';
   declarations: [LandingPageComponent],
   imports: [
     CommonModule,
-    GfCarouselModule,
-    GfLogoModule,
+    GfCarouselComponent,
+    GfLogoComponent,
     GfValueComponent,
     GfWorldMapChartModule,
     LandingPageRoutingModule,

@@ -1,5 +1,5 @@
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
-import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -17,7 +17,7 @@ import { AllocationsPageComponent } from './allocations-page.component';
   imports: [
     AllocationsPageRoutingModule,
     CommonModule,
-    GfPortfolioProportionChartModule,
+    GfPortfolioProportionChartComponent,
     GfPremiumIndicatorComponent,
     GfWorldMapChartModule,
     GfValueComponent,

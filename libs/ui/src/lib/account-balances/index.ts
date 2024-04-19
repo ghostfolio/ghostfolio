@@ -1,1 +1,1 @@
-export * from './account-balances.module';
+export * from './account-balances.component';

@@ -1,5 +1,5 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter';
+import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -20,7 +20,7 @@ import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/
   declarations: [AdminMarketDataComponent],
   imports: [
     CommonModule,
-    GfActivitiesFilterModule,
+    GfActivitiesFilterComponent,
     GfAssetProfileDialogModule,
     GfCreateAssetProfileDialogModule,
     GfSymbolModule,

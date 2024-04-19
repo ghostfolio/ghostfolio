@@ -2,20 +2,36 @@ import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
 import { Benchmark, User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+import { GfTrendIndicatorComponent } from '../trend-indicator';
+import { GfValueComponent } from '../value';
 
 @Component({
-  selector: 'gf-benchmark',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './benchmark.component.html',
-  styleUrls: ['./benchmark.component.scss']
+  imports: [
+    CommonModule,
+    GfTrendIndicatorComponent,
+    GfValueComponent,
+    MatTableModule,
+    NgxSkeletonLoaderModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-benchmark',
+  standalone: true,
+  styleUrls: ['./benchmark.component.scss'],
+  templateUrl: './benchmark.component.html'
 })
-export class BenchmarkComponent implements OnChanges {
+export class GfBenchmarkComponent implements OnChanges {
   @Input() benchmarks: Benchmark[];
   @Input() locale = getLocale();
   @Input() user: User;
