@@ -1,7 +1,7 @@
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { GfCarouselModule } from '@ghostfolio/ui/carousel';
 import { GfLogoModule } from '@ghostfolio/ui/logo';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -18,7 +18,7 @@ import { LandingPageComponent } from './landing-page.component';
     CommonModule,
     GfCarouselModule,
     GfLogoModule,
-    GfValueModule,
+    GfValueComponent,
     GfWorldMapChartModule,
     LandingPageRoutingModule,
     MatButtonModule,

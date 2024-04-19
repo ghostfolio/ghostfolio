@@ -1,20 +1,26 @@
 import { getLocale } from '@ghostfolio/common/helper';
 
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
 import { isNumber } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-value',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './value.component.html',
-  styleUrls: ['./value.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-value',
+  standalone: true,
+  styleUrls: ['./value.component.scss'],
+  templateUrl: './value.component.html'
 })
-export class ValueComponent implements OnChanges {
+export class GfValueComponent implements OnChanges {
   @Input() colorizeSign = false;
   @Input() icon = '';
   @Input() isAbsolute = false;

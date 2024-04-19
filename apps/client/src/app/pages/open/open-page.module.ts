@@ -1,4 +1,4 @@
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -9,7 +9,12 @@ import { OpenPageComponent } from './open-page.component';
 
 @NgModule({
   declarations: [OpenPageComponent],
-  imports: [CommonModule, GfValueModule, MatCardModule, OpenPageRoutingModule],
+  imports: [
+    CommonModule,
+    GfValueComponent,
+    MatCardModule,
+    OpenPageRoutingModule
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OpenPageModule {}

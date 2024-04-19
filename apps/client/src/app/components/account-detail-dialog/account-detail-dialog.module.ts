@@ -4,7 +4,7 @@ import { GfInvestmentChartModule } from '@ghostfolio/client/components/investmen
 import { GfAccountBalancesModule } from '@ghostfolio/ui/account-balances';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -25,7 +25,7 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
     GfDialogHeaderModule,
     GfHoldingsTableComponent,
     GfInvestmentChartModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatTabsModule,

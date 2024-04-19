@@ -1,7 +1,7 @@
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -18,9 +18,9 @@ import { AllocationsPageComponent } from './allocations-page.component';
     AllocationsPageRoutingModule,
     CommonModule,
     GfPortfolioProportionChartModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     GfWorldMapChartModule,
-    GfValueModule,
+    GfValueComponent,
     MatCardModule,
     MatDialogModule,
     MatProgressBarModule
