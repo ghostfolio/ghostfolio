@@ -1,6 +1,6 @@
 import { GfWorldMapChartModule } from '@ghostfolio/client/components/world-map-chart/world-map-chart.module';
 import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
-import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -16,7 +16,7 @@ import { PublicPageComponent } from './public-page.component';
   imports: [
     CommonModule,
     GfHoldingsTableComponent,
-    GfPortfolioProportionChartModule,
+    GfPortfolioProportionChartComponent,
     GfValueComponent,
     GfWorldMapChartModule,
     MatButtonModule,

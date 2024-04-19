@@ -1,1 +1,1 @@
-export * from './activities-filter.module';
+export * from './activities-filter.component';

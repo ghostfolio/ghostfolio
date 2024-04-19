@@ -5,7 +5,7 @@ import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
-import { GfActivityTypeModule } from '@ghostfolio/ui/activity-type';
+import { GfActivityTypeComponent } from '@ghostfolio/ui/activity-type';
 import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -50,7 +50,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfActivityTypeModule,
+    GfActivityTypeComponent,
     GfAssetProfileIconComponent,
     GfNoTransactionsInfoComponent,
     GfSymbolModule,

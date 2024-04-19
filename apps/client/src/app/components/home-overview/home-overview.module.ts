@@ -1,5 +1,5 @@
 import { GfPortfolioPerformanceModule } from '@ghostfolio/client/components/portfolio-performance/portfolio-performance.module';
-import { GfLineChartModule } from '@ghostfolio/ui/line-chart';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { HomeOverviewComponent } from './home-overview.component';
   declarations: [HomeOverviewComponent],
   imports: [
     CommonModule,
-    GfLineChartModule,
+    GfLineChartComponent,
     GfNoTransactionsInfoComponent,
     GfPortfolioPerformanceModule,
     MatButtonModule,

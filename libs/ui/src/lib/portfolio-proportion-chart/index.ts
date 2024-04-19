@@ -1,1 +1,1 @@
-export * from './portfolio-proportion-chart.module';
+export * from './portfolio-proportion-chart.component';

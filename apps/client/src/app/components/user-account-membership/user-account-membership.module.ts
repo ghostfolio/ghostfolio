@@ -1,4 +1,4 @@
-import { GfMembershipCardModule } from '@ghostfolio/ui/membership-card';
+import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -15,7 +15,7 @@ import { UserAccountMembershipComponent } from './user-account-membership.compon
   exports: [UserAccountMembershipComponent],
   imports: [
     CommonModule,
-    GfMembershipCardModule,
+    GfMembershipCardComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
     MatButtonModule,
