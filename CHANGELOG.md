@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the date range support to the portfolio holdings page
+
 ### Changed
 
 - Removed the date range support in the activities table on the portfolio activities page (experimental)
