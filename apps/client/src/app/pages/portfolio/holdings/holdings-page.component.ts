@@ -123,7 +123,8 @@ export class HoldingsPageComponent implements OnDestroy, OnInit {
     }
 
     return this.dataService.fetchPortfolioHoldings({
-      filters
+      filters,
+      range: this.user?.settings?.dateRange
     });
   }
 

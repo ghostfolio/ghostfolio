@@ -290,6 +290,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -301,6 +302,7 @@ export class PortfolioController {
     });
 
     const { holdings } = await this.portfolioService.getDetails({
+      dateRange,
       filters,
       impersonationId,
       userId: this.request.user.id
