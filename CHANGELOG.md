@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the date range support to the portfolio holdings page
+- Added support to create an account balance
 
 ### Changed
 

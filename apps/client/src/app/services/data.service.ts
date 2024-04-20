@@ -42,7 +42,11 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import {
+  AccountBalance,
+  DataSource,
+  Order as OrderModel
+} from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
@@ -609,6 +613,22 @@ export class DataService {
 
   public postAccount(aAccount: CreateAccountDto) {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
+  }
+
+  public postAccountBalance({
+    accountId,
+    balance,
+    date
+  }: {
+    accountId: string;
+    balance: number;
+    date: Date;
+  }) {
+    return this.http.post<AccountBalance>(`/api/v1/account-balance`, {
+      accountId,
+      balance,
+      date
+    });
   }
 
   public postBenchmark(benchmark: UniqueAsset) {

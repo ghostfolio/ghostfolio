@@ -140,15 +140,33 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
+  public onAddAccountBalance({
+    balance,
+    date
+  }: {
+    balance: number;
+    date: Date;
+  }) {
+    this.dataService
+      .postAccountBalance({
+        balance,
+        date,
+        accountId: this.data.accountId
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
+      });
+  }
+
   public onDeleteAccountBalance(aId: string) {
     this.dataService
       .deleteAccountBalance(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchAccountBalances();
-          this.fetchPortfolioPerformance();
-        }
+      .subscribe(() => {
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
       });
   }
 
