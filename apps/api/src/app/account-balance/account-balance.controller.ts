@@ -1,3 +1,4 @@
+import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -25,6 +26,7 @@ import { CreateAccountBalanceDto } from './create-account-balance.dto';
 export class AccountBalanceController {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly accountService: AccountService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -56,19 +58,31 @@ export class AccountBalanceController {
   public async createAccountBalance(
     @Body() data: CreateAccountBalanceDto
   ): Promise<AccountBalance> {
-    const account = data.Account.connect.id_userId;
-    const body = {
+    const account = await this.accountService.account({
+      id_userId: {
+        id: data.accountId,
+        userId: this.request.user.id
+      }
+    });
+
+    if (!account) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accountBalanceService.createAccountBalance({
       Account: {
         connect: {
           id_userId: {
             id: account.id,
-            userId: this.request.user.id
+            userId: account.userId
           }
         }
       },
-      value: data.balance,
-      date: data.date
-    };
-    return this.accountBalanceService.createAccountBalance(body);
+      date: data.date,
+      value: data.balance
+    });
   }
 }

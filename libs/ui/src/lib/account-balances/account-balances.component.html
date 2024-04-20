@@ -62,6 +62,7 @@
           <button
             class="mx-1 no-min-width px-2"
             mat-button
+            type="button"
             [matMenuTriggerFor]="accountBalanceMenu"
             (click)="$event.stopPropagation()"
           >
@@ -69,7 +70,11 @@
           </button>
         }
         <mat-menu #accountBalanceMenu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="onDeleteAccountBalance(element.id)">
+          <button
+            mat-menu-item
+            type="button"
+            (click)="onDeleteAccountBalance(element.id)"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="trash-outline" />
               <span i18n>Delete</span>

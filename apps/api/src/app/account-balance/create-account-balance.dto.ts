@@ -1,40 +1,8 @@
-import { Type } from 'class-transformer';
-import {
-  IsISO8601,
-  IsNotEmptyObject,
-  IsNumber,
-  IsObject,
-  IsString,
-  ValidateNested
-} from 'class-validator';
-
-export class Id_UserId {
-  @IsString()
-  id: string;
-}
-
-export class Connect {
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Id_UserId)
-  id_userId: Id_UserId;
-}
-
-export class Account {
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Connect)
-  connect: Connect;
-}
+import { IsISO8601, IsNumber, IsUUID } from 'class-validator';
 
 export class CreateAccountBalanceDto {
-  @IsNotEmptyObject()
-  @IsObject()
-  @ValidateNested()
-  @Type(() => Account)
-  Account: Account;
+  @IsUUID()
+  accountId: string;
 
   @IsNumber()
   balance: number;

@@ -141,18 +141,17 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onAddAccountBalance({
-    date,
-    balance
+    balance,
+    date
   }: {
-    date: string;
     balance: number;
+    date: Date;
   }) {
-    const formattedDate = new Date(date);
     this.dataService
       .postAccountBalance({
-        accountId: this.data.accountId,
         balance,
-        date: formattedDate
+        date,
+        accountId: this.data.accountId
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({

@@ -64,7 +64,7 @@ export class GfAccountBalancesComponent
 
   @Output() accountBalanceCreated = new EventEmitter<{
     balance: number;
-    date: string;
+    date: Date;
   }>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
 
@@ -81,7 +81,7 @@ export class GfAccountBalancesComponent
 
   public accountBalanceForm = new FormGroup({
     balance: new FormControl(0, Validators.required),
-    date: new FormControl(new Date().toISOString(), Validators.required)
+    date: new FormControl(new Date(), Validators.required)
   });
 
   public constructor(private dateAdapter: DateAdapter<any>) {}
