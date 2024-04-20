@@ -1,10 +1,3 @@
 :host {
   display: block;
 }
-
-:host-context(.is-dark-theme) {
-  input {
-    color: rgb(var(--light-primary-text));
-    background-color: rgb(var(--palette-foreground-text-light));
-  }
-}
