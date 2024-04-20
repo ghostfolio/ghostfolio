@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Removed the date range support in the activities table on the portfolio activities page (experimental)
+- Improved the language localization for German (`de`)
 - Upgraded `angular` from version `17.3.3` to `17.3.5`
 - Upgraded `Nx` from version `18.2.3` to `18.3.3`
 
