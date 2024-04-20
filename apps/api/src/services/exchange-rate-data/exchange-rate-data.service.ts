@@ -453,7 +453,7 @@ export class ExchangeRateDataService {
               `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
                 date,
                 DATE_FORMAT
-              )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom} and ${DEFAULT_CURRENCY}${currencyTo}.`,
+              )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}${DEFAULT_CURRENCY === currencyTo ? '' : ` and ${DEFAULT_CURRENCY}${currencyTo}`}.`,
               'ExchangeRateDataService'
             );
           }
