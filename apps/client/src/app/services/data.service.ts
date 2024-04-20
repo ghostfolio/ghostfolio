@@ -464,13 +464,21 @@ export class DataService {
   }
 
   public fetchPortfolioHoldings({
-    filters
+    filters,
+    range
   }: {
     filters?: Filter[];
-  } = {}) {
+    range?: DateRange;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
     return this.http
       .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
-        params: this.buildFiltersAsQueryParams({ filters })
+        params
       })
       .pipe(
         map((response) => {
