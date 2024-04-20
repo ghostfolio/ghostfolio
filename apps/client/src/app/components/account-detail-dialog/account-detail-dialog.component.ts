@@ -122,8 +122,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
             type: 'ACCOUNT',
             id: this.data.accountId
           }
-        ],
-        range: 'max'
+        ]
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {

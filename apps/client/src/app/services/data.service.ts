@@ -468,10 +468,13 @@ export class DataService {
     range
   }: {
     filters?: Filter[];
-    range: DateRange;
+    range?: DateRange;
   }) {
     let params = this.buildFiltersAsQueryParams({ filters });
-    params = params.append('range', range);
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     return this.http
       .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
