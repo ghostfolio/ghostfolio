@@ -251,11 +251,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           ({ date, netWorth, netWorthInPercentage }) => {
             return {
               date,
-              value:
-                this.data.hasImpersonationId ||
-                this.user.settings.isRestrictedView
-                  ? netWorthInPercentage
-                  : netWorth
+              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
             };
           }
         );
