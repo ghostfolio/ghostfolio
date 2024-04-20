@@ -334,8 +334,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     if (isChartMode) {
       const datesWithOrders = {};
 
-      for (const order of orders) {
-        datesWithOrders[order.date] = true;
+      for (const { date, type } of orders) {
+        if (['BUY', 'SELL'].includes(type)) {
+          datesWithOrders[date] = true;
+        }
       }
 
       while (isBefore(day, end)) {

@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `17.3.3` to `17.3.5`
 - Upgraded `Nx` from version `18.2.3` to `18.3.3`
 
+### Fixed
+
+- Fixed gaps in the portfolio performance charts by considering `BUY` and `SELL` activities
+
 ## 2.73.0 - 2024-04-17
 
 ### Added
