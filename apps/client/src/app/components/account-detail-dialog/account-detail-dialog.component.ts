@@ -154,11 +154,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         accountId: this.data.accountId
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchAccountBalances();
-          this.fetchPortfolioPerformance();
-        }
+      .subscribe(() => {
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
       });
   }
 
@@ -166,11 +164,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dataService
       .deleteAccountBalance(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchAccountBalances();
-          this.fetchPortfolioPerformance();
-        }
+      .subscribe(() => {
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
       });
   }
 

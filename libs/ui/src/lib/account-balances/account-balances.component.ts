@@ -70,19 +70,19 @@ export class GfAccountBalancesComponent
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public Validators = Validators;
-
-  public dataSource: MatTableDataSource<
-    AccountBalancesResponse['balances'][0]
-  > = new MatTableDataSource();
-  public displayedColumns: string[] = ['date', 'value', 'actions'];
-
-  private unsubscribeSubject = new Subject<void>();
-
   public accountBalanceForm = new FormGroup({
     balance: new FormControl(0, Validators.required),
     date: new FormControl(new Date(), Validators.required)
   });
+
+  public dataSource: MatTableDataSource<
+    AccountBalancesResponse['balances'][0]
+  > = new MatTableDataSource();
+
+  public displayedColumns: string[] = ['date', 'value', 'actions'];
+  public Validators = Validators;
+
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor(private dateAdapter: DateAdapter<any>) {}
 

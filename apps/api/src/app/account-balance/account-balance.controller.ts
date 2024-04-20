@@ -30,28 +30,6 @@ export class AccountBalanceController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  @HasPermission(permissions.deleteAccountBalance)
-  @Delete(':id')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteAccountBalance(
-    @Param('id') id: string
-  ): Promise<AccountBalance> {
-    const accountBalance = await this.accountBalanceService.accountBalance({
-      id
-    });
-
-    if (!accountBalance || accountBalance.userId !== this.request.user.id) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return this.accountBalanceService.deleteAccountBalance({
-      id
-    });
-  }
-
   @HasPermission(permissions.createAccountBalance)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -83,6 +61,28 @@ export class AccountBalanceController {
       },
       date: data.date,
       value: data.balance
+    });
+  }
+
+  @HasPermission(permissions.deleteAccountBalance)
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteAccountBalance(
+    @Param('id') id: string
+  ): Promise<AccountBalance> {
+    const accountBalance = await this.accountBalanceService.accountBalance({
+      id
+    });
+
+    if (!accountBalance || accountBalance.userId !== this.request.user.id) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.accountBalanceService.deleteAccountBalance({
+      id
     });
   }
 }
