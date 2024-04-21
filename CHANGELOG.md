@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the chart in the account detail dialog
+- Improved the account balance management
 
 ## 2.75.0 - 2024-04-21
 
