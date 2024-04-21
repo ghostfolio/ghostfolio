@@ -1,6 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -22,11 +23,13 @@ export class PortfolioCalculatorFactory {
   ) {}
 
   public createCalculator({
+    accountBalanceItems = [],
     activities,
     calculationType,
     currency,
     dateRange = 'max'
   }: {
+    accountBalanceItems?: HistoricalDataItem[];
     activities: Activity[];
     calculationType: PerformanceCalculationType;
     currency: string;
@@ -35,6 +38,7 @@ export class PortfolioCalculatorFactory {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
         return new MWRPortfolioCalculator({
+          accountBalanceItems,
           activities,
           currency,
           dateRange,
@@ -43,6 +47,7 @@ export class PortfolioCalculatorFactory {
         });
       case PerformanceCalculationType.TWR:
         return new TWRPortfolioCalculator({
+          accountBalanceItems,
           activities,
           currency,
           currentRateService: this.currentRateService,

@@ -90,7 +90,12 @@ describe('PortfolioCalculator', () => {
 
       expect(investments).toEqual([]);
 
-      expect(investmentsByMonth).toEqual([]);
+      expect(investmentsByMonth).toEqual([
+        {
+          date: '2021-12-01',
+          investment: 0
+        }
+      ]);
     });
   });
 });

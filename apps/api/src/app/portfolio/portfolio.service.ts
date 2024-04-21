@@ -64,7 +64,6 @@ import {
   differenceInDays,
   format,
   isAfter,
-  isBefore,
   isSameMonth,
   isSameYear,
   parseISO,
@@ -1056,11 +1055,16 @@ export class PortfolioService {
         ) => {
           const formattedDate = format(date, DATE_FORMAT);
 
-          // Store the item in the map, overwriting if the date already exists
-          map[formattedDate] = {
-            date: formattedDate,
-            value: valueInBaseCurrency
-          };
+          if (map[formattedDate]) {
+            // If the value exists, add the current value to the existing one
+            map[formattedDate].value += valueInBaseCurrency;
+          } else {
+            // Otherwise, initialize the value for that date
+            map[formattedDate] = {
+              date: formattedDate,
+              value: valueInBaseCurrency
+            };
+          }
 
           return map;
         },
@@ -1100,6 +1104,7 @@ export class PortfolioService {
     }
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
+      accountBalanceItems,
       activities,
       dateRange,
       calculationType: PerformanceCalculationType.TWR,
@@ -1131,6 +1136,8 @@ export class PortfolioService {
     let currentNetPerformanceWithCurrencyEffect =
       netPerformanceWithCurrencyEffect;
 
+    let currentNetWorth = 0;
+
     const items = await portfolioCalculator.getChart({
       dateRange
     });
@@ -1153,35 +1160,14 @@ export class PortfolioService {
       currentNetPerformanceWithCurrencyEffect = new Big(
         itemOfToday.netPerformanceWithCurrencyEffect
       );
+
+      currentNetWorth = itemOfToday.netWorth;
     }
-
-    accountBalanceItems = accountBalanceItems.filter(({ date }) => {
-      return !isBefore(parseDate(date), startDate);
-    });
-
-    const accountBalanceItemOfToday = accountBalanceItems.find(({ date }) => {
-      return date === format(new Date(), DATE_FORMAT);
-    });
-
-    if (!accountBalanceItemOfToday) {
-      accountBalanceItems.push({
-        date: format(new Date(), DATE_FORMAT),
-        value: last(accountBalanceItems)?.value ?? 0
-      });
-    }
-
-    const mergedHistoricalDataItems = this.mergeHistoricalDataItems(
-      accountBalanceItems,
-      items
-    );
-
-    const currentHistoricalDataItem = last(mergedHistoricalDataItems);
-    const currentNetWorth = currentHistoricalDataItem?.netWorth ?? 0;
 
     return {
       errors,
       hasErrors,
-      chart: mergedHistoricalDataItems,
+      chart: items,
       firstOrderDate: parseDate(items[0]?.date),
       performance: {
         currentNetWorth,
@@ -1908,45 +1894,5 @@ export class PortfolioService {
     }
 
     return { accounts, platforms };
-  }
-
-  private mergeHistoricalDataItems(
-    accountBalanceItems: HistoricalDataItem[],
-    performanceChartItems: HistoricalDataItem[]
-  ): HistoricalDataItem[] {
-    const historicalDataItemsMap: { [date: string]: HistoricalDataItem } = {};
-    let latestAccountBalance = 0;
-
-    for (const item of accountBalanceItems.concat(performanceChartItems)) {
-      const isAccountBalanceItem = accountBalanceItems.includes(item);
-
-      const totalAccountBalance = isAccountBalanceItem
-        ? item.value
-        : latestAccountBalance;
-
-      if (isAccountBalanceItem && performanceChartItems.length > 0) {
-        latestAccountBalance = item.value;
-      } else {
-        historicalDataItemsMap[item.date] = {
-          ...item,
-          totalAccountBalance,
-          netWorth:
-            (isAccountBalanceItem ? 0 : item.value) + totalAccountBalance
-        };
-      }
-    }
-
-    // Convert to an array and sort by date in ascending order
-    const historicalDataItems = Object.keys(historicalDataItemsMap).map(
-      (date) => {
-        return historicalDataItemsMap[date];
-      }
-    );
-
-    historicalDataItems.sort((a, b) => {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    });
-
-    return historicalDataItems;
   }
 }

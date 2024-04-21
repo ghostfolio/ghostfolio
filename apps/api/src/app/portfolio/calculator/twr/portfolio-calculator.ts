@@ -188,6 +188,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       [date: string]: Big;
     } = {};
 
+    let totalAccountBalanceInBaseCurrency = new Big(0);
     let totalDividend = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
     let totalInterest = new Big(0);
@@ -237,6 +238,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
+        totalAccountBalanceInBaseCurrency: new Big(0),
         totalDividend: new Big(0),
         totalDividendInBaseCurrency: new Big(0),
         totalInterest: new Big(0),
@@ -286,6 +288,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
         timeWeightedInvestmentWithCurrencyEffect: new Big(0),
+        totalAccountBalanceInBaseCurrency: new Big(0),
         totalDividend: new Big(0),
         totalDividendInBaseCurrency: new Big(0),
         totalInterest: new Big(0),
@@ -875,6 +878,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       netPerformanceValuesWithCurrencyEffect,
       timeWeightedInvestmentValues,
       timeWeightedInvestmentValuesWithCurrencyEffect,
+      totalAccountBalanceInBaseCurrency,
       totalDividend,
       totalDividendInBaseCurrency,
       totalInterest,
