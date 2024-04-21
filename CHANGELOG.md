@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `accountId` and `date` as a unique constraint to the `AccountBalance` database schema
+
 ### Fixed
 
 - Fixed an issue with `totalValueInBaseCurrency` in the value redaction interceptor for the impersonation mode

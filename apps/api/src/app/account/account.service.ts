@@ -6,6 +6,7 @@ import { Filter } from '@ghostfolio/common/interfaces';
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
+import { parseISO } from 'date-fns';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -242,17 +243,11 @@ export class AccountService {
       );
 
     if (amountInCurrencyOfAccount) {
-      await this.accountBalanceService.createAccountBalance({
-        date,
-        Account: {
-          connect: {
-            id_userId: {
-              userId,
-              id: accountId
-            }
-          }
-        },
-        value: new Big(balance).plus(amountInCurrencyOfAccount).toNumber()
+      await this.accountBalanceService.createOrUpdateAccountBalance({
+        accountId,
+        userId,
+        balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
+        date: date.toISOString()
       });
     }
   }
