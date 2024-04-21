@@ -839,7 +839,7 @@ export abstract class PortfolioCalculator {
       firstActivityDate = new Date();
     }
 
-    return min([firstActivityDate, firstAccountBalanceDate]);
+    return min([firstAccountBalanceDate, firstActivityDate]);
   }
 
   protected abstract getSymbolMetrics({
