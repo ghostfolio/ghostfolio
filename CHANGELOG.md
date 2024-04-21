@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the chart in the account detail dialog
 
+## 2.75.0 - 2024-04-21
+
+### Added
+
+- Added `accountId` and `date` as a unique constraint to the `AccountBalance` database schema
+
+### Fixed
+
+- Fixed an issue with `totalValueInBaseCurrency` in the value redaction interceptor for the impersonation mode
+
 ## 2.74.0 - 2024-04-20
 
 ### Added

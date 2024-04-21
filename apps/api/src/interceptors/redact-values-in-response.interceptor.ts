@@ -57,6 +57,7 @@ export class RedactValuesInResponseInterceptor<T>
               'quantity',
               'symbolMapping',
               'totalBalanceInBaseCurrency',
+              'totalValueInBaseCurrency',
               'unitPrice',
               'value',
               'valueInBaseCurrency'
