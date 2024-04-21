@@ -1,10 +1,14 @@
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse, Filter } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { AccountBalance, Prisma } from '@prisma/client';
+import { parseISO } from 'date-fns';
+
+import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Injectable()
 export class AccountBalanceService {
@@ -24,11 +28,36 @@ export class AccountBalanceService {
     });
   }
 
-  public async createAccountBalance(
-    data: Prisma.AccountBalanceCreateInput
-  ): Promise<AccountBalance> {
-    return this.prismaService.accountBalance.create({
-      data
+  public async createAccountBalance({
+    accountId,
+    balance,
+    date,
+    userId
+  }: CreateAccountBalanceDto & {
+    userId: string;
+  }): Promise<AccountBalance> {
+    return this.prismaService.accountBalance.upsert({
+      create: {
+        Account: {
+          connect: {
+            id_userId: {
+              userId,
+              id: accountId
+            }
+          }
+        },
+        date: resetHours(parseISO(date)),
+        value: balance
+      },
+      update: {
+        value: balance
+      },
+      where: {
+        accountId_date: {
+          accountId,
+          date: resetHours(parseISO(date))
+        }
+      }
     });
   }
 
