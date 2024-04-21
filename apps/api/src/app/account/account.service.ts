@@ -1,12 +1,13 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
-import { parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { groupBy } from 'lodash';
 
 import { CashDetails } from './interfaces/cash-details.interface';
@@ -86,15 +87,11 @@ export class AccountService {
       data
     });
 
-    await this.prismaService.accountBalance.create({
-      data: {
-        Account: {
-          connect: {
-            id_userId: { id: account.id, userId: aUserId }
-          }
-        },
-        value: data.balance
-      }
+    await this.accountBalanceService.createOrUpdateAccountBalance({
+      accountId: account.id,
+      balance: data.balance,
+      date: format(new Date(), DATE_FORMAT),
+      userId: aUserId
     });
 
     return account;
@@ -197,15 +194,11 @@ export class AccountService {
   ): Promise<Account> {
     const { data, where } = params;
 
-    await this.prismaService.accountBalance.create({
-      data: {
-        Account: {
-          connect: {
-            id_userId: where.id_userId
-          }
-        },
-        value: <number>data.balance
-      }
+    await this.accountBalanceService.createOrUpdateAccountBalance({
+      accountId: <string>data.id,
+      balance: <number>data.balance,
+      date: format(new Date(), DATE_FORMAT),
+      userId: aUserId
     });
 
     return this.prismaService.account.update({
