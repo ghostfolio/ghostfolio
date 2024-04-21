@@ -84,55 +84,10 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.dataService
-      .fetchAccount(this.data.accountId)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({
-          balance,
-          currency,
-          name,
-          Platform,
-          transactionCount,
-          value,
-          valueInBaseCurrency
-        }) => {
-          this.balance = balance;
-          this.currency = currency;
-
-          if (isNumber(balance) && isNumber(value)) {
-            this.equity = new Big(value).minus(balance).toNumber();
-          } else {
-            this.equity = null;
-          }
-
-          this.name = name;
-          this.platformName = Platform?.name ?? '-';
-          this.transactionCount = transactionCount;
-          this.valueInBaseCurrency = valueInBaseCurrency;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      );
-
-    this.dataService
-      .fetchPortfolioHoldings({
-        filters: [
-          {
-            type: 'ACCOUNT',
-            id: this.data.accountId
-          }
-        ]
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
-        this.holdings = holdings;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
+    this.fetchAccount();
     this.fetchAccountBalances();
     this.fetchActivities();
+    this.fetchPortfolioHoldings();
     this.fetchPortfolioPerformance();
   }
 
@@ -155,6 +110,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.fetchAccount();
         this.fetchAccountBalances();
         this.fetchPortfolioPerformance();
       });
@@ -165,6 +121,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .deleteAccountBalance(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.fetchAccount();
         this.fetchAccountBalances();
         this.fetchPortfolioPerformance();
       });
@@ -199,6 +156,39 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.fetchActivities();
   }
 
+  private fetchAccount() {
+    this.dataService
+      .fetchAccount(this.data.accountId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(
+        ({
+          balance,
+          currency,
+          name,
+          Platform,
+          transactionCount,
+          value,
+          valueInBaseCurrency
+        }) => {
+          this.balance = balance;
+          this.currency = currency;
+
+          if (isNumber(balance) && isNumber(value)) {
+            this.equity = new Big(value).minus(balance).toNumber();
+          } else {
+            this.equity = null;
+          }
+
+          this.name = name;
+          this.platformName = Platform?.name ?? '-';
+          this.transactionCount = transactionCount;
+          this.valueInBaseCurrency = valueInBaseCurrency;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      );
+  }
+
   private fetchAccountBalances() {
     this.dataService
       .fetchAccountBalances(this.data.accountId)
@@ -225,6 +215,24 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
         this.totalItems = count;
 
         this.isLoadingActivities = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private fetchPortfolioHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings({
+        filters: [
+          {
+            type: 'ACCOUNT',
+            id: this.data.accountId
+          }
+        ]
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings;
 
         this.changeDetectorRef.markForCheck();
       });

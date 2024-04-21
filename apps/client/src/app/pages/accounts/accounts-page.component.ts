@@ -233,6 +233,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.fetchAccounts();
+
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
