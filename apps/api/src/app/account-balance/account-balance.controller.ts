@@ -52,7 +52,7 @@ export class AccountBalanceController {
       );
     }
 
-    return this.accountBalanceService.createAccountBalance({
+    return this.accountBalanceService.createOrUpdateAccountBalance({
       accountId: account.id,
       balance: data.balance,
       date: data.date,

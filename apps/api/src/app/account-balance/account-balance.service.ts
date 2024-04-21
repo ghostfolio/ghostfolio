@@ -28,7 +28,7 @@ export class AccountBalanceService {
     });
   }
 
-  public async createAccountBalance({
+  public async createOrUpdateAccountBalance({
     accountId,
     balance,
     date,

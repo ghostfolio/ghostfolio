@@ -243,7 +243,7 @@ export class AccountService {
       );
 
     if (amountInCurrencyOfAccount) {
-      await this.accountBalanceService.createAccountBalance({
+      await this.accountBalanceService.createOrUpdateAccountBalance({
         accountId,
         userId,
         balance: new Big(balance).plus(amountInCurrencyOfAccount).toNumber(),
