@@ -4,7 +4,6 @@ import ms from 'ms';
 
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
-export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
 export const ghostfolioFearAndGreedIndexDataSource = DataSource.RAPID_API;
 export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 

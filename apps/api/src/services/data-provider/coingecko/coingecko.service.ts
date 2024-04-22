@@ -59,7 +59,7 @@ export class CoinGeckoService implements DataProviderInterface {
   }): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {
       symbol,
-      assetClass: AssetClass.CASH,
+      assetClass: AssetClass.LIQUIDITY,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
       currency: DEFAULT_CURRENCY,
       dataSource: this.getName()
@@ -243,7 +243,7 @@ export class CoinGeckoService implements DataProviderInterface {
         return {
           name,
           symbol,
-          assetClass: AssetClass.CASH,
+          assetClass: AssetClass.LIQUIDITY,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),

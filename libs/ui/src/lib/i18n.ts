@@ -40,6 +40,7 @@ const locales = {
   COMMODITY: $localize`Commodity`,
   EQUITY: $localize`Equity`,
   FIXED_INCOME: $localize`Fixed Income`,
+  LIQUIDITY: $localize`Liquidity`,
   REAL_ESTATE: $localize`Real Estate`,
 
   // AssetSubClass (enum)
