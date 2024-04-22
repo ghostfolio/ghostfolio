@@ -1,5 +1,5 @@
 import { WebauthnPageComponent } from '@ghostfolio/client/pages/webauthn/webauthn-page.component';
-import { GfLogoModule } from '@ghostfolio/ui/logo';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -12,7 +12,7 @@ import { WebauthnPageRoutingModule } from './webauthn-page-routing.module';
   declarations: [WebauthnPageComponent],
   imports: [
     CommonModule,
-    GfLogoModule,
+    GfLogoComponent,
     MatButtonModule,
     MatProgressSpinnerModule,
     WebauthnPageRoutingModule

@@ -5,6 +5,7 @@ import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -26,14 +27,17 @@ import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as Color from 'color';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-portfolio-proportion-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './portfolio-proportion-chart.component.html',
-  styleUrls: ['./portfolio-proportion-chart.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  selector: 'gf-portfolio-proportion-chart',
+  standalone: true,
+  styleUrls: ['./portfolio-proportion-chart.component.scss'],
+  templateUrl: './portfolio-proportion-chart.component.html'
 })
-export class PortfolioProportionChartComponent
+export class GfPortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() baseCurrency: string;

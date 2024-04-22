@@ -1,5 +1,5 @@
 import { GfRuleModule } from '@ghostfolio/client/components/rule/rule.module';
-import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -14,7 +14,7 @@ import { RulesComponent } from './rules.component';
   exports: [RulesComponent],
   imports: [
     CommonModule,
-    GfNoTransactionsInfoModule,
+    GfNoTransactionsInfoComponent,
     GfPositionModule,
     GfRuleModule,
     MatButtonModule,

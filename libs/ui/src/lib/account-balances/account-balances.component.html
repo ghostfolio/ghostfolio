@@ -1,60 +1,106 @@
-<table
-  class="gf-table w-100"
-  mat-table
-  matSort
-  matSortActive="date"
-  matSortDirection="desc"
-  [dataSource]="dataSource"
->
-  <ng-container matColumnDef="date">
-    <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
-      <ng-container i18n>Date</ng-container>
-    </th>
-    <td *matCellDef="let element" class="px-2" mat-cell>
-      <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
-    </td>
-  </ng-container>
+<form [formGroup]="accountBalanceForm" (ngSubmit)="onSubmitAccountBalance()">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    matSortActive="date"
+    matSortDirection="desc"
+    [dataSource]="dataSource"
+  >
+    <ng-container matColumnDef="date">
+      <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+        <ng-container i18n>Date</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-2" mat-cell>
+        <gf-value [isDate]="true" [locale]="locale" [value]="element?.date" />
+      </td>
+      <td *matFooterCellDef class="px-2" mat-footer-cell>
+        <mat-form-field appearance="outline" class="py-1 without-hint">
+          <input formControlName="date" matInput [matDatepicker]="date" />
+          <mat-datepicker-toggle matSuffix [for]="date">
+            <ion-icon
+              class="text-muted"
+              matDatepickerToggleIcon
+              name="calendar-clear-outline"
+            />
+          </mat-datepicker-toggle>
+          <mat-datepicker #date />
+        </mat-form-field>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="value">
-    <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
-      <ng-container i18n>Value</ng-container>
-    </th>
-    <td *matCellDef="let element" class="px-2" mat-cell>
-      <div class="d-flex justify-content-end">
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [unit]="element?.Account?.currency"
-          [value]="element?.value"
-        />
-      </div>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="value">
+      <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
+        <ng-container i18n>Value</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-2" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [unit]="element?.Account?.currency"
+            [value]="element?.value"
+          />
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-2" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <mat-form-field appearance="outline" class="without-hint">
+            <input formControlName="balance" matInput type="number" />
+            <div class="ml-2" matTextSuffix>
+              {{ accountCurrency }}
+            </div>
+          </mat-form-field>
+        </div>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="actions" stickyEnd>
-    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-      @if (showActions) {
+    <ng-container matColumnDef="actions" stickyEnd>
+      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
+      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+        @if (showActions) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            type="button"
+            [matMenuTriggerFor]="accountBalanceMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <ion-icon name="ellipsis-horizontal" />
+          </button>
+        }
+        <mat-menu #accountBalanceMenu="matMenu" xPosition="before">
+          <button
+            mat-menu-item
+            type="button"
+            (click)="onDeleteAccountBalance(element.id)"
+          >
+            <span class="align-items-center d-flex">
+              <ion-icon class="mr-2" name="trash-outline" />
+              <span i18n>Delete</span>
+            </span>
+          </button>
+        </mat-menu>
+      </td>
+      <td *matFooterCellDef class="px-1 text-center" mat-footer-cell>
         <button
           class="mx-1 no-min-width px-2"
-          mat-button
-          [matMenuTriggerFor]="accountBalanceMenu"
-          (click)="$event.stopPropagation()"
+          color="primary"
+          mat-flat-button
+          type="submit"
+          [disabled]="accountBalanceForm.invalid"
         >
-          <ion-icon name="ellipsis-horizontal" />
+          <span i18n>Add</span>
         </button>
-      }
-      <mat-menu #accountBalanceMenu="matMenu" xPosition="before">
-        <button mat-menu-item (click)="onDeleteAccountBalance(element.id)">
-          <span class="align-items-center d-flex">
-            <ion-icon class="mr-2" name="trash-outline" />
-            <span i18n>Delete</span>
-          </span>
-        </button>
-      </mat-menu>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-</table>
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    <tr
+      *matFooterRowDef="displayedColumns"
+      mat-footer-row
+      [hidden]="!showActions"
+    ></tr>
+  </table>
+</form>

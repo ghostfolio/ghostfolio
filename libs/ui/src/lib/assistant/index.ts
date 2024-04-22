@@ -1,1 +1,1 @@
-export * from './assistant.module';
+export * from './assistant.component';

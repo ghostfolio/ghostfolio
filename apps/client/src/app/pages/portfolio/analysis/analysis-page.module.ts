@@ -1,9 +1,9 @@
 import { GfBenchmarkComparatorModule } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
-import { GfActivitiesFilterModule } from '@ghostfolio/ui/activities-filter/activities-filter.module';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -18,12 +18,12 @@ import { AnalysisPageComponent } from './analysis-page.component';
   imports: [
     AnalysisPageRoutingModule,
     CommonModule,
-    GfActivitiesFilterModule,
+    GfActivitiesFilterComponent,
     GfBenchmarkComparatorModule,
     GfInvestmentChartModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     GfToggleModule,
-    GfValueModule,
+    GfValueComponent,
     MatCardModule,
     NgxSkeletonLoaderModule
   ],

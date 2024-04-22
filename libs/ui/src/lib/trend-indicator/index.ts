@@ -1,1 +1,1 @@
-export * from './trend-indicator.module';
+export * from './trend-indicator.component';

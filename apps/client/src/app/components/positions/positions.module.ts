@@ -1,4 +1,4 @@
-import { GfNoTransactionsInfoModule } from '@ghostfolio/ui/no-transactions-info';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -12,7 +12,7 @@ import { PositionsComponent } from './positions.component';
   exports: [PositionsComponent],
   imports: [
     CommonModule,
-    GfNoTransactionsInfoModule,
+    GfNoTransactionsInfoComponent,
     GfPositionModule,
     MatButtonModule
   ],
