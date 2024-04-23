@@ -5,7 +5,6 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -53,7 +52,6 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
     '[id]': 'id'
   },
   imports: [
-    CommonModule,
     FormsModule,
     GfPremiumIndicatorComponent,
     GfSymbolModule,

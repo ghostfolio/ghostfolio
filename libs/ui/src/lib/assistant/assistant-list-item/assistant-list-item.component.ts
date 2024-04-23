@@ -2,7 +2,6 @@ import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { ISearchResultItem } from '@ghostfolio/ui/assistant/interfaces/interfaces';
 
 import { FocusableOption } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,7 +18,7 @@ import { Params, RouterModule } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfSymbolModule, RouterModule],
+  imports: [GfSymbolModule, RouterModule],
   selector: 'gf-assistant-list-item',
   standalone: true,
   styleUrls: ['./assistant-list-item.scss'],
