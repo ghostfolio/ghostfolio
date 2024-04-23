@@ -47,6 +47,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { AssetClass, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -128,14 +129,19 @@ export class PortfolioController {
 
       const totalValue = Object.values(holdings)
         .filter(({ assetClass, assetSubClass }) => {
-          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+          return (
+            assetClass !== AssetClass.LIQUIDITY &&
+            assetSubClass !== AssetSubClass.CASH
+          );
         })
         .map(({ valueInBaseCurrency }) => {
           return valueInBaseCurrency;
         })
-        .reduce((a, b) => a + b, 0);
+        .reduce((a, b) => {
+          return a + b;
+        }, 0);
 
-      for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      for (const [, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.valueInPercentage =
@@ -185,11 +191,11 @@ export class PortfolioController {
       holdings[symbol] = {
         ...portfolioPosition,
         assetClass:
-          hasDetails || portfolioPosition.assetClass === 'CASH'
+          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
             ? portfolioPosition.assetClass
             : undefined,
         assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === 'CASH'
+          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
             ? portfolioPosition.assetSubClass
             : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
