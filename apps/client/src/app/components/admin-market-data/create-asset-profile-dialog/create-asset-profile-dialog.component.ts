@@ -59,14 +59,12 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     this.mode === 'auto'
       ? this.dialogRef.close({
           dataSource:
-            this.createAssetProfileForm.controls['searchSymbol'].value
-              .dataSource,
-          symbol:
-            this.createAssetProfileForm.controls['searchSymbol'].value.symbol
+            this.createAssetProfileForm.get('searchSymbol').value.dataSource,
+          symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
         })
       : this.dialogRef.close({
           dataSource: 'MANUAL',
-          symbol: this.createAssetProfileForm.controls['addSymbol'].value
+          symbol: this.createAssetProfileForm.get('addSymbol').value
         });
   }
 

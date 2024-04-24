@@ -12,7 +12,7 @@
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
           <mat-select-trigger>{{
-            typesTranslationMap[activityForm.controls['type'].value]
+            typesTranslationMap[activityForm.get('type').value]
           }}</mat-select-trigger>
           <mat-option value="BUY">
             <span
@@ -83,9 +83,7 @@
         <mat-select formControlName="accountId">
           <mat-option
             *ngIf="
-              !activityForm.controls['accountId'].hasValidator(
-                Validators.required
-              )
+              !activityForm.get('accountId').hasValidator(Validators.required)
             "
             [value]="null"
           />
@@ -113,9 +111,9 @@
     <div
       class="mb-3"
       [ngClass]="{
-        'd-none': !activityForm.controls['searchSymbol'].hasValidator(
-          Validators.required
-        )
+        'd-none': !activityForm
+          .get('searchSymbol')
+          .hasValidator(Validators.required)
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -129,9 +127,7 @@
     <div
       class="mb-3"
       [ngClass]="{
-        'd-none': !activityForm.controls['name'].hasValidator(
-          Validators.required
-        )
+        'd-none': !activityForm.get('name').hasValidator(Validators.required)
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -173,10 +169,10 @@
       class="mb-3"
       [ngClass]="{
         'd-none':
-          activityForm.controls['type']?.value === 'FEE' ||
-          activityForm.controls['type']?.value === 'INTEREST' ||
-          activityForm.controls['type']?.value === 'ITEM' ||
-          activityForm.controls['type']?.value === 'LIABILITY'
+          activityForm.get('type')?.value === 'FEE' ||
+          activityForm.get('type')?.value === 'INTEREST' ||
+          activityForm.get('type')?.value === 'ITEM' ||
+          activityForm.get('type')?.value === 'LIABILITY'
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -186,12 +182,12 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value === 'FEE' }"
     >
       <div class="align-items-start d-flex">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label
-            ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+            ><ng-container [ngSwitch]="activityForm.get('type')?.value">
               <ng-container *ngSwitchCase="'DIVIDEND'" i18n
                 >Dividend</ng-container
               >
@@ -211,7 +207,7 @@
           <div
             class="ml-2"
             matTextSuffix
-            [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+            [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
           >
             <mat-select formControlName="currencyOfUnitPrice">
               <mat-option
@@ -224,16 +220,14 @@
           </div>
           <mat-error
             *ngIf="
-              activityForm.controls['unitPriceInCustomCurrency'].hasError(
-                'invalid'
-              )
+              activityForm.get('unitPriceInCustomCurrency').hasError('invalid')
             "
             ><ng-container i18n
               >Oops! Could not get the historical exchange rate
               from</ng-container
             >
             {{
-              activityForm.controls['date']?.value | date: defaultDateFormat
+              activityForm.get('date')?.value | date: defaultDateFormat
             }}</mat-error
           >
         </mat-form-field>
@@ -241,7 +235,7 @@
           *ngIf="
             currentMarketPrice &&
             (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
-            isToday(activityForm.controls['date']?.value)
+            isToday(activityForm.get('date')?.value)
           "
           class="ml-2 mt-1 no-min-width"
           mat-button
@@ -256,7 +250,7 @@
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label
-          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
+          ><ng-container [ngSwitch]="activityForm.get('type')?.value">
             <ng-container *ngSwitchCase="'DIVIDEND'" i18n
               >Dividend</ng-container
             >
@@ -269,7 +263,7 @@
         </mat-label>
         <input formControlName="unitPrice" matInput type="number" />
         <span class="ml-2" matTextSuffix>{{
-          activityForm.controls['currency'].value
+          activityForm.get('currency').value
         }}</span>
       </mat-form-field>
     </div>
@@ -277,9 +271,9 @@
       class="mb-3"
       [ngClass]="{
         'd-none':
-          activityForm.controls['type']?.value === 'INTEREST' ||
-          activityForm.controls['type']?.value === 'ITEM' ||
-          activityForm.controls['type']?.value === 'LIABILITY'
+          activityForm.get('type')?.value === 'INTEREST' ||
+          activityForm.get('type')?.value === 'ITEM' ||
+          activityForm.get('type')?.value === 'LIABILITY'
       }"
     >
       <mat-form-field appearance="outline" class="w-100">
@@ -288,19 +282,17 @@
         <div
           class="ml-2"
           matTextSuffix
-          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+          [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
         >
-          {{ activityForm.controls['currencyOfUnitPrice'].value }}
+          {{ activityForm.get('currencyOfUnitPrice').value }}
         </div>
         <mat-error
-          *ngIf="
-            activityForm.controls['feeInCustomCurrency'].hasError('invalid')
-          "
+          *ngIf="activityForm.get('feeInCustomCurrency').hasError('invalid')"
           ><ng-container i18n
             >Oops! Could not get the historical exchange rate from</ng-container
           >
           {{
-            activityForm.controls['date']?.value | date: defaultDateFormat
+            activityForm.get('date')?.value | date: defaultDateFormat
           }}</mat-error
         >
       </mat-form-field>
@@ -310,7 +302,7 @@
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
         <span class="ml-2" matTextSuffix>{{
-          activityForm.controls['currency'].value
+          activityForm.get('currency').value
         }}</span>
       </mat-form-field>
     </div>
@@ -328,7 +320,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Class</mat-label>
@@ -344,7 +336,7 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Sub Class</mat-label>
@@ -363,7 +355,7 @@
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
           <mat-chip-row
-            *ngFor="let tag of activityForm.controls['tags']?.value"
+            *ngFor="let tag of activityForm.get('tags')?.value"
             matChipRemove
             [removable]="true"
             (removed)="onRemoveTag(tag)"
@@ -399,8 +391,7 @@
       [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
       [unit]="
-        activityForm.controls['currency']?.value ??
-        data.user?.settings?.baseCurrency
+        activityForm.get('currency')?.value ?? data.user?.settings?.baseCurrency
       "
       [value]="total"
     />
