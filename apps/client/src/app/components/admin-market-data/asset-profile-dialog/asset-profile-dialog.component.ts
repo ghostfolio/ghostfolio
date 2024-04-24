@@ -291,12 +291,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       symbolMapping,
       assetClass: this.assetProfileForm.get('assetClass').value,
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
-      comment: this.assetProfileForm.get('comment').value ?? null,
+      comment: this.assetProfileForm.get('comment').value || null,
       currency: (<Currency>(
         (<unknown>this.assetProfileForm.get('currency').value)
       ))?.value,
       name: this.assetProfileForm.get('name').value,
-      url: this.assetProfileForm.get('url').value
+      url: this.assetProfileForm.get('url').value || null
     };
 
     this.adminService
