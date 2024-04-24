@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _Self-Hosting_ section by the custom asset instructions on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
 - Upgraded `prisma` from version `5.12.1` to `5.13.0`
