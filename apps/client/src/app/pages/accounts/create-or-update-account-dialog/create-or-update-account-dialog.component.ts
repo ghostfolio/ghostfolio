@@ -82,7 +82,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   }
 
   public autoCompleteCheck() {
-    const inputValue = this.accountForm.controls['platformId'].value;
+    const inputValue = this.accountForm.get('platformId').value;
 
     if (typeof inputValue === 'string') {
       const matchingEntry = this.platforms.find(({ name }) => {
@@ -90,7 +90,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       });
 
       if (matchingEntry) {
-        this.accountForm.controls['platformId'].setValue(matchingEntry);
+        this.accountForm.get('platformId').setValue(matchingEntry);
       }
     }
   }
@@ -105,13 +105,13 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
 
   public async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
-      balance: this.accountForm.controls['balance'].value,
-      comment: this.accountForm.controls['comment'].value,
-      currency: this.accountForm.controls['currency'].value?.value,
-      id: this.accountForm.controls['accountId'].value,
-      isExcluded: this.accountForm.controls['isExcluded'].value,
-      name: this.accountForm.controls['name'].value,
-      platformId: this.accountForm.controls['platformId'].value?.id ?? null
+      balance: this.accountForm.get('balance').value,
+      comment: this.accountForm.get('comment').value,
+      currency: this.accountForm.get('currency').value?.value,
+      id: this.accountForm.get('accountId').value,
+      isExcluded: this.accountForm.get('isExcluded').value,
+      name: this.accountForm.get('name').value,
+      platformId: this.accountForm.get('platformId').value?.id ?? null
     };
 
     try {

@@ -66,9 +66,9 @@ export class TransferBalanceDialog implements OnDestroy {
 
   public onSubmit() {
     const account: TransferBalanceDto = {
-      accountIdFrom: this.transferBalanceForm.controls['fromAccount'].value,
-      accountIdTo: this.transferBalanceForm.controls['toAccount'].value,
-      balance: this.transferBalanceForm.controls['balance'].value
+      accountIdFrom: this.transferBalanceForm.get('fromAccount').value,
+      accountIdTo: this.transferBalanceForm.get('toAccount').value,
+      balance: this.transferBalanceForm.get('balance').value
     };
 
     this.dialogRef.close({ account });
