@@ -302,7 +302,7 @@
               mat-flat-button
               type="button"
               [disabled]="
-                assetProfileForm.controls['scraperConfiguration'].value === '{}'
+                assetProfileForm.get('scraperConfiguration').value === '{}'
               "
               (click)="onTestMarketData()"
             >
@@ -338,11 +338,11 @@
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Url</mat-label>
         <input formControlName="url" matInput type="text" />
-        @if (assetProfileForm.controls['url'].value) {
+        @if (assetProfileForm.get('url').value) {
           <gf-asset-profile-icon
             class="mr-3"
             matSuffix
-            [url]="assetProfileForm.controls['url'].value"
+            [url]="assetProfileForm.get('url').value"
           />
         }
       </mat-form-field>
