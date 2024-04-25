@@ -3,6 +3,7 @@ import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-dat
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -258,7 +259,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     let countries = [];
     let scraperConfiguration = {};
     let sectors = [];
@@ -298,6 +299,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       name: this.assetProfileForm.get('name').value,
       url: this.assetProfileForm.get('url').value || null
     };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileForm,
+        object: assetProfileData
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
 
     this.adminService
       .patchAssetProfile({
