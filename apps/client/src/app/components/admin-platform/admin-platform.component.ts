@@ -143,9 +143,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        const platform: CreatePlatformDto = data?.platform;
-
+      .subscribe((platform: CreatePlatformDto) => {
         if (platform) {
           this.adminService
             .postPlatform(platform)
