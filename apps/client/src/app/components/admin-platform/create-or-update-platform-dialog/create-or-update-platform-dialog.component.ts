@@ -1,4 +1,5 @@
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
+import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
@@ -37,16 +38,26 @@ export class CreateOrUpdatePlatformDialog implements OnDestroy {
 
   public async onSubmit() {
     try {
-      const platform: CreatePlatformDto = {
+      const platform: CreatePlatformDto | UpdatePlatformDto = {
         name: this.platformForm.get('name')?.value,
         url: this.platformForm.get('url')?.value
       };
 
-      await validateObjectForForm({
-        classDto: CreatePlatformDto,
-        form: this.platformForm,
-        object: platform
-      });
+      if (this.data.platform.id) {
+        (platform as UpdatePlatformDto).id = this.data.platform.id;
+        await validateObjectForForm({
+          classDto: UpdatePlatformDto,
+          form: this.platformForm,
+          object: platform
+        });
+      } else {
+        await validateObjectForForm({
+          classDto: CreatePlatformDto,
+          form: this.platformForm,
+          object: platform
+        });
+      }
+
       this.dialogRef.close(platform);
     } catch (error) {
       console.error(error);

@@ -1,4 +1,5 @@
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
@@ -36,15 +37,25 @@ export class CreateOrUpdateTagDialog implements OnDestroy {
 
   public async onSubmit() {
     try {
-      const tag: CreateTagDto = {
+      const tag: CreateTagDto | UpdateTagDto = {
         name: this.tagForm.get('name')?.value
       };
 
-      await validateObjectForForm({
-        classDto: CreateTagDto,
-        form: this.tagForm,
-        object: tag
-      });
+      if (this.data.tag.id) {
+        (tag as UpdateTagDto).id = this.data.tag.id;
+        await validateObjectForForm({
+          classDto: UpdateTagDto,
+          form: this.tagForm,
+          object: tag
+        });
+      } else {
+        await validateObjectForForm({
+          classDto: CreateTagDto,
+          form: this.tagForm,
+          object: tag
+        });
+      }
+
       this.dialogRef.close(tag);
     } catch (error) {
       console.error(error);
