@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prisma` from version `5.12.1` to `5.13.0`
 
+### Fixed
+
+- Fixed the form submit in the asset profile details dialog of the admin control due to the `url` validation
+
 ## 2.76.0 - 2024-04-23
 
 ### Changed

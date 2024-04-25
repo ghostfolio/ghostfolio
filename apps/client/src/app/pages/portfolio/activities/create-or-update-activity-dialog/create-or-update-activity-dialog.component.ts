@@ -448,7 +448,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       accountId: this.activityForm.get('accountId').value,
       assetClass: this.activityForm.get('assetClass').value,
       assetSubClass: this.activityForm.get('assetSubClass').value,
-      comment: this.activityForm.get('comment').value,
+      comment: this.activityForm.get('comment').value || null,
       currency: this.activityForm.get('currency').value,
       customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
       date: this.activityForm.get('date').value,
