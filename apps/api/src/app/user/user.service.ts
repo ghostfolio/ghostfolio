@@ -1,5 +1,6 @@
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -25,6 +26,7 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
@@ -37,6 +39,7 @@ export class UserService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -437,11 +440,9 @@ export class UserService {
     userId: string;
     userSettings: UserSettings;
   }) {
-    const settings = userSettings as unknown as Prisma.JsonObject;
-
-    await this.prismaService.settings.upsert({
+    const { settings } = await this.prismaService.settings.upsert({
       create: {
-        settings,
+        settings: userSettings as unknown as Prisma.JsonObject,
         User: {
           connect: {
             id: userId
@@ -449,14 +450,21 @@ export class UserService {
         }
       },
       update: {
-        settings
+        settings: userSettings as unknown as Prisma.JsonObject
       },
       where: {
         userId
       }
     });
 
-    return;
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId
+      })
+    );
+
+    return settings;
   }
 
   private getRandomString(length: number) {

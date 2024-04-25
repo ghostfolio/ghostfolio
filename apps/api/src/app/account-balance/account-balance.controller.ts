@@ -1,7 +1,6 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { resetHours } from '@ghostfolio/common/helper';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -18,7 +17,6 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { AccountBalance } from '@prisma/client';
-import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AccountBalanceService } from './account-balance.service';
@@ -67,10 +65,11 @@ export class AccountBalanceController {
     @Param('id') id: string
   ): Promise<AccountBalance> {
     const accountBalance = await this.accountBalanceService.accountBalance({
-      id
+      id,
+      userId: this.request.user.id
     });
 
-    if (!accountBalance || accountBalance.userId !== this.request.user.id) {
+    if (!accountBalance) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -78,7 +77,8 @@ export class AccountBalanceController {
     }
 
     return this.accountBalanceService.deleteAccountBalance({
-      id
+      id: accountBalance.id,
+      userId: accountBalance.userId
     });
   }
 }
