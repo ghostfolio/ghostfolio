@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy
+} from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
@@ -11,13 +20,36 @@ import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
   styleUrls: ['./create-or-update-tag-dialog.scss'],
   templateUrl: 'create-or-update-tag-dialog.html'
 })
-export class CreateOrUpdateTagDialog {
+export class CreateOrUpdateTagDialog implements OnDestroy {
+  public tagForm: FormGroup;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: CreateOrUpdateTagDialogParams,
-    public dialogRef: MatDialogRef<CreateOrUpdateTagDialog>
-  ) {}
+    public dialogRef: MatDialogRef<CreateOrUpdateTagDialog>,
+    private formBuilder: FormBuilder
+  ) {
+    this.tagForm = this.formBuilder.group({
+      name: [this.data.tag.name]
+    });
+  }
+
+  public async onSubmit() {
+    try {
+      const tag: CreateTagDto = {
+        name: this.tagForm.get('name')?.value
+      };
+
+      await validateObjectForForm({
+        classDto: CreateTagDto,
+        form: this.tagForm,
+        object: tag
+      });
+      this.dialogRef.close(tag);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   public onCancel() {
     this.dialogRef.close();

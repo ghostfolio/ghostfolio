@@ -142,9 +142,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        const tag: CreateTagDto = data?.tag;
-
+      .subscribe((tag: CreateTagDto) => {
         if (tag) {
           this.adminService
             .postTag(tag)
