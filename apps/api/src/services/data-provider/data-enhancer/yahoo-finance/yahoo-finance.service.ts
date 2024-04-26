@@ -266,7 +266,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
     switch (quoteType?.toLowerCase()) {
       case 'cryptocurrency':
-        assetClass = AssetClass.CASH;
+        assetClass = AssetClass.LIQUIDITY;
         assetSubClass = AssetSubClass.CRYPTOCURRENCY;
         break;
       case 'equity':

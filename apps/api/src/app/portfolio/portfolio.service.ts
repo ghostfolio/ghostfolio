@@ -54,6 +54,7 @@ import {
   Account,
   Type as ActivityType,
   AssetClass,
+  AssetSubClass,
   DataSource,
   Order,
   Platform,
@@ -376,7 +377,7 @@ export class PortfolioService {
       }) ?? false;
 
     const isFilteredByCash = filters?.some(({ id, type }) => {
-      return id === 'CASH' && type === 'ASSET_CLASS';
+      return id === AssetClass.LIQUIDITY && type === 'ASSET_CLASS';
     });
 
     const isFilteredByClosedHoldings =
@@ -391,8 +392,8 @@ export class PortfolioService {
     if (
       filters?.length === 0 ||
       (filters?.length === 1 &&
-        filters[0].type === 'ASSET_CLASS' &&
-        filters[0].id === 'CASH')
+        filters[0].id === AssetClass.LIQUIDITY &&
+        filters[0].type === 'ASSET_CLASS')
     ) {
       filteredValueInBaseCurrency = filteredValueInBaseCurrency.plus(
         cashDetails.balanceInBaseCurrency
@@ -1425,8 +1426,8 @@ export class PortfolioService {
     return {
       currency,
       allocationInPercentage: 0,
-      assetClass: AssetClass.CASH,
-      assetSubClass: AssetClass.CASH,
+      assetClass: AssetClass.LIQUIDITY,
+      assetSubClass: AssetSubClass.CASH,
       countries: [],
       dataSource: undefined,
       dateOfFirstActivity: undefined,

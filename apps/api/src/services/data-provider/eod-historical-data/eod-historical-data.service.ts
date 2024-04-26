@@ -468,7 +468,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         assetSubClass = AssetSubClass.STOCK;
         break;
       case 'currency':
-        assetClass = AssetClass.CASH;
+        assetClass = AssetClass.LIQUIDITY;
 
         if (Exchange?.toLowerCase() === 'cc') {
           assetSubClass = AssetSubClass.CRYPTOCURRENCY;

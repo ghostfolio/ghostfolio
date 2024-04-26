@@ -248,15 +248,16 @@ enum AccessPermission {
 }
 
 enum AssetClass {
-  CASH
   COMMODITY
   EQUITY
   FIXED_INCOME
+  LIQUIDITY
   REAL_ESTATE
 }
 
 enum AssetSubClass {
   BOND
+  CASH
   COMMODITY
   CRYPTOCURRENCY
   ETF

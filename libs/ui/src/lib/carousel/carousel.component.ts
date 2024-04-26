@@ -1,6 +1,5 @@
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
-import { CommonModule } from '@angular/common';
 import {
   AfterContentInit,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -22,7 +21,7 @@ import { CarouselItem } from './carousel-item.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, MatButtonModule],
+  imports: [MatButtonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-carousel',
   standalone: true,

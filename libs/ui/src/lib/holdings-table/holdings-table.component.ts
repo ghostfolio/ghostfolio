@@ -23,7 +23,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
-import { AssetClass } from '@prisma/client';
+import { AssetClass, AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
 
@@ -66,7 +66,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetClass.CASH];
+  public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public isLoading = true;
   public routeQueryParams: Subscription;
 

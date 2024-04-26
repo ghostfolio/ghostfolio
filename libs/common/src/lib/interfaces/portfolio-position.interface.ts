@@ -8,7 +8,7 @@ export interface PortfolioPosition {
   allocationInPercentage: number;
   assetClass?: AssetClass;
   assetClassLabel?: string;
-  assetSubClass?: AssetSubClass | 'CASH';
+  assetSubClass?: AssetSubClass;
   assetSubClassLabel?: string;
   countries: Country[];
   currency: string;

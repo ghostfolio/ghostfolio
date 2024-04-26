@@ -27,7 +27,7 @@
       </mat-form-field>
     </div>
 
-    @if (accessForm.controls['type'].value === 'PRIVATE') {
+    @if (accessForm.get('type').value === 'PRIVATE') {
       <div>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Permission</mat-label>

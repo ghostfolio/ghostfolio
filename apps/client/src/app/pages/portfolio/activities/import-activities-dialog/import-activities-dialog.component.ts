@@ -85,7 +85,7 @@ export class ImportActivitiesDialog implements OnDestroy {
 
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
-      this.uniqueAssetForm.controls['uniqueAsset'].disable();
+      this.uniqueAssetForm.get('uniqueAsset').disable();
 
       this.dataService
         .fetchPositions({
@@ -102,7 +102,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.holdings = sortBy(positions, ({ name }) => {
             return name.toLowerCase();
           });
-          this.uniqueAssetForm.controls['uniqueAsset'].enable();
+          this.uniqueAssetForm.get('uniqueAsset').enable();
 
           this.isLoading = false;
 
@@ -167,10 +167,10 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public onLoadDividends(aStepper: MatStepper) {
-    this.uniqueAssetForm.controls['uniqueAsset'].disable();
+    this.uniqueAssetForm.get('uniqueAsset').disable();
 
     const { dataSource, symbol } =
-      this.uniqueAssetForm.controls['uniqueAsset'].value;
+      this.uniqueAssetForm.get('uniqueAsset').value;
 
     this.dataService
       .fetchDividendsImport({
@@ -193,7 +193,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
-    this.uniqueAssetForm.controls['uniqueAsset'].enable();
+    this.uniqueAssetForm.get('uniqueAsset').enable();
 
     aStepper.reset();
   }

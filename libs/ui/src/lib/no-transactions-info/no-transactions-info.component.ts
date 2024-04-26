@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -13,7 +12,7 @@ import { GfLogoComponent } from '../logo';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfLogoComponent, MatButtonModule, RouterModule],
+  imports: [GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-no-transactions-info-indicator',
   standalone: true,

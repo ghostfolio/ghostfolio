@@ -2,7 +2,6 @@ import { Currency } from '@ghostfolio/common/interfaces';
 import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -41,7 +40,6 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
     '[id]': 'id'
   },
   imports: [
-    CommonModule,
     FormsModule,
     MatAutocompleteModule,
     MatFormFieldModule,

@@ -1,7 +1,6 @@
 import { getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -36,7 +35,6 @@ import { GfValueComponent } from '../value';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     GfValueComponent,
     MatButtonModule,
     MatDatepickerModule,

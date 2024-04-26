@@ -348,8 +348,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         name: position.name
       };
 
-      if (position.assetClass !== AssetClass.CASH) {
-        // Prepare analysis data by continents, countries and sectors except for cash
+      if (position.assetClass !== AssetClass.LIQUIDITY) {
+        // Prepare analysis data by continents, countries and sectors except for liquidity
 
         if (position.countries.length > 0) {
           this.markets.developedMarkets.value +=
