@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the `@ghostfolio/ui` components to control flow
 - Upgraded `prisma` from version `5.12.1` to `5.13.0`
 
 ### Fixed
