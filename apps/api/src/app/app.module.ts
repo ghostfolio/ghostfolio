@@ -1,3 +1,4 @@
+import { EventsModule } from '@ghostfolio/api/events/events.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronService } from '@ghostfolio/api/services/cron.service';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -14,6 +15,7 @@ import {
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
@@ -44,6 +46,7 @@ import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 
 @Module({
+  controllers: [AppController],
   imports: [
     AdminModule,
     AccessModule,
@@ -64,6 +67,8 @@ import { UserModule } from './user/user.module';
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
+    EventEmitterModule.forRoot(),
+    EventsModule,
     ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
@@ -109,7 +114,6 @@ import { UserModule } from './user/user.module';
     TwitterBotModule,
     UserModule
   ],
-  controllers: [AppController],
   providers: [CronService]
 })
 export class AppModule {}

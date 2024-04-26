@@ -1,4 +1,5 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -13,6 +14,7 @@ import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
   AssetSubClass,
@@ -27,7 +29,6 @@ import { endOfToday, isAfter } from 'date-fns';
 import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CreateOrderDto } from './create-order.dto';
 import { Activities } from './interfaces/activities.interface';
 
 @Injectable()
@@ -35,6 +36,7 @@ export class OrderService {
   public constructor(
     private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
@@ -160,6 +162,13 @@ export class OrderService {
       });
     }
 
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
+
     return order;
   }
 
@@ -174,6 +183,13 @@ export class OrderService {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
+
     return order;
   }
 
@@ -181,6 +197,13 @@ export class OrderService {
     const { count } = await this.prismaService.order.deleteMany({
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: <string>where.userId
+      })
+    );
 
     return count;
   }
@@ -455,7 +478,7 @@ export class OrderService {
       where
     });
 
-    return this.prismaService.order.update({
+    const order = await this.prismaService.order.update({
       data: {
         ...data,
         isDraft,
@@ -467,6 +490,15 @@ export class OrderService {
       },
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
+
+    return order;
   }
 
   private async orders(params: {

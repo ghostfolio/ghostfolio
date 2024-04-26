@@ -1,10 +1,12 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Account, Order, Platform, Prisma } from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
@@ -16,6 +18,7 @@ import { CashDetails } from './interfaces/cash-details.interface';
 export class AccountService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService
   ) {}
@@ -94,6 +97,13 @@ export class AccountService {
       userId: aUserId
     });
 
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: account.userId
+      })
+    );
+
     return account;
   }
 
@@ -101,9 +111,18 @@ export class AccountService {
     where: Prisma.AccountWhereUniqueInput,
     aUserId: string
   ): Promise<Account> {
-    return this.prismaService.account.delete({
+    const account = await this.prismaService.account.delete({
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: account.userId
+      })
+    );
+
+    return account;
   }
 
   public async getAccounts(aUserId: string): Promise<Account[]> {
@@ -201,10 +220,19 @@ export class AccountService {
       userId: aUserId
     });
 
-    return this.prismaService.account.update({
+    const account = await this.prismaService.account.update({
       data,
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: account.userId
+      })
+    );
+
+    return account;
   }
 
   public async updateAccountBalance({
