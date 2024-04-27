@@ -1,7 +1,8 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
-  symbolProfileDummyData
+  symbolProfileDummyData,
+  userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
   PerformanceCalculationType,
@@ -11,6 +12,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
@@ -35,12 +37,15 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
+  let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let factory: PortfolioCalculatorFactory;
   let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    configurationService = new ConfigurationService();
+
     currentRateService = new CurrentRateService(null, null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
@@ -53,6 +58,7 @@ describe('PortfolioCalculator', () => {
     redisCacheService = new RedisCacheService(null, null);
 
     factory = new PortfolioCalculatorFactory(
+      configurationService,
       currentRateService,
       exchangeRateDataService,
       redisCacheService
@@ -101,7 +107,8 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = factory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.TWR,
-        currency: 'CHF'
+        currency: 'CHF',
+        userId: userDummyData.id
       });
 
       const chartData = await portfolioCalculator.getChartData({

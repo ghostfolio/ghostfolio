@@ -1,10 +1,9 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
-import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { SymbolMetrics, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';

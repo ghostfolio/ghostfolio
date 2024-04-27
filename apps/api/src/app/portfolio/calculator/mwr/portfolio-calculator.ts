@@ -1,7 +1,6 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { SymbolMetrics, UniqueAsset } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 
 export class MWRPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(

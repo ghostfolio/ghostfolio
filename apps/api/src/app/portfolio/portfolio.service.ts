@@ -277,6 +277,7 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
@@ -352,6 +353,7 @@ export class PortfolioService {
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       dateRange,
+      userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
@@ -648,6 +650,7 @@ export class PortfolioService {
     ]);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
+      userId,
       activities: orders.filter((order) => {
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
@@ -919,6 +922,7 @@ export class PortfolioService {
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       dateRange,
+      userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
@@ -1108,6 +1112,7 @@ export class PortfolioService {
       accountBalanceItems,
       activities,
       dateRange,
+      userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
@@ -1202,6 +1207,7 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency
     });
