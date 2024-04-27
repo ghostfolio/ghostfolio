@@ -1,5 +1,6 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
@@ -19,7 +20,8 @@ export enum PerformanceCalculationType {
 export class PortfolioCalculatorFactory {
   public constructor(
     private readonly currentRateService: CurrentRateService,
-    private readonly exchangeRateDataService: ExchangeRateDataService
+    private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly redisCacheService: RedisCacheService
   ) {}
 
   public createCalculator({
@@ -43,7 +45,8 @@ export class PortfolioCalculatorFactory {
           currency,
           dateRange,
           currentRateService: this.currentRateService,
-          exchangeRateDataService: this.exchangeRateDataService
+          exchangeRateDataService: this.exchangeRateDataService,
+          redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
         return new TWRPortfolioCalculator({
@@ -52,7 +55,8 @@ export class PortfolioCalculatorFactory {
           currency,
           currentRateService: this.currentRateService,
           dateRange,
-          exchangeRateDataService: this.exchangeRateDataService
+          exchangeRateDataService: this.exchangeRateDataService,
+          redisCacheService: this.redisCacheService
         });
       default:
         throw new Error('Invalid calculation type');

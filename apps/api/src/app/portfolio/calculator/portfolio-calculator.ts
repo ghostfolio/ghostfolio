@@ -4,6 +4,7 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import {
   getFactor,
   getInterval
@@ -23,9 +24,9 @@ import {
   InvestmentItem,
   ResponseError,
   SymbolMetrics,
-  TimelinePosition,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
@@ -72,6 +73,7 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
+    redisCacheService: RedisCacheService;
   }) {
     this.accountBalanceItems = accountBalanceItems;
     this.currency = currency;
