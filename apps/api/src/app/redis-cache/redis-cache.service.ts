@@ -24,6 +24,10 @@ export class RedisCacheService {
     return this.cache.get(key);
   }
 
+  public getPortfolioSnapshotKey(userId: string) {
+    return `portfolio-snapshot-${userId}`;
+  }
+
   public getQuoteKey({ dataSource, symbol }: UniqueAsset) {
     return `quote-${getAssetProfileIdentifier({ dataSource, symbol })}`;
   }

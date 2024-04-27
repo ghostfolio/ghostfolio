@@ -1,7 +1,8 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
   private positions: TimelinePosition[];

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the content of the _Self-Hosting_ section by the custom asset instructions on the Frequently Asked Questions (FAQ) page
-- Set up an event system to follow portfolio changes
+- Added the caching to the portfolio calculator (experimental)
 
 ### Changed
 

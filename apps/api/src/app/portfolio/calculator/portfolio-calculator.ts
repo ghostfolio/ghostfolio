@@ -1,13 +1,14 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
-import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import {
   getFactor,
   getInterval
 } from '@ghostfolio/api/helper/portfolio.helper';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
@@ -23,12 +24,14 @@ import {
   InvestmentItem,
   ResponseError,
   SymbolMetrics,
-  TimelinePosition,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 
+import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
+import { plainToClass } from 'class-transformer';
 import {
   differenceInDays,
   eachDayOfInterval,
@@ -41,6 +44,7 @@ import {
   subDays
 } from 'date-fns';
 import { first, last, uniq, uniqBy } from 'lodash';
+import ms from 'ms';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -48,52 +52,78 @@ export abstract class PortfolioCalculator {
   protected accountBalanceItems: HistoricalDataItem[];
   protected orders: PortfolioOrder[];
 
+  private configurationService: ConfigurationService;
   private currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
+  private isExperimentalFeatures: boolean;
+  private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
+  private userId: string;
 
   public constructor({
     accountBalanceItems,
     activities,
+    configurationService,
     currency,
     currentRateService,
     dateRange,
-    exchangeRateDataService
+    exchangeRateDataService,
+    isExperimentalFeatures,
+    redisCacheService,
+    userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
+    configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;
     dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
+    isExperimentalFeatures: boolean;
+    redisCacheService: RedisCacheService;
+    userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
+    this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
     this.exchangeRateDataService = exchangeRateDataService;
-    this.orders = activities.map(
-      ({ date, fee, quantity, SymbolProfile, tags = [], type, unitPrice }) => {
-        return {
-          SymbolProfile,
-          tags,
-          type,
-          date: format(date, DATE_FORMAT),
-          fee: new Big(fee),
-          quantity: new Big(quantity),
-          unitPrice: new Big(unitPrice)
-        };
-      }
-    );
+    this.isExperimentalFeatures = isExperimentalFeatures;
 
-    this.orders.sort((a, b) => {
-      return a.date?.localeCompare(b.date);
-    });
+    this.orders = activities
+      .map(
+        ({
+          date,
+          fee,
+          quantity,
+          SymbolProfile,
+          tags = [],
+          type,
+          unitPrice
+        }) => {
+          return {
+            SymbolProfile,
+            tags,
+            type,
+            date: format(date, DATE_FORMAT),
+            fee: new Big(fee),
+            quantity: new Big(quantity),
+            unitPrice: new Big(unitPrice)
+          };
+        }
+      )
+      .sort((a, b) => {
+        return a.date?.localeCompare(b.date);
+      });
+
+    this.redisCacheService = redisCacheService;
+    this.userId = userId;
 
     const { endDate, startDate } = getInterval(dateRange);
 
@@ -1011,6 +1041,48 @@ export abstract class PortfolioCalculator {
   }
 
   private async initialize() {
-    this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
+    if (this.isExperimentalFeatures) {
+      const startTimeTotal = performance.now();
+
+      const cachedSnapshot = await this.redisCacheService.get(
+        this.redisCacheService.getPortfolioSnapshotKey(this.userId)
+      );
+
+      if (cachedSnapshot) {
+        this.snapshot = plainToClass(
+          PortfolioSnapshot,
+          JSON.parse(cachedSnapshot)
+        );
+
+        Logger.debug(
+          `Fetched portfolio snapshot from cache in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      } else {
+        this.snapshot = await this.computeSnapshot(
+          this.startDate,
+          this.endDate
+        );
+
+        this.redisCacheService.set(
+          this.redisCacheService.getPortfolioSnapshotKey(this.userId),
+          JSON.stringify(this.snapshot),
+          this.configurationService.get('CACHE_QUOTES_TTL')
+        );
+
+        Logger.debug(
+          `Computed portfolio snapshot in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      }
+    } else {
+      this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
+    }
   }
 }
