@@ -1,5 +1,6 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {
   ChangeDetectionStrategy,
@@ -65,28 +66,38 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const access: CreateAccessDto = {
       alias: this.accessForm.get('alias').value,
       granteeUserId: this.accessForm.get('userId').value,
       permissions: [this.accessForm.get('permissions').value]
     };
 
-    this.dataService
-      .postAccess(access)
-      .pipe(
-        catchError((error) => {
-          if (error.status === StatusCodes.BAD_REQUEST) {
-            alert($localize`Oops! Could not grant access.`);
-          }
-
-          return EMPTY;
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe(() => {
-        this.dialogRef.close({ access });
+    try {
+      await validateObjectForForm({
+        classDto: CreateAccessDto,
+        form: this.accessForm,
+        object: access
       });
+
+      this.dataService
+        .postAccess(access)
+        .pipe(
+          catchError((error) => {
+            if (error.status === StatusCodes.BAD_REQUEST) {
+              alert($localize`Oops! Could not grant access.`);
+            }
+
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.dialogRef.close({ access });
+        });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public ngOnDestroy() {
