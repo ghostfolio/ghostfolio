@@ -140,7 +140,8 @@ export class OrderService {
             return { id };
           })
         }
-      }
+      },
+      include: { SymbolProfile: true }
     });
 
     if (updateAccountBalance === true) {
