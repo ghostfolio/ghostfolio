@@ -3,7 +3,7 @@ import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
-import { Transform, Type, plainToClass } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
@@ -53,13 +53,6 @@ export class PortfolioSnapshot {
   @Type(() => Big)
   netPerformancePercentageWithCurrencyEffect: Big;
 
-  /*@Transform(
-    ({ value }) =>
-      value.map((position: any) => {
-        return plainToClass(TimelinePosition, position);
-      }),
-    { toClassOnly: true }
-  )*/
   @Type(() => TimelinePosition)
   positions: TimelinePosition[];
 
