@@ -359,7 +359,7 @@ export class PortfolioService {
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
       isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+        this.request.user?.Settings.settings.isExperimentalFeatures
     });
 
     const { currentValueInBaseCurrency, hasErrors, positions } =
