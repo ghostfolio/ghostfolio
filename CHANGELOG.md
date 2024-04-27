@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the form submit in the asset profile details dialog of the admin control due to the `url` validation
+- Fixed the historical market data gathering for asset profiles with `MANUAL` data source
 
 ## 2.76.0 - 2024-04-23
 
