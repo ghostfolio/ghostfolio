@@ -279,7 +279,9 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency
+      currency: this.request.user.Settings.settings.baseCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     const items = await portfolioCalculator.getChart({
@@ -355,7 +357,9 @@ export class PortfolioService {
       dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency
+      currency: userCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     const { currentValueInBaseCurrency, hasErrors, positions } =
@@ -655,7 +659,9 @@ export class PortfolioService {
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency
+      currency: userCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     const portfolioStart = portfolioCalculator.getStartDate();
@@ -924,7 +930,9 @@ export class PortfolioService {
       dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency
+      currency: this.request.user.Settings.settings.baseCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
@@ -1114,7 +1122,9 @@ export class PortfolioService {
       dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency
+      currency: userCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     const {
@@ -1209,7 +1219,9 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency
+      currency: this.request.user.Settings.settings.baseCurrency,
+      isExperimentalFeatures:
+        this.request.user.Settings.settings.isExperimentalFeatures
     });
 
     let { totalFeesWithCurrencyEffect, positions, totalInvestment } =

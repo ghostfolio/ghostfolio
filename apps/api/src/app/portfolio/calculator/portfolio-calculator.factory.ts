@@ -32,6 +32,7 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     dateRange = 'max',
+    isExperimentalFeatures = false,
     userId
   }: {
     accountBalanceItems?: HistoricalDataItem[];
@@ -39,6 +40,7 @@ export class PortfolioCalculatorFactory {
     calculationType: PerformanceCalculationType;
     currency: string;
     dateRange?: DateRange;
+    isExperimentalFeatures?: boolean;
     userId: string;
   }): PortfolioCalculator {
     switch (calculationType) {
@@ -48,6 +50,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           dateRange,
+          isExperimentalFeatures,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -61,6 +64,7 @@ export class PortfolioCalculatorFactory {
           currency,
           currentRateService: this.currentRateService,
           dateRange,
+          isExperimentalFeatures,
           userId,
           configurationService: this.configurationService,
           exchangeRateDataService: this.exchangeRateDataService,

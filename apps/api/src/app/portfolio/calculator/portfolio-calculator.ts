@@ -29,6 +29,7 @@ import {
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 
+import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
@@ -57,6 +58,7 @@ export abstract class PortfolioCalculator {
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
+  private isExperimentalFeatures: boolean;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
@@ -72,6 +74,7 @@ export abstract class PortfolioCalculator {
     currentRateService,
     dateRange,
     exchangeRateDataService,
+    isExperimentalFeatures,
     redisCacheService,
     userId
   }: {
@@ -82,6 +85,7 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
+    isExperimentalFeatures: boolean;
     redisCacheService: RedisCacheService;
     userId: string;
   }) {
@@ -90,6 +94,7 @@ export abstract class PortfolioCalculator {
     this.currency = currency;
     this.currentRateService = currentRateService;
     this.exchangeRateDataService = exchangeRateDataService;
+    this.isExperimentalFeatures = isExperimentalFeatures;
 
     this.orders = activities
       .map(
@@ -1036,23 +1041,48 @@ export abstract class PortfolioCalculator {
   }
 
   private async initialize() {
-    const cachedSnapshot = await this.redisCacheService.get(
-      this.redisCacheService.getPortfolioSnapshotKey(this.userId)
-    );
+    if (this.isExperimentalFeatures) {
+      const startTimeTotal = performance.now();
 
-    if (cachedSnapshot) {
-      this.snapshot = plainToClass(
-        PortfolioSnapshot,
-        JSON.parse(cachedSnapshot)
+      const cachedSnapshot = await this.redisCacheService.get(
+        this.redisCacheService.getPortfolioSnapshotKey(this.userId)
       );
+
+      if (cachedSnapshot) {
+        this.snapshot = plainToClass(
+          PortfolioSnapshot,
+          JSON.parse(cachedSnapshot)
+        );
+
+        Logger.debug(
+          `Fetched portfolio snapshot from cache in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      } else {
+        this.snapshot = await this.computeSnapshot(
+          this.startDate,
+          this.endDate
+        );
+
+        this.redisCacheService.set(
+          this.redisCacheService.getPortfolioSnapshotKey(this.userId),
+          JSON.stringify(this.snapshot),
+          this.configurationService.get('CACHE_QUOTES_TTL')
+        );
+
+        Logger.debug(
+          `Computed portfolio snapshot in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      }
     } else {
       this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
-
-      this.redisCacheService.set(
-        this.redisCacheService.getPortfolioSnapshotKey(this.userId),
-        JSON.stringify(this.snapshot),
-        this.configurationService.get('CACHE_QUOTES_TTL')
-      );
     }
   }
 }
