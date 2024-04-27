@@ -3,11 +3,8 @@ import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/por
 import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import {
-  SymbolMetrics,
-  TimelinePosition,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
+import { SymbolMetrics, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';

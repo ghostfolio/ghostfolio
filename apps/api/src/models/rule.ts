@@ -1,7 +1,8 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
-import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';

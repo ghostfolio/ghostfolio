@@ -29,6 +29,7 @@ import {
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
+  InvestmentItem,
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -36,10 +37,9 @@ import {
   PortfolioReport,
   PortfolioSummary,
   Position,
-  TimelinePosition,
   UserSettings
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
+import { TimelinePosition } from '@ghostfolio/common/models';
 import type {
   AccountWithValue,
   DateRange,

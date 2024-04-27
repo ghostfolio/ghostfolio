@@ -1,4 +1,5 @@
-import { ResponseError, TimelinePosition } from '@ghostfolio/common/interfaces';
+import { ResponseError } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
 
