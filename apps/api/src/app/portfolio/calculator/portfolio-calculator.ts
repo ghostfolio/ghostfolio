@@ -37,6 +37,7 @@ import {
   eachDayOfInterval,
   endOfDay,
   format,
+  isAfter,
   isBefore,
   isSameDay,
   max,
@@ -44,13 +45,12 @@ import {
   subDays
 } from 'date-fns';
 import { first, last, uniq, uniqBy } from 'lodash';
-import ms from 'ms';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
   protected accountBalanceItems: HistoricalDataItem[];
-  protected orders: PortfolioOrder[];
+  protected activities: PortfolioOrder[];
 
   private configurationService: ConfigurationService;
   private currency: string;
@@ -96,7 +96,7 @@ export abstract class PortfolioCalculator {
     this.exchangeRateDataService = exchangeRateDataService;
     this.isExperimentalFeatures = isExperimentalFeatures;
 
-    this.orders = activities
+    this.activities = activities
       .map(
         ({
           date,
@@ -107,6 +107,12 @@ export abstract class PortfolioCalculator {
           type,
           unitPrice
         }) => {
+          if (isAfter(date, new Date(Date.now()))) {
+            // Adapt date to today if activity is in future (e.g. liability)
+            // to include it in the interval
+            date = endOfDay(new Date(Date.now()));
+          }
+
           return {
             SymbolProfile,
             tags,
@@ -917,7 +923,7 @@ export abstract class PortfolioCalculator {
       tags,
       type,
       unitPrice
-    } of this.orders) {
+    } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
       const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
