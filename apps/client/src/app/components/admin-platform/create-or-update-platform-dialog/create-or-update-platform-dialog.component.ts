@@ -23,6 +23,7 @@ import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdatePlatformDialog implements OnDestroy {
   public platformForm: FormGroup;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -34,6 +35,10 @@ export class CreateOrUpdatePlatformDialog implements OnDestroy {
       name: [this.data.platform.name, Validators.required],
       url: [this.data.platform.url, Validators.required]
     });
+  }
+
+  public onCancel() {
+    this.dialogRef.close();
   }
 
   public async onSubmit() {
@@ -62,10 +67,6 @@ export class CreateOrUpdatePlatformDialog implements OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  public onCancel() {
-    this.dialogRef.close();
   }
 
   public ngOnDestroy() {

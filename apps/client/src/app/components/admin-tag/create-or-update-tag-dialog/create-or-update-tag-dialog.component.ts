@@ -23,6 +23,7 @@ import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateTagDialog implements OnDestroy {
   public tagForm: FormGroup;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -33,6 +34,10 @@ export class CreateOrUpdateTagDialog implements OnDestroy {
     this.tagForm = this.formBuilder.group({
       name: [this.data.tag.name]
     });
+  }
+
+  public onCancel() {
+    this.dialogRef.close();
   }
 
   public async onSubmit() {
@@ -60,10 +65,6 @@ export class CreateOrUpdateTagDialog implements OnDestroy {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  public onCancel() {
-    this.dialogRef.close();
   }
 
   public ngOnDestroy() {

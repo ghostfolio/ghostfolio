@@ -1,3 +1,4 @@
+import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Access, User } from '@ghostfolio/common/interfaces';
@@ -113,7 +114,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((access) => {
+    dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
       if (access) {
         this.update();
       }

@@ -93,7 +93,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
           takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
-          this.dialogRef.close({ access });
+          this.dialogRef.close(access);
         });
     } catch (error) {
       console.error(error);

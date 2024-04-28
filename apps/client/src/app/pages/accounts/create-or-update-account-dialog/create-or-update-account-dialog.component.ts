@@ -123,6 +123,8 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
           form: this.accountForm,
           object: account
         });
+
+        this.dialogRef.close(account as UpdateAccountDto);
       } else {
         delete (account as CreateAccountDto).id;
 
@@ -131,9 +133,9 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
           form: this.accountForm,
           object: account
         });
-      }
 
-      this.dialogRef.close({ account });
+        this.dialogRef.close(account as CreateAccountDto);
+      }
     } catch (error) {
       console.error(error);
     }
