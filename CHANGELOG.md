@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Skipped the caching in the portfolio calculator if there are active filters (experimental)
+
 ### Fixed
 
 - Fixed an issue in the calculation of the portfolio summary caused by future liabilities
