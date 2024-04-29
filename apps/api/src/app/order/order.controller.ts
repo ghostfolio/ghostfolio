@@ -88,20 +88,25 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange?: DateRange,
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<Activities> {
+    let endDate: Date;
+    let startDate: Date;
+
+    if (dateRange) {
+      ({ endDate, startDate } = getInterval(dateRange));
+    }
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
       filterByTags
     });
-
-    const { endDate, startDate } = getInterval(dateRange);
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
