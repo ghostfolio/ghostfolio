@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a form validation against the DTO in the create or update access dialog
+- Added a form validation against the DTO in the asset profile details dialog of the admin control
+- Added a form validation against the DTO in the platform management of the admin control panel
+- Added a form validation against the DTO in the tag management of the admin control panel
+
 ### Changed
 
 - Skipped the caching in the portfolio calculator if there are active filters (experimental)

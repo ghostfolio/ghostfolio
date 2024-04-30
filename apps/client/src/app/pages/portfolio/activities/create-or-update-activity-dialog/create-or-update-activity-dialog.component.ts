@@ -475,6 +475,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           ignoreFields: ['dataSource', 'date'],
           object: activity as UpdateOrderDto
         });
+
+        this.dialogRef.close(activity as UpdateOrderDto);
       } else {
         (activity as CreateOrderDto).updateAccountBalance =
           this.activityForm.get('updateAccountBalance').value;
@@ -485,9 +487,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           ignoreFields: ['dataSource', 'date'],
           object: activity
         });
-      }
 
-      this.dialogRef.close({ activity });
+        this.dialogRef.close(activity as CreateOrderDto);
+      }
     } catch (error) {
       console.error(error);
     }
