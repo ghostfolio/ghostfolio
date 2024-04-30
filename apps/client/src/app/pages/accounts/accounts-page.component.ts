@@ -189,9 +189,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: UpdateAccountDto = data?.account;
-
+      .subscribe((account: UpdateAccountDto | null) => {
         if (account) {
           this.dataService
             .putAccount(account)
@@ -258,9 +256,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: CreateAccountDto = data?.account;
-
+      .subscribe((account: CreateAccountDto | null) => {
         if (account) {
           this.dataService
             .postAccount(account)

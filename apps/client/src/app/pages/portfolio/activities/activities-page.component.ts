@@ -287,9 +287,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const transaction: UpdateOrderDto = data?.activity;
-
+      .subscribe((transaction: UpdateOrderDto | null) => {
         if (transaction) {
           this.dataService
             .putOrder(transaction)
@@ -338,9 +336,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((data: any) => {
-            const transaction: CreateOrderDto = data?.activity;
-
+          .subscribe((transaction: CreateOrderDto | null) => {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
