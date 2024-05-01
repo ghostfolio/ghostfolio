@@ -700,17 +700,19 @@ export class PortfolioService {
 
       const dividendYieldPercent = this.getAnnualizedPerformancePercent({
         daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
-        netPerformancePercent: dividendInBaseCurrency.div(
-          timeWeightedInvestment
-        )
+        netPerformancePercent: timeWeightedInvestment.eq(0)
+          ? new Big(0)
+          : dividendInBaseCurrency.div(timeWeightedInvestment)
       });
 
       const dividendYieldPercentWithCurrencyEffect =
         this.getAnnualizedPerformancePercent({
           daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
-          netPerformancePercent: dividendInBaseCurrency.div(
-            timeWeightedInvestmentWithCurrencyEffect
-          )
+          netPerformancePercent: timeWeightedInvestmentWithCurrencyEffect.eq(0)
+            ? new Big(0)
+            : dividendInBaseCurrency.div(
+                timeWeightedInvestmentWithCurrencyEffect
+              )
         });
 
       const historicalData = await this.dataProviderService.getHistorical(
