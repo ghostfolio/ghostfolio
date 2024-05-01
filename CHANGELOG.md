@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a form validation against the DTO in the platform management of the admin control panel
 - Added a form validation against the DTO in the tag management of the admin control panel
 
+### Changed
+
+- Set the performance column of the holdings table to stick at the end
+
 ### Fixed
 
 - Fixed an issue in the calculation of the portfolio summary caused by future liabilities
