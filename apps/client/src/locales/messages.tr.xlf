@@ -13394,7 +13394,7 @@
       </trans-unit>
       <trans-unit id="8812557643580169825" datatype="html">
         <source>Finland</source>
-        <target state="translated">Finlandiya/target>
+        <target state="translated">Finlandiya</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
           <context context-type="linenumber">490</context>
