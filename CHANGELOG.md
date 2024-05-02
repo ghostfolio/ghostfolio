@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the performance column of the holdings table to stick at the end
 - Skipped the caching in the portfolio calculator if there are active filters (experimental)
+- Improved the `INACTIVE` user role
 
 ### Fixed
 
