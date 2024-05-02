@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the calculation of the portfolio summary caused by future liabilities
+- Fixed a division by zero error in the dividend yield calculation (experimental)
 
 ## 2.77.1 - 2024-04-27
 
