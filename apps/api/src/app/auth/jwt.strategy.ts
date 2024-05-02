@@ -2,10 +2,12 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { HEADER_KEY_TIMEZONE } from '@ghostfolio/common/config';
+import { hasRole } from '@ghostfolio/common/permissions';
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import * as countriesAndTimezones from 'countries-and-timezones';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
@@ -29,6 +31,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
       if (user) {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+          if (hasRole(user, 'INACTIVE')) {
+            throw new HttpException(
+              getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+              StatusCodes.TOO_MANY_REQUESTS
+            );
+          }
+
           const country =
             countriesAndTimezones.getCountryForTimezone(timezone)?.id;
 
@@ -45,10 +54,20 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
         return user;
       } else {
-        throw '';
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.NOT_FOUND),
+          StatusCodes.NOT_FOUND
+        );
       }
-    } catch (err) {
-      throw new UnauthorizedException('unauthorized', err.message);
+    } catch (error) {
+      if (error?.getStatus() === StatusCodes.TOO_MANY_REQUESTS) {
+        throw error;
+      } else {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.UNAUTHORIZED),
+          StatusCodes.UNAUTHORIZED
+        );
+      }
     }
   }
 }

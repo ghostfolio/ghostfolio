@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+
+## 2.78.0 - 2024-05-02
+
 ### Added
 
 - Added a form validation against the DTO in the create or update access dialog
@@ -16,8 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the performance column of the holdings table to stick at the end
 - Skipped the caching in the portfolio calculator if there are active filters (experimental)
-- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+- Improved the `INACTIVE` user role
 
 ### Fixed
 
