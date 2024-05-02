@@ -26,6 +26,7 @@ import {
 } from '@angular/core';
 import {
   Chart,
+  Decimation,
   Filler,
   LineController,
   LineElement,
@@ -52,6 +53,7 @@ export class GfLineChartComponent
   @Input() benchmarkLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
+  @Input() dataDecimation = false;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
   @Input() locale = getLocale();
@@ -76,6 +78,7 @@ export class GfLineChartComponent
 
   public constructor(private changeDetectorRef: ChangeDetectorRef) {
     Chart.register(
+      Decimation,
       Filler,
       LineController,
       LineElement,
@@ -200,6 +203,9 @@ export class GfLineChartComponent
             },
             interaction: { intersect: false, mode: 'index' },
             plugins: <unknown>{
+              decimation: {
+                enabled: this.dataDecimation
+              },
               legend: {
                 align: 'start',
                 display: this.showLegend,
