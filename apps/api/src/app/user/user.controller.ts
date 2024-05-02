@@ -2,11 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
-import {
-  hasPermission,
-  hasRole,
-  permissions
-} from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -63,13 +59,6 @@ export class UserController {
   public async getUser(
     @Headers('accept-language') acceptLanguage: string
   ): Promise<User> {
-    if (hasRole(this.request.user, 'INACTIVE')) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
-        StatusCodes.TOO_MANY_REQUESTS
-      );
-    }
-
     return this.userService.getUser(
       this.request.user,
       acceptLanguage?.split(',')?.[0]
