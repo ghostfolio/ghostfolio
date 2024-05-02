@@ -56,14 +56,15 @@ export abstract class PortfolioCalculator {
   private currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
+  private dateRange: DateRange;
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
-  private isExperimentalFeatures: boolean;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
+  private useCache: boolean;
   private userId: string;
 
   public constructor({
@@ -74,8 +75,8 @@ export abstract class PortfolioCalculator {
     currentRateService,
     dateRange,
     exchangeRateDataService,
-    isExperimentalFeatures,
     redisCacheService,
+    useCache,
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
@@ -85,16 +86,16 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
-    isExperimentalFeatures: boolean;
     redisCacheService: RedisCacheService;
+    useCache: boolean;
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
     this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
+    this.dateRange = dateRange;
     this.exchangeRateDataService = exchangeRateDataService;
-    this.isExperimentalFeatures = isExperimentalFeatures;
 
     this.activities = activities
       .map(
@@ -129,6 +130,7 @@ export abstract class PortfolioCalculator {
       });
 
     this.redisCacheService = redisCacheService;
+    this.useCache = useCache;
     this.userId = userId;
 
     const { endDate, startDate } = getInterval(dateRange);
@@ -1047,11 +1049,13 @@ export abstract class PortfolioCalculator {
   }
 
   private async initialize() {
-    if (this.isExperimentalFeatures) {
+    if (this.useCache) {
       const startTimeTotal = performance.now();
 
       const cachedSnapshot = await this.redisCacheService.get(
-        this.redisCacheService.getPortfolioSnapshotKey(this.userId)
+        this.redisCacheService.getPortfolioSnapshotKey({
+          userId: this.userId
+        })
       );
 
       if (cachedSnapshot) {
@@ -1074,7 +1078,9 @@ export abstract class PortfolioCalculator {
         );
 
         this.redisCacheService.set(
-          this.redisCacheService.getPortfolioSnapshotKey(this.userId),
+          this.redisCacheService.getPortfolioSnapshotKey({
+            userId: this.userId
+          }),
           JSON.stringify(this.snapshot),
           this.configurationService.get('CACHE_QUOTES_TTL')
         );

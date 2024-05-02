@@ -32,6 +32,7 @@ export class PortfolioCalculatorFactory {
     calculationType,
     currency,
     dateRange = 'max',
+    hasFilters,
     isExperimentalFeatures = false,
     userId
   }: {
@@ -40,9 +41,12 @@ export class PortfolioCalculatorFactory {
     calculationType: PerformanceCalculationType;
     currency: string;
     dateRange?: DateRange;
+    hasFilters: boolean;
     isExperimentalFeatures?: boolean;
     userId: string;
   }): PortfolioCalculator {
+    const useCache = !hasFilters && isExperimentalFeatures;
+
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
         return new MWRPortfolioCalculator({
@@ -50,7 +54,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           dateRange,
-          isExperimentalFeatures,
+          useCache,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -64,7 +68,7 @@ export class PortfolioCalculatorFactory {
           currency,
           currentRateService: this.currentRateService,
           dateRange,
-          isExperimentalFeatures,
+          useCache,
           userId,
           configurationService: this.configurationService,
           exchangeRateDataService: this.exchangeRateDataService,

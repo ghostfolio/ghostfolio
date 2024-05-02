@@ -16,11 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Skipped the caching in the portfolio calculator if there are active filters (experimental)
 - Upgraded `ionicons` from version `7.3.0` to `7.4.0`
 
 ### Fixed
 
 - Fixed an issue in the calculation of the portfolio summary caused by future liabilities
+- Fixed a division by zero error in the dividend yield calculation (experimental)
 
 ## 2.77.1 - 2024-04-27
 

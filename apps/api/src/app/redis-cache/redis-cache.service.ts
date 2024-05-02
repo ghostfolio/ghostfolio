@@ -24,7 +24,7 @@ export class RedisCacheService {
     return this.cache.get(key);
   }
 
-  public getPortfolioSnapshotKey(userId: string) {
+  public getPortfolioSnapshotKey({ userId }: { userId: string }) {
     return `portfolio-snapshot-${userId}`;
   }
 
