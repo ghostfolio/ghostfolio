@@ -17,7 +17,9 @@ export class PortfolioChangedListener {
     );
 
     this.redisCacheService.remove(
-      this.redisCacheService.getPortfolioSnapshotKey(event.getUserId())
+      this.redisCacheService.getPortfolioSnapshotKey({
+        userId: event.getUserId()
+      })
     );
   }
 }

@@ -277,9 +277,11 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency,
+      hasFilters: filters?.length > 0,
       isExperimentalFeatures:
         this.request.user.Settings.settings.isExperimentalFeatures
     });
@@ -358,6 +360,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
+      hasFilters: filters?.length > 0,
       isExperimentalFeatures:
         this.request.user?.Settings.settings.isExperimentalFeatures
     });
@@ -660,6 +663,7 @@ export class PortfolioService {
       }),
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
+      hasFilters: true,
       isExperimentalFeatures:
         this.request.user.Settings.settings.isExperimentalFeatures
     });
@@ -931,6 +935,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency,
+      hasFilters: filters?.length > 0,
       isExperimentalFeatures:
         this.request.user.Settings.settings.isExperimentalFeatures
     });
@@ -1085,7 +1090,7 @@ export class PortfolioService {
       )
     );
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate } = getInterval(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -1123,6 +1128,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
+      hasFilters: filters?.length > 0,
       isExperimentalFeatures:
         this.request.user.Settings.settings.isExperimentalFeatures
     });
@@ -1220,6 +1226,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency,
+      hasFilters: false,
       isExperimentalFeatures:
         this.request.user.Settings.settings.isExperimentalFeatures
     });
