@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for Türkçe (`tr`)
+
+## 2.78.0 - 2024-05-02
+
 ### Added
 
 - Added a form validation against the DTO in the create or update access dialog
@@ -17,10 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Türkçe (`tr`)
+- Set the performance column of the holdings table to stick at the end
+- Skipped the caching in the portfolio calculator if there are active filters (experimental)
+- Improved the `INACTIVE` user role
 
 ### Fixed
 
 - Fixed an issue in the calculation of the portfolio summary caused by future liabilities
+- Fixed a division by zero error in the dividend yield calculation (experimental)
 
 ## 2.77.1 - 2024-04-27
 

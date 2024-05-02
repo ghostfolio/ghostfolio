@@ -123,6 +123,7 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF',
+        hasFilters: false,
         userId: userDummyData.id
       });
 
