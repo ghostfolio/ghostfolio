@@ -73,13 +73,13 @@
   />
 
   <ng-container>
-    <div *ngIf="size === 'large'">
+    <div *ngIf="size === 'large'" class="text-truncate">
       <span class="h6"
         ><ng-container *ngTemplateOutlet="label"></ng-container
       ></span>
       <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
     </div>
-    <small *ngIf="size !== 'large'">
+    <small *ngIf="size !== 'large'" class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
   </ng-container>

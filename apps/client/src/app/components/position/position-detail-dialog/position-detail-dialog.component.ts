@@ -56,6 +56,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
+  public netPerformance: number;
+  public netPerformancePercent: number;
   public netPerformancePercentWithCurrencyEffect: number;
   public netPerformanceWithCurrencyEffect: number;
   public quantity: number;
@@ -104,6 +106,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           marketPrice,
           maxPrice,
           minPrice,
+          netPerformance,
+          netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
           netPerformanceWithCurrencyEffect,
           orders,
@@ -126,15 +130,15 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
           this.historicalDataItems = historicalData.map(
-            (historicalDataItem) => {
+            ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
-                date: historicalDataItem.date,
-                value: historicalDataItem.averagePrice
+                date,
+                value: averagePrice
               });
 
               return {
-                date: historicalDataItem.date,
-                value: historicalDataItem.marketPrice
+                date,
+                value: marketPrice
               };
             }
           );
@@ -142,6 +146,8 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
+          this.netPerformance = netPerformance;
+          this.netPerformancePercent = netPerformancePercent;
           this.netPerformancePercentWithCurrencyEffect =
             netPerformancePercentWithCurrencyEffect;
           this.netPerformanceWithCurrencyEffect =

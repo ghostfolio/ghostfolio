@@ -37,27 +37,58 @@
 
     <div class="row">
       <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [colorizeSign]="true"
-          [isCurrency]="true"
-          [locale]="data.locale"
-          [unit]="data.baseCurrency"
-          [value]="netPerformanceWithCurrencyEffect"
-          >Change</gf-value
-        >
+        @if (
+          SymbolProfile?.currency &&
+          data.baseCurrency !== SymbolProfile?.currency
+        ) {
+          <gf-value
+            i18n
+            size="medium"
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="data.locale"
+            [unit]="data.baseCurrency"
+            [value]="netPerformanceWithCurrencyEffect"
+            >Change with currency effect</gf-value
+          >
+        } @else {
+          <gf-value
+            i18n
+            size="medium"
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="data.locale"
+            [unit]="data.baseCurrency"
+            [value]="netPerformance"
+            >Change</gf-value
+          >
+        }
       </div>
       <div class="col-6 mb-3">
-        <gf-value
-          i18n
-          size="medium"
-          [colorizeSign]="true"
-          [isPercent]="true"
-          [locale]="data.locale"
-          [value]="netPerformancePercentWithCurrencyEffect"
-          >Performance</gf-value
-        >
+        @if (
+          SymbolProfile?.currency &&
+          data.baseCurrency !== SymbolProfile?.currency
+        ) {
+          <gf-value
+            i18n
+            size="medium"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="data.locale"
+            [value]="netPerformancePercentWithCurrencyEffect"
+            >Performance with currency effect</gf-value
+          >
+        } @else {
+          <gf-value
+            i18n
+            size="medium"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="data.locale"
+            [value]="netPerformancePercent"
+            >Performance</gf-value
+          >
+        }
       </div>
       <div class="col-6 mb-3">
         <gf-value
