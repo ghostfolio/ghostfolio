@@ -490,6 +490,9 @@ export class PortfolioController {
     return performanceInformation;
   }
 
+  /**
+   * @deprecated
+   */
   @Get('positions')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
