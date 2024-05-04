@@ -9,9 +9,19 @@
     class="flex-nowrap px-3 py-1 row"
     [hidden]="summary?.ordersCount === null"
   >
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>
+    <div class="d-flex flex-grow-1 ml-3 text-truncate">
       {{ summary?.ordersCount }}
-      {summary?.ordersCount, plural, =1 {transaction} other {transactions}}
+      <ng-container i18n>{summary?.ordersCount, plural,
+        =1 {activity}
+        other {activities}
+      }</ng-container>
+      <span
+        class="align-items-center d-flex ml-1"
+        matTooltipPosition="above"
+        [matTooltip]="buyAndSellActivitiesTooltip"
+      >
+        <ion-icon name="information-circle-outline" />
+      </span>
     </div>
   </div>
   <div class="row">
@@ -65,9 +75,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="
-          isLoading
-            ? undefined
-            : summary?.currentGrossPerformanceWithCurrencyEffect
+          isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -91,7 +99,7 @@
         [value]="
           isLoading
             ? undefined
-            : summary?.currentGrossPerformancePercentWithCurrencyEffect
+            : summary?.grossPerformancePercentageWithCurrencyEffect
         "
       />
     </div>
@@ -121,9 +129,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="
-          isLoading
-            ? undefined
-            : summary?.currentNetPerformanceWithCurrencyEffect
+          isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -147,7 +153,7 @@
         [value]="
           isLoading
             ? undefined
-            : summary?.currentNetPerformancePercentWithCurrencyEffect
+            : summary?.netPerformancePercentageWithCurrencyEffect
         "
       />
     </div>
@@ -164,7 +170,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentValue"
+        [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
       />
     </div>
   </div>

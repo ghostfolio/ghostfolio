@@ -1,5 +1,5 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.module';
+import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position-detail-dialog/position-detail-dialog.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
