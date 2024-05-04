@@ -75,9 +75,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="
-          isLoading
-            ? undefined
-            : summary?.currentGrossPerformanceWithCurrencyEffect
+          isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -101,7 +99,7 @@
         [value]="
           isLoading
             ? undefined
-            : summary?.currentGrossPerformancePercentWithCurrencyEffect
+            : summary?.grossPerformancePercentageWithCurrencyEffect
         "
       />
     </div>
@@ -131,9 +129,7 @@
         [locale]="locale"
         [unit]="baseCurrency"
         [value]="
-          isLoading
-            ? undefined
-            : summary?.currentNetPerformanceWithCurrencyEffect
+          isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -157,7 +153,7 @@
         [value]="
           isLoading
             ? undefined
-            : summary?.currentNetPerformancePercentWithCurrencyEffect
+            : summary?.netPerformancePercentageWithCurrencyEffect
         "
       />
     </div>
@@ -174,7 +170,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentValue"
+        [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
       />
     </div>
   </div>

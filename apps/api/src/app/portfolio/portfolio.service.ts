@@ -1108,16 +1108,16 @@ export class PortfolioService {
         firstOrderDate: undefined,
         hasErrors: false,
         performance: {
-          currentGrossPerformance: 0,
-          currentGrossPerformancePercent: 0,
-          currentGrossPerformancePercentWithCurrencyEffect: 0,
-          currentGrossPerformanceWithCurrencyEffect: 0,
-          currentNetPerformance: 0,
-          currentNetPerformancePercent: 0,
-          currentNetPerformancePercentWithCurrencyEffect: 0,
-          currentNetPerformanceWithCurrencyEffect: 0,
           currentNetWorth: 0,
-          currentValue: 0,
+          currentValueInBaseCurrency: 0,
+          grossPerformance: 0,
+          grossPerformancePercentage: 0,
+          grossPerformancePercentageWithCurrencyEffect: 0,
+          grossPerformanceWithCurrencyEffect: 0,
+          netPerformance: 0,
+          netPerformancePercentage: 0,
+          netPerformancePercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
           totalInvestment: 0
         }
       };
@@ -1152,9 +1152,9 @@ export class PortfolioService {
 
     let currentNetPerformance = netPerformance;
 
-    let currentNetPerformancePercent = netPerformancePercentage;
+    let currentNetPerformancePercentage = netPerformancePercentage;
 
-    let currentNetPerformancePercentWithCurrencyEffect =
+    let currentNetPerformancePercentageWithCurrencyEffect =
       netPerformancePercentageWithCurrencyEffect;
 
     let currentNetPerformanceWithCurrencyEffect =
@@ -1173,11 +1173,11 @@ export class PortfolioService {
     if (itemOfToday) {
       currentNetPerformance = new Big(itemOfToday.netPerformance);
 
-      currentNetPerformancePercent = new Big(
+      currentNetPerformancePercentage = new Big(
         itemOfToday.netPerformanceInPercentage
       ).div(100);
 
-      currentNetPerformancePercentWithCurrencyEffect = new Big(
+      currentNetPerformancePercentageWithCurrencyEffect = new Big(
         itemOfToday.netPerformanceInPercentageWithCurrencyEffect
       ).div(100);
 
@@ -1195,19 +1195,19 @@ export class PortfolioService {
       firstOrderDate: parseDate(items[0]?.date),
       performance: {
         currentNetWorth,
-        currentGrossPerformance: grossPerformance.toNumber(),
-        currentGrossPerformancePercent: grossPerformancePercentage.toNumber(),
-        currentGrossPerformancePercentWithCurrencyEffect:
+        currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
+        grossPerformance: grossPerformance.toNumber(),
+        grossPerformancePercentage: grossPerformancePercentage.toNumber(),
+        grossPerformancePercentageWithCurrencyEffect:
           grossPerformancePercentageWithCurrencyEffect.toNumber(),
-        currentGrossPerformanceWithCurrencyEffect:
+        grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect.toNumber(),
-        currentNetPerformance: currentNetPerformance.toNumber(),
-        currentNetPerformancePercent: currentNetPerformancePercent.toNumber(),
-        currentNetPerformancePercentWithCurrencyEffect:
-          currentNetPerformancePercentWithCurrencyEffect.toNumber(),
-        currentNetPerformanceWithCurrencyEffect:
+        netPerformance: currentNetPerformance.toNumber(),
+        netPerformancePercentage: currentNetPerformancePercentage.toNumber(),
+        netPerformancePercentageWithCurrencyEffect:
+          currentNetPerformancePercentageWithCurrencyEffect.toNumber(),
+        netPerformanceWithCurrencyEffect:
           currentNetPerformanceWithCurrencyEffect.toNumber(),
-        currentValue: currentValueInBaseCurrency.toNumber(),
         totalInvestment: totalInvestment.toNumber()
       }
     };
@@ -1732,19 +1732,7 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
-      currentGrossPerformance: grossPerformance.toNumber(),
-      currentGrossPerformancePercent: grossPerformancePercentage.toNumber(),
-      currentGrossPerformancePercentWithCurrencyEffect:
-        grossPerformancePercentageWithCurrencyEffect.toNumber(),
-      currentGrossPerformanceWithCurrencyEffect:
-        grossPerformanceWithCurrencyEffect.toNumber(),
-      currentNetPerformance: netPerformance.toNumber(),
-      currentNetPerformancePercent: netPerformancePercentage.toNumber(),
-      currentNetPerformancePercentWithCurrencyEffect:
-        netPerformancePercentageWithCurrencyEffect.toNumber(),
-      currentNetPerformanceWithCurrencyEffect:
-        netPerformanceWithCurrencyEffect.toNumber(),
-      currentValue: currentValueInBaseCurrency.toNumber(),
+      currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
         assets: emergencyFundPositionsValueInBaseCurrency,
@@ -1761,9 +1749,21 @@ export class PortfolioService {
       fireWealth: new Big(currentValueInBaseCurrency)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
+      grossPerformance: grossPerformance.toNumber(),
+      grossPerformancePercentage: grossPerformancePercentage.toNumber(),
+      grossPerformancePercentageWithCurrencyEffect:
+        grossPerformancePercentageWithCurrencyEffect.toNumber(),
+      grossPerformanceWithCurrencyEffect:
+        grossPerformanceWithCurrencyEffect.toNumber(),
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
+      netPerformance: netPerformance.toNumber(),
+      netPerformancePercentage: netPerformancePercentage.toNumber(),
+      netPerformancePercentageWithCurrencyEffect:
+        netPerformancePercentageWithCurrencyEffect.toNumber(),
+      netPerformanceWithCurrencyEffect:
+        netPerformanceWithCurrencyEffect.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,

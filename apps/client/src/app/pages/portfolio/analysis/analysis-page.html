@@ -42,7 +42,7 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformance
+                    : performance?.netPerformance
                 "
               />
             </div>
@@ -61,7 +61,7 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformancePercent
+                    : performance?.netPerformancePercentage
                 "
               />
             </div>
@@ -86,10 +86,10 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformance === null
+                    : performance?.netPerformance === null
                       ? null
-                      : performance?.currentNetPerformanceWithCurrencyEffect -
-                        performance?.currentNetPerformance
+                      : performance?.netPerformanceWithCurrencyEffect -
+                        performance?.netPerformance
                 "
               />
             </div>
@@ -108,10 +108,10 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformancePercent === null
+                    : performance?.netPerformancePercentage === null
                       ? null
-                      : performance?.currentNetPerformancePercentWithCurrencyEffect -
-                        performance?.currentNetPerformancePercent
+                      : performance?.netPerformancePercentageWithCurrencyEffect -
+                        performance?.netPerformancePercentage
                 "
               />
             </div>
@@ -131,7 +131,7 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformanceWithCurrencyEffect
+                    : performance?.netPerformanceWithCurrencyEffect
                 "
               />
             </div>
@@ -150,7 +150,7 @@
                 [value]="
                   isLoadingInvestmentChart
                     ? undefined
-                    : performance?.currentNetPerformancePercentWithCurrencyEffect
+                    : performance?.netPerformancePercentageWithCurrencyEffect
                 "
               />
             </div>
