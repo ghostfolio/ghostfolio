@@ -416,7 +416,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private searchHoldings(aSearchTerm: string): Observable<ISearchResultItem[]> {
     return this.dataService
-      .fetchPositions({
+      .fetchPortfolioHoldings({
         filters: [
           {
             id: aSearchTerm,
@@ -429,8 +429,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         catchError(() => {
           return EMPTY;
         }),
-        map(({ positions }) => {
-          return positions.map(
+        map(({ holdings }) => {
+          return holdings.map(
             ({ assetSubClass, currency, dataSource, name, symbol }) => {
               return {
                 currency,

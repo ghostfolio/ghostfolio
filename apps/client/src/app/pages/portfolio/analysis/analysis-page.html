@@ -170,17 +170,17 @@
         </mat-card-header>
         <mat-card-content>
           <ol class="mb-0 ml-1 pl-3">
-            <li *ngFor="let position of top3" class="py-1">
+            <li *ngFor="let holding of top3" class="py-1">
               <a
                 class="d-flex"
                 [queryParams]="{
-                  dataSource: position.dataSource,
+                  dataSource: holding.dataSource,
                   positionDetailDialog: true,
-                  symbol: position.symbol
+                  symbol: holding.symbol
                 }"
                 [routerLink]="[]"
               >
-                <div class="flex-grow-1 mr-2">{{ position.name }}</div>
+                <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
                 <div class="d-flex justify-content-end">
                   <gf-value
                     class="justify-content-end"
@@ -188,9 +188,7 @@
                     [colorizeSign]="true"
                     [isPercent]="true"
                     [locale]="user?.settings?.locale"
-                    [value]="
-                      position.netPerformancePercentageWithCurrencyEffect
-                    "
+                    [value]="holding.netPerformancePercentWithCurrencyEffect"
                   />
                 </div>
               </a>
@@ -218,17 +216,17 @@
         </mat-card-header>
         <mat-card-content>
           <ol class="mb-0 ml-1 pl-3">
-            <li *ngFor="let position of bottom3" class="py-1">
+            <li *ngFor="let holding of bottom3" class="py-1">
               <a
                 class="d-flex"
                 [queryParams]="{
-                  dataSource: position.dataSource,
+                  dataSource: holding.dataSource,
                   positionDetailDialog: true,
-                  symbol: position.symbol
+                  symbol: holding.symbol
                 }"
                 [routerLink]="[]"
               >
-                <div class="flex-grow-1 mr-2">{{ position.name }}</div>
+                <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
                 <div class="d-flex justify-content-end">
                   <gf-value
                     class="justify-content-end"
@@ -236,9 +234,7 @@
                     [colorizeSign]="true"
                     [isPercent]="true"
                     [locale]="user?.settings?.locale"
-                    [value]="
-                      position.netPerformancePercentageWithCurrencyEffect
-                    "
+                    [value]="holding.netPerformancePercentWithCurrencyEffect"
                   />
                 </div>
               </a>
