@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Moved the holdings table to the holdings tab of the home page
 - Improved the performance labels (with and without currency effects) in the position detail dialog
+- Optimized the calculations of the of the portfolio details endpoint
 
 ### Fixed
 

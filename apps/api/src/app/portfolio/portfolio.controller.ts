@@ -165,21 +165,21 @@ export class PortfolioController {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
-        'currentGrossPerformance',
-        'currentGrossPerformanceWithCurrencyEffect',
-        'currentNetPerformance',
-        'currentNetPerformanceWithCurrencyEffect',
         'currentNetWorth',
-        'currentValue',
+        'currentValueInBaseCurrency',
         'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
         'fireWealth',
+        'grossPerformance',
+        'grossPerformanceWithCurrencyEffect',
         'interest',
         'items',
         'liabilities',
+        'netPerformance',
+        'netPerformanceWithCurrencyEffect',
         'totalBuy',
         'totalInvestment',
         'totalSell',
@@ -449,10 +449,14 @@ export class PortfolioController {
                     .div(performanceInformation.performance.totalInvestment)
                     .toNumber(),
             valueInPercentage:
-              performanceInformation.performance.currentValue === 0
+              performanceInformation.performance.currentValueInBaseCurrency ===
+              0
                 ? 0
                 : new Big(value)
-                    .div(performanceInformation.performance.currentValue)
+                    .div(
+                      performanceInformation.performance
+                        .currentValueInBaseCurrency
+                    )
                     .toNumber()
           };
         }
@@ -461,12 +465,12 @@ export class PortfolioController {
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
         [
-          'currentGrossPerformance',
-          'currentGrossPerformanceWithCurrencyEffect',
-          'currentNetPerformance',
-          'currentNetPerformanceWithCurrencyEffect',
           'currentNetWorth',
-          'currentValue',
+          'currentValueInBaseCurrency',
+          'grossPerformance',
+          'grossPerformanceWithCurrencyEffect',
+          'netPerformance',
+          'netPerformanceWithCurrencyEffect',
           'totalInvestment'
         ]
       );
@@ -483,7 +487,7 @@ export class PortfolioController {
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['currentNetPerformance', 'currentNetPerformancePercent']
+        ['netPerformance']
       );
     }
 

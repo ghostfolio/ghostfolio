@@ -49,12 +49,12 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
         this.value.nativeElement.innerHTML = '';
       }
     } else {
-      if (isNumber(this.performance?.currentValue)) {
-        new CountUp('value', this.performance?.currentValue, {
+      if (isNumber(this.performance?.currentValueInBaseCurrency)) {
+        new CountUp('value', this.performance?.currentValueInBaseCurrency, {
           decimal: getNumberFormatDecimal(this.locale),
           decimalPlaces:
             this.deviceType === 'mobile' &&
-            this.performance?.currentValue >= 100000
+            this.performance?.currentValueInBaseCurrency >= 100000
               ? 0
               : 2,
           duration: 1,
@@ -63,8 +63,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
       } else if (this.showDetails === false) {
         new CountUp(
           'value',
-          this.performance?.currentNetPerformancePercentWithCurrencyEffect *
-            100,
+          this.performance?.netPerformancePercentageWithCurrencyEffect * 100,
           {
             decimal: getNumberFormatDecimal(this.locale),
             decimalPlaces: 2,

@@ -41,9 +41,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [value]="
-          isLoading
-            ? undefined
-            : performance?.currentNetPerformanceWithCurrencyEffect
+          isLoading ? undefined : performance?.netPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -55,7 +53,7 @@
         [value]="
           isLoading
             ? undefined
-            : performance?.currentNetPerformancePercentWithCurrencyEffect
+            : performance?.netPerformancePercentageWithCurrencyEffect
         "
       />
     </div>
