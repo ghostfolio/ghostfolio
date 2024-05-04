@@ -1604,7 +1604,7 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
-    const performanceInformation = await this.getPerformance({
+    const { performance } = await this.getPerformance({
       impersonationId,
       userId
     });
@@ -1694,7 +1694,7 @@ export class PortfolioService {
       .toNumber();
 
     const netWorth = new Big(balanceInBaseCurrency)
-      .plus(performanceInformation.performance.currentValue)
+      .plus(performance.currentValue)
       .plus(valuables)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
@@ -1704,21 +1704,19 @@ export class PortfolioService {
 
     const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
       daysInMarket,
-      netPerformancePercent: new Big(
-        performanceInformation.performance.currentNetPerformancePercent
-      )
+      netPerformancePercent: new Big(performance.currentNetPerformancePercent)
     })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
       this.getAnnualizedPerformancePercent({
         daysInMarket,
         netPerformancePercent: new Big(
-          performanceInformation.performance.currentNetPerformancePercentWithCurrencyEffect
+          performance.currentNetPerformancePercentWithCurrencyEffect
         )
       })?.toNumber();
 
     return {
-      ...performanceInformation.performance,
+      ...performance,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
@@ -1740,7 +1738,7 @@ export class PortfolioService {
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : undefined,
-      fireWealth: new Big(performanceInformation.performance.currentValue)
+      fireWealth: new Big(performance.currentValue)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       interest: interest.toNumber(),

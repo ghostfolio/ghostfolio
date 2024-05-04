@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the performance labels (with and without currency effects) in the position detail dialog
 - Upgraded `ionicons` from version `7.3.0` to `7.4.0`
 
 ## 2.78.0 - 2024-05-02
