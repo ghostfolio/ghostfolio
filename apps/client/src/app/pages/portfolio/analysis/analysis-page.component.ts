@@ -80,7 +80,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
 
-    route.queryParams
+    this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (

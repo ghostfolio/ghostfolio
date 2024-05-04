@@ -44,7 +44,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    route.queryParams
+    this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (
