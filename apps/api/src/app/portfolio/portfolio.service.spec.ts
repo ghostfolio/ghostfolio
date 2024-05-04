@@ -27,7 +27,7 @@ describe('PortfolioService', () => {
         portfolioService
           .getAnnualizedPerformancePercent({
             daysInMarket: NaN, // differenceInDays of date-fns returns NaN for the same day
-            netPerformancePercent: new Big(0)
+            netPerformancePercentage: new Big(0)
           })
           .toNumber()
       ).toEqual(0);
@@ -36,7 +36,7 @@ describe('PortfolioService', () => {
         portfolioService
           .getAnnualizedPerformancePercent({
             daysInMarket: 0,
-            netPerformancePercent: new Big(0)
+            netPerformancePercentage: new Big(0)
           })
           .toNumber()
       ).toEqual(0);
@@ -48,7 +48,7 @@ describe('PortfolioService', () => {
         portfolioService
           .getAnnualizedPerformancePercent({
             daysInMarket: 65, // < 1 year
-            netPerformancePercent: new Big(0.1025)
+            netPerformancePercentage: new Big(0.1025)
           })
           .toNumber()
       ).toBeCloseTo(0.729705);
@@ -57,7 +57,7 @@ describe('PortfolioService', () => {
         portfolioService
           .getAnnualizedPerformancePercent({
             daysInMarket: 365, // 1 year
-            netPerformancePercent: new Big(0.05)
+            netPerformancePercentage: new Big(0.05)
           })
           .toNumber()
       ).toBeCloseTo(0.05);
@@ -69,7 +69,7 @@ describe('PortfolioService', () => {
         portfolioService
           .getAnnualizedPerformancePercent({
             daysInMarket: 575, // > 1 year
-            netPerformancePercent: new Big(0.2374)
+            netPerformancePercentage: new Big(0.2374)
           })
           .toNumber()
       ).toBeCloseTo(0.145);

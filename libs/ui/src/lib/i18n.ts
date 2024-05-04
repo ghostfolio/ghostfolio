@@ -5,6 +5,7 @@ const locales = {
   'Asia-Pacific': $localize`Asia-Pacific`,
   ASSET_CLASS: $localize`Asset Class`,
   ASSET_SUB_CLASS: $localize`Asset Sub Class`,
+  BUY_AND_SELL_ACTIVITIES_TOOLTIP: $localize`Buy and sell`,
   CORE: $localize`Core`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC: $localize`Switch to Ghostfolio Premium or Ghostfolio Open Source easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS: $localize`Switch to Ghostfolio Premium easily`,

@@ -11,6 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Türkçe (`tr`)
 
+## 2.79.0 - 2024-05-04
+
+### Changed
+
+- Moved the holdings table to the holdings tab of the home page
+- Improved the performance labels (with and without currency effects) in the position detail dialog
+- Optimized the calculations of the portfolio details endpoint
+
+### Fixed
+
+- Fixed an issue with the benchmarks in the markets overview
+- Fixed an issue with the _Fear & Greed Index_ (market mood) in the markets overview
+
 ## 2.78.0 - 2024-05-02
 
 ### Added

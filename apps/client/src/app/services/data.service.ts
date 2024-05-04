@@ -376,6 +376,9 @@ export class DataService {
     });
   }
 
+  /**
+   * @deprecated
+   */
   public fetchPositions({
     filters,
     range
