@@ -360,7 +360,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
-      hasFilters: filters?.length > 0,
+      hasFilters: true, // disable cache
       isExperimentalFeatures:
         this.request.user?.Settings.settings.isExperimentalFeatures
     });
