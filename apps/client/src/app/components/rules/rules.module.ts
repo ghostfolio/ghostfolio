@@ -6,7 +6,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 
-import { GfPositionModule } from '../position/position.module';
 import { RulesComponent } from './rules.component';
 
 @NgModule({
@@ -15,7 +14,6 @@ import { RulesComponent } from './rules.component';
   imports: [
     CommonModule,
     GfNoTransactionsInfoComponent,
-    GfPositionModule,
     GfRuleModule,
     MatButtonModule,
     MatCardModule
