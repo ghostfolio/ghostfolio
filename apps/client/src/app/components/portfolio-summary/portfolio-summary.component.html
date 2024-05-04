@@ -9,9 +9,19 @@
     class="flex-nowrap px-3 py-1 row"
     [hidden]="summary?.ordersCount === null"
   >
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>
+    <div class="d-flex flex-grow-1 ml-3 text-truncate">
       {{ summary?.ordersCount }}
-      {summary?.ordersCount, plural, =1 {transaction} other {transactions}}
+      <ng-container i18n>{summary?.ordersCount, plural,
+        =1 {activity}
+        other {activities}
+      }</ng-container>
+      <span
+        class="align-items-center d-flex ml-1"
+        matTooltipPosition="above"
+        [matTooltip]="buyAndSellActivitiesTooltip"
+      >
+        <ion-icon name="information-circle-outline" />
+      </span>
     </div>
   </div>
   <div class="row">

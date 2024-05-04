@@ -1604,11 +1604,6 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
 
-    const { performance } = await this.getPerformance({
-      impersonationId,
-      userId
-    });
-
     const { activities } = await this.orderService.getOrders({
       userCurrency,
       userId,
@@ -1625,6 +1620,19 @@ export class PortfolioService {
         nonExcludedActivities.push(activity);
       }
     }
+
+    const {
+      currentValueInBaseCurrency,
+      grossPerformance,
+      grossPerformancePercentage,
+      grossPerformancePercentageWithCurrencyEffect,
+      grossPerformanceWithCurrencyEffect,
+      netPerformance,
+      netPerformancePercentage,
+      netPerformancePercentageWithCurrencyEffect,
+      netPerformanceWithCurrencyEffect,
+      totalInvestment
+    } = await portfolioCalculator.getSnapshot();
 
     const dividendInBaseCurrency =
       await portfolioCalculator.getDividendInBaseCurrency();
@@ -1694,7 +1702,7 @@ export class PortfolioService {
       .toNumber();
 
     const netWorth = new Big(balanceInBaseCurrency)
-      .plus(performance.currentValue)
+      .plus(currentValueInBaseCurrency)
       .plus(valuables)
       .plus(excludedAccountsAndActivities)
       .minus(liabilities)
@@ -1704,19 +1712,18 @@ export class PortfolioService {
 
     const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
       daysInMarket,
-      netPerformancePercent: new Big(performance.currentNetPerformancePercent)
+      netPerformancePercent: new Big(netPerformancePercentage)
     })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
       this.getAnnualizedPerformancePercent({
         daysInMarket,
         netPerformancePercent: new Big(
-          performance.currentNetPerformancePercentWithCurrencyEffect
+          netPerformancePercentageWithCurrencyEffect
         )
       })?.toNumber();
 
     return {
-      ...performance,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
@@ -1725,6 +1732,19 @@ export class PortfolioService {
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
+      currentGrossPerformance: grossPerformance.toNumber(),
+      currentGrossPerformancePercent: grossPerformancePercentage.toNumber(),
+      currentGrossPerformancePercentWithCurrencyEffect:
+        grossPerformancePercentageWithCurrencyEffect.toNumber(),
+      currentGrossPerformanceWithCurrencyEffect:
+        grossPerformanceWithCurrencyEffect.toNumber(),
+      currentNetPerformance: netPerformance.toNumber(),
+      currentNetPerformancePercent: netPerformancePercentage.toNumber(),
+      currentNetPerformancePercentWithCurrencyEffect:
+        netPerformancePercentageWithCurrencyEffect.toNumber(),
+      currentNetPerformanceWithCurrencyEffect:
+        netPerformanceWithCurrencyEffect.toNumber(),
+      currentValue: currentValueInBaseCurrency.toNumber(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
         assets: emergencyFundPositionsValueInBaseCurrency,
@@ -1738,15 +1758,16 @@ export class PortfolioService {
       filteredValueInPercentage: netWorth
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : undefined,
-      fireWealth: new Big(performance.currentValue)
+      fireWealth: new Big(currentValueInBaseCurrency)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
       ordersCount: activities.filter(({ type }) => {
-        return type === 'BUY' || type === 'SELL';
+        return ['BUY', 'SELL'].includes(type);
       }).length,
+      totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
   }

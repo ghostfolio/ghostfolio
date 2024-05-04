@@ -8,7 +8,7 @@ export interface PortfolioPerformance {
   currentNetPerformancePercent: number;
   currentNetPerformancePercentWithCurrencyEffect: number;
   currentNetPerformanceWithCurrencyEffect: number;
-  currentNetWorth: number;
+  currentNetWorth?: number;
   currentValue: number;
   totalInvestment: number;
 }
