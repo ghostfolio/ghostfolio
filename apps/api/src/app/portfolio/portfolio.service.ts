@@ -208,16 +208,16 @@ export class PortfolioService {
 
   public getAnnualizedPerformancePercent({
     daysInMarket,
-    netPerformancePercent
+    netPerformancePercentage
   }: {
     daysInMarket: number;
-    netPerformancePercent: Big;
+    netPerformancePercentage: Big;
   }): Big {
     if (isNumber(daysInMarket) && daysInMarket > 0) {
       const exponent = new Big(365).div(daysInMarket).toNumber();
 
       return new Big(
-        Math.pow(netPerformancePercent.plus(1).toNumber(), exponent)
+        Math.pow(netPerformancePercentage.plus(1).toNumber(), exponent)
       ).minus(1);
     }
 
@@ -704,7 +704,7 @@ export class PortfolioService {
 
       const dividendYieldPercent = this.getAnnualizedPerformancePercent({
         daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
-        netPerformancePercent: timeWeightedInvestment.eq(0)
+        netPerformancePercentage: timeWeightedInvestment.eq(0)
           ? new Big(0)
           : dividendInBaseCurrency.div(timeWeightedInvestment)
       });
@@ -712,7 +712,9 @@ export class PortfolioService {
       const dividendYieldPercentWithCurrencyEffect =
         this.getAnnualizedPerformancePercent({
           daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
-          netPerformancePercent: timeWeightedInvestmentWithCurrencyEffect.eq(0)
+          netPerformancePercentage: timeWeightedInvestmentWithCurrencyEffect.eq(
+            0
+          )
             ? new Big(0)
             : dividendInBaseCurrency.div(
                 timeWeightedInvestmentWithCurrencyEffect
@@ -1712,13 +1714,13 @@ export class PortfolioService {
 
     const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
       daysInMarket,
-      netPerformancePercent: new Big(netPerformancePercentage)
+      netPerformancePercentage: new Big(netPerformancePercentage)
     })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
       this.getAnnualizedPerformancePercent({
         daysInMarket,
-        netPerformancePercent: new Big(
+        netPerformancePercentage: new Big(
           netPerformancePercentageWithCurrencyEffect
         )
       })?.toNumber();
