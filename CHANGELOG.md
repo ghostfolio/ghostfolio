@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Increased the number of attempts of queue jobs from `10` to `12` (fail later)
 
+### Fixed
+
+- Fixed the position detail dialog open functionality when searching for a holding in the assistant
+
 ## 2.79.0 - 2024-05-04
 
 ### Changed
