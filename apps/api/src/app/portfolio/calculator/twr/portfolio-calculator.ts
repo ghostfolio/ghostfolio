@@ -102,11 +102,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
     }
 
-    console.log(
-      'Overall: totalTimeWeightedInvestmentValue',
-      totalTimeWeightedInvestment.toFixed()
-    );
-
     return {
       currentValueInBaseCurrency,
       grossPerformance,
@@ -338,16 +333,21 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let lastUnitPrice: Big;
 
     if (isChartMode) {
-      const datesWithOrders = {};
+      const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
       for (const order of orders) {
-        datesWithOrders[order.date] = true;
+        ordersByDate[order.date] = ordersByDate[order.date] ?? [];
+        ordersByDate[order.date].push(order);
       }
 
       while (isBefore(day, end)) {
-        const hasDate = datesWithOrders[format(day, DATE_FORMAT)];
-
-        if (!hasDate) {
+        if (ordersByDate[format(day, DATE_FORMAT)]?.length > 0) {
+          for (let order of ordersByDate[format(day, DATE_FORMAT)]) {
+            order.unitPriceFromMarketData =
+              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
+              lastUnitPrice;
+          }
+        } else {
           orders.push({
             date: format(day, DATE_FORMAT),
             fee: new Big(0),
@@ -360,11 +360,17 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
             type: 'BUY',
             unitPrice:
               marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
+              lastUnitPrice,
+            unitPriceFromMarketData:
+              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
               lastUnitPrice
           });
         }
 
-        lastUnitPrice = last(orders).unitPrice;
+        const lastOrder = last(orders);
+
+        lastUnitPrice =
+          lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
 
         day = addDays(day, step);
       }
@@ -423,12 +429,14 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         );
       }
 
-      if (order.unitPrice) {
-        order.unitPriceInBaseCurrency = order.unitPrice.mul(
-          currentExchangeRate ?? 1
-        );
+      const unitPrice = ['BUY', 'SELL'].includes(order.type)
+        ? order.unitPrice
+        : order.unitPriceFromMarketData;
 
-        order.unitPriceInBaseCurrencyWithCurrencyEffect = order.unitPrice.mul(
+      if (unitPrice) {
+        order.unitPriceInBaseCurrency = unitPrice.mul(currentExchangeRate ?? 1);
+
+        order.unitPriceInBaseCurrencyWithCurrencyEffect = unitPrice.mul(
           exchangeRateAtOrderDate ?? 1
         );
       }
@@ -649,10 +657,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           grossPerformanceWithCurrencyEffect;
       }
 
-      if (i > indexOfStartOrder && ['BUY', 'SELL'].includes(order.type)) {
+      if (i > indexOfStartOrder) {
         // Only consider periods with an investment for the calculation of
         // the time weighted investment
-        if (valueOfInvestmentBeforeTransaction.gt(0)) {
+        if (
+          valueOfInvestmentBeforeTransaction.gt(0) &&
+          ['BUY', 'SELL'].includes(order.type)
+        ) {
           // Calculate the number of days since the previous order
           const orderDate = new Date(order.date);
           const previousOrderDate = new Date(orders[i - 1].date);
