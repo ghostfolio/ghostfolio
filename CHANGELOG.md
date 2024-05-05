@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set the icon column of the activities table to stick at the beginning
 - Set the icon column of the holdings table to stick at the beginning
 
+### Fixed
+
+- Fixed the position detail dialog open functionality when searching for a holding in the assistant
+
 ## 2.79.0 - 2024-05-04
 
 ### Changed
