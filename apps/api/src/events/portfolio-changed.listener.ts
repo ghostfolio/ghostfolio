@@ -12,7 +12,7 @@ export class PortfolioChangedListener {
   @OnEvent(PortfolioChangedEvent.getName())
   handlePortfolioChangedEvent(event: PortfolioChangedEvent) {
     Logger.log(
-      `Portfolio of user with id ${event.getUserId()} has changed`,
+      `Portfolio of user '${event.getUserId()}' has changed`,
       'PortfolioChangedListener'
     );
 
