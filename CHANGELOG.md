@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+
 ### Fixed
 
 - Fixed the position detail dialog open functionality when searching for a holding in the assistant
