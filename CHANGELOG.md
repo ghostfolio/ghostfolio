@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the icon column of the activities table to stick at the beginning
 - Set the icon column of the holdings table to stick at the beginning
+- Increased the number of attempts of queue jobs from `10` to `12` (fail later)
 - Upgraded `ionicons` from version `7.3.0` to `7.4.0`
 
 ### Fixed

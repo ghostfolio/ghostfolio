@@ -66,7 +66,7 @@ export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -76,7 +76,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
