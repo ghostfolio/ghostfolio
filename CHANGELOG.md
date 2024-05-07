@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the absolute change column to the holdings table on the home page
 
+### Changed
+
+- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+
 ### Fixed
 
 - Fixed the position detail dialog open functionality when searching for a holding in the assistant
