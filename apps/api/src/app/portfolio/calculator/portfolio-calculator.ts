@@ -91,6 +91,7 @@ export abstract class PortfolioCalculator {
     userId: string;
   }) {
     console.time('--- PortfolioCalculator.constructor - 1');
+
     this.accountBalanceItems = accountBalanceItems;
     this.configurationService = configurationService;
     this.currency = currency;
@@ -273,7 +274,8 @@ export abstract class PortfolioCalculator {
     } = await this.currentRateService.getValues({
       dataGatheringItems,
       dateQuery: {
-        in: dates
+        gte: parseDate(firstTransactionPoint?.date),
+        lt: end
       }
     });
 
@@ -302,7 +304,7 @@ export abstract class PortfolioCalculator {
     const chartStartDate = this.getStartDate();
     const daysInMarket = differenceInDays(endDate, chartStartDate) + 1;
 
-    const step = true /*withDataDecimation*/
+    const step = false /*withDataDecimation*/
       ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
       : 1;
 
@@ -581,11 +583,6 @@ export abstract class PortfolioCalculator {
         totalTimeWeightedInvestmentValueWithCurrencyEffect
       } = values;
 
-      console.log(
-        'Chart: totalTimeWeightedInvestmentValue',
-        totalTimeWeightedInvestmentValue.toFixed()
-      );
-
       const netPerformanceInPercentage = totalTimeWeightedInvestmentValue.eq(0)
         ? 0
         : totalNetPerformanceValue
@@ -712,7 +709,8 @@ export abstract class PortfolioCalculator {
       await this.currentRateService.getValues({
         dataGatheringItems,
         dateQuery: {
-          in: dates
+          gte: start,
+          lt: end
         }
       });
 
