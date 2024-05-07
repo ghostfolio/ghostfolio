@@ -1201,9 +1201,6 @@ export class PortfolioService {
 
     let currentNetWorth = 0;
 
-    /*const items = await portfolioCalculator.getChart({
-      dateRange
-    });*/
     console.timeEnd('------- PortfolioService.getPerformance - 4');
     console.time('------- PortfolioService.getPerformance - 5');
 
