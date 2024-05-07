@@ -13104,10 +13104,10 @@ invariant@^2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
-ionicons@7.3.0:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.3.0.tgz#d2385e87dbe6a8c79fd44fb2e7c87b0de4a2cbcb"
-  integrity sha512-l9quySYi+o4T6mFzhKRyU/1nKc2Zs0zxs7jWcq9iVRhRPQondV11jYqLTed0lVVXHfGrBCfnedKl9D6BCnA1UQ==
+ionicons@7.4.0:
+  version "7.4.0"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-7.4.0.tgz#9c285aaa8089befbd6c5a89ae13292d364cd9ace"
+  integrity sha512-ZK94MMqgzMCPPMhmk8Ouu6goyVHFIlw/ACP6oe3FrikcI0N7CX0xcwVaEbUc0G/v3W0shI93vo+9ve/KpvcNhQ==
   dependencies:
     "@stencil/core" "^4.0.3"
 
