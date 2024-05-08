@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the spacing around the floating action buttons (FAB)
 - Set the icon column of the activities table to stick at the beginning
 - Set the icon column of the holdings table to stick at the beginning
 - Increased the number of attempts of queue jobs from `10` to `12` (fail later)
