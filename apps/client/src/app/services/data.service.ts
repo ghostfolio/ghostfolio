@@ -6,7 +6,6 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -372,24 +371,6 @@ export class DataService {
     }
 
     return this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`, {
-      params
-    });
-  }
-
-  /**
-   * @deprecated
-   */
-  public fetchPositions({
-    filters,
-    range
-  }: {
-    filters?: Filter[];
-    range: DateRange;
-  }): Observable<PortfolioPositions> {
-    let params = this.buildFiltersAsQueryParams({ filters });
-    params = params.append('range', range);
-
-    return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
       params
     });
   }

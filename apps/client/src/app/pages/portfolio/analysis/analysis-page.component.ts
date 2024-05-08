@@ -8,7 +8,7 @@ import {
   HistoricalDataItem,
   PortfolioInvestments,
   PortfolioPerformance,
-  Position,
+  PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
@@ -35,7 +35,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
-  public bottom3: Position[];
+  public bottom3: PortfolioPosition[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public daysInMarket: number;
   public deviceType: string;
@@ -60,7 +60,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performanceDataItemsInPercentage: HistoricalDataItem[];
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public streaks: PortfolioInvestments['streaks'];
-  public top3: Position[];
+  public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
   public user: User;
@@ -308,23 +308,23 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
-      .fetchPositions({
+      .fetchPortfolioHoldings({
         filters: this.userService.getFilters(),
         range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ positions }) => {
-        const positionsSorted = sortBy(
-          positions.filter(({ netPerformancePercentageWithCurrencyEffect }) => {
-            return isNumber(netPerformancePercentageWithCurrencyEffect);
+      .subscribe(({ holdings }) => {
+        const holdingsSorted = sortBy(
+          holdings.filter(({ netPerformancePercentWithCurrencyEffect }) => {
+            return isNumber(netPerformancePercentWithCurrencyEffect);
           }),
-          'netPerformancePercentageWithCurrencyEffect'
+          'netPerformancePercentWithCurrencyEffect'
         ).reverse();
 
-        this.top3 = positionsSorted.slice(0, 3);
+        this.top3 = holdingsSorted.slice(0, 3);
 
-        if (positions?.length > 3) {
-          this.bottom3 = positionsSorted.slice(-3).reverse();
+        if (holdings?.length > 3) {
+          this.bottom3 = holdingsSorted.slice(-3).reverse();
         } else {
           this.bottom3 = [];
         }

@@ -2,7 +2,7 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { Position } from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 import {
   StepperOrientation,
@@ -43,7 +43,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public deviceType: string;
   public dialogTitle = $localize`Import Activities`;
   public errorMessages: string[] = [];
-  public holdings: Position[] = [];
+  public holdings: PortfolioPosition[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
   public isLoading = false;
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
@@ -88,7 +88,7 @@ export class ImportActivitiesDialog implements OnDestroy {
       this.uniqueAssetForm.get('uniqueAsset').disable();
 
       this.dataService
-        .fetchPositions({
+        .fetchPortfolioHoldings({
           filters: [
             {
               id: AssetClass.EQUITY,
@@ -98,8 +98,8 @@ export class ImportActivitiesDialog implements OnDestroy {
           range: 'max'
         })
         .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ positions }) => {
-          this.holdings = sortBy(positions, ({ name }) => {
+        .subscribe(({ holdings }) => {
+          this.holdings = sortBy(holdings, ({ name }) => {
             return name.toLowerCase();
           });
           this.uniqueAssetForm.get('uniqueAsset').enable();
