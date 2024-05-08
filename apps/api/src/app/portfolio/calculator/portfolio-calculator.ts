@@ -44,7 +44,7 @@ import {
   min,
   subDays
 } from 'date-fns';
-import { first, last, uniq, uniqBy } from 'lodash';
+import { first, last, sum, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -99,6 +99,8 @@ export abstract class PortfolioCalculator {
     this.dateRange = dateRange;
     this.exchangeRateDataService = exchangeRateDataService;
 
+    let dateOfFirstActivity = new Date();
+
     this.activities = activities
       .map(
         ({
@@ -110,6 +112,10 @@ export abstract class PortfolioCalculator {
           type,
           unitPrice
         }) => {
+          if (isBefore(date, dateOfFirstActivity)) {
+            dateOfFirstActivity = date;
+          }
+
           if (isAfter(date, new Date(Date.now()))) {
             // Adapt date to today if activity is in future (e.g. liability)
             // to include it in the interval
@@ -132,10 +138,13 @@ export abstract class PortfolioCalculator {
       });
 
     this.redisCacheService = redisCacheService;
-    this.useCache = useCache;
+    this.useCache = false; // useCache;
     this.userId = userId;
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate, startDate } = getInterval(
+      'max',
+      subDays(dateOfFirstActivity, 1)
+    );
 
     this.endDate = endDate;
     this.startDate = startDate;
@@ -1080,6 +1089,57 @@ export abstract class PortfolioCalculator {
     console.timeEnd('getSnapshot');
 
     return this.snapshot;
+  }
+
+  public async getPerformance({ end, start }) {
+    await this.snapshotPromise;
+
+    const { chartData } = this.snapshot;
+
+    const newChartData = [];
+
+    let netPerformanceAtStartDate;
+    let netPerformanceWithCurrencyEffectAtStartDate;
+    let netPerformanceInPercentageWithCurrencyEffectAtStartDate;
+    let investmentValuesWithCurrencyEffect = [];
+
+    for (let historicalDataItem of chartData) {
+      if (
+        !isBefore(parseDate(historicalDataItem.date), start) &&
+        !isAfter(parseDate(historicalDataItem.date), end)
+      ) {
+        if (!netPerformanceAtStartDate) {
+          netPerformanceAtStartDate = historicalDataItem.netPerformance;
+
+          netPerformanceWithCurrencyEffectAtStartDate =
+            historicalDataItem.netPerformanceWithCurrencyEffect;
+
+          netPerformanceInPercentageWithCurrencyEffectAtStartDate =
+            historicalDataItem.netPerformanceInPercentageWithCurrencyEffect;
+        }
+
+        investmentValuesWithCurrencyEffect.push(
+          historicalDataItem.investmentValueWithCurrencyEffect
+        );
+
+        // TODO: Normalize remaining metrics
+        newChartData.push({
+          ...historicalDataItem,
+          netPerformance:
+            historicalDataItem.netPerformance - netPerformanceAtStartDate,
+          netPerformanceWithCurrencyEffect:
+            historicalDataItem.netPerformanceWithCurrencyEffect -
+            netPerformanceWithCurrencyEffectAtStartDate,
+          netPerformanceInPercentageWithCurrencyEffect:
+            historicalDataItem.netPerformanceWithCurrencyEffect /
+            // TODO: This is not correct yet
+            (sum(investmentValuesWithCurrencyEffect) /
+              investmentValuesWithCurrencyEffect.length)
+        });
+      }
+    }
+
+    return newChartData;
   }
 
   public getStartDate() {

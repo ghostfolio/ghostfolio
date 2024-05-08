@@ -340,10 +340,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
       for (const order of orders) {
-        if (['BUY', 'SELL'].includes(order.type)) {
-          ordersByDate[order.date] = ordersByDate[order.date] ?? [];
-          ordersByDate[order.date].push(order);
-        }
+        ordersByDate[order.date] = ordersByDate[order.date] ?? [];
+        ordersByDate[order.date].push(order);
       }
 
       while (isBefore(day, end)) {

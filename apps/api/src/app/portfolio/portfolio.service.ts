@@ -1120,7 +1120,7 @@ export class PortfolioService {
       )
     );
 
-    const { endDate } = getInterval(dateRange);
+    const { endDate, startDate } = getInterval(dateRange);
 
     console.time('------- PortfolioService.getPerformance - 2');
 
@@ -1230,10 +1230,15 @@ export class PortfolioService {
 
     console.timeEnd('------ PortfolioService.getPerformance');
 
+    const newChartData = await portfolioCalculator.getPerformance({
+      end: endDate,
+      start: startDate
+    });
+
     return {
       errors,
       hasErrors,
-      chart: chartData,
+      chart: newChartData,
       firstOrderDate: parseDate(chartData[0]?.date),
       performance: {
         currentNetWorth,
