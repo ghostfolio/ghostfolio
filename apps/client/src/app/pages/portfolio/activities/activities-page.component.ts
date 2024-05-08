@@ -29,6 +29,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog/import-activi
 import { ImportActivitiesDialogParams } from './import-activities-dialog/interfaces/interfaces';
 
 @Component({
+  host: { class: 'has-fab' },
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'

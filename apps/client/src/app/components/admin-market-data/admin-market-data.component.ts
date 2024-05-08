@@ -38,6 +38,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'has-fab' },
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'

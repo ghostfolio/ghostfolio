@@ -21,7 +21,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/c
 import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'has-fab page' },
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
