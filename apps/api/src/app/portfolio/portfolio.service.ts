@@ -1817,7 +1817,7 @@ export class PortfolioService {
       cashDetailsWithExcludedAccounts.balanceInBaseCurrency
     ).minus(balanceInBaseCurrency);
 
-    excludedAccountsAndActivities = excludedBalanceInBaseCurrency
+    let excludedAccountsAndActivities = excludedBalanceInBaseCurrency
       .plus(totalOfExcludedActivities)
       .toNumber();
 

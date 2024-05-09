@@ -339,7 +339,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       const datesWithOrders = {};
 
       for (const { date, type } of orders) {
-        if (['BUY', 'SELL'].includes(type)) {
+        if (['BUY', 'SELL', 'STAKE'].includes(type)) {
           datesWithOrders[date] = true;
         }
       }
@@ -459,7 +459,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
 
       if (order.type === 'STAKE') {
-        order.unitPrice = marketSymbolMap[order.date]?.[symbol];
+        order.unitPrice = marketSymbolMap[order.date]?.[symbol] ?? new Big(0);
       }
 
       if (order.unitPrice) {
