@@ -1101,11 +1101,11 @@ export abstract class PortfolioCalculator {
     let netPerformanceAtStartDate;
     let netPerformanceWithCurrencyEffectAtStartDate;
     let netPerformanceInPercentageWithCurrencyEffectAtStartDate;
-    let investmentValuesWithCurrencyEffect = [];
+    let totalInvestmentValuesWithCurrencyEffect = [];
 
     for (let historicalDataItem of chartData) {
       if (
-        !isBefore(parseDate(historicalDataItem.date), start) &&
+        !isBefore(parseDate(historicalDataItem.date), subDays(start, 1)) &&
         !isAfter(parseDate(historicalDataItem.date), end)
       ) {
         if (!netPerformanceAtStartDate) {
@@ -1118,8 +1118,8 @@ export abstract class PortfolioCalculator {
             historicalDataItem.netPerformanceInPercentageWithCurrencyEffect;
         }
 
-        investmentValuesWithCurrencyEffect.push(
-          historicalDataItem.investmentValueWithCurrencyEffect
+        totalInvestmentValuesWithCurrencyEffect.push(
+          historicalDataItem.totalInvestmentValueWithCurrencyEffect
         );
 
         // TODO: Normalize remaining metrics
@@ -1131,10 +1131,12 @@ export abstract class PortfolioCalculator {
             historicalDataItem.netPerformanceWithCurrencyEffect -
             netPerformanceWithCurrencyEffectAtStartDate,
           netPerformanceInPercentageWithCurrencyEffect:
-            historicalDataItem.netPerformanceWithCurrencyEffect /
-            // TODO: This is not correct yet
-            (sum(investmentValuesWithCurrencyEffect) /
-              investmentValuesWithCurrencyEffect.length)
+            ((historicalDataItem.netPerformanceWithCurrencyEffect -
+              netPerformanceWithCurrencyEffectAtStartDate) /
+              // TODO: Not sure if this is correct
+              (sum(totalInvestmentValuesWithCurrencyEffect) /
+                totalInvestmentValuesWithCurrencyEffect.length)) *
+            100
         });
       }
     }
