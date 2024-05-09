@@ -78,6 +78,7 @@ export class GfActivitiesTableComponent
   @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() locale = getLocale();
