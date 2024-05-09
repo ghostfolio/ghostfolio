@@ -1118,9 +1118,24 @@ export abstract class PortfolioCalculator {
             historicalDataItem.netPerformanceInPercentageWithCurrencyEffect;
         }
 
-        totalInvestmentValuesWithCurrencyEffect.push(
-          historicalDataItem.totalInvestmentValueWithCurrencyEffect
-        );
+        const netPerformanceWithCurrencyEffectSinceStartDate =
+          historicalDataItem.netPerformanceWithCurrencyEffect -
+          netPerformanceWithCurrencyEffectAtStartDate;
+
+        if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
+          totalInvestmentValuesWithCurrencyEffect.push(
+            historicalDataItem.totalInvestmentValueWithCurrencyEffect
+          );
+        }
+
+        const timeWeightedInvestmentValue =
+          totalInvestmentValuesWithCurrencyEffect.length > 0
+            ? sum(totalInvestmentValuesWithCurrencyEffect) /
+              totalInvestmentValuesWithCurrencyEffect.length
+            : 0;
+
+        // TODO: Not sure if this is correct
+        console.log(historicalDataItem.totalInvestmentValueWithCurrencyEffect);
 
         // TODO: Normalize remaining metrics
         newChartData.push({
@@ -1128,14 +1143,10 @@ export abstract class PortfolioCalculator {
           netPerformance:
             historicalDataItem.netPerformance - netPerformanceAtStartDate,
           netPerformanceWithCurrencyEffect:
-            historicalDataItem.netPerformanceWithCurrencyEffect -
-            netPerformanceWithCurrencyEffectAtStartDate,
+            netPerformanceWithCurrencyEffectSinceStartDate,
           netPerformanceInPercentageWithCurrencyEffect:
-            ((historicalDataItem.netPerformanceWithCurrencyEffect -
-              netPerformanceWithCurrencyEffectAtStartDate) /
-              // TODO: Not sure if this is correct
-              (sum(totalInvestmentValuesWithCurrencyEffect) /
-                totalInvestmentValuesWithCurrencyEffect.length)) *
+            (netPerformanceWithCurrencyEffectSinceStartDate /
+              timeWeightedInvestmentValue) *
             100
         });
       }
