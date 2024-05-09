@@ -1,14 +1,21 @@
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { resetHours } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse, Filter } from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
+import { parseISO } from 'date-fns';
+
+import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
 @Injectable()
 export class AccountBalanceService {
   public constructor(
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService
   ) {}
@@ -24,20 +31,63 @@ export class AccountBalanceService {
     });
   }
 
-  public async createAccountBalance(
-    data: Prisma.AccountBalanceCreateInput
-  ): Promise<AccountBalance> {
-    return this.prismaService.accountBalance.create({
-      data
+  public async createOrUpdateAccountBalance({
+    accountId,
+    balance,
+    date,
+    userId
+  }: CreateAccountBalanceDto & {
+    userId: string;
+  }): Promise<AccountBalance> {
+    const accountBalance = await this.prismaService.accountBalance.upsert({
+      create: {
+        Account: {
+          connect: {
+            id_userId: {
+              userId,
+              id: accountId
+            }
+          }
+        },
+        date: resetHours(parseISO(date)),
+        value: balance
+      },
+      update: {
+        value: balance
+      },
+      where: {
+        accountId_date: {
+          accountId,
+          date: resetHours(parseISO(date))
+        }
+      }
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId
+      })
+    );
+
+    return accountBalance;
   }
 
   public async deleteAccountBalance(
     where: Prisma.AccountBalanceWhereUniqueInput
   ): Promise<AccountBalance> {
-    return this.prismaService.accountBalance.delete({
+    const accountBalance = await this.prismaService.accountBalance.delete({
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: <string>where.userId
+      })
+    );
+
+    return accountBalance;
   }
 
   public async getAccountBalances({

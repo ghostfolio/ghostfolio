@@ -1,1 +1,1 @@
-export * from './activity-type.module';
+export * from './activity-type.component';

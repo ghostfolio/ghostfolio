@@ -60,15 +60,15 @@ export class OrderController {
   }
 
   @Delete(':id')
+  @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteOrder(@Param('id') id: string): Promise<OrderModel> {
-    const order = await this.orderService.order({ id });
+    const order = await this.orderService.order({
+      id,
+      userId: this.request.user.id
+    });
 
-    if (
-      !hasPermission(this.request.user.permissions, permissions.deleteOrder) ||
-      !order ||
-      order.userId !== this.request.user.id
-    ) {
+    if (!order) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -88,20 +88,25 @@ export class OrderController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') dateRange: DateRange = 'max',
+    @Query('range') dateRange?: DateRange,
     @Query('skip') skip?: number,
     @Query('sortColumn') sortColumn?: string,
     @Query('sortDirection') sortDirection?: Prisma.SortOrder,
     @Query('tags') filterByTags?: string,
     @Query('take') take?: number
   ): Promise<Activities> {
+    let endDate: Date;
+    let startDate: Date;
+
+    if (dateRange) {
+      ({ endDate, startDate } = getInterval(dateRange));
+    }
+
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
       filterByTags
     });
-
-    const { endDate, startDate } = getInterval(dateRange);
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);

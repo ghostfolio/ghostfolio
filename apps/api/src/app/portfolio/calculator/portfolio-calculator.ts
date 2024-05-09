@@ -1,13 +1,14 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
-import { PortfolioSnapshot } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-snapshot.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import {
   getFactor,
   getInterval
 } from '@ghostfolio/api/helper/portfolio.helper';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
@@ -23,72 +24,114 @@ import {
   InvestmentItem,
   ResponseError,
   SymbolMetrics,
-  TimelinePosition,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
+import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
 
+import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
+import { plainToClass } from 'class-transformer';
 import {
   differenceInDays,
   eachDayOfInterval,
   endOfDay,
   format,
+  isAfter,
   isBefore,
   isSameDay,
   max,
+  min,
   subDays
 } from 'date-fns';
-import { last, uniq, uniqBy } from 'lodash';
+import { first, last, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
 
-  protected orders: PortfolioOrder[];
+  protected accountBalanceItems: HistoricalDataItem[];
+  protected activities: PortfolioOrder[];
 
+  private configurationService: ConfigurationService;
   private currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
+  private dateRange: DateRange;
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
+  private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
+  private useCache: boolean;
+  private userId: string;
 
   public constructor({
+    accountBalanceItems,
     activities,
+    configurationService,
     currency,
     currentRateService,
     dateRange,
-    exchangeRateDataService
+    exchangeRateDataService,
+    redisCacheService,
+    useCache,
+    userId
   }: {
+    accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
+    configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;
     dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
+    redisCacheService: RedisCacheService;
+    useCache: boolean;
+    userId: string;
   }) {
+    this.accountBalanceItems = accountBalanceItems;
+    this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
+    this.dateRange = dateRange;
     this.exchangeRateDataService = exchangeRateDataService;
-    this.orders = activities.map(
-      ({ date, fee, quantity, SymbolProfile, tags = [], type, unitPrice }) => {
-        return {
-          SymbolProfile,
-          tags,
-          type,
-          date: format(date, DATE_FORMAT),
-          fee: new Big(fee),
-          quantity: new Big(quantity),
-          unitPrice: new Big(unitPrice)
-        };
-      }
-    );
 
-    this.orders.sort((a, b) => {
-      return a.date?.localeCompare(b.date);
-    });
+    this.activities = activities
+      .map(
+        ({
+          date,
+          fee,
+          quantity,
+          SymbolProfile,
+          tags = [],
+          type,
+          unitPrice
+        }) => {
+          if (isAfter(date, new Date(Date.now()))) {
+            // Adapt date to today if activity is in future (e.g. liability)
+            // to include it in the interval
+            date = endOfDay(new Date(Date.now()));
+          }
+
+          return {
+            SymbolProfile,
+            tags,
+            type,
+            date: format(date, DATE_FORMAT),
+            fee: new Big(fee),
+            quantity: new Big(quantity),
+            unitPrice: new Big(unitPrice)
+          };
+        }
+      )
+      .sort((a, b) => {
+        return a.date?.localeCompare(b.date);
+      });
+
+    this.redisCacheService = redisCacheService;
+    this.useCache = useCache;
+    this.userId = userId;
 
     const { endDate, startDate } = getInterval(dateRange);
 
@@ -383,10 +426,6 @@ export abstract class PortfolioCalculator {
     dateRange?: DateRange;
     withDataDecimation?: boolean;
   }): Promise<HistoricalDataItem[]> {
-    if (this.getTransactionPoints().length === 0) {
-      return [];
-    }
-
     const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
 
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
@@ -485,6 +524,7 @@ export abstract class PortfolioCalculator {
         investmentValueWithCurrencyEffect: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
+        totalAccountBalanceWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
         totalInvestmentValueWithCurrencyEffect: Big;
         totalNetPerformanceValue: Big;
@@ -544,8 +584,23 @@ export abstract class PortfolioCalculator {
       };
     }
 
+    let lastDate = format(this.startDate, DATE_FORMAT);
+
     for (const currentDate of dates) {
       const dateString = format(currentDate, DATE_FORMAT);
+
+      accumulatedValuesByDate[dateString] = {
+        investmentValueWithCurrencyEffect: new Big(0),
+        totalAccountBalanceWithCurrencyEffect: new Big(0),
+        totalCurrentValue: new Big(0),
+        totalCurrentValueWithCurrencyEffect: new Big(0),
+        totalInvestmentValue: new Big(0),
+        totalInvestmentValueWithCurrencyEffect: new Big(0),
+        totalNetPerformanceValue: new Big(0),
+        totalNetPerformanceValueWithCurrencyEffect: new Big(0),
+        totalTimeWeightedInvestmentValue: new Big(0),
+        totalTimeWeightedInvestmentValueWithCurrencyEffect: new Big(0)
+      };
 
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
@@ -584,49 +639,94 @@ export abstract class PortfolioCalculator {
             dateString
           ] ?? new Big(0);
 
-        accumulatedValuesByDate[dateString] = {
-          investmentValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.investmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(investmentValueWithCurrencyEffect),
-          totalCurrentValue: (
-            accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
-          ).add(currentValue),
-          totalCurrentValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.totalCurrentValueWithCurrencyEffect ?? new Big(0)
-          ).add(currentValueWithCurrencyEffect),
-          totalInvestmentValue: (
-            accumulatedValuesByDate[dateString]?.totalInvestmentValue ??
-            new Big(0)
-          ).add(investmentValueAccumulated),
-          totalInvestmentValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.totalInvestmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(investmentValueAccumulatedWithCurrencyEffect),
-          totalNetPerformanceValue: (
-            accumulatedValuesByDate[dateString]?.totalNetPerformanceValue ??
-            new Big(0)
-          ).add(netPerformanceValue),
-          totalNetPerformanceValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.totalNetPerformanceValueWithCurrencyEffect ?? new Big(0)
-          ).add(netPerformanceValueWithCurrencyEffect),
-          totalTimeWeightedInvestmentValue: (
-            accumulatedValuesByDate[dateString]
-              ?.totalTimeWeightedInvestmentValue ?? new Big(0)
-          ).add(timeWeightedInvestmentValue),
-          totalTimeWeightedInvestmentValueWithCurrencyEffect: (
-            accumulatedValuesByDate[dateString]
-              ?.totalTimeWeightedInvestmentValueWithCurrencyEffect ?? new Big(0)
-          ).add(timeWeightedInvestmentValueWithCurrencyEffect)
-        };
+        accumulatedValuesByDate[dateString].investmentValueWithCurrencyEffect =
+          accumulatedValuesByDate[
+            dateString
+          ].investmentValueWithCurrencyEffect.add(
+            investmentValueWithCurrencyEffect
+          );
+
+        accumulatedValuesByDate[dateString].totalCurrentValue =
+          accumulatedValuesByDate[dateString].totalCurrentValue.add(
+            currentValue
+          );
+
+        accumulatedValuesByDate[
+          dateString
+        ].totalCurrentValueWithCurrencyEffect = accumulatedValuesByDate[
+          dateString
+        ].totalCurrentValueWithCurrencyEffect.add(
+          currentValueWithCurrencyEffect
+        );
+
+        accumulatedValuesByDate[dateString].totalInvestmentValue =
+          accumulatedValuesByDate[dateString].totalInvestmentValue.add(
+            investmentValueAccumulated
+          );
+
+        accumulatedValuesByDate[
+          dateString
+        ].totalInvestmentValueWithCurrencyEffect = accumulatedValuesByDate[
+          dateString
+        ].totalInvestmentValueWithCurrencyEffect.add(
+          investmentValueAccumulatedWithCurrencyEffect
+        );
+
+        accumulatedValuesByDate[dateString].totalNetPerformanceValue =
+          accumulatedValuesByDate[dateString].totalNetPerformanceValue.add(
+            netPerformanceValue
+          );
+
+        accumulatedValuesByDate[
+          dateString
+        ].totalNetPerformanceValueWithCurrencyEffect = accumulatedValuesByDate[
+          dateString
+        ].totalNetPerformanceValueWithCurrencyEffect.add(
+          netPerformanceValueWithCurrencyEffect
+        );
+
+        accumulatedValuesByDate[dateString].totalTimeWeightedInvestmentValue =
+          accumulatedValuesByDate[
+            dateString
+          ].totalTimeWeightedInvestmentValue.add(timeWeightedInvestmentValue);
+
+        accumulatedValuesByDate[
+          dateString
+        ].totalTimeWeightedInvestmentValueWithCurrencyEffect =
+          accumulatedValuesByDate[
+            dateString
+          ].totalTimeWeightedInvestmentValueWithCurrencyEffect.add(
+            timeWeightedInvestmentValueWithCurrencyEffect
+          );
       }
+
+      if (
+        this.accountBalanceItems.some(({ date }) => {
+          return date === dateString;
+        })
+      ) {
+        accumulatedValuesByDate[
+          dateString
+        ].totalAccountBalanceWithCurrencyEffect = new Big(
+          this.accountBalanceItems.find(({ date }) => {
+            return date === dateString;
+          }).value
+        );
+      } else {
+        accumulatedValuesByDate[
+          dateString
+        ].totalAccountBalanceWithCurrencyEffect =
+          accumulatedValuesByDate[lastDate]
+            ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0);
+      }
+
+      lastDate = dateString;
     }
 
     return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
       const {
         investmentValueWithCurrencyEffect,
+        totalAccountBalanceWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
@@ -661,6 +761,11 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
+        // TODO: Add valuables
+        netWorth: totalCurrentValueWithCurrencyEffect
+          .plus(totalAccountBalanceWithCurrencyEffect)
+          .toNumber(),
+        totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
           totalInvestmentValueWithCurrencyEffect.toNumber(),
@@ -749,9 +854,30 @@ export abstract class PortfolioCalculator {
   }
 
   public getStartDate() {
-    return this.transactionPoints.length > 0
-      ? parseDate(this.transactionPoints[0].date)
-      : new Date();
+    let firstAccountBalanceDate: Date;
+    let firstActivityDate: Date;
+
+    try {
+      const firstAccountBalanceDateString = first(
+        this.accountBalanceItems
+      )?.date;
+      firstAccountBalanceDate = firstAccountBalanceDateString
+        ? parseDate(firstAccountBalanceDateString)
+        : new Date();
+    } catch (error) {
+      firstAccountBalanceDate = new Date();
+    }
+
+    try {
+      const firstActivityDateString = this.transactionPoints[0].date;
+      firstActivityDate = firstActivityDateString
+        ? parseDate(firstActivityDateString)
+        : new Date();
+    } catch (error) {
+      firstActivityDate = new Date();
+    }
+
+    return min([firstAccountBalanceDate, firstActivityDate]);
   }
 
   protected abstract getSymbolMetrics({
@@ -799,7 +925,7 @@ export abstract class PortfolioCalculator {
       tags,
       type,
       unitPrice
-    } of this.orders) {
+    } of this.activities) {
       let currentTransactionPointItem: TransactionPointSymbol;
       const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
 
@@ -923,6 +1049,52 @@ export abstract class PortfolioCalculator {
   }
 
   private async initialize() {
-    this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
+    if (this.useCache) {
+      const startTimeTotal = performance.now();
+
+      const cachedSnapshot = await this.redisCacheService.get(
+        this.redisCacheService.getPortfolioSnapshotKey({
+          userId: this.userId
+        })
+      );
+
+      if (cachedSnapshot) {
+        this.snapshot = plainToClass(
+          PortfolioSnapshot,
+          JSON.parse(cachedSnapshot)
+        );
+
+        Logger.debug(
+          `Fetched portfolio snapshot from cache in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      } else {
+        this.snapshot = await this.computeSnapshot(
+          this.startDate,
+          this.endDate
+        );
+
+        this.redisCacheService.set(
+          this.redisCacheService.getPortfolioSnapshotKey({
+            userId: this.userId
+          }),
+          JSON.stringify(this.snapshot),
+          this.configurationService.get('CACHE_QUOTES_TTL')
+        );
+
+        Logger.debug(
+          `Computed portfolio snapshot in ${(
+            (performance.now() - startTimeTotal) /
+            1000
+          ).toFixed(3)} seconds`,
+          'PortfolioCalculator'
+        );
+      }
+    } else {
+      this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
+    }
   }
 }

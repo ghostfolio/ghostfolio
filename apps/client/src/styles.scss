@@ -387,6 +387,10 @@ ngx-skeleton-loader {
   @include gf-table;
 }
 
+.has-fab {
+  padding-bottom: 3rem !important;
+}
+
 .has-info-message {
   .page.has-tabs {
     height: calc(100svh - 2 * var(--mat-toolbar-standard-height));
@@ -543,6 +547,10 @@ ngx-skeleton-loader {
       --mdc-tab-indicator-active-indicator-color: transparent;
     }
 
+    .mat-mdc-tab-nav-panel {
+      padding: 2rem 0;
+    }
+
     @media (max-width: 575.98px) {
       .mat-mdc-tab-link {
         --mdc-secondary-navigation-tab-container-height: 3rem;
@@ -566,10 +574,6 @@ ngx-skeleton-loader {
             justify-content: flex-start;
           }
         }
-      }
-
-      .mat-mdc-tab-nav-panel {
-        padding: 2rem 0;
       }
     }
   }

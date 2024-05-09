@@ -47,11 +47,11 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { AssetClass, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -128,14 +128,19 @@ export class PortfolioController {
 
       const totalValue = Object.values(holdings)
         .filter(({ assetClass, assetSubClass }) => {
-          return assetClass !== 'CASH' && assetSubClass !== 'CASH';
+          return (
+            assetClass !== AssetClass.LIQUIDITY &&
+            assetSubClass !== AssetSubClass.CASH
+          );
         })
         .map(({ valueInBaseCurrency }) => {
           return valueInBaseCurrency;
         })
-        .reduce((a, b) => a + b, 0);
+        .reduce((a, b) => {
+          return a + b;
+        }, 0);
 
-      for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      for (const [, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.valueInPercentage =
@@ -159,21 +164,21 @@ export class PortfolioController {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
-        'currentGrossPerformance',
-        'currentGrossPerformanceWithCurrencyEffect',
-        'currentNetPerformance',
-        'currentNetPerformanceWithCurrencyEffect',
         'currentNetWorth',
-        'currentValue',
+        'currentValueInBaseCurrency',
         'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
         'fireWealth',
+        'grossPerformance',
+        'grossPerformanceWithCurrencyEffect',
         'interest',
         'items',
         'liabilities',
+        'netPerformance',
+        'netPerformanceWithCurrencyEffect',
         'totalBuy',
         'totalInvestment',
         'totalSell',
@@ -185,11 +190,11 @@ export class PortfolioController {
       holdings[symbol] = {
         ...portfolioPosition,
         assetClass:
-          hasDetails || portfolioPosition.assetClass === 'CASH'
+          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
             ? portfolioPosition.assetClass
             : undefined,
         assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === 'CASH'
+          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
             ? portfolioPosition.assetSubClass
             : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
@@ -290,6 +295,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -301,6 +307,7 @@ export class PortfolioController {
     });
 
     const { holdings } = await this.portfolioService.getDetails({
+      dateRange,
       filters,
       impersonationId,
       userId: this.request.user.id
@@ -441,10 +448,14 @@ export class PortfolioController {
                     .div(performanceInformation.performance.totalInvestment)
                     .toNumber(),
             valueInPercentage:
-              performanceInformation.performance.currentValue === 0
+              performanceInformation.performance.currentValueInBaseCurrency ===
+              0
                 ? 0
                 : new Big(value)
-                    .div(performanceInformation.performance.currentValue)
+                    .div(
+                      performanceInformation.performance
+                        .currentValueInBaseCurrency
+                    )
                     .toNumber()
           };
         }
@@ -453,12 +464,12 @@ export class PortfolioController {
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
         [
-          'currentGrossPerformance',
-          'currentGrossPerformanceWithCurrencyEffect',
-          'currentNetPerformance',
-          'currentNetPerformanceWithCurrencyEffect',
           'currentNetWorth',
-          'currentValue',
+          'currentValueInBaseCurrency',
+          'grossPerformance',
+          'grossPerformanceWithCurrencyEffect',
+          'netPerformance',
+          'netPerformanceWithCurrencyEffect',
           'totalInvestment'
         ]
       );
@@ -475,37 +486,11 @@ export class PortfolioController {
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['currentNetPerformance', 'currentNetPerformancePercent']
+        ['netPerformance']
       );
     }
 
     return performanceInformation;
-  }
-
-  @Get('positions')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @UseInterceptors(RedactValuesInResponseInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getPositions(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
-  ): Promise<PortfolioPositions> {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterBySearchQuery,
-      filterByTags
-    });
-
-    return this.portfolioService.getPositions({
-      dateRange,
-      filters,
-      impersonationId
-    });
   }
 
   @Get('public/:accessId')

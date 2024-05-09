@@ -449,13 +449,16 @@ export class ExchangeRateDataService {
               factors[format(date, DATE_FORMAT)] = factor;
             }
           } catch {
-            Logger.error(
-              `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
-                date,
-                DATE_FORMAT
-              )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom} and ${DEFAULT_CURRENCY}${currencyTo}.`,
-              'ExchangeRateDataService'
-            );
+            let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
+              date,
+              DATE_FORMAT
+            )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
+
+            if (DEFAULT_CURRENCY !== currencyTo) {
+              errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
+            }
+
+            Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
           }
         }
       }

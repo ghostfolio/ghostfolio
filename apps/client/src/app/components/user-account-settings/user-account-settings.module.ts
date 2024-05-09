@@ -1,4 +1,4 @@
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -18,7 +18,7 @@ import { UserAccountSettingsComponent } from './user-account-settings.component'
   imports: [
     CommonModule,
     FormsModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,

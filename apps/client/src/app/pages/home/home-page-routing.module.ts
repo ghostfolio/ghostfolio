@@ -23,6 +23,11 @@ const routes: Routes = [
         title: $localize`Holdings`
       },
       {
+        path: 'holdings',
+        component: HomeHoldingsComponent,
+        title: $localize`Holdings`
+      },
+      {
         path: 'summary',
         component: HomeSummaryComponent,
         title: $localize`Summary`

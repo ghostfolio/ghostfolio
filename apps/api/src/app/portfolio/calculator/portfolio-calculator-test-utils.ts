@@ -24,3 +24,7 @@ export const symbolProfileDummyData = {
   sectors: [],
   updatedAt: undefined
 };
+
+export const userDummyData = {
+  id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+};

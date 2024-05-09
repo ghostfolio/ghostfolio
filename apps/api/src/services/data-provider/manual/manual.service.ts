@@ -91,7 +91,7 @@ export class ManualService implements DataProviderInterface {
         headers = {},
         selector,
         url
-      } = symbolProfile.scraperConfiguration ?? {};
+      } = symbolProfile?.scraperConfiguration ?? {};
 
       if (defaultMarketPrice) {
         const historical: {

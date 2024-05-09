@@ -21,7 +21,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/c
 import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'has-fab page' },
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
@@ -189,9 +189,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: UpdateAccountDto = data?.account;
-
+      .subscribe((account: UpdateAccountDto | null) => {
         if (account) {
           this.dataService
             .putAccount(account)
@@ -233,6 +231,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.fetchAccounts();
+
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
@@ -256,9 +256,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: CreateAccountDto = data?.account;
-
+      .subscribe((account: CreateAccountDto | null) => {
         if (account) {
           this.dataService
             .postAccount(account)

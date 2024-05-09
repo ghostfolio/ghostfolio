@@ -11,7 +11,7 @@
         [colorScheme]="user?.settings?.colorScheme"
         [historicalDataItems]="historicalDataItems"
         [isAnimated]="true"
-        [locale]="user?.settings?.locale"
+        [locale]="user?.settings?.locale || undefined"
         [showXAxis]="true"
         [showYAxis]="true"
         [yMax]="100"
@@ -30,7 +30,7 @@
     <div class="col-xs-12 col-md-8 offset-md-2">
       <gf-benchmark
         [benchmarks]="benchmarks"
-        [locale]="user?.settings?.locale"
+        [locale]="user?.settings?.locale || undefined"
         [user]="user"
       />
       <ngx-skeleton-loader

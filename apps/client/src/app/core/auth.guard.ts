@@ -54,9 +54,10 @@ export class AuthGuard {
               this.router.navigate(['/' + $localize`register`]);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) =>
-                state.url.startsWith(publicPageRoute)
-              )?.length > 0
+              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) => {
+                const [, url] = state.url.split('/');
+                return `/${url}` === publicPageRoute;
+              })?.length > 0
             ) {
               resolve(true);
               return EMPTY;

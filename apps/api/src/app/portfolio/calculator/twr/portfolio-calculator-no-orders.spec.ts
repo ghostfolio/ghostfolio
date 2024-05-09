@@ -1,9 +1,13 @@
+import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { parseDate } from '@ghostfolio/common/helper';
 
@@ -19,12 +23,25 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   };
 });
 
+jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    RedisCacheService: jest.fn().mockImplementation(() => {
+      return RedisCacheServiceMock;
+    })
+  };
+});
+
 describe('PortfolioCalculator', () => {
+  let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let factory: PortfolioCalculatorFactory;
+  let redisCacheService: RedisCacheService;
 
   beforeEach(() => {
+    configurationService = new ConfigurationService();
+
     currentRateService = new CurrentRateService(null, null, null, null);
 
     exchangeRateDataService = new ExchangeRateDataService(
@@ -34,9 +51,13 @@ describe('PortfolioCalculator', () => {
       null
     );
 
+    redisCacheService = new RedisCacheService(null, null);
+
     factory = new PortfolioCalculatorFactory(
+      configurationService,
       currentRateService,
-      exchangeRateDataService
+      exchangeRateDataService,
+      redisCacheService
     );
   });
 
@@ -49,7 +70,9 @@ describe('PortfolioCalculator', () => {
       const portfolioCalculator = factory.createCalculator({
         activities: [],
         calculationType: PerformanceCalculationType.TWR,
-        currency: 'CHF'
+        currency: 'CHF',
+        hasFilters: false,
+        userId: userDummyData.id
       });
 
       const start = subDays(new Date(Date.now()), 10);
@@ -90,7 +113,12 @@ describe('PortfolioCalculator', () => {
 
       expect(investments).toEqual([]);
 
-      expect(investmentsByMonth).toEqual([]);
+      expect(investmentsByMonth).toEqual([
+        {
+          date: '2021-12-01',
+          investment: 0
+        }
+      ]);
     });
   });
 });

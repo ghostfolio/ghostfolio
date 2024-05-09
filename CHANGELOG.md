@@ -5,7 +5,115 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.80.0 - 2024-05-08
+
+### Added
+
+- Added the absolute change column to the holdings table on the home page
+
+### Changed
+
+- Increased the spacing around the floating action buttons (FAB)
+- Set the icon column of the activities table to stick at the beginning
+- Set the icon column of the holdings table to stick at the beginning
+- Increased the number of attempts of queue jobs from `10` to `12` (fail later)
+- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+
+### Fixed
+
+- Fixed the position detail dialog open functionality when searching for a holding in the assistant
+
+## 2.79.0 - 2024-05-04
+
+### Changed
+
+- Moved the holdings table to the holdings tab of the home page
+- Improved the performance labels (with and without currency effects) in the position detail dialog
+- Optimized the calculations of the portfolio details endpoint
+
+### Fixed
+
+- Fixed an issue with the benchmarks in the markets overview
+- Fixed an issue with the _Fear & Greed Index_ (market mood) in the markets overview
+
+## 2.78.0 - 2024-05-02
+
+### Added
+
+- Added a form validation against the DTO in the create or update access dialog
+- Added a form validation against the DTO in the asset profile details dialog of the admin control
+- Added a form validation against the DTO in the platform management of the admin control panel
+- Added a form validation against the DTO in the tag management of the admin control panel
+
+### Changed
+
+- Set the performance column of the holdings table to stick at the end
+- Skipped the caching in the portfolio calculator if there are active filters (experimental)
+- Improved the `INACTIVE` user role
+
+### Fixed
+
+- Fixed an issue in the calculation of the portfolio summary caused by future liabilities
+- Fixed a division by zero error in the dividend yield calculation (experimental)
+
+## 2.77.1 - 2024-04-27
+
+### Added
+
+- Extended the content of the _Self-Hosting_ section by the custom asset instructions on the Frequently Asked Questions (FAQ) page
+- Added the caching to the portfolio calculator (experimental)
+
+### Changed
+
+- Migrated the `@ghostfolio/ui` components to control flow
+- Updated the browserslist database
+- Upgraded `prisma` from version `5.12.1` to `5.13.0`
+
+### Fixed
+
+- Fixed the form submit in the asset profile details dialog of the admin control due to the `url` validation
+- Fixed the historical market data gathering for asset profiles with `MANUAL` data source
+
+## 2.76.0 - 2024-04-23
+
+### Changed
+
+- Changed `CASH` to `LIQUIDITY` in the asset class enum
+
+## 2.75.1 - 2024-04-21
+
+### Added
+
+- Added `accountId` and `date` as a unique constraint to the `AccountBalance` database schema
+
+### Changed
+
+- Improved the chart in the account detail dialog
+- Improved the account balance management
+
+### Fixed
+
+- Fixed an issue with `totalValueInBaseCurrency` in the value redaction interceptor for the impersonation mode
+
+## 2.74.0 - 2024-04-20
+
+### Added
+
+- Added the date range support to the portfolio holdings page
+- Added support to create an account balance
+
+### Changed
+
+- Removed the date range support in the activities table on the portfolio activities page (experimental)
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `17.3.3` to `17.3.5`
+- Upgraded `Nx` from version `18.2.3` to `18.3.3`
+
+### Fixed
+
+- Fixed gaps in the portfolio performance charts by considering `BUY` and `SELL` activities
+
+## 2.73.0 - 2024-04-17
 
 ### Added
 
@@ -19,6 +127,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the interest calculations into the portfolio calculator
 - Moved the liability calculations into the portfolio calculator
 - Moved the (wealth) item calculations into the portfolio calculator
+- Let queue jobs for asset profile data gathering fail by throwing an error
+- Let queue jobs for historical market data gathering fail by throwing an error
+- Upgraded `yahoo-finance2` from version `2.11.1` to `2.11.2`
 
 ## 2.72.0 - 2024-04-13
 

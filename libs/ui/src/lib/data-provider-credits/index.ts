@@ -1,1 +1,1 @@
-export * from './data-provider-credits.module';
+export * from './data-provider-credits.component';

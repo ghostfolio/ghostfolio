@@ -233,15 +233,17 @@ export class DataProviderService {
     }
   }
 
-  public async getHistoricalRaw(
-    aDataGatheringItems: UniqueAsset[],
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistoricalRaw({
+    dataGatheringItems,
+    from,
+    to
+  }: {
+    dataGatheringItems: UniqueAsset[];
+    from: Date;
+    to: Date;
+  }): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    let dataGatheringItems = aDataGatheringItems;
-
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
         this.hasCurrency({
@@ -330,6 +332,8 @@ export class DataProviderService {
       }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
+
+      throw error;
     }
 
     return result;
@@ -395,7 +399,8 @@ export class DataProviderService {
           numberOfItemsInCache > 1 ? 's' : ''
         } from cache in ${((performance.now() - startTimeTotal) / 1000).toFixed(
           3
-        )} seconds`
+        )} seconds`,
+        'DataProviderService'
       );
     }
 
@@ -501,7 +506,8 @@ export class DataProviderService {
               } from ${dataSource} in ${(
                 (performance.now() - startTimeDataSource) /
                 1000
-              ).toFixed(3)} seconds`
+              ).toFixed(3)} seconds`,
+              'DataProviderService'
             );
 
             try {
@@ -531,14 +537,15 @@ export class DataProviderService {
 
     await Promise.all(promises);
 
-    Logger.debug('------------------------------------------------');
+    Logger.debug('--------------------------------------------------------');
     Logger.debug(
       `Fetched ${items.length} quote${items.length > 1 ? 's' : ''} in ${(
         (performance.now() - startTimeTotal) /
         1000
-      ).toFixed(3)} seconds`
+      ).toFixed(3)} seconds`,
+      'DataProviderService'
     );
-    Logger.debug('================================================');
+    Logger.debug('========================================================');
 
     return response;
   }
