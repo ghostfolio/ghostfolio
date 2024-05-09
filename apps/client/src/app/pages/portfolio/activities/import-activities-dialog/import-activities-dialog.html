@@ -33,7 +33,7 @@
               <mat-label i18n>Holding</mat-label>
               <mat-select formControlName="uniqueAsset">
                 <mat-select-trigger>{{
-                  uniqueAssetForm.controls['uniqueAsset']?.value?.name
+                  uniqueAssetForm.get('uniqueAsset')?.value?.name
                 }}</mat-select-trigger>
                 <mat-option
                   *ngFor="let holding of holdings"

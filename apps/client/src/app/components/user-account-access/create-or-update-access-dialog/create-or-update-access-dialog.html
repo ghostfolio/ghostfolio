@@ -27,7 +27,7 @@
       </mat-form-field>
     </div>
 
-    @if (accessForm.controls['type'].value === 'PRIVATE') {
+    @if (accessForm.get('type').value === 'PRIVATE') {
       <div>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Permission</mat-label>
@@ -45,7 +45,7 @@
             Ghostfolio <ng-container i18n>User ID</ng-container>
           </mat-label>
           <input
-            formControlName="userId"
+            formControlName="granteeUserId"
             matInput
             type="text"
             (keydown.enter)="$event.stopPropagation()"

@@ -1,5 +1,5 @@
 import { CacheService } from '@ghostfolio/client/services/cache.service';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -19,7 +19,7 @@ import { AdminOverviewComponent } from './admin-overview.component';
   imports: [
     CommonModule,
     FormsModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatCardModule,
     MatMenuModule,

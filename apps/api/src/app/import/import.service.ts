@@ -416,6 +416,11 @@ export class ImportService {
           User: { connect: { id: user.id } },
           userId: user.id
         });
+
+        if (order.SymbolProfile?.symbol) {
+          // Update symbol that may have been assigned in createOrder()
+          assetProfile.symbol = order.SymbolProfile.symbol;
+        }
       }
 
       const value = new Big(quantity).mul(unitPrice).toNumber();

@@ -48,11 +48,11 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { AssetClass, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -122,40 +122,27 @@ export class PortfolioController {
       hasReadRestrictedAccessPermission ||
       this.userService.isRestrictedView(this.request.user)
     ) {
-      let investmentTuple: [number, number] = [0, 0];
-      for (let holding of Object.entries(holdings)) {
-        var portfolioPosition = holding[1];
-        investmentTuple[0] += portfolioPosition.investment;
-        investmentTuple[1] += this.exchangeRateDataService.toCurrency(
-          portfolioPosition.quantity * portfolioPosition.marketPrice,
-          portfolioPosition.currency,
-          this.request.user.Settings.settings.baseCurrency
-        );
-      }
-      const totalInvestment = investmentTuple[0];
+      const totalInvestment = Object.values(holdings)
+        .map(({ investment }) => {
+          return investment;
+        })
+        .reduce((a, b) => a + b, 0);
 
-      const totalValue = investmentTuple[1];
+      const totalValue = Object.values(holdings)
+        .filter(({ assetClass, assetSubClass }) => {
+          return (
+            assetClass !== AssetClass.LIQUIDITY &&
+            assetSubClass !== AssetSubClass.CASH
+          );
+        })
+        .map(({ valueInBaseCurrency }) => {
+          return valueInBaseCurrency;
+        })
+        .reduce((a, b) => {
+          return a + b;
+        }, 0);
 
-      if (hasDetails === false) {
-        portfolioSummary = nullifyValuesInObject(summary, [
-          'cash',
-          'committedFunds',
-          'currentGrossPerformance',
-          'currentNetPerformance',
-          'currentValue',
-          'dividend',
-          'emergencyFund',
-          'excludedAccountsAndActivities',
-          'fees',
-          'items',
-          'liabilities',
-          'netWorth',
-          'totalBuy',
-          'totalSell'
-        ]);
-      }
-
-      for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
+      for (const [, portfolioPosition] of Object.entries(holdings)) {
         portfolioPosition.investment =
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.valueInPercentage =
@@ -197,21 +184,21 @@ export class PortfolioController {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
-        'currentGrossPerformance',
-        'currentGrossPerformanceWithCurrencyEffect',
-        'currentNetPerformance',
-        'currentNetPerformanceWithCurrencyEffect',
         'currentNetWorth',
-        'currentValue',
+        'currentValueInBaseCurrency',
         'dividendInBaseCurrency',
         'emergencyFund',
         'excludedAccountsAndActivities',
         'fees',
         'filteredValueInBaseCurrency',
         'fireWealth',
+        'grossPerformance',
+        'grossPerformanceWithCurrencyEffect',
         'interest',
         'items',
         'liabilities',
+        'netPerformance',
+        'netPerformanceWithCurrencyEffect',
         'totalBuy',
         'totalInvestment',
         'totalSell',
@@ -223,11 +210,11 @@ export class PortfolioController {
       holdings[symbol] = {
         ...portfolioPosition,
         assetClass:
-          hasDetails || portfolioPosition.assetClass === 'CASH'
+          hasDetails || portfolioPosition.assetClass === AssetClass.LIQUIDITY
             ? portfolioPosition.assetClass
             : undefined,
         assetSubClass:
-          hasDetails || portfolioPosition.assetSubClass === 'CASH'
+          hasDetails || portfolioPosition.assetSubClass === AssetSubClass.CASH
             ? portfolioPosition.assetSubClass
             : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
@@ -328,6 +315,7 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -339,6 +327,7 @@ export class PortfolioController {
     });
 
     const { holdings } = await this.portfolioService.getDetails({
+      dateRange,
       filters,
       impersonationId,
       userId: this.request.user.id
@@ -481,10 +470,14 @@ export class PortfolioController {
                     .div(performanceInformation.performance.totalInvestment)
                     .toNumber(),
             valueInPercentage:
-              performanceInformation.performance.currentValue === 0
+              performanceInformation.performance.currentValueInBaseCurrency ===
+              0
                 ? 0
                 : new Big(value)
-                    .div(performanceInformation.performance.currentValue)
+                    .div(
+                      performanceInformation.performance
+                        .currentValueInBaseCurrency
+                    )
                     .toNumber()
           };
         }
@@ -493,12 +486,12 @@ export class PortfolioController {
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
         [
-          'currentGrossPerformance',
-          'currentGrossPerformanceWithCurrencyEffect',
-          'currentNetPerformance',
-          'currentNetPerformanceWithCurrencyEffect',
           'currentNetWorth',
-          'currentValue',
+          'currentValueInBaseCurrency',
+          'grossPerformance',
+          'grossPerformanceWithCurrencyEffect',
+          'netPerformance',
+          'netPerformanceWithCurrencyEffect',
           'totalInvestment'
         ]
       );
@@ -515,37 +508,11 @@ export class PortfolioController {
       );
       performanceInformation.performance = nullifyValuesInObject(
         performanceInformation.performance,
-        ['currentNetPerformance', 'currentNetPerformancePercent']
+        ['netPerformance']
       );
     }
 
     return performanceInformation;
-  }
-
-  @Get('positions')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @UseInterceptors(RedactValuesInResponseInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getPositions(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
-  ): Promise<PortfolioPositions> {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterBySearchQuery,
-      filterByTags
-    });
-
-    return this.portfolioService.getPositions({
-      dateRange,
-      filters,
-      impersonationId
-    });
   }
 
   @Get('public/:accessId')

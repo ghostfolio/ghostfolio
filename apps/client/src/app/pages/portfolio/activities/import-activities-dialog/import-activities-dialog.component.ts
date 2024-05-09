@@ -2,7 +2,7 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { Position } from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '@ghostfolio/common/interfaces';
 
 import {
   StepperOrientation,
@@ -43,7 +43,7 @@ export class ImportActivitiesDialog implements OnDestroy {
   public deviceType: string;
   public dialogTitle = $localize`Import Activities`;
   public errorMessages: string[] = [];
-  public holdings: Position[] = [];
+  public holdings: PortfolioPosition[] = [];
   public importStep: ImportStep = ImportStep.UPLOAD_FILE;
   public isLoading = false;
   public maxSafeInteger = Number.MAX_SAFE_INTEGER;
@@ -85,10 +85,10 @@ export class ImportActivitiesDialog implements OnDestroy {
 
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
-      this.uniqueAssetForm.controls['uniqueAsset'].disable();
+      this.uniqueAssetForm.get('uniqueAsset').disable();
 
       this.dataService
-        .fetchPositions({
+        .fetchPortfolioHoldings({
           filters: [
             {
               id: AssetClass.EQUITY,
@@ -98,11 +98,11 @@ export class ImportActivitiesDialog implements OnDestroy {
           range: 'max'
         })
         .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(({ positions }) => {
-          this.holdings = sortBy(positions, ({ name }) => {
+        .subscribe(({ holdings }) => {
+          this.holdings = sortBy(holdings, ({ name }) => {
             return name.toLowerCase();
           });
-          this.uniqueAssetForm.controls['uniqueAsset'].enable();
+          this.uniqueAssetForm.get('uniqueAsset').enable();
 
           this.isLoading = false;
 
@@ -167,10 +167,10 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public onLoadDividends(aStepper: MatStepper) {
-    this.uniqueAssetForm.controls['uniqueAsset'].disable();
+    this.uniqueAssetForm.get('uniqueAsset').disable();
 
     const { dataSource, symbol } =
-      this.uniqueAssetForm.controls['uniqueAsset'].value;
+      this.uniqueAssetForm.get('uniqueAsset').value;
 
     this.dataService
       .fetchDividendsImport({
@@ -193,7 +193,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
-    this.uniqueAssetForm.controls['uniqueAsset'].enable();
+    this.uniqueAssetForm.get('uniqueAsset').enable();
 
     aStepper.reset();
   }

@@ -1,9 +1,9 @@
 import { GfAdminMarketDataDetailModule } from '@ghostfolio/client/components/admin-market-data-detail/admin-market-data-detail.module';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
-import { GfPortfolioProportionChartModule } from '@ghostfolio/ui/portfolio-proportion-chart/portfolio-proportion-chart.module';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule } from '@angular/common';
@@ -28,11 +28,11 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     FormsModule,
     GfAdminMarketDataDetailModule,
     GfAssetProfileIconComponent,
-    GfCurrencySelectorModule,
-    GfPortfolioProportionChartModule,
+    GfCurrencySelectorComponent,
+    GfPortfolioProportionChartComponent,
     MatAutocompleteModule,
     MatChipsModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

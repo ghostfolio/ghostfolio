@@ -3,6 +3,7 @@ import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-dat
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -281,29 +282,29 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     let countries = [];
     let scraperConfiguration = {};
     let sectors = [];
     let symbolMapping = {};
 
     try {
-      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+      countries = JSON.parse(this.assetProfileForm.get('countries').value);
     } catch {}
 
     try {
       scraperConfiguration = JSON.parse(
-        this.assetProfileForm.controls['scraperConfiguration'].value
+        this.assetProfileForm.get('scraperConfiguration').value
       );
     } catch {}
 
     try {
-      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
+      sectors = JSON.parse(this.assetProfileForm.get('sectors').value);
     } catch {}
 
     try {
       symbolMapping = JSON.parse(
-        this.assetProfileForm.controls['symbolMapping'].value
+        this.assetProfileForm.get('symbolMapping').value
       );
     } catch {}
 
@@ -312,19 +313,27 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       scraperConfiguration,
       sectors,
       symbolMapping,
-      assetClass: this.assetProfileForm.controls['assetClass'].value,
-      assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
-      comment: this.assetProfileForm.controls['comment'].value ?? null,
-      name: this.assetProfileForm.controls['name'].value,
-      tags: this.assetProfileForm.controls['tags'].value,
+      assetClass: this.assetProfileForm.get('assetClass').value,
+      assetSubClass: this.assetProfileForm.get('assetSubClass').value,
+      comment: this.assetProfileForm.get('comment').value || null,
+      tags: this.assetProfileForm.get('tags').value,
       currency: (<Currency>(
-        (<unknown>this.assetProfileForm.controls['currency'].value)
+        (<unknown>this.assetProfileForm.get('currency').value)
       ))?.value,
+      name: this.assetProfileForm.controls['name'].value,
       url: this.assetProfileForm.controls['url'].value
     };
 
-    assetProfileData.url =
-      assetProfileData.url?.length > 0 ? assetProfileData.url : null;
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileForm,
+        object: assetProfileData
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
 
     this.adminService
       .patchAssetProfile({
@@ -341,8 +350,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
-        scraperConfiguration:
-          this.assetProfileForm.controls['scraperConfiguration'].value,
+        scraperConfiguration: this.assetProfileForm.get('scraperConfiguration')
+          .value,
         symbol: this.data.symbol
       })
       .pipe(
@@ -358,9 +367,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             ' ' +
             price +
             ' ' +
-            (<Currency>(
-              (<unknown>this.assetProfileForm.controls['currency'].value)
-            ))?.value
+            (<Currency>(<unknown>this.assetProfileForm.get('currency').value))
+              ?.value
         );
       });
   }

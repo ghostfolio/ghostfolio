@@ -12,7 +12,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
-import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
 import {
   ChangeDetectionStrategy,
@@ -62,7 +62,7 @@ export class HeaderComponent implements OnChanges {
 
   @Output() signOut = new EventEmitter<void>();
 
-  @ViewChild('assistant') assistantElement: AssistantComponent;
+  @ViewChild('assistant') assistantElement: GfAssistantComponent;
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
   public hasPermissionForSocialLogin: boolean;

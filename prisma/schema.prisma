@@ -59,6 +59,7 @@ model AccountBalance {
   value     Float
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 
+  @@unique([accountId, date])
   @@index([accountId])
   @@index([date])
 }
@@ -249,15 +250,16 @@ enum AccessPermission {
 }
 
 enum AssetClass {
-  CASH
   COMMODITY
   EQUITY
   FIXED_INCOME
+  LIQUIDITY
   REAL_ESTATE
 }
 
 enum AssetSubClass {
   BOND
+  CASH
   COMMODITY
   CRYPTOCURRENCY
   ETF

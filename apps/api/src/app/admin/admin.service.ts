@@ -458,7 +458,7 @@ export class AdminService {
           dataSource,
           marketDataItemCount,
           symbol,
-          assetClass: 'CASH',
+          assetClass: AssetClass.LIQUIDITY,
           countriesCount: 0,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
           id: undefined,

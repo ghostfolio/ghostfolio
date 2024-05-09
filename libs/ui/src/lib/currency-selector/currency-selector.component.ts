@@ -3,6 +3,7 @@ import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-fi
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -12,13 +13,23 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, FormGroupDirective, NgControl } from '@angular/forms';
+import {
+  FormControl,
+  FormGroupDirective,
+  FormsModule,
+  NgControl,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   MatAutocomplete,
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import {
+  MatFormFieldControl,
+  MatFormFieldModule
+} from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -28,17 +39,26 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
     '[attr.aria-describedBy]': 'describedBy',
     '[id]': 'id'
   },
+  imports: [
+    FormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: CurrencySelectorComponent
+      useExisting: GfCurrencySelectorComponent
     }
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-currency-selector',
+  standalone: true,
   styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })
-export class CurrencySelectorComponent
+export class GfCurrencySelectorComponent
   extends AbstractMatFormField<Currency>
   implements OnInit, OnDestroy
 {

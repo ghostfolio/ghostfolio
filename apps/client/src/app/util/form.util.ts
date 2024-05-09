@@ -32,6 +32,14 @@ export async function validateObjectForForm<T>({
         validationError: Object.values(constraints)[0]
       });
     }
+
+    const formControlInCustomCurrency = form.get(`${property}InCustomCurrency`);
+
+    if (formControlInCustomCurrency) {
+      formControlInCustomCurrency.setErrors({
+        validationError: Object.values(constraints)[0]
+      });
+    }
   }
 
   return Promise.reject(nonIgnoredErrors);
