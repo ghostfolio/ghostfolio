@@ -1,0 +1,185 @@
+{
+  "migrations": [
+    {
+      "cli": "nx",
+      "version": "17.3.0-beta.6",
+      "description": "Updates the nx wrapper.",
+      "implementation": "./src/migrations/update-17-3-0/update-nxw",
+      "package": "nx",
+      "name": "17.3.0-update-nx-wrapper"
+    },
+    {
+      "cli": "nx",
+      "version": "18.0.0-beta.2",
+      "description": "Updates nx.json to disabled adding plugins when generating projects in an existing Nx workspace",
+      "implementation": "./src/migrations/update-18-0-0/disable-crystal-for-existing-workspaces",
+      "x-repair-skip": true,
+      "package": "nx",
+      "name": "18.0.0-disable-adding-plugins-for-existing-workspaces"
+    },
+    {
+      "version": "18.1.0-beta.3",
+      "description": "Moves affected.defaultBase to defaultBase in `nx.json`",
+      "implementation": "./src/migrations/update-17-2-0/move-default-base",
+      "package": "nx",
+      "name": "move-default-base-to-nx-json-root"
+    },
+    {
+      "cli": "nx",
+      "version": "18.1.0-beta.3",
+      "description": "Update to Cypress ^13.6.6 if the workspace is using Cypress v13 to ensure workspaces don't use v13.6.5 which has an issue when verifying Cypress.",
+      "implementation": "./src/migrations/update-18-1-0/update-cypress-version-13-6-6",
+      "package": "@nx/cypress",
+      "name": "update-cypress-version-13-6-6"
+    },
+    {
+      "cli": "nx",
+      "version": "17.2.6-beta.1",
+      "description": "Rename workspace rules from @nx/workspace/name to @nx/workspace-name",
+      "implementation": "./src/migrations/update-17-2-6-rename-workspace-rules/rename-workspace-rules",
+      "package": "@nx/eslint-plugin",
+      "name": "update-17-2-6-rename-workspace-rules"
+    },
+    {
+      "version": "17.1.0-beta.2",
+      "description": "Move jest executor options to nx.json targetDefaults",
+      "implementation": "./src/migrations/update-17-1-0/move-options-to-target-defaults",
+      "package": "@nx/jest",
+      "name": "move-options-to-target-defaults"
+    },
+    {
+      "cli": "nx",
+      "version": "17.1.0-beta.5",
+      "requires": {
+        "@angular/core": ">=17.0.0"
+      },
+      "description": "Update the @angular/cli package version to ~17.0.0.",
+      "factory": "./src/migrations/update-17-1-0/update-angular-cli",
+      "package": "@nx/angular",
+      "name": "update-angular-cli-version-17-0-0"
+    },
+    {
+      "cli": "nx",
+      "version": "17.1.0-beta.5",
+      "requires": {
+        "@angular/core": ">=17.0.0"
+      },
+      "description": "Rename 'browserTarget' to 'buildTarget'.",
+      "factory": "./src/migrations/update-17-1-0/browser-target-to-build-target",
+      "package": "@nx/angular",
+      "name": "rename-browser-target-to-build-target"
+    },
+    {
+      "cli": "nx",
+      "version": "17.1.0-beta.5",
+      "requires": {
+        "@angular/core": ">=17.0.0"
+      },
+      "description": "Replace usages of '@nguniversal/builders' with '@angular-devkit/build-angular'.",
+      "factory": "./src/migrations/update-17-1-0/replace-nguniversal-builders",
+      "package": "@nx/angular",
+      "name": "replace-nguniversal-builders"
+    },
+    {
+      "cli": "nx",
+      "version": "17.1.0-beta.5",
+      "requires": {
+        "@angular/core": ">=17.0.0"
+      },
+      "description": "Replace usages of '@nguniversal/' packages with '@angular/ssr'.",
+      "factory": "./src/migrations/update-17-1-0/replace-nguniversal-engines",
+      "package": "@nx/angular",
+      "name": "replace-nguniversal-engines"
+    },
+    {
+      "cli": "nx",
+      "version": "17.1.0-beta.5",
+      "requires": {
+        "@angular/core": ">=17.0.0"
+      },
+      "description": "Replace the deep imports from 'zone.js/dist/zone' and 'zone.js/dist/zone-testing' with 'zone.js' and 'zone.js/testing'.",
+      "factory": "./src/migrations/update-17-1-0/update-zone-js-deep-import",
+      "package": "@nx/angular",
+      "name": "update-zone-js-deep-import"
+    },
+    {
+      "cli": "nx",
+      "version": "17.2.0-beta.2",
+      "description": "Rename '@nx/angular:webpack-dev-server' executor to '@nx/angular:dev-server'",
+      "factory": "./src/migrations/update-17-2-0/rename-webpack-dev-server",
+      "package": "@nx/angular",
+      "name": "rename-webpack-dev-server-executor"
+    },
+    {
+      "cli": "nx",
+      "version": "17.3.0-beta.10",
+      "requires": {
+        "@angular/core": ">=17.1.0"
+      },
+      "description": "Update the @angular/cli package version to ~17.1.0.",
+      "factory": "./src/migrations/update-17-3-0/update-angular-cli",
+      "package": "@nx/angular",
+      "name": "update-angular-cli-version-17-1-0"
+    },
+    {
+      "cli": "nx",
+      "version": "17.3.0-beta.10",
+      "requires": {
+        "@angular/core": ">=17.1.0"
+      },
+      "description": "Add 'browser-sync' as dev dependency when '@angular-devkit/build-angular:ssr-dev-server' or '@nx/angular:module-federation-dev-ssr' is used.",
+      "factory": "./src/migrations/update-17-3-0/add-browser-sync-dependency",
+      "package": "@nx/angular",
+      "name": "add-browser-sync-dependency"
+    },
+    {
+      "cli": "nx",
+      "version": "17.3.0-beta.10",
+      "requires": {
+        "@angular/core": ">=17.1.0"
+      },
+      "description": "Add 'autoprefixer' as dev dependency when '@nx/angular:ng-packagr-lite' or '@nx/angular:package` is used.",
+      "factory": "./src/migrations/update-17-3-0/add-autoprefixer-dependency",
+      "package": "@nx/angular",
+      "name": "add-autoprefixer-dependency"
+    },
+    {
+      "cli": "nx",
+      "version": "18.0.0-beta.0",
+      "description": "Add NX_MF_DEV_SERVER_STATIC_REMOTES to inputs for task hashing when '@nx/angular:webpack-browser' is used for Module Federation.",
+      "factory": "./src/migrations/update-18-0-0/add-mf-env-var-to-target-defaults",
+      "package": "@nx/angular",
+      "name": "add-module-federation-env-var-to-target-defaults"
+    },
+    {
+      "cli": "nx",
+      "version": "18.1.0-beta.1",
+      "requires": {
+        "@angular/core": ">=17.2.0"
+      },
+      "description": "Update the @angular/cli package version to ~17.2.0.",
+      "factory": "./src/migrations/update-18-1-0/update-angular-cli",
+      "package": "@nx/angular",
+      "name": "update-angular-cli-version-17-2-0"
+    },
+    {
+      "cli": "nx",
+      "version": "18.1.1-beta.0",
+      "description": "Ensure targetDefaults inputs for task hashing when '@nx/angular:webpack-browser' is used are correct for Module Federation.",
+      "factory": "./src/migrations/update-18-1-1/fix-target-defaults-inputs",
+      "package": "@nx/angular",
+      "name": "fix-target-defaults-for-webpack-browser"
+    },
+    {
+      "cli": "nx",
+      "version": "18.2.0-beta.0",
+      "requires": {
+        "@angular/core": ">=17.3.0"
+      },
+      "description": "Update the @angular/cli package version to ~17.3.0.",
+      "factory": "./src/migrations/update-18-2-0/update-angular-cli",
+      "package": "@nx/angular",
+      "name": "update-angular-cli-version-17-3-0"
+    }
+  ]
+}
