@@ -244,6 +244,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       if (transactionDates.some((d) => d === dateString)) {
         let holdings = { ...currentHoldings[previousDateString] };
         investmentByDate[dateString].forEach((trade) => {
+          holdings[trade.SymbolProfile.symbol] ??= new Big(0);
           holdings[trade.SymbolProfile.symbol] = holdings[
             trade.SymbolProfile.symbol
           ].plus(trade.quantity.mul(getFactor(trade.type)));
