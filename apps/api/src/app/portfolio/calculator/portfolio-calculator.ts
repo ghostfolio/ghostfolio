@@ -53,12 +53,12 @@ export abstract class PortfolioCalculator {
   protected activities: PortfolioOrder[];
 
   private configurationService: ConfigurationService;
-  private currency: string;
+  protected currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private dateRange: DateRange;
   private endDate: Date;
-  private exchangeRateDataService: ExchangeRateDataService;
+  protected exchangeRateDataService: ExchangeRateDataService;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
@@ -66,6 +66,7 @@ export abstract class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
   private useCache: boolean;
   private userId: string;
+  protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
 
   public constructor({
     accountBalanceItems,
@@ -287,6 +288,8 @@ export abstract class PortfolioCalculator {
         );
       }
     }
+
+    this.marketMap = marketSymbolMap;
 
     const endDateString = format(endDate, DATE_FORMAT);
 

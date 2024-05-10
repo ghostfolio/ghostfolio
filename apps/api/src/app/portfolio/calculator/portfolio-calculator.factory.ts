@@ -8,13 +8,15 @@ import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
+import { CPRPortfolioCalculator } from './constantPortfolioReturn/portfolio-calculator';
 import { MWRPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
 import { TWRPortfolioCalculator } from './twr/portfolio-calculator';
 
 export enum PerformanceCalculationType {
   MWR = 'MWR', // Money-Weighted Rate of Return
-  TWR = 'TWR' // Time-Weighted Rate of Return
+  TWR = 'TWR', // Time-Weighted Rate of Return
+  CPR = 'CPR' // Constant Portfolio Rate of Return
 }
 
 @Injectable()
@@ -63,6 +65,19 @@ export class PortfolioCalculatorFactory {
         });
       case PerformanceCalculationType.TWR:
         return new TWRPortfolioCalculator({
+          accountBalanceItems,
+          activities,
+          currency,
+          currentRateService: this.currentRateService,
+          dateRange,
+          useCache,
+          userId,
+          configurationService: this.configurationService,
+          exchangeRateDataService: this.exchangeRateDataService,
+          redisCacheService: this.redisCacheService
+        });
+      case PerformanceCalculationType.CPR:
+        return new CPRPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,
