@@ -174,7 +174,6 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW',
             tags: [],
             timeWeightedInvestment: new Big('285.8'),
-            tags: undefined,
             timeWeightedInvestmentWithCurrencyEffect: new Big('285.8'),
             transactionCount: 2,
             valueInBaseCurrency: new Big('0')
