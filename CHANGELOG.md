@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disabled the button to delete all activities on the portfolio activities page if there are active filters
 
+### Fixed
+
+- Fixed the position detail dialog close functionality
+
 ## 2.80.0 - 2024-05-08
 
 ### Added
