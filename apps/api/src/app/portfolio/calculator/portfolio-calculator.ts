@@ -616,6 +616,7 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
+        netWorth: 0, // TODO
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
           totalInvestmentValueWithCurrencyEffect.toNumber(),
@@ -1096,7 +1097,7 @@ export abstract class PortfolioCalculator {
 
     const { chartData } = this.snapshot;
 
-    const newChartData = [];
+    const newChartData: HistoricalDataItem[] = [];
 
     let netPerformanceAtStartDate;
     let netPerformanceWithCurrencyEffectAtStartDate;
@@ -1147,7 +1148,12 @@ export abstract class PortfolioCalculator {
           netPerformanceInPercentageWithCurrencyEffect:
             (netPerformanceWithCurrencyEffectSinceStartDate /
               timeWeightedInvestmentValue) *
-            100
+            100,
+          // TODO: Add net worth with valuables
+          // netWorth: totalCurrentValueWithCurrencyEffect
+          //   .plus(totalAccountBalanceWithCurrencyEffect)
+          //   .toNumber()
+          netWorth: 0
         });
       }
     }
