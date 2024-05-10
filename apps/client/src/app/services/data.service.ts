@@ -263,12 +263,12 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order`, { params });
   }
 
-  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
-    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
+  public deleteAllActivities() {
+    return this.http.delete<any>(`/api/v1/order`);
   }
 
-  public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
+  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
   public deleteUser(aId: string) {
