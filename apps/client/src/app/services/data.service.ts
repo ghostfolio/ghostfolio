@@ -256,16 +256,16 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteAllOrders() {
-    return this.http.delete<any>(`/api/v1/order/`);
+  public deleteActivity(aId: string) {
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
+  }
+
+  public deleteAllActivities() {
+    return this.http.delete<any>(`/api/v1/order`);
   }
 
   public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
-  }
-
-  public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteUser(aId: string) {

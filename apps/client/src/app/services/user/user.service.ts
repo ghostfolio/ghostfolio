@@ -75,6 +75,10 @@ export class UserService extends ObservableStore<UserStoreState> {
     return filters;
   }
 
+  public hasFilters() {
+    return this.getFilters().length > 0;
+  }
+
   public remove() {
     this.setState({ user: null }, UserStoreActions.RemoveUser);
   }
