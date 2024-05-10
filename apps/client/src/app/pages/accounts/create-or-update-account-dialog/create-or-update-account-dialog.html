@@ -39,7 +39,7 @@
           (keydown.enter)="$event.stopPropagation()"
         />
         <span class="ml-2" matTextSuffix>{{
-          accountForm.controls['currency']?.value?.value
+          accountForm.get('currency')?.value?.value
         }}</span>
       </mat-form-field>
     </div>
@@ -61,7 +61,7 @@
           ) {
             <mat-option [value]="platformEntry">
               <span class="d-flex">
-                <gf-symbol-icon
+                <gf-asset-profile-icon
                   class="mr-1"
                   [tooltip]="platformEntry.name"
                   [url]="platformEntry.url"

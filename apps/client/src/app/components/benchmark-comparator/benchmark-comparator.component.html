@@ -20,7 +20,7 @@
       <mat-select
         name="benchmark"
         [disabled]="user?.subscription?.type === 'Basic'"
-        [value]="benchmark"
+        [value]="benchmark?.id"
         (selectionChange)="onChangeBenchmark($event.value)"
       >
         <mat-option [value]="null" />

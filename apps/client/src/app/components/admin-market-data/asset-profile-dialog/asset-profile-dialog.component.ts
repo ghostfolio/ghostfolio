@@ -1,7 +1,11 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   Currency,
@@ -69,7 +73,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     tags: new FormControl<Tag[]>(undefined),
     scraperConfiguration: '',
     sectors: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    url: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
@@ -77,6 +82,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [code: string]: { name: string; value: number };
   };
   public currencies: Currency[] = [];
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -92,6 +98,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
@@ -181,7 +188,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfile?.scraperConfiguration ?? {}
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          url: this.assetProfile?.url
         });
 
         this.assetProfileForm.markAsPristine();
@@ -191,6 +199,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onClose() {
+    this.dialogRef.close();
+  }
+
+  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+
     this.dialogRef.close();
   }
 
@@ -218,15 +232,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-      ).data;
+      ).data as UpdateMarketDataDto[];
 
       this.adminService
         .postMarketData({
           dataSource: this.data.dataSource,
           marketData: {
-            marketData: marketData.map(({ date, marketPrice }) => {
-              return { marketPrice, date: parseDate(date).toISOString() };
-            })
+            marketData
           },
           symbol: this.data.symbol
         })
@@ -270,29 +282,29 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     let countries = [];
     let scraperConfiguration = {};
     let sectors = [];
     let symbolMapping = {};
 
     try {
-      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+      countries = JSON.parse(this.assetProfileForm.get('countries').value);
     } catch {}
 
     try {
       scraperConfiguration = JSON.parse(
-        this.assetProfileForm.controls['scraperConfiguration'].value
+        this.assetProfileForm.get('scraperConfiguration').value
       );
     } catch {}
 
     try {
-      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
+      sectors = JSON.parse(this.assetProfileForm.get('sectors').value);
     } catch {}
 
     try {
       symbolMapping = JSON.parse(
-        this.assetProfileForm.controls['symbolMapping'].value
+        this.assetProfileForm.get('symbolMapping').value
       );
     } catch {}
 
@@ -301,15 +313,27 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       scraperConfiguration,
       sectors,
       symbolMapping,
-      assetClass: this.assetProfileForm.controls['assetClass'].value,
-      assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
-      comment: this.assetProfileForm.controls['comment'].value ?? null,
-      name: this.assetProfileForm.controls['name'].value,
-      tags: this.assetProfileForm.controls['tags'].value,
+      assetClass: this.assetProfileForm.get('assetClass').value,
+      assetSubClass: this.assetProfileForm.get('assetSubClass').value,
+      comment: this.assetProfileForm.get('comment').value || null,
+      tags: this.assetProfileForm.get('tags').value,
       currency: (<Currency>(
-        (<unknown>this.assetProfileForm.controls['currency'].value)
-      ))?.value
+        (<unknown>this.assetProfileForm.get('currency').value)
+      ))?.value,
+      name: this.assetProfileForm.controls['name'].value,
+      url: this.assetProfileForm.controls['url'].value
     };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileForm,
+        object: assetProfileData
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
 
     this.adminService
       .patchAssetProfile({
@@ -326,8 +350,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
-        scraperConfiguration:
-          this.assetProfileForm.controls['scraperConfiguration'].value,
+        scraperConfiguration: this.assetProfileForm.get('scraperConfiguration')
+          .value,
         symbol: this.data.symbol
       })
       .pipe(
@@ -343,9 +367,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             ' ' +
             price +
             ' ' +
-            (<Currency>(
-              (<unknown>this.assetProfileForm.controls['currency'].value)
-            ))?.value
+            (<Currency>(<unknown>this.assetProfileForm.get('currency').value))
+              ?.value
         );
       });
   }

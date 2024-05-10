@@ -1,1 +1,1 @@
-export * from './no-transactions-info.module';
+export * from './no-transactions-info.component';

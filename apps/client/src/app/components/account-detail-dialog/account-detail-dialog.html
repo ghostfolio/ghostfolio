@@ -115,6 +115,7 @@
         </ng-template>
         <gf-account-balances
           [accountBalances]="accountBalances"
+          [accountCurrency]="currency"
           [accountId]="data.accountId"
           [locale]="user?.settings?.locale"
           [showActions]="
@@ -122,6 +123,7 @@
             hasPermissionToDeleteAccountBalance &&
             !user.settings.isRestrictedView
           "
+          (accountBalanceCreated)="onAddAccountBalance($event)"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
         />
       </mat-tab>

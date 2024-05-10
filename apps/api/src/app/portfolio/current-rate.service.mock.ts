@@ -8,6 +8,13 @@ import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 function mockGetValue(symbol: string, date: Date) {
   switch (symbol) {
+    case '55196015-1365-4560-aa60-8751ae6d18f8':
+      if (isSameDay(parseDate('2022-01-31'), date)) {
+        return { marketPrice: 3000 };
+      }
+
+      return { marketPrice: 0 };
+
     case 'BALN.SW':
       if (isSameDay(parseDate('2021-11-12'), date)) {
         return { marketPrice: 146 };
@@ -39,6 +46,17 @@ function mockGetValue(symbol: string, date: Date) {
         return { marketPrice: 89.12 };
       } else if (isSameDay(parseDate('2023-07-10'), date)) {
         return { marketPrice: 116.45 };
+      }
+
+      return { marketPrice: 0 };
+
+    case 'MSFT':
+      if (isSameDay(parseDate('2021-09-16'), date)) {
+        return { marketPrice: 89.12 };
+      } else if (isSameDay(parseDate('2021-11-16'), date)) {
+        return { marketPrice: 339.51 };
+      } else if (isSameDay(parseDate('2023-07-10'), date)) {
+        return { marketPrice: 331.83 };
       }
 
       return { marketPrice: 0 };

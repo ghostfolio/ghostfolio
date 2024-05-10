@@ -2,6 +2,7 @@ import { FocusKeyManager } from '@angular/cdk/a11y';
 import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
@@ -13,17 +14,21 @@ import {
   QueryList,
   ViewChild
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 
 import { CarouselItem } from './carousel-item.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatButtonModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-carousel',
+  standalone: true,
   styleUrls: ['./carousel.component.scss'],
   templateUrl: './carousel.component.html'
 })
-export class CarouselComponent implements AfterContentInit {
+export class GfCarouselComponent implements AfterContentInit {
   @ContentChildren(CarouselItem) public items!: QueryList<CarouselItem>;
 
   @HostBinding('class.animations-disabled')

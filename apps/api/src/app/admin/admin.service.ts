@@ -26,6 +26,7 @@ import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
+  AssetClass,
   AssetSubClass,
   Prisma,
   Property,
@@ -75,7 +76,7 @@ export class AdminService {
         );
       }
 
-      return await this.symbolProfileService.add(
+      return this.symbolProfileService.add(
         assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
       );
     } catch (error) {
@@ -216,6 +217,7 @@ export class AdminService {
           countries: true,
           currency: true,
           dataSource: true,
+          id: true,
           name: true,
           Order: {
             orderBy: [{ date: 'asc' }],
@@ -240,6 +242,7 @@ export class AdminService {
         countries,
         currency,
         dataSource,
+        id,
         name,
         Order,
         sectors,
@@ -263,6 +266,7 @@ export class AdminService {
           currency,
           countriesCount,
           dataSource,
+          id,
           name,
           symbol,
           marketDataItemCount,
@@ -337,7 +341,8 @@ export class AdminService {
     scraperConfiguration,
     sectors,
     symbol,
-    symbolMapping
+    symbolMapping,
+    url
   }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
     if (dataSource === 'MANUAL') {
       await this.symbolProfileService.updateSymbolProfile({
@@ -453,9 +458,10 @@ export class AdminService {
           dataSource,
           marketDataItemCount,
           symbol,
-          assetClass: 'CASH',
+          assetClass: AssetClass.LIQUIDITY,
           countriesCount: 0,
           currency: symbol.replace(DEFAULT_CURRENCY, ''),
+          id: undefined,
           name: symbol,
           sectorsCount: 0,
           tags: []
@@ -500,13 +506,14 @@ export class AdminService {
         },
         createdAt: true,
         id: true,
+        role: true,
         Subscription: true
       },
       take: 30
     });
 
     return usersWithAnalytics.map(
-      ({ _count, Analytics, createdAt, id, Subscription }) => {
+      ({ _count, Analytics, createdAt, id, role, Subscription }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = Analytics
@@ -526,6 +533,7 @@ export class AdminService {
           createdAt,
           engagement,
           id,
+          role,
           subscription,
           accountCount: _count.Account || 0,
           country: Analytics?.country,

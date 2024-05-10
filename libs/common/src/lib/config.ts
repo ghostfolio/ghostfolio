@@ -4,7 +4,6 @@ import ms from 'ms';
 
 export const ghostfolioPrefix = 'GF';
 export const ghostfolioScraperApiSymbolPrefix = `_${ghostfolioPrefix}_`;
-export const ghostfolioCashSymbol = `${ghostfolioScraperApiSymbolPrefix}CASH`;
 export const ghostfolioFearAndGreedIndexDataSource = DataSource.RAPID_API;
 export const ghostfolioFearAndGreedIndexSymbol = `${ghostfolioScraperApiSymbolPrefix}FEAR_AND_GREED_INDEX`;
 
@@ -32,8 +31,11 @@ export const warnColorRgb = {
 };
 
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
-export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
+export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
+export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
+  DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
+);
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
@@ -64,23 +66,21 @@ export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   removeOnComplete: true
 };
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
-  priority: DATA_GATHERING_QUEUE_PRIORITY_LOW,
   removeOnComplete: true
 };
 
@@ -137,7 +137,8 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'nl',
   'pl',
   'pt',
-  'tr'
+  'tr',
+  'zh'
 ];
 
 export const UNKNOWN_KEY = 'UNKNOWN';

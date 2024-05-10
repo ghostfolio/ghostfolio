@@ -1,4 +1,4 @@
-import { GfLogoModule } from '@ghostfolio/ui/logo';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import { Platform } from '@angular/cdk/platform';
 import { HttpClientModule } from '@angular/common/http';
@@ -43,7 +43,7 @@ export function NgxStripeFactory(): string {
     BrowserAnimationsModule,
     BrowserModule,
     GfHeaderModule,
-    GfLogoModule,
+    GfLogoComponent,
     GfSubscriptionInterstitialDialogModule,
     HttpClientModule,
     MarkdownModule.forRoot(),

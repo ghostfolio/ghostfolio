@@ -59,6 +59,7 @@ model AccountBalance {
   value     Float
   Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 
+  @@unique([accountId, date])
   @@index([accountId])
   @@index([date])
 }
@@ -97,6 +98,7 @@ model MarketData {
 
   @@unique([dataSource, date, symbol])
   @@index([dataSource])
+  @@index([dataSource, symbol])
   @@index([date])
   @@index([marketPrice])
   @@index([state])
@@ -108,6 +110,7 @@ model Order {
   accountUserId   String?
   comment         String?
   createdAt       DateTime      @default(now())
+  currency        String?
   date            DateTime
   fee             Float
   id              String        @id @default(uuid())
@@ -247,15 +250,16 @@ enum AccessPermission {
 }
 
 enum AssetClass {
-  CASH
   COMMODITY
   EQUITY
   FIXED_INCOME
+  LIQUIDITY
   REAL_ESTATE
 }
 
 enum AssetSubClass {
   BOND
+  CASH
   COMMODITY
   CRYPTOCURRENCY
   ETF

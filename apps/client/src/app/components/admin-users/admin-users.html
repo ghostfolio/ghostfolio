@@ -35,12 +35,20 @@
               mat-cell
             >
               <div class="d-flex align-items-center">
-                <span class="d-none d-sm-inline-block text-monospace">{{
-                  element.id
-                }}</span>
-                <span class="d-inline-block d-sm-none text-monospace">{{
-                  (element.id | slice: 0 : 5) + '...'
-                }}</span>
+                <span
+                  class="d-none d-sm-inline-block text-monospace"
+                  [ngClass]="{
+                    'text-line-through': element.role === 'INACTIVE'
+                  }"
+                  >{{ element.id }}</span
+                >
+                <span
+                  class="d-inline-block d-sm-none text-monospace"
+                  [ngClass]="{
+                    'text-line-through': element.role === 'INACTIVE'
+                  }"
+                  >{{ (element.id | slice: 0 : 5) + '...' }}</span
+                >
                 <gf-premium-indicator
                   *ngIf="element?.subscription?.type === 'Premium'"
                   class="ml-1"

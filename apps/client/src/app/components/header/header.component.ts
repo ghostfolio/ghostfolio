@@ -12,7 +12,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
-import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
 import {
   ChangeDetectionStrategy,
@@ -62,7 +62,7 @@ export class HeaderComponent implements OnChanges {
 
   @Output() signOut = new EventEmitter<void>();
 
-  @ViewChild('assistant') assistantElement: AssistantComponent;
+  @ViewChild('assistant') assistantElement: GfAssistantComponent;
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
   public hasPermissionForSocialLogin: boolean;
@@ -169,15 +169,7 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      let filtersType: string;
-
-      if (filter.type === 'ACCOUNT') {
-        filtersType = 'accounts';
-      } else if (filter.type === 'ASSET_CLASS') {
-        filtersType = 'assetClasses';
-      } else if (filter.type === 'TAG') {
-        filtersType = 'tags';
-      }
+      let filtersType = this.getFilterType(filter.type);
 
       let userFilters = filters
         .filter((f) => f.type === filter.type && filter.id)
@@ -187,6 +179,14 @@ export class HeaderComponent implements OnChanges {
         ? userFilters
         : null;
     }
+    ['ACCOUNT', 'ASSET_CLASS', 'TAG']
+      .filter(
+        (fitlerType) =>
+          !filters.some((f: Filter) => f.type.toString() === fitlerType)
+      )
+      .forEach((filterType) => {
+        userSetting[`filters.${this.getFilterType(filterType)}`] = null;
+      });
 
     this.dataService
       .putUserSetting(userSetting)
@@ -268,5 +268,14 @@ export class HeaderComponent implements OnChanges {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+  private getFilterType(filterType: string) {
+    if (filterType === 'ACCOUNT') {
+      return 'accounts';
+    } else if (filterType === 'ASSET_CLASS') {
+      return 'assetClasses';
+    } else if (filterType === 'TAG') {
+      return 'tags';
+    }
   }
 }

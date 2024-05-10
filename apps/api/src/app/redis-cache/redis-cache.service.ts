@@ -21,7 +21,11 @@ export class RedisCacheService {
   }
 
   public async get(key: string): Promise<string> {
-    return await this.cache.get(key);
+    return this.cache.get(key);
+  }
+
+  public getPortfolioSnapshotKey({ userId }: { userId: string }) {
+    return `portfolio-snapshot-${userId}`;
   }
 
   public getQuoteKey({ dataSource, symbol }: UniqueAsset) {
@@ -29,15 +33,15 @@ export class RedisCacheService {
   }
 
   public async remove(key: string) {
-    await this.cache.del(key);
+    return this.cache.del(key);
   }
 
   public async reset() {
-    await this.cache.reset();
+    return this.cache.reset();
   }
 
   public async set(key: string, value: string, ttlInSeconds?: number) {
-    await this.cache.set(
+    return this.cache.set(
       key,
       value,
       ttlInSeconds ?? this.configurationService.get('CACHE_TTL')

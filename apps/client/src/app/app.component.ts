@@ -1,3 +1,4 @@
+import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
@@ -187,20 +188,28 @@ export class AppComponent implements OnDestroy, OnInit {
       ? userPreferredColorScheme === 'DARK'
       : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    this.toggleThemeStyleClass(isDarkTheme);
+    this.toggleTheme(isDarkTheme);
 
     window.matchMedia('(prefers-color-scheme: dark)').addListener((event) => {
       if (!this.user?.settings.colorScheme) {
-        this.toggleThemeStyleClass(event.matches);
+        this.toggleTheme(event.matches);
       }
     });
   }
 
-  private toggleThemeStyleClass(isDarkTheme: boolean) {
+  private toggleTheme(isDarkTheme: boolean) {
+    const themeColor = getCssVariable(
+      isDarkTheme ? '--dark-background' : '--light-background'
+    );
+
     if (isDarkTheme) {
       this.document.body.classList.add('is-dark-theme');
     } else {
       this.document.body.classList.remove('is-dark-theme');
     }
+
+    this.document
+      .querySelector('meta[name="theme-color"]')
+      .setAttribute('content', themeColor);
   }
 }

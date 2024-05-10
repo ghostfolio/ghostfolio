@@ -1,6 +1,10 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_PAGE_SIZE,
+  ghostfolioScraperApiSymbolPrefix
+} from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
@@ -20,12 +24,13 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AssetSubClass, DataSource } from '@prisma/client';
+import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
+import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
@@ -33,6 +38,7 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'has-fab' },
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
   templateUrl: './admin-market-data.html'
@@ -78,6 +84,7 @@ export class AdminMarketDataComponent
         type: <Filter['type']>'PRESET_ID'
       }
     ]);
+  public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
   public dataSource: MatTableDataSource<AdminMarketDataItem> =
@@ -98,6 +105,7 @@ export class AdminMarketDataComponent
     'actions'
   ];
   public filters$ = new Subject<Filter[]>();
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isLoading = false;
   public isUUID = isUUID;
   public placeholder = '';
@@ -108,8 +116,10 @@ export class AdminMarketDataComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private route: ActivatedRoute,
@@ -169,6 +179,9 @@ export class AdminMarketDataComponent
   }
 
   public ngOnInit() {
+    const { benchmarks } = this.dataService.fetchInfo();
+
+    this.benchmarks = benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
   }
 
@@ -181,20 +194,7 @@ export class AdminMarketDataComponent
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this asset profile?`
-    );
-
-    if (confirmation) {
-      this.adminService
-        .deleteProfileData({ dataSource, symbol })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        });
-    }
+    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
   }
 
   public onGather7Days() {
@@ -293,7 +293,16 @@ export class AdminMarketDataComponent
       .subscribe(({ count, marketData }) => {
         this.totalItems = count;
 
-        this.dataSource = new MatTableDataSource(marketData);
+        this.dataSource = new MatTableDataSource(
+          marketData.map((marketDataItem) => {
+            return {
+              ...marketDataItem,
+              isBenchmark: this.benchmarks.some(({ id }) => {
+                return id === marketDataItem.id;
+              })
+            };
+          })
+        );
         this.dataSource.sort = this.sort;
 
         this.isLoading = false;
@@ -320,6 +329,7 @@ export class AdminMarketDataComponent
           data: <AssetProfileDialogParams>{
             dataSource,
             symbol,
+            colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
           },

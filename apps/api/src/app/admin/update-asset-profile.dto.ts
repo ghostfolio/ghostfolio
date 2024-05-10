@@ -5,7 +5,8 @@ import {
   IsISO4217CurrencyCode,
   IsObject,
   IsOptional,
-  IsString
+  IsString,
+  IsUrl
 } from 'class-validator';
 
 export class UpdateAssetProfileDto {
@@ -50,4 +51,11 @@ export class UpdateAssetProfileDto {
   symbolMapping?: {
     [dataProvider: string]: string;
   };
+
+  @IsOptional()
+  @IsUrl({
+    protocols: ['https'],
+    require_protocol: true
+  })
+  url?: string;
 }

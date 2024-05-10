@@ -142,9 +142,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        const tag: CreateTagDto = data?.tag;
-
+      .subscribe((tag: CreateTagDto | null) => {
         if (tag) {
           this.adminService
             .postTag(tag)
@@ -180,9 +178,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        const tag: UpdateTagDto = data?.tag;
-
+      .subscribe((tag: UpdateTagDto | null) => {
         if (tag) {
           this.adminService
             .putTag(tag)

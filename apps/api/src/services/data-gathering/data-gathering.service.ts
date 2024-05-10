@@ -8,6 +8,8 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DATA_GATHERING_QUEUE_PRIORITY_LOW,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
   PROPERTY_BENCHMARKS
@@ -64,24 +66,35 @@ export class DataGatheringService {
 
   public async gather7Days() {
     const dataGatheringItems = await this.getSymbols7D();
-    await this.gatherSymbols(dataGatheringItems);
+    await this.gatherSymbols({
+      dataGatheringItems,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
+    });
   }
 
   public async gatherMax() {
     const dataGatheringItems = await this.getSymbolsMax();
-    await this.gatherSymbols(dataGatheringItems);
+    await this.gatherSymbols({
+      dataGatheringItems,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
+    });
   }
 
   public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
-    const symbols = (await this.getSymbolsMax()).filter((dataGatheringItem) => {
-      return (
-        dataGatheringItem.dataSource === dataSource &&
-        dataGatheringItem.symbol === symbol
-      );
+    const dataGatheringItems = (await this.getSymbolsMax()).filter(
+      (dataGatheringItem) => {
+        return (
+          dataGatheringItem.dataSource === dataSource &&
+          dataGatheringItem.symbol === symbol
+        );
+      }
+    );
+    await this.gatherSymbols({
+      dataGatheringItems,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
-    await this.gatherSymbols(symbols);
   }
 
   public async gatherSymbolForDate({
@@ -94,11 +107,11 @@ export class DataGatheringService {
     symbol: string;
   }) {
     try {
-      const historicalData = await this.dataProviderService.getHistoricalRaw(
-        [{ dataSource, symbol }],
-        date,
-        date
-      );
+      const historicalData = await this.dataProviderService.getHistoricalRaw({
+        dataGatheringItems: [{ dataSource, symbol }],
+        from: date,
+        to: date
+      });
 
       const marketPrice =
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
@@ -225,22 +238,23 @@ export class DataGatheringService {
           error,
           'DataGatheringService'
         );
+
+        if (uniqueAssets.length === 1) {
+          throw error;
+        }
       }
     }
-
-    Logger.log(
-      `Asset profile data gathering has been completed for ${uniqueAssets
-        .map(({ dataSource, symbol }) => {
-          return `${symbol} (${dataSource})`;
-        })
-        .join(',')}.`,
-      'DataGatheringService'
-    );
   }
 
-  public async gatherSymbols(aSymbolsWithStartDate: IDataGatheringItem[]) {
+  public async gatherSymbols({
+    dataGatheringItems,
+    priority
+  }: {
+    dataGatheringItems: IDataGatheringItem[];
+    priority: number;
+  }) {
     await this.addJobsToQueue(
-      aSymbolsWithStartDate.map(({ dataSource, date, symbol }) => {
+      dataGatheringItems.map(({ dataSource, date, symbol }) => {
         return {
           data: {
             dataSource,
@@ -250,6 +264,7 @@ export class DataGatheringService {
           name: GATHER_HISTORICAL_MARKET_DATA_PROCESS,
           opts: {
             ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+            priority,
             jobId: `${getAssetProfileIdentifier({
               dataSource,
               symbol

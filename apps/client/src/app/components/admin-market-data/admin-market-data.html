@@ -161,23 +161,27 @@
               <ion-icon name="ellipsis-horizontal" />
             </button>
             <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
-              <button
+              <a
                 mat-menu-item
-                (click)="
-                  onOpenAssetProfileDialog({
-                    dataSource: element.dataSource,
-                    symbol: element.symbol
-                  })
-                "
+                [queryParams]="{
+                  assetProfileDialog: true,
+                  dataSource: element.dataSource,
+                  symbol: element.symbol
+                }"
+                [routerLink]="[]"
               >
                 <span class="align-items-center d-flex">
                   <ion-icon class="mr-2" name="create-outline" />
                   <span i18n>Edit</span>
                 </span>
-              </button>
+              </a>
               <button
                 mat-menu-item
-                [disabled]="element.activitiesCount !== 0"
+                [disabled]="
+                  element.activitiesCount !== 0 ||
+                  element.isBenchmark ||
+                  element.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+                "
                 (click)="
                   onDeleteProfileData({
                     dataSource: element.dataSource,

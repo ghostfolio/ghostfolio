@@ -6,6 +6,7 @@ import { primaryColorRgb } from '@ghostfolio/common/config';
 import { getLocale } from '@ghostfolio/common/helper';
 import { ColorScheme } from '@ghostfolio/common/types';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,8 +18,19 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { MatDatepicker } from '@angular/material/datepicker';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import {
+  MatDatepicker,
+  MatDatepickerModule
+} from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {
   BarController,
   BarElement,
@@ -39,17 +51,30 @@ import {
   sub
 } from 'date-fns';
 import { isNumber } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 import { FireCalculatorService } from './fire-calculator.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule
+  ],
+  providers: [FireCalculatorService],
   selector: 'gf-fire-calculator',
+  standalone: true,
   styleUrls: ['./fire-calculator.component.scss'],
   templateUrl: './fire-calculator.component.html'
 })
-export class FireCalculatorComponent implements OnChanges, OnDestroy {
+export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   @Input() annualInterestRate = 5;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;

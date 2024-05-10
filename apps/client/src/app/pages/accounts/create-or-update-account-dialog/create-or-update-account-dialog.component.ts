@@ -1,6 +1,7 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { Currency } from '@ghostfolio/common/interfaces';
 
 import {
@@ -81,7 +82,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   }
 
   public autoCompleteCheck() {
-    const inputValue = this.accountForm.controls['platformId'].value;
+    const inputValue = this.accountForm.get('platformId').value;
 
     if (typeof inputValue === 'string') {
       const matchingEntry = this.platforms.find(({ name }) => {
@@ -89,7 +90,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
       });
 
       if (matchingEntry) {
-        this.accountForm.controls['platformId'].setValue(matchingEntry);
+        this.accountForm.get('platformId').setValue(matchingEntry);
       }
     }
   }
@@ -102,24 +103,42 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     this.dialogRef.close();
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const account: CreateAccountDto | UpdateAccountDto = {
-      balance: this.accountForm.controls['balance'].value,
-      comment: this.accountForm.controls['comment'].value,
-      currency: this.accountForm.controls['currency'].value?.value,
-      id: this.accountForm.controls['accountId'].value,
-      isExcluded: this.accountForm.controls['isExcluded'].value,
-      name: this.accountForm.controls['name'].value,
-      platformId: this.accountForm.controls['platformId'].value?.id ?? null
+      balance: this.accountForm.get('balance').value,
+      comment: this.accountForm.get('comment').value || null,
+      currency: this.accountForm.get('currency').value?.value,
+      id: this.accountForm.get('accountId').value,
+      isExcluded: this.accountForm.get('isExcluded').value,
+      name: this.accountForm.get('name').value,
+      platformId: this.accountForm.get('platformId').value?.id || null
     };
 
-    if (this.data.account.id) {
-      (account as UpdateAccountDto).id = this.data.account.id;
-    } else {
-      delete (account as CreateAccountDto).id;
-    }
+    try {
+      if (this.data.account.id) {
+        (account as UpdateAccountDto).id = this.data.account.id;
 
-    this.dialogRef.close({ account });
+        await validateObjectForForm({
+          classDto: UpdateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+
+        this.dialogRef.close(account as UpdateAccountDto);
+      } else {
+        delete (account as CreateAccountDto).id;
+
+        await validateObjectForForm({
+          classDto: CreateAccountDto,
+          form: this.accountForm,
+          object: account
+        });
+
+        this.dialogRef.close(account as CreateAccountDto);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public ngOnDestroy() {

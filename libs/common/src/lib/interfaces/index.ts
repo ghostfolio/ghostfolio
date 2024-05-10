@@ -40,6 +40,7 @@ import type { BenchmarkResponse } from './responses/benchmark-response.interface
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
@@ -47,7 +48,6 @@ import type { Subscription } from './subscription.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
-import type { TimelinePosition } from './timeline-position.interface';
 import type { UniqueAsset } from './unique-asset.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
@@ -81,6 +81,7 @@ export {
   PortfolioChart,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioItem,
   PortfolioOverview,
@@ -100,7 +101,6 @@ export {
   Subscription,
   SymbolMetrics,
   TabConfiguration,
-  TimelinePosition,
   UniqueAsset,
   User,
   UserSettings

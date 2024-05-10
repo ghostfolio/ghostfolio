@@ -241,37 +241,44 @@ export class EodHistoricalDataService implements DataProviderInterface {
         })
       );
 
-      response = quotes.reduce(
-        (
-          result: { [symbol: string]: IDataProviderResponse },
-          { close, code, timestamp }
-        ) => {
-          const currency = symbolProfiles.find(({ symbol }) => {
+      for (const { close, code, timestamp } of quotes) {
+        let currency: string;
+
+        if (code.endsWith('.FOREX')) {
+          currency = this.convertFromEodSymbol(code)?.replace(
+            DEFAULT_CURRENCY,
+            ''
+          );
+        }
+
+        if (!currency) {
+          currency = symbolProfiles.find(({ symbol }) => {
             return symbol === code;
           })?.currency;
+        }
 
-          if (isNumber(close)) {
-            result[this.convertFromEodSymbol(code)] = {
-              currency:
-                currency ??
-                this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
-              dataSource: this.getName(),
-              marketPrice: close,
-              marketState: isToday(new Date(timestamp * 1000))
-                ? 'open'
-                : 'closed'
-            };
-          } else {
-            Logger.error(
-              `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
-              'EodHistoricalDataService'
-            );
+        if (!currency) {
+          const { items } = await this.search({ query: code });
+
+          if (items.length === 1) {
+            currency = items[0].currency;
           }
+        }
 
-          return result;
-        },
-        {}
-      );
+        if (isNumber(close)) {
+          response[this.convertFromEodSymbol(code)] = {
+            currency,
+            dataSource: this.getName(),
+            marketPrice: close,
+            marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
+          };
+        } else {
+          Logger.error(
+            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
+            'EodHistoricalDataService'
+          );
+        }
+      }
 
       return response;
     } catch (error) {
@@ -461,7 +468,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         assetSubClass = AssetSubClass.STOCK;
         break;
       case 'currency':
-        assetClass = AssetClass.CASH;
+        assetClass = AssetClass.LIQUIDITY;
 
         if (Exchange?.toLowerCase() === 'cc') {
           assetSubClass = AssetSubClass.CRYPTOCURRENCY;
