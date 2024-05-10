@@ -55,7 +55,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class DataService {
-  public constructor(private http: HttpClient) {}
+  public constructor(private http: HttpClient) { }
 
   public buildFiltersAsQueryParams({ filters }: { filters?: Filter[] }) {
     let params = new HttpParams();
@@ -256,8 +256,11 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteAllOrders() {
-    return this.http.delete<any>(`/api/v1/order/`);
+  public deleteAllOrders({
+    filters
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+    return this.http.delete<any>(`/api/v1/order`, { params });
   }
 
   public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {

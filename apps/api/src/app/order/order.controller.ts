@@ -31,7 +31,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Order as OrderModel, Prisma } from '@prisma/client';
+import { AssetClass, Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -48,15 +48,24 @@ export class OrderController {
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) {}
+  ) { }
 
   @Delete()
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteOrders(): Promise<number> {
-    return this.orderService.deleteOrders({
-      userId: this.request.user.id
+  public async deleteOrders(
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('tags') filterByTags?: string
+  ): Promise<number> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
     });
+    return this.orderService.deleteOrders({
+      userId: this.request.user.id,
+    }, filters);
   }
 
   @Delete(':id')

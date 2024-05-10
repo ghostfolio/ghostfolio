@@ -194,7 +194,63 @@ export class OrderService {
     return order;
   }
 
-  public async deleteOrders(where: Prisma.OrderWhereInput): Promise<number> {
+  public async deleteOrders(where: Prisma.OrderWhereInput, filters: Filter[]): Promise<number> {
+
+    const {
+      ACCOUNT: filtersByAccount,
+      ASSET_CLASS: filtersByAssetClass,
+      TAG: filtersByTag
+    } = groupBy(filters, (filter) => {
+      return filter.type;
+    });
+
+    if (filtersByAccount?.length > 0) {
+      where.accountId = {
+        in: filtersByAccount.map(({ id }) => {
+          return id;
+        })
+      };
+    }
+
+    if (filtersByAssetClass?.length > 0) {
+      where.SymbolProfile = {
+        OR: [
+          {
+            AND: [
+              {
+                OR: filtersByAssetClass.map(({ id }) => {
+                  return { assetClass: AssetClass[id] };
+                })
+              },
+              {
+                OR: [
+                  { SymbolProfileOverrides: { is: null } },
+                  { SymbolProfileOverrides: { assetClass: null } }
+                ]
+              }
+            ]
+          },
+          {
+            SymbolProfileOverrides: {
+              OR: filtersByAssetClass.map(({ id }) => {
+                return { assetClass: AssetClass[id] };
+              })
+            }
+          }
+        ]
+      };
+    }
+
+    if (filtersByTag?.length > 0) {
+      where.tags = {
+        some: {
+          OR: filtersByTag.map(({ id }) => {
+            return { id };
+          })
+        }
+      };
+    }
+
     const { count } = await this.prismaService.order.deleteMany({
       where
     });

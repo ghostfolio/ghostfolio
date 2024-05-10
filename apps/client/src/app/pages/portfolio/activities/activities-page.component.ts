@@ -171,7 +171,9 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
     if (confirmation) {
       this.dataService
-        .deleteAllOrders()
+        .deleteAllOrders({
+          filters: this.userService.getFilters()
+        })
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe({
           next: () => {
@@ -217,9 +219,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             data.activities
           ),
           contentType: 'text/calendar',
-          fileName: `ghostfolio-draft${
-            data.activities.length > 1 ? 's' : ''
-          }-${format(parseISO(data.meta.date), 'yyyyMMddHHmmss')}.ics`,
+          fileName: `ghostfolio-draft${data.activities.length > 1 ? 's' : ''
+            }-${format(parseISO(data.meta.date), 'yyyyMMddHHmmss')}.ics`,
           format: 'string'
         });
       });
