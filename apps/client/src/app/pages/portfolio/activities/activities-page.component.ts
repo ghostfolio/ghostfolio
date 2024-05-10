@@ -1,8 +1,6 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PositionDetailDialogParams } from '@ghostfolio/client/components/position-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialog } from '@ghostfolio/client/components/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { IcsService } from '@ghostfolio/client/services/ics/ics.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -18,7 +16,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import { Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -83,15 +81,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
-        } else if (
-          params['dataSource'] &&
-          params['positionDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openPositionDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
         }
       });
   }
@@ -346,47 +335,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
               });
             }
 
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
-      });
-  }
-
-  private openPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((user) => {
-        this.updateUser(user);
-
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
-          autoFocus: false,
-          data: <PositionDetailDialogParams>{
-            dataSource,
-            symbol,
-            baseCurrency: this.user?.settings?.baseCurrency,
-            colorScheme: this.user?.settings?.colorScheme,
-            deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToReportDataGlitch: hasPermission(
-              this.user?.permissions,
-              permissions.reportDataGlitch
-            ),
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });
