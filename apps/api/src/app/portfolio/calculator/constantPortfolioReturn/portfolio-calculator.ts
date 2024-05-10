@@ -1,5 +1,5 @@
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
-import { parseDate, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
   HistoricalDataItem,
   SymbolMetrics,
@@ -8,7 +8,7 @@ import {
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
-import { addDays, eachDayOfInterval } from 'date-fns';
+import { addDays, eachDayOfInterval, format } from 'date-fns';
 
 import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
 import { TWRPortfolioCalculator } from '../twr/portfolio-calculator';
@@ -71,9 +71,10 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       })
       .sort();
     let data: HistoricalDataItem[] = [];
+    const startString = format(start, DATE_FORMAT);
 
     data.push({
-      date: start.toDateString(),
+      date: startString,
       netPerformanceInPercentage: 0,
       netPerformanceInPercentageWithCurrencyEffect: 0,
       investmentValueWithCurrencyEffect: 0,
@@ -87,15 +88,16 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       valueWithCurrencyEffect: 0
     });
 
-    let totalInvestment = Object.keys(
-      timelineHoldings[start.toDateString()]
-    ).reduce((sum, holding) => {
-      return sum.plus(
-        timelineHoldings[start.toDateString()][holding].mul(
-          this.marketMap[start.toDateString()][holding]
-        )
-      );
-    }, new Big(0));
+    let totalInvestment = Object.keys(timelineHoldings[startString]).reduce(
+      (sum, holding) => {
+        return sum.plus(
+          timelineHoldings[startString][holding].mul(
+            this.marketMap[startString][holding]
+          )
+        );
+      },
+      new Big(0)
+    );
 
     let previousNetPerformanceInPercentage = new Big(0);
     let previousNetPerformanceInPercentageWithCurrencyEffect = new Big(0);
@@ -237,19 +239,18 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     this.calculateInitialHoldings(investmentByDate, start, currentHoldings);
 
     for (let i = 1; i < dates.length; i++) {
-      const date = dates[i];
-      const previousDate = dates[i - 1];
-      if (transactionDates.some((d) => d === date.toDateString())) {
-        let holdings = { ...currentHoldings[previousDate.toDateString()] };
-        investmentByDate[date.toDateString()].forEach((trade) => {
+      const dateString = format(dates[i], DATE_FORMAT);
+      const previousDateString = format(dates[i - 1], DATE_FORMAT);
+      if (transactionDates.some((d) => d === dateString)) {
+        let holdings = { ...currentHoldings[previousDateString] };
+        investmentByDate[dateString].forEach((trade) => {
           holdings[trade.SymbolProfile.symbol] = holdings[
             trade.SymbolProfile.symbol
           ].plus(trade.quantity.mul(getFactor(trade.type)));
         });
-        currentHoldings[date.toDateString()] = holdings;
+        currentHoldings[dateString] = holdings;
       } else {
-        currentHoldings[date.toDateString()] =
-          currentHoldings[previousDate.toDateString()];
+        currentHoldings[dateString] = currentHoldings[previousDateString];
       }
     }
 
@@ -275,12 +276,14 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
         return groupBySymbol;
       }, {});
 
+    currentHoldings[format(start, DATE_FORMAT)] = {};
+
     for (const symbol of Object.keys(preRangeTrades)) {
       const trades: PortfolioOrder[] = preRangeTrades[symbol];
       let startQuantity = trades.reduce((sum, trade) => {
         return sum.plus(trade.quantity.mul(getFactor(trade.type)));
       }, new Big(0));
-      currentHoldings[start.toDateString()][symbol] = startQuantity;
+      currentHoldings[format(start, DATE_FORMAT)][symbol] = startQuantity;
     }
   }
 
