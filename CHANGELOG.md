@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Disabled the button to delete all activities on the portfolio activities page if there are active filters
 - Upgraded `Nx` from version `18.3.3` to `19.0.2`
 
 ## 2.80.0 - 2024-05-08

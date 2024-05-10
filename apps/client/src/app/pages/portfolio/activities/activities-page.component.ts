@@ -155,7 +155,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   public onDeleteActivity(aId: string) {
     this.dataService
-      .deleteOrder(aId)
+      .deleteActivity(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
         next: () => {
@@ -171,7 +171,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
     if (confirmation) {
       this.dataService
-        .deleteAllOrders()
+        .deleteAllActivities()
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe({
           next: () => {
@@ -400,6 +400,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       hasPermission(this.user.permissions, permissions.createOrder);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder);
+      hasPermission(this.user.permissions, permissions.deleteOrder) &&
+      !this.userService.hasFilters();
   }
 }
