@@ -54,7 +54,7 @@ export abstract class PortfolioCalculator {
 
   private configurationService: ConfigurationService;
   protected currency: string;
-  private currentRateService: CurrentRateService;
+  protected currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private dateRange: DateRange;
   private endDate: Date;
@@ -424,10 +424,12 @@ export abstract class PortfolioCalculator {
 
   public async getChart({
     dateRange = 'max',
-    withDataDecimation = true
+    withDataDecimation = true,
+    withTimeWeightedReturn = false
   }: {
     dateRange?: DateRange;
     withDataDecimation?: boolean;
+    withTimeWeightedReturn?: boolean;
   }): Promise<HistoricalDataItem[]> {
     const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
 

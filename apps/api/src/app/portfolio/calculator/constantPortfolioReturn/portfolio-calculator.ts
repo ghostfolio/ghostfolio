@@ -1,14 +1,25 @@
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
-import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import {
-  HistoricalDataItem,
-  SymbolMetrics,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
+  getFactor,
+  getInterval
+} from '@ghostfolio/api/helper/portfolio.helper';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
-import { addDays, eachDayOfInterval, format } from 'date-fns';
+import {
+  addDays,
+  differenceInDays,
+  eachDayOfInterval,
+  format,
+  isAfter,
+  isBefore,
+  isEqual,
+  subDays
+} from 'date-fns';
 
 import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
 import { TWRPortfolioCalculator } from '../twr/portfolio-calculator';
@@ -17,44 +28,58 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   private holdings: { [date: string]: { [symbol: string]: Big } } = {};
   private holdingCurrencies: { [symbol: string]: string } = {};
 
-  protected calculateOverallPerformance(
-    positions: TimelinePosition[]
-  ): PortfolioSnapshot {
-    return super.calculateOverallPerformance(positions);
-  }
-
-  protected getSymbolMetrics({
-    dataSource,
-    end,
-    exchangeRates,
-    isChartMode = false,
-    marketSymbolMap,
-    start,
-    step = 1,
-    symbol
+  @LogPerformance
+  public async getChart({
+    dateRange = 'max',
+    withDataDecimation = true,
+    withTimeWeightedReturn = false
   }: {
-    end: Date;
-    exchangeRates: { [dateString: string]: number };
-    isChartMode?: boolean;
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
-    start: Date;
-    step?: number;
-  } & UniqueAsset): SymbolMetrics {
-    return super.getSymbolMetrics({
-      dataSource,
-      end,
-      exchangeRates,
-      isChartMode,
-      marketSymbolMap,
-      start,
+    dateRange?: DateRange;
+    withDataDecimation?: boolean;
+    withTimeWeightedReturn?: boolean;
+  }): Promise<HistoricalDataItem[]> {
+    const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
+
+    const daysInMarket = differenceInDays(endDate, startDate) + 1;
+    const step = withDataDecimation
+      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      : 1;
+
+    let item = super.getChartData({
       step,
-      symbol
+      end: endDate,
+      start: startDate
     });
+
+    if (!withTimeWeightedReturn) {
+      return item;
+    } else {
+      let timeWeighted = await this.getTimeWeightedChartData({
+        step,
+        end: endDate,
+        start: startDate
+      });
+
+      return item.then((data) => {
+        return data.map((item) => {
+          let timeWeightedItem = timeWeighted.find(
+            (timeWeightedItem) => timeWeightedItem.date === item.date
+          );
+          if (timeWeightedItem) {
+            item.timeWeightedPerformance =
+              timeWeightedItem.netPerformanceInPercentage;
+            item.timeWeightedPerformanceWithCurrencyEffect =
+              timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
+          }
+
+          return item;
+        });
+      });
+    }
   }
 
-  public override async getChartData({
+  @LogPerformance
+  private async getTimeWeightedChartData({
     end = new Date(Date.now()),
     start,
     step = 1
@@ -63,13 +88,18 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     start: Date;
     step?: number;
   }): Promise<HistoricalDataItem[]> {
-    const timelineHoldings = this.getHoldings(start, end);
+    let marketMapTask = this.computeMarketMap({ in: [start, end] });
+    const timelineHoldings = await this.getHoldings(start, end);
+
     const calculationDates = Object.keys(timelineHoldings)
       .filter((date) => {
         let parsed = parseDate(date);
-        parsed >= start && parsed <= end;
+        return (
+          isAfter(parsed, subDays(start, 1)) &&
+          isBefore(parsed, addDays(end, 1))
+        );
       })
-      .sort();
+      .sort((a, b) => parseDate(a).getTime() - parseDate(b).getTime());
     let data: HistoricalDataItem[] = [];
     const startString = format(start, DATE_FORMAT);
 
@@ -88,11 +118,13 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       valueWithCurrencyEffect: 0
     });
 
+    await marketMapTask;
+
     let totalInvestment = Object.keys(timelineHoldings[startString]).reduce(
       (sum, holding) => {
         return sum.plus(
           timelineHoldings[startString][holding].mul(
-            this.marketMap[startString][holding]
+            this.marketMap[startString][holding] ?? new Big(0)
           )
         );
       },
@@ -149,6 +181,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return data;
   }
 
+  @LogPerformance
   private async handleSingleHolding(
     previousDate: string,
     holding: string,
@@ -203,6 +236,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private getCurrency(symbol: string) {
     if (!this.holdingCurrencies[symbol]) {
       this.holdingCurrencies[symbol] = this.activities.find(
@@ -213,11 +247,16 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return this.holdingCurrencies[symbol];
   }
 
-  private getHoldings(start: Date, end: Date) {
+  @LogPerformance
+  private async getHoldings(start: Date, end: Date) {
     if (
       this.holdings &&
-      Object.keys(this.holdings).some((h) => parseDate(h) >= end) &&
-      Object.keys(this.holdings).some((h) => parseDate(h) <= start)
+      Object.keys(this.holdings).some((h) =>
+        isAfter(parseDate(h), subDays(end, 1))
+      ) &&
+      Object.keys(this.holdings).some((h) =>
+        isBefore(parseDate(h), addDays(start, 1))
+      )
     ) {
       return this.holdings;
     }
@@ -226,7 +265,8 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return this.holdings;
   }
 
-  private computeHoldings(start: Date, end: Date) {
+  @LogPerformance
+  private async computeHoldings(start: Date, end: Date) {
     const investmentByDate = this.getInvestmentByDate();
     const transactionDates = Object.keys(investmentByDate).sort();
     let dates = eachDayOfInterval({ start, end }, { step: 1 })
@@ -258,6 +298,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     this.holdings = currentHoldings;
   }
 
+  @LogPerformance
   private calculateInitialHoldings(
     investmentByDate: { [date: string]: PortfolioOrder[] },
     start: Date,
@@ -288,6 +329,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private getInvestmentByDate(): { [date: string]: PortfolioOrder[] } {
     return this.activities.reduce((groupedByDate, order) => {
       if (!groupedByDate[order.date]) {
@@ -298,5 +340,41 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
 
       return groupedByDate;
     }, {});
+  }
+
+  @LogPerformance
+  private async computeMarketMap(dateQuery: { in: Date[] }) {
+    const dataGatheringItems: IDataGatheringItem[] = this.activities.map(
+      (activity) => {
+        return {
+          symbol: activity.SymbolProfile.symbol,
+          dataSource: activity.SymbolProfile.dataSource
+        };
+      }
+    );
+    const { values: marketSymbols } = await this.currentRateService.getValues({
+      dataGatheringItems,
+      dateQuery
+    });
+
+    const marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    } = {};
+
+    for (const marketSymbol of marketSymbols) {
+      const date = format(marketSymbol.date, DATE_FORMAT);
+
+      if (!marketSymbolMap[date]) {
+        marketSymbolMap[date] = {};
+      }
+
+      if (marketSymbol.marketPrice) {
+        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+          marketSymbol.marketPrice
+        );
+      }
+    }
+
+    this.marketMap = marketSymbolMap;
   }
 }
