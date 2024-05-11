@@ -124,22 +124,17 @@ export class MarketDataService {
     where: Prisma.MarketDataWhereUniqueInput;
   }): Promise<MarketData> {
     const { data, where } = params;
-    await this.lock.acquireAsync();
-    try {
-      return this.prismaService.marketData.upsert({
-        where,
-        create: {
-          dataSource: where.dataSource_date_symbol.dataSource,
-          date: where.dataSource_date_symbol.date,
-          marketPrice: data.marketPrice,
-          state: data.state,
-          symbol: where.dataSource_date_symbol.symbol
-        },
-        update: { marketPrice: data.marketPrice, state: data.state }
-      });
-    } finally {
-      this.lock.release();
-    }
+    return this.prismaService.marketData.upsert({
+      where,
+      create: {
+        dataSource: where.dataSource_date_symbol.dataSource,
+        date: where.dataSource_date_symbol.date,
+        marketPrice: data.marketPrice,
+        state: data.state,
+        symbol: where.dataSource_date_symbol.symbol
+      },
+      update: { marketPrice: data.marketPrice, state: data.state }
+    });
   }
 
   /**
@@ -153,31 +148,26 @@ export class MarketDataService {
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
       async ({ dataSource, date, marketPrice, symbol, state }) => {
-        await this.lock.acquireAsync();
-        try {
-          return this.prismaService.marketData.upsert({
-            create: {
+        return this.prismaService.marketData.upsert({
+          create: {
+            dataSource: <DataSource>dataSource,
+            date: <Date>date,
+            marketPrice: <number>marketPrice,
+            state: <MarketDataState>state,
+            symbol: <string>symbol
+          },
+          update: {
+            marketPrice: <number>marketPrice,
+            state: <MarketDataState>state
+          },
+          where: {
+            dataSource_date_symbol: {
               dataSource: <DataSource>dataSource,
               date: <Date>date,
-              marketPrice: <number>marketPrice,
-              state: <MarketDataState>state,
               symbol: <string>symbol
-            },
-            update: {
-              marketPrice: <number>marketPrice,
-              state: <MarketDataState>state
-            },
-            where: {
-              dataSource_date_symbol: {
-                dataSource: <DataSource>dataSource,
-                date: <Date>date,
-                symbol: <string>symbol
-              }
             }
-          });
-        } finally {
-          this.lock.release();
-        }
+          }
+        });
       }
     );
     return await Promise.all(upsertPromises);

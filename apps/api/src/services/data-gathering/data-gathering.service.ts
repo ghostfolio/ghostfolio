@@ -117,21 +117,16 @@ export class DataGatheringService {
         historicalData[symbol][format(date, DATE_FORMAT)].marketPrice;
 
       if (marketPrice) {
-        await this.lock.acquireAsync();
-        try {
-          return await this.prismaService.marketData.upsert({
-            create: {
-              dataSource,
-              date,
-              marketPrice,
-              symbol
-            },
-            update: { marketPrice },
-            where: { dataSource_date_symbol: { dataSource, date, symbol } }
-          });
-        } finally {
-          this.lock.release();
-        }
+        return await this.prismaService.marketData.upsert({
+          create: {
+            dataSource,
+            date,
+            marketPrice,
+            symbol
+          },
+          update: { marketPrice },
+          where: { dataSource_date_symbol: { dataSource, date, symbol } }
+        });
       }
     } catch (error) {
       Logger.error(error, 'DataGatheringService');
