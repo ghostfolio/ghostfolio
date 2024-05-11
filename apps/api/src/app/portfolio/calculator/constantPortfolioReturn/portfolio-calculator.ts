@@ -43,9 +43,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
 
     if (!withTimeWeightedReturn) {
       return item;
-    }
-
-    if (withTimeWeightedReturn) {
+    } else {
       let timeWeighted = await this.getTimeWeightedChartData({
         step,
         end: endDate,
@@ -68,8 +66,6 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
         });
       });
     }
-
-    return item;
   }
 
   @LogPerformance
