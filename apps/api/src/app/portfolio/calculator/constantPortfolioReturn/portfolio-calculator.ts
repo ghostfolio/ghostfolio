@@ -111,7 +111,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       (sum, holding) => {
         return sum.plus(
           timelineHoldings[startString][holding].mul(
-            this.marketMap[startString][holding]
+            this.marketMap[startString][holding] ?? new Big(0)
           )
         );
       },
