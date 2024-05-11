@@ -105,7 +105,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
   }
