@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import {
   getFactor,
   getInterval
@@ -17,6 +18,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   private holdings: { [date: string]: { [symbol: string]: Big } } = {};
   private holdingCurrencies: { [symbol: string]: string } = {};
 
+  @LogPerformance
   public async getChart({
     dateRange = 'max',
     withDataDecimation = true,
@@ -57,9 +59,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
           );
           if (timeWeightedItem) {
             item.timeWeightedPerformance =
-              timeWeightedItem.timeWeightedPerformance;
+              timeWeightedItem.netPerformanceInPercentage;
             item.timeWeightedPerformanceWithCurrencyEffect =
-              timeWeightedItem.timeWeightedPerformanceWithCurrencyEffect;
+              timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
           }
 
           return item;
@@ -70,6 +72,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return item;
   }
 
+  @LogPerformance
   private async getTimeWeightedChartData({
     end = new Date(Date.now()),
     start,
@@ -165,6 +168,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return data;
   }
 
+  @LogPerformance
   private async handleSingleHolding(
     previousDate: string,
     holding: string,
@@ -219,6 +223,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     };
   }
 
+  @LogPerformance
   private getCurrency(symbol: string) {
     if (!this.holdingCurrencies[symbol]) {
       this.holdingCurrencies[symbol] = this.activities.find(
@@ -229,6 +234,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return this.holdingCurrencies[symbol];
   }
 
+  @LogPerformance
   private getHoldings(start: Date, end: Date) {
     if (
       this.holdings &&
@@ -242,6 +248,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     return this.holdings;
   }
 
+  @LogPerformance
   private computeHoldings(start: Date, end: Date) {
     const investmentByDate = this.getInvestmentByDate();
     const transactionDates = Object.keys(investmentByDate).sort();
@@ -274,6 +281,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     this.holdings = currentHoldings;
   }
 
+  @LogPerformance
   private calculateInitialHoldings(
     investmentByDate: { [date: string]: PortfolioOrder[] },
     start: Date,
@@ -304,6 +312,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private getInvestmentByDate(): { [date: string]: PortfolioOrder[] } {
     return this.activities.reduce((groupedByDate, order) => {
       if (!groupedByDate[order.date]) {
