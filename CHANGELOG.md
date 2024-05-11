@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an indicator for active filters (experimental)
+
 ### Changed
 
 - Disabled the button to delete all activities on the portfolio activities page if there are active filters
