@@ -54,7 +54,7 @@ export abstract class PortfolioCalculator {
 
   private configurationService: ConfigurationService;
   protected currency: string;
-  private currentRateService: CurrentRateService;
+  protected currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private dateRange: DateRange;
   private endDate: Date;

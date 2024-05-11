@@ -3,13 +3,23 @@ import {
   getFactor,
   getInterval
 } from '@ghostfolio/api/helper/portfolio.helper';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
-import { addDays, differenceInDays, eachDayOfInterval, format } from 'date-fns';
+import {
+  addDays,
+  differenceInDays,
+  eachDayOfInterval,
+  format,
+  isAfter,
+  isBefore,
+  isEqual,
+  subDays
+} from 'date-fns';
 
 import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
 import { TWRPortfolioCalculator } from '../twr/portfolio-calculator';
@@ -78,13 +88,18 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     start: Date;
     step?: number;
   }): Promise<HistoricalDataItem[]> {
-    const timelineHoldings = this.getHoldings(start, end);
+    let marketMapTask = this.computeMarketMap({ in: [start, end] });
+    const timelineHoldings = await this.getHoldings(start, end);
+
     const calculationDates = Object.keys(timelineHoldings)
       .filter((date) => {
         let parsed = parseDate(date);
-        parsed >= start && parsed <= end;
+        return (
+          isAfter(parsed, subDays(start, 1)) &&
+          isBefore(parsed, addDays(end, 1))
+        );
       })
-      .sort();
+      .sort((a, b) => parseDate(a).getTime() - parseDate(b).getTime());
     let data: HistoricalDataItem[] = [];
     const startString = format(start, DATE_FORMAT);
 
@@ -102,6 +117,8 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       value: 0,
       valueWithCurrencyEffect: 0
     });
+
+    await marketMapTask;
 
     let totalInvestment = Object.keys(timelineHoldings[startString]).reduce(
       (sum, holding) => {
@@ -231,11 +248,15 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private getHoldings(start: Date, end: Date) {
+  private async getHoldings(start: Date, end: Date) {
     if (
       this.holdings &&
-      Object.keys(this.holdings).some((h) => parseDate(h) >= end) &&
-      Object.keys(this.holdings).some((h) => parseDate(h) <= start)
+      Object.keys(this.holdings).some((h) =>
+        isAfter(parseDate(h), subDays(end, 1))
+      ) &&
+      Object.keys(this.holdings).some((h) =>
+        isBefore(parseDate(h), addDays(start, 1))
+      )
     ) {
       return this.holdings;
     }
@@ -245,7 +266,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private computeHoldings(start: Date, end: Date) {
+  private async computeHoldings(start: Date, end: Date) {
     const investmentByDate = this.getInvestmentByDate();
     const transactionDates = Object.keys(investmentByDate).sort();
     let dates = eachDayOfInterval({ start, end }, { step: 1 })
@@ -319,5 +340,41 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
 
       return groupedByDate;
     }, {});
+  }
+
+  @LogPerformance
+  private async computeMarketMap(dateQuery: { in: Date[] }) {
+    const dataGatheringItems: IDataGatheringItem[] = this.activities.map(
+      (activity) => {
+        return {
+          symbol: activity.SymbolProfile.symbol,
+          dataSource: activity.SymbolProfile.dataSource
+        };
+      }
+    );
+    const { values: marketSymbols } = await this.currentRateService.getValues({
+      dataGatheringItems,
+      dateQuery
+    });
+
+    const marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    } = {};
+
+    for (const marketSymbol of marketSymbols) {
+      const date = format(marketSymbol.date, DATE_FORMAT);
+
+      if (!marketSymbolMap[date]) {
+        marketSymbolMap[date] = {};
+      }
+
+      if (marketSymbol.marketPrice) {
+        marketSymbolMap[date][marketSymbol.symbol] = new Big(
+          marketSymbol.marketPrice
+        );
+      }
+    }
+
+    this.marketMap = marketSymbolMap;
   }
 }
