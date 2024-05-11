@@ -1099,10 +1099,10 @@ export abstract class PortfolioCalculator {
 
     const newChartData: HistoricalDataItem[] = [];
 
-    let netPerformanceAtStartDate;
-    let netPerformanceWithCurrencyEffectAtStartDate;
-    let netPerformanceInPercentageWithCurrencyEffectAtStartDate;
-    let totalInvestmentValuesWithCurrencyEffect = [];
+    let netPerformanceAtStartDate: number;
+    let netPerformanceWithCurrencyEffectAtStartDate: number;
+    let netPerformanceInPercentageWithCurrencyEffectAtStartDate: number;
+    let totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (let historicalDataItem of chartData) {
       if (
@@ -1158,7 +1158,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    return newChartData;
+    return { chart: newChartData };
   }
 
   public getStartDate() {

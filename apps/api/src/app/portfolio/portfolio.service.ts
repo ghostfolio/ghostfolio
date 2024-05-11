@@ -70,7 +70,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, isNumber, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -1230,15 +1230,15 @@ export class PortfolioService {
 
     console.timeEnd('------ PortfolioService.getPerformance');
 
-    const newChartData = await portfolioCalculator.getPerformance({
+    const { chart } = await portfolioCalculator.getPerformance({
       end: endDate,
       start: startDate
     });
 
     return {
+      chart,
       errors,
       hasErrors,
-      chart: newChartData,
       firstOrderDate: parseDate(chartData[0]?.date),
       performance: {
         currentNetWorth,
