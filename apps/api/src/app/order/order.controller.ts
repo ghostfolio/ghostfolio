@@ -48,7 +48,7 @@ export class OrderController {
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser
-  ) { }
+  ) {}
 
   @Delete()
   @HasPermission(permissions.deleteOrder)
@@ -63,9 +63,14 @@ export class OrderController {
       filterByAssetClasses,
       filterByTags
     });
-    return this.orderService.deleteOrders({
+    const where: Prisma.OrderWhereInput = {
       userId: this.request.user.id,
-    }, filters);
+      currency: this.request.user.Settings.settings.baseCurrency,
+    };
+    return this.orderService.deleteOrders({
+      filters,
+      where
+    });
   }
 
   @Delete(':id')

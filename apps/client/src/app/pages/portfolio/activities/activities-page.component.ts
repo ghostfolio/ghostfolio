@@ -171,7 +171,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
     if (confirmation) {
       this.dataService
-        .deleteAllOrders({
+        .deleteAllActivities({
           filters: this.userService.getFilters()
         })
         .pipe(takeUntil(this.unsubscribeSubject))

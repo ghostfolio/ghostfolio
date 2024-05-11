@@ -40,7 +40,7 @@ export class OrderService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
-  ) {}
+  ) { }
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -194,76 +194,25 @@ export class OrderService {
     return order;
   }
 
-  public async deleteOrders(where: Prisma.OrderWhereInput, filters: Filter[]): Promise<number> {
-
-    const {
-      ACCOUNT: filtersByAccount,
-      ASSET_CLASS: filtersByAssetClass,
-      TAG: filtersByTag
-    } = groupBy(filters, (filter) => {
-      return filter.type;
-    });
-
-    if (filtersByAccount?.length > 0) {
-      where.accountId = {
-        in: filtersByAccount.map(({ id }) => {
-          return id;
-        })
-      };
-    }
-
-    if (filtersByAssetClass?.length > 0) {
-      where.SymbolProfile = {
-        OR: [
-          {
-            AND: [
-              {
-                OR: filtersByAssetClass.map(({ id }) => {
-                  return { assetClass: AssetClass[id] };
-                })
-              },
-              {
-                OR: [
-                  { SymbolProfileOverrides: { is: null } },
-                  { SymbolProfileOverrides: { assetClass: null } }
-                ]
-              }
-            ]
-          },
-          {
-            SymbolProfileOverrides: {
-              OR: filtersByAssetClass.map(({ id }) => {
-                return { assetClass: AssetClass[id] };
-              })
-            }
-          }
-        ]
-      };
-    }
-
-    if (filtersByTag?.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
-        }
-      };
-    }
-
+  public async deleteOrders({ filters, where }: { filters?: Filter[], where: Prisma.OrderWhereInput }): Promise<number> {
+    const userId = where.userId as string;
+    const userCurrency = where.currency as string;
+    const { activities } = await this.getOrders({ filters, userId, userCurrency });
+    const orderIds = activities.map(order => order.id);
     const { count } = await this.prismaService.order.deleteMany({
-      where
+      where: {
+        id: { in: orderIds }
+      }
     });
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId: <string>where.userId
-      })
+      new PortfolioChangedEvent({ userId: where.userId as string })
     );
 
     return count;
   }
+
 
   public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.order.findFirst({
