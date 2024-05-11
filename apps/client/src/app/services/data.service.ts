@@ -260,13 +260,6 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
-  public deleteAllOrders({
-    filters
-  }) {
-    let params = this.buildFiltersAsQueryParams({ filters });
-    return this.http.delete<any>(`/api/v1/order`, { params });
-  }
-
   public deleteAllActivities({
     filters
   }) {

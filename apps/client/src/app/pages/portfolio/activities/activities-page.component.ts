@@ -401,7 +401,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       hasPermission(this.user.permissions, permissions.createOrder);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder) &&
-      !this.userService.hasFilters();
+      hasPermission(this.user.permissions, permissions.deleteOrder);
   }
 }

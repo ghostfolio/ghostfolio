@@ -40,7 +40,7 @@ export class OrderService {
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
-  ) { }
+  ) {}
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -201,13 +201,19 @@ export class OrderService {
     const orderIds = activities.map(order => order.id);
     const { count } = await this.prismaService.order.deleteMany({
       where: {
-        id: { in: orderIds }
+        id: {
+          in: activities.map(({ id }) => {
+            return id;
+          })
+        }
       }
     });
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({ userId: where.userId as string })
+      new PortfolioChangedEvent({
+        userId: <string>where.userId
+      })
     );
 
     return count;
