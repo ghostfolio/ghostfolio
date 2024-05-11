@@ -1282,18 +1282,9 @@ export class PortfolioService {
     let currentNetWorth = 0;
 
     let items = await portfolioCalculator.getChart({
-      dateRange
-    });
-
-    items = await this.calculatedTimeWeightedPerformance(
-      calculateTimeWeightedPerformance,
-      activities,
       dateRange,
-      userId,
-      userCurrency,
-      filters,
-      items
-    );
+      withTimeWeightedReturn: calculateTimeWeightedPerformance
+    });
 
     const itemOfToday = items.find(({ date }) => {
       return date === format(new Date(), DATE_FORMAT);
@@ -1340,44 +1331,6 @@ export class PortfolioService {
         totalInvestment: totalInvestment.toNumber()
       }
     };
-  }
-
-  private async calculatedTimeWeightedPerformance(
-    calculateTimeWeightedPerformance: boolean,
-    activities: Activity[],
-    dateRange: string,
-    userId: string,
-    userCurrency: string,
-    filters: Filter[],
-    items: HistoricalDataItem[]
-  ) {
-    if (calculateTimeWeightedPerformance) {
-      const portfolioCalculatorCPR = this.calculatorFactory.createCalculator({
-        activities,
-        dateRange,
-        userId,
-        calculationType: PerformanceCalculationType.CPR,
-        currency: userCurrency,
-        hasFilters: filters?.length > 0,
-        isExperimentalFeatures:
-          this.request.user.Settings.settings.isExperimentalFeatures
-      });
-      let timeWeightedInvestmentItems = await portfolioCalculatorCPR.getChart({
-        dateRange
-      });
-
-      items = items.map((item) => {
-        let matchingItem = timeWeightedInvestmentItems.find(
-          (timeWeightedInvestmentItem) =>
-            timeWeightedInvestmentItem.date === item.date
-        );
-        item.timeWeightedPerformance = matchingItem.netPerformanceInPercentage;
-        item.timeWeightedPerformanceWithCurrencyEffect =
-          matchingItem.netPerformanceInPercentageWithCurrencyEffect;
-        return item;
-      });
-    }
-    return items;
   }
 
   @LogPerformance

@@ -64,7 +64,7 @@ export class PortfolioCalculatorFactory {
           redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
-        return new TWRPortfolioCalculator({
+        return new CPRPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,

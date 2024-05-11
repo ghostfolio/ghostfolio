@@ -424,10 +424,12 @@ export abstract class PortfolioCalculator {
 
   public async getChart({
     dateRange = 'max',
-    withDataDecimation = true
+    withDataDecimation = true,
+    withTimeWeightedReturn = false
   }: {
     dateRange?: DateRange;
     withDataDecimation?: boolean;
+    withTimeWeightedReturn?: boolean;
   }): Promise<HistoricalDataItem[]> {
     const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
 

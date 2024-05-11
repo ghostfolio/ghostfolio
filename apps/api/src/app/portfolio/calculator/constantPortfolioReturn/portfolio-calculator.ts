@@ -1,14 +1,14 @@
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
-import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import {
-  HistoricalDataItem,
-  SymbolMetrics,
-  UniqueAsset
-} from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
+  getFactor,
+  getInterval
+} from '@ghostfolio/api/helper/portfolio.helper';
+import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
+import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
+import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { Big } from 'big.js';
-import { addDays, eachDayOfInterval, format } from 'date-fns';
+import { addDays, differenceInDays, eachDayOfInterval, format } from 'date-fns';
 
 import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
 import { TWRPortfolioCalculator } from '../twr/portfolio-calculator';
@@ -17,44 +17,60 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   private holdings: { [date: string]: { [symbol: string]: Big } } = {};
   private holdingCurrencies: { [symbol: string]: string } = {};
 
-  protected calculateOverallPerformance(
-    positions: TimelinePosition[]
-  ): PortfolioSnapshot {
-    return super.calculateOverallPerformance(positions);
-  }
-
-  protected getSymbolMetrics({
-    dataSource,
-    end,
-    exchangeRates,
-    isChartMode = false,
-    marketSymbolMap,
-    start,
-    step = 1,
-    symbol
+  public async getChart({
+    dateRange = 'max',
+    withDataDecimation = true,
+    withTimeWeightedReturn = false
   }: {
-    end: Date;
-    exchangeRates: { [dateString: string]: number };
-    isChartMode?: boolean;
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
-    start: Date;
-    step?: number;
-  } & UniqueAsset): SymbolMetrics {
-    return super.getSymbolMetrics({
-      dataSource,
-      end,
-      exchangeRates,
-      isChartMode,
-      marketSymbolMap,
-      start,
+    dateRange?: DateRange;
+    withDataDecimation?: boolean;
+    withTimeWeightedReturn?: boolean;
+  }): Promise<HistoricalDataItem[]> {
+    const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
+
+    const daysInMarket = differenceInDays(endDate, startDate) + 1;
+    const step = withDataDecimation
+      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      : 1;
+
+    let item = super.getChartData({
       step,
-      symbol
+      end: endDate,
+      start: startDate
     });
+
+    if (!withTimeWeightedReturn) {
+      return item;
+    }
+
+    if (withTimeWeightedReturn) {
+      let timeWeighted = await this.getTimeWeightedChartData({
+        step,
+        end: endDate,
+        start: startDate
+      });
+
+      return item.then((data) => {
+        return data.map((item) => {
+          let timeWeightedItem = timeWeighted.find(
+            (timeWeightedItem) => timeWeightedItem.date === item.date
+          );
+          if (timeWeightedItem) {
+            item.timeWeightedPerformance =
+              timeWeightedItem.timeWeightedPerformance;
+            item.timeWeightedPerformanceWithCurrencyEffect =
+              timeWeightedItem.timeWeightedPerformanceWithCurrencyEffect;
+          }
+
+          return item;
+        });
+      });
+    }
+
+    return item;
   }
 
-  public override async getChartData({
+  private async getTimeWeightedChartData({
     end = new Date(Date.now()),
     start,
     step = 1
