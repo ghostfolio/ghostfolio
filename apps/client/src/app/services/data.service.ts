@@ -1,4 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
@@ -618,20 +619,8 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
-  public postAccountBalance({
-    accountId,
-    balance,
-    date
-  }: {
-    accountId: string;
-    balance: number;
-    date: Date;
-  }) {
-    return this.http.post<AccountBalance>(`/api/v1/account-balance`, {
-      accountId,
-      balance,
-      date
-    });
+  public postAccountBalance(aBalance: CreateAccountBalanceDto) {
+    return this.http.post<AccountBalance>(`/api/v1/account-balance`, aBalance);
   }
 
   public postBenchmark(benchmark: UniqueAsset) {

@@ -1,3 +1,5 @@
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
@@ -60,10 +62,7 @@ export class GfAccountBalancesComponent
   @Input() locale = getLocale();
   @Input() showActions = true;
 
-  @Output() accountBalanceCreated = new EventEmitter<{
-    balance: number;
-    date: Date;
-  }>();
+  @Output() accountBalanceCreated = new EventEmitter<CreateAccountBalanceDto>();
   @Output() accountBalanceDeleted = new EventEmitter<string>();
 
   @ViewChild(MatSort) sort: MatSort;
@@ -107,8 +106,25 @@ export class GfAccountBalancesComponent
     }
   }
 
-  public onSubmitAccountBalance() {
-    this.accountBalanceCreated.emit(this.accountBalanceForm.getRawValue());
+  public async onSubmitAccountBalance() {
+    const balance: CreateAccountBalanceDto = {
+      accountId: this.accountId,
+      balance: this.accountBalanceForm.get('balance').value,
+      date: this.accountBalanceForm.get('date').value.toISOString()
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: CreateAccountBalanceDto,
+        form: this.accountBalanceForm,
+        object: balance
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    this.accountBalanceCreated.emit(balance);
   }
 
   public ngOnDestroy() {

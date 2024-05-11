@@ -1,3 +1,4 @@
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -95,19 +96,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
-  public onAddAccountBalance({
-    balance,
-    date
-  }: {
-    balance: number;
-    date: Date;
-  }) {
+  public onAddAccountBalance(balance: CreateAccountBalanceDto) {
     this.dataService
-      .postAccountBalance({
-        balance,
-        date,
-        accountId: this.data.accountId
-      })
+      .postAccountBalance(balance)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.fetchAccount();
