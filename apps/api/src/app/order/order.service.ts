@@ -206,7 +206,9 @@ export class OrderService {
     const { activities } = await this.getOrders({
       filters,
       userId,
-      userCurrency
+      userCurrency,
+      includeDrafts: true,
+      withExcludedAccounts: true
     });
 
     const { count } = await this.prismaService.order.deleteMany({
