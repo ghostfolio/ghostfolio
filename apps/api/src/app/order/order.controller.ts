@@ -11,7 +11,7 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -53,8 +53,20 @@ export class OrderController {
   @Delete()
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteOrders(): Promise<number> {
+  public async deleteOrders(
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('tags') filterByTags?: string
+  ): Promise<number> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByTags
+    });
+
     return this.orderService.deleteOrders({
+      filters,
+      userCurrency: this.request.user.Settings.settings.baseCurrency,
       userId: this.request.user.id
     });
   }
