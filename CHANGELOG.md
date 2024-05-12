@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Disabled the button to delete all activities on the portfolio activities page if there are active filters
+- Improved the functionality to delete all activities on the portfolio activities page to work with the filters of the assistant
 
 ## 2.80.0 - 2024-05-08
 
