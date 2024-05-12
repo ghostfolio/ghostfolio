@@ -262,6 +262,7 @@ export class DataService {
 
   public deleteAllActivities({ filters }) {
     let params = this.buildFiltersAsQueryParams({ filters });
+
     return this.http.delete<any>(`/api/v1/order`, { params });
   }
 

@@ -196,19 +196,19 @@ export class OrderService {
 
   public async deleteOrders({
     filters,
-    where
+    userCurrency,
+    userId
   }: {
     filters?: Filter[];
-    where: Prisma.OrderWhereInput;
+    userCurrency: string;
+    userId: string;
   }): Promise<number> {
-    const userId = where.userId as string;
-    const userCurrency = where.currency as string;
     const { activities } = await this.getOrders({
       filters,
       userId,
       userCurrency
     });
-    const orderIds = activities.map((order) => order.id);
+
     const { count } = await this.prismaService.order.deleteMany({
       where: {
         id: {
@@ -221,9 +221,7 @@ export class OrderService {
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId: <string>where.userId
-      })
+      new PortfolioChangedEvent({ userId })
     );
 
     return count;

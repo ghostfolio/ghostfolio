@@ -63,13 +63,11 @@ export class OrderController {
       filterByAssetClasses,
       filterByTags
     });
-    const where: Prisma.OrderWhereInput = {
-      userId: this.request.user.id,
-      currency: this.request.user.Settings.settings.baseCurrency
-    };
+
     return this.orderService.deleteOrders({
       filters,
-      where
+      userCurrency: this.request.user.Settings.settings.baseCurrency,
+      userId: this.request.user.id
     });
   }
 
