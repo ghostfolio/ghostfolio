@@ -11,7 +11,7 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { permissions } from '@ghostfolio/common/permissions';
 import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -31,7 +31,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { AssetClass, Order as OrderModel, Prisma } from '@prisma/client';
+import { Order as OrderModel, Prisma } from '@prisma/client';
 import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
@@ -65,7 +65,7 @@ export class OrderController {
     });
     const where: Prisma.OrderWhereInput = {
       userId: this.request.user.id,
-      currency: this.request.user.Settings.settings.baseCurrency,
+      currency: this.request.user.Settings.settings.baseCurrency
     };
     return this.orderService.deleteOrders({
       filters,

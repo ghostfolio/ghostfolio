@@ -194,11 +194,21 @@ export class OrderService {
     return order;
   }
 
-  public async deleteOrders({ filters, where }: { filters?: Filter[], where: Prisma.OrderWhereInput }): Promise<number> {
+  public async deleteOrders({
+    filters,
+    where
+  }: {
+    filters?: Filter[];
+    where: Prisma.OrderWhereInput;
+  }): Promise<number> {
     const userId = where.userId as string;
     const userCurrency = where.currency as string;
-    const { activities } = await this.getOrders({ filters, userId, userCurrency });
-    const orderIds = activities.map(order => order.id);
+    const { activities } = await this.getOrders({
+      filters,
+      userId,
+      userCurrency
+    });
+    const orderIds = activities.map((order) => order.id);
     const { count } = await this.prismaService.order.deleteMany({
       where: {
         id: {
@@ -218,7 +228,6 @@ export class OrderService {
 
     return count;
   }
-
 
   public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
     return this.prismaService.order.findFirst({
