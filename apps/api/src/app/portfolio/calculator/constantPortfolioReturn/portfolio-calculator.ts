@@ -9,6 +9,7 @@ import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
+import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import {
   addDays,
@@ -88,7 +89,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     start: Date;
     step?: number;
   }): Promise<HistoricalDataItem[]> {
-    let marketMapTask = this.computeMarketMap({ in: [start, end] });
+    let marketMapTask = this.computeMarketMap({ gte: start, lte: end });
     const timelineHoldings = await this.getHoldings(start, end);
 
     const calculationDates = Object.keys(timelineHoldings)
@@ -186,42 +187,71 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     previousDate: string,
     holding: string,
     date: string,
-    totalInvestment,
+    totalInvestment: Big,
     timelineHoldings: { [date: string]: { [symbol: string]: Big } },
-    netPerformanceInPercentage,
-    netPerformanceInPercentageWithCurrencyEffect,
-    newTotalInvestment
+    netPerformanceInPercentage: Big,
+    netPerformanceInPercentageWithCurrencyEffect: Big,
+    newTotalInvestment: Big
   ) {
     const previousPrice = this.marketMap[previousDate][holding];
-    const currentPrice = this.marketMap[date][holding];
-    const previousPriceInBaseCurrency =
-      await this.exchangeRateDataService.toCurrencyAtDate(
-        previousPrice.toNumber(),
-        this.getCurrency(holding),
-        this.currency,
-        parseDate(previousDate)
+    const currentPrice = this.marketMap[date][holding] ?? previousPrice;
+    const previousHolding = timelineHoldings[previousDate][holding];
+
+    const priceInBaseCurrency = currentPrice
+      ? new Big(
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            currentPrice?.toNumber() ?? 0,
+            this.getCurrency(holding),
+            this.currency,
+            parseDate(date)
+          )
+        )
+      : new Big(0);
+
+    if (previousHolding.eq(0)) {
+      return {
+        netPerformanceInPercentage: new Big(0),
+        netPerformanceInPercentageWithCurrencyEffect: new Big(0),
+        newTotalInvestment: newTotalInvestment.plus(
+          timelineHoldings[date][holding].mul(priceInBaseCurrency)
+        )
+      };
+    }
+    if (!currentPrice || !previousPrice) {
+      Logger.warn(
+        `Missing historical market data for ${holding} (${!currentPrice ? date : previousDate}})`,
+        'PortfolioCalculator'
       );
-    const portfolioWeight = totalInvestment
-      ? timelineHoldings[previousDate][holding]
-          .mul(previousPriceInBaseCurrency)
-          .div(totalInvestment)
+      return {
+        netPerformanceInPercentage: new Big(0),
+        netPerformanceInPercentageWithCurrencyEffect: new Big(0),
+        newTotalInvestment: newTotalInvestment.plus(
+          timelineHoldings[date][holding].mul(priceInBaseCurrency)
+        )
+      };
+    }
+    const previousPriceInBaseCurrency = previousPrice
+      ? new Big(
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            previousPrice?.toNumber() ?? 0,
+            this.getCurrency(holding),
+            this.currency,
+            parseDate(previousDate)
+          )
+        )
+      : new Big(0);
+    const portfolioWeight = totalInvestment.toNumber()
+      ? previousHolding.mul(previousPriceInBaseCurrency).div(totalInvestment)
       : 0;
 
     netPerformanceInPercentage = netPerformanceInPercentage.plus(
       currentPrice.div(previousPrice).minus(1).mul(portfolioWeight)
     );
 
-    const priceInBaseCurrency =
-      await this.exchangeRateDataService.toCurrencyAtDate(
-        currentPrice.toNumber(),
-        this.getCurrency(holding),
-        this.currency,
-        parseDate(date)
-      );
     netPerformanceInPercentageWithCurrencyEffect =
       netPerformanceInPercentageWithCurrencyEffect.plus(
-        new Big(priceInBaseCurrency)
-          .div(new Big(previousPriceInBaseCurrency))
+        priceInBaseCurrency
+          .div(previousPriceInBaseCurrency)
           .minus(1)
           .mul(portfolioWeight)
       );
@@ -343,15 +373,18 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async computeMarketMap(dateQuery: { in: Date[] }) {
-    const dataGatheringItems: IDataGatheringItem[] = this.activities.map(
-      (activity) => {
+  private async computeMarketMap(dateQuery: { gte: Date; lte: Date }) {
+    const dataGatheringItems: IDataGatheringItem[] = this.activities
+      .map((activity) => {
         return {
           symbol: activity.SymbolProfile.symbol,
           dataSource: activity.SymbolProfile.dataSource
         };
-      }
-    );
+      })
+      .filter(
+        (gathering, i, arr) =>
+          arr.findIndex((t) => t.symbol === gathering.symbol) === i
+      );
     const { values: marketSymbols } = await this.currentRateService.getValues({
       dataGatheringItems,
       dateQuery
