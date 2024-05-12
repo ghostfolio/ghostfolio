@@ -2,16 +2,19 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [CommonModule],
   selector: 'gf-demo-page',
+  standalone: true,
   templateUrl: './demo-page.html'
 })
-export class DemoPageComponent implements OnDestroy {
+export class GfDemoPageComponent implements OnDestroy {
   public info: InfoItem;
 
   private unsubscribeSubject = new Subject<void>();
