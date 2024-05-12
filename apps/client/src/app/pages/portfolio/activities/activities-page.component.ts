@@ -142,32 +142,24 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.openCreateActivityDialog(aActivity);
   }
 
+  public onDeleteActivities() {
+    this.dataService
+      .deleteActivities({
+        filters: this.userService.getFilters()
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchActivities();
+      });
+  }
+
   public onDeleteActivity(aId: string) {
     this.dataService
       .deleteActivity(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchActivities();
-        }
+      .subscribe(() => {
+        this.fetchActivities();
       });
-  }
-
-  public onDeleteAllActivities() {
-    const confirmation = confirm(
-      $localize`Do you really want to delete all your activities?`
-    );
-
-    if (confirmation) {
-      this.dataService
-        .deleteAllActivities()
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe({
-          next: () => {
-            this.fetchActivities();
-          }
-        });
-    }
   }
 
   public onExport(activityIds?: string[]) {
@@ -348,7 +340,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       hasPermission(this.user.permissions, permissions.createOrder);
     this.hasPermissionToDeleteActivity =
       !this.hasImpersonationId &&
-      hasPermission(this.user.permissions, permissions.deleteOrder) &&
-      !this.userService.hasFilters();
+      hasPermission(this.user.permissions, permissions.deleteOrder);
   }
 }
