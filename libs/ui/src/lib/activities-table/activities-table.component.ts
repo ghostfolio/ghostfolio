@@ -92,10 +92,10 @@ export class GfActivitiesTableComponent
   @Input() sortDisabled = false;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
+  @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
-  @Output() deleteAllActivities = new EventEmitter<void>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
@@ -211,6 +211,16 @@ export class GfActivitiesTableComponent
     this.activityToClone.emit(aActivity);
   }
 
+  public onDeleteActivities() {
+    const confirmation = confirm(
+      $localize`Do you really want to delete these activities?`
+    );
+
+    if (confirmation) {
+      this.activitiesDeleted.emit();
+    }
+  }
+
   public onDeleteActivity(aId: string) {
     const confirmation = confirm(
       $localize`Do you really want to delete this activity?`
@@ -239,10 +249,6 @@ export class GfActivitiesTableComponent
           return activity.id;
         })
     );
-  }
-
-  public onDeleteAllActivities() {
-    this.deleteAllActivities.emit();
   }
 
   public onImport() {

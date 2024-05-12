@@ -256,14 +256,14 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteActivity(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
-  }
-
-  public deleteAllActivities({ filters }) {
+  public deleteActivities({ filters }) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     return this.http.delete<any>(`/api/v1/order`, { params });
+  }
+
+  public deleteActivity(aId: string) {
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
