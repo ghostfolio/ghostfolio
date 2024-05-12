@@ -96,9 +96,9 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
-  public onAddAccountBalance(balance: CreateAccountBalanceDto) {
+  public onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
     this.dataService
-      .postAccountBalance(balance)
+      .postAccountBalance(accountBalance)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.fetchAccount();

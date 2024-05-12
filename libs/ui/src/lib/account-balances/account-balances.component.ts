@@ -107,7 +107,7 @@ export class GfAccountBalancesComponent
   }
 
   public async onSubmitAccountBalance() {
-    const balance: CreateAccountBalanceDto = {
+    const accountBalance: CreateAccountBalanceDto = {
       accountId: this.accountId,
       balance: this.accountBalanceForm.get('balance').value,
       date: this.accountBalanceForm.get('date').value.toISOString()
@@ -117,14 +117,14 @@ export class GfAccountBalancesComponent
       await validateObjectForForm({
         classDto: CreateAccountBalanceDto,
         form: this.accountBalanceForm,
-        object: balance
+        object: accountBalance
       });
     } catch (error) {
       console.error(error);
       return;
     }
 
-    this.accountBalanceCreated.emit(balance);
+    this.accountBalanceCreated.emit(accountBalance);
   }
 
   public ngOnDestroy() {

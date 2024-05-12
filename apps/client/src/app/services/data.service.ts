@@ -619,8 +619,11 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
-  public postAccountBalance(aBalance: CreateAccountBalanceDto) {
-    return this.http.post<AccountBalance>(`/api/v1/account-balance`, aBalance);
+  public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
+    return this.http.post<AccountBalance>(
+      `/api/v1/account-balance`,
+      aAccountBalance
+    );
   }
 
   public postBenchmark(benchmark: UniqueAsset) {
