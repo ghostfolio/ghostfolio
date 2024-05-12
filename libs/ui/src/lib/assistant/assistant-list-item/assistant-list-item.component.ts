@@ -60,9 +60,9 @@ export class GfAssistantListItemComponent
       this.queryParams = {
         dataSource,
         symbol,
-        positionDetailDialog: true
+        holdingDetailDialog: true
       };
-      this.routerLink = ['/portfolio', 'holdings'];
+      this.routerLink = [];
     }
   }
 

@@ -265,7 +265,7 @@ export class GfActivitiesTableComponent
 
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
     this.router.navigate([], {
-      queryParams: { dataSource, symbol, positionDetailDialog: true }
+      queryParams: { dataSource, symbol, holdingDetailDialog: true }
     });
   }
 

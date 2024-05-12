@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the delete all activities functionality on the portfolio activities page to work with the filters of the assistant
+- Upgraded `Nx` from version `18.3.3` to `19.0.2`
+
+### Fixed
+
+- Fixed the position detail dialog close functionality
 
 ## 2.80.0 - 2024-05-08
 
