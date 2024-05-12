@@ -217,9 +217,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
         )
       };
     }
-    if (!currentPrice || !previousPrice) {
+    if (previousPrice === undefined || currentPrice === undefined) {
       Logger.warn(
-        `Missing historical market data for ${holding} (${!currentPrice ? date : previousDate}})`,
+        `Missing historical market data for ${holding} (${previousPrice === undefined ? previousDate : date}})`,
         'PortfolioCalculator'
       );
       return {
