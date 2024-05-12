@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the delete all activities functionality on the portfolio activities page to work with the filters of the assistant
+- Improved the language localization for German (`de`)
 - Improved the language localization for Türkçe (`tr`)
 - Upgraded `Nx` from version `18.3.3` to `19.0.2`
 
