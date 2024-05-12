@@ -52,7 +52,6 @@ import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
-import { PortfolioPositions } from './interfaces/portfolio-positions.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -492,35 +491,6 @@ export class PortfolioController {
     }
 
     return performanceInformation;
-  }
-
-  /**
-   * @deprecated
-   */
-  @Get('positions')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @UseInterceptors(RedactValuesInResponseInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getPositions(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Query('accounts') filterByAccounts?: string,
-    @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('query') filterBySearchQuery?: string,
-    @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
-  ): Promise<PortfolioPositions> {
-    const filters = this.apiService.buildFiltersFromQueryParams({
-      filterByAccounts,
-      filterByAssetClasses,
-      filterBySearchQuery,
-      filterByTags
-    });
-
-    return this.portfolioService.getPositions({
-      dateRange,
-      filters,
-      impersonationId
-    });
   }
 
   @Get('public/:accessId')

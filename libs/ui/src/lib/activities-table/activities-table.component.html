@@ -58,6 +58,7 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
+        [disabled]="!hasPermissionToDeleteActivity"
         (click)="onDeleteAllActivities()"
       >
         <span class="align-items-center d-flex">
@@ -119,7 +120,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="icon">
+    <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <gf-asset-profile-icon
@@ -444,7 +445,11 @@
               <span i18n>Export Draft as ICS</span>
             </span>
           </button>
-          <button mat-menu-item (click)="onDeleteActivity(element.id)">
+          <button
+            mat-menu-item
+            [disabled]="!hasPermissionToDeleteActivity"
+            (click)="onDeleteActivity(element.id)"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="trash-outline" />
               <span i18n>Delete</span>

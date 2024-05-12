@@ -7,7 +7,7 @@
     matSortDirection="desc"
     [dataSource]="dataSource"
   >
-    <ng-container matColumnDef="icon">
+    <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <gf-asset-profile-icon
@@ -109,7 +109,30 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="performance" stickyEnd>
+    <ng-container matColumnDef="performance">
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header="netPerformanceWithCurrencyEffect"
+      >
+        <ng-container i18n>Change</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="
+              isLoading ? undefined : element.netPerformanceWithCurrencyEffect
+            "
+          />
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="performanceInPercentage" stickyEnd>
       <th
         *matHeaderCellDef
         class="justify-content-end px-1"

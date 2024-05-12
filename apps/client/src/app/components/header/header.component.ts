@@ -65,6 +65,7 @@ export class HeaderComponent implements OnChanges {
   @ViewChild('assistant') assistantElement: GfAssistantComponent;
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
+  public hasFilters: boolean;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
@@ -106,6 +107,8 @@ export class HeaderComponent implements OnChanges {
   }
 
   public ngOnChanges() {
+    this.hasFilters = this.userService.hasFilters();
+
     this.hasPermissionForSocialLogin = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSocialLogin

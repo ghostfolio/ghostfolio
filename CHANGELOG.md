@@ -7,9 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added an indicator for active filters (experimental)
+
 ### Changed
 
+- Disabled the button to delete all activities on the portfolio activities page if there are active filters
 - Improved the language localization for Türkçe (`tr`)
+- Upgraded `Nx` from version `18.3.3` to `19.0.2`
+
+### Fixed
+
+- Fixed the position detail dialog close functionality
+
+## 2.80.0 - 2024-05-08
+
+### Added
+
+- Added the absolute change column to the holdings table on the home page
+
+### Changed
+
+- Increased the spacing around the floating action buttons (FAB)
+- Set the icon column of the activities table to stick at the beginning
+- Set the icon column of the holdings table to stick at the beginning
+- Increased the number of attempts of queue jobs from `10` to `12` (fail later)
+- Upgraded `ionicons` from version `7.3.0` to `7.4.0`
+
+### Fixed
+
+- Fixed the position detail dialog open functionality when searching for a holding in the assistant
 
 ## 2.79.0 - 2024-05-04
 

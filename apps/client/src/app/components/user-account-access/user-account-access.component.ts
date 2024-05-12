@@ -21,6 +21,7 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'has-fab' },
   selector: 'gf-user-account-access',
   styleUrls: ['./user-account-access.scss'],
   templateUrl: './user-account-access.html'

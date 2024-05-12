@@ -5,6 +5,7 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,6 +22,7 @@ import { HeaderComponent } from './header.component';
     GfLogoComponent,
     GfPremiumIndicatorComponent,
     LoginWithAccessTokenDialogModule,
+    MatBadgeModule,
     MatButtonModule,
     MatMenuModule,
     MatToolbarModule,

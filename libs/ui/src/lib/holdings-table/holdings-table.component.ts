@@ -84,7 +84,12 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     this.displayedColumns.push('allocationInPercentage');
-    this.displayedColumns.push('performance');
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('performance');
+    }
+
+    this.displayedColumns.push('performanceInPercentage');
 
     this.isLoading = true;
 
@@ -100,7 +105,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
   }
