@@ -51,7 +51,7 @@ import { AssetClass, AssetSubClass } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
+import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { PortfolioService } from './portfolio.service';
 
 @Controller('portfolio')
@@ -569,7 +569,7 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource,
     @Param('symbol') symbol
-  ): Promise<PortfolioPositionDetail> {
+  ): Promise<PortfolioHoldingDetail> {
     const position = await this.portfolioService.getPosition(
       dataSource,
       impersonationId,
