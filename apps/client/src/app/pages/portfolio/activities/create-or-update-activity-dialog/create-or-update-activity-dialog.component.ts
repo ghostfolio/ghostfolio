@@ -91,7 +91,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
 
     this.activityForm = this.formBuilder.group({
-      accountId: [this.data.activity?.accountId, Validators.required],
+      accountId: [
+        !!this.data.activity?.accountId || this.data.accounts.length !== 1
+          ? this.data.activity?.accountId
+          : this.data.accounts[0].id,
+        Validators.required
+      ],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
       comment: [this.data.activity?.comment],
