@@ -74,6 +74,7 @@ import {
 } from 'date-fns';
 import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
+import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
   PerformanceCalculationType,
@@ -1824,12 +1825,17 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth = new Big(balanceInBaseCurrency)
-      .plus(currentValueInBaseCurrency)
-      .plus(valuables)
-      .plus(excludedAccountsAndActivities)
-      .minus(liabilities)
-      .toNumber();
+    const netWorth =
+      portfolioCalculator instanceof CPRPortfolioCalculator
+        ? await (portfolioCalculator as CPRPortfolioCalculator)
+            .getUnfilteredNetWorth(this.getUserCurrency())
+            .then((value) => value.toNumber())
+        : new Big(balanceInBaseCurrency)
+            .plus(currentValueInBaseCurrency)
+            .plus(valuables)
+            .plus(excludedAccountsAndActivities)
+            .minus(liabilities)
+            .toNumber();
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 

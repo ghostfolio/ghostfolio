@@ -8,6 +8,7 @@ import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
+import { OrderService } from '../../order/order.service';
 import { CPRPortfolioCalculator } from './constantPortfolioReturn/portfolio-calculator';
 import { MWRPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
@@ -25,7 +26,8 @@ export class PortfolioCalculatorFactory {
     private readonly configurationService: ConfigurationService,
     private readonly currentRateService: CurrentRateService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly redisCacheService: RedisCacheService
+    private readonly redisCacheService: RedisCacheService,
+    private readonly orderservice: OrderService
   ) {}
 
   public createCalculator({
@@ -64,31 +66,37 @@ export class PortfolioCalculatorFactory {
           redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
-        return new CPRPortfolioCalculator({
-          accountBalanceItems,
-          activities,
-          currency,
-          currentRateService: this.currentRateService,
-          dateRange,
-          useCache,
-          userId,
-          configurationService: this.configurationService,
-          exchangeRateDataService: this.exchangeRateDataService,
-          redisCacheService: this.redisCacheService
-        });
+        return new CPRPortfolioCalculator(
+          {
+            accountBalanceItems,
+            activities,
+            currency,
+            currentRateService: this.currentRateService,
+            dateRange,
+            useCache,
+            userId,
+            configurationService: this.configurationService,
+            exchangeRateDataService: this.exchangeRateDataService,
+            redisCacheService: this.redisCacheService
+          },
+          this.orderservice
+        );
       case PerformanceCalculationType.CPR:
-        return new CPRPortfolioCalculator({
-          accountBalanceItems,
-          activities,
-          currency,
-          currentRateService: this.currentRateService,
-          dateRange,
-          useCache,
-          userId,
-          configurationService: this.configurationService,
-          exchangeRateDataService: this.exchangeRateDataService,
-          redisCacheService: this.redisCacheService
-        });
+        return new CPRPortfolioCalculator(
+          {
+            accountBalanceItems,
+            activities,
+            currency,
+            currentRateService: this.currentRateService,
+            dateRange,
+            useCache,
+            userId,
+            configurationService: this.configurationService,
+            exchangeRateDataService: this.exchangeRateDataService,
+            redisCacheService: this.redisCacheService
+          },
+          this.orderservice
+        );
       default:
         throw new Error('Invalid calculation type');
     }

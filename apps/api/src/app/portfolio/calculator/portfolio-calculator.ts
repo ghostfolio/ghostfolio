@@ -65,7 +65,7 @@ export abstract class PortfolioCalculator {
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
   private useCache: boolean;
-  private userId: string;
+  protected userId: string;
   protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
 
   public constructor({
