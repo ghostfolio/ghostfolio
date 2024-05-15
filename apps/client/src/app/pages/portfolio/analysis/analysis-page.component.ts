@@ -337,24 +337,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             value: netPerformanceInPercentageWithCurrencyEffect
           });
           if ((this.timeWeightedPerformance ?? 'N') !== 'N') {
-            let lastPerformance = 0;
-            if (index > 0) {
-              lastPerformance = new Big(
-                chart[index - 1].timeWeightedPerformance
-              )
-                .div(100)
-                .plus(1)
-                .mul(
-                  new Big(chart[index].timeWeightedPerformance).div(100).plus(1)
-                )
-                .minus(1)
-                .mul(100)
-                .toNumber();
-            }
-            chart[index].timeWeightedPerformance = lastPerformance;
             this.performanceDataItemsTimeWeightedInPercentage.push({
               date,
-              value: lastPerformance
+              value: chart[index].timeWeightedPerformance
             });
           }
         }

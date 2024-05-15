@@ -55,52 +55,40 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     if (!withTimeWeightedReturn) {
       return item;
     } else {
+      let itemResult = await item;
+      let dates = itemResult.map((item) => parseDate(item.date));
       let timeWeighted = await this.getTimeWeightedChartData({
-        step,
-        end: endDate,
-        start: startDate
+        dates
       });
 
-      return item.then((data) => {
-        return data.map((item) => {
-          let timeWeightedItem = timeWeighted.find(
-            (timeWeightedItem) => timeWeightedItem.date === item.date
-          );
-          if (timeWeightedItem) {
-            item.timeWeightedPerformance =
-              timeWeightedItem.netPerformanceInPercentage;
-            item.timeWeightedPerformanceWithCurrencyEffect =
-              timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
-          }
+      return itemResult.map((item) => {
+        let timeWeightedItem = timeWeighted.find(
+          (timeWeightedItem) => timeWeightedItem.date === item.date
+        );
+        if (timeWeightedItem) {
+          item.timeWeightedPerformance =
+            timeWeightedItem.netPerformanceInPercentage;
+          item.timeWeightedPerformanceWithCurrencyEffect =
+            timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
+        }
 
-          return item;
-        });
+        return item;
       });
     }
   }
 
   @LogPerformance
   private async getTimeWeightedChartData({
-    end = new Date(Date.now()),
-    start,
-    step = 1
+    dates
   }: {
-    end?: Date;
-    start: Date;
-    step?: number;
+    dates?: Date[];
   }): Promise<HistoricalDataItem[]> {
+    dates = dates.sort((a, b) => a.getTime() - b.getTime());
+    const start = dates[0];
+    const end = dates[dates.length - 1];
     let marketMapTask = this.computeMarketMap({ gte: start, lte: end });
     const timelineHoldings = await this.getHoldings(start, end);
 
-    const calculationDates = Object.keys(timelineHoldings)
-      .filter((date) => {
-        let parsed = parseDate(date);
-        return (
-          isAfter(parsed, subDays(start, 1)) &&
-          isBefore(parsed, addDays(end, 1))
-        );
-      })
-      .sort((a, b) => parseDate(a).getTime() - parseDate(b).getTime());
     let data: HistoricalDataItem[] = [];
     const startString = format(start, DATE_FORMAT);
 
@@ -135,9 +123,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     let previousNetPerformanceInPercentage = new Big(0);
     let previousNetPerformanceInPercentageWithCurrencyEffect = new Big(0);
 
-    for (let i = 1; i < calculationDates.length; i++) {
-      const date = calculationDates[i];
-      const previousDate = calculationDates[i - 1];
+    for (let i = 1; i < dates.length; i++) {
+      const date = format(dates[i], DATE_FORMAT);
+      const previousDate = format(dates[i - 1], DATE_FORMAT);
       const holdings = timelineHoldings[previousDate];
       let newTotalInvestment = new Big(0);
       let netPerformanceInPercentage = new Big(0);
@@ -158,24 +146,28 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
           netPerformanceInPercentageWithCurrencyEffect,
           newTotalInvestment
         ));
-        totalInvestment = newTotalInvestment;
       }
+      totalInvestment = newTotalInvestment;
 
-      previousNetPerformanceInPercentage =
-        previousNetPerformanceInPercentage.mul(
-          netPerformanceInPercentage.plus(1)
-        );
+      previousNetPerformanceInPercentage = previousNetPerformanceInPercentage
+        .plus(1)
+        .mul(netPerformanceInPercentage.plus(1))
+        .minus(1);
       previousNetPerformanceInPercentageWithCurrencyEffect =
-        previousNetPerformanceInPercentageWithCurrencyEffect.mul(
-          netPerformanceInPercentageWithCurrencyEffect.plus(1)
-        );
+        previousNetPerformanceInPercentageWithCurrencyEffect
+          .plus(1)
+          .mul(netPerformanceInPercentageWithCurrencyEffect.plus(1))
+          .minus(1);
 
       data.push({
         date,
-        netPerformanceInPercentage:
-          previousNetPerformanceInPercentage.toNumber(),
+        netPerformanceInPercentage: previousNetPerformanceInPercentage
+          .mul(100)
+          .toNumber(),
         netPerformanceInPercentageWithCurrencyEffect:
-          previousNetPerformanceInPercentageWithCurrencyEffect.toNumber()
+          previousNetPerformanceInPercentageWithCurrencyEffect
+            .mul(100)
+            .toNumber()
       });
     }
 
@@ -210,8 +202,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
 
     if (previousHolding.eq(0)) {
       return {
-        netPerformanceInPercentage: new Big(0),
-        netPerformanceInPercentageWithCurrencyEffect: new Big(0),
+        netPerformanceInPercentage: netPerformanceInPercentage,
+        netPerformanceInPercentageWithCurrencyEffect:
+          netPerformanceInPercentageWithCurrencyEffect,
         newTotalInvestment: newTotalInvestment.plus(
           timelineHoldings[date][holding].mul(priceInBaseCurrency)
         )
@@ -223,8 +216,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
         'PortfolioCalculator'
       );
       return {
-        netPerformanceInPercentage: new Big(0),
-        netPerformanceInPercentageWithCurrencyEffect: new Big(0),
+        netPerformanceInPercentage: netPerformanceInPercentage,
+        netPerformanceInPercentageWithCurrencyEffect:
+          netPerformanceInPercentageWithCurrencyEffect,
         newTotalInvestment: newTotalInvestment.plus(
           timelineHoldings[date][holding].mul(priceInBaseCurrency)
         )
@@ -242,7 +236,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       : new Big(0);
     const portfolioWeight = totalInvestment.toNumber()
       ? previousHolding.mul(previousPriceInBaseCurrency).div(totalInvestment)
-      : 0;
+      : new Big(0);
 
     netPerformanceInPercentage = netPerformanceInPercentage.plus(
       currentPrice.div(previousPrice).minus(1).mul(portfolioWeight)
