@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Refactored the holding detail dialog to a standalone component
+- Refactored various pages to standalone components
 
 ## 2.81.0 - 2024-05-12
 
