@@ -1,6 +1,7 @@
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
@@ -48,38 +49,12 @@ export class CurrentRateService {
 
     if (includesToday) {
       promises.push(
-        this.dataProviderService
-          .getQuotes({ items: dataGatheringItems, user: this.request?.user })
-          .then((dataResultProvider) => {
-            const result: GetValueObject[] = [];
-
-            for (const dataGatheringItem of dataGatheringItems) {
-              if (
-                dataResultProvider?.[dataGatheringItem.symbol]?.dataProviderInfo
-              ) {
-                dataProviderInfos.push(
-                  dataResultProvider[dataGatheringItem.symbol].dataProviderInfo
-                );
-              }
-
-              if (dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice) {
-                result.push({
-                  dataSource: dataGatheringItem.dataSource,
-                  date: today,
-                  marketPrice:
-                    dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice,
-                  symbol: dataGatheringItem.symbol
-                });
-              } else {
-                quoteErrors.push({
-                  dataSource: dataGatheringItem.dataSource,
-                  symbol: dataGatheringItem.symbol
-                });
-              }
-            }
-
-            return result;
-          })
+        this.getTodayPrivate(
+          dataGatheringItems,
+          dataProviderInfos,
+          today,
+          quoteErrors
+        )
       );
     }
 
@@ -167,6 +142,61 @@ export class CurrentRateService {
     }
 
     return response;
+  }
+
+  public async getToday(
+    dataGatheringItems: IDataGatheringItem[]
+  ): Promise<GetValueObject[]> {
+    const dataProviderInfos: DataProviderInfo[] = [];
+    const quoteErrors: UniqueAsset[] = [];
+    const today = resetHours(new Date());
+
+    return this.getTodayPrivate(
+      dataGatheringItems,
+      dataProviderInfos,
+      today,
+      quoteErrors
+    );
+  }
+
+  private async getTodayPrivate(
+    dataGatheringItems: IDataGatheringItem[],
+    dataProviderInfos: DataProviderInfo[],
+    today: Date,
+    quoteErrors: UniqueAsset[]
+  ): Promise<GetValueObject[]> {
+    return this.dataProviderService
+      .getQuotes({ items: dataGatheringItems, user: this.request?.user })
+      .then((dataResultProvider) => {
+        const result: GetValueObject[] = [];
+
+        for (const dataGatheringItem of dataGatheringItems) {
+          if (
+            dataResultProvider?.[dataGatheringItem.symbol]?.dataProviderInfo
+          ) {
+            dataProviderInfos.push(
+              dataResultProvider[dataGatheringItem.symbol].dataProviderInfo
+            );
+          }
+
+          if (dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice) {
+            result.push({
+              dataSource: dataGatheringItem.dataSource,
+              date: today,
+              marketPrice:
+                dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice,
+              symbol: dataGatheringItem.symbol
+            });
+          } else {
+            quoteErrors.push({
+              dataSource: dataGatheringItem.dataSource,
+              symbol: dataGatheringItem.symbol
+            });
+          }
+        }
+
+        return result;
+      });
   }
 
   private containsToday(dates: Date[]): boolean {
