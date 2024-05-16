@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the date range selector in the assistant
+- Refactored various pages to standalone components
+- Upgraded `body-parser` from version `1.20.1` to `1.20.2`
 
 ## 2.81.0 - 2024-05-12
 
