@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored various pages to standalone components
 - Upgraded `@internationalized/number` from version `3.5.0` to `3.5.2`
+- Upgraded `body-parser` from version `1.20.1` to `1.20.2`
 
 ## 2.81.0 - 2024-05-12
 
