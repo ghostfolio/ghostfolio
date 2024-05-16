@@ -2,7 +2,7 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
-import * as bodyParser from 'body-parser';
+import { json } from 'body-parser';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
@@ -34,7 +34,7 @@ async function bootstrap() {
   );
 
   // Support 10mb csv/json files for importing activities
-  app.use(bodyParser.json({ limit: '10mb' }));
+  app.use(json({ limit: '10mb' }));
 
   if (configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true') {
     app.use(
