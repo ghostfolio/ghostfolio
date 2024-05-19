@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the holding detail dialog to a standalone component
 - Refreshed the cryptocurrencies list
 - Refactored various pages to standalone components
 - Upgraded `body-parser` from version `1.20.1` to `1.20.2`

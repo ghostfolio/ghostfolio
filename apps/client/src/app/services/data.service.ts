@@ -6,7 +6,7 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -325,6 +325,31 @@ export class DataService {
     });
   }
 
+  public fetchHoldingDetail({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http
+      .get<PortfolioHoldingDetail>(
+        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((data) => {
+          if (data.orders) {
+            for (const order of data.orders) {
+              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
+              order.date = parseISO(<string>(<unknown>order.date));
+            }
+          }
+
+          return data;
+        })
+      );
+  }
+
   public fetchInfo(): InfoItem {
     const info = cloneDeep((window as any).info);
     const utmSource = <'ios' | 'trusted-web-activity'>(
@@ -561,31 +586,6 @@ export class DataService {
 
   public fetchPortfolioReport() {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
-  }
-
-  public fetchPositionDetail({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    return this.http
-      .get<PortfolioPositionDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
-      )
-      .pipe(
-        map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
-              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
-              order.date = parseISO(<string>(<unknown>order.date));
-            }
-          }
-
-          return data;
-        })
-      );
   }
 
   public loginAnonymous(accessToken: string) {
