@@ -7,7 +7,7 @@ import {
 
 import { Account, Tag } from '@prisma/client';
 
-export interface PortfolioPositionDetail {
+export interface PortfolioHoldingDetail {
   accounts: Account[];
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
