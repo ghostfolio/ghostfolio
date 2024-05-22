@@ -3680,10 +3680,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@internationalized/number@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@internationalized/number/-/number-3.5.0.tgz#9de6018424b441a6545f209afa286ad7df4a2906"
-  integrity sha512-ZY1BW8HT9WKYvaubbuqXbbDdHhOUMfE2zHHFJeTppid0S+pc8HtdIxFxaYMsGjCb4UsF+MEJ4n2TfU7iHnUK8w==
+"@internationalized/number@3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@internationalized/number/-/number-3.5.2.tgz#2edc8e830268dca7283dad6def728f34eb5b7fdc"
+  integrity sha512-4FGHTi0rOEX1giSkt5MH4/te0eHBq3cvAYsfLlpguV6pzJAReXymiYpE5wPCqKqjkUO3PIsyvk+tBiIV1pZtbA==
   dependencies:
     "@swc/helpers" "^0.5.0"
 
