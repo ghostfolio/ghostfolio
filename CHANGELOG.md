@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the create or update activity dialog by preselecting the (only) account
 - Improved the usability of the date range selector in the assistant
 - Refactored the holding detail dialog to a standalone component
 - Refreshed the cryptocurrencies list
