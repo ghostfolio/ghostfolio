@@ -3680,10 +3680,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-2.0.2.tgz#d9fae00a2d5cb40f92cfe64b47ad749fbc38f917"
   integrity sha512-6EwiSjwWYP7pTckG6I5eyFANjPhmPjUX9JRLUSfNPC7FX7zK9gyZAfUEaECL6ALTpGX5AjnBq3C9XmVWPitNpw==
 
-"@internationalized/number@3.5.0":
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/@internationalized/number/-/number-3.5.0.tgz#9de6018424b441a6545f209afa286ad7df4a2906"
-  integrity sha512-ZY1BW8HT9WKYvaubbuqXbbDdHhOUMfE2zHHFJeTppid0S+pc8HtdIxFxaYMsGjCb4UsF+MEJ4n2TfU7iHnUK8w==
+"@internationalized/number@3.5.2":
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/@internationalized/number/-/number-3.5.2.tgz#2edc8e830268dca7283dad6def728f34eb5b7fdc"
+  integrity sha512-4FGHTi0rOEX1giSkt5MH4/te0eHBq3cvAYsfLlpguV6pzJAReXymiYpE5wPCqKqjkUO3PIsyvk+tBiIV1pZtbA==
   dependencies:
     "@swc/helpers" "^0.5.0"
 
@@ -7064,10 +7064,10 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/body-parser@1.19.2":
-  version "1.19.2"
-  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.2.tgz#aea2059e28b7658639081347ac4fab3de166e6f0"
-  integrity sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==
+"@types/body-parser@1.19.5":
+  version "1.19.5"
+  resolved "https://registry.yarnpkg.com/@types/body-parser/-/body-parser-1.19.5.tgz#04ce9a3b677dc8bd681a17da1ab9835dc9d3ede4"
+  integrity sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==
   dependencies:
     "@types/connect" "*"
     "@types/node" "*"
@@ -19716,10 +19716,10 @@ yocto-queue@^1.0.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
 
-zone.js@0.14.4:
-  version "0.14.4"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.14.4.tgz#e0168fe450e3e4313c8efdb4a0ae4b557ac0fdd8"
-  integrity sha512-NtTUvIlNELez7Q1DzKVIFZBzNb646boQMgpATo9z3Ftuu/gWvzxCW7jdjcUDoRGxRikrhVHB/zLXh1hxeJawvw==
+zone.js@0.14.5:
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.14.5.tgz#7f3591dc4cad1a030cda86b03d10450b719dd460"
+  integrity sha512-9XYWZzY6PhHOSdkYryNcMm7L8EK7a4q+GbTvxbIA2a9lMdRUpGuyaYvLDcg8D6bdn+JomSsbPcilVKg6SmUx6w==
   dependencies:
     tslib "^2.3.0"
 
