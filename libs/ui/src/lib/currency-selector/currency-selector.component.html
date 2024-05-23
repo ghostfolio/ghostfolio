@@ -8,12 +8,11 @@
 
 <mat-autocomplete
   #currencyAutocomplete="matAutocomplete"
-  [displayWith]="displayFn"
   (optionSelected)="onUpdateCurrency($event)"
 >
   @for (currencyItem of filteredCurrencies; track currencyItem) {
     <mat-option class="line-height-1" [value]="currencyItem">
-      {{ currencyItem.label }}
+      {{ currencyItem }}
     </mat-option>
   }
 </mat-autocomplete>
