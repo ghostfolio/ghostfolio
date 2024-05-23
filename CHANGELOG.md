@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `prisma` from version `5.13.0` to `5.14.0`
+
 ## 2.82.0 - 2024-05-22
 
 ### Changed
@@ -16,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored various pages to standalone components
 - Upgraded `@internationalized/number` from version `3.5.0` to `3.5.2`
 - Upgraded `body-parser` from version `1.20.1` to `1.20.2`
-- Upgraded `prisma` from version `5.13.0` to `5.14.0`
 - Upgraded `zone.js` from version `0.14.4` to `0.14.5`
 
 ## 2.81.0 - 2024-05-12
