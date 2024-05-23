@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `angular` from version `17.3.5` to `17.3.10`
+- Upgraded `Nx` from version `19.0.2` to `19.0.5`
 
 ## 2.82.0 - 2024-05-22
 
