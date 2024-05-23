@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `Nx` from version `19.0.2` to `19.0.5`
 - Upgraded `prisma` from version `5.13.0` to `5.14.0`
 
 ## 2.82.0 - 2024-05-22
