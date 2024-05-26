@@ -46,7 +46,9 @@ export class GoogleSheetsService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Google Sheets',
+      url: 'https://docs.google.com/spreadsheets'
     };
   }
 
