@@ -3,7 +3,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
-import { Strategy } from 'passport-google-oauth20';
+import { Profile, Strategy } from 'passport-google-oauth20';
 
 import { AuthService } from './auth.service';
 
@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   public constructor(
     private readonly authService: AuthService,
-    readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService
   ) {
     super({
       callbackURL: `${configurationService.get(
@@ -20,7 +20,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID: configurationService.get('GOOGLE_CLIENT_ID'),
       clientSecret: configurationService.get('GOOGLE_SECRET'),
       passReqToCallback: true,
-      scope: ['email', 'profile']
+      scope: ['profile']
     });
   }
 
@@ -28,20 +28,17 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     request: any,
     token: string,
     refreshToken: string,
-    profile,
+    profile: Profile,
     done: Function,
     done2: Function
   ) {
     try {
-      const jwt: string = await this.authService.validateOAuthLogin({
+      const jwt = await this.authService.validateOAuthLogin({
         provider: Provider.GOOGLE,
         thirdPartyId: profile.id
       });
-      const user = {
-        jwt
-      };
 
-      done(null, user);
+      done(null, { jwt });
     } catch (error) {
       Logger.error(error, 'GoogleStrategy');
       done(error, false);
