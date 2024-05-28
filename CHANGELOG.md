@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `prisma` from version `5.13.0` to `5.14.0`
 - Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
 
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+
 ## 2.82.0 - 2024-05-22
 
 ### Changed
