@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
 - Upgraded `angular` from version `17.3.5` to `17.3.10`
 - Upgraded `class-validator` from version `0.14.0` to `0.14.1`
+- Upgraded `countup.js` from version `2.3.2` to `2.8.0`
 - Upgraded `Nx` from version `19.0.2` to `19.0.5`
 - Upgraded `passport` from version `0.6.0` to `0.7.0`
 - Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
