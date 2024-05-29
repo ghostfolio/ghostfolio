@@ -271,6 +271,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
+  public deleteOwnUser(accessToken: string) {
+    return this.http.delete<any>(`/api/v1/user/self/${accessToken}`);
+  }
+
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
   }

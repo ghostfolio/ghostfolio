@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -32,6 +33,7 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
@@ -51,6 +53,34 @@ export class UserController {
 
     return this.userService.deleteUser({
       id
+    });
+  }
+
+  @Delete('self/:accessToken')
+  @HasPermission(permissions.deleteOwnUser)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteOwnUser(
+    @Param('accessToken') accessToken: string
+  ): Promise<UserModel> {
+    const hashedAccessToken = this.userService.createAccessToken(
+      accessToken,
+      this.configurationService.get('ACCESS_TOKEN_SALT')
+    );
+
+    const [user] = await this.userService.users({
+      where: { accessToken: hashedAccessToken }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return this.userService.deleteUser({
+      id: user.id,
+      accessToken: hashedAccessToken
     });
   }
 

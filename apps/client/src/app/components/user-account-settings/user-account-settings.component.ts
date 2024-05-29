@@ -4,6 +4,7 @@ import {
   KEY_TOKEN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -17,6 +18,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
@@ -33,8 +35,13 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];
+  public deleteOwnUserForm = this.formBuilder.group({
+    accessToken: ['', Validators.required]
+  });
+  public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public isAccessTokenHidden = true;
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -58,7 +65,9 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private formBuilder: FormBuilder,
     private settingsStorageService: SettingsStorageService,
+    private tokenStorageService: TokenStorageService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
@@ -83,6 +92,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
             permissions.updateViewMode
           );
 
+          this.hasPermissionToDeleteOwnUser = hasPermission(
+            this.user.permissions,
+            permissions.deleteOwnUser
+          );
+
           this.locales.push(this.user.settings.locale);
           this.locales = uniq(this.locales.sort());
 
@@ -97,6 +111,31 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
   public isCommunityLanguage() {
     return !(this.language === 'de' || this.language === 'en');
+  }
+
+  public onCloseAccount() {
+    const confirmation = confirm(
+      $localize`Do you really want to close your account?`
+    );
+
+    const accessToken = this.deleteOwnUserForm.get('accessToken').value;
+
+    if (confirmation) {
+      this.dataService
+        .deleteOwnUser(accessToken)
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe({
+          next: () => {
+            this.tokenStorageService.signOut();
+            this.userService.remove();
+
+            document.location.href = `/${document.documentElement.lang}`;
+          },
+          error: () => {
+            alert($localize`Oops! Incorrect Security Token.`);
+          }
+        });
+    }
   }
 
   public onChangeUserSetting(aKey: string, aValue: string) {

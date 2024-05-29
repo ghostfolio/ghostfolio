@@ -232,6 +232,64 @@
           </button>
         </div>
       </div>
+      @if (hasPermissionToDeleteOwnUser) {
+        <hr class="danger-zone-hr" />
+        @if (hasPermissionToDeleteOwnUser) {
+          <form
+            class="w-100"
+            [formGroup]="deleteOwnUserForm"
+            (ngSubmit)="onCloseAccount()"
+          >
+            <div class="align-items-center d-flex mt-4 py-1">
+              <div class="pr-1 w-50 danger-zone-text" i18n>Danger Zone</div>
+              <div class="pl-1 w-50">
+                <mat-form-field
+                  appearance="outline"
+                  class="without-hint w-100"
+                  color="warn"
+                >
+                  <mat-label class="danger-zone-text" i18n
+                    >Security Token</mat-label
+                  >
+                  <input
+                    formControlName="accessToken"
+                    matInput
+                    [type]="isAccessTokenHidden ? 'password' : 'text'"
+                  />
+                  <button
+                    mat-button
+                    matSuffix
+                    type="button"
+                    (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                  >
+                    <ion-icon
+                      [name]="
+                        isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                      "
+                    />
+                  </button>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="align-items-center d-flex py-1">
+              <div class="pr-1 w-50"></div>
+              <div class="pl-1 text-monospace w-50">
+                <button
+                  color="warn"
+                  mat-flat-button
+                  type="submit"
+                  [disabled]="
+                    !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                  "
+                >
+                  <span i18n>Close Account</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        }
+      }
     </div>
   </div>
 </div>
