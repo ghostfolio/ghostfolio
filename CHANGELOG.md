@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `passport` from version `0.6.0` to `0.7.0`
 - Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
 - Upgraded `prisma` from version `5.13.0` to `5.14.0`
+- Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
 
 ## 2.82.0 - 2024-05-22
 
