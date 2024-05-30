@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+
 ## 2.83.0 - 2024-05-30
 
 ### Changed
@@ -18,10 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
 - Upgraded `prisma` from version `5.13.0` to `5.14.0`
 - Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
-
-### Fixed
-
-- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
 
 ## 2.82.0 - 2024-05-22
 
