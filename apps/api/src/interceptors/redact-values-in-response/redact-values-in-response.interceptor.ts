@@ -1,5 +1,5 @@
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { redactAttributes } from '@ghostfolio/api/helper/object.helper';
+import { UserHelperService } from '@ghostfolio/api/services/user-helper/user-helper.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
@@ -16,7 +16,7 @@ import { map } from 'rxjs/operators';
 export class RedactValuesInResponseInterceptor<T>
   implements NestInterceptor<T, any>
 {
-  public constructor(private userService: UserService) {}
+  public constructor(private userHelperService: UserHelperService) {}
 
   public intercept(
     context: ExecutionContext,
@@ -30,14 +30,14 @@ export class RedactValuesInResponseInterceptor<T>
         const impersonationId =
           headers?.[HEADER_KEY_IMPERSONATION.toLowerCase()];
         const hasReadRestrictedPermission =
-          this.userService.hasReadRestrictedAccessPermission({
+          this.userHelperService.hasReadRestrictedAccessPermission({
             impersonationId,
             user
           });
 
         if (
           hasReadRestrictedPermission ||
-          this.userService.isRestrictedView(user)
+          this.userHelperService.isRestrictedView(user)
         ) {
           data = redactAttributes({
             object: data,

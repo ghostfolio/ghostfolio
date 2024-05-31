@@ -7,13 +7,14 @@ import {
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
 import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
-import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { UserHelperService } from '@ghostfolio/api/services/user-helper/user-helper.service';
 import {
   DEFAULT_CURRENCY,
   HEADER_KEY_IMPERSONATION
@@ -65,6 +66,7 @@ export class PortfolioController {
     private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly userHelperService: UserHelperService,
     private readonly userService: UserService
   ) {}
 
@@ -85,7 +87,7 @@ export class PortfolioController {
     let hasDetails = true;
     let hasError = false;
     const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
+      this.userHelperService.hasReadRestrictedAccessPermission({
         impersonationId,
         user: this.request.user
       });
@@ -118,7 +120,7 @@ export class PortfolioController {
 
     if (
       hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      this.userHelperService.isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
         .map(({ investment }) => {
@@ -159,7 +161,7 @@ export class PortfolioController {
     if (
       hasDetails === false ||
       hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      this.userHelperService.isRestrictedView(this.request.user)
     ) {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
@@ -227,7 +229,7 @@ export class PortfolioController {
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividends> {
     const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
+      this.userHelperService.hasReadRestrictedAccessPermission({
         impersonationId,
         user: this.request.user
       });
@@ -260,7 +262,7 @@ export class PortfolioController {
 
     if (
       hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      this.userHelperService.isRestrictedView(this.request.user)
     ) {
       const maxDividend = dividends.reduce(
         (investment, item) => Math.max(investment, item.investment),
@@ -327,7 +329,7 @@ export class PortfolioController {
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestments> {
     const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
+      this.userHelperService.hasReadRestrictedAccessPermission({
         impersonationId,
         user: this.request.user
       });
@@ -348,7 +350,7 @@ export class PortfolioController {
 
     if (
       hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      this.userHelperService.isRestrictedView(this.request.user)
     ) {
       const maxInvestment = investments.reduce(
         (investment, item) => Math.max(investment, item.investment),
@@ -398,7 +400,7 @@ export class PortfolioController {
     const withExcludedAccounts = withExcludedAccountsParam === 'true';
 
     const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
+      this.userHelperService.hasReadRestrictedAccessPermission({
         impersonationId,
         user: this.request.user
       });
@@ -420,7 +422,7 @@ export class PortfolioController {
     if (
       hasReadRestrictedAccessPermission ||
       this.request.user.Settings.settings.viewMode === 'ZEN' ||
-      this.userService.isRestrictedView(this.request.user)
+      this.userHelperService.isRestrictedView(this.request.user)
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         ({

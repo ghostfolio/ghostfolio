@@ -1,5 +1,6 @@
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
@@ -12,7 +13,7 @@ import { UserService } from './user.service';
 
 @Module({
   controllers: [UserController],
-  exports: [UserService],
+  exports: [ConfigurationService, UserService],
   imports: [
     ConfigurationModule,
     JwtModule.register({
@@ -24,6 +25,6 @@ import { UserService } from './user.service';
     SubscriptionModule,
     TagModule
   ],
-  providers: [UserService]
+  providers: [ConfigurationService, UserService]
 })
 export class UserModule {}

@@ -1,4 +1,4 @@
-import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { DataEnhancerModule } from '@ghostfolio/api/services/data-provider/data-enhancer/data-enhancer.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 
@@ -9,7 +9,11 @@ import { HealthService } from './health.service';
 
 @Module({
   controllers: [HealthController],
-  imports: [ConfigurationModule, DataEnhancerModule, DataProviderModule],
+  imports: [
+    DataEnhancerModule,
+    DataProviderModule,
+    TransformDataSourceInRequestModule
+  ],
   providers: [HealthService]
 })
 export class HealthModule {}
