@@ -11,11 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the data provider information to the asset profile details dialog of the admin control
 
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+
+## 2.83.0 - 2024-05-30
+
 ### Changed
 
+- Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
 - Upgraded `angular` from version `17.3.5` to `17.3.10`
+- Upgraded `class-validator` from version `0.14.0` to `0.14.1`
+- Upgraded `countup.js` from version `2.3.2` to `2.8.0`
 - Upgraded `Nx` from version `19.0.2` to `19.0.5`
+- Upgraded `passport` from version `0.6.0` to `0.7.0`
+- Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
 - Upgraded `prisma` from version `5.13.0` to `5.14.0`
+- Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
 
 ## 2.82.0 - 2024-05-22
 
