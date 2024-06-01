@@ -123,19 +123,6 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
-    this.calculatorForm.setValue(
-      {
-        annualInterestRate: this.annualInterestRate,
-        paymentPerPeriod: this.savingsRate,
-        principalInvestmentAmount: 0,
-        projectedTotalAmount: this.projectedTotalAmount,
-        retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
-      },
-      {
-        emitEvent: false
-      }
-    );
-
     this.calculatorForm.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
@@ -169,9 +156,22 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    this.periodsToRetire = this.getPeriodsToRetire();
-
     if (isNumber(this.fireWealth) && this.fireWealth >= 0) {
+      this.calculatorForm.setValue(
+        {
+          annualInterestRate: this.annualInterestRate,
+          paymentPerPeriod: this.savingsRate,
+          principalInvestmentAmount: 0,
+          projectedTotalAmount: this.projectedTotalAmount,
+          retirementDate: this.retirementDate ?? this.DEFAULT_RETIREMENT_DATE
+        },
+        {
+          emitEvent: false
+        }
+      );
+
+      this.periodsToRetire = this.getPeriodsToRetire();
+
       setTimeout(() => {
         // Wait for the chartCanvas
         this.calculatorForm.patchValue(
@@ -409,9 +409,9 @@ export class GfFireCalculatorComponent implements OnChanges, OnDestroy {
     if (this.projectedTotalAmount) {
       const periods = this.fireCalculatorService.calculatePeriodsToRetire({
         P: this.getP(),
-        totalAmount: this.projectedTotalAmount,
         PMT: this.getPMT(),
-        r: this.getR()
+        r: this.getR(),
+        totalAmount: this.projectedTotalAmount
       });
 
       return periods;

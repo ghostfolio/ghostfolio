@@ -621,10 +621,14 @@ export class DataProviderService {
         return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
       })
       .map((lookupItem) => {
-        if (
-          !this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') ||
-          user.subscription.type === 'Premium'
-        ) {
+        if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+          if (user.subscription.type === 'Premium') {
+            lookupItem.dataProviderInfo.isPremium = false;
+          }
+
+          lookupItem.dataProviderInfo.name = undefined;
+          lookupItem.dataProviderInfo.url = undefined;
+        } else {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 

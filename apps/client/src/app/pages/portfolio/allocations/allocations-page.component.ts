@@ -1,7 +1,5 @@
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialogParams } from '@ghostfolio/client/components/position-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialog } from '@ghostfolio/client/components/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -13,7 +11,6 @@ import {
   UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -108,15 +105,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
           this.openAccountDetailDialog(params['accountId']);
-        } else if (
-          params['dataSource'] &&
-          params['positionDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openPositionDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
         }
       });
   }
@@ -178,7 +166,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
     if (dataSource && symbol) {
       this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
   }
@@ -552,47 +540,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
-      });
-  }
-
-  private openPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((user) => {
-        this.user = user;
-
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
-          autoFocus: false,
-          data: <PositionDetailDialogParams>{
-            dataSource,
-            symbol,
-            baseCurrency: this.user?.settings?.baseCurrency,
-            colorScheme: this.user?.settings?.colorScheme,
-            deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToReportDataGlitch: hasPermission(
-              this.user?.permissions,
-              permissions.reportDataGlitch
-            ),
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
       });
   }
 }

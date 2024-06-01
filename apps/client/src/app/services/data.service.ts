@@ -1,11 +1,12 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -256,16 +257,18 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteAllOrders() {
-    return this.http.delete<any>(`/api/v1/order/`);
+  public deleteActivities({ filters }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.delete<any>(`/api/v1/order`, { params });
+  }
+
+  public deleteActivity(aId: string) {
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
-  }
-
-  public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
   public deleteUser(aId: string) {
@@ -320,6 +323,31 @@ export class DataService {
     return this.http.get<Export>('/api/v1/export', {
       params
     });
+  }
+
+  public fetchHoldingDetail({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http
+      .get<PortfolioHoldingDetail>(
+        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((data) => {
+          if (data.orders) {
+            for (const order of data.orders) {
+              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
+              order.date = parseISO(<string>(<unknown>order.date));
+            }
+          }
+
+          return data;
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {
@@ -571,31 +599,6 @@ export class DataService {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
-  public fetchPositionDetail({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    return this.http
-      .get<PortfolioPositionDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
-      )
-      .pipe(
-        map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
-              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
-              order.date = parseISO(<string>(<unknown>order.date));
-            }
-          }
-
-          return data;
-        })
-      );
-  }
-
   public loginAnonymous(accessToken: string) {
     return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
       accessToken
@@ -610,20 +613,11 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
-  public postAccountBalance({
-    accountId,
-    balance,
-    date
-  }: {
-    accountId: string;
-    balance: number;
-    date: Date;
-  }) {
-    return this.http.post<AccountBalance>(`/api/v1/account-balance`, {
-      accountId,
-      balance,
-      date
-    });
+  public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
+    return this.http.post<AccountBalance>(
+      `/api/v1/account-balance`,
+      aAccountBalance
+    );
   }
 
   public postBenchmark(benchmark: UniqueAsset) {

@@ -2,7 +2,7 @@ import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/accou
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
