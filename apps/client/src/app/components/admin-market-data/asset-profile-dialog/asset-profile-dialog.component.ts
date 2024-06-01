@@ -8,7 +8,6 @@ import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  Currency,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -81,7 +80,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
@@ -112,10 +111,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.currencies = currencies.map((currency) => ({
-      label: currency,
-      value: currency
-    }));
+    this.currencies = currencies;
 
     this.initialize();
   }
@@ -317,11 +313,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
       comment: this.assetProfileForm.get('comment').value || null,
       tags: this.assetProfileForm.get('tags').value,
-      currency: (<Currency>(
-        (<unknown>this.assetProfileForm.get('currency').value)
-      ))?.value,
-      name: this.assetProfileForm.controls['name'].value,
-      url: this.assetProfileForm.controls['url'].value
+      currency: this.assetProfileForm.get('currency').value,
+      name: this.assetProfileForm.get('name').value,
+      url: this.assetProfileForm.get('url').value
     };
 
     try {
@@ -367,8 +361,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             ' ' +
             price +
             ' ' +
-            (<Currency>(<unknown>this.assetProfileForm.get('currency').value))
-              ?.value
+            this.assetProfileForm.get('currency').value
         );
       });
   }

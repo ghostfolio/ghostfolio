@@ -1,5 +1,3 @@
-import { PositionDetailDialogParams } from '@ghostfolio/client/components/position-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialog } from '@ghostfolio/client/components/position-detail-dialog/position-detail-dialog.component';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -12,14 +10,11 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DataSource, SymbolProfile } from '@prisma/client';
+import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
@@ -80,30 +75,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private dialog: MatDialog,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
-    private router: Router,
     private userService: UserService
   ) {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
-
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (
-          params['dataSource'] &&
-          params['positionDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openPositionDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
-        }
-      });
   }
 
   get savingsRate() {
@@ -243,47 +220,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.isLoadingInvestmentTimelineChart = false;
 
         this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  private openPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((user) => {
-        this.user = user;
-
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
-          autoFocus: false,
-          data: <PositionDetailDialogParams>{
-            dataSource,
-            symbol,
-            baseCurrency: this.user?.settings?.baseCurrency,
-            colorScheme: this.user?.settings?.colorScheme,
-            deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToReportDataGlitch: hasPermission(
-              this.user?.permissions,
-              permissions.reportDataGlitch
-            ),
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
       });
   }
 

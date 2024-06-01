@@ -5,6 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.84.0 - 2024-06-01
+
+### Added
+
+- Added the data provider information to the asset profile details dialog of the admin control
+- Added the cascading on delete for various relations in the database schema
+
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+- Fixed the state handling in the currency selector
+- Fixed the deletion of an asset profile with symbol profile overrides in the asset profile details dialog of the admin control
+
+## 2.83.0 - 2024-05-30
+
+### Changed
+
+- Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
+- Upgraded `angular` from version `17.3.5` to `17.3.10`
+- Upgraded `class-validator` from version `0.14.0` to `0.14.1`
+- Upgraded `countup.js` from version `2.3.2` to `2.8.0`
+- Upgraded `Nx` from version `19.0.2` to `19.0.5`
+- Upgraded `passport` from version `0.6.0` to `0.7.0`
+- Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
+- Upgraded `prisma` from version `5.13.0` to `5.14.0`
+- Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
+
+## 2.82.0 - 2024-05-22
+
+### Changed
+
+- Improved the usability of the create or update activity dialog by preselecting the (only) account
+- Improved the usability of the date range selector in the assistant
+- Refactored the holding detail dialog to a standalone component
+- Refreshed the cryptocurrencies list
+- Refactored various pages to standalone components
+- Upgraded `@internationalized/number` from version `3.5.0` to `3.5.2`
+- Upgraded `body-parser` from version `1.20.1` to `1.20.2`
+- Upgraded `zone.js` from version `0.14.4` to `0.14.5`
+
+## 2.81.0 - 2024-05-12
+
+### Added
+
+- Added an indicator for active filters (experimental)
+
+### Changed
+
+- Improved the delete all activities functionality on the portfolio activities page to work with the filters of the assistant
+- Improved the language localization for German (`de`)
+- Improved the language localization for Türkçe (`tr`)
+- Upgraded `Nx` from version `18.3.3` to `19.0.2`
+
+### Fixed
+
+- Fixed the position detail dialog close functionality
+
 ## 2.80.0 - 2024-05-08
 
 ### Added

@@ -43,7 +43,9 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Yahoo Finance',
+      url: 'https://finance.yahoo.com'
     };
   }
 

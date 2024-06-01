@@ -51,21 +51,21 @@ export class UserService extends ObservableStore<UserStoreState> {
     const filters: Filter[] = [];
     const user = this.getState().user;
 
-    if (user.settings['filters.accounts']) {
+    if (user?.settings['filters.accounts']) {
       filters.push({
         id: user.settings['filters.accounts'].join(','),
         type: 'ACCOUNT'
       });
     }
 
-    if (user.settings['filters.assetClasses']) {
+    if (user?.settings['filters.assetClasses']) {
       filters.push({
         id: user.settings['filters.assetClasses'].join(','),
         type: 'ASSET_CLASS'
       });
     }
 
-    if (user.settings['filters.tags']) {
+    if (user?.settings['filters.tags']) {
       filters.push({
         id: user.settings['filters.tags'].join(','),
         type: 'TAG'
@@ -73,6 +73,10 @@ export class UserService extends ObservableStore<UserStoreState> {
     }
 
     return filters;
+  }
+
+  public hasFilters() {
+    return this.getFilters().length > 0;
   }
 
   public remove() {

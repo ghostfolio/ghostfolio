@@ -66,7 +66,8 @@ export const products: Product[] = [
       'Français',
       'Italiano',
       'Nederlands',
-      'Português'
+      'Português',
+      'Türkçe'
     ],
     name: 'Ghostfolio',
     origin: $localize`Switzerland`,

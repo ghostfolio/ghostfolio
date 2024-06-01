@@ -1,3 +1,5 @@
+import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -13,13 +15,21 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Title } from '@angular/platform-browser';
-import { NavigationEnd, PRIMARY_OUTLET, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  PRIMARY_OUTLET,
+  Router
+} from '@angular/router';
+import { DataSource } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { DataService } from './services/data.service';
+import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
 import { UserService } from './services/user/user.service';
 
@@ -38,6 +48,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public currentRoute: string;
   public currentYear = new Date().getFullYear();
   public deviceType: string;
+  public hasImpersonationId: boolean;
   public hasInfoMessage: boolean;
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
@@ -67,7 +78,10 @@ export class AppComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
+    private dialog: MatDialog,
     @Inject(DOCUMENT) private document: Document,
+    private impersonationStorageService: ImpersonationStorageService,
+    private route: ActivatedRoute,
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
@@ -75,6 +89,21 @@ export class AppComponent implements OnDestroy, OnInit {
   ) {
     this.initializeTheme();
     this.user = undefined;
+
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (
+          params['dataSource'] &&
+          params['holdingDetailDialog'] &&
+          params['symbol']
+        ) {
+          this.openHoldingDetailDialog({
+            dataSource: params['dataSource'],
+            symbol: params['symbol']
+          });
+        }
+      });
   }
 
   public ngOnInit() {
@@ -95,6 +124,13 @@ export class AppComponent implements OnDestroy, OnInit {
       this.info?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -195,6 +231,55 @@ export class AppComponent implements OnDestroy, OnInit {
         this.toggleTheme(event.matches);
       }
     });
+  }
+
+  private openHoldingDetailDialog({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        this.user = user;
+
+        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
+          autoFocus: false,
+          data: <HoldingDetailDialogParams>{
+            dataSource,
+            symbol,
+            baseCurrency: this.user?.settings?.baseCurrency,
+            colorScheme: this.user?.settings?.colorScheme,
+            deviceType: this.deviceType,
+            hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToReportDataGlitch: hasPermission(
+              this.user?.permissions,
+              permissions.reportDataGlitch
+            ),
+            locale: this.user?.settings?.locale
+          },
+          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+        });
+
+        dialogRef
+          .afterClosed()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.router.navigate([], {
+              queryParams: {
+                dataSource: null,
+                holdingDetailDialog: null,
+                symbol: null
+              },
+              queryParamsHandling: 'merge',
+              relativeTo: this.route
+            });
+          });
+      });
   }
 
   private toggleTheme(isDarkTheme: boolean) {

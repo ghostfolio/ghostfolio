@@ -1,4 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
+import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
+import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -8,9 +11,16 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -18,24 +28,50 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
 import { Account, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { PositionDetailDialogParams } from './interfaces/interfaces';
+import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'd-flex flex-column h-100' },
-  selector: 'gf-position-detail-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'position-detail-dialog.html',
-  styleUrls: ['./position-detail-dialog.component.scss']
+  host: { class: 'd-flex flex-column h-100' },
+  imports: [
+    CommonModule,
+    GfAccountsTableModule,
+    GfActivitiesTableComponent,
+    GfDataProviderCreditsComponent,
+    GfDialogFooterModule,
+    GfDialogHeaderModule,
+    GfLineChartComponent,
+    GfPortfolioProportionChartComponent,
+    GfValueComponent,
+    MatButtonModule,
+    MatChipsModule,
+    MatDialogModule,
+    MatTabsModule,
+    NgxSkeletonLoaderModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-holding-detail-dialog',
+  standalone: true,
+  styleUrls: ['./holding-detail-dialog.component.scss'],
+  templateUrl: 'holding-detail-dialog.html'
 })
-export class PositionDetailDialog implements OnDestroy, OnInit {
+export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public accounts: Account[];
   public activities: Activity[];
   public assetClass: string;
@@ -82,14 +118,14 @@ export class PositionDetailDialog implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    public dialogRef: MatDialogRef<PositionDetailDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: PositionDetailDialogParams,
+    public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
     private userService: UserService
   ) {}
 
   public ngOnInit() {
     this.dataService
-      .fetchPositionDetail({
+      .fetchHoldingDetail({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })

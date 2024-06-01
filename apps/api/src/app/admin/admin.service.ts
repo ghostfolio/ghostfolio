@@ -320,6 +320,12 @@ export class AdminService {
       })
     ]);
 
+    if (assetProfile) {
+      assetProfile.dataProviderInfo = this.dataProviderService
+        .getDataProvider(assetProfile.dataSource)
+        .getDataProviderInfo();
+    }
+
     return {
       marketData,
       assetProfile: assetProfile ?? {

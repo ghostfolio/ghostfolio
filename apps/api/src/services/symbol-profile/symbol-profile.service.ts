@@ -69,7 +69,9 @@ export class SymbolProfileService {
           })
         }
       })
-      .then((symbolProfiles) => this.getSymbols(symbolProfiles));
+      .then((symbolProfiles) => {
+        return this.enhanceSymbolProfiles(symbolProfiles);
+      });
   }
 
   public async getSymbolProfilesByIds(
@@ -92,7 +94,9 @@ export class SymbolProfileService {
           }
         }
       })
-      .then((symbolProfiles) => this.getSymbols(symbolProfiles));
+      .then((symbolProfiles) => {
+        return this.enhanceSymbolProfiles(symbolProfiles);
+      });
   }
 
   public updateSymbolProfile({
@@ -130,7 +134,7 @@ export class SymbolProfileService {
     });
   }
 
-  private getSymbols(
+  private enhanceSymbolProfiles(
     symbolProfiles: (SymbolProfile & {
       _count: { Order: number };
       Order?: {

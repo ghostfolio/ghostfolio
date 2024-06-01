@@ -116,7 +116,12 @@
           #assistantTrigger="matMenuTrigger"
           class="h-100 no-min-width px-2"
           mat-button
+          matBadge="✓"
+          matBadgeSize="small"
           [mat-menu-trigger-for]="assistantMenu"
+          [matBadgeHidden]="
+            !hasFilters || !user?.settings?.isExperimentalFeatures
+          "
           [matMenuTriggerRestoreFocus]="false"
           (menuOpened)="onOpenAssistant()"
         >

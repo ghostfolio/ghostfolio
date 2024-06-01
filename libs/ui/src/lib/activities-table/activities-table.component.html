@@ -58,11 +58,12 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
-        (click)="onDeleteAllActivities()"
+        [disabled]="!hasPermissionToDeleteActivity"
+        (click)="onDeleteActivities()"
       >
         <span class="align-items-center d-flex">
           <ion-icon class="mr-2" name="trash-outline" />
-          <span i18n>Delete all Activities</span>
+          <span i18n>Delete Activities</span>
         </span>
       </button>
     </mat-menu>
@@ -444,7 +445,11 @@
               <span i18n>Export Draft as ICS</span>
             </span>
           </button>
-          <button mat-menu-item (click)="onDeleteActivity(element.id)">
+          <button
+            mat-menu-item
+            [disabled]="!hasPermissionToDeleteActivity"
+            (click)="onDeleteActivity(element.id)"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="trash-outline" />
               <span i18n>Delete</span>
