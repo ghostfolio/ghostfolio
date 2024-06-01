@@ -43,7 +43,9 @@ export class RapidApiService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Rapid API',
+      url: 'https://rapidapi.com'
     };
   }
 
