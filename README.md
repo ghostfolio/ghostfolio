@@ -2,7 +2,7 @@
 
 [<img src="https://avatars.githubusercontent.com/u/82473144?s=200" width="100" alt="Ghostfolio logo">](https://ghostfol.io)
 
-# Ghostfolio
+## Ghostfolio
 
 **Open Source Wealth Management Software**
 
