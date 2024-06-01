@@ -2,7 +2,7 @@ import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DataSource } from '@prisma/client';
 
-export interface PositionDetailDialogParams {
+export interface HoldingDetailDialogParams {
   baseCurrency: string;
   colorScheme: ColorScheme;
   dataSource: DataSource;
