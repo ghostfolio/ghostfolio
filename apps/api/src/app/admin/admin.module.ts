@@ -1,4 +1,5 @@
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
+import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -27,7 +28,8 @@ import { QueueModule } from './queue/queue.module';
     PropertyModule,
     QueueModule,
     SubscriptionModule,
-    SymbolProfileModule
+    SymbolProfileModule,
+    TransformDataSourceInRequestModule
   ],
   controllers: [AdminController],
   providers: [AdminService],

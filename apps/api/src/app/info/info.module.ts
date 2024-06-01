@@ -2,6 +2,7 @@ import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module'
 import { PlatformModule } from '@ghostfolio/api/app/platform/platform.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
+import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -34,6 +35,7 @@ import { InfoService } from './info.service';
     RedisCacheModule,
     SymbolProfileModule,
     TagModule,
+    TransformDataSourceInResponseModule,
     UserModule
   ],
   providers: [InfoService]

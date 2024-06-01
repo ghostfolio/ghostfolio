@@ -7,9 +7,9 @@ import {
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
 import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
-import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response.interceptor';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -27,6 +27,10 @@ import {
   PortfolioPublicDetails,
   PortfolioReport
 } from '@ghostfolio/common/interfaces';
+import {
+  hasReadRestrictedAccessPermission,
+  isRestrictedView
+} from '@ghostfolio/common/permissions';
 import type {
   DateRange,
   GroupBy,
@@ -84,11 +88,6 @@ export class PortfolioController {
 
     let hasDetails = true;
     let hasError = false;
-    const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
-        impersonationId,
-        user: this.request.user
-      });
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails = this.request.user.subscription.type === 'Premium';
@@ -117,8 +116,11 @@ export class PortfolioController {
     let portfolioSummary = summary;
 
     if (
-      hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      }) ||
+      isRestrictedView(this.request.user)
     ) {
       const totalInvestment = Object.values(holdings)
         .map(({ investment }) => {
@@ -158,8 +160,11 @@ export class PortfolioController {
 
     if (
       hasDetails === false ||
-      hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      }) ||
+      isRestrictedView(this.request.user)
     ) {
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
@@ -226,12 +231,6 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividends> {
-    const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
-        impersonationId,
-        user: this.request.user
-      });
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -259,8 +258,11 @@ export class PortfolioController {
     });
 
     if (
-      hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      }) ||
+      isRestrictedView(this.request.user)
     ) {
       const maxDividend = dividends.reduce(
         (investment, item) => Math.max(investment, item.investment),
@@ -326,12 +328,6 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestments> {
-    const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
-        impersonationId,
-        user: this.request.user
-      });
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -347,8 +343,11 @@ export class PortfolioController {
     });
 
     if (
-      hasReadRestrictedAccessPermission ||
-      this.userService.isRestrictedView(this.request.user)
+      hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      }) ||
+      isRestrictedView(this.request.user)
     ) {
       const maxInvestment = investments.reduce(
         (investment, item) => Math.max(investment, item.investment),
@@ -397,12 +396,6 @@ export class PortfolioController {
   ): Promise<PortfolioPerformanceResponse> {
     const withExcludedAccounts = withExcludedAccountsParam === 'true';
 
-    const hasReadRestrictedAccessPermission =
-      this.userService.hasReadRestrictedAccessPermission({
-        impersonationId,
-        user: this.request.user
-      });
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -418,9 +411,12 @@ export class PortfolioController {
     });
 
     if (
-      hasReadRestrictedAccessPermission ||
-      this.request.user.Settings.settings.viewMode === 'ZEN' ||
-      this.userService.isRestrictedView(this.request.user)
+      hasReadRestrictedAccessPermission({
+        impersonationId,
+        user: this.request.user
+      }) ||
+      isRestrictedView(this.request.user) ||
+      this.request.user.Settings.settings.viewMode === 'ZEN'
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         ({
