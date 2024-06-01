@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the data provider information to the asset profile details dialog of the admin control
+
 ### Fixed
 
 - Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
