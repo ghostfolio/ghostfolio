@@ -10,11 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the data provider information to the asset profile details dialog of the admin control
+- Added the cascading on delete for various relations in the database schema
 
 ### Fixed
 
 - Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
 - Fixed the state handling in the currency selector
+- Fixed the deletion of an asset profile with symbol profile overrides in the asset profile details dialog of the admin control
 
 ## 2.83.0 - 2024-05-30
 
