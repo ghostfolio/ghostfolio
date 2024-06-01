@@ -2,7 +2,6 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
-import { Currency } from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
@@ -33,7 +32,7 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
 })
 export class CreateOrUpdateAccountDialog implements OnDestroy {
   public accountForm: FormGroup;
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
   public filteredPlatforms: Observable<Platform[]>;
   public platforms: Platform[];
 
@@ -49,10 +48,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
   public ngOnInit() {
     const { currencies, platforms } = this.dataService.fetchInfo();
 
-    this.currencies = currencies.map((currency) => ({
-      label: currency,
-      value: currency
-    }));
+    this.currencies = currencies;
     this.platforms = platforms;
 
     this.accountForm = this.formBuilder.group({
@@ -107,7 +103,7 @@ export class CreateOrUpdateAccountDialog implements OnDestroy {
     const account: CreateAccountDto | UpdateAccountDto = {
       balance: this.accountForm.get('balance').value,
       comment: this.accountForm.get('comment').value || null,
-      currency: this.accountForm.get('currency').value?.value,
+      currency: this.accountForm.get('currency').value,
       id: this.accountForm.get('accountId').value,
       isExcluded: this.accountForm.get('isExcluded').value,
       name: this.accountForm.get('name').value,
