@@ -32,6 +32,7 @@ import { MonsePageComponent } from './products/monse-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
+import { PortfolioVisualizerPageComponent } from './products/portfolio-visualizer-page.component';
 import { PortseidoPageComponent } from './products/portseido-page.component';
 import { ProjectionLabPageComponent } from './products/projectionlab-page.component';
 import { RocketMoneyPageComponent } from './products/rocket-money-page.component';
@@ -39,12 +40,14 @@ import { SeekingAlphaPageComponent } from './products/seeking-alpha-page.compone
 import { SharesightPageComponent } from './products/sharesight-page.component';
 import { SimplePortfolioPageComponent } from './products/simple-portfolio-page.component';
 import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-page.component';
+import { StockEventsPageComponent } from './products/stock-events-page.component';
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
 import { VyzerPageComponent } from './products/vyzer-page.component';
+import { WallminePageComponent } from './products/wallmine-page.component';
 import { WealthfolioPageComponent } from './products/wealthfolio-page.component';
 import { WealthicaPageComponent } from './products/wealthica-page.component';
 import { WhalPageComponent } from './products/whal-page.component';
@@ -67,7 +70,8 @@ export const products: Product[] = [
       'Italiano',
       'Nederlands',
       'Português',
-      'Türkçe'
+      'Türkçe',
+      '简体中文'
     ],
     name: 'Ghostfolio',
     origin: $localize`Switzerland`,
@@ -409,6 +413,16 @@ export const products: Product[] = [
     slogan: 'Manage all your portfolios'
   },
   {
+    component: PortfolioVisualizerPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'portfolio-visualizer',
+    languages: ['English'],
+    name: 'Portfolio Visualizer',
+    pricingPerYear: '$360',
+    slogan: 'Tools for Better Investors'
+  },
+  {
     component: PortseidoPageComponent,
     founded: 2021,
     hasFreePlan: true,
@@ -485,6 +499,15 @@ export const products: Product[] = [
     slogan: 'Simple and powerful portfolio tracker'
   },
   {
+    component: StockEventsPageComponent,
+    founded: 2019,
+    hasSelfHostingAbility: false,
+    key: 'stock-events',
+    name: 'Stock Events',
+    origin: $localize`Germany`,
+    slogan: 'Track all your Investments'
+  },
+  {
     component: StocklePageComponent,
     key: 'stockle',
     name: 'Stockle',
@@ -542,6 +565,16 @@ export const products: Product[] = [
     origin: $localize`United States`,
     pricingPerYear: '$348',
     slogan: 'Virtual Family Office for Smart Wealth Management'
+  },
+  {
+    component: WallminePageComponent,
+    hasSelfHostingAbility: false,
+    key: 'wallmine',
+    languages: ['English'],
+    name: 'wallmine',
+    origin: $localize`Czech Republic`,
+    pricingPerYear: '$600',
+    slogan: 'Make Smarter Investments'
   },
   {
     component: WealthfolioPageComponent,
