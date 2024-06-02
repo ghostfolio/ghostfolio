@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
 
+### Fixed
+
+- Fixed an issue with the default locale in the value component
+
 ## 2.84.0 - 2024-06-01
 
 ### Added
