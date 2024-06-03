@@ -141,7 +141,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
   public onCloseAccount() {
     const confirmation = confirm(
-      $localize`Do you really want to close your account?`
+      $localize`Do you really want to close your Ghostfolio account?`
     );
 
     const accessToken = this.deleteOwnUserForm.get('accessToken').value;
@@ -149,17 +149,19 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     if (confirmation) {
       this.dataService
         .deleteOwnUser({ accessToken })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe({
-          next: () => {
-            this.tokenStorageService.signOut();
-            this.userService.remove();
-
-            document.location.href = `/${document.documentElement.lang}`;
-          },
-          error: () => {
+        .pipe(
+          catchError(() => {
             alert($localize`Oops! Incorrect Security Token.`);
-          }
+
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.tokenStorageService.signOut();
+          this.userService.remove();
+
+          document.location.href = `/${document.documentElement.lang}`;
         });
     }
   }

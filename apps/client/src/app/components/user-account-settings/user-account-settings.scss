@@ -15,15 +15,6 @@
     font-size: 90%;
     line-height: 1.2;
   }
-
-  .danger-zone {
-    &-text {
-      color: rgba(var(--palette-warn-500), 1);
-    }
-    &-hr {
-      background-color: rgba(var(--palette-warn-500), 1);
-    }
-  }
 }
 
 :host-context(.is-dark-theme) {
