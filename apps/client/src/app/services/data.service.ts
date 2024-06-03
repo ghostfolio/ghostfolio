@@ -9,6 +9,7 @@ import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -271,8 +272,8 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
-  public deleteOwnUser(accessToken: string) {
-    return this.http.delete<any>(`/api/v1/user/self/${accessToken}`);
+  public deleteOwnUser(aData: DeleteOwnUserDto) {
+    return this.http.delete<any>(`/api/v1/user`, { body: aData });
   }
 
   public deleteUser(aId: string) {

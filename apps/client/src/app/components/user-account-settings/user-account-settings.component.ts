@@ -113,31 +113,6 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     return !(this.language === 'de' || this.language === 'en');
   }
 
-  public onCloseAccount() {
-    const confirmation = confirm(
-      $localize`Do you really want to close your account?`
-    );
-
-    const accessToken = this.deleteOwnUserForm.get('accessToken').value;
-
-    if (confirmation) {
-      this.dataService
-        .deleteOwnUser(accessToken)
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe({
-          next: () => {
-            this.tokenStorageService.signOut();
-            this.userService.remove();
-
-            document.location.href = `/${document.documentElement.lang}`;
-          },
-          error: () => {
-            alert($localize`Oops! Incorrect Security Token.`);
-          }
-        });
-    }
-  }
-
   public onChangeUserSetting(aKey: string, aValue: string) {
     this.dataService
       .putUserSetting({ [aKey]: aValue })
@@ -162,6 +137,31 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
             }
           });
       });
+  }
+
+  public onCloseAccount() {
+    const confirmation = confirm(
+      $localize`Do you really want to close your account?`
+    );
+
+    const accessToken = this.deleteOwnUserForm.get('accessToken').value;
+
+    if (confirmation) {
+      this.dataService
+        .deleteOwnUser({ accessToken })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe({
+          next: () => {
+            this.tokenStorageService.signOut();
+            this.userService.remove();
+
+            document.location.href = `/${document.documentElement.lang}`;
+          },
+          error: () => {
+            alert($localize`Oops! Incorrect Security Token.`);
+          }
+        });
+    }
   }
 
   public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {

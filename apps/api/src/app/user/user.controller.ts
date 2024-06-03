@@ -26,6 +26,7 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { size } from 'lodash';
 
+import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
@@ -40,6 +41,34 @@ export class UserController {
     private readonly userService: UserService
   ) {}
 
+  @Delete()
+  @HasPermission(permissions.deleteOwnUser)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteOwnUser(
+    @Body() data: DeleteOwnUserDto
+  ): Promise<UserModel> {
+    const hashedAccessToken = this.userService.createAccessToken(
+      data.accessToken,
+      this.configurationService.get('ACCESS_TOKEN_SALT')
+    );
+
+    const [user] = await this.userService.users({
+      where: { accessToken: hashedAccessToken, id: this.request.user.id }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.userService.deleteUser({
+      accessToken: hashedAccessToken,
+      id: user.id
+    });
+  }
+
   @Delete(':id')
   @HasPermission(permissions.deleteUser)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -53,34 +82,6 @@ export class UserController {
 
     return this.userService.deleteUser({
       id
-    });
-  }
-
-  @Delete('self/:accessToken')
-  @HasPermission(permissions.deleteOwnUser)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async deleteOwnUser(
-    @Param('accessToken') accessToken: string
-  ): Promise<UserModel> {
-    const hashedAccessToken = this.userService.createAccessToken(
-      accessToken,
-      this.configurationService.get('ACCESS_TOKEN_SALT')
-    );
-
-    const [user] = await this.userService.users({
-      where: { accessToken: hashedAccessToken }
-    });
-
-    if (!user) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    return this.userService.deleteUser({
-      id: user.id,
-      accessToken: hashedAccessToken
     });
   }
 
