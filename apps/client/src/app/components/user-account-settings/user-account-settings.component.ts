@@ -82,6 +82,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.hasPermissionToDeleteOwnUser = hasPermission(
+            this.user.permissions,
+            permissions.deleteOwnUser
+          );
+
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
             permissions.updateUserSettings
@@ -90,11 +95,6 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
           this.hasPermissionToUpdateViewMode = hasPermission(
             this.user.permissions,
             permissions.updateViewMode
-          );
-
-          this.hasPermissionToDeleteOwnUser = hasPermission(
-            this.user.permissions,
-            permissions.deleteOwnUser
           );
 
           this.locales.push(this.user.settings.locale);
