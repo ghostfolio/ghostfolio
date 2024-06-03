@@ -144,11 +144,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       $localize`Do you really want to close your Ghostfolio account?`
     );
 
-    const accessToken = this.deleteOwnUserForm.get('accessToken').value;
-
     if (confirmation) {
       this.dataService
-        .deleteOwnUser({ accessToken })
+        .deleteOwnUser({
+          accessToken: this.deleteOwnUserForm.get('accessToken').value
+        })
         .pipe(
           catchError(() => {
             alert($localize`Oops! Incorrect Security Token.`);
