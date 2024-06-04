@@ -45,6 +45,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { StockEventsPageComponent } from './products/stock-events-page.component';
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
+import { StonksfolioPageComponent } from './products/stonksfolio-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
@@ -546,6 +547,17 @@ export const products: Product[] = [
     origin: $localize`France`,
     note: 'StockMarketEye has discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
+  },
+  {
+    component: StonksfolioPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'stonksfolio',
+    languages: ['English'],
+    name: 'Stonksfolio',
+    origin: $localize`Bulgaria`,
+    pricingPerYear: '€49.90',
+    slogan: 'Visualize all of your portfolios'
   },
   {
     component: SumioPageComponent,
