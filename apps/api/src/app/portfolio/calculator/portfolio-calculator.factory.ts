@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
@@ -30,6 +31,7 @@ export class PortfolioCalculatorFactory {
     private readonly orderservice: OrderService
   ) {}
 
+  @LogPerformance
   public createCalculator({
     accountBalanceItems = [],
     activities,

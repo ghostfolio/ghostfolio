@@ -211,6 +211,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public getAnnualizedPerformancePercent({
     daysInMarket,
     netPerformancePercentage
@@ -229,6 +230,7 @@ export class PortfolioService {
     return new Big(0);
   }
 
+  @LogPerformance
   public async getDividends({
     activities,
     groupBy

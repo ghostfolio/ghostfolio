@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
@@ -148,6 +149,7 @@ export abstract class PortfolioCalculator {
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
 
+  @LogPerformance
   public async computeSnapshot(
     start: Date,
     end?: Date
@@ -422,6 +424,7 @@ export abstract class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   public async getChart({
     dateRange = 'max',
     withDataDecimation = true,
@@ -445,6 +448,7 @@ export abstract class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public async getChartData({
     end = new Date(Date.now()),
     start,
@@ -785,10 +789,12 @@ export abstract class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
 
+  @LogPerformance
   public async getDividendInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -799,18 +805,21 @@ export abstract class PortfolioCalculator {
     );
   }
 
+  @LogPerformance
   public async getFeesInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalFeesWithCurrencyEffect;
   }
 
+  @LogPerformance
   public async getInterestInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalInterestWithCurrencyEffect;
   }
 
+  @LogPerformance
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -828,6 +837,7 @@ export abstract class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public getInvestmentsByGroup({
     data,
     groupBy
@@ -851,12 +861,14 @@ export abstract class PortfolioCalculator {
     }));
   }
 
+  @LogPerformance
   public async getLiabilitiesInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
+  @LogPerformance
   public async getSnapshot() {
     await this.snapshotPromise;
 
