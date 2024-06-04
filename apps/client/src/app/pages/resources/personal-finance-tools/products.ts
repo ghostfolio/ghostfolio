@@ -30,6 +30,7 @@ import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
+import { NavexaPageComponent } from './products/navexa-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
@@ -390,6 +391,17 @@ export const products: Product[] = [
     name: 'Monse',
     pricingPerYear: '$60',
     slogan: 'Gain financial control and keep your data private.'
+  },
+  {
+    component: NavexaPageComponent,
+    founded: 2017,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'navexa',
+    name: 'Navexa',
+    origin: $localize`Australia`,
+    pricingPerYear: '$90',
+    slogan: 'The Intelligent Portfolio Tracker'
   },
   {
     component: ParqetPageComponent,

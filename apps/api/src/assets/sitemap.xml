@@ -175,6 +175,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-navexa</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-parqet</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -542,6 +546,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-monse</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-navexa</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -927,6 +935,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-navexa</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-parqet</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -1152,6 +1164,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-monse</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-navexa</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
