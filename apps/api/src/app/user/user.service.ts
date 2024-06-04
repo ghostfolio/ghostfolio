@@ -240,10 +240,13 @@ export class UserService {
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;
-      }
-
-      if (user.subscription?.type === 'Premium') {
+      } else if (user.subscription?.type === 'Premium') {
         currentPermissions.push(permissions.reportDataGlitch);
+
+        currentPermissions = without(
+          currentPermissions,
+          permissions.deleteOwnUser
+        );
       }
     }
 

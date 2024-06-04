@@ -4,6 +4,7 @@ import {
   KEY_TOKEN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -17,6 +18,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
@@ -33,8 +35,13 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];
+  public deleteOwnUserForm = this.formBuilder.group({
+    accessToken: ['', Validators.required]
+  });
+  public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public isAccessTokenHidden = true;
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -58,7 +65,9 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private formBuilder: FormBuilder,
     private settingsStorageService: SettingsStorageService,
+    private tokenStorageService: TokenStorageService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
@@ -72,6 +81,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToDeleteOwnUser = hasPermission(
+            this.user.permissions,
+            permissions.deleteOwnUser
+          );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -123,6 +137,33 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
             }
           });
       });
+  }
+
+  public onCloseAccount() {
+    const confirmation = confirm(
+      $localize`Do you really want to close your Ghostfolio account?`
+    );
+
+    if (confirmation) {
+      this.dataService
+        .deleteOwnUser({
+          accessToken: this.deleteOwnUserForm.get('accessToken').value
+        })
+        .pipe(
+          catchError(() => {
+            alert($localize`Oops! Incorrect Security Token.`);
+
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.tokenStorageService.signOut();
+          this.userService.remove();
+
+          document.location.href = `/${document.documentElement.lang}`;
+        });
+    }
   }
 
   public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
