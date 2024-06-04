@@ -23,6 +23,7 @@ import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
+import { KoyfinPageComponent } from './products/koyfin-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MagnifiPageComponent } from './products/magnifi-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
@@ -310,6 +311,17 @@ export const products: Product[] = [
     origin: $localize`Germany`,
     pricingPerYear: '€119',
     slogan: 'ETF portfolios made simple'
+  },
+  {
+    component: KoyfinPageComponent,
+    founded: 2016,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'koyfin',
+    name: 'Koyfin',
+    origin: $localize`United States`,
+    pricingPerYear: '$468',
+    slogan: 'Comprehensive financial data analysis'
   },
   {
     component: KuberaPageComponent,
