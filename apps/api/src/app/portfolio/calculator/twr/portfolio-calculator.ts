@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
@@ -17,6 +18,7 @@ import {
 import { cloneDeep, first, last, sortBy } from 'lodash';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
+  @LogPerformance
   protected calculateOverallPerformance(
     positions: TimelinePosition[]
   ): PortfolioSnapshot {
@@ -133,6 +135,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   protected getSymbolMetrics({
     dataSource,
     end,

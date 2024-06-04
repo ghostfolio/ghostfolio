@@ -183,6 +183,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-portfolio-visualizer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-portseido</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -211,6 +215,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-stock-events</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-stockle</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -232,6 +240,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-vyzer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-wallmine</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -537,6 +549,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-portfolio-visualizer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-portseido</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -565,6 +581,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-stock-events</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-stockle</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -586,6 +606,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-vyzer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-wallmine</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -903,6 +927,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-portfolio-visualizer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-portseido</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -931,6 +959,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-stock-events</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-stockle</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -952,6 +984,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-vyzer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-wallmine</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -1115,6 +1151,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-portfolio-visualizer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-portseido</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -1143,6 +1183,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-stock-events</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-stockle</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -1164,6 +1208,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-vyzer</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-wallmine</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>

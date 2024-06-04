@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
@@ -240,6 +241,7 @@ export class OrderService {
     });
   }
 
+  @LogPerformance
   public async getOrders({
     endDate,
     filters,
