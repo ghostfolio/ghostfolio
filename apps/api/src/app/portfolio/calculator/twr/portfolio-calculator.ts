@@ -7,6 +7,7 @@ import { SymbolMetrics, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 
 import { Logger } from '@nestjs/common';
+import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import {
   addDays,
@@ -1372,7 +1373,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     orders: PortfolioOrderItem[],
     day: Date,
     end: Date,
-    dataSource: string,
+    dataSource: DataSource,
     symbol: string,
     marketSymbolMap: { [date: string]: { [symbol: string]: Big } },
     lastUnitPrice: Big,
