@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
+- Upgraded `prettier` from version `3.2.5` to `3.3.1`
 
 ### Fixed
 
