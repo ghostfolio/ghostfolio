@@ -23,12 +23,14 @@ import { GetquinPageComponent } from './products/getquin-page.component';
 import { GoSpatzPageComponent } from './products/gospatz-page.component';
 import { IntuitMintPageComponent } from './products/intuit-mint-page.component';
 import { JustEtfPageComponent } from './products/justetf-page.component';
+import { KoyfinPageComponent } from './products/koyfin-page.component';
 import { KuberaPageComponent } from './products/kubera-page.component';
 import { MagnifiPageComponent } from './products/magnifi-page.component';
 import { MarketsShPageComponent } from './products/markets.sh-page.component';
 import { MaybeFinancePageComponent } from './products/maybe-finance-page.component';
 import { MonarchMoneyPageComponent } from './products/monarch-money-page.component';
 import { MonsePageComponent } from './products/monse-page.component';
+import { NavexaPageComponent } from './products/navexa-page.component';
 import { ParqetPageComponent } from './products/parqet-page.component';
 import { PlannixPageComponent } from './products/plannix-page.component';
 import { PortfolioDividendTrackerPageComponent } from './products/portfolio-dividend-tracker-page.component';
@@ -43,6 +45,7 @@ import { SnowballAnalyticsPageComponent } from './products/snowball-analytics-pa
 import { StockEventsPageComponent } from './products/stock-events-page.component';
 import { StocklePageComponent } from './products/stockle-page.component';
 import { StockMarketEyePageComponent } from './products/stockmarketeye-page.component';
+import { StonksfolioPageComponent } from './products/stonksfolio-page.component';
 import { SumioPageComponent } from './products/sumio-page.component';
 import { TillerPageComponent } from './products/tiller-page.component';
 import { UtlunaPageComponent } from './products/utluna-page.component';
@@ -312,6 +315,17 @@ export const products: Product[] = [
     slogan: 'ETF portfolios made simple'
   },
   {
+    component: KoyfinPageComponent,
+    founded: 2016,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'koyfin',
+    name: 'Koyfin',
+    origin: $localize`United States`,
+    pricingPerYear: '$468',
+    slogan: 'Comprehensive financial data analysis'
+  },
+  {
     component: KuberaPageComponent,
     founded: 2019,
     hasFreePlan: false,
@@ -378,6 +392,17 @@ export const products: Product[] = [
     name: 'Monse',
     pricingPerYear: '$60',
     slogan: 'Gain financial control and keep your data private.'
+  },
+  {
+    component: NavexaPageComponent,
+    founded: 2017,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'navexa',
+    name: 'Navexa',
+    origin: $localize`Australia`,
+    pricingPerYear: '$90',
+    slogan: 'The Intelligent Portfolio Tracker'
   },
   {
     component: ParqetPageComponent,
@@ -522,6 +547,17 @@ export const products: Product[] = [
     origin: $localize`France`,
     note: 'StockMarketEye has discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
+  },
+  {
+    component: StonksfolioPageComponent,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'stonksfolio',
+    languages: ['English'],
+    name: 'Stonksfolio',
+    origin: $localize`Bulgaria`,
+    pricingPerYear: '€49.90',
+    slogan: 'Visualize all of your portfolios'
   },
   {
     component: SumioPageComponent,
