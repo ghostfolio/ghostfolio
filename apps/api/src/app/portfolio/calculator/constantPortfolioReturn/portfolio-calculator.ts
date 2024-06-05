@@ -197,7 +197,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async getTimeWeightedChartData({
+  protected async getTimeWeightedChartData({
     dates
   }: {
     dates?: Date[];
@@ -301,7 +301,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async handleSingleHolding(
+  protected async handleSingleHolding(
     previousDate: string,
     holding: string,
     date: string,
@@ -387,12 +387,12 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private getCurrency(symbol: string) {
+  protected getCurrency(symbol: string) {
     return this.getCurrencyFromActivities(this.activities, symbol);
   }
 
   @LogPerformance
-  private getCurrencyFromActivities(
+  protected getCurrencyFromActivities(
     activities: PortfolioOrder[],
     symbol: string
   ) {
@@ -406,7 +406,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async getHoldings(
+  protected async getHoldings(
     activities: PortfolioOrder[],
     start: Date,
     end: Date
@@ -428,7 +428,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async computeHoldings(
+  protected async computeHoldings(
     activities: PortfolioOrder[],
     start: Date,
     end: Date
@@ -473,7 +473,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private calculateInitialHoldings(
+  protected calculateInitialHoldings(
     investmentByDate: { [date: string]: PortfolioOrder[] },
     start: Date,
     currentHoldings: { [date: string]: { [symbol: string]: Big } }
@@ -504,7 +504,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private getInvestmentByDate(activities: PortfolioOrder[]): {
+  protected getInvestmentByDate(activities: PortfolioOrder[]): {
     [date: string]: PortfolioOrder[];
   } {
     return activities.reduce((groupedByDate, order) => {
@@ -519,7 +519,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private mapToDataGatheringItems(
+  protected mapToDataGatheringItems(
     orders: PortfolioOrder[]
   ): IDataGatheringItem[] {
     return orders
@@ -536,7 +536,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private async computeMarketMap(dateQuery: DateQuery): Promise<{
+  protected async computeMarketMap(dateQuery: DateQuery): Promise<{
     [date: string]: { [symbol: string]: Big };
   }> {
     const dataGatheringItems: IDataGatheringItem[] =
@@ -568,7 +568,9 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  private activitiesToPortfolioOrder(activities: Activity[]): PortfolioOrder[] {
+  protected activitiesToPortfolioOrder(
+    activities: Activity[]
+  ): PortfolioOrder[] {
     return activities
       .map(
         ({

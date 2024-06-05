@@ -632,7 +632,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private handleOrders(
+  protected handleOrders(
     orders: PortfolioOrderItem[],
     exchangeRates: { [dateString: string]: number },
     totalDividend,
@@ -986,7 +986,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private calculateTimeWeightedInvestments(
+  protected calculateTimeWeightedInvestments(
     valueOfInvestmentBeforeTransaction: any,
     order: PortfolioOrderItem,
     orders: PortfolioOrderItem[],
@@ -1102,7 +1102,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private calculatePerformances(
+  protected calculatePerformances(
     order: PortfolioOrderItem,
     lastAveragePrice: any,
     lastAveragePriceWithCurrencyEffect: any,
@@ -1187,7 +1187,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private calculateInvestmentValues(
+  protected calculateInvestmentValues(
     totalInvestment: any,
     totalInvestmentWithCurrencyEffect: any,
     transactionInvestment,
@@ -1260,7 +1260,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private handleBuyAndSellOrders(
+  protected handleBuyAndSellOrders(
     order: PortfolioOrderItem,
     transactionInvestment,
     transactionInvestmentWithCurrencyEffect,
@@ -1314,7 +1314,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private handleOrderType(
+  protected handleOrderType(
     order: PortfolioOrderItem,
     totalDividend: any,
     totalDividendInBaseCurrency: any,
@@ -1368,7 +1368,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   @LogPerformance
-  private handleIsChartMode(
+  protected handleIsChartMode(
     isChartMode: boolean,
     orders: PortfolioOrderItem[],
     day: Date,

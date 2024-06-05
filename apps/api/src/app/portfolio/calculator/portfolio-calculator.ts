@@ -926,13 +926,15 @@ export abstract class PortfolioCalculator {
     return this.transactionPoints;
   }
 
+  @LogPerformance
   public async getValuablesInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalValuablesWithCurrencyEffect;
   }
 
-  private computeTransactionPoints() {
+  @LogPerformance
+  protected computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
 
@@ -1070,7 +1072,8 @@ export abstract class PortfolioCalculator {
     }
   }
 
-  private async initialize() {
+  @LogPerformance
+  protected async initialize() {
     if (this.useCache) {
       const startTimeTotal = performance.now();
 
