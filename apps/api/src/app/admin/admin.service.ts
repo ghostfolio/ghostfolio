@@ -409,30 +409,60 @@ export class AdminService {
       by: ['dataSource', 'symbol']
     });
 
-    const marketData: AdminMarketDataItem[] = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
+    const marketDataPromise: Promise<AdminMarketDataItem>[] =
+      this.exchangeRateDataService
+        .getCurrencyPairs()
+        .map(async ({ dataSource, symbol }) => {
+          let date: Date = null;
+          let activitiesCount = 0;
 
-        return {
-          dataSource,
-          marketDataItemCount,
-          symbol,
-          assetClass: AssetClass.LIQUIDITY,
-          countriesCount: 0,
-          currency: symbol.replace(DEFAULT_CURRENCY, ''),
-          id: undefined,
-          name: symbol,
-          sectorsCount: 0
-        };
-      });
+          const marketDataItemCount =
+            marketDataItems.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
 
+          const symbolProfile =
+            await this.prismaService.symbolProfile.findFirst({
+              where: { symbol, dataSource }
+            });
+
+          if (symbolProfile?.id) {
+            const orders = await this.prismaService.order.findMany({
+              orderBy: { date: 'asc' },
+              where: { symbolProfileId: symbolProfile.id }
+            });
+            activitiesCount = orders.length;
+          }
+
+          if (activitiesCount > 0) {
+            const earliestId = await this.prismaService.order.findFirst({
+              orderBy: {
+                date: 'asc'
+              },
+              where: { symbolProfileId: symbolProfile?.id }
+            });
+            date = earliestId.date;
+          }
+
+          return {
+            activitiesCount,
+            assetClass: AssetClass.LIQUIDITY,
+            countriesCount: 0,
+            currency: symbol.replace(DEFAULT_CURRENCY, ''),
+            dataSource,
+            date,
+            id: undefined,
+            marketDataItemCount,
+            name: symbol,
+            sectorsCount: 0,
+            symbol
+          };
+        });
+
+    const marketData = await Promise.all(marketDataPromise);
     return { marketData, count: marketData.length };
   }
 

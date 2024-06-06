@@ -6,13 +6,13 @@ export interface AdminMarketData {
 }
 
 export interface AdminMarketDataItem {
-  activitiesCount?: number;
+  activitiesCount: number;
   assetClass?: AssetClass;
   assetSubClass?: AssetSubClass;
   countriesCount: number;
   currency: string;
   dataSource: DataSource;
-  date?: Date;
+  date: Date;
   id: string;
   isBenchmark?: boolean;
   marketDataItemCount: number;
