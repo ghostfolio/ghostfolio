@@ -505,7 +505,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (this.positions[symbol].assetSubClass === 'ETF') {
+      if (
+        this.positions[symbol].assetSubClass === 'ETF' &&
+        !this.hasImpersonationId &&
+        !this.user.settings.isRestrictedView
+      ) {
         this.totalValueInEtf += this.positions[symbol].value;
       }
 
@@ -553,18 +557,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.markets[UNKNOWN_KEY].value =
       this.markets[UNKNOWN_KEY].value / marketsTotal;
 
-    this.topHoldings = Object.values(this.topHoldingsMap)
-      .map(({ name, value }) => {
-        return {
-          name,
-          allocationInPercentage:
-            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
-          valueInBaseCurrency: value
-        };
-      })
-      .sort((a, b) => {
-        return b.valueInBaseCurrency - a.valueInBaseCurrency;
-      });
+    if (!this.hasImpersonationId && !this.user.settings.isRestrictedView) {
+      this.topHoldings = Object.values(this.topHoldingsMap)
+        .map(({ name, value }) => {
+          return {
+            name,
+            allocationInPercentage:
+              this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+            valueInBaseCurrency: value
+          };
+        })
+        .sort((a, b) => {
+          return b.valueInBaseCurrency - a.valueInBaseCurrency;
+        });
+    }
   }
 
   private openAccountDetailDialog(aAccountId: string) {
