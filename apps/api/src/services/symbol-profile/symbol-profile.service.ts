@@ -2,6 +2,7 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
   EnhancedSymbolProfile,
+  Holding,
   ScraperConfiguration,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -97,6 +98,7 @@ export class SymbolProfileService {
     countries,
     currency,
     dataSource,
+    holdings,
     name,
     scraperConfiguration,
     sectors,
@@ -112,6 +114,7 @@ export class SymbolProfileService {
         comment,
         countries,
         currency,
+        holdings,
         name,
         scraperConfiguration,
         sectors,
@@ -140,6 +143,7 @@ export class SymbolProfileService {
           symbolProfile?.countries as unknown as Prisma.JsonArray
         ),
         dateOfFirstActivity: <Date>undefined,
+        holdings: this.getHoldings(symbolProfile),
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
         sectors: this.getSectors(symbolProfile),
         symbolMapping: this.getSymbolMapping(symbolProfile)
@@ -165,6 +169,14 @@ export class SymbolProfileService {
             item.SymbolProfileOverrides
               ?.countries as unknown as Prisma.JsonArray
           );
+        }
+
+        if (
+          (item.SymbolProfileOverrides.holdings as unknown as Holding[])
+            ?.length > 0
+        ) {
+          item.holdings = item.SymbolProfileOverrides
+            .holdings as unknown as Holding[];
         }
 
         item.name = item.SymbolProfileOverrides?.name ?? item.name;
@@ -201,6 +213,19 @@ export class SymbolProfileService {
         name: countries[code]?.name ?? UNKNOWN_KEY
       };
     });
+  }
+
+  private getHoldings(symbolProfile: SymbolProfile): Holding[] {
+    return ((symbolProfile?.holdings as Prisma.JsonArray) ?? []).map(
+      (holding) => {
+        const { name, weight } = holding as Prisma.JsonObject;
+
+        return {
+          name: (name as string) ?? UNKNOWN_KEY,
+          valueInBaseCurrency: weight as number
+        };
+      }
+    );
   }
 
   private getScraperConfiguration(

@@ -499,6 +499,7 @@ export class PortfolioService {
           grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+        holdings: assetProfile.holdings,
         investment: investment.toNumber(),
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: assetProfile.name,
@@ -1465,6 +1466,7 @@ export class PortfolioService {
       grossPerformancePercent: 0,
       grossPerformancePercentWithCurrencyEffect: 0,
       grossPerformanceWithCurrencyEffect: 0,
+      holdings: [],
       investment: balance,
       marketPrice: 0,
       marketState: 'open',
