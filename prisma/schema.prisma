@@ -164,6 +164,7 @@ model SymbolProfile {
   figi                   String?
   figiComposite          String?
   figiShareClass         String?
+  holdings               Json?                   @default("[]")
   id                     String                  @id @default(uuid())
   isin                   String?
   name                   String?
@@ -189,6 +190,7 @@ model SymbolProfileOverrides {
   assetClass      AssetClass?
   assetSubClass   AssetSubClass?
   countries       Json?          @default("[]")
+  holdings        Json?          @default("[]")
   name            String?
   sectors         Json?          @default("[]")
   url             String?
