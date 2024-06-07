@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced the allocations by ETF holding on the allocations page (experimental)
+
 ### Changed
 
 - Upgraded `prettier` from version `3.2.5` to `3.3.1`
