@@ -10,7 +10,7 @@ Remove permission in `UserService` using `without()`
 
 ### Frontend
 
-Use `*ngIf="user?.settings?.isExperimentalFeatures"` in HTML template
+Use `@if (user?.settings?.isExperimentalFeatures) {}` in HTML template
 
 ## Git
 
