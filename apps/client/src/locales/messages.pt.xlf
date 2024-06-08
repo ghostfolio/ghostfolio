@@ -176,6 +176,10 @@
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="d04d5b5d13ac9acf9750f1807f0227eeee98b247" datatype="html">
         <source>Total</source>
@@ -287,6 +291,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">74</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="28f86ffd419b869711aa13f5e5ff54be6d70731c" datatype="html">
@@ -1904,6 +1912,10 @@
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="4eb84de23219c85432e38fb4fbdeb6c0f103ff8b" datatype="html">
         <source>Show all</source>
@@ -1911,6 +1923,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">197</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
@@ -2714,7 +2730,7 @@
         <target state="translated">Por Conta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
-          <context context-type="linenumber">270</context>
+          <context context-type="linenumber">294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b79f5520c0cb9a00bd589e8a4c86ffcf5ae439d7" datatype="html">
@@ -2762,7 +2778,7 @@
         <target state="translated">Por País</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
-          <context context-type="linenumber">313</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="85780db87ac6c9f202615ac63754551c061e7236" datatype="html">
@@ -4130,7 +4146,7 @@
         <target state="translated">Por Prestador de ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
-          <context context-type="linenumber">290</context>
+          <context context-type="linenumber">314</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ec87c89615dd278ed8ebf7d77faae0ab684a127e" datatype="html">
@@ -10628,6 +10644,10 @@
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">123</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="06c1bcff740ab4b1d5283d937d22e9daf8b31933" datatype="html">
         <source>Ready to take control of your personal finances?</source>
@@ -16127,6 +16147,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/products.ts</context>
           <context context-type="linenumber">558</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9d11f76485fd1306f47e2c2d585183ea844760f4" datatype="html">
+        <source>By ETF Holding</source>
+        <target state="new">By ETF Holding</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
+          <context context-type="linenumber">342</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="75c0cd71711a9015e2e3fa6080306dafbfe890cb" datatype="html">
+        <source>Approximation based on the Top 15 holdings per ETF</source>
+        <target state="new">Approximation based on the Top 15 holdings per ETF</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
+          <context context-type="linenumber">350</context>
         </context-group>
       </trans-unit>
     </body>
