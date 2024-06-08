@@ -509,6 +509,10 @@ ngx-skeleton-loader {
   min-width: unset !important;
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
 .page {
   display: flex;
   flex-direction: column;
