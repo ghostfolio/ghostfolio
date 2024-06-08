@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.14.0` to `5.15.0`
 
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator
+
 ## 2.86.0 - 2024-06-07
 
 ### Added
