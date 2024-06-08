@@ -267,6 +267,30 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate"
+            ><span i18n>By Country</span
+            ><gf-premium-indicator
+              *ngIf="user?.subscription?.type === 'Basic'"
+              class="ml-1"
+            />
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-portfolio-proportion-chart
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [colorScheme]="user?.settings?.colorScheme"
+            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
+            [keys]="['name']"
+            [locale]="user?.settings?.locale"
+            [maxItems]="10"
+            [positions]="countries"
+          />
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="text-truncate" i18n>By Account</mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -306,57 +330,36 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="col-md-4">
+    <div
+      class="col-md-12"
+      [ngClass]="{
+        'd-none': !user?.settings?.isExperimentalFeatures
+      }"
+    >
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Country</span
-            ><gf-premium-indicator
+            ><span i18n>By ETF Holding</span>
+            <gf-premium-indicator
               *ngIf="user?.subscription?.type === 'Basic'"
               class="ml-1"
             />
           </mat-card-title>
+          <mat-card-subtitle>
+            <ng-container i18n
+              >Approximation based on the Top 15 holdings per ETF</ng-container
+            >
+          </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <gf-portfolio-proportion-chart
+          <gf-top-holdings
             [baseCurrency]="user?.settings?.baseCurrency"
-            [colorScheme]="user?.settings?.colorScheme"
-            [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
-            [keys]="['name']"
             [locale]="user?.settings?.locale"
-            [maxItems]="10"
-            [positions]="countries"
+            [pageSize]="10"
+            [topHoldings]="topHoldings"
           />
         </mat-card-content>
       </mat-card>
     </div>
-    @if (topHoldings?.length > 0 && user?.settings?.isExperimentalFeatures) {
-      <div class="col-md-12">
-        <mat-card appearance="outlined" class="mb-3">
-          <mat-card-header class="overflow-hidden w-100">
-            <mat-card-title class="align-items-center d-flex text-truncate"
-              ><span i18n>By ETF Holding</span>
-              <gf-premium-indicator
-                *ngIf="user?.subscription?.type === 'Basic'"
-                class="ml-1"
-              />
-            </mat-card-title>
-            <mat-card-subtitle>
-              <ng-container i18n
-                >Approximation based on the Top 15 holdings per
-                ETF</ng-container
-              >
-            </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-            <gf-top-holdings
-              [baseCurrency]="user?.settings?.baseCurrency"
-              [locale]="user?.settings?.locale"
-              [topHoldings]="topHoldings"
-            />
-          </mat-card-content>
-        </mat-card>
-      </div>
-    }
   </div>
 </div>
