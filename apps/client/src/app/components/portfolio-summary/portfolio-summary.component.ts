@@ -1,5 +1,5 @@
 import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
-import { PortfolioSummary } from '@ghostfolio/common/interfaces';
+import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import {
@@ -26,6 +26,7 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
   @Input() language: string;
   @Input() locale = getLocale();
   @Input() summary: PortfolioSummary;
+  @Input() user: User;
 
   @Output() emergencyFundChanged = new EventEmitter<number>();
 
