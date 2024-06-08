@@ -102,7 +102,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenHoldingDialog({ dataSource, symbol }: UniqueAsset) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -110,7 +110,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onShowAllPositions() {
+  public onShowAllHoldings() {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {

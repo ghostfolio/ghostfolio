@@ -89,6 +89,7 @@ export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 
 export const MAX_CHART_ITEMS = 365;
+export const MAX_TOP_HOLDINGS = 50;
 
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';

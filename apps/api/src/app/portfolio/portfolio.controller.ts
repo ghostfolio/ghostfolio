@@ -204,6 +204,7 @@ export class PortfolioController {
             : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
+        holdings: hasDetails ? portfolioPosition.holdings : [],
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
