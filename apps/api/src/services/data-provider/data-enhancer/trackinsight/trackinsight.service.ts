@@ -163,6 +163,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.holdings = [];
 
       for (const { label, weight } of holdings?.topHoldings ?? []) {
+        if (label?.toLowerCase() === 'other') {
+          continue;
+        }
+
         response.holdings.push({
           weight,
           name: label

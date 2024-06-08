@@ -11,7 +11,7 @@
       <ng-container i18n>Name</ng-container>
     </th>
     <td *matCellDef="let element" class="px-2" mat-cell>
-      {{ element?.name }}
+      {{ element?.name | titlecase }}
     </td>
   </ng-container>
 
@@ -59,3 +59,30 @@
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
   <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 </table>
+
+<mat-paginator class="d-none" [pageSize]="pageSize" />
+
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}
+
+@if (dataSource.data.length > pageSize && !isLoading) {
+  <div class="my-3 text-center">
+    <button mat-stroked-button (click)="onShowAllHoldings()">
+      <ng-container i18n>Show all</ng-container>
+    </button>
+  </div>
+}
+
+@if (dataSource.data.length === 0 && !isLoading) {
+  <div class="p-3 text-center text-muted">
+    <small i18n>No data available</small>
+  </div>
+}

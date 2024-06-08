@@ -3,7 +3,7 @@ import { AccountDetailDialogParams } from '@ghostfolio/client/components/account
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   Holding,
@@ -85,7 +85,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public topHoldings: Holding[] = [];
+  public topHoldings: Holding[];
   public topHoldingsMap: {
     [name: string]: { name: string; value: number };
   };
@@ -456,21 +456,28 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           for (const holding of position.holdings) {
             const { name, valueInBaseCurrency } = holding;
 
-            if (this.topHoldingsMap[name]?.value) {
-              this.topHoldingsMap[name].value +=
-                valueInBaseCurrency *
-                (isNumber(position.valueInBaseCurrency)
-                  ? position.valueInBaseCurrency
-                  : position.valueInPercentage);
-            } else {
-              this.topHoldingsMap[name] = {
-                name,
-                value:
+            if (
+              !this.hasImpersonationId &&
+              !this.user.settings.isRestrictedView
+            ) {
+              if (this.topHoldingsMap[name]?.value) {
+                this.topHoldingsMap[name].value +=
                   valueInBaseCurrency *
                   (isNumber(position.valueInBaseCurrency)
-                    ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-                    : this.portfolioDetails.holdings[symbol].valueInPercentage)
-              };
+                    ? position.valueInBaseCurrency
+                    : position.valueInPercentage);
+              } else {
+                this.topHoldingsMap[name] = {
+                  name,
+                  value:
+                    valueInBaseCurrency *
+                    (isNumber(position.valueInBaseCurrency)
+                      ? this.portfolioDetails.holdings[symbol]
+                          .valueInBaseCurrency
+                      : this.portfolioDetails.holdings[symbol]
+                          .valueInPercentage)
+                };
+              }
             }
           }
         }
@@ -505,11 +512,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         }
       }
 
-      if (
-        this.positions[symbol].assetSubClass === 'ETF' &&
-        !this.hasImpersonationId &&
-        !this.user.settings.isRestrictedView
-      ) {
+      if (this.positions[symbol].assetSubClass === 'ETF') {
         this.totalValueInEtf += this.positions[symbol].value;
       }
 
@@ -557,19 +560,21 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.markets[UNKNOWN_KEY].value =
       this.markets[UNKNOWN_KEY].value / marketsTotal;
 
-    if (!this.hasImpersonationId && !this.user.settings.isRestrictedView) {
-      this.topHoldings = Object.values(this.topHoldingsMap)
-        .map(({ name, value }) => {
-          return {
-            name,
-            allocationInPercentage:
-              this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
-            valueInBaseCurrency: value
-          };
-        })
-        .sort((a, b) => {
-          return b.valueInBaseCurrency - a.valueInBaseCurrency;
-        });
+    this.topHoldings = Object.values(this.topHoldingsMap)
+      .map(({ name, value }) => {
+        return {
+          name,
+          allocationInPercentage:
+            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+          valueInBaseCurrency: value
+        };
+      })
+      .sort((a, b) => {
+        return b.valueInBaseCurrency - a.valueInBaseCurrency;
+      });
+
+    if (this.topHoldings.length > MAX_TOP_HOLDINGS) {
+      this.topHoldings = this.topHoldings.slice(0, MAX_TOP_HOLDINGS);
     }
   }
 
