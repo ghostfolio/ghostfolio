@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the allocations by ETF holding on the allocations page (experimental)
 - Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.14.0` to `5.15.0`
 
 ## 2.86.0 - 2024-06-07
 
