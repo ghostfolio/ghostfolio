@@ -39,9 +39,13 @@
           </th>
           <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
             <div class="text-truncate">{{ element.name }}</div>
-            <div *ngIf="!isUUID(element.symbol)">
-              <small class="text-muted">{{ element.symbol | gfSymbol }}</small>
-            </div>
+            @if (!isUUID(element.symbol)) {
+              <div>
+                <small class="text-muted">{{
+                  element.symbol | gfSymbol
+                }}</small>
+              </div>
+            }
           </td>
           <td *matFooterCellDef class="px-1" mat-footer-cell></td>
         </ng-container>
@@ -121,11 +125,9 @@
         <ng-container matColumnDef="comment">
           <th *matHeaderCellDef class="px-1" mat-header-cell></th>
           <td *matCellDef="let element" class="px-1" mat-cell>
-            <ion-icon
-              *ngIf="element.comment"
-              class="d-block"
-              name="document-text-outline"
-            />
+            @if (element.comment) {
+              <ion-icon class="d-block" name="document-text-outline" />
+            }
           </td>
         </ng-container>
 
@@ -222,15 +224,16 @@
         (page)="onChangePage($event)"
       />
 
-      <ngx-skeleton-loader
-        *ngIf="isLoading && totalItems === 0"
-        animation="pulse"
-        class="px-4 py-3"
-        [theme]="{
-          height: '1.5rem',
-          width: '100%'
-        }"
-      />
+      @if (isLoading && totalItems === 0) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="px-4 py-3"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        />
+      }
     </div>
   </div>
 

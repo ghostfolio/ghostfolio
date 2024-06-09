@@ -27,7 +27,7 @@
         </button>
       </mat-form-field>
     </form>
-    <ng-container *ngIf="data.hasPermissionToUseSocialLogin">
+    @if (data.hasPermissionToUseSocialLogin) {
       <div class="my-3 text-center text-muted" i18n>or</div>
       <div class="d-flex flex-column">
         <button
@@ -52,7 +52,7 @@
           /><span i18n>Sign in with Google</span></a
         >
       </div>
-    </ng-container>
+    }
   </div>
 </div>
 <div mat-dialog-actions>

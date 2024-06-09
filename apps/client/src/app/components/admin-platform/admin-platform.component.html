@@ -30,12 +30,13 @@
             <ng-container i18n>Name</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
-            <gf-asset-profile-icon
-              *ngIf="element.url"
-              class="d-inline mr-1"
-              [tooltip]="element.name"
-              [url]="element.url"
-            />
+            @if (element.url) {
+              <gf-asset-profile-icon
+                class="d-inline mr-1"
+                [tooltip]="element.name"
+                [url]="element.url"
+              />
+            }
             <span>{{ element.name }}</span>
           </td></ng-container
         >

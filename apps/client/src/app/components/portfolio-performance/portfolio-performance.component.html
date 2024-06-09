@@ -10,16 +10,18 @@
         />
       }
     </div>
-    <div *ngIf="isLoading" class="align-items-center d-flex">
-      <ngx-skeleton-loader
-        animation="pulse"
-        class="mb-2"
-        [theme]="{
-          height: '4rem',
-          width: '15rem'
-        }"
-      />
-    </div>
+    @if (isLoading) {
+      <div class="align-items-center d-flex">
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mb-2"
+          [theme]="{
+            height: '4rem',
+            width: '15rem'
+          }"
+        />
+      </div>
+    }
     <div
       class="display-4 font-weight-bold m-0 text-center value-container"
       [hidden]="isLoading"
@@ -34,28 +36,32 @@
       {{ unit }}
     </div>
   </div>
-  <div *ngIf="showDetails" class="row">
-    <div class="d-flex col justify-content-end">
-      <gf-value
-        [colorizeSign]="true"
-        [isCurrency]="true"
-        [locale]="locale"
-        [value]="
-          isLoading ? undefined : performance?.netPerformanceWithCurrencyEffect
-        "
-      />
+  @if (showDetails) {
+    <div class="row">
+      <div class="d-flex col justify-content-end">
+        <gf-value
+          [colorizeSign]="true"
+          [isCurrency]="true"
+          [locale]="locale"
+          [value]="
+            isLoading
+              ? undefined
+              : performance?.netPerformanceWithCurrencyEffect
+          "
+        />
+      </div>
+      <div class="col">
+        <gf-value
+          [colorizeSign]="true"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="
+            isLoading
+              ? undefined
+              : performance?.netPerformancePercentageWithCurrencyEffect
+          "
+        />
+      </div>
     </div>
-    <div class="col">
-      <gf-value
-        [colorizeSign]="true"
-        [isPercent]="true"
-        [locale]="locale"
-        [value]="
-          isLoading
-            ? undefined
-            : performance?.netPerformancePercentageWithCurrencyEffect
-        "
-      />
-    </div>
-  </div>
+  }
 </div>

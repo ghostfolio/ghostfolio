@@ -88,16 +88,22 @@
                   Available in
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container
-                    *ngFor="let language of product1.languages; last as isLast"
-                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
-                  >
+                  @for (
+                    language of product1.languages;
+                    track language;
+                    let isLast = $last
+                  ) {
+                    {{ language }}{{ isLast ? '' : ', ' }}
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container
-                    *ngFor="let language of product2.languages; last as isLast"
-                    >{{ language }}{{ isLast ? '' : ', ' }}</ng-container
-                  >
+                  @for (
+                    language of product2.languages;
+                    track language;
+                    let isLast = $last
+                  ) {
+                    {{ language }}{{ isLast ? '' : ', ' }}
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -105,18 +111,18 @@
                   Open Source Software
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.isOpenSource" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="!product1.isOpenSource" i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product1.isOpenSource) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.isOpenSource" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="!product2.isOpenSource" i18n
-                    >❌ No
-                  </ng-container>
+                  @if (product2.isOpenSource) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else {
+                    <ng-container i18n>❌ No </ng-container>
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -124,26 +130,18 @@
                   Self-Hosting
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container
-                    *ngIf="product1.hasSelfHostingAbility === true"
-                    i18n
-                    >✅ Yes</ng-container
-                  ><ng-container
-                    *ngIf="product1.hasSelfHostingAbility === false"
-                    i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product1.hasSelfHostingAbility === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product1.hasSelfHostingAbility === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container
-                    *ngIf="product2.hasSelfHostingAbility === true"
-                    i18n
-                    >✅ Yes</ng-container
-                  ><ng-container
-                    *ngIf="product2.hasSelfHostingAbility === false"
-                    i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product2.hasSelfHostingAbility === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product2.hasSelfHostingAbility === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -151,18 +149,18 @@
                   Use anonymously
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.useAnonymously === true" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="product1.useAnonymously === false" i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product1.useAnonymously === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product1.useAnonymously === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.useAnonymously === true" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="product2.useAnonymously === false" i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product2.useAnonymously === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product2.useAnonymously === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -170,18 +168,18 @@
                   Free Plan
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product1.hasFreePlan === true" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="product1.hasFreePlan === false" i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product1.hasFreePlan === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product1.hasFreePlan === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.hasFreePlan === true" i18n
-                    >✅ Yes</ng-container
-                  ><ng-container *ngIf="product2.hasFreePlan === false" i18n
-                    >❌ No</ng-container
-                  >
+                  @if (product2.hasFreePlan === true) {
+                    <ng-container i18n>✅ Yes</ng-container>
+                  } @else if (product2.hasFreePlan === false) {
+                    <ng-container i18n>❌ No</ng-container>
+                  }
                 </td>
               </tr>
               <tr class="mat-mdc-row">
@@ -191,18 +189,20 @@
                   <span i18n>year</span>
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
-                  <ng-container *ngIf="product2.pricingPerYear"
-                    ><span i18n>Starting from</span>
+                  @if (product2.pricingPerYear) {
+                    <span i18n>Starting from</span>
                     {{ product2.pricingPerYear }} /
-                    <span i18n>year</span></ng-container
-                  >
+                    <span i18n>year</span>
+                  }
                 </td>
               </tr>
-              <tr *ngIf="product1.note || product2.note" class="mat-mdc-row">
-                <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Notes</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.note }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2.note }}</td>
-              </tr>
+              @if (product1.note || product2.note) {
+                <tr class="mat-mdc-row">
+                  <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Notes</td>
+                  <td class="mat-mdc-cell px-1 py-2">{{ product1.note }}</td>
+                  <td class="mat-mdc-cell px-1 py-2">{{ product2.note }}</td>
+                </tr>
+              }
             </tbody>
           </table>
         </section>
