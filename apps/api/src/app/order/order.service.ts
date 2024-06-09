@@ -329,6 +329,21 @@ export class OrderService {
     ];
     const where: Prisma.OrderWhereInput = { userId };
 
+    const searchQuery = filters.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
+    if (searchQuery) {
+      // TODO: Manage merge with other mutation of .SymbolProfile below
+      where.SymbolProfile = {
+        OR: [
+          { id: { mode: 'insensitive', contains: searchQuery } },
+          { isin: { mode: 'insensitive', contains: searchQuery } },
+          { name: { mode: 'insensitive', contains: searchQuery } },
+          { symbol: { mode: 'insensitive', contains: searchQuery } }
+        ]
+      };
+    }
+
     if (endDate || startDate) {
       where.AND = [];
 
