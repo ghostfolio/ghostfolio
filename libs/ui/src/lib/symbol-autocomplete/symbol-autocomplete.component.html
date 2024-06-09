@@ -11,7 +11,9 @@
   [displayWith]="displayFn"
   (optionSelected)="onUpdateSymbol($event)"
 >
-  @if (!isLoadingRemote || !isLoadingLocal) {
+  @if (
+    (!isLoadingRemote || !isLoadingLocal) && filteredLookupItems.length > 0
+  ) {
     @for (lookupItem of filteredLookupItems; track lookupItem) {
       <mat-option
         class="line-height-1"
