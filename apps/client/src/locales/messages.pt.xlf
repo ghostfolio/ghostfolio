@@ -12215,7 +12215,7 @@
       </trans-unit>
       <trans-unit id="5afcc8902de9b8cc10cc02cdd606eb75d7786b65" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </source>
-        <target state="new"> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
+        <target state="translated"> Alternativa de software livre ao <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">38</context>
@@ -12223,7 +12223,7 @@
       </trans-unit>
       <trans-unit id="824385315623644802" datatype="html">
         <source>Open Source Alternative to <x id="PH" equiv-text="name"/></source>
-        <target state="new">Open Source Alternative to <x id="PH" equiv-text="name"/></target>
+        <target state="translated">Alternativa de software livre ao <x id="PH" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
           <context context-type="linenumber">26</context>

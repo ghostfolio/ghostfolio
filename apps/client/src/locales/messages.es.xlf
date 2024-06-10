@@ -5500,7 +5500,7 @@
       </trans-unit>
       <trans-unit id="72aebdb25074909ed3dcb0866e277a1bef1a6916" datatype="html">
         <source>✅ Yes</source>
-        <target state="new">✅ Yes</target>
+        <target state="translated">✅ Sí</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">109</context>
@@ -7296,7 +7296,7 @@
       </trans-unit>
       <trans-unit id="ecdfd0aa6379102d20ffcf1e9e762edc54f148f4" datatype="html">
         <source>❌ No</source>
-        <target state="new">❌ No</target>
+        <target state="translated">❌ No</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">111</context>
@@ -12216,7 +12216,7 @@
       </trans-unit>
       <trans-unit id="5afcc8902de9b8cc10cc02cdd606eb75d7786b65" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </source>
-        <target state="new"> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
+        <target state="translated"> Alternativa de software libre a <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">38</context>
@@ -12224,7 +12224,7 @@
       </trans-unit>
       <trans-unit id="824385315623644802" datatype="html">
         <source>Open Source Alternative to <x id="PH" equiv-text="name"/></source>
-        <target state="new">Open Source Alternative to <x id="PH" equiv-text="name"/></target>
+        <target state="translated">Alternativa de software libre a <x id="PH" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
           <context context-type="linenumber">26</context>
@@ -12232,7 +12232,7 @@
       </trans-unit>
       <trans-unit id="59aece48b4cff51f656b88e8f6c4061bb03410dc" datatype="html">
         <source>The Open Source Alternative to</source>
-        <target state="new">The Open Source Alternative to</target>
+        <target state="translated">La alternativa de software libre a</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page-template.html</context>
           <context context-type="linenumber">8</context>
