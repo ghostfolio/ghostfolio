@@ -59,12 +59,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Currency</span>
-            <gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Currency</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -82,12 +81,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Asset Class</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Asset Class</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -128,12 +126,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Sector</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Sector</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -152,12 +149,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Continent</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Continent</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -175,12 +171,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Market</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Market</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -199,12 +194,11 @@
     <div class="col-lg">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>Regions</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>Regions</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -246,18 +240,17 @@
                 >Other Markets</gf-value
               >
             </div>
-            <div
-              *ngIf="markets?.[UNKNOWN_KEY]?.value > 0"
-              class="col-xs-12 col-md my-2"
-            >
-              <gf-value
-                i18n
-                size="large"
-                [isPercent]="true"
-                [value]="markets?.[UNKNOWN_KEY]?.value"
-                >No data available</gf-value
-              >
-            </div>
+            @if (markets?.[UNKNOWN_KEY]?.value > 0) {
+              <div class="col-xs-12 col-md my-2">
+                <gf-value
+                  i18n
+                  size="large"
+                  [isPercent]="true"
+                  [value]="markets?.[UNKNOWN_KEY]?.value"
+                  >No data available</gf-value
+                >
+              </div>
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -267,12 +260,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By Country</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Country</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -310,12 +302,11 @@
     <div class="col-md-4">
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By ETF Provider</span
-            ><gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By ETF Provider</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
@@ -338,16 +329,15 @@
     >
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="align-items-center d-flex text-truncate"
-            ><span i18n>By ETF Holding</span>
-            <gf-premium-indicator
-              *ngIf="user?.subscription?.type === 'Basic'"
-              class="ml-1"
-            />
+          <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By ETF Holding</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
           </mat-card-title>
           <mat-card-subtitle>
             <ng-container i18n
-              >Approximation based on the Top 15 holdings per ETF</ng-container
+              >Approximation based on the top holdings of each ETF</ng-container
             >
           </mat-card-subtitle>
         </mat-card-header>
