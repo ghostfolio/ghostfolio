@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set the image source label in `Dockerfile`
+
 ### Changed
 
 - Upgraded `angular` from version `17.3.10` to `18.0.2`
