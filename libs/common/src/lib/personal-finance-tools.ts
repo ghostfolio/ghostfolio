@@ -1,6 +1,6 @@
 import { Product } from '@ghostfolio/common/interfaces';
 
-export const products: Product[] = [
+export const personalFinanceTools: Product[] = [
   {
     founded: 2023,
     hasSelfHostingAbility: false,

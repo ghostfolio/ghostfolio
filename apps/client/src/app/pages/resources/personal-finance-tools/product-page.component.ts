@@ -1,6 +1,6 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
-import { products } from '@ghostfolio/common/personal-finance-tools';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -61,7 +61,7 @@ export class GfProductPageComponent implements OnInit {
       useAnonymously: true
     };
 
-    this.product2 = products.find(({ key }) => {
+    this.product2 = personalFinanceTools.find(({ key }) => {
       return key === this.route.snapshot.data['key'];
     });
   }

@@ -1,5 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { products } from '@ghostfolio/common/personal-finance-tools';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -13,7 +13,7 @@ const routes: Routes = [
     path: '',
     title: $localize`Personal Finance Tools`
   },
-  ...products.map(({ alias, key, name }) => {
+  ...personalFinanceTools.map(({ alias, key, name }) => {
     return {
       canActivate: [AuthGuard],
       data: { key },

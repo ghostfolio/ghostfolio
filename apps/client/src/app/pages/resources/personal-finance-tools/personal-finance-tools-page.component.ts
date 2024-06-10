@@ -1,4 +1,4 @@
-import { products } from '@ghostfolio/common/personal-finance-tools';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public pathAlternativeTo = $localize`open-source-alternative-to` + '-';
   public pathResources = '/' + $localize`resources`;
-  public products = products.sort((a, b) => {
+  public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
   public routerLinkAbout = ['/' + $localize`about`];

@@ -1,9 +1,10 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DATE_FORMAT,
   getYesterday,
   interpolate
 } from '@ghostfolio/common/helper';
-import { products } from '@ghostfolio/common/personal-finance-tools';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { Controller, Get, Res, VERSION_NEUTRAL, Version } from '@nestjs/common';
 import { format } from 'date-fns';
@@ -15,7 +16,9 @@ import * as path from 'path';
 export class SitemapController {
   public sitemapXml = '';
 
-  public constructor() {
+  public constructor(
+    private readonly configurationService: ConfigurationService
+  ) {
     try {
       this.sitemapXml = fs.readFileSync(
         path.join(__dirname, 'assets', 'sitemap.xml'),
@@ -33,28 +36,44 @@ export class SitemapController {
     response.send(
       interpolate(this.sitemapXml, {
         currentDate,
-        personalFinanceTools: products
-          .map(({ alias, key }) => {
-            return [
-              '<url>',
-              `  <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-${alias ?? key}</loc>`,
-              `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
-              '</url>',
-              '<url>',
-              `  <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-${alias ?? key}</loc>`,
-              `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
-              '</url>',
-              '<url>',
-              `  <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-${alias ?? key}</loc>`,
-              `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
-              '</url>',
-              '<url>',
-              `  <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-${alias ?? key}</loc>`,
-              `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
-              '</url>'
-            ].join('\n');
-          })
-          .join('\n')
+        personalFinanceTools: this.configurationService.get(
+          'ENABLE_FEATURE_SUBSCRIPTION'
+        )
+          ? personalFinanceTools
+              .map(({ alias, key }) => {
+                return [
+                  '<url>',
+                  `  <loc>https://ghostfol.io/de/ressourcen/personal-finance-tools/open-source-alternative-zu-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/en/resources/personal-finance-tools/open-source-alternative-to-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/es/recursos/personal-finance-tools/alternativa-de-software-libre-a-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/fr/ressources/personal-finance-tools/alternative-open-source-a-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/it/risorse/personal-finance-tools/alternativa-open-source-a-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/nl/bronnen/personal-finance-tools/open-source-alternatief-voor-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>',
+                  '<url>',
+                  `  <loc>https://ghostfol.io/pt/recursos/personal-finance-tools/alternativa-de-software-livre-ao-${alias ?? key}</loc>`,
+                  `  <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
+                  '</url>'
+                ].join('\n');
+              })
+              .join('\n')
+          : ''
       })
     );
   }
