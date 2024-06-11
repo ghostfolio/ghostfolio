@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.88.0 - 2024-06-11
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
+## Unreleased
+
 ### Added
 
 - Set the image source label in `Dockerfile`
