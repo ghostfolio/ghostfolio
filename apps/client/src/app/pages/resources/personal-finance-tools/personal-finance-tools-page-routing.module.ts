@@ -1,10 +1,10 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PersonalFinanceToolsPageComponent } from './personal-finance-tools-page.component';
-import { products } from './products';
 
 const routes: Routes = [
   {
@@ -13,19 +13,20 @@ const routes: Routes = [
     path: '',
     title: $localize`Personal Finance Tools`
   },
-  ...products
-    .filter(({ key }) => {
-      return key !== 'ghostfolio';
-    })
-    .map(({ alias, component, key, name }) => {
-      return {
-        canActivate: [AuthGuard],
-        path: $localize`open-source-alternative-to` + `-${alias ?? key}`,
-        loadComponent: () =>
-          import(`./products/${key}-page.component`).then(() => component),
-        title: $localize`Open Source Alternative to ${name}`
-      };
-    })
+  ...personalFinanceTools.map(({ alias, key, name }) => {
+    return {
+      canActivate: [AuthGuard],
+      data: { key },
+      loadComponent: () =>
+        import('./product-page.component').then(
+          ({ GfProductPageComponent }) => {
+            return GfProductPageComponent;
+          }
+        ),
+      path: $localize`open-source-alternative-to` + `-${alias ?? key}`,
+      title: $localize`Open Source Alternative to ${name}`
+    };
+  })
 ];
 
 @NgModule({
