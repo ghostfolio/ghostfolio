@@ -41,7 +41,7 @@ export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
-export const DEFAULT_ROOT_URL = 'http://localhost:4200';
+export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
