@@ -1,20 +1,22 @@
 <div class="container p-0">
   <div class="row no-gutters">
     <div class="col">
-      <mat-card
-        *ngIf="hasPermissionToCreateOrder && rules === null"
-        appearance="outlined"
-        class="my-2 text-center"
-      >
-        <mat-card-content>
-          <gf-no-transactions-info-indicator [hasBorder]="false" />
-        </mat-card-content>
-      </mat-card>
+      @if (hasPermissionToCreateOrder && rules === null) {
+        <mat-card appearance="outlined" class="my-2 text-center">
+          <mat-card-content>
+            <gf-no-transactions-info-indicator [hasBorder]="false" />
+          </mat-card-content>
+        </mat-card>
+      }
 
-      <gf-rule *ngIf="rules?.length === 0" [isLoading]="true" />
-      <ng-container *ngIf="rules !== null && rules !== undefined">
-        <gf-rule *ngFor="let rule of rules" [rule]="rule" />
-      </ng-container>
+      @if (rules?.length === 0) {
+        <gf-rule [isLoading]="true" />
+      }
+      @if (rules !== null && rules !== undefined) {
+        @for (rule of rules; track rule) {
+          <gf-rule [rule]="rule" />
+        }
+      }
     </div>
   </div>
 </div>

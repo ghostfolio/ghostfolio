@@ -376,9 +376,9 @@
         <div class="col">
           <div class="h5" i18n>Tags</div>
           <mat-chip-listbox>
-            <mat-chip-option *ngFor="let tag of tags" disabled>{{
-              tag.name
-            }}</mat-chip-option>
+            @for (tag of tags; track tag) {
+              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+            }
           </mat-chip-listbox>
         </div>
       </div>

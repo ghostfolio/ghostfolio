@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the blog post list
+- Migrated the `@ghostfolio/client` components to control flow
+- Improved the language localization for German (`de`)
 - Upgraded `angular` from version `17.3.10` to `18.0.2`
 - Upgraded `Nx` from version `19.0.5` to `19.2.2`
 

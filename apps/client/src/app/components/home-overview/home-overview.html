@@ -39,22 +39,19 @@
           </li>
         </ol>
         <div class="d-flex justify-content-center">
-          <a
-            *ngIf="user?.accounts?.length === 1"
-            color="primary"
-            mat-flat-button
-            [routerLink]="['/accounts']"
-          >
-            <ng-container i18n>Setup accounts</ng-container>
-          </a>
-          <a
-            *ngIf="user?.accounts?.length > 1"
-            color="primary"
-            mat-flat-button
-            [routerLink]="['/portfolio', 'activities']"
-          >
-            <ng-container i18n>Add activity</ng-container>
-          </a>
+          @if (user?.accounts?.length === 1) {
+            <a color="primary" mat-flat-button [routerLink]="['/accounts']">
+              <ng-container i18n>Setup accounts</ng-container>
+            </a>
+          } @else if (user?.accounts?.length > 1) {
+            <a
+              color="primary"
+              mat-flat-button
+              [routerLink]="['/portfolio', 'activities']"
+            >
+              <ng-container i18n>Add activity</ng-container>
+            </a>
+          }
         </div>
       </div>
     </div>

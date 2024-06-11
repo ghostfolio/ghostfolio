@@ -2,7 +2,6 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -12,12 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page' },
-  imports: [
-    CommonModule,
-    GfLogoComponent,
-    MatButtonModule,
-    MatProgressSpinnerModule
-  ],
+  imports: [GfLogoComponent, MatButtonModule, MatProgressSpinnerModule],
   selector: 'gf-webauthn-page',
   standalone: true,
   styleUrls: ['./webauthn-page.scss'],
