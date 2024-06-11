@@ -1,14 +1,16 @@
-<div *ngIf="showActions" class="d-flex justify-content-end">
-  <button
-    class="align-items-center d-flex"
-    mat-stroked-button
-    [disabled]="dataSource?.data.length < 2"
-    (click)="onTransferBalance()"
-  >
-    <ion-icon class="mr-2" name="arrow-redo-outline" />
-    <ng-container i18n>Transfer Cash Balance</ng-container>...
-  </button>
-</div>
+@if (showActions) {
+  <div class="d-flex justify-content-end">
+    <button
+      class="align-items-center d-flex"
+      mat-stroked-button
+      [disabled]="dataSource?.data.length < 2"
+      (click)="onTransferBalance()"
+    >
+      <ion-icon class="mr-2" name="arrow-redo-outline" />
+      <ng-container i18n>Transfer Cash Balance</ng-container>...
+    </button>
+  </div>
+}
 
 <div class="overflow-x-auto">
   <table class="gf-table w-100" mat-table matSort [dataSource]="dataSource">
@@ -24,7 +26,9 @@
         mat-cell
       >
         <div class="d-flex justify-content-center">
-          <ion-icon *ngIf="element.isExcluded" name="eye-off-outline" />
+          @if (element.isExcluded) {
+            <ion-icon name="eye-off-outline" />
+          }
         </div>
       </td>
       <td
@@ -39,12 +43,13 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        <gf-asset-profile-icon
-          *ngIf="element.Platform?.url"
-          class="d-inline d-sm-none mr-1"
-          [tooltip]="element.Platform?.name"
-          [url]="element.Platform?.url"
-        />
+        @if (element.Platform?.url) {
+          <gf-asset-profile-icon
+            class="d-inline d-sm-none mr-1"
+            [tooltip]="element.Platform?.name"
+            [url]="element.Platform?.url"
+          />
+        }
         <span>{{ element.name }}</span>
       </td>
       <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
@@ -86,12 +91,13 @@
         mat-cell
       >
         <div class="d-flex">
-          <gf-asset-profile-icon
-            *ngIf="element.Platform?.url"
-            class="mr-1"
-            [tooltip]="element.Platform?.name"
-            [url]="element.Platform?.url"
-          />
+          @if (element.Platform?.url) {
+            <gf-asset-profile-icon
+              class="mr-1"
+              [tooltip]="element.Platform?.name"
+              [url]="element.Platform?.url"
+            />
+          }
           <span>{{ element.Platform?.name }}</span>
         </div>
       </td>
@@ -236,15 +242,16 @@
         class="d-none d-lg-table-cell px-1"
         mat-cell
       >
-        <button
-          *ngIf="element.comment"
-          class="mx-1 no-min-width px-2"
-          mat-button
-          title="Note"
-          (click)="onOpenComment(element.comment); $event.stopPropagation()"
-        >
-          <ion-icon name="document-text-outline" />
-        </button>
+        @if (element.comment) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            title="Note"
+            (click)="onOpenComment(element.comment); $event.stopPropagation()"
+          >
+            <ion-icon name="document-text-outline" />
+          </button>
+        }
       </td>
       <td
         *matFooterCellDef
@@ -303,12 +310,13 @@
   </table>
 </div>
 
-<ngx-skeleton-loader
-  *ngIf="isLoading"
-  animation="pulse"
-  class="px-4 py-3"
-  [theme]="{
-    height: '1.5rem',
-    width: '100%'
-  }"
-/>
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}

@@ -22,22 +22,21 @@
     </div>
   </div>
 
-  <div
-    *ngIf="
-      !hasImpersonationId &&
-      hasPermissionToCreateAccount &&
-      !user.settings.isRestrictedView
-    "
-    class="fab-container"
-  >
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large" />
-    </a>
-  </div>
+  @if (
+    !hasImpersonationId &&
+    hasPermissionToCreateAccount &&
+    !user.settings.isRestrictedView
+  ) {
+    <div class="fab-container">
+      <a
+        class="align-items-center d-flex justify-content-center"
+        color="primary"
+        mat-fab
+        [queryParams]="{ createDialog: true }"
+        [routerLink]="[]"
+      >
+        <ion-icon name="add-outline" size="large" />
+      </a>
+    </div>
+  }
 </div>

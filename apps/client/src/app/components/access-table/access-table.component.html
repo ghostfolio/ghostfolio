@@ -32,17 +32,16 @@
     <ng-container matColumnDef="details">
       <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
       <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-        <div
-          *ngIf="element.type === 'PUBLIC'"
-          class="align-items-center d-flex"
-        >
-          <ion-icon class="mr-1" name="link-outline" />
-          <a
-            href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
-            target="_blank"
-            >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
-          >
-        </div>
+        @if (element.type === 'PUBLIC') {
+          <div class="align-items-center d-flex">
+            <ion-icon class="mr-1" name="link-outline" />
+            <a
+              href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
+              target="_blank"
+              >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
+            >
+          </div>
+        }
       </td>
     </ng-container>
 
