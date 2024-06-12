@@ -5984,7 +5984,7 @@
       </trans-unit>
       <trans-unit id="567d4a9cafe9790b401ebf3a5d74f7c51b46a7b5" datatype="html">
         <source> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table </source>
-        <target state="new"> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table </target>
+        <target state="translated"> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> tabella di comparazione </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">49</context>

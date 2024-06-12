@@ -3687,7 +3687,7 @@
       </trans-unit>
       <trans-unit id="8491ac1eac9be4c3b013f8cc51fe7b801a3c4d7b" datatype="html">
         <source> Get Started </source>
-        <target state="translated"> Débuter </target>
+        <target state="translated"> Démarrer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">438</context>
@@ -4339,7 +4339,7 @@
       </trans-unit>
       <trans-unit id="d1db8b2ae4504dc216afb401317392fa0fca7d63" datatype="html">
         <source> Discover Open Source Alternatives for Personal Finance Tools </source>
-        <target state="new"> Discover Open Source Alternatives for Personal Finance Tools </target>
+        <target state="translated"> Découvrez les alternatives Open Source pour les outils de finance personnelle </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">4</context>
@@ -4347,7 +4347,7 @@
       </trans-unit>
       <trans-unit id="e174910a7abd2793d04bba1c3971a0c7fafd7b79" datatype="html">
         <source>Founded</source>
-        <target state="new">Founded</target>
+        <target state="translated">Fondée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">72</context>
@@ -4355,7 +4355,7 @@
       </trans-unit>
       <trans-unit id="950b5f04a2efd3f11c0f76418d5a4212381e792e" datatype="html">
         <source>Origin</source>
-        <target state="new">Origin</target>
+        <target state="translated">L’origine</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -4363,7 +4363,7 @@
       </trans-unit>
       <trans-unit id="2ae797460f17fe72086256ec5e2da35ddc6e1614" datatype="html">
         <source>Region</source>
-        <target state="new">Region</target>
+        <target state="translated">La région</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">82</context>
@@ -4371,7 +4371,7 @@
       </trans-unit>
       <trans-unit id="c5a2349fd1775501aa7a16c423816a734b959db4" datatype="html">
         <source> Available in </source>
-        <target state="new"> Available in </target>
+        <target state="translated"> Disponible en </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">87</context>
@@ -4463,7 +4463,7 @@
       </trans-unit>
       <trans-unit id="fbce449c2e3719c495e4e3ba0107df816b039ebe" datatype="html">
         <source> Use anonymously </source>
-        <target state="new"> Use anonymously </target>
+        <target state="translated"> Utilisation anonyme </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">148</context>
@@ -4471,7 +4471,7 @@
       </trans-unit>
       <trans-unit id="f37bf6923c7cffbb879c67fcb782950e28c431d0" datatype="html">
         <source> Free Plan </source>
-        <target state="new"> Free Plan </target>
+        <target state="translated"> Plan gratuit </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">167</context>
@@ -4479,7 +4479,7 @@
       </trans-unit>
       <trans-unit id="fcde58253a4cfd52c228eebdae74e1be7a1ab714" datatype="html">
         <source>Notes</source>
-        <target state="new">Notes</target>
+        <target state="translated">Notes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">201</context>
@@ -4887,7 +4887,7 @@
       </trans-unit>
       <trans-unit id="50fefcca3f8b7dd5a34141329118014a8c4b7d1b" datatype="html">
         <source> Get Started </source>
-        <target state="new"> Get Started </target>
+        <target state="translated"> Démarrer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">41</context>
@@ -5651,7 +5651,7 @@
       </trans-unit>
       <trans-unit id="968ab39db7fbb2621ba4536940768e6b6ee9c71f" datatype="html">
         <source> Get Started </source>
-        <target state="new"> Get Started </target>
+        <target state="translated"> Démarrer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">232</context>
@@ -5983,7 +5983,7 @@
       </trans-unit>
       <trans-unit id="567d4a9cafe9790b401ebf3a5d74f7c51b46a7b5" datatype="html">
         <source> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table </source>
-        <target state="new"> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table </target>
+        <target state="translated"> Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> tableau comparatif </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">49</context>
