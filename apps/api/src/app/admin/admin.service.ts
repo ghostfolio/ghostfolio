@@ -413,8 +413,21 @@ export class AdminService {
       this.exchangeRateDataService
         .getCurrencyPairs()
         .map(async ({ dataSource, symbol }) => {
-          let date: Date = null;
-          let activitiesCount = 0;
+          const currency = symbol.replace(DEFAULT_CURRENCY, '');
+
+          const currencyPairOrders = await this.prismaService.order.aggregate({
+            _count: true,
+            _min: {
+              date: true
+            },
+            where: {
+              currency: DEFAULT_CURRENCY,
+              SymbolProfile: {
+                currency,
+                dataSource
+              }
+            }
+          });
 
           const marketDataItemCount =
             marketDataItems.find((marketDataItem) => {
@@ -424,36 +437,13 @@ export class AdminService {
               );
             })?._count ?? 0;
 
-          const symbolProfile =
-            await this.prismaService.symbolProfile.findFirst({
-              where: { symbol, dataSource }
-            });
-
-          if (symbolProfile?.id) {
-            const orders = await this.prismaService.order.findMany({
-              orderBy: { date: 'asc' },
-              where: { symbolProfileId: symbolProfile.id }
-            });
-            activitiesCount = orders.length;
-          }
-
-          if (activitiesCount > 0) {
-            const earliestId = await this.prismaService.order.findFirst({
-              orderBy: {
-                date: 'asc'
-              },
-              where: { symbolProfileId: symbolProfile?.id }
-            });
-            date = earliestId.date;
-          }
-
           return {
-            activitiesCount,
+            activitiesCount: currencyPairOrders._count,
+            currency,
             assetClass: AssetClass.LIQUIDITY,
             countriesCount: 0,
-            currency: symbol.replace(DEFAULT_CURRENCY, ''),
             dataSource,
-            date,
+            date: currencyPairOrders._min.date,
             id: undefined,
             marketDataItemCount,
             name: symbol,
