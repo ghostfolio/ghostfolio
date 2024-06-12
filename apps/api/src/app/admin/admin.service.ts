@@ -415,16 +415,14 @@ export class AdminService {
         .map(async ({ dataSource, symbol }) => {
           const currency = symbol.replace(DEFAULT_CURRENCY, '');
 
-          const currencyPairOrders = await this.prismaService.order.aggregate({
+          const { _count, _min } = await this.prismaService.order.aggregate({
             _count: true,
             _min: {
               date: true
             },
             where: {
-              currency: DEFAULT_CURRENCY,
               SymbolProfile: {
-                currency,
-                dataSource
+                currency
               }
             }
           });
@@ -438,17 +436,18 @@ export class AdminService {
             })?._count ?? 0;
 
           return {
-            activitiesCount: currencyPairOrders._count,
             currency,
-            assetClass: AssetClass.LIQUIDITY,
-            countriesCount: 0,
             dataSource,
-            date: currencyPairOrders._min.date,
-            id: undefined,
             marketDataItemCount,
+            symbol,
+            activitiesCount: _count as number,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countriesCount: 0,
+            date: _min.date,
+            id: undefined,
             name: symbol,
-            sectorsCount: 0,
-            symbol
+            sectorsCount: 0
           };
         });
 
