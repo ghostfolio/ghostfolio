@@ -21,7 +21,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
-import { isToday } from 'date-fns';
+import { isAfter, isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -424,6 +424,14 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       currencyOfUnitPrice: this.activityForm.get('currency').value,
       unitPriceInCustomCurrency: this.currentMarketPrice
     });
+  }
+
+  public dateFilter(aDate: Date) {
+    if (!aDate) {
+      return true;
+    }
+
+    return isAfter(aDate, new Date(0));
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
