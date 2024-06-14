@@ -2,7 +2,15 @@
   <ng-container matColumnDef="name">
     <th *matHeaderCellDef class="px-2" i18n mat-header-cell>Index</th>
     <td *matCellDef="let element" class="px-2" mat-cell>
-      {{ element?.name }}
+      <a
+        [queryParams]="{
+          benchmarkDetailDialog: true,
+          dataSource: element.dataSource,
+          symbol: element.symbol
+        }"
+        [routerLink]="[]"
+        >{{ element?.name }}</a
+      >
     </td>
   </ng-container>
 
