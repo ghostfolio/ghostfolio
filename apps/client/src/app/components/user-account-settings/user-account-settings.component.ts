@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
 import { EMPTY, Subject } from 'rxjs';
@@ -42,6 +43,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isAccessTokenHidden = true;
+  public isFingerprintSupported: boolean;
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -69,12 +71,14 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
     private userService: UserService,
+    private snackBar: MatSnackBar,
     public webAuthnService: WebAuthnService
   ) {
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;
+    this.isFingerprintSupported = this.doesBrowserSupportAuthn();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -224,7 +228,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
   public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
-      this.registerDevice();
+      this.registerDevice(aEvent);
     } else {
       const confirmation = confirm(
         $localize`Do you really want to remove this sign in method?`
@@ -277,13 +281,30 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  private registerDevice() {
+  private registerDevice(aEvent: MatSlideToggleChange) {
     this.webAuthnService
       .register()
       .pipe(
         takeUntil(this.unsubscribeSubject),
-        catchError(() => {
-          this.update();
+        catchError((error: Error) => {
+          aEvent.source.checked = false;
+          this.changeDetectorRef.markForCheck();
+
+          let errorMessage: string;
+
+          if (
+            error.message.includes(
+              'The operation either timed out or was not allowed.'
+            )
+          ) {
+            errorMessage = $localize`The operation either timed out or was not allowed.`;
+          } else {
+            errorMessage = $localize`Oops! There was an unknown error setting up biometric authentication.`;
+          }
+
+          this.snackBar.open(errorMessage, undefined, {
+            duration: 4000
+          });
 
           return EMPTY;
         })
@@ -300,5 +321,10 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.isWebAuthnEnabled = this.webAuthnService.isEnabled() ?? false;
 
     this.changeDetectorRef.markForCheck();
+  }
+
+  private doesBrowserSupportAuthn() {
+    // Authn is built on top of PublicKeyCredential: https://stackoverflow.com/a/55868189
+    return typeof PublicKeyCredential !== 'undefined';
   }
 }
