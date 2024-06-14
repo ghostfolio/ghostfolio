@@ -1,3 +1,5 @@
+import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
+
 import {
   AssetClass,
   AssetSubClass,
@@ -15,7 +17,8 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  Min
+  Min,
+  Validate
 } from 'class-validator';
 import { isString } from 'lodash';
 
@@ -51,6 +54,7 @@ export class CreateOrderDto {
   dataSource?: DataSource;
 
   @IsISO8601()
+  @Validate(IsAfter1970Constraint)
   date: string;
 
   @IsNumber()

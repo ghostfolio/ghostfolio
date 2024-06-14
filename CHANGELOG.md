@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Moved the indicator for active filters from experimental to general availability
+
+## 2.89.0 - 2024-06-14
+
+### Added
+
+- Extended the historical market data table with currencies preset by date and activities count in the admin control panel
+
+### Changed
+
+- Improved the date validation in the create, import and update activities endpoints
 - Improved the language localization for German (`de`)
 
 ## 2.88.0 - 2024-06-11

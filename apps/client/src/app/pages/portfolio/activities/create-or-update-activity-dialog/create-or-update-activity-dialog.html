@@ -157,7 +157,12 @@
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
-        <input formControlName="date" matInput [matDatepicker]="date" />
+        <input
+          formControlName="date"
+          matInput
+          [matDatepicker]="date"
+          [matDatepickerFilter]="dateFilter"
+        />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
