@@ -13,11 +13,13 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+import { isCurrency } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  EnhancedSymbolProfile,
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -32,6 +34,7 @@ import {
   Property,
   SymbolProfile
 } from '@prisma/client';
+import { isNumber } from 'class-validator';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
 
@@ -295,6 +298,27 @@ export class AdminService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
+    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+    let currency: EnhancedSymbolProfile['currency'] = '-';
+
+    if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
+      currency = symbol.replace(DEFAULT_CURRENCY, '');
+      const { _count, _min } = await this.prismaService.order.aggregate({
+        _count: true,
+        _min: {
+          date: true
+        },
+        where: {
+          SymbolProfile: {
+            currency
+          }
+        }
+      });
+      activitiesCount = _count as number;
+      dateOfFirstActivity = _min.date;
+    }
+
     const [[assetProfile], marketData] = await Promise.all([
       this.symbolProfileService.getSymbolProfiles([
         {
@@ -322,12 +346,14 @@ export class AdminService {
     return {
       marketData,
       assetProfile: assetProfile ?? {
+        currency,
+        dataSource,
         symbol,
-        currency: '-'
+        activitiesCount,
+        dateOfFirstActivity
       }
     };
   }
-
   public async patchAssetProfileData({
     assetClass,
     assetSubClass,
