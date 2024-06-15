@@ -1,5 +1,4 @@
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
-import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { SymbolModule } from '@ghostfolio/api/app/symbol/symbol.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
@@ -25,7 +24,6 @@ import { BenchmarkService } from './benchmark.service';
     PrismaModule,
     PropertyModule,
     RedisCacheModule,
-    SubscriptionModule,
     SymbolModule,
     SymbolProfileModule,
     TransformDataSourceInRequestModule,
