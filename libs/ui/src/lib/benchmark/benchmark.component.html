@@ -2,15 +2,7 @@
   <ng-container matColumnDef="name">
     <th *matHeaderCellDef class="px-2" i18n mat-header-cell>Index</th>
     <td *matCellDef="let element" class="px-2" mat-cell>
-      <a
-        [queryParams]="{
-          benchmarkDetailDialog: true,
-          dataSource: element.dataSource,
-          symbol: element.symbol
-        }"
-        [routerLink]="[]"
-        >{{ element?.name }}</a
-      >
+      {{ element?.name }}
     </td>
   </ng-container>
 
@@ -118,5 +110,15 @@
   </ng-container>
 
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  <tr
+    *matRowDef="let row; columns: displayedColumns"
+    class="cursor-pointer"
+    mat-row
+    (click)="
+      onOpenBenchmarkDialog({
+        dataSource: row.dataSource,
+        symbol: row.symbol
+      })
+    "
+  ></tr>
 </table>

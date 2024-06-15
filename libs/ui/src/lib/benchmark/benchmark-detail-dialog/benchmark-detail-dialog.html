@@ -2,7 +2,7 @@
   mat-dialog-title
   position="center"
   [deviceType]="data.deviceType"
-  [title]="assetProfile?.name"
+  [title]="assetProfile?.name ?? assetProfile?.symbol"
   (closeButtonClicked)="onClose()"
 />
 

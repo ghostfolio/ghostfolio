@@ -84,6 +84,12 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     }
   }
 
+  public onOpenBenchmarkDialog({ dataSource, symbol }: UniqueAsset) {
+    this.router.navigate([], {
+      queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
+    });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
