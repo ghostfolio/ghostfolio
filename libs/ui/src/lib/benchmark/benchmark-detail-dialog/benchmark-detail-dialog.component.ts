@@ -60,7 +60,7 @@ export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.dataService
-      .fetchBenchmark({
+      .fetchAsset({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })

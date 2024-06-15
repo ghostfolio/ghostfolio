@@ -285,11 +285,11 @@ export class DataService {
     return this.http.get<Access[]>('/api/v1/access');
   }
 
-  public fetchBenchmark({
+  public fetchAsset({
     dataSource,
     symbol
   }: UniqueAsset): Observable<AdminMarketDataDetails> {
-    return this.http.get<any>(`/api/v1/benchmark/${dataSource}/${symbol}`).pipe(
+    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
           item.date = parseISO(item.date);

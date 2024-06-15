@@ -30,14 +30,12 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { pick } from 'lodash';
 
 import { BenchmarkService } from './benchmark.service';
 
 @Controller('benchmark')
 export class BenchmarkController {
   public constructor(
-    private readonly adminService: AdminService,
     private readonly benchmarkService: BenchmarkService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -103,23 +101,6 @@ export class BenchmarkController {
   public async getBenchmark(): Promise<BenchmarkResponse> {
     return {
       benchmarks: await this.benchmarkService.getBenchmarks()
-    };
-  }
-
-  @Get(':dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getBenchmarkMarketData(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<AdminMarketDataDetails> {
-    const { assetProfile, marketData } =
-      await this.adminService.getMarketDataBySymbol({ dataSource, symbol });
-
-    return {
-      marketData,
-      assetProfile: pick(assetProfile, ['dataSource', 'name', 'symbol'])
     };
   }
 
