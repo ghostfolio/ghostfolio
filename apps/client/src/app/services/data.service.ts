@@ -19,6 +19,7 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
+  AdminMarketDataDetails,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -284,7 +285,21 @@ export class DataService {
     return this.http.get<Access[]>('/api/v1/access');
   }
 
-  public fetchBenchmarkBySymbol({
+  public fetchAsset({
+    dataSource,
+    symbol
+  }: UniqueAsset): Observable<AdminMarketDataDetails> {
+    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
+      map((data) => {
+        for (const item of data.marketData) {
+          item.date = parseISO(item.date);
+        }
+        return data;
+      })
+    );
+  }
+
+  public fetchBenchmarkForUser({
     dataSource,
     range,
     startDate,

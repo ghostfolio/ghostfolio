@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a dialog for the benchmarks in the markets overview
+
 ### Changed
 
 - Moved the indicator for active filters from experimental to general availability
