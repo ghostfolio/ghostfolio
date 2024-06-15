@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a dialog for the benchmarks in the markets overview
 
+### Changed
+
+- Set up SSL for local development
+
 ## 2.89.0 - 2024-06-14
 
 ### Added
