@@ -105,7 +105,7 @@ export class BenchmarkController {
   @Get(':dataSource/:symbol/:startDateString')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async getBenchmarkMarketDataBySymbol(
+  public async getBenchmarkMarketDataForUser(
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
@@ -117,7 +117,7 @@ export class BenchmarkController {
     );
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    return this.benchmarkService.getMarketDataBySymbol({
+    return this.benchmarkService.getMarketDataForUser({
       dataSource,
       endDate,
       startDate,

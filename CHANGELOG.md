@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a dialog for the benchmarks in the markets overview
+
 ### Changed
 
 - Improved the error handling in the biometric authentication registration
+- Set up SSL for local development
 
 ## 2.89.0 - 2024-06-14
 
