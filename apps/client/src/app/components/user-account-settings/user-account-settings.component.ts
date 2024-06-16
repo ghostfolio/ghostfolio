@@ -23,7 +23,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -43,7 +43,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isAccessTokenHidden = true;
-  public isFingerprintSupported: boolean;
+  public isFingerprintSupported = this.doesBrowserSupportAuthn();
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -69,9 +69,9 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private settingsStorageService: SettingsStorageService,
+    private snackBar: MatSnackBar,
     private tokenStorageService: TokenStorageService,
     private userService: UserService,
-    private snackBar: MatSnackBar,
     public webAuthnService: WebAuthnService
   ) {
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
@@ -228,7 +228,10 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
   public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
-      this.registerDevice(aEvent);
+      this.registerDevice().catch(() => {
+        aEvent.source.checked = false;
+        this.changeDetectorRef.markForCheck();
+      });
     } else {
       const confirmation = confirm(
         $localize`Do you really want to remove this sign in method?`
@@ -281,40 +284,43 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  private registerDevice(aEvent: MatSlideToggleChange) {
-    this.webAuthnService
-      .register()
-      .pipe(
-        takeUntil(this.unsubscribeSubject),
-        catchError((error: Error) => {
-          aEvent.source.checked = false;
-          this.changeDetectorRef.markForCheck();
+  private registerDevice(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.webAuthnService
+        .register()
+        .pipe(
+          takeUntil(this.unsubscribeSubject),
+          catchError((error: Error) => {
+            let errorMessage: string;
 
-          let errorMessage: string;
+            if (
+              error.message.includes(
+                'The operation either timed out or was not allowed.'
+              )
+            ) {
+              errorMessage = $localize`The operation either timed out or was not allowed.`;
+            } else {
+              errorMessage = $localize`Oops! There was an unknown error setting up biometric authentication.`;
+            }
 
-          if (
-            error.message.includes(
-              'The operation either timed out or was not allowed.'
-            )
-          ) {
-            errorMessage = $localize`The operation either timed out or was not allowed.`;
-          } else {
-            errorMessage = $localize`Oops! There was an unknown error setting up biometric authentication.`;
+            this.snackBar.open(errorMessage, undefined, { duration: 4000 });
+
+            return throwError(() => error);
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
+            this.settingsStorageService.removeSetting(KEY_TOKEN);
+
+            this.update();
+            resolve();
+          },
+          error: (error) => {
+            reject(error);
           }
-
-          this.snackBar.open(errorMessage, undefined, {
-            duration: 4000
-          });
-
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
-        this.settingsStorageService.removeSetting(KEY_TOKEN);
-
-        this.update();
-      });
+        });
+    });
   }
 
   private update() {
