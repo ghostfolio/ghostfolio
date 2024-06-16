@@ -78,7 +78,6 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
 
     this.baseCurrency = baseCurrency;
     this.currencies = currencies;
-    this.isFingerprintSupported = this.doesBrowserSupportAuthn();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
