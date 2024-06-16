@@ -226,12 +226,15 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  public async onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
-      this.registerDevice().catch(() => {
+      try {
+        await this.registerDevice();
+      } catch {
         aEvent.source.checked = false;
+
         this.changeDetectorRef.markForCheck();
-      });
+      }
     } else {
       const confirmation = confirm(
         $localize`Do you really want to remove this sign in method?`
@@ -272,16 +275,21 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .deregister()
       .pipe(
-        takeUntil(this.unsubscribeSubject),
         catchError(() => {
           this.update();
 
           return EMPTY;
-        })
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
       .subscribe(() => {
         this.update();
       });
+  }
+
+  private doesBrowserSupportAuthn() {
+    // Authn is built on top of PublicKeyCredential: https://stackoverflow.com/a/55868189
+    return typeof PublicKeyCredential !== 'undefined';
   }
 
   private registerDevice(): Promise<void> {
@@ -289,24 +297,16 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       this.webAuthnService
         .register()
         .pipe(
-          takeUntil(this.unsubscribeSubject),
           catchError((error: Error) => {
-            let errorMessage: string;
-
-            if (
-              error.message.includes(
-                'The operation either timed out or was not allowed.'
-              )
-            ) {
-              errorMessage = $localize`The operation either timed out or was not allowed.`;
-            } else {
-              errorMessage = $localize`Oops! There was an unknown error setting up biometric authentication.`;
-            }
-
-            this.snackBar.open(errorMessage, undefined, { duration: 4000 });
+            this.snackBar.open(
+              $localize`Oops! There was an error setting up biometric authentication.`,
+              undefined,
+              { duration: 3000 }
+            );
 
             return throwError(() => error);
-          })
+          }),
+          takeUntil(this.unsubscribeSubject)
         )
         .subscribe({
           next: () => {
@@ -327,10 +327,5 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.isWebAuthnEnabled = this.webAuthnService.isEnabled() ?? false;
 
     this.changeDetectorRef.markForCheck();
-  }
-
-  private doesBrowserSupportAuthn() {
-    // Authn is built on top of PublicKeyCredential: https://stackoverflow.com/a/55868189
-    return typeof PublicKeyCredential !== 'undefined';
   }
 }
