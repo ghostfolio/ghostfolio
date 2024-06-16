@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `marked` from version `9.1.6` to `13.0.0`
+- Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
 - Set up SSL for local development
 
 ## 2.89.0 - 2024-06-14
