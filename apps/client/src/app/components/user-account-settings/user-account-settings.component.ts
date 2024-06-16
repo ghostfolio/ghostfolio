@@ -303,7 +303,9 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
               { duration: 3000 }
             );
 
-            return throwError(() => error);
+            return throwError(() => {
+              return error;
+            });
           }),
           takeUntil(this.unsubscribeSubject)
         )
