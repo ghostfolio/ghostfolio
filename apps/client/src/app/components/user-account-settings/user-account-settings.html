@@ -189,7 +189,9 @@
             color="primary"
             hideIcon="true"
             [checked]="isWebAuthnEnabled === true"
-            [disabled]="!hasPermissionToUpdateUserSettings"
+            [disabled]="
+              !hasPermissionToUpdateUserSettings || !isFingerprintSupported
+            "
             (change)="onSignInWithFingerprintChange($event)"
           />
         </div>
