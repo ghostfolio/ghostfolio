@@ -22,7 +22,7 @@ export class SubscriptionService {
     this.stripe = new Stripe(
       this.configurationService.get('STRIPE_SECRET_KEY'),
       {
-        apiVersion: '2022-11-15'
+        apiVersion: '2024-04-10'
       }
     );
   }
