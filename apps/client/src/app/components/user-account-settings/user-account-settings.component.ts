@@ -20,9 +20,10 @@ import {
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -42,6 +43,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isAccessTokenHidden = true;
+  public isFingerprintSupported = this.doesBrowserSupportAuthn();
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
@@ -67,6 +69,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private formBuilder: FormBuilder,
     private settingsStorageService: SettingsStorageService,
+    private snackBar: MatSnackBar,
     private tokenStorageService: TokenStorageService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
@@ -222,9 +225,15 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  public async onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
-      this.registerDevice();
+      try {
+        await this.registerDevice();
+      } catch {
+        aEvent.source.checked = false;
+
+        this.changeDetectorRef.markForCheck();
+      }
     } else {
       const confirmation = confirm(
         $localize`Do you really want to remove this sign in method?`
@@ -265,35 +274,54 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .deregister()
       .pipe(
-        takeUntil(this.unsubscribeSubject),
         catchError(() => {
           this.update();
 
           return EMPTY;
-        })
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
       .subscribe(() => {
         this.update();
       });
   }
 
-  private registerDevice() {
-    this.webAuthnService
-      .register()
-      .pipe(
-        takeUntil(this.unsubscribeSubject),
-        catchError(() => {
-          this.update();
+  private doesBrowserSupportAuthn() {
+    // Authn is built on top of PublicKeyCredential: https://stackoverflow.com/a/55868189
+    return typeof PublicKeyCredential !== 'undefined';
+  }
 
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
-        this.settingsStorageService.removeSetting(KEY_TOKEN);
+  private registerDevice(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.webAuthnService
+        .register()
+        .pipe(
+          catchError((error: Error) => {
+            this.snackBar.open(
+              $localize`Oops! There was an error setting up biometric authentication.`,
+              undefined,
+              { duration: 3000 }
+            );
 
-        this.update();
-      });
+            return throwError(() => {
+              return error;
+            });
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe({
+          next: () => {
+            this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
+            this.settingsStorageService.removeSetting(KEY_TOKEN);
+
+            this.update();
+            resolve();
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+    });
   }
 
   private update() {
