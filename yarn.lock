@@ -15615,10 +15615,10 @@ markdown-to-jsx@^7.1.8:
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.3.2.tgz#f286b4d112dad3028acc1e77dfe1f653b347e131"
   integrity sha512-B+28F5ucp83aQm+OxNrPkS8z0tMKaeHiy0lHJs3LqCyDQFtWuenaIrkaVTgAm1pf1AU85LXltva86hlaT17i8Q==
 
-marked@9.1.6:
-  version "9.1.6"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-9.1.6.tgz#5d2a3f8180abfbc5d62e3258a38a1c19c0381695"
-  integrity sha512-jcByLnIFkd5gSXZmjNvS1TlmRhCXZjIzHYlaGkPlLIekG55JDR2Z4va9tZwCiP+/RDERiNhMOFu01xd6O5ct1Q==
+marked@13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-13.0.0.tgz#c18cda8a1fd0055859060c971e30f57beb79fd46"
+  integrity sha512-VTeDCd9txf4KLLljUZ0nljE/Incb9SrWuueE44QVuU0pkOdh4sfCeW1Z6lPcxyDRSVY6rm8db/0OPaN75RNUmw==
 
 mdast-util-definitions@^4.0.0:
   version "4.0.0"
@@ -16287,10 +16287,10 @@ ngx-device-detector@5.0.1:
   dependencies:
     tslib "^2.0.0"
 
-ngx-markdown@17.1.1:
-  version "17.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-17.1.1.tgz#6e9c34fe8d470621b4609d68e8a403efb72b4e66"
-  integrity sha512-BGNWGJ6tmfPx+ScZFq5qeGLgWJwsakjScZ2e+oUzm+97DAHpIHSl8gptNZvZgRhOiFdjLcKBcuY2Rz8WB6J6UQ==
+ngx-markdown@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-18.0.0.tgz#68435d7b6b82906b442bcd7d10ebd763389e0887"
+  integrity sha512-sFR9dIOKobdhNKZTlCrX3RmpoAhZ7k3T9h7oWJP676Oe9BsoxuAYZKJmFDT20vrY6xmFD3WtLJDZR7rNRLf6Uw==
   dependencies:
     tslib "^2.3.0"
   optionalDependencies:
