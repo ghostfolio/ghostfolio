@@ -12,6 +12,7 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 
 import { Module } from '@nestjs/common';
 
+import { OrderModule } from '../order/order.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { QueueModule } from './queue/queue.module';
@@ -24,6 +25,7 @@ import { QueueModule } from './queue/queue.module';
     DataProviderModule,
     ExchangeRateDataModule,
     MarketDataModule,
+    OrderModule,
     PrismaModule,
     PropertyModule,
     QueueModule,

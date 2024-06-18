@@ -34,9 +34,10 @@ import {
   Property,
   SymbolProfile
 } from '@prisma/client';
-import { isNumber } from 'class-validator';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
+
+import { OrderService } from '../order/order.service';
 
 @Injectable()
 export class AdminService {
@@ -45,6 +46,7 @@ export class AdminService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -304,19 +306,8 @@ export class AdminService {
 
     if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
       currency = symbol.replace(DEFAULT_CURRENCY, '');
-      const { _count, _min } = await this.prismaService.order.aggregate({
-        _count: true,
-        _min: {
-          date: true
-        },
-        where: {
-          SymbolProfile: {
-            currency
-          }
-        }
-      });
-      activitiesCount = _count as number;
-      dateOfFirstActivity = _min.date;
+      [activitiesCount, dateOfFirstActivity] =
+        await this.orderService.getCountAndDateMin(currency);
     }
 
     const [[assetProfile], marketData] = await Promise.all([
@@ -346,14 +337,15 @@ export class AdminService {
     return {
       marketData,
       assetProfile: assetProfile ?? {
+        activitiesCount,
+        dateOfFirstActivity,
         currency,
         dataSource,
-        symbol,
-        activitiesCount,
-        dateOfFirstActivity
+        symbol
       }
     };
   }
+
   public async patchAssetProfileData({
     assetClass,
     assetSubClass,
@@ -439,19 +431,15 @@ export class AdminService {
       this.exchangeRateDataService
         .getCurrencyPairs()
         .map(async ({ dataSource, symbol }) => {
-          const currency = symbol.replace(DEFAULT_CURRENCY, '');
+          let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+          let currency: EnhancedSymbolProfile['currency'] = '-';
 
-          const { _count, _min } = await this.prismaService.order.aggregate({
-            _count: true,
-            _min: {
-              date: true
-            },
-            where: {
-              SymbolProfile: {
-                currency
-              }
-            }
-          });
+          if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
+            currency = symbol.replace(DEFAULT_CURRENCY, '');
+            [activitiesCount, dateOfFirstActivity] =
+              await this.orderService.getCountAndDateMin(currency);
+          }
 
           const marketDataItemCount =
             marketDataItems.find((marketDataItem) => {
@@ -466,11 +454,11 @@ export class AdminService {
             dataSource,
             marketDataItemCount,
             symbol,
-            activitiesCount: _count as number,
+            activitiesCount,
             assetClass: AssetClass.LIQUIDITY,
             assetSubClass: AssetSubClass.CASH,
             countriesCount: 0,
-            date: _min.date,
+            date: dateOfFirstActivity,
             id: undefined,
             name: symbol,
             sectorsCount: 0

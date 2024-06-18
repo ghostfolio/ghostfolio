@@ -10,7 +10,11 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  EnhancedSymbolProfile,
+  Filter,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -540,5 +544,22 @@ export class OrderService {
       take,
       where
     });
+  }
+
+  public async getCountAndDateMin(
+    currency: EnhancedSymbolProfile['currency']
+  ): Promise<[number, Date]> {
+    const { _count, _min } = await this.prismaService.order.aggregate({
+      _count: true,
+      _min: {
+        date: true
+      },
+      where: { SymbolProfile: { currency } }
+    });
+    const activitiesCount: EnhancedSymbolProfile['activitiesCount'] =
+      _count as number;
+    const dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'] =
+      _min.date;
+    return [activitiesCount, dateOfFirstActivity];
   }
 }
