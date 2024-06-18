@@ -7420,10 +7420,10 @@
     "@types/express" "^4.7.0"
     file-system-cache "2.3.0"
 
-"@stripe/stripe-js@1.47.0":
-  version "1.47.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.47.0.tgz#48626a2e43302330aa826ce498a2d9761db4053d"
-  integrity sha512-jKSClqEIKS2MbPCXlSsseDSZyJ3dVrfUrYMz5LBY1o9iS2tfKbpTZACt8r2g+xyQozI+uHr76pVTyFsmBKA4Mg==
+"@stripe/stripe-js@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-3.5.0.tgz#7fff3d9d931e972c24dcc8ee25f7481a58879b2b"
+  integrity sha512-pKS3wZnJoL1iTyGBXAvCwduNNeghJHY6QSRSNNvpYnrrQrLZ6Owsazjyynu0e0ObRgks0i7Rv+pe2M7/MBTZpQ==
 
 "@swc/core-darwin-arm64@1.3.95":
   version "1.3.95"
@@ -16308,10 +16308,10 @@ ngx-skeleton-loader@7.0.0:
     perf-marks "^1.13.4"
     tslib "^2.0.0"
 
-ngx-stripe@15.5.0:
-  version "15.5.0"
-  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-15.5.0.tgz#b05fc1cf9f55bb5e7f307ac5cfdf29807a2f48a9"
-  integrity sha512-Ut3JANfxSzl/4qy+pokHOXGVITgNSlSMv7XGN2Y4tPDk6BVUD9SSl/3VuXW9UdbKAmX0XS68nRACiKCOSet5zw==
+ngx-stripe@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-18.0.0.tgz#bcd0932426688c89084a22670a87c868a1ae65a7"
+  integrity sha512-AT67vLeqEUDMnK5TfEaorumYJyOWqecbrh/1UWNtN8vF6Yzb0L/Dty3ANAa/QQi0OvBg6gXrudrhEnT8pT5lng==
   dependencies:
     tslib "^2.3.0"
 
@@ -19170,10 +19170,10 @@ strip-json-comments@^3.0.1, strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-stripe@11.12.0:
-  version "11.12.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-11.12.0.tgz#2d7d4c37a6447a972128b1266e027693241704e3"
-  integrity sha512-7yzFyVV/eYpYalfjnw1f9sh/N3r5QVdx5MFtmpOg2QikKVAW4AptXC8P0wj1KNCd/LIo23nTDo0+m9788jHswg==
+stripe@15.11.0:
+  version "15.11.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-15.11.0.tgz#c50a682a1df34719c03674f5d0ccc37a661049fd"
+  integrity sha512-qmZF0PN1jRVpiQrXL8eTb9Jy/6S+aUlcDquKBFT2h3PkaD7RZ444FIojVXUg67FK2zFIUNXgMv02c7csdL5qHg==
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.11.0"

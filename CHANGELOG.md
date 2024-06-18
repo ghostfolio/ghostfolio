@@ -13,8 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the indicator for active filters from experimental to general availability
 - Improved the error handling in the biometric authentication registration
 - Set up SSL for local development
+- Upgraded the _Stripe_ dependencies
 - Upgraded `marked` from version `9.1.6` to `13.0.0`
 - Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
 
