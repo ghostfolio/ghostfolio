@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the indicator for active filters from experimental to general availability
 - Improved the error handling in the biometric authentication registration
 - Set up SSL for local development
 
