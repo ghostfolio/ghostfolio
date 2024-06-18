@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added a dialog for the benchmarks in the markets overview
+- Extended the content of the _Self-Hosting_ section by the mobile app question on the Frequently Asked Questions (FAQ) page
 
 ### Changed
 
