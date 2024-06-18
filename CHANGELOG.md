@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the indicator for active filters from experimental to general availability
 - Improved the error handling in the biometric authentication registration
 - Set up SSL for local development
+- Upgraded `zone.js` from version `0.14.5` to `0.14.7`
 
 ## 2.89.0 - 2024-06-14
 
