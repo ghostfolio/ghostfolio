@@ -546,9 +546,9 @@ export class OrderService {
     });
   }
 
-  public async getCountAndDateMin(
+  public async getStatisticsByCurrency(
     currency: EnhancedSymbolProfile['currency']
-  ): Promise<[number, Date]> {
+  ): Promise<{ activitiesCount: number; dateOfFirstActivity: Date }> {
     const { _count, _min } = await this.prismaService.order.aggregate({
       _count: true,
       _min: {
@@ -560,6 +560,6 @@ export class OrderService {
       _count as number;
     const dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'] =
       _min.date;
-    return [activitiesCount, dateOfFirstActivity];
+    return { activitiesCount, dateOfFirstActivity };
   }
 }

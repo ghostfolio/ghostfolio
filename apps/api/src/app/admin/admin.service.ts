@@ -306,8 +306,8 @@ export class AdminService {
 
     if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
       currency = symbol.replace(DEFAULT_CURRENCY, '');
-      [activitiesCount, dateOfFirstActivity] =
-        await this.orderService.getCountAndDateMin(currency);
+      ({ activitiesCount, dateOfFirstActivity } =
+        await this.orderService.getStatisticsByCurrency(currency));
     }
 
     const [[assetProfile], marketData] = await Promise.all([
@@ -338,10 +338,10 @@ export class AdminService {
       marketData,
       assetProfile: assetProfile ?? {
         activitiesCount,
-        dateOfFirstActivity,
         currency,
         dataSource,
-        symbol
+        symbol,
+        dateOfFirstActivity
       }
     };
   }
@@ -437,8 +437,8 @@ export class AdminService {
 
           if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
             currency = symbol.replace(DEFAULT_CURRENCY, '');
-            [activitiesCount, dateOfFirstActivity] =
-              await this.orderService.getCountAndDateMin(currency);
+            ({ activitiesCount, dateOfFirstActivity } =
+              await this.orderService.getStatisticsByCurrency(currency));
           }
 
           const marketDataItemCount =
@@ -450,11 +450,11 @@ export class AdminService {
             })?._count ?? 0;
 
           return {
+            activitiesCount,
             currency,
             dataSource,
             marketDataItemCount,
             symbol,
-            activitiesCount,
             assetClass: AssetClass.LIQUIDITY,
             assetSubClass: AssetSubClass.CASH,
             countriesCount: 0,
