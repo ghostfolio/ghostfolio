@@ -78,7 +78,7 @@ export class ExchangeRateDataService {
       );
       const lastDateString = dateStrings.reduce((a, b) => {
         return a > b ? a : b;
-      });
+      }, undefined);
 
       let previousExchangeRate =
         exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[

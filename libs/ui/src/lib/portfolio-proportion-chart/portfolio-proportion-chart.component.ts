@@ -112,7 +112,7 @@ export class GfPortfolioProportionChartComponent
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].value = chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value.plus(this.positions[symbol].value);
+            ].value.plus(this.positions[symbol].value || 0);
 
             if (
               chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
@@ -124,20 +124,20 @@ export class GfPortfolioProportionChartComponent
                 chartData[
                   this.positions[symbol][this.keys[0]].toUpperCase()
                 ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-                  this.positions[symbol].value
+                  this.positions[symbol].value || 0
                 );
             } else {
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory[
                 this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-              ] = { value: new Big(this.positions[symbol].value) };
+              ] = { value: new Big(this.positions[symbol].value || 0) };
             }
           } else {
             chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
               name: this.positions[symbol][this.keys[0]],
               subCategory: {},
-              value: new Big(this.positions[symbol].value ?? 0)
+              value: new Big(this.positions[symbol].value || 0)
             };
 
             if (this.positions[symbol][this.keys[1]]) {
@@ -145,7 +145,7 @@ export class GfPortfolioProportionChartComponent
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory = {
                 [this.positions[symbol][this.keys[1]]]: {
-                  value: new Big(this.positions[symbol].value)
+                  value: new Big(this.positions[symbol].value || 0)
                 }
               };
             }
@@ -153,7 +153,7 @@ export class GfPortfolioProportionChartComponent
         } else {
           if (chartData[UNKNOWN_KEY]) {
             chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-              this.positions[symbol].value
+              this.positions[symbol].value || 0
             );
           } else {
             chartData[UNKNOWN_KEY] = {
@@ -161,7 +161,7 @@ export class GfPortfolioProportionChartComponent
               subCategory: this.keys[1]
                 ? { [this.keys[1]]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(this.positions[symbol].value)
+              value: new Big(this.positions[symbol].value || 0)
             };
           }
         }
@@ -170,7 +170,7 @@ export class GfPortfolioProportionChartComponent
       Object.keys(this.positions).forEach((symbol) => {
         chartData[symbol] = {
           name: this.positions[symbol].name,
-          value: new Big(this.positions[symbol].value)
+          value: new Big(this.positions[symbol].value || 0)
         };
       });
     }

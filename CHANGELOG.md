@@ -7,8 +7,154 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a dialog for the benchmarks in the markets overview
+- Extended the content of the _Self-Hosting_ section by the mobile app question on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
+- Moved the indicator for active filters from experimental to general availability
+- Improved the error handling in the biometric authentication registration
+- Set up SSL for local development
+- Upgraded the _Stripe_ dependencies
+- Upgraded `marked` from version `9.1.6` to `13.0.0`
+- Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
+- Upgraded `zone.js` from version `0.14.5` to `0.14.7`
+
+## 2.89.0 - 2024-06-14
+
+### Added
+
+- Extended the historical market data table with currencies preset by date and activities count in the admin control panel
+
+### Changed
+
+- Improved the date validation in the create, import and update activities endpoints
+- Improved the language localization for German (`de`)
+
+## 2.88.0 - 2024-06-11
+
+### Added
+
+- Set the image source label in `Dockerfile`
+
+### Changed
+
+- Improved the style of the blog post list
+- Migrated the `@ghostfolio/client` components to control flow
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `17.3.10` to `18.0.2`
+- Upgraded `Nx` from version `19.0.5` to `19.2.2`
+
+## 2.87.0 - 2024-06-08
+
+### Changed
+
+- Improved the portfolio summary
+- Improved the allocations by ETF holding on the allocations page (experimental)
+- Improved the error handling in the `HttpResponseInterceptor`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.14.0` to `5.15.0`
+
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator
+
+## 2.86.0 - 2024-06-07
+
+### Added
+
+- Introduced the allocations by ETF holding on the allocations page (experimental)
+
+### Changed
+
+- Upgraded `prettier` from version `3.2.5` to `3.3.1`
+
+## 2.85.0 - 2024-06-06
+
+### Added
+
+- Added the ability to close a user account
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
+
+### Fixed
+
+- Fixed an issue with the default locale in the value component
+
+## 2.84.0 - 2024-06-01
+
+### Added
+
+- Added the data provider information to the asset profile details dialog of the admin control
+- Added the cascading on delete for various relations in the database schema
+
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+- Fixed the state handling in the currency selector
+- Fixed the deletion of an asset profile with symbol profile overrides in the asset profile details dialog of the admin control
+
+## 2.83.0 - 2024-05-30
+
+### Changed
+
+- Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
+- Upgraded `angular` from version `17.3.5` to `17.3.10`
+- Upgraded `class-validator` from version `0.14.0` to `0.14.1`
+- Upgraded `countup.js` from version `2.3.2` to `2.8.0`
+- Upgraded `Nx` from version `19.0.2` to `19.0.5`
+- Upgraded `passport` from version `0.6.0` to `0.7.0`
+- Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
+- Upgraded `prisma` from version `5.13.0` to `5.14.0`
+- Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
+
+## 2.82.0 - 2024-05-22
+
+### Changed
+
+- Improved the usability of the create or update activity dialog by preselecting the (only) account
+- Improved the usability of the date range selector in the assistant
+- Refactored the holding detail dialog to a standalone component
+- Refreshed the cryptocurrencies list
+- Refactored various pages to standalone components
+- Upgraded `@internationalized/number` from version `3.5.0` to `3.5.2`
+- Upgraded `body-parser` from version `1.20.1` to `1.20.2`
+- Upgraded `zone.js` from version `0.14.4` to `0.14.5`
+
+## 2.81.0 - 2024-05-12
+
+### Added
+
+- Added an indicator for active filters (experimental)
+
+### Changed
+
+- Improved the delete all activities functionality on the portfolio activities page to work with the filters of the assistant
+- Improved the language localization for German (`de`)
+- Improved the language localization for Türkçe (`tr`)
+- Upgraded `Nx` from version `18.3.3` to `19.0.2`
+
+### Fixed
+
+- Fixed the position detail dialog close functionality
+
+## 2.80.0 - 2024-05-08
+
+### Added
+
+- Added the absolute change column to the holdings table on the home page
+
+### Changed
+
+- Increased the spacing around the floating action buttons (FAB)
+- Set the icon column of the activities table to stick at the beginning
+- Set the icon column of the holdings table to stick at the beginning
+- Increased the number of attempts of queue jobs from `10` to `12` (fail later)
 - Upgraded `ionicons` from version `7.3.0` to `7.4.0`
 
 ### Fixed

@@ -9,9 +9,10 @@ import { Subject } from 'rxjs';
 @Component({
   host: { class: 'page' },
   selector: 'gf-demo-page',
+  standalone: true,
   templateUrl: './demo-page.html'
 })
-export class DemoPageComponent implements OnDestroy {
+export class GfDemoPageComponent implements OnDestroy {
   public info: InfoItem;
 
   private unsubscribeSubject = new Subject<void>();

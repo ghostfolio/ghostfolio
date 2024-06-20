@@ -1,6 +1,12 @@
 :host {
   color: rgb(var(--dark-primary-text));
   display: block;
+
+  .mat-mdc-card {
+    &:hover {
+      border-color: var(--gf-theme-primary-500);
+    }
+  }
 }
 
 :host-context(.is-dark-theme) {

@@ -50,7 +50,12 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .subscribe(({ summary }) => {
         this.fireWealth = summary.fireWealth
           ? new Big(summary.fireWealth)
-          : new Big(10000);
+          : new Big(0);
+
+        if (this.user.subscription?.type === 'Basic') {
+          this.fireWealth = new Big(10000);
+        }
+
         this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 

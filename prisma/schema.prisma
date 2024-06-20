@@ -17,8 +17,8 @@ model Access {
   permissions   AccessPermission[] @default([READ_RESTRICTED])
   updatedAt     DateTime           @updatedAt
   userId        String
-  GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], references: [id])
-  User          User               @relation("accessGive", fields: [userId], references: [id])
+  GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
+  User          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -38,7 +38,7 @@ model Account {
   updatedAt  DateTime         @updatedAt
   userId     String
   Platform   Platform?        @relation(fields: [platformId], references: [id])
-  User       User             @relation(fields: [userId], references: [id])
+  User       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   Order      Order[]
 
   @@id([id, userId])
@@ -69,7 +69,7 @@ model Analytics {
   country       String?
   updatedAt     DateTime @updatedAt
   userId        String   @id
-  User          User     @relation(fields: [userId], references: [id])
+  User          User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([updatedAt])
 }
@@ -82,7 +82,7 @@ model AuthDevice {
   id                  String   @id @default(uuid())
   updatedAt           DateTime @updatedAt
   userId              String
-  User                User     @relation(fields: [userId], references: [id])
+  User                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }
@@ -123,7 +123,7 @@ model Order {
   userId          String
   Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
-  User            User          @relation(fields: [userId], references: [id])
+  User            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
   tags            Tag[]
 
   @@index([accountId])
@@ -150,7 +150,7 @@ model Settings {
   settings  Json?
   updatedAt DateTime @updatedAt
   userId    String   @id
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 }
 
 model SymbolProfile {
@@ -164,6 +164,7 @@ model SymbolProfile {
   figi                   String?
   figiComposite          String?
   figiShareClass         String?
+  holdings               Json?                   @default("[]")
   id                     String                  @id @default(uuid())
   isin                   String?
   name                   String?
@@ -189,12 +190,13 @@ model SymbolProfileOverrides {
   assetClass      AssetClass?
   assetSubClass   AssetSubClass?
   countries       Json?          @default("[]")
+  holdings        Json?          @default("[]")
   name            String?
   sectors         Json?          @default("[]")
   url             String?
   symbolProfileId String         @id
   updatedAt       DateTime       @updatedAt
-  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], references: [id])
+  SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
 }
 
 model Subscription {
@@ -204,7 +206,7 @@ model Subscription {
   price     Float?
   updatedAt DateTime @updatedAt
   userId    String
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }

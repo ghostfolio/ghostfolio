@@ -153,6 +153,7 @@ export class BenchmarkService {
       }
 
       return {
+        dataSource: benchmarkAssetProfiles[index].dataSource,
         marketCondition: this.getMarketCondition(
           performancePercentFromAllTimeHigh
         ),
@@ -163,6 +164,7 @@ export class BenchmarkService {
             performancePercent: performancePercentFromAllTimeHigh
           }
         },
+        symbol: benchmarkAssetProfiles[index].symbol,
         trend50d: benchmarkTrends[index].trend50d,
         trend200d: benchmarkTrends[index].trend200d
       };
@@ -213,7 +215,7 @@ export class BenchmarkService {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  public async getMarketDataBySymbol({
+  public async getMarketDataForUser({
     dataSource,
     endDate = new Date(),
     startDate,

@@ -3,25 +3,26 @@
     class="align-items-center d-none d-sm-flex h3 justify-content-center mb-3 text-center"
   >
     <span i18n>Granted Access</span>
-    <gf-premium-indicator
-      *ngIf="user?.subscription?.type === 'Basic'"
-      class="ml-1"
-    />
+    @if (user?.subscription?.type === 'Basic') {
+      <gf-premium-indicator class="ml-1" />
+    }
   </h1>
   <gf-access-table
     [accesses]="accesses"
     [showActions]="hasPermissionToDeleteAccess"
     (accessDeleted)="onDeleteAccess($event)"
   />
-  <div *ngIf="hasPermissionToCreateAccess" class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large" />
-    </a>
-  </div>
+  @if (hasPermissionToCreateAccess) {
+    <div class="fab-container">
+      <a
+        class="align-items-center d-flex justify-content-center"
+        color="primary"
+        mat-fab
+        [queryParams]="{ createDialog: true }"
+        [routerLink]="[]"
+      >
+        <ion-icon name="add-outline" size="large" />
+      </a>
+    </div>
+  }
 </div>

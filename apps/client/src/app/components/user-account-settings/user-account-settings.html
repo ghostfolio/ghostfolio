@@ -36,11 +36,9 @@
                     onChangeUserSetting('baseCurrency', $event.value)
                   "
                 >
-                  <mat-option
-                    *ngFor="let currency of currencies"
-                    [value]="currency"
-                    >{{ currency }}</mat-option
-                  >
+                  @for (currency of currencies; track currency) {
+                    <mat-option [value]="currency">{{ currency }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -48,20 +46,18 @@
           <div class="align-items-center d-flex mb-2">
             <div class="pr-1 w-50">
               <div i18n>Language</div>
-              <div
-                *ngIf="isCommunityLanguage()"
-                class="hint-text text-muted"
-                i18n
-              >
-                If a translation is missing, kindly support us in extending it
-                <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
-                    language
-                  }}.xlf"
-                  target="_blank"
-                  >here</a
-                >.
-              </div>
+              @if (isCommunityLanguage()) {
+                <div class="hint-text text-muted" i18n>
+                  If a translation is missing, kindly support us in extending it
+                  <a
+                    href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
+                      language
+                    }}.xlf"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              }
             </div>
             <div class="pl-1 w-50">
               <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -134,9 +130,9 @@
                   "
                 >
                   <mat-option [value]="null" />
-                  <mat-option *ngFor="let locale of locales" [value]="locale">{{
-                    locale
-                  }}</mat-option>
+                  @for (locale of locales; track locale) {
+                    <mat-option [value]="locale">{{ locale }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -193,31 +189,32 @@
             color="primary"
             hideIcon="true"
             [checked]="isWebAuthnEnabled === true"
-            [disabled]="!hasPermissionToUpdateUserSettings"
+            [disabled]="
+              !hasPermissionToUpdateUserSettings || !isFingerprintSupported
+            "
             (change)="onSignInWithFingerprintChange($event)"
           />
         </div>
       </div>
-      <div
-        *ngIf="hasPermissionToUpdateUserSettings"
-        class="align-items-center d-flex mt-4 py-1"
-      >
-        <div class="pr-1 w-50">
-          <div i18n>Experimental Features</div>
-          <div class="hint-text text-muted" i18n>
-            Sneak peek at upcoming functionality
+      @if (hasPermissionToUpdateUserSettings) {
+        <div class="align-items-center d-flex mt-4 py-1">
+          <div class="pr-1 w-50">
+            <div i18n>Experimental Features</div>
+            <div class="hint-text text-muted" i18n>
+              Sneak peek at upcoming functionality
+            </div>
+          </div>
+          <div class="pl-1 w-50">
+            <mat-slide-toggle
+              color="primary"
+              hideIcon="true"
+              [checked]="user.settings.isExperimentalFeatures"
+              [disabled]="!hasPermissionToUpdateUserSettings"
+              (change)="onExperimentalFeaturesChange($event)"
+            />
           </div>
         </div>
-        <div class="pl-1 w-50">
-          <mat-slide-toggle
-            color="primary"
-            hideIcon="true"
-            [checked]="user.settings.isExperimentalFeatures"
-            [disabled]="!hasPermissionToUpdateUserSettings"
-            (change)="onExperimentalFeaturesChange($event)"
-          />
-        </div>
-      </div>
+      }
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
@@ -232,6 +229,55 @@
           </button>
         </div>
       </div>
+      @if (hasPermissionToDeleteOwnUser) {
+        <hr class="mt-5" />
+        <form
+          class="w-100"
+          [formGroup]="deleteOwnUserForm"
+          (ngSubmit)="onCloseAccount()"
+        >
+          <div class="d-flex py-1">
+            <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
+            <div class="pl-1 w-50">
+              <mat-form-field
+                appearance="outline"
+                class="without-hint w-100"
+                [hideRequiredMarker]="true"
+              >
+                <mat-label i18n>Security Token</mat-label>
+                <input
+                  formControlName="accessToken"
+                  matInput
+                  [type]="isAccessTokenHidden ? 'password' : 'text'"
+                />
+                <button
+                  mat-button
+                  matSuffix
+                  type="button"
+                  (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                >
+                  <ion-icon
+                    [name]="
+                      isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                    "
+                  />
+                </button>
+              </mat-form-field>
+              <button
+                class="mt-2"
+                color="warn"
+                mat-flat-button
+                type="submit"
+                [disabled]="
+                  !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                "
+              >
+                <span i18n>Close Account</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      }
     </div>
   </div>
 </div>

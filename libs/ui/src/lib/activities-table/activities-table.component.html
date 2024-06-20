@@ -58,18 +58,19 @@
       <button
         class="align-items-center d-flex"
         mat-menu-item
-        (click)="onDeleteAllActivities()"
+        [disabled]="!hasPermissionToDeleteActivity"
+        (click)="onDeleteActivities()"
       >
         <span class="align-items-center d-flex">
           <ion-icon class="mr-2" name="trash-outline" />
-          <span i18n>Delete all Activities</span>
+          <span i18n>Delete Activities</span>
         </span>
       </button>
     </mat-menu>
   </div>
 }
 
-<div class="activities">
+<div class="overflow-x-auto">
   <table
     class="gf-table w-100"
     mat-table
@@ -119,7 +120,7 @@
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="icon">
+    <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
         <gf-asset-profile-icon
@@ -444,7 +445,11 @@
               <span i18n>Export Draft as ICS</span>
             </span>
           </button>
-          <button mat-menu-item (click)="onDeleteActivity(element.id)">
+          <button
+            mat-menu-item
+            [disabled]="!hasPermissionToDeleteActivity"
+            (click)="onDeleteActivity(element.id)"
+          >
             <span class="align-items-center d-flex">
               <ion-icon class="mr-2" name="trash-outline" />
               <span i18n>Delete</span>

@@ -161,7 +161,7 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 1. Run `yarn database:setup` to initialize the database schema
 1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
 1. Start the server and the client (see [_Development_](#Development))
-1. Open http://localhost:4200/en in your browser
+1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
 ### Start Server
@@ -176,7 +176,7 @@ Run `yarn start:server`
 
 ### Start Client
 
-Run `yarn start:client` and open http://localhost:4200/en in your browser
+Run `yarn start:client` and open https://localhost:4200/en in your browser
 
 ### Start _Storybook_
 
@@ -275,7 +275,7 @@ Are you building your own project? Add the `ghostfolio` topic to your _GitHub_ r
 
 Ghostfolio is **100% free** and **open source**. We encourage and support an active and healthy community that accepts contributions from the public - including you.
 
-Not sure what to work on? We have got some ideas. Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://twitter.com/ghostfolio_) on _X_. We would love to hear from you.
+Not sure what to work on? We have [some ideas](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22), even for [newcomers](https://github.com/ghostfolio/ghostfolio/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22). Please join the Ghostfolio [Slack](https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg) channel or post to [@ghostfolio\_](https://twitter.com/ghostfolio_) on _X_. We would love to hear from you.
 
 If you like to support this project, get [**Ghostfolio Premium**](https://ghostfol.io/en/pricing) or [**Buy me a coffee**](https://www.buymeacoffee.com/ghostfolio).
 

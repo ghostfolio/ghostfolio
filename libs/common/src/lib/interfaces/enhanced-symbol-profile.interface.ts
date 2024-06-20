@@ -1,6 +1,8 @@
 import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 
 import { Country } from './country.interface';
+import { DataProviderInfo } from './data-provider-info.interface';
+import { Holding } from './holding.interface';
 import { ScraperConfiguration } from './scraper-configuration.interface';
 import { Sector } from './sector.interface';
 
@@ -12,12 +14,14 @@ export interface EnhancedSymbolProfile {
   countries: Country[];
   createdAt: Date;
   currency?: string;
+  dataProviderInfo?: DataProviderInfo;
   dataSource: DataSource;
   dateOfFirstActivity?: Date;
-  id: string;
   figi?: string;
   figiComposite?: string;
   figiShareClass?: string;
+  holdings: Holding[];
+  id: string;
   isin?: string;
   name?: string;
   scraperConfiguration?: ScraperConfiguration;

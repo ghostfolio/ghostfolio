@@ -41,7 +41,7 @@ export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
-export const DEFAULT_ROOT_URL = 'http://localhost:4200';
+export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -66,7 +66,7 @@ export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 
 export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
 export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -76,7 +76,7 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
   'GATHER_HISTORICAL_MARKET_DATA';
 export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
-  attempts: 10,
+  attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
@@ -89,6 +89,7 @@ export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 
 export const MAX_CHART_ITEMS = 365;
+export const MAX_TOP_HOLDINGS = 50;
 
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';

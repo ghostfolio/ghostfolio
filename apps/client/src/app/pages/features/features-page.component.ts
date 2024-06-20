@@ -2,17 +2,28 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
+  imports: [
+    GfPremiumIndicatorComponent,
+    MatButtonModule,
+    MatCardModule,
+    RouterModule
+  ],
   selector: 'gf-features-page',
+  standalone: true,
   styleUrls: ['./features-page.scss'],
   templateUrl: './features-page.html'
 })
-export class FeaturesPageComponent implements OnDestroy {
+export class GfFeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public routerLinkRegister = ['/' + $localize`register`];

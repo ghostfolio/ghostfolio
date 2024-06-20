@@ -50,7 +50,9 @@ export class AlphaVantageService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Alpha Vantage',
+      url: 'https://www.alphavantage.co'
     };
   }
 

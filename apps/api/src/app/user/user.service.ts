@@ -121,28 +121,6 @@ export class UserService {
     return usersWithAdminRole.length > 0;
   }
 
-  public hasReadRestrictedAccessPermission({
-    impersonationId,
-    user
-  }: {
-    impersonationId: string;
-    user: UserWithSettings;
-  }) {
-    if (!impersonationId) {
-      return false;
-    }
-
-    const access = user.Access?.find(({ id }) => {
-      return id === impersonationId;
-    });
-
-    return access?.permissions?.includes('READ_RESTRICTED') ?? true;
-  }
-
-  public isRestrictedView(aUser: UserWithSettings) {
-    return aUser.Settings.settings.isRestrictedView ?? false;
-  }
-
   public async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
@@ -262,10 +240,13 @@ export class UserService {
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;
-      }
-
-      if (user.subscription?.type === 'Premium') {
+      } else if (user.subscription?.type === 'Premium') {
         currentPermissions.push(permissions.reportDataGlitch);
+
+        currentPermissions = without(
+          currentPermissions,
+          permissions.deleteOwnUser
+        );
       }
     }
 

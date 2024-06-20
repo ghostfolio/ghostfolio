@@ -313,6 +313,12 @@ export class AdminService {
       })
     ]);
 
+    if (assetProfile) {
+      assetProfile.dataProviderInfo = this.dataProviderService
+        .getDataProvider(assetProfile.dataSource)
+        .getDataProviderInfo();
+    }
+
     return {
       marketData,
       assetProfile: assetProfile ?? {
@@ -329,6 +335,7 @@ export class AdminService {
     countries,
     currency,
     dataSource,
+    holdings,
     name,
     scraperConfiguration,
     sectors,
@@ -349,6 +356,7 @@ export class AdminService {
         countries,
         currency,
         dataSource,
+        holdings,
         scraperConfiguration,
         sectors,
         symbol,
@@ -401,30 +409,49 @@ export class AdminService {
       by: ['dataSource', 'symbol']
     });
 
-    const marketData: AdminMarketDataItem[] = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
+    const marketDataPromise: Promise<AdminMarketDataItem>[] =
+      this.exchangeRateDataService
+        .getCurrencyPairs()
+        .map(async ({ dataSource, symbol }) => {
+          const currency = symbol.replace(DEFAULT_CURRENCY, '');
 
-        return {
-          dataSource,
-          marketDataItemCount,
-          symbol,
-          assetClass: AssetClass.LIQUIDITY,
-          countriesCount: 0,
-          currency: symbol.replace(DEFAULT_CURRENCY, ''),
-          id: undefined,
-          name: symbol,
-          sectorsCount: 0
-        };
-      });
+          const { _count, _min } = await this.prismaService.order.aggregate({
+            _count: true,
+            _min: {
+              date: true
+            },
+            where: {
+              SymbolProfile: {
+                currency
+              }
+            }
+          });
 
+          const marketDataItemCount =
+            marketDataItems.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
+
+          return {
+            currency,
+            dataSource,
+            marketDataItemCount,
+            symbol,
+            activitiesCount: _count as number,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countriesCount: 0,
+            date: _min.date,
+            id: undefined,
+            name: symbol,
+            sectorsCount: 0
+          };
+        });
+
+    const marketData = await Promise.all(marketDataPromise);
     return { marketData, count: marketData.length };
   }
 
