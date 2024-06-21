@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up SSL for local development
 - Upgraded the _Stripe_ dependencies
 - Upgraded `marked` from version `9.1.6` to `13.0.0`
+- Upgraded `ngx-device-detector` from version `5.0.1` to `8.0.0`
 - Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
 - Upgraded `zone.js` from version `0.14.5` to `0.14.7`
 
