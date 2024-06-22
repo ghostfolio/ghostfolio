@@ -1,3 +1,4 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,11 +14,13 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+import { isCurrency, getCurrencyFromSymbol } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  EnhancedSymbolProfile,
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -42,6 +45,7 @@ export class AdminService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -295,6 +299,16 @@ export class AdminService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
+    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+    let currency: EnhancedSymbolProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+
+    if (isCurrency(getCurrencyFromSymbol(symbol))) {
+      currency = getCurrencyFromSymbol(symbol);
+      ({ activitiesCount, dateOfFirstActivity } =
+        await this.orderService.getStatisticsByCurrency(currency));
+    }
+
     const [[assetProfile], marketData] = await Promise.all([
       this.symbolProfileService.getSymbolProfiles([
         {
@@ -322,8 +336,11 @@ export class AdminService {
     return {
       marketData,
       assetProfile: assetProfile ?? {
-        symbol,
-        currency: '-'
+        activitiesCount,
+        currency,
+        dataSource,
+        dateOfFirstActivity,
+        symbol
       }
     };
   }
@@ -413,19 +430,15 @@ export class AdminService {
       this.exchangeRateDataService
         .getCurrencyPairs()
         .map(async ({ dataSource, symbol }) => {
-          const currency = symbol.replace(DEFAULT_CURRENCY, '');
+          let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+          let currency: EnhancedSymbolProfile['currency'] = '-';
+          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-          const { _count, _min } = await this.prismaService.order.aggregate({
-            _count: true,
-            _min: {
-              date: true
-            },
-            where: {
-              SymbolProfile: {
-                currency
-              }
-            }
-          });
+          if (isCurrency(getCurrencyFromSymbol(symbol))) {
+            currency = getCurrencyFromSymbol(symbol);
+            ({ activitiesCount, dateOfFirstActivity } =
+              await this.orderService.getStatisticsByCurrency(currency));
+          }
 
           const marketDataItemCount =
             marketDataItems.find((marketDataItem) => {
@@ -436,15 +449,15 @@ export class AdminService {
             })?._count ?? 0;
 
           return {
+            activitiesCount,
             currency,
             dataSource,
             marketDataItemCount,
             symbol,
-            activitiesCount: _count as number,
             assetClass: AssetClass.LIQUIDITY,
             assetSubClass: AssetSubClass.CASH,
             countriesCount: 0,
-            date: _min.date,
+            date: dateOfFirstActivity,
             id: undefined,
             name: symbol,
             sectorsCount: 0
