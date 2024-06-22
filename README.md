@@ -161,7 +161,7 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 1. Run `yarn database:setup` to initialize the database schema
 1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
 1. Start the server and the client (see [_Development_](#Development))
-1. Open http://localhost:4200/en in your browser
+1. Open https://localhost:4200/en in your browser
 1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
 
 ### Start Server
@@ -176,7 +176,7 @@ Run `yarn start:server`
 
 ### Start Client
 
-Run `yarn start:client` and open http://localhost:4200/en in your browser
+Run `yarn start:client` and open https://localhost:4200/en in your browser
 
 ### Start _Storybook_
 

@@ -121,9 +121,7 @@
             matBadge="✓"
             matBadgeSize="small"
             [mat-menu-trigger-for]="assistantMenu"
-            [matBadgeHidden]="
-              !hasFilters || !user?.settings?.isExperimentalFeatures
-            "
+            [matBadgeHidden]="!hasFilters"
             [matMenuTriggerRestoreFocus]="false"
             (menuOpened)="onOpenAssistant()"
           >

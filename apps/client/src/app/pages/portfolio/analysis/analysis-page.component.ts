@@ -285,7 +285,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.isLoadingBenchmarkComparator = true;
 
         this.dataService
-          .fetchBenchmarkBySymbol({
+          .fetchBenchmarkForUser({
             dataSource,
             symbol,
             range: this.user?.settings?.dateRange,

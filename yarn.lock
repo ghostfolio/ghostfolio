@@ -7420,10 +7420,10 @@
     "@types/express" "^4.7.0"
     file-system-cache "2.3.0"
 
-"@stripe/stripe-js@1.47.0":
-  version "1.47.0"
-  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-1.47.0.tgz#48626a2e43302330aa826ce498a2d9761db4053d"
-  integrity sha512-jKSClqEIKS2MbPCXlSsseDSZyJ3dVrfUrYMz5LBY1o9iS2tfKbpTZACt8r2g+xyQozI+uHr76pVTyFsmBKA4Mg==
+"@stripe/stripe-js@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-3.5.0.tgz#7fff3d9d931e972c24dcc8ee25f7481a58879b2b"
+  integrity sha512-pKS3wZnJoL1iTyGBXAvCwduNNeghJHY6QSRSNNvpYnrrQrLZ6Owsazjyynu0e0ObRgks0i7Rv+pe2M7/MBTZpQ==
 
 "@swc/core-darwin-arm64@1.3.95":
   version "1.3.95"
@@ -15615,10 +15615,10 @@ markdown-to-jsx@^7.1.8:
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.3.2.tgz#f286b4d112dad3028acc1e77dfe1f653b347e131"
   integrity sha512-B+28F5ucp83aQm+OxNrPkS8z0tMKaeHiy0lHJs3LqCyDQFtWuenaIrkaVTgAm1pf1AU85LXltva86hlaT17i8Q==
 
-marked@9.1.6:
-  version "9.1.6"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-9.1.6.tgz#5d2a3f8180abfbc5d62e3258a38a1c19c0381695"
-  integrity sha512-jcByLnIFkd5gSXZmjNvS1TlmRhCXZjIzHYlaGkPlLIekG55JDR2Z4va9tZwCiP+/RDERiNhMOFu01xd6O5ct1Q==
+marked@13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-13.0.0.tgz#c18cda8a1fd0055859060c971e30f57beb79fd46"
+  integrity sha512-VTeDCd9txf4KLLljUZ0nljE/Incb9SrWuueE44QVuU0pkOdh4sfCeW1Z6lPcxyDRSVY6rm8db/0OPaN75RNUmw==
 
 mdast-util-definitions@^4.0.0:
   version "4.0.0"
@@ -16280,17 +16280,17 @@ ng-extract-i18n-merge@2.12.0:
     "@schematics/angular" "^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0"
     xmldoc "^1.1.3"
 
-ngx-device-detector@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-5.0.1.tgz#da511f0393fff7dab45a3dfa72d40981c5e81e3c"
-  integrity sha512-hVKaGzyXzy6zeliYyN7runz3eOOsh3tmZ8A6P5MSpHIjVjSx3pUJcobFTKNyHGn/zGS4JFWuhSSb7QmNwmqK9w==
+ngx-device-detector@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-device-detector/-/ngx-device-detector-8.0.0.tgz#9d7523fbfc23f7655375ac5ef750e510e709464f"
+  integrity sha512-ik6EwUKnlN+xwoWHzyJp5+V+QRWYrmpTqAvRwa16xBnAVd7/i3jElN7MZjs/InwcYz7AW3XcSNeu+XRvtHgb9w==
   dependencies:
     tslib "^2.0.0"
 
-ngx-markdown@17.1.1:
-  version "17.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-17.1.1.tgz#6e9c34fe8d470621b4609d68e8a403efb72b4e66"
-  integrity sha512-BGNWGJ6tmfPx+ScZFq5qeGLgWJwsakjScZ2e+oUzm+97DAHpIHSl8gptNZvZgRhOiFdjLcKBcuY2Rz8WB6J6UQ==
+ngx-markdown@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-markdown/-/ngx-markdown-18.0.0.tgz#68435d7b6b82906b442bcd7d10ebd763389e0887"
+  integrity sha512-sFR9dIOKobdhNKZTlCrX3RmpoAhZ7k3T9h7oWJP676Oe9BsoxuAYZKJmFDT20vrY6xmFD3WtLJDZR7rNRLf6Uw==
   dependencies:
     tslib "^2.3.0"
   optionalDependencies:
@@ -16308,10 +16308,10 @@ ngx-skeleton-loader@7.0.0:
     perf-marks "^1.13.4"
     tslib "^2.0.0"
 
-ngx-stripe@15.5.0:
-  version "15.5.0"
-  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-15.5.0.tgz#b05fc1cf9f55bb5e7f307ac5cfdf29807a2f48a9"
-  integrity sha512-Ut3JANfxSzl/4qy+pokHOXGVITgNSlSMv7XGN2Y4tPDk6BVUD9SSl/3VuXW9UdbKAmX0XS68nRACiKCOSet5zw==
+ngx-stripe@18.0.0:
+  version "18.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-stripe/-/ngx-stripe-18.0.0.tgz#bcd0932426688c89084a22670a87c868a1ae65a7"
+  integrity sha512-AT67vLeqEUDMnK5TfEaorumYJyOWqecbrh/1UWNtN8vF6Yzb0L/Dty3ANAa/QQi0OvBg6gXrudrhEnT8pT5lng==
   dependencies:
     tslib "^2.3.0"
 
@@ -19170,10 +19170,10 @@ strip-json-comments@^3.0.1, strip-json-comments@^3.1.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-3.1.1.tgz#31f1281b3832630434831c310c01cccda8cbe006"
   integrity sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==
 
-stripe@11.12.0:
-  version "11.12.0"
-  resolved "https://registry.yarnpkg.com/stripe/-/stripe-11.12.0.tgz#2d7d4c37a6447a972128b1266e027693241704e3"
-  integrity sha512-7yzFyVV/eYpYalfjnw1f9sh/N3r5QVdx5MFtmpOg2QikKVAW4AptXC8P0wj1KNCd/LIo23nTDo0+m9788jHswg==
+stripe@15.11.0:
+  version "15.11.0"
+  resolved "https://registry.yarnpkg.com/stripe/-/stripe-15.11.0.tgz#c50a682a1df34719c03674f5d0ccc37a661049fd"
+  integrity sha512-qmZF0PN1jRVpiQrXL8eTb9Jy/6S+aUlcDquKBFT2h3PkaD7RZ444FIojVXUg67FK2zFIUNXgMv02c7csdL5qHg==
   dependencies:
     "@types/node" ">=8.1.0"
     qs "^6.11.0"
@@ -20756,12 +20756,10 @@ yocto-queue@^1.0.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-1.0.0.tgz#7f816433fb2cbc511ec8bf7d263c3b58a1a3c251"
   integrity sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==
 
-zone.js@0.14.5:
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.14.5.tgz#7f3591dc4cad1a030cda86b03d10450b719dd460"
-  integrity sha512-9XYWZzY6PhHOSdkYryNcMm7L8EK7a4q+GbTvxbIA2a9lMdRUpGuyaYvLDcg8D6bdn+JomSsbPcilVKg6SmUx6w==
-  dependencies:
-    tslib "^2.3.0"
+zone.js@0.14.7:
+  version "0.14.7"
+  resolved "https://registry.yarnpkg.com/zone.js/-/zone.js-0.14.7.tgz#4a9a70599109663b1921165663bbac521995eef3"
+  integrity sha512-0w6DGkX2BPuiK/NLf+4A8FLE43QwBfuqz2dVgi/40Rj1WmqUskCqj329O/pwrqFJLG5X8wkeG2RhIAro441xtg==
 
 zone.js@~0.10.3:
   version "0.10.3"
