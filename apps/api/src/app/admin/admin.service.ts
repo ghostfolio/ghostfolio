@@ -1,3 +1,4 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,7 +14,7 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
-import { isCurrency } from '@ghostfolio/common/helper';
+import { isCurrency, getCurrencyFromSymbol } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -36,8 +37,6 @@ import {
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
-
-import { OrderService } from '../order/order.service';
 
 @Injectable()
 export class AdminService {
@@ -301,11 +300,11 @@ export class AdminService {
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
     let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
     let currency: EnhancedSymbolProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-    if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
-      currency = symbol.replace(DEFAULT_CURRENCY, '');
+    if (isCurrency(getCurrencyFromSymbol(symbol))) {
+      currency = getCurrencyFromSymbol(symbol);
       ({ activitiesCount, dateOfFirstActivity } =
         await this.orderService.getStatisticsByCurrency(currency));
     }
@@ -340,8 +339,8 @@ export class AdminService {
         activitiesCount,
         currency,
         dataSource,
-        symbol,
-        dateOfFirstActivity
+        dateOfFirstActivity,
+        symbol
       }
     };
   }
@@ -432,11 +431,11 @@ export class AdminService {
         .getCurrencyPairs()
         .map(async ({ dataSource, symbol }) => {
           let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
           let currency: EnhancedSymbolProfile['currency'] = '-';
+          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-          if (isCurrency(symbol.replace(DEFAULT_CURRENCY, ''))) {
-            currency = symbol.replace(DEFAULT_CURRENCY, '');
+          if (isCurrency(getCurrencyFromSymbol(symbol))) {
+            currency = getCurrencyFromSymbol(symbol);
             ({ activitiesCount, dateOfFirstActivity } =
               await this.orderService.getStatisticsByCurrency(currency));
           }

@@ -1,3 +1,4 @@
+import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
@@ -12,7 +13,6 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 
 import { Module } from '@nestjs/common';
 
-import { OrderModule } from '../order/order.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
 import { QueueModule } from './queue/queue.module';

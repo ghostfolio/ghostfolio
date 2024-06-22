@@ -433,6 +433,26 @@ export class OrderService {
     return { activities, count };
   }
 
+  public async getStatisticsByCurrency(
+    currency: EnhancedSymbolProfile['currency']
+  ): Promise<{
+    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+  }> {
+    const { _count, _min } = await this.prismaService.order.aggregate({
+      _count: true,
+      _min: {
+        date: true
+      },
+      where: { SymbolProfile: { currency } }
+    });
+
+    return {
+      activitiesCount: _count as number,
+      dateOfFirstActivity: _min.date
+    };
+  }
+
   public async order(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput
   ): Promise<Order | null> {
@@ -544,22 +564,5 @@ export class OrderService {
       take,
       where
     });
-  }
-
-  public async getStatisticsByCurrency(
-    currency: EnhancedSymbolProfile['currency']
-  ): Promise<{ activitiesCount: number; dateOfFirstActivity: Date }> {
-    const { _count, _min } = await this.prismaService.order.aggregate({
-      _count: true,
-      _min: {
-        date: true
-      },
-      where: { SymbolProfile: { currency } }
-    });
-    const activitiesCount: EnhancedSymbolProfile['activitiesCount'] =
-      _count as number;
-    const dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'] =
-      _min.date;
-    return { activitiesCount, dateOfFirstActivity };
   }
 }
