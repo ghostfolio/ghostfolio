@@ -138,7 +138,7 @@ export abstract class PortfolioCalculator {
       });
 
     this.redisCacheService = redisCacheService;
-    this.useCache = false; // useCache;
+    this.useCache = false; // TODO: useCache
     this.userId = userId;
 
     const { endDate, startDate } = getInterval(
