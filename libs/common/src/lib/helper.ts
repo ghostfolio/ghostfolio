@@ -13,7 +13,12 @@ import {
 } from 'date-fns';
 import { de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
 
-import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
+import {
+  DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
+  ghostfolioScraperApiSymbolPrefix,
+  locale
+} from './config';
 import { Benchmark, UniqueAsset } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
@@ -159,6 +164,10 @@ export function getCssVariable(aCssVariable: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(
     aCssVariable
   );
+}
+
+export function getCurrencyFromSymbol(aSymbol = '') {
+  return aSymbol.replace(DEFAULT_CURRENCY, '');
 }
 
 export function getDateFnsLocale(aLanguageCode: string) {
@@ -322,8 +331,18 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isCurrency(aSymbol = '') {
-  return currencies[aSymbol];
+export function isCurrency(aCurrency = '') {
+  return currencies[aCurrency] || isDerivedCurrency(aCurrency);
+}
+
+export function isDerivedCurrency(aCurrency: string) {
+  if (aCurrency === 'USX') {
+    return true;
+  }
+
+  return DERIVED_CURRENCIES.find(({ currency }) => {
+    return currency === aCurrency;
+  });
 }
 
 export function parseDate(date: string): Date | null {
