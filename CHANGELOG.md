@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
+- Fixed the horizontal overflow in the historical market data table of the admin control panel
 
 ## 2.90.0 - 2024-06-22
 
