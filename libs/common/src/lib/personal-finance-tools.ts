@@ -499,6 +499,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'See all your investments in one place'
   },
   {
+    founded: 2018,
+    hasSelfHostingAbility: false,
+    key: 'wealthy-tracker',
+    languages: ['English'],
+    name: 'Wealthy Tracker',
+    origin: `India`,
+    slogan: 'One app to manage all your investments'
+  },
+  {
     key: 'whal',
     name: 'Whal',
     origin: `United States`,
