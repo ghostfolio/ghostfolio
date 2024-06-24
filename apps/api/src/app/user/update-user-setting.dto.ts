@@ -1,4 +1,5 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+import { xRayRules } from '@ghostfolio/common/interfaces/x-ray-rule.interface';
 import type {
   ColorScheme,
   DateRange,
@@ -102,4 +103,7 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsOptional()
+  xRayRules?: xRayRules;
 }

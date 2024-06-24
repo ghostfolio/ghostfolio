@@ -1,5 +1,6 @@
 export interface PortfolioReportRule {
-  evaluation: string;
+  evaluation?: string;
+  key: string;
   name: string;
-  value: boolean;
+  value?: boolean;
 }

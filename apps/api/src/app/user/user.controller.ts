@@ -24,7 +24,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { size } from 'lodash';
+import { size, merge } from 'lodash';
 
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
@@ -144,17 +144,17 @@ export class UserController {
       );
     }
 
-    const userSettings: UserSettings = {
-      ...(<UserSettings>this.request.user.Settings.settings),
-      ...data
-    };
+    const userSettings: UserSettings = merge(
+      {},
+      <UserSettings>this.request.user.Settings.settings,
+      data
+    );
 
     for (const key in userSettings) {
       if (userSettings[key] === false || userSettings[key] === null) {
         delete userSettings[key];
       }
     }
-
     return this.userService.updateUserSetting({
       userSettings,
       userId: this.request.user.id
