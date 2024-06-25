@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `prisma` from version `5.15.0` to `5.16.0`
+
 ### Fixed
 
 - Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
