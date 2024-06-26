@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a benchmarks preset to the historical market data table of the admin control panel
+
 ### Changed
 
 - Upgraded `angular` from version `18.0.2` to `18.0.4`
 
 ### Fixed
 
+- Fixed the dialog position (center) on mobile
 - Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
 - Fixed the creation of activities with `MANUAL` data source (with no historical market data)
 
