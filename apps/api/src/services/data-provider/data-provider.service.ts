@@ -516,7 +516,8 @@ export class DataProviderService {
                   .filter((symbol) => {
                     return (
                       isNumber(response[symbol].marketPrice) &&
-                      response[symbol].marketPrice > 0
+                      response[symbol].marketPrice > 0 &&
+                      response[symbol].marketState === 'open'
                     );
                   })
                   .map((symbol) => {

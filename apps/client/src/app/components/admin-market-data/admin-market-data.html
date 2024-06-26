@@ -11,208 +11,210 @@
   </div>
   <div class="row">
     <div class="col">
-      <table
-        class="gf-table w-100"
-        mat-table
-        matSort
-        matSortActive="symbol"
-        matSortDirection="asc"
-        [dataSource]="dataSource"
-      >
-        <ng-container matColumnDef="symbol">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Symbol</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.symbol }}
-          </td>
-        </ng-container>
+      <div class="overflow-x-auto">
+        <table
+          class="gf-table w-100"
+          mat-table
+          matSort
+          matSortActive="symbol"
+          matSortDirection="asc"
+          [dataSource]="dataSource"
+        >
+          <ng-container matColumnDef="symbol">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Symbol</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.symbol }}
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="nameWithSymbol">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="symbol"
-          >
-            <ng-container i18n>Name</ng-container>
-          </th>
-          <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
-            <div class="text-truncate">{{ element.name }}</div>
-            @if (!isUUID(element.symbol)) {
-              <div>
-                <small class="text-muted">{{
-                  element.symbol | gfSymbol
-                }}</small>
-              </div>
-            }
-          </td>
-          <td *matFooterCellDef class="px-1" mat-footer-cell></td>
-        </ng-container>
-
-        <ng-container matColumnDef="dataSource">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Data Source</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.dataSource }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="assetClass">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Asset Class</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.assetClass }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="assetSubClass">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Asset Sub Class</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.assetSubClass }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="date">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
-            <ng-container i18n>First Activity</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ (element.date | date: defaultDateFormat) ?? '' }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="activitiesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
-            <ng-container i18n>Activities Count</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.activitiesCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="marketDataItemCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
-            <ng-container i18n>Historical Data</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.marketDataItemCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="sectorsCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
-            <ng-container i18n>Sectors Count</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.sectorsCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="countriesCount">
-          <th *matHeaderCellDef class="px-1" mat-header-cell>
-            <ng-container i18n>Countries Count</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
-            {{ element.countriesCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="comment">
-          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            @if (element.comment) {
-              <ion-icon class="d-block" name="document-text-outline" />
-            }
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions" stickyEnd>
-          <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
-            <button
-              class="mx-1 no-min-width px-2"
-              mat-button
-              [matMenuTriggerFor]="assetProfilesActionsMenu"
-              (click)="$event.stopPropagation()"
+          <ng-container matColumnDef="nameWithSymbol">
+            <th
+              *matHeaderCellDef
+              class="px-1"
+              mat-header-cell
+              mat-sort-header="symbol"
             >
-              <ion-icon name="ellipsis-vertical" />
-            </button>
-            <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="onGather7Days()">
-                <ng-container i18n>Gather Recent Data</ng-container>
-              </button>
-              <button mat-menu-item (click)="onGatherMax()">
-                <ng-container i18n>Gather All Data</ng-container>
-              </button>
-              <button mat-menu-item (click)="onGatherProfileData()">
-                <ng-container i18n>Gather Profile Data</ng-container>
-              </button>
-            </mat-menu>
-          </th>
-          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-            <button
-              class="mx-1 no-min-width px-2"
-              mat-button
-              [matMenuTriggerFor]="assetProfileActionsMenu"
-              (click)="$event.stopPropagation()"
-            >
-              <ion-icon name="ellipsis-horizontal" />
-            </button>
-            <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
-              <a
-                mat-menu-item
-                [queryParams]="{
-                  assetProfileDialog: true,
-                  dataSource: element.dataSource,
-                  symbol: element.symbol
-                }"
-                [routerLink]="[]"
-              >
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="create-outline" />
-                  <span i18n>Edit</span>
-                </span>
-              </a>
+              <ng-container i18n>Name</ng-container>
+            </th>
+            <td *matCellDef="let element" class="line-height-1 px-1" mat-cell>
+              <div class="text-truncate">{{ element.name }}</div>
+              @if (!isUUID(element.symbol)) {
+                <div>
+                  <small class="text-muted">{{
+                    element.symbol | gfSymbol
+                  }}</small>
+                </div>
+              }
+            </td>
+            <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataSource">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Data Source</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.dataSource }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetClass">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Asset Class</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.assetClass }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="assetSubClass">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Asset Sub Class</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ element.assetSubClass }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="date">
+            <th *matHeaderCellDef class="px-1" mat-header-cell>
+              <ng-container i18n>First Activity</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              {{ (element.date | date: defaultDateFormat) ?? '' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="activitiesCount">
+            <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
+              <ng-container i18n>Activities Count</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+              {{ element.activitiesCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="marketDataItemCount">
+            <th *matHeaderCellDef class="px-1" mat-header-cell>
+              <ng-container i18n>Historical Data</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+              {{ element.marketDataItemCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sectorsCount">
+            <th *matHeaderCellDef class="px-1" mat-header-cell>
+              <ng-container i18n>Sectors Count</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+              {{ element.sectorsCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="countriesCount">
+            <th *matHeaderCellDef class="px-1" mat-header-cell>
+              <ng-container i18n>Countries Count</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+              {{ element.countriesCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="comment">
+            <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              @if (element.comment) {
+                <ion-icon class="d-block" name="document-text-outline" />
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions" stickyEnd>
+            <th *matHeaderCellDef class="px-1 text-center" mat-header-cell>
               <button
-                mat-menu-item
-                [disabled]="
-                  element.activitiesCount !== 0 ||
-                  element.isBenchmark ||
-                  element.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
-                "
-                (click)="
-                  onDeleteProfileData({
+                class="mx-1 no-min-width px-2"
+                mat-button
+                [matMenuTriggerFor]="assetProfilesActionsMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-vertical" />
+              </button>
+              <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
+                <button mat-menu-item (click)="onGather7Days()">
+                  <ng-container i18n>Gather Recent Data</ng-container>
+                </button>
+                <button mat-menu-item (click)="onGatherMax()">
+                  <ng-container i18n>Gather All Data</ng-container>
+                </button>
+                <button mat-menu-item (click)="onGatherProfileData()">
+                  <ng-container i18n>Gather Profile Data</ng-container>
+                </button>
+              </mat-menu>
+            </th>
+            <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+              <button
+                class="mx-1 no-min-width px-2"
+                mat-button
+                [matMenuTriggerFor]="assetProfileActionsMenu"
+                (click)="$event.stopPropagation()"
+              >
+                <ion-icon name="ellipsis-horizontal" />
+              </button>
+              <mat-menu #assetProfileActionsMenu="matMenu" xPosition="before">
+                <a
+                  mat-menu-item
+                  [queryParams]="{
+                    assetProfileDialog: true,
                     dataSource: element.dataSource,
                     symbol: element.symbol
-                  })
-                "
-              >
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="trash-outline" />
-                  <span i18n>Delete</span>
-                </span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
+                  }"
+                  [routerLink]="[]"
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="create-outline" />
+                    <span i18n>Edit</span>
+                  </span>
+                </a>
+                <button
+                  mat-menu-item
+                  [disabled]="
+                    element.activitiesCount !== 0 ||
+                    element.isBenchmark ||
+                    element.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+                  "
+                  (click)="
+                    onDeleteProfileData({
+                      dataSource: element.dataSource,
+                      symbol: element.symbol
+                    })
+                  "
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="trash-outline" />
+                    <span i18n>Delete</span>
+                  </span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
 
-        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-        <tr
-          *matRowDef="let row; columns: displayedColumns"
-          class="cursor-pointer"
-          mat-row
-          (click)="
-            onOpenAssetProfileDialog({
-              dataSource: row.dataSource,
-              symbol: row.symbol
-            })
-          "
-        ></tr>
-      </table>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr
+            *matRowDef="let row; columns: displayedColumns"
+            class="cursor-pointer"
+            mat-row
+            (click)="
+              onOpenAssetProfileDialog({
+                dataSource: row.dataSource,
+                symbol: row.symbol
+              })
+            "
+          ></tr>
+        </table>
+      </div>
 
       <mat-paginator
         [length]="totalItems"
