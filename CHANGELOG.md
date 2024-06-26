@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the dialog position (center) on mobile
 - Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
 - Fixed the creation of activities with `MANUAL` data source (with no historical market data)
 
