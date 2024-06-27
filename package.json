@@ -24,7 +24,7 @@
     "database:migrate": "prisma migrate deploy",
     "database:push": "prisma db push",
     "database:seed": "prisma db seed",
-    "database:setup": "npm run database:push && npm database:seed",
+    "database:setup": "npm run database:push && npm run database:seed",
     "database:validate-schema": "prisma validate",
     "dep-graph": "nx dep-graph",
     "e2e": "ng e2e",
