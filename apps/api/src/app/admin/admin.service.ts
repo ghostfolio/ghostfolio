@@ -1,3 +1,4 @@
+import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
@@ -41,6 +42,7 @@ import { groupBy } from 'lodash';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -151,7 +153,16 @@ export class AdminService {
       [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
-    if (presetId === 'CURRENCIES') {
+    if (presetId === 'BENCHMARKS') {
+      const benchmarkAssetProfiles =
+        await this.benchmarkService.getBenchmarkAssetProfiles();
+
+      where.id = {
+        in: benchmarkAssetProfiles.map(({ id }) => {
+          return id;
+        })
+      };
+    } else if (presetId === 'CURRENCIES') {
       return this.getMarketDataForCurrencies();
     } else if (
       presetId === 'ETF_WITHOUT_COUNTRIES' ||

@@ -69,6 +69,11 @@ export class AdminMarketDataComponent
     })
     .concat([
       {
+        id: 'BENCHMARKS',
+        label: $localize`Benchmarks`,
+        type: <Filter['type']>'PRESET_ID'
+      },
+      {
         id: 'CURRENCIES',
         label: $localize`Currencies`,
         type: <Filter['type']>'PRESET_ID'
