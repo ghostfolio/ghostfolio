@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added support for derived currencies in the currency validation
 - Added support for automatic deletion of unused asset profiles when deleting activities
 
 ### Fixed
