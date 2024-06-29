@@ -204,6 +204,16 @@ export const personalFinanceTools: Product[] = [
   {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
+    key: 'holistic-capital',
+    languages: ['Deutsch'],
+    name: 'Holistic',
+    origin: `Germany`,
+    slogan: 'Die All-in-One Lösung für dein Vermögen.',
+    useAnonymously: true
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
     key: 'intuit-mint',
     name: 'Intuit Mint',
     note: 'Intuit Mint has discontinued in 2023',
