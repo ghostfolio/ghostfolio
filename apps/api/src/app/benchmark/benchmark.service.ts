@@ -135,7 +135,7 @@ export class BenchmarkService {
       Promise.all(promisesAllTimeHighs),
       Promise.all(promisesBenchmarkTrends)
     ]);
-    let storeInCache = true;
+    let storeInCache = useCache;
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } =
