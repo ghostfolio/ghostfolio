@@ -402,6 +402,13 @@ export const personalFinanceTools: Product[] = [
   },
   {
     hasFreePlan: true,
+    key: 'sharesmaster',
+    name: 'SharesMaster',
+    note: 'SharesMaster has discontinued',
+    slogan: 'Free Stock Portfolio Tracker'
+  },
+  {
+    hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'simple-portfolio',
     name: 'Simple Portfolio',
