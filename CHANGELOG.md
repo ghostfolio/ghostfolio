@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for automatic deletion of unused asset profiles when deleting activities
 
+### Fixed
+
+- Fixed an issue with the all time high in the benchmarks of the markets overview
+
 ## 2.91.0 - 2024-06-26
 
 ### Added
