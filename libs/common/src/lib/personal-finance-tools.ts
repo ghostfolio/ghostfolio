@@ -19,6 +19,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Investment Software Suite'
   },
   {
+    founded: 2016,
+    key: 'alphatrackr',
+    languages: ['English'],
+    name: 'AlphaTrackr',
+    slogan: 'Investment Portfolio Tracking Tool'
+  },
+  {
     founded: 2017,
     hasSelfHostingAbility: false,
     key: 'altoo',
