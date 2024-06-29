@@ -343,6 +343,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Tools for Better Investors'
   },
   {
+    hasFreePlan: true,
+    key: 'portfoloo',
+    name: 'Portfoloo',
+    note: 'Portfoloo has discontinued',
+    slogan:
+      'Free Stock Portfolio Tracker with unlimited portfolio and stocks for DIY investors'
+  },
+  {
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
