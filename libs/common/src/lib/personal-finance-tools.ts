@@ -27,6 +27,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Simplicity for Complex Wealth'
   },
   {
+    founded: 2018,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'anlage.app',
+    languages: ['English'],
+    name: 'Anlage.App',
+    origin: `Austria`,
+    pricingPerYear: '$120',
+    slogan: 'Analyze and track your portfolio.'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
