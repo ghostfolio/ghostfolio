@@ -276,6 +276,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your financial future, in your control'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'merlincrypto',
+    languages: ['English'],
+    name: 'Merlin',
+    origin: `United States`,
+    pricingPerYear: '$204',
+    region: 'Canada, United States',
+    slogan: 'The smartest way to track your crypto'
+  },
+  {
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
