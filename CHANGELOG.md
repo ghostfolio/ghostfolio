@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Added support for derived currencies in the currency validation
+
 ### Fixed
 
 - Fixed an issue with the all time high in the benchmarks of the markets overview
