@@ -418,6 +418,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Market Analysis & Tools for Investors'
   },
   {
+    founded: 2022,
+    key: 'segmio',
+    name: 'Segmio',
+    origin: `Romania`,
+    slogan: 'Wealth Management and Net Worth Tracking'
+  },
+  {
     founded: 2007,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
