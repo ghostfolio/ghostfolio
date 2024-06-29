@@ -1,7 +1,8 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsBoolean,
-  IsISO4217CurrencyCode,
   IsNumber,
   IsOptional,
   IsString,
@@ -20,7 +21,7 @@ export class UpdateAccountDto {
   )
   comment?: string;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   currency: string;
 
   @IsString()
