@@ -1,3 +1,4 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import type {
   ColorScheme,
   DateRange,
@@ -7,7 +8,6 @@ import type {
 import {
   IsArray,
   IsBoolean,
-  IsISO4217CurrencyCode,
   IsISO8601,
   IsIn,
   IsNumber,
@@ -21,7 +21,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   annualInterestRate?: number;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   @IsOptional()
   baseCurrency?: string;
 

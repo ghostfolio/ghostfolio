@@ -1,3 +1,4 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import { IsAfter1970Constraint } from '@ghostfolio/common/validator-constraints/is-after-1970';
 
 import {
@@ -12,7 +13,6 @@ import {
   IsArray,
   IsBoolean,
   IsEnum,
-  IsISO4217CurrencyCode,
   IsISO8601,
   IsNumber,
   IsOptional,
@@ -42,10 +42,10 @@ export class CreateOrderDto {
   )
   comment?: string;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   currency: string;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   @IsOptional()
   customCurrency?: string;
 
