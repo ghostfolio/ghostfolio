@@ -454,30 +454,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
         if (position.holdings.length > 0) {
           for (const holding of position.holdings) {
-            const { name, valueInBaseCurrency } = holding;
+            const { allocationInPercentage, name, valueInBaseCurrency } =
+              holding;
 
-            if (
-              !this.hasImpersonationId &&
-              !this.user.settings.isRestrictedView
-            ) {
-              if (this.topHoldingsMap[name]?.value) {
-                this.topHoldingsMap[name].value +=
-                  valueInBaseCurrency *
-                  (isNumber(position.valueInBaseCurrency)
-                    ? position.valueInBaseCurrency
-                    : position.valueInPercentage);
-              } else {
-                this.topHoldingsMap[name] = {
-                  name,
-                  value:
-                    valueInBaseCurrency *
-                    (isNumber(position.valueInBaseCurrency)
-                      ? this.portfolioDetails.holdings[symbol]
-                          .valueInBaseCurrency
-                      : this.portfolioDetails.holdings[symbol]
-                          .valueInPercentage)
-                };
-              }
+            if (this.topHoldingsMap[name]?.value) {
+              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+                ? valueInBaseCurrency
+                : allocationInPercentage *
+                  this.portfolioDetails.holdings[symbol].valueInPercentage;
+            } else {
+              this.topHoldingsMap[name] = {
+                name,
+                value: isNumber(valueInBaseCurrency)
+                  ? valueInBaseCurrency
+                  : allocationInPercentage *
+                    this.portfolioDetails.holdings[symbol].valueInPercentage
+              };
             }
           }
         }
@@ -562,6 +554,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
     this.topHoldings = Object.values(this.topHoldingsMap)
       .map(({ name, value }) => {
+        if (this.hasImpersonationId || this.user.settings.isRestrictedView) {
+          return {
+            name,
+            allocationInPercentage: value,
+            valueInBaseCurrency: null
+          };
+        }
+
         return {
           name,
           allocationInPercentage:
@@ -570,7 +570,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         };
       })
       .sort((a, b) => {
-        return b.valueInBaseCurrency - a.valueInBaseCurrency;
+        return b.allocationInPercentage - a.allocationInPercentage;
       });
 
     if (this.topHoldings.length > MAX_TOP_HOLDINGS) {

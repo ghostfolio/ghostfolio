@@ -221,8 +221,9 @@ export class SymbolProfileService {
         const { name, weight } = holding as Prisma.JsonObject;
 
         return {
+          allocationInPercentage: weight as number,
           name: (name as string) ?? UNKNOWN_KEY,
-          valueInBaseCurrency: weight as number
+          valueInBaseCurrency: undefined
         };
       }
     );
