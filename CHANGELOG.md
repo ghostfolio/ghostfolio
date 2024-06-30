@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for bulk deletion of asset profiles from the market data table in the admin control panel
+
 ### Changed
 
 - Added support for derived currencies in the currency validation

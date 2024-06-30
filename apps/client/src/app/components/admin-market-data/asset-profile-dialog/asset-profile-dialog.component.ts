@@ -176,7 +176,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }
