@@ -208,6 +208,54 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 
 Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>` or `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`.
 
+### Export Activities
+
+#### Request
+
+`GET http://localhost:3333/api/v1/export`
+
+#### Body
+
+```
+{
+  "meta": {
+    "date": "2024-03-29T20:33:05.038Z",
+    "version": "2.68.0"
+  },
+  "accounts": [
+    {
+      "balance": 0,
+      "comment": null,
+      "currency": "USD",
+      "id": "33333333-3333-3333-3333-333333333333",
+      "isExcluded": false,
+      "name": "SP500",
+      "platformId": null
+    }
+  ],
+  "activities": [
+    {
+      "accountId": "33333333-3333-3333-3333-333333333333",
+      "comment": null,
+      "fee": 0,
+      "id": "33333333-3333-3333-3333-333333333333",
+      "quantity": 5.00,
+      "type": "BUY",
+      "unitPrice": 500.00,
+      "currency": "EUR",
+      "dataSource": "YAHOO",
+      "date": "2023-11-19T16:17:44.130Z",
+      "symbol": "XXXX.MI"
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "CHF"
+    }
+  }
+}
+```
+
 ### Import Activities
 
 #### Request
