@@ -1,14 +1,17 @@
 import { transformToBig } from '@ghostfolio/common/class-transformer';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { HistoricalDataItem, UniqueAsset } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshot {
+  chartData: HistoricalDataItem[];
+
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
+
   errors?: UniqueAsset[];
 
   @Transform(transformToBig, { toClassOnly: true })
