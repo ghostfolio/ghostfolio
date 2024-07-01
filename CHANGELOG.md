@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.92.0 - 2024-06-30
+
+### Added
+
+- Added support for bulk deletion of asset profiles from the market data table in the admin control panel
+
+### Changed
+
+- Added support for derived currencies in the currency validation
+- Added support for automatic deletion of unused asset profiles when deleting activities
+- Improved the caching of the benchmarks in the markets overview (only cache if needed)
+- Upgraded `prisma` from version `5.15.0` to `5.16.1`
+
+### Fixed
+
+- Fixed an issue with the all time high in the benchmarks of the markets overview
+
 ## 2.91.0 - 2024-06-26
 
 ### Added
