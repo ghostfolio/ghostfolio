@@ -150,15 +150,14 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/en/download) (version 18+)
-- [Yarn](https://yarnpkg.com/en/docs/install)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
 ### Setup
 
-1. Run `yarn install`
+1. Run `npm install`
 1. Run `docker compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-1. Run `yarn database:setup` to initialize the database schema
+1. Run `npm run database:setup` to initialize the database schema
 1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
 1. Start the server and the client (see [_Development_](#Development))
 1. Open https://localhost:4200/en in your browser
@@ -168,31 +167,31 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 
 #### Debug
 
-Run `yarn watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
+Run `npm run watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
 
 #### Serve
 
-Run `yarn start:server`
+Run `npm run start:server`
 
 ### Start Client
 
-Run `yarn start:client` and open https://localhost:4200/en in your browser
+Run `npm run start:client` and open https://localhost:4200/en in your browser
 
 ### Start _Storybook_
 
-Run `yarn start:storybook`
+Run `npm run start:storybook`
 
 ### Migrate Database
 
 With the following command you can keep your database schema in sync:
 
 ```bash
-yarn database:push
+npm run database:push
 ```
 
 ## Testing
 
-Run `yarn test`
+Run `npm test`
 
 ## Public API
 

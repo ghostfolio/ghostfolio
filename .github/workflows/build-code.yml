@@ -24,16 +24,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node_version }}
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
 
       - name: Check formatting
-        run: yarn format:check
+        run: npm run format:check
 
       - name: Execute tests
-        run: yarn test
+        run: npm test
 
       - name: Build application
-        run: yarn build:production
+        run: npm run build:production
