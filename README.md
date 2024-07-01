@@ -89,7 +89,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 | ------------------------ | ------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `ACCESS_TOKEN_SALT`      | string              |               | A random string used as salt for access tokens                                                                                      |
 | `API_KEY_COINGECKO_DEMO` | string (`optional`) |               | The _CoinGecko_ Demo API key                                                                                                        |
-| `API_KEY_COINGECKO_PRO`  | string (`optional`) |               | The _CoinGecko_ Pro API                                                                                                             |
+| `API_KEY_COINGECKO_PRO`  | string (`optional`) |               | The _CoinGecko_ Pro API key                                                                                                         |
 | `DATABASE_URL`           | string              |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
 | `HOST`                   | string (`optional`) | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
 | `JWT_SECRET_KEY`         | string              |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
