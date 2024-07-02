@@ -62,7 +62,7 @@ export class AccountService {
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
 
-    include.balances = { orderBy: { date: 'desc' }, take: 1 };
+    include.balances = { orderBy: { createdAt: 'desc' }, take: 1 };
 
     const accounts = await this.prismaService.account.findMany({
       cursor,
