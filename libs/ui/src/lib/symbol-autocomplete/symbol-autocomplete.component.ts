@@ -34,11 +34,13 @@ import {
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isString } from 'lodash';
-import { Subject, tap } from 'rxjs';
+import { combineLatest, Subject, tap } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  map,
+  startWith,
   switchMap,
   takeUntil
 } from 'rxjs/operators';
@@ -78,7 +80,8 @@ export class GfSymbolAutocompleteComponent
   implements OnInit, OnDestroy
 {
   @Input() private includeIndices = false;
-  @Input() public isLoading = false;
+  @Input() public isLoadingLocal = false;
+  @Input() public isLoadingRemote = false;
 
   @ViewChild(MatInput) private input: MatInput;
 
@@ -124,26 +127,50 @@ export class GfSymbolAutocompleteComponent
         }),
         takeUntil(this.unsubscribeSubject),
         tap(() => {
-          this.isLoading = true;
+          this.isLoadingRemote = true;
+          this.isLoadingLocal = true;
 
           this.changeDetectorRef.markForCheck();
         }),
-        switchMap((query: string) => {
-          return this.dataService.fetchSymbols({
-            query,
-            includeIndices: this.includeIndices
-          });
-        })
+        switchMap((query: string) =>
+          combineLatest([
+            this.dataService
+              .fetchPortfolioLookup({
+                query
+              })
+              .pipe(startWith(undefined)),
+            this.dataService
+              .fetchSymbols({
+                query,
+                includeIndices: this.includeIndices
+              })
+              .pipe(startWith(undefined))
+          ])
+        )
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+        const [localItems, remoteItems]: [LookupItem[], LookupItem[]] =
+          filteredLookupItems;
+        const uniqueItems = [
+          ...new Map(
+            (localItems ?? [])
+              .concat(remoteItems ?? [])
+              .map((item) => [item.symbol, item])
+          ).values()
+        ];
+        this.filteredLookupItems = uniqueItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
           };
         });
 
-        this.isLoading = false;
+        if (localItems !== undefined) {
+          this.isLoadingLocal = false;
+        }
+        if (remoteItems !== undefined) {
+          this.isLoadingRemote = false;
+        }
 
         this.changeDetectorRef.markForCheck();
       });
