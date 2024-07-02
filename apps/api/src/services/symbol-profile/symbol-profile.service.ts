@@ -240,6 +240,7 @@ export class SymbolProfileService {
         headers:
           scraperConfiguration.headers as ScraperConfiguration['headers'],
         locale: scraperConfiguration.locale as string,
+        postprocessor: scraperConfiguration.postprocessor as string,
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };
