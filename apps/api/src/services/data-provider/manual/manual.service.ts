@@ -257,7 +257,7 @@ export class ManualService implements DataProviderInterface {
         signal: abortController.signal
       });
 
-      if (headers['content-type'] === 'application/json') {
+      if (headers['content-type'].includes('application/json')) {
         const data = JSON.parse(body);
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
