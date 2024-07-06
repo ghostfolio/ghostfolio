@@ -135,7 +135,7 @@ export class BenchmarkService {
       Promise.all(promisesAllTimeHighs),
       Promise.all(promisesBenchmarkTrends)
     ]);
-    let storeInCache = true;
+    let storeInCache = useCache;
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } =
@@ -161,7 +161,10 @@ export class BenchmarkService {
         performances: {
           allTimeHigh: {
             date: allTimeHigh?.date,
-            performancePercent: performancePercentFromAllTimeHigh
+            performancePercent:
+              performancePercentFromAllTimeHigh >= 0
+                ? 0
+                : performancePercentFromAllTimeHigh
           }
         },
         symbol: benchmarkAssetProfiles[index].symbol,
@@ -419,7 +422,7 @@ export class BenchmarkService {
   private getMarketCondition(
     aPerformanceInPercent: number
   ): Benchmark['marketCondition'] {
-    if (aPerformanceInPercent === 0) {
+    if (aPerformanceInPercent >= 0) {
       return 'ALL_TIME_HIGH';
     } else if (aPerformanceInPercent <= -0.2) {
       return 'BEAR_MARKET';

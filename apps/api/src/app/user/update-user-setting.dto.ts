@@ -1,3 +1,4 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import { xRayRules } from '@ghostfolio/common/interfaces/x-ray-rule.interface';
 import type {
   ColorScheme,
@@ -8,7 +9,6 @@ import type {
 import {
   IsArray,
   IsBoolean,
-  IsISO4217CurrencyCode,
   IsISO8601,
   IsIn,
   IsNumber,
@@ -22,7 +22,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   annualInterestRate?: number;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   @IsOptional()
   baseCurrency?: string;
 

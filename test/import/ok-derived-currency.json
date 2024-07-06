@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "date": "2024-06-28T00:00:00.000Z",
+    "version": "dev"
+  },
+  "accounts": [
+    {
+      "balance": 2000,
+      "currency": "USD",
+      "id": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
+      "isExcluded": false,
+      "name": "My Online Trading Account",
+      "platformId": null
+    }
+  ],
+  "activities": [
+    {
+      "accountId": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
+      "comment": null,
+      "fee": 0,
+      "quantity": 5,
+      "type": "BUY",
+      "unitPrice": 10875.00,
+      "currency": "ZAc",
+      "dataSource": "YAHOO",
+      "date": "2024-06-27T22:00:00.000Z",
+      "symbol": "JSE.JO"
+    }
+  ]
+}

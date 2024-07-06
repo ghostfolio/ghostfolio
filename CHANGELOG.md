@@ -7,9 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
+- Improved the detection of REST APIs (`JSON`) used via the scraper configuration
+
+## 2.92.0 - 2024-06-30
+
+### Added
+
+- Added support for bulk deletion of asset profiles from the market data table in the admin control panel
+
+### Changed
+
+- Added support for derived currencies in the currency validation
+- Added support for automatic deletion of unused asset profiles when deleting activities
+- Improved the caching of the benchmarks in the markets overview (only cache if needed)
+- Upgraded `prisma` from version `5.15.0` to `5.16.1`
+
 ### Fixed
 
+- Fixed an issue with the all time high in the benchmarks of the markets overview
+
+## 2.91.0 - 2024-06-26
+
+### Added
+
+- Added a benchmarks preset to the historical market data table of the admin control panel
+
+### Changed
+
+- Upgraded `angular` from version `18.0.2` to `18.0.4`
+
+### Fixed
+
+- Fixed the dialog position (center) on mobile
+- Fixed the horizontal overflow in the historical market data table of the admin control panel
 - Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
+- Fixed the creation of activities with `MANUAL` data source (with no historical market data)
 
 ## 2.90.0 - 2024-06-22
 
