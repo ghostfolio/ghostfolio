@@ -1,4 +1,4 @@
-export interface xRayRules {
+export interface XRayRules {
   AccountClusterRiskCurrentInvestment?: Rule;
   AccountClusterRiskSingleAccount?: Rule;
   CurrencyClusterRiskBaseCurrencyCurrentInvestment?: Rule;

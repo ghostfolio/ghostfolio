@@ -1,3 +1,4 @@
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -144,6 +145,29 @@ export class FirePageComponent implements OnDestroy, OnInit {
           .subscribe((user) => {
             this.user = user;
 
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onRulesUpdated(event: UpdateUserSettingDto) {
+    this.isLoading = true;
+    this.dataService
+      .putUserSetting(event)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.dataService
+          .fetchPortfolioReport()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((portfolioReport) => {
+            this.accountClusterRiskRules =
+              portfolioReport.rules['accountClusterRisk'] || null;
+            this.currencyClusterRiskRules =
+              portfolioReport.rules['currencyClusterRisk'] || null;
+            this.emergencyFundRules =
+              portfolioReport.rules['emergencyFund'] || null;
+            this.feeRules = portfolioReport.rules['fees'] || null;
+            this.isLoading = false;
             this.changeDetectorRef.markForCheck();
           });
       });

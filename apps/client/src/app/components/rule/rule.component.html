@@ -16,16 +16,13 @@
         class="align-items-center d-flex icon-container mr-2 px-2"
         [ngClass]="{
           okay: rule?.value === true,
-          warn: rule?.value === false,
-          disabled: rule?.value === undefined
+          warn: rule?.value === false
         }"
       >
         @if (rule?.value === true) {
           <ion-icon name="checkmark-circle-outline" />
-        } @else if (rule?.value === false) {
-          <ion-icon name="warning-outline" />
         } @else {
-          <ion-icon name="close-outline" />
+          <ion-icon name="warning-outline" />
         }
       </div>
     }
@@ -53,31 +50,27 @@
         <div class="evaluation">
           @if (rule?.evaluation) {
             {{ rule?.evaluation }}
-          } @else {
-            Rule is disabled
           }
-          <div class="float-right">
-            <button
-              class="mx-1 no-min-width px-2"
-              mat-button
-              [matMenuTriggerFor]="accountMenu"
-              (click)="$event.stopPropagation()"
-            >
-              <ion-icon name="ellipsis-horizontal" />
-            </button>
-            <mat-menu #accountMenu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="onUpdateAccount(rule)">
-                <span class="align-items-center d-flex">
-                  @if (rule?.evaluation) {
-                    Disable
-                  } @else {
-                    Enable
-                  }
-                </span>
-              </button>
-            </mat-menu>
-          </div>
         </div>
+      </div>
+      <div>
+        <button
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="accountMenu"
+          (click)="$event.stopPropagation()"
+        >
+          <ion-icon name="ellipsis-horizontal" />
+        </button>
+        <mat-menu #accountMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="onUpdateRule(rule)">
+            @if (rule?.evaluation) {
+              <ng-container i18n>Deactivate</ng-container>
+            } @else {
+              <ng-container i18n>Activate</ng-container>
+            }
+          </button>
+        </mat-menu>
       </div>
     }
   </div>
