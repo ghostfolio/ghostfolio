@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Crypto Coins Heatmap_ to the resources section
+- Added the _Stock Heatmap_ to the resources section
+
 ### Changed
 
 - Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
