@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
 - Improved the detection of REST APIs (`JSON`) used via the scraper configuration
+- Refreshed the cryptocurrencies list
 - Refactored the thresholds of the rules in the _X-ray_ section
 - Removed the obsolete `version` from the `docker-compose` files
 - Upgraded `Nx` from version `19.2.2` to `19.4.0`
