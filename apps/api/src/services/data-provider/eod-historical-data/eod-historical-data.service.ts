@@ -246,7 +246,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       for (const { close, code, timestamp } of quotes) {
         let currency: string;
 
-        if (code.endsWith('.FOREX')) {
+        if (this.isForex(code)) {
           currency = this.convertFromEodSymbol(code)?.replace(
             DEFAULT_CURRENCY,
             ''
@@ -272,7 +272,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
             currency,
             dataSource: this.getName(),
             marketPrice: close,
-            marketState: isToday(new Date(timestamp * 1000)) ? 'open' : 'closed'
+            marketState:
+              this.isForex(code) || isToday(new Date(timestamp * 1000))
+                ? 'open'
+                : 'closed'
           };
         } else {
           Logger.error(
@@ -311,7 +314,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       items: searchResult
         .filter(({ currency, symbol }) => {
           // Remove 'NA' currency and exchange rates
-          return currency?.length === 3 && !symbol.endsWith('.FOREX');
+          return currency?.length === 3 && !this.isForex(symbol);
         })
         .map(
           ({
@@ -349,7 +352,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private convertFromEodSymbol(aEodSymbol: string) {
     let symbol = aEodSymbol;
 
-    if (symbol.endsWith('.FOREX')) {
+    if (this.isForex(symbol)) {
       symbol = symbol.replace('GBX', 'GBp');
       symbol = symbol.replace('.FOREX', '');
     }
@@ -449,6 +452,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     return searchResult;
+  }
+
+  private isForex(aCode: string) {
+    return aCode?.endsWith('.FOREX') || false;
   }
 
   private parseAssetClass({
