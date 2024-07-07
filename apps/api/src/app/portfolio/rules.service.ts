@@ -17,14 +17,17 @@ export class RulesService {
         const { evaluation, value } = rule.evaluate(
           rule.getSettings(aUserSettings)
         );
+
         return {
           evaluation,
-          value,
+          isActive: true,
           key: rule.getKey(),
-          name: rule.getName()
+          name: rule.getName(),
+          value
         };
       } else {
         return {
+          isActive: false,
           key: rule.getKey(),
           name: rule.getName()
         };

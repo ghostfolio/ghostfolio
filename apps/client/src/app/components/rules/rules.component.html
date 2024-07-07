@@ -13,8 +13,8 @@
         <gf-rule [isLoading]="true" />
       }
       @if (rules !== null && rules !== undefined) {
-        @for (rule of rules; track rule) {
-          <gf-rule [rule]="rule" />
+        @for (rule of rules; track rule.key) {
+          <gf-rule [rule]="rule" (ruleUpdated)="onRulesUpdated($event)" />
         }
       }
     </div>

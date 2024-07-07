@@ -5,7 +5,7 @@ import {
   ViewMode
 } from '@ghostfolio/common/types';
 
-import { xRayRules } from './x-ray-rule.interface';
+import { XRayRules } from './x-ray-rule.interface';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -25,5 +25,5 @@ export interface UserSettings {
   retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
-  xRayRules?: xRayRules;
+  xRayRules?: XRayRules;
 }

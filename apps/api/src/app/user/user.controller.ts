@@ -155,6 +155,7 @@ export class UserController {
         delete userSettings[key];
       }
     }
+
     return this.userService.updateUserSetting({
       userSettings,
       userId: this.request.user.id
