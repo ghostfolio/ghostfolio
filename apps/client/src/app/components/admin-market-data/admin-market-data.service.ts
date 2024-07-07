@@ -42,7 +42,7 @@ export class AdminMarketDataService {
       forkJoin(deleteRequests)
         .pipe(
           catchError(() => {
-            alert($localize`Oops! Could not delete asset profiles.`);
+            alert($localize`Oops! Could not delete profiles.`);
 
             return EMPTY;
           }),
