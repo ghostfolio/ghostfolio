@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the _Crypto Coins Heatmap_ to the resources section
 - Added the _Stock Heatmap_ to the resources section
+- Extended the content of the _Self-Hosting_ section by the platforms concept on the Frequently Asked Questions (FAQ) page
 
 ### Changed
 
