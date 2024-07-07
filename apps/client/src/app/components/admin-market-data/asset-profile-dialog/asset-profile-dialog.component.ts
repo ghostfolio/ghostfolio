@@ -8,7 +8,6 @@ import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  Currency,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -73,7 +72,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
@@ -102,10 +101,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.currencies = currencies.map((currency) => ({
-      label: currency,
-      value: currency
-    }));
+    this.currencies = currencies;
 
     this.initialize();
   }
@@ -180,7 +176,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }
@@ -293,9 +289,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetClass: this.assetProfileForm.get('assetClass').value,
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
       comment: this.assetProfileForm.get('comment').value || null,
-      currency: (<Currency>(
-        (<unknown>this.assetProfileForm.get('currency').value)
-      ))?.value,
+      currency: this.assetProfileForm.get('currency').value,
       name: this.assetProfileForm.get('name').value,
       url: this.assetProfileForm.get('url').value || null
     };
@@ -343,8 +337,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             ' ' +
             price +
             ' ' +
-            (<Currency>(<unknown>this.assetProfileForm.get('currency').value))
-              ?.value
+            this.assetProfileForm.get('currency').value
         );
       });
   }

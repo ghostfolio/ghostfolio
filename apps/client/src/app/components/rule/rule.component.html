@@ -1,43 +1,51 @@
 <div class="py-3">
   <div class="align-items-center flex-nowrap no-gutters row">
-    <div *ngIf="isLoading">
-      <ngx-skeleton-loader
-        animation="pulse"
-        class="mr-2"
-        [theme]="{
-          height: '2rem',
-          width: '2rem'
-        }"
-      />
-    </div>
-    <div
-      *ngIf="!isLoading"
-      class="align-items-center d-flex icon-container mr-2 px-2"
-      [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
-    >
-      <ion-icon *ngIf="rule?.value === true" name="checkmark-circle-outline" />
-      <ion-icon *ngIf="rule?.value === false" name="warning-outline" />
-    </div>
-    <div *ngIf="isLoading" class="flex-grow-1">
-      <ngx-skeleton-loader
-        animation="pulse"
-        class="mt-1 mb-1"
-        [theme]="{
-          height: '1rem',
-          width: '10rem'
-        }"
-      />
-      <ngx-skeleton-loader
-        animation="pulse"
-        [theme]="{
-          height: '1rem',
-          width: '15rem'
-        }"
-      />
-    </div>
-    <div *ngIf="!isLoading" class="flex-grow-1">
-      <div class="h6 my-1">{{ rule?.name }}</div>
-      <div class="evaluation">{{ rule?.evaluation }}</div>
-    </div>
+    @if (isLoading) {
+      <div>
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mr-2"
+          [theme]="{
+            height: '2rem',
+            width: '2rem'
+          }"
+        />
+      </div>
+    } @else {
+      <div
+        class="align-items-center d-flex icon-container mr-2 px-2"
+        [ngClass]="{ okay: rule?.value === true, warn: rule?.value === false }"
+      >
+        @if (rule?.value === true) {
+          <ion-icon name="checkmark-circle-outline" />
+        } @else {
+          <ion-icon name="warning-outline" />
+        }
+      </div>
+    }
+    @if (isLoading) {
+      <div class="flex-grow-1">
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="mt-1 mb-1"
+          [theme]="{
+            height: '1rem',
+            width: '10rem'
+          }"
+        />
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{
+            height: '1rem',
+            width: '15rem'
+          }"
+        />
+      </div>
+    } @else {
+      <div class="flex-grow-1">
+        <div class="h6 my-1">{{ rule?.name }}</div>
+        <div class="evaluation">{{ rule?.evaluation }}</div>
+      </div>
+    }
   </div>
 </div>

@@ -116,10 +116,21 @@
         >
       </div>
       <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [value]="
+            assetProfile?.dataProviderInfo?.name ?? assetProfile?.dataSource
+          "
+          >Data Source</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="assetProfile?.currency"
           >Currency</gf-value
         >
       </div>
+      <div class="col-6 mb-3"></div>
       <div class="col-6 mb-3">
         <gf-value
           i18n
@@ -135,7 +146,7 @@
           i18n
           size="medium"
           [locale]="data.locale"
-          [value]="assetProfile?.activitiesCount ?? 0"
+          [value]="assetProfile?.activitiesCount"
           >Activities</gf-value
         >
       </div>
@@ -232,11 +243,11 @@
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetClass of assetClasses"
-            [value]="assetClass.id"
-            >{{ assetClass.label }}</mat-option
-          >
+          @for (assetClass of assetClasses; track assetClass) {
+            <mat-option [value]="assetClass.id">{{
+              assetClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -245,11 +256,11 @@
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetSubClass of assetSubClasses"
-            [value]="assetSubClass.id"
-            >{{ assetSubClass.label }}</mat-option
-          >
+          @for (assetSubClass of assetSubClasses; track assetSubClass) {
+            <mat-option [value]="assetSubClass.id">{{
+              assetSubClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>

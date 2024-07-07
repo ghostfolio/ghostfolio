@@ -13,10 +13,7 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/da
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
-} from '@ghostfolio/common/config';
+import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
@@ -295,6 +292,7 @@ export class ImportService {
         figi,
         figiComposite,
         figiShareClass,
+        holdings,
         id,
         isin,
         name,
@@ -367,6 +365,7 @@ export class ImportService {
             figi,
             figiComposite,
             figiShareClass,
+            holdings,
             id,
             isin,
             name,
@@ -538,6 +537,7 @@ export class ImportService {
             assetSubClass: undefined,
             countries: undefined,
             createdAt: undefined,
+            holdings: undefined,
             id: undefined,
             sectors: undefined,
             updatedAt: undefined

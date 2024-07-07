@@ -24,110 +24,121 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>Currencies</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            [isInPercent]="true"
-            [keys]="['currency']"
-            [maxItems]="10"
-            [positions]="positions"
-          />
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>Sectors</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="sectors"
-          />
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div *ngIf="portfolioPublicDetails?.hasDetails" class="col-md-4">
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>Continents</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <gf-portfolio-proportion-chart
-            [isInPercent]="true"
-            [keys]="['name']"
-            [positions]="continents"
-          />
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-  <div *ngIf="portfolioPublicDetails?.hasDetails" class="row world-map-chart">
-    <div class="col-lg">
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-header class="overflow-hidden w-100">
-          <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="world-map-chart-container">
-            <gf-world-map-chart
-              format="{0}%"
-              [countries]="countries"
-              [isInPercent]="true"
-            />
-          </div>
-          <div class="row">
-            <div class="col-xs-12 col-md my-2">
-              <gf-value
-                i18n
-                size="large"
-                [isPercent]="true"
-                [value]="markets?.developedMarkets?.value"
-                >Developed Markets</gf-value
-              >
-            </div>
-            <div class="col-xs-12 col-md my-2">
-              <gf-value
-                i18n
-                size="large"
-                [isPercent]="true"
-                [value]="markets?.emergingMarkets?.value"
-                >Emerging Markets</gf-value
-              >
-            </div>
-            <div class="col-xs-12 col-md my-2">
-              <gf-value
-                i18n
-                size="large"
-                [isPercent]="true"
-                [value]="markets?.otherMarkets?.value"
-                >Other Markets</gf-value
-              >
-            </div>
-            <div
-              *ngIf="markets?.[UNKNOWN_KEY]?.value > 0"
-              class="col-xs-12 col-md my-2"
+    @if (portfolioPublicDetails?.hasDetails) {
+      <div class="col-md-4">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >Currencies</mat-card-title
             >
-              <gf-value
-                i18n
-                size="large"
-                [isPercent]="true"
-                [value]="markets?.[UNKNOWN_KEY]?.value"
-                >No data available</gf-value
-              >
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-portfolio-proportion-chart
+              [isInPercent]="true"
+              [keys]="['currency']"
+              [maxItems]="10"
+              [positions]="positions"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+    @if (portfolioPublicDetails?.hasDetails) {
+      <div class="col-md-4">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n>Sectors</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <gf-portfolio-proportion-chart
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="sectors"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
+    @if (portfolioPublicDetails?.hasDetails) {
+      <div class="col-md-4">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n
+              >Continents</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <gf-portfolio-proportion-chart
+              [isInPercent]="true"
+              [keys]="['name']"
+              [positions]="continents"
+            />
+          </mat-card-content>
+        </mat-card>
+      </div>
+    }
   </div>
+  @if (portfolioPublicDetails?.hasDetails) {
+    <div class="row world-map-chart">
+      <div class="col-lg">
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header class="overflow-hidden w-100">
+            <mat-card-title class="text-truncate" i18n>Regions</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="world-map-chart-container">
+              <gf-world-map-chart
+                format="{0}%"
+                [countries]="countries"
+                [isInPercent]="true"
+              />
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-md my-2">
+                <gf-value
+                  i18n
+                  size="large"
+                  [isPercent]="true"
+                  [value]="markets?.developedMarkets?.value"
+                  >Developed Markets</gf-value
+                >
+              </div>
+              <div class="col-xs-12 col-md my-2">
+                <gf-value
+                  i18n
+                  size="large"
+                  [isPercent]="true"
+                  [value]="markets?.emergingMarkets?.value"
+                  >Emerging Markets</gf-value
+                >
+              </div>
+              <div class="col-xs-12 col-md my-2">
+                <gf-value
+                  i18n
+                  size="large"
+                  [isPercent]="true"
+                  [value]="markets?.otherMarkets?.value"
+                  >Other Markets</gf-value
+                >
+              </div>
+              @if (markets?.[UNKNOWN_KEY]?.value > 0) {
+                <div class="col-xs-12 col-md my-2">
+                  <gf-value
+                    i18n
+                    size="large"
+                    [isPercent]="true"
+                    [value]="markets?.[UNKNOWN_KEY]?.value"
+                    >No data available</gf-value
+                  >
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
   <div class="row">
     <div class="col-lg">
       <gf-holdings-table

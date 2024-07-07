@@ -3,12 +3,13 @@
   [formControl]="optionFormControl"
   (change)="onValueChange()"
 >
-  <mat-radio-button
-    *ngFor="let option of options"
-    class="d-inline-flex"
-    [disabled]="isLoading"
-    [ngClass]="{ 'cursor-pointer': !isLoading }"
-    [value]="option.value"
-    >{{ option.label }}</mat-radio-button
-  >
+  @for (option of options; track option) {
+    <mat-radio-button
+      class="d-inline-flex"
+      [disabled]="isLoading"
+      [ngClass]="{ 'cursor-pointer': !isLoading }"
+      [value]="option.value"
+      >{{ option.label }}</mat-radio-button
+    >
+  }
 </mat-radio-group>

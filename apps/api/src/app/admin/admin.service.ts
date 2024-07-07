@@ -1,3 +1,5 @@
+import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,11 +15,13 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
+import { isCurrency, getCurrencyFromSymbol } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  EnhancedSymbolProfile,
   Filter,
   UniqueAsset
 } from '@ghostfolio/common/interfaces';
@@ -38,10 +42,12 @@ import { groupBy } from 'lodash';
 @Injectable()
 export class AdminService {
   public constructor(
+    private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -147,7 +153,16 @@ export class AdminService {
       [{ symbol: 'asc' }];
     const where: Prisma.SymbolProfileWhereInput = {};
 
-    if (presetId === 'CURRENCIES') {
+    if (presetId === 'BENCHMARKS') {
+      const benchmarkAssetProfiles =
+        await this.benchmarkService.getBenchmarkAssetProfiles();
+
+      where.id = {
+        in: benchmarkAssetProfiles.map(({ id }) => {
+          return id;
+        })
+      };
+    } else if (presetId === 'CURRENCIES') {
       return this.getMarketDataForCurrencies();
     } else if (
       presetId === 'ETF_WITHOUT_COUNTRIES' ||
@@ -295,6 +310,16 @@ export class AdminService {
     dataSource,
     symbol
   }: UniqueAsset): Promise<AdminMarketDataDetails> {
+    let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+    let currency: EnhancedSymbolProfile['currency'] = '-';
+    let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+
+    if (isCurrency(getCurrencyFromSymbol(symbol))) {
+      currency = getCurrencyFromSymbol(symbol);
+      ({ activitiesCount, dateOfFirstActivity } =
+        await this.orderService.getStatisticsByCurrency(currency));
+    }
+
     const [[assetProfile], marketData] = await Promise.all([
       this.symbolProfileService.getSymbolProfiles([
         {
@@ -313,11 +338,20 @@ export class AdminService {
       })
     ]);
 
+    if (assetProfile) {
+      assetProfile.dataProviderInfo = this.dataProviderService
+        .getDataProvider(assetProfile.dataSource)
+        .getDataProviderInfo();
+    }
+
     return {
       marketData,
       assetProfile: assetProfile ?? {
-        symbol,
-        currency: '-'
+        activitiesCount,
+        currency,
+        dataSource,
+        dateOfFirstActivity,
+        symbol
       }
     };
   }
@@ -329,6 +363,7 @@ export class AdminService {
     countries,
     currency,
     dataSource,
+    holdings,
     name,
     scraperConfiguration,
     sectors,
@@ -349,6 +384,7 @@ export class AdminService {
         countries,
         currency,
         dataSource,
+        holdings,
         scraperConfiguration,
         sectors,
         symbol,
@@ -401,30 +437,45 @@ export class AdminService {
       by: ['dataSource', 'symbol']
     });
 
-    const marketData: AdminMarketDataItem[] = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .map(({ dataSource, symbol }) => {
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
+    const marketDataPromise: Promise<AdminMarketDataItem>[] =
+      this.exchangeRateDataService
+        .getCurrencyPairs()
+        .map(async ({ dataSource, symbol }) => {
+          let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+          let currency: EnhancedSymbolProfile['currency'] = '-';
+          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-        return {
-          dataSource,
-          marketDataItemCount,
-          symbol,
-          assetClass: AssetClass.LIQUIDITY,
-          countriesCount: 0,
-          currency: symbol.replace(DEFAULT_CURRENCY, ''),
-          id: undefined,
-          name: symbol,
-          sectorsCount: 0
-        };
-      });
+          if (isCurrency(getCurrencyFromSymbol(symbol))) {
+            currency = getCurrencyFromSymbol(symbol);
+            ({ activitiesCount, dateOfFirstActivity } =
+              await this.orderService.getStatisticsByCurrency(currency));
+          }
 
+          const marketDataItemCount =
+            marketDataItems.find((marketDataItem) => {
+              return (
+                marketDataItem.dataSource === dataSource &&
+                marketDataItem.symbol === symbol
+              );
+            })?._count ?? 0;
+
+          return {
+            activitiesCount,
+            currency,
+            dataSource,
+            marketDataItemCount,
+            symbol,
+            assetClass: AssetClass.LIQUIDITY,
+            assetSubClass: AssetSubClass.CASH,
+            countriesCount: 0,
+            date: dateOfFirstActivity,
+            id: undefined,
+            name: symbol,
+            sectorsCount: 0
+          };
+        });
+
+    const marketData = await Promise.all(marketDataPromise);
     return { marketData, count: marketData.length };
   }
 

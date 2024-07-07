@@ -1,5 +1,5 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position-detail-dialog/position-detail-dialog.module';
+import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
@@ -23,7 +23,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterModule } from '@angular/router';
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
 
@@ -32,8 +32,8 @@ import { Subject, Subscription } from 'rxjs';
   imports: [
     CommonModule,
     GfAssetProfileIconComponent,
+    GfHoldingDetailDialogComponent,
     GfNoTransactionsInfoComponent,
-    GfPositionDetailDialogModule,
     GfSymbolModule,
     GfValueComponent,
     MatButtonModule,
@@ -102,7 +102,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenHoldingDialog({ dataSource, symbol }: UniqueAsset) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -110,7 +110,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onShowAllPositions() {
+  public onShowAllHoldings() {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {

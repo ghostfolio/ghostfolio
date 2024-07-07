@@ -4,6 +4,7 @@ import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -25,6 +26,7 @@ import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/
     GfCreateAssetProfileDialogModule,
     GfSymbolModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatMenuModule,
     MatPaginatorModule,
     MatSortModule,

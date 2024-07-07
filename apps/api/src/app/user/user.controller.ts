@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -25,6 +26,7 @@ import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { size } from 'lodash';
 
+import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
@@ -32,11 +34,40 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly jwtService: JwtService,
     private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly userService: UserService
   ) {}
+
+  @Delete()
+  @HasPermission(permissions.deleteOwnUser)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async deleteOwnUser(
+    @Body() data: DeleteOwnUserDto
+  ): Promise<UserModel> {
+    const hashedAccessToken = this.userService.createAccessToken(
+      data.accessToken,
+      this.configurationService.get('ACCESS_TOKEN_SALT')
+    );
+
+    const [user] = await this.userService.users({
+      where: { accessToken: hashedAccessToken, id: this.request.user.id }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return this.userService.deleteUser({
+      accessToken: hashedAccessToken,
+      id: user.id
+    });
+  }
 
   @Delete(':id')
   @HasPermission(permissions.deleteUser)

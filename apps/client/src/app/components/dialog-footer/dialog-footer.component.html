@@ -1,7 +1,5 @@
-<button
-  *ngIf="deviceType === 'mobile'"
-  mat-button
-  (click)="onClickCloseButton()"
->
-  <ion-icon name="close" size="large" />
-</button>
+@if (deviceType === 'mobile') {
+  <button mat-button (click)="onClickCloseButton()">
+    <ion-icon name="close" size="large" />
+  </button>
+}

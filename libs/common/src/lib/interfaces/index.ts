@@ -11,13 +11,13 @@ import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
-import type { Currency } from './currency.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
+import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
@@ -66,13 +66,13 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
-  Currency,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Export,
   Filter,
   FilterGroup,
   HistoricalDataItem,
+  Holding,
   ImportResponse,
   InfoItem,
   InvestmentItem,

@@ -1,3 +1,5 @@
+import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
+import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -26,8 +28,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { PositionDetailDialogParams } from './components/position-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialog } from './components/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
@@ -246,9 +246,9 @@ export class AppComponent implements OnDestroy, OnInit {
       .subscribe((user) => {
         this.user = user;
 
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
+        const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
           autoFocus: false,
-          data: <PositionDetailDialogParams>{
+          data: <HoldingDetailDialogParams>{
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,

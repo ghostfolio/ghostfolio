@@ -4,10 +4,9 @@
       class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2 text-truncate"
     >
       <span i18n>Performance</span>
-      <gf-premium-indicator
-        *ngIf="user?.subscription?.type === 'Basic'"
-        class="ml-1"
-      />
+      @if (user?.subscription?.type === 'Basic') {
+        <gf-premium-indicator class="ml-1" />
+      }
     </div>
   </div>
   <div class="col-md-6 col-xs-12 d-flex justify-content-end">
@@ -24,33 +23,33 @@
         (selectionChange)="onChangeBenchmark($event.value)"
       >
         <mat-option [value]="null" />
-        <mat-option
-          *ngFor="let symbolProfile of benchmarks"
-          [value]="symbolProfile.id"
-          >{{ symbolProfile.name }}</mat-option
-        >
-        <mat-option
-          *ngIf="hasPermissionToAccessAdminControl"
-          [routerLink]="['/admin', 'market-data']"
-        >
-          <div class="align-items-center d-flex">
-            <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
-            <span i18n>Manage Benchmarks</span>
-          </div>
-        </mat-option>
+        @for (symbolProfile of benchmarks; track symbolProfile) {
+          <mat-option [value]="symbolProfile.id">{{
+            symbolProfile.name
+          }}</mat-option>
+        }
+        @if (hasPermissionToAccessAdminControl) {
+          <mat-option [routerLink]="['/admin', 'market-data']">
+            <div class="align-items-center d-flex">
+              <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
+              <span i18n>Manage Benchmarks</span>
+            </div>
+          </mat-option>
+        }
       </mat-select>
     </mat-form-field>
   </div>
 </div>
 <div class="chart-container">
-  <ngx-skeleton-loader
-    *ngIf="isLoading"
-    animation="pulse"
-    [theme]="{
-      height: '100%',
-      width: '100%'
-    }"
-  />
+  @if (isLoading) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{
+        height: '100%',
+        width: '100%'
+      }"
+    />
+  }
   <canvas
     #chartCanvas
     class="h-100"

@@ -1,5 +1,5 @@
 <mat-toolbar class="px-0">
-  <ng-container *ngIf="user">
+  @if (user) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
         class="align-items-center justify-content-start rounded-0"
@@ -54,19 +54,21 @@
           >Accounts</a
         >
       </li>
-      <li *ngIf="hasPermissionToAccessAdminControl" class="list-inline-item">
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === 'admin',
-            'text-decoration-underline': currentRoute === 'admin'
-          }"
-          [routerLink]="['/admin']"
-          >Admin Control</a
-        >
-      </li>
+      @if (hasPermissionToAccessAdminControl) {
+        <li class="list-inline-item">
+          <a
+            class="d-none d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === 'admin',
+              'text-decoration-underline': currentRoute === 'admin'
+            }"
+            [routerLink]="['/admin']"
+            >Admin Control</a
+          >
+        </li>
+      }
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"
@@ -80,24 +82,23 @@
           >Resources</a
         >
       </li>
-      <li
-        *ngIf="
-          hasPermissionForSubscription && user?.subscription?.type === 'Basic'
-        "
-        class="list-inline-item"
-      >
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === routePricing,
-            'text-decoration-underline': currentRoute === routePricing
-          }"
-          [routerLink]="routerLinkPricing"
-          >Pricing</a
-        >
-      </li>
+      @if (
+        hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+      ) {
+        <li class="list-inline-item">
+          <a
+            class="d-none d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === routePricing,
+              'text-decoration-underline': currentRoute === routePricing
+            }"
+            [routerLink]="routerLinkPricing"
+            >Pricing</a
+          >
+        </li>
+      }
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block"
@@ -111,42 +112,42 @@
           >About</a
         >
       </li>
-      <li *ngIf="hasPermissionToAccessAssistant" class="list-inline-item">
-        <button
-          #assistantTrigger="matMenuTrigger"
-          class="h-100 no-min-width px-2"
-          mat-button
-          matBadge="✓"
-          matBadgeSize="small"
-          [mat-menu-trigger-for]="assistantMenu"
-          [matBadgeHidden]="
-            !hasFilters || !user?.settings?.isExperimentalFeatures
-          "
-          [matMenuTriggerRestoreFocus]="false"
-          (menuOpened)="onOpenAssistant()"
-        >
-          <ion-icon class="rotate-90" name="options-outline" />
-        </button>
-        <mat-menu
-          #assistantMenu="matMenu"
-          class="assistant"
-          xPosition="before"
-          [overlapTrigger]="true"
-          (closed)="assistantElement?.setIsOpen(false)"
-        >
-          <gf-assistant
-            #assistant
-            [deviceType]="deviceType"
-            [hasPermissionToAccessAdminControl]="
-              hasPermissionToAccessAdminControl
-            "
-            [user]="user"
-            (closed)="closeAssistant()"
-            (dateRangeChanged)="onDateRangeChange($event)"
-            (filtersChanged)="onFiltersChanged($event)"
-          />
-        </mat-menu>
-      </li>
+      @if (hasPermissionToAccessAssistant) {
+        <li class="list-inline-item">
+          <button
+            #assistantTrigger="matMenuTrigger"
+            class="h-100 no-min-width px-2"
+            mat-button
+            matBadge="✓"
+            matBadgeSize="small"
+            [mat-menu-trigger-for]="assistantMenu"
+            [matBadgeHidden]="!hasFilters"
+            [matMenuTriggerRestoreFocus]="false"
+            (menuOpened)="onOpenAssistant()"
+          >
+            <ion-icon class="rotate-90" name="options-outline" />
+          </button>
+          <mat-menu
+            #assistantMenu="matMenu"
+            class="assistant"
+            xPosition="before"
+            [overlapTrigger]="true"
+            (closed)="assistantElement?.setIsOpen(false)"
+          >
+            <gf-assistant
+              #assistant
+              [deviceType]="deviceType"
+              [hasPermissionToAccessAdminControl]="
+                hasPermissionToAccessAdminControl
+              "
+              [user]="user"
+              (closed)="closeAssistant()"
+              (dateRangeChanged)="onDateRangeChange($event)"
+              (filtersChanged)="onFiltersChanged($event)"
+            />
+          </mat-menu>
+        </li>
+      }
       <li class="list-inline-item">
         <button
           class="no-min-width px-1"
@@ -167,40 +168,31 @@
           />
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
-          <ng-container
-            *ngIf="
-              hasPermissionForSubscription &&
-              user?.subscription?.type === 'Basic'
-            "
-          >
+          @if (
+            hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+          ) {
             <a class="d-flex" mat-menu-item [routerLink]="routerLinkPricing"
               ><span class="align-items-center d-flex"
-                ><span
-                  ><ng-container
-                    *ngIf="user.subscription.offer === 'default'"
-                    i18n
-                    >Upgrade Plan</ng-container
-                  >
-                  <ng-container
-                    *ngIf="
-                      user.subscription.offer === 'renewal' ||
-                      user.subscription.offer === 'renewal-early-bird'
-                    "
-                    i18n
-                    >Renew Plan</ng-container
-                  ></span
-                >
+                ><span>
+                  @if (user.subscription.offer === 'default') {
+                    <ng-container i18n>Upgrade Plan</ng-container>
+                  } @else if (
+                    user.subscription.offer === 'renewal' ||
+                    user.subscription.offer === 'renewal-early-bird'
+                  ) {
+                    <ng-container i18n>Renew Plan</ng-container>
+                  }
+                </span>
                 <gf-premium-indicator
                   class="d-inline-block ml-1"
                   [enableLink]="false" /></span
             ></a>
             <hr class="m-0" />
-          </ng-container>
-          <ng-container *ngIf="user?.access?.length > 0">
+          }
+          @if (user?.access?.length > 0) {
             <button mat-menu-item (click)="impersonateAccount(null)">
               <span class="align-items-center d-flex">
                 <ion-icon
-                  *ngIf="user?.access?.length > 0"
                   class="mr-2"
                   [name]="
                     impersonationId
@@ -211,27 +203,28 @@
                 <span i18n>Me</span>
               </span>
             </button>
-            <button
-              *ngFor="let accessItem of user?.access"
-              mat-menu-item
-              (click)="impersonateAccount(accessItem.id)"
-            >
-              <span class="align-items-center d-flex">
-                <ion-icon
-                  class="mr-2"
-                  name="square-outline"
-                  [name]="
-                    accessItem.id === impersonationId
-                      ? 'radio-button-on-outline'
-                      : 'radio-button-off-outline'
-                  "
-                />
-                <span *ngIf="accessItem.alias">{{ accessItem.alias }}</span>
-                <span *ngIf="!accessItem.alias" i18n>User</span>
-              </span>
-            </button>
+            @for (accessItem of user?.access; track accessItem) {
+              <button mat-menu-item (click)="impersonateAccount(accessItem.id)">
+                <span class="align-items-center d-flex">
+                  <ion-icon
+                    class="mr-2"
+                    name="square-outline"
+                    [name]="
+                      accessItem.id === impersonationId
+                        ? 'radio-button-on-outline'
+                        : 'radio-button-off-outline'
+                    "
+                  />
+                  @if (accessItem.alias) {
+                    <span>{{ accessItem.alias }}</span>
+                  } @else {
+                    <span i18n>User</span>
+                  }
+                </span>
+              </button>
+            }
             <hr class="m-0" />
-          </ng-container>
+          }
           <a
             class="d-flex d-sm-none"
             i18n
@@ -268,15 +261,16 @@
             [routerLink]="['/account']"
             >My Ghostfolio</a
           >
-          <a
-            *ngIf="hasPermissionToAccessAdminControl"
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
-            [routerLink]="['/admin']"
-            >Admin Control</a
-          >
+          @if (hasPermissionToAccessAdminControl) {
+            <a
+              class="d-flex d-sm-none"
+              i18n
+              mat-menu-item
+              [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
+              [routerLink]="['/admin']"
+              >Admin Control</a
+            >
+          }
           <hr class="m-0" />
           <a
             class="d-flex d-sm-none"
@@ -288,18 +282,18 @@
             [routerLink]="routerLinkResources"
             >Resources</a
           >
-          <a
-            *ngIf="
-              hasPermissionForSubscription &&
-              user?.subscription?.type === 'Basic'
-            "
-            class="d-flex d-sm-none"
-            i18n
-            mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
-            [routerLink]="routerLinkPricing"
-            >Pricing</a
-          >
+          @if (
+            hasPermissionForSubscription && user?.subscription?.type === 'Basic'
+          ) {
+            <a
+              class="d-flex d-sm-none"
+              i18n
+              mat-menu-item
+              [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
+              [routerLink]="routerLinkPricing"
+              >Pricing</a
+            >
+          }
           <a
             class="d-flex d-sm-none"
             i18n
@@ -313,8 +307,8 @@
         </mat-menu>
       </li>
     </ul>
-  </ng-container>
-  <ng-container *ngIf="user === null">
+  }
+  @if (user === null) {
     <div class="d-flex h-100 logo-container" [ngClass]="{ filled: hasTabs }">
       <a
         class="align-items-center justify-content-start rounded-0"
@@ -357,35 +351,36 @@
           >About</a
         >
       </li>
-      <li *ngIf="hasPermissionForSubscription" class="list-inline-item">
-        <a
-          class="d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === routePricing,
-            'text-decoration-underline': currentRoute === routePricing
-          }"
-          [routerLink]="routerLinkPricing"
-          >Pricing</a
-        >
-      </li>
-      <li
-        *ngIf="hasPermissionToAccessFearAndGreedIndex"
-        class="list-inline-item"
-      >
-        <a
-          class="d-none d-sm-block"
-          i18n
-          mat-flat-button
-          [ngClass]="{
-            'font-weight-bold': currentRoute === routeMarkets,
-            'text-decoration-underline': currentRoute === routeMarkets
-          }"
-          [routerLink]="routerLinkMarkets"
-          >Markets</a
-        >
-      </li>
+      @if (hasPermissionForSubscription) {
+        <li class="list-inline-item">
+          <a
+            class="d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === routePricing,
+              'text-decoration-underline': currentRoute === routePricing
+            }"
+            [routerLink]="routerLinkPricing"
+            >Pricing</a
+          >
+        </li>
+      }
+      @if (hasPermissionToAccessFearAndGreedIndex) {
+        <li class="list-inline-item">
+          <a
+            class="d-none d-sm-block"
+            i18n
+            mat-flat-button
+            [ngClass]="{
+              'font-weight-bold': currentRoute === routeMarkets,
+              'text-decoration-underline': currentRoute === routeMarkets
+            }"
+            [routerLink]="routerLinkMarkets"
+            >Markets</a
+          >
+        </li>
+      }
       <li class="list-inline-item">
         <a
           class="d-none d-sm-block no-min-width p-1"
@@ -399,18 +394,17 @@
           <ng-container i18n>Sign in</ng-container>
         </button>
       </li>
-      <li
-        *ngIf="currentRoute !== 'register' && hasPermissionToCreateUser"
-        class="list-inline-item ml-1"
-      >
-        <a
-          class="d-none d-sm-block"
-          color="primary"
-          mat-flat-button
-          [routerLink]="routerLinkRegister"
-          ><ng-container i18n>Get started</ng-container>
-        </a>
-      </li>
+      @if (currentRoute !== 'register' && hasPermissionToCreateUser) {
+        <li class="list-inline-item ml-1">
+          <a
+            class="d-none d-sm-block"
+            color="primary"
+            mat-flat-button
+            [routerLink]="routerLinkRegister"
+            ><ng-container i18n>Get started</ng-container>
+          </a>
+        </li>
+      }
     </ul>
-  </ng-container>
+  }
 </mat-toolbar>

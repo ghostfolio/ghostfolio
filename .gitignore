@@ -28,6 +28,7 @@
 .env
 .env.prod
 .nx/cache
+.nx/workspace-data
 /.sass-cache
 /connect.lock
 /coverage

@@ -1,6 +1,8 @@
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
-import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import { Benchmark, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfTrendIndicatorComponent } from '@ghostfolio/ui/trend-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -8,13 +10,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
-  OnChanges
+  OnChanges,
+  OnDestroy
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { Subject, takeUntil } from 'rxjs';
 
-import { GfTrendIndicatorComponent } from '../trend-indicator';
-import { GfValueComponent } from '../value';
+import { GfBenchmarkDetailDialogComponent } from './benchmark-detail-dialog/benchmark-detail-dialog.component';
+import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +29,8 @@ import { GfValueComponent } from '../value';
     GfTrendIndicatorComponent,
     GfValueComponent,
     MatTableModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-benchmark',
@@ -31,8 +38,9 @@ import { GfValueComponent } from '../value';
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent implements OnChanges {
+export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() benchmarks: Benchmark[];
+  @Input() deviceType: string;
   @Input() locale = getLocale();
   @Input() user: User;
 
@@ -40,7 +48,28 @@ export class GfBenchmarkComponent implements OnChanges {
   public resolveMarketCondition = resolveMarketCondition;
   public translate = translate;
 
-  public constructor() {}
+  private unsubscribeSubject = new Subject<void>();
+
+  public constructor(
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.route.queryParams
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((params) => {
+        if (
+          params['benchmarkDetailDialog'] &&
+          params['dataSource'] &&
+          params['symbol']
+        ) {
+          this.openBenchmarkDetailDialog({
+            dataSource: params['dataSource'],
+            symbol: params['symbol']
+          });
+        }
+      });
+  }
 
   public ngOnChanges() {
     if (this.user?.settings?.isExperimentalFeatures) {
@@ -53,5 +82,37 @@ export class GfBenchmarkComponent implements OnChanges {
         'marketCondition'
       ];
     }
+  }
+
+  public onOpenBenchmarkDialog({ dataSource, symbol }: UniqueAsset) {
+    this.router.navigate([], {
+      queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
+    });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
+  private openBenchmarkDetailDialog({ dataSource, symbol }: UniqueAsset) {
+    const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
+      data: <BenchmarkDetailDialogParams>{
+        dataSource,
+        symbol,
+        colorScheme: this.user?.settings?.colorScheme,
+        deviceType: this.deviceType,
+        locale: this.locale
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.router.navigate(['.'], { relativeTo: this.route });
+      });
   }
 }

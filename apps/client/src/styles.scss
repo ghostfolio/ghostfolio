@@ -214,16 +214,6 @@ body {
     }
   }
 
-  .mat-mdc-menu-panel {
-    &.assistant {
-      max-width: unset !important;
-
-      .mat-mdc-menu-content {
-        padding: 0;
-      }
-    }
-  }
-
   &.is-dark-theme {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
@@ -366,6 +356,10 @@ ngx-skeleton-loader {
 }
 
 .cdk-overlay-container {
+  .cdk-global-overlay-wrapper {
+    justify-content: center !important;
+  }
+
   .cdk-overlay-pane {
     max-width: 95vw !important;
   }
@@ -453,6 +447,14 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-menu-panel {
+  &.assistant {
+    max-width: unset !important;
+
+    .mat-mdc-menu-content {
+      padding: 0;
+    }
+  }
+
   .mat-mdc-menu-item {
     &.font-weight-bold {
       .mat-mdc-menu-item-text {
@@ -507,6 +509,10 @@ ngx-skeleton-loader {
 
 .no-min-width {
   min-width: unset !important;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .page {

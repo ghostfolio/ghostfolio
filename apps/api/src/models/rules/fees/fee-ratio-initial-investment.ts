@@ -26,10 +26,10 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       ? this.fees / this.totalInvestment
       : 0;
 
-    if (feeRatio > ruleSettings.threshold) {
+    if (feeRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: `The fees do exceed ${
-          ruleSettings.threshold * 100
+          ruleSettings.thresholdMax * 100
         }% of your initial investment (${(feeRatio * 100).toPrecision(3)}%)`,
         value: false
       };
@@ -37,7 +37,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
     return {
       evaluation: `The fees do not exceed ${
-        ruleSettings.threshold * 100
+        ruleSettings.thresholdMax * 100
       }% of your initial investment (${(feeRatio * 100).toPrecision(3)}%)`,
       value: true
     };
@@ -47,12 +47,12 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     return {
       baseCurrency: aUserSettings.baseCurrency,
       isActive: true,
-      threshold: 0.01
+      thresholdMax: 0.01
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMax: number;
 }

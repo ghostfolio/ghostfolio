@@ -4,8 +4,11 @@
   (keyup.enter)="platformForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 *ngIf="data.platform.id" i18n mat-dialog-title>Update platform</h1>
-  <h1 *ngIf="!data.platform.id" i18n mat-dialog-title>Add platform</h1>
+  @if (data.platform.id) {
+    <h1 i18n mat-dialog-title>Update platform</h1>
+  } @else {
+    <h1 i18n mat-dialog-title>Add platform</h1>
+  }
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">

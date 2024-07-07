@@ -17,6 +17,7 @@ export const permissions = {
   deleteAccountBalance: 'deleteAcccountBalance',
   deleteAuthDevice: 'deleteAuthDevice',
   deleteOrder: 'deleteOrder',
+  deleteOwnUser: 'deleteOwnUser',
   deletePlatform: 'deletePlatform',
   deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
@@ -57,6 +58,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
+        permissions.deleteOwnUser,
         permissions.deletePlatform,
         permissions.deleteTag,
         permissions.deleteUser,
@@ -84,6 +86,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccountBalance,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
+        permissions.deleteOwnUser,
         permissions.updateAccount,
         permissions.updateAuthDevice,
         permissions.updateOrder,
@@ -125,6 +128,28 @@ export function hasPermission(
   return aPermissions.includes(aPermission);
 }
 
-export function hasRole(aUser: UserWithSettings, aRole: Role): boolean {
+export function hasReadRestrictedAccessPermission({
+  impersonationId,
+  user
+}: {
+  impersonationId: string;
+  user: UserWithSettings;
+}) {
+  if (!impersonationId) {
+    return false;
+  }
+
+  const access = user.Access?.find(({ id }) => {
+    return id === impersonationId;
+  });
+
+  return access?.permissions?.includes('READ_RESTRICTED') ?? true;
+}
+
+export function hasRole(aUser: UserWithSettings, aRole: Role) {
   return aUser?.role === aRole;
+}
+
+export function isRestrictedView(aUser: UserWithSettings) {
+  return aUser.Settings.settings.isRestrictedView ?? false;
 }

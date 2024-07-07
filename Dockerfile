@@ -51,6 +51,9 @@ RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
 FROM node:18-slim
+
+LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
+
 RUN apt update && apt install -y \
     curl \
     openssl \

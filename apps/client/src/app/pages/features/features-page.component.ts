@@ -4,7 +4,6 @@ import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +13,6 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   host: { class: 'page' },
   imports: [
-    CommonModule,
     GfPremiumIndicatorComponent,
     MatButtonModule,
     MatCardModule,

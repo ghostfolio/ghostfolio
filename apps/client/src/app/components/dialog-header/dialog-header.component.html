@@ -3,11 +3,8 @@
   [ngClass]="{ 'text-center': position === 'center' }"
   >{{ title }}</span
 >
-<button
-  *ngIf="deviceType !== 'mobile'"
-  class="no-min-width px-0"
-  mat-button
-  (click)="onClickCloseButton()"
->
-  <ion-icon name="close" size="large" />
-</button>
+@if (deviceType !== 'mobile') {
+  <button class="no-min-width px-0" mat-button (click)="onClickCloseButton()">
+    <ion-icon name="close" size="large" />
+  </button>
+}

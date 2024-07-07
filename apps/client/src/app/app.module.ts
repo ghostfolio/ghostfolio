@@ -1,7 +1,10 @@
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import { Platform } from '@angular/cdk/platform';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -45,7 +48,6 @@ export function NgxStripeFactory(): string {
     GfHeaderModule,
     GfLogoComponent,
     GfSubscriptionInterstitialDialogModule,
-    HttpClientModule,
     MarkdownModule.forRoot(),
     MatAutocompleteModule,
     MatChipsModule,
@@ -63,6 +65,7 @@ export function NgxStripeFactory(): string {
     authInterceptorProviders,
     httpResponseInterceptorProviders,
     LanguageService,
+    provideHttpClient(withInterceptorsFromDi()),
     {
       provide: DateAdapter,
       useClass: CustomDateAdapter,

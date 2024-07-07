@@ -10,7 +10,11 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  EnhancedSymbolProfile,
+  Filter,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -180,7 +184,15 @@ export class OrderService {
       where
     });
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
+    const [symbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesByIds([
+        order.symbolProfileId
+      ]);
+
+    if (
+      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
+      symbolProfile.activitiesCount === 0
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -196,18 +208,16 @@ export class OrderService {
 
   public async deleteOrders({
     filters,
-    userCurrency,
     userId
   }: {
     filters?: Filter[];
-    userCurrency: string;
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getOrders({
       filters,
       userId,
-      userCurrency,
       includeDrafts: true,
+      userCurrency: undefined,
       withExcludedAccounts: true
     });
 
@@ -220,6 +230,19 @@ export class OrderService {
         }
       }
     });
+
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByIds(
+        activities.map(({ symbolProfileId }) => {
+          return symbolProfileId;
+        })
+      );
+
+    for (const { activitiesCount, id } of symbolProfiles) {
+      if (activitiesCount === 0) {
+        await this.symbolProfileService.deleteById(id);
+      }
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
@@ -427,6 +450,26 @@ export class OrderService {
     });
 
     return { activities, count };
+  }
+
+  public async getStatisticsByCurrency(
+    currency: EnhancedSymbolProfile['currency']
+  ): Promise<{
+    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+  }> {
+    const { _count, _min } = await this.prismaService.order.aggregate({
+      _count: true,
+      _min: {
+        date: true
+      },
+      where: { SymbolProfile: { currency } }
+    });
+
+    return {
+      activitiesCount: _count as number,
+      dateOfFirstActivity: _min.date
+    };
   }
 
   public async order(

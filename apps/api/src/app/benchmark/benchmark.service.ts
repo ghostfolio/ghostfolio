@@ -135,7 +135,7 @@ export class BenchmarkService {
       Promise.all(promisesAllTimeHighs),
       Promise.all(promisesBenchmarkTrends)
     ]);
-    let storeInCache = true;
+    let storeInCache = useCache;
 
     benchmarks = allTimeHighs.map((allTimeHigh, index) => {
       const { marketPrice } =
@@ -153,6 +153,7 @@ export class BenchmarkService {
       }
 
       return {
+        dataSource: benchmarkAssetProfiles[index].dataSource,
         marketCondition: this.getMarketCondition(
           performancePercentFromAllTimeHigh
         ),
@@ -160,9 +161,13 @@ export class BenchmarkService {
         performances: {
           allTimeHigh: {
             date: allTimeHigh?.date,
-            performancePercent: performancePercentFromAllTimeHigh
+            performancePercent:
+              performancePercentFromAllTimeHigh >= 0
+                ? 0
+                : performancePercentFromAllTimeHigh
           }
         },
+        symbol: benchmarkAssetProfiles[index].symbol,
         trend50d: benchmarkTrends[index].trend50d,
         trend200d: benchmarkTrends[index].trend200d
       };
@@ -213,7 +218,7 @@ export class BenchmarkService {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  public async getMarketDataBySymbol({
+  public async getMarketDataForUser({
     dataSource,
     endDate = new Date(),
     startDate,
@@ -417,7 +422,7 @@ export class BenchmarkService {
   private getMarketCondition(
     aPerformanceInPercent: number
   ): Benchmark['marketCondition'] {
-    if (aPerformanceInPercent === 0) {
+    if (aPerformanceInPercent >= 0) {
       return 'ALL_TIME_HIGH';
     } else if (aPerformanceInPercent <= -0.2) {
       return 'BEAR_MARKET';

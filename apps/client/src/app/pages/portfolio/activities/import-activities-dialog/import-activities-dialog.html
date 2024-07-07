@@ -16,12 +16,11 @@
   >
     <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
       <ng-template matStepLabel>
-        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
-          >Select Holding</ng-container
-        >
-        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
-          >Select File</ng-container
-        >
+        @if (mode === 'DIVIDEND') {
+          <ng-container i18n>Select Holding</ng-container>
+        } @else {
+          <ng-container i18n>Select File</ng-container>
+        }
       </ng-template>
       <div class="pt-3">
         @if (mode === 'DIVIDEND') {
@@ -35,30 +34,29 @@
                 <mat-select-trigger>{{
                   uniqueAssetForm.get('uniqueAsset')?.value?.name
                 }}</mat-select-trigger>
-                <mat-option
-                  *ngFor="let holding of holdings"
-                  class="line-height-1"
-                  [value]="{
-                    dataSource: holding.dataSource,
-                    name: holding.name,
-                    symbol: holding.symbol
-                  }"
-                >
-                  <span
-                    ><b>{{ holding.name }}</b></span
+                @for (holding of holdings; track holding) {
+                  <mat-option
+                    class="line-height-1"
+                    [value]="{
+                      dataSource: holding.dataSource,
+                      name: holding.name,
+                      symbol: holding.symbol
+                    }"
                   >
-                  <br />
-                  <small class="text-muted"
-                    >{{ holding.symbol | gfSymbol }} ·
-                    {{ holding.currency }}</small
-                  >
-                </mat-option>
+                    <span
+                      ><b>{{ holding.name }}</b></span
+                    >
+                    <br />
+                    <small class="text-muted"
+                      >{{ holding.symbol | gfSymbol }} ·
+                      {{ holding.currency }}</small
+                    >
+                  </mat-option>
+                }
               </mat-select>
-              <mat-spinner
-                *ngIf="isLoading"
-                class="position-absolute"
-                [diameter]="20"
-              />
+              @if (isLoading) {
+                <mat-spinner class="position-absolute" [diameter]="20" />
+              }
             </mat-form-field>
             <div class="d-flex flex-column justify-content-center">
               <button
@@ -111,36 +109,36 @@
 
     <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
       <ng-template matStepLabel>
-        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
-          >Select Dividends</ng-container
-        >
-        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
-          >Select Activities</ng-container
-        >
+        @if (mode === 'DIVIDEND') {
+          <ng-container i18n>Select Dividends</ng-container>
+        } @else {
+          <ng-container i18n>Select Activities</ng-container>
+        }
       </ng-template>
       <div class="pt-3">
         @if (errorMessages?.length === 0) {
-          <gf-activities-table
-            *ngIf="importStep === 1"
-            [baseCurrency]="data?.user?.settings?.baseCurrency"
-            [dataSource]="dataSource"
-            [deviceType]="data?.deviceType"
-            [hasPermissionToCreateActivity]="false"
-            [hasPermissionToDeleteActivity]="false"
-            [hasPermissionToExportActivities]="false"
-            [hasPermissionToFilter]="false"
-            [hasPermissionToOpenDetails]="false"
-            [locale]="data?.user?.settings?.locale"
-            [pageSize]="maxSafeInteger"
-            [showActions]="false"
-            [showCheckbox]="true"
-            [showSymbolColumn]="false"
-            [sortColumn]="sortColumn"
-            [sortDirection]="sortDirection"
-            [sortDisabled]="true"
-            [totalItems]="totalItems"
-            (selectedActivities)="updateSelection($event)"
-          />
+          @if (importStep === 1) {
+            <gf-activities-table
+              [baseCurrency]="data?.user?.settings?.baseCurrency"
+              [dataSource]="dataSource"
+              [deviceType]="data?.deviceType"
+              [hasPermissionToCreateActivity]="false"
+              [hasPermissionToDeleteActivity]="false"
+              [hasPermissionToExportActivities]="false"
+              [hasPermissionToFilter]="false"
+              [hasPermissionToOpenDetails]="false"
+              [locale]="data?.user?.settings?.locale"
+              [pageSize]="maxSafeInteger"
+              [showActions]="false"
+              [showCheckbox]="true"
+              [showSymbolColumn]="false"
+              [sortColumn]="sortColumn"
+              [sortDirection]="sortDirection"
+              [sortDisabled]="true"
+              [totalItems]="totalItems"
+              (selectedActivities)="updateSelection($event)"
+            />
+          }
           <div class="d-flex justify-content-end mt-3">
             <button mat-button (click)="onReset(stepper)">
               <ng-container i18n>Back</ng-container>
@@ -157,25 +155,23 @@
           </div>
         } @else {
           <mat-accordion displayMode="flat">
-            <mat-expansion-panel
-              *ngFor="let message of errorMessages; let i = index"
-              [disabled]="!details[i]"
-            >
-              <mat-expansion-panel-header class="pl-1">
-                <mat-panel-title>
-                  <div class="d-flex">
-                    <div class="align-items-center d-flex mr-2">
-                      <ion-icon name="warning-outline" />
+            @for (message of errorMessages; track message; let i = $index) {
+              <mat-expansion-panel [disabled]="!details[i]">
+                <mat-expansion-panel-header class="pl-1">
+                  <mat-panel-title>
+                    <div class="d-flex">
+                      <div class="align-items-center d-flex mr-2">
+                        <ion-icon name="warning-outline" />
+                      </div>
+                      <div>{{ message }}</div>
                     </div>
-                    <div>{{ message }}</div>
-                  </div>
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <pre
-                *ngIf="details[i]"
-                class="m-0"
-              ><code>{{ details[i] | json }}</code></pre>
-            </mat-expansion-panel>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                @if (details[i]) {
+                  <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
+                }
+              </mat-expansion-panel>
+            }
           </mat-accordion>
           <div class="d-flex justify-content-end mt-3">
             <button mat-button (click)="onReset(stepper)">

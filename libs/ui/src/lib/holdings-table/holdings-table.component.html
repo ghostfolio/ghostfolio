@@ -1,4 +1,4 @@
-<div class="holdings">
+<div class="overflow-x-auto">
   <table
     class="gf-table w-100"
     mat-table
@@ -169,7 +169,7 @@
       }"
       (click)="
         !ignoreAssetSubClasses.includes(row.assetSubClass) &&
-          onOpenPositionDialog({
+          onOpenHoldingDialog({
             dataSource: row.dataSource,
             symbol: row.symbol
           })
@@ -193,7 +193,7 @@
 
 @if (dataSource.data.length > pageSize && !isLoading) {
   <div class="my-3 text-center">
-    <button mat-stroked-button (click)="onShowAllPositions()">
+    <button mat-stroked-button (click)="onShowAllHoldings()">
       <ng-container i18n>Show all</ng-container>
     </button>
   </div>

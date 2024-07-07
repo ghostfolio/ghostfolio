@@ -27,7 +27,7 @@ export class GfValueComponent implements OnChanges {
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale = getLocale();
+  @Input() locale: string;
   @Input() position = '';
   @Input() precision: number | undefined;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
@@ -135,6 +135,7 @@ export class GfValueComponent implements OnChanges {
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
+    this.locale = this.locale || getLocale();
     this.useAbsoluteValue = false;
   }
 }

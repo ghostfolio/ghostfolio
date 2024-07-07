@@ -2,13 +2,13 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
-import { takeUntil } from 'rxjs';
+import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
 
 @Injectable()
 export class AdminMarketDataService {
   public constructor(private adminService: AdminService) {}
 
-  public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
+  public deleteAssetProfile({ dataSource, symbol }: UniqueAsset) {
     const confirmation = confirm(
       $localize`Do you really want to delete this asset profile?`
     );
@@ -21,6 +21,33 @@ export class AdminMarketDataService {
             window.location.reload();
           }, 300);
         });
+    }
+  }
+
+  public deleteAssetProfiles(uniqueAssets: UniqueAsset[]) {
+    const confirmation = confirm(
+      $localize`Do you really want to delete these asset profiles?`
+    );
+
+    if (confirmation) {
+      const deleteRequests = uniqueAssets.map(({ dataSource, symbol }) => {
+        return this.adminService.deleteProfileData({ dataSource, symbol });
+      });
+
+      forkJoin(deleteRequests)
+        .pipe(
+          catchError(() => {
+            alert($localize`Oops! Could not delete asset profiles.`);
+
+            return EMPTY;
+          }),
+          finalize(() => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 300);
+          })
+        )
+        .subscribe(() => {});
     }
   }
 }

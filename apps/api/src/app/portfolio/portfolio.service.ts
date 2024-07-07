@@ -77,7 +77,7 @@ import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
 } from './calculator/portfolio-calculator.factory';
-import { PortfolioPositionDetail } from './interfaces/portfolio-position-detail.interface';
+import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { RulesService } from './rules.service';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
@@ -499,6 +499,17 @@ export class PortfolioService {
           grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+        holdings: assetProfile.holdings.map(
+          ({ allocationInPercentage, name }) => {
+            return {
+              allocationInPercentage,
+              name,
+              valueInBaseCurrency: valueInBaseCurrency
+                .mul(allocationInPercentage)
+                .toNumber()
+            };
+          }
+        ),
         investment: investment.toNumber(),
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: assetProfile.name,
@@ -602,7 +613,7 @@ export class PortfolioService {
     aDataSource: DataSource,
     aImpersonationId: string,
     aSymbol: string
-  ): Promise<PortfolioPositionDetail> {
+  ): Promise<PortfolioHoldingDetail> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -693,7 +704,7 @@ export class PortfolioService {
         transactionCount
       } = position;
 
-      const accounts: PortfolioPositionDetail['accounts'] = uniqBy(
+      const accounts: PortfolioHoldingDetail['accounts'] = uniqBy(
         orders.filter(({ Account }) => {
           return Account;
         }),
@@ -1465,6 +1476,7 @@ export class PortfolioService {
       grossPerformancePercent: 0,
       grossPerformancePercentWithCurrencyEffect: 0,
       grossPerformanceWithCurrencyEffect: 0,
+      holdings: [],
       investment: balance,
       marketPrice: 0,
       marketState: 'open',

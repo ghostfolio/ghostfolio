@@ -228,12 +228,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
         value: '1y'
-      },
-      {
-        label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
-        value: '5y'
-      },
-      { label: $localize`Max`, value: 'max' }
+      }
     ];
 
     if (this.user?.settings?.isExperimentalFeatures) {
@@ -249,6 +244,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           .reverse()
       );
     }
+
+    this.dateRangeOptions = this.dateRangeOptions.concat([
+      {
+        label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
+        value: '5y'
+      },
+      { label: $localize`Max`, value: 'max' }
+    ]);
 
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 

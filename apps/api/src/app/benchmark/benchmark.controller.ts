@@ -1,8 +1,8 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import type {
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
@@ -105,7 +105,7 @@ export class BenchmarkController {
   @Get(':dataSource/:symbol/:startDateString')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async getBenchmarkMarketDataBySymbol(
+  public async getBenchmarkMarketDataForUser(
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
@@ -117,7 +117,7 @@ export class BenchmarkController {
     );
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    return this.benchmarkService.getMarketDataBySymbol({
+    return this.benchmarkService.getMarketDataForUser({
       dataSource,
       endDate,
       startDate,

@@ -9,8 +9,168 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
+- Improved the detection of REST APIs (`JSON`) used via the scraper configuration
+- Refactored the thresholds of the rules in the _X-ray_ section
+- Upgraded `Nx` from version `19.2.2` to `19.4.0`
+
+## 2.92.0 - 2024-06-30
+
+### Added
+
+- Added support for bulk deletion of asset profiles from the market data table in the admin control panel
+
+### Changed
+
+- Added support for derived currencies in the currency validation
+- Added support for automatic deletion of unused asset profiles when deleting activities
+- Improved the caching of the benchmarks in the markets overview (only cache if needed)
+- Upgraded `prisma` from version `5.15.0` to `5.16.1`
+
+### Fixed
+
+- Fixed an issue with the all time high in the benchmarks of the markets overview
+
+## 2.91.0 - 2024-06-26
+
+### Added
+
+- Added a benchmarks preset to the historical market data table of the admin control panel
+
+### Changed
+
+- Upgraded `angular` from version `18.0.2` to `18.0.4`
+
+### Fixed
+
+- Fixed the dialog position (center) on mobile
+- Fixed the horizontal overflow in the historical market data table of the admin control panel
+- Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
+- Fixed the creation of activities with `MANUAL` data source (with no historical market data)
+
+## 2.90.0 - 2024-06-22
+
+### Added
+
+- Added a dialog for the benchmarks in the markets overview
+- Extended the asset profile details dialog of the admin control for currencies
+- Extended the content of the _Self-Hosting_ section by the mobile app question on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Moved the indicator for active filters from experimental to general availability
+- Improved the error handling in the biometric authentication registration
+- Improved the language localization for German (`de`)
+- Set up SSL for local development
+- Upgraded the _Stripe_ dependencies
+- Upgraded `marked` from version `9.1.6` to `13.0.0`
+- Upgraded `ngx-device-detector` from version `5.0.1` to `8.0.0`
+- Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
+- Upgraded `zone.js` from version `0.14.5` to `0.14.7`
+
+## 2.89.0 - 2024-06-14
+
+### Added
+
+- Extended the historical market data table with currencies preset by date and activities count in the admin control panel
+
+### Changed
+
+- Improved the date validation in the create, import and update activities endpoints
+- Improved the language localization for German (`de`)
+
+## 2.88.0 - 2024-06-11
+
+### Added
+
+- Set the image source label in `Dockerfile`
+
+### Changed
+
+- Improved the style of the blog post list
+- Migrated the `@ghostfolio/client` components to control flow
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `17.3.10` to `18.0.2`
+- Upgraded `Nx` from version `19.0.5` to `19.2.2`
+
+## 2.87.0 - 2024-06-08
+
+### Changed
+
+- Improved the portfolio summary
+- Improved the allocations by ETF holding on the allocations page (experimental)
+- Improved the error handling in the `HttpResponseInterceptor`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.14.0` to `5.15.0`
+
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator
+
+## 2.86.0 - 2024-06-07
+
+### Added
+
+- Introduced the allocations by ETF holding on the allocations page (experimental)
+
+### Changed
+
+- Upgraded `prettier` from version `3.2.5` to `3.3.1`
+
+## 2.85.0 - 2024-06-06
+
+### Added
+
+- Added the ability to close a user account
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
+
+### Fixed
+
+- Fixed an issue with the default locale in the value component
+
+## 2.84.0 - 2024-06-01
+
+### Added
+
+- Added the data provider information to the asset profile details dialog of the admin control
+- Added the cascading on delete for various relations in the database schema
+
+### Fixed
+
+- Fixed an issue with the initial annual interest rate in the _FIRE_ calculator
+- Fixed the state handling in the currency selector
+- Fixed the deletion of an asset profile with symbol profile overrides in the asset profile details dialog of the admin control
+
+## 2.83.0 - 2024-05-30
+
+### Changed
+
+- Upgraded `@nestjs/passport` from version `10.0.0` to `10.0.3`
+- Upgraded `angular` from version `17.3.5` to `17.3.10`
+- Upgraded `class-validator` from version `0.14.0` to `0.14.1`
+- Upgraded `countup.js` from version `2.3.2` to `2.8.0`
+- Upgraded `Nx` from version `19.0.2` to `19.0.5`
+- Upgraded `passport` from version `0.6.0` to `0.7.0`
+- Upgraded `passport-jwt` from version `4.0.0` to `4.0.1`
+- Upgraded `prisma` from version `5.13.0` to `5.14.0`
+- Upgraded `yahoo-finance2` from version `2.11.2` to `2.11.3`
+
+## 2.82.0 - 2024-05-22
+
+### Changed
+
+- Improved the usability of the create or update activity dialog by preselecting the (only) account
+- Improved the usability of the date range selector in the assistant
+- Refactored the holding detail dialog to a standalone component
+- Refreshed the cryptocurrencies list
 - Refactored various pages to standalone components
+- Upgraded `@internationalized/number` from version `3.5.0` to `3.5.2`
 - Upgraded `body-parser` from version `1.20.1` to `1.20.2`
+- Upgraded `zone.js` from version `0.14.4` to `0.14.5`
 
 ## 2.81.0 - 2024-05-12
 

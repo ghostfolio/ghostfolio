@@ -1,16 +1,12 @@
 :host {
   display: block;
 
-  .users {
-    overflow-x: auto;
+  .gf-table {
+    min-width: 100%;
 
-    table {
-      min-width: 100%;
-
-      .mat-mdc-row,
-      .mat-mdc-header-row {
-        width: 100%;
-      }
+    .mat-mdc-row,
+    .mat-mdc-header-row {
+      width: 100%;
     }
   }
 }

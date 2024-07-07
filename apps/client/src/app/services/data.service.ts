@@ -6,9 +6,10 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
+import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -18,6 +19,7 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
+  AdminMarketDataDetails,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -271,6 +273,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
+  public deleteOwnUser(aData: DeleteOwnUserDto) {
+    return this.http.delete<any>(`/api/v1/user`, { body: aData });
+  }
+
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
   }
@@ -279,7 +285,21 @@ export class DataService {
     return this.http.get<Access[]>('/api/v1/access');
   }
 
-  public fetchBenchmarkBySymbol({
+  public fetchAsset({
+    dataSource,
+    symbol
+  }: UniqueAsset): Observable<AdminMarketDataDetails> {
+    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
+      map((data) => {
+        for (const item of data.marketData) {
+          item.date = parseISO(item.date);
+        }
+        return data;
+      })
+    );
+  }
+
+  public fetchBenchmarkForUser({
     dataSource,
     range,
     startDate,
@@ -323,6 +343,31 @@ export class DataService {
     return this.http.get<Export>('/api/v1/export', {
       params
     });
+  }
+
+  public fetchHoldingDetail({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http
+      .get<PortfolioHoldingDetail>(
+        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((data) => {
+          if (data.orders) {
+            for (const order of data.orders) {
+              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
+              order.date = parseISO(<string>(<unknown>order.date));
+            }
+          }
+
+          return data;
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {
@@ -561,31 +606,6 @@ export class DataService {
 
   public fetchPortfolioReport() {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
-  }
-
-  public fetchPositionDetail({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    return this.http
-      .get<PortfolioPositionDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
-      )
-      .pipe(
-        map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
-              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
-              order.date = parseISO(<string>(<unknown>order.date));
-            }
-          }
-
-          return data;
-        })
-      );
   }
 
   public loginAnonymous(accessToken: string) {
