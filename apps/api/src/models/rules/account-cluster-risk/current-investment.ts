@@ -55,10 +55,10 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
 
     const maxInvestmentRatio = maxItem?.investment / totalInvestment || 0;
 
-    if (maxInvestmentRatio > ruleSettings.threshold) {
+    if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: `Over ${
-          ruleSettings.threshold * 100
+          ruleSettings.thresholdMax * 100
         }% of your current investment is at ${maxItem.name} (${(
           maxInvestmentRatio * 100
         ).toPrecision(3)}%)`,
@@ -70,7 +70,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       evaluation: `The major part of your current investment is at ${
         maxItem.name
       } (${(maxInvestmentRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.threshold * 100
+        ruleSettings.thresholdMax * 100
       }%`,
       value: true
     };
@@ -80,12 +80,12 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     return {
       baseCurrency: aUserSettings.baseCurrency,
       isActive: true,
-      threshold: 0.5
+      thresholdMax: 0.5
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMax: number;
 }
