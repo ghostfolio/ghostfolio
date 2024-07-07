@@ -41,10 +41,10 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
 
     const maxValueRatio = maxItem?.value / totalValue || 0;
 
-    if (maxValueRatio > ruleSettings.threshold) {
+    if (maxValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: `Over ${
-          ruleSettings.threshold * 100
+          ruleSettings.thresholdMax * 100
         }% of your current investment is in ${maxItem.groupKey} (${(
           maxValueRatio * 100
         ).toPrecision(3)}%)`,
@@ -56,7 +56,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
       evaluation: `The major part of your current investment is in ${
         maxItem?.groupKey ?? ruleSettings.baseCurrency
       } (${(maxValueRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.threshold * 100
+        ruleSettings.thresholdMax * 100
       }%`,
       value: true
     };
@@ -66,12 +66,12 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     return {
       baseCurrency: aUserSettings.baseCurrency,
       isActive: true,
-      threshold: 0.5
+      thresholdMax: 0.5
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMax: number;
 }
