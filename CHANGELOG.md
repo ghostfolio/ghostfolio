@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _Self-Hosting_ section by the platforms concept on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
 - Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
