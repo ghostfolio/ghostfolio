@@ -124,7 +124,7 @@ export class AdminMarketDataComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,

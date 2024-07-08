@@ -87,7 +87,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,

@@ -1,5 +1,10 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
+import {
+  AdminMarketDataItem,
+  UniqueAsset
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
 import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
@@ -49,5 +54,18 @@ export class AdminMarketDataService {
         )
         .subscribe(() => {});
     }
+  }
+
+  public hasPermissionToDeleteAssetProfile({
+    activitiesCount,
+    isBenchmark,
+    symbol
+  }: Pick<AdminMarketDataItem, 'activitiesCount' | 'isBenchmark' | 'symbol'>) {
+    return (
+      activitiesCount === 0 &&
+      !isBenchmark &&
+      !isCurrency(getCurrencyFromSymbol(symbol)) &&
+      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+    );
   }
 }
