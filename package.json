@@ -173,7 +173,7 @@
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.4.4",
     "@types/lodash": "4.17.0",
-    "@types/node": "18.16.9",
+    "@types/node": "20.14.10",
     "@types/papaparse": "5.3.7",
     "@types/passport-google-oauth20": "2.0.16",
     "@typescript-eslint/eslint-plugin": "6.21.0",
@@ -197,13 +197,13 @@
     "shx": "0.3.4",
     "storybook": "7.0.9",
     "ts-jest": "29.1.0",
-    "ts-node": "10.9.1",
+    "ts-node": "10.9.2",
     "tslib": "2.6.0",
     "typescript": "5.4.4",
     "webpack-bundle-analyzer": "4.10.1"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

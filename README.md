@@ -149,7 +149,7 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 18+)
+- [Node.js](https://nodejs.org/en/download) (version 20+)
 - [Yarn](https://yarnpkg.com/en/docs/install)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
