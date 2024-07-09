@@ -31,7 +31,7 @@ export class AdminMarketDataService {
 
   public deleteAssetProfiles(uniqueAssets: UniqueAsset[]) {
     const confirmation = confirm(
-      $localize`Do you really want to delete these asset profiles?`
+      $localize`Do you really want to delete these profiles?`
     );
 
     if (confirmation) {

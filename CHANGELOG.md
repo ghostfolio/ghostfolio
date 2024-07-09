@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ### Fixed
 
 - Fixed a pagination issue in the activities endpoint by adding `id` as a secondary sort criterion to `date` to ensure consistent ordering
