@@ -291,7 +291,8 @@ export class OrderService {
     withExcludedAccounts?: boolean;
   }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' }
+      { date: 'asc' },
+      { id: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
 
@@ -367,7 +368,7 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
     }
 
     if (types) {
