@@ -87,21 +87,21 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 
 | Name                     | Type                | Default Value | Description                                                                                                                         |
 | ------------------------ | ------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `ACCESS_TOKEN_SALT`      | string              |               | A random string used as salt for access tokens                                                                                      |
-| `API_KEY_COINGECKO_DEMO` | string (`optional`) |               | The _CoinGecko_ Demo API key                                                                                                        |
-| `API_KEY_COINGECKO_PRO`  | string (`optional`) |               | The _CoinGecko_ Pro API key                                                                                                         |
-| `DATABASE_URL`           | string              |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
-| `HOST`                   | string (`optional`) | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
-| `JWT_SECRET_KEY`         | string              |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
-| `PORT`                   | number (`optional`) | `3333`        | The port where the Ghostfolio application will run on                                                                               |
-| `POSTGRES_DB`            | string              |               | The name of the _PostgreSQL_ database                                                                                               |
-| `POSTGRES_PASSWORD`      | string              |               | The password of the _PostgreSQL_ database                                                                                           |
-| `POSTGRES_USER`          | string              |               | The user of the _PostgreSQL_ database                                                                                               |
-| `REDIS_DB`               | number (`optional`) | `0`           | The database index of _Redis_                                                                                                       |
-| `REDIS_HOST`             | string              |               | The host where _Redis_ is running                                                                                                   |
-| `REDIS_PASSWORD`         | string              |               | The password of _Redis_                                                                                                             |
-| `REDIS_PORT`             | number              |               | The port where _Redis_ is running                                                                                                   |
-| `REQUEST_TIMEOUT`        | number (`optional`) | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
+| `ACCESS_TOKEN_SALT`      | `string`            |               | A random string used as salt for access tokens                                                                                      |
+| `API_KEY_COINGECKO_DEMO` | `string` (optional) |               | The _CoinGecko_ Demo API key                                                                                                        |
+| `API_KEY_COINGECKO_PRO`  | `string` (optional) |               | The _CoinGecko_ Pro API key                                                                                                         |
+| `DATABASE_URL`           | `string`            |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `HOST`                   | `string` (optional) | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
+| `JWT_SECRET_KEY`         | `string`            |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
+| `PORT`                   | `number` (optional) | `3333`        | The port where the Ghostfolio application will run on                                                                               |
+| `POSTGRES_DB`            | `string`            |               | The name of the _PostgreSQL_ database                                                                                               |
+| `POSTGRES_PASSWORD`      | `string`            |               | The password of the _PostgreSQL_ database                                                                                           |
+| `POSTGRES_USER`          | `string`            |               | The user of the _PostgreSQL_ database                                                                                               |
+| `REDIS_DB`               | `number` (optional) | `0`           | The database index of _Redis_                                                                                                       |
+| `REDIS_HOST`             | `string`            |               | The host where _Redis_ is running                                                                                                   |
+| `REDIS_PASSWORD`         | `string`            |               | The password of _Redis_                                                                                                             |
+| `REDIS_PORT`             | `number`            |               | The port where _Redis_ is running                                                                                                   |
+| `REQUEST_TIMEOUT`        | `number` (optional) | `2000`        | The timeout of network requests to data providers in milliseconds                                                                   |
 
 ### Run with Docker Compose
 
@@ -233,18 +233,18 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
-| Field      | Type                | Description                                                                   |
-| ---------- | ------------------- | ----------------------------------------------------------------------------- |
-| accountId  | string (`optional`) | Id of the account                                                             |
-| comment    | string (`optional`) | Comment of the activity                                                       |
-| currency   | string              | `CHF` \| `EUR` \| `USD` etc.                                                  |
-| dataSource | string              | `COINGECKO` \| `MANUAL` (for type `ITEM`) \| `YAHOO`                          |
-| date       | string              | Date in the format `ISO-8601`                                                 |
-| fee        | number              | Fee of the activity                                                           |
-| quantity   | number              | Quantity of the activity                                                      |
-| symbol     | string              | Symbol of the activity (suitable for `dataSource`)                            |
-| type       | string              | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `ITEM` \| `LIABILITY` \| `SELL` |
-| unitPrice  | number              | Price per unit of the activity                                                |
+| Field        | Type                | Description                                                                   |
+| ------------ | ------------------- | ----------------------------------------------------------------------------- |
+| `accountId`  | `string` (optional) | Id of the account                                                             |
+| `comment`    | `string` (optional) | Comment of the activity                                                       |
+| `currency`   | `string`            | `CHF` \| `EUR` \| `USD` etc.                                                  |
+| `dataSource` | `string`            | `COINGECKO` \| `MANUAL` (for type `ITEM`) \| `YAHOO`                          |
+| `date`       | `string`            | Date in the format `ISO-8601`                                                 |
+| `fee`        | `number`            | Fee of the activity                                                           |
+| `quantity`   | `number`            | Quantity of the activity                                                      |
+| `symbol`     | `string`            | Symbol of the activity (suitable for `dataSource`)                            |
+| `type`       | `string`            | `BUY` \| `DIVIDEND` \| `FEE` \| `INTEREST` \| `ITEM` \| `LIABILITY` \| `SELL` |
+| `unitPrice`  | `number`            | Price per unit of the activity                                                |
 
 #### Response
 
