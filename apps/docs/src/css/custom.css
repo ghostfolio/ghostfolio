@@ -1,0 +1,82 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #36cfcc; /* Keeping the primary color as per your original choice */
+  --ifm-color-primary-dark: #32c6c4;
+  --ifm-color-primary-darker: #2dbab8;
+  --ifm-color-primary-darkest: #29a9a7;
+  --ifm-color-primary-light: #5dd9d8;
+  --ifm-color-primary-lighter: #86e3e2;
+  --ifm-color-primary-lightest: #e0f7f7;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(54, 207, 204, 0.1);
+
+  --ifm-background-color: #ffffff; /* Main background color */
+  --ifm-background-color-secondary: #f4f7fa; /* Light gray background for contrast */
+  --ifm-background-color-tertiary: #e9eff4; /* Slightly darker gray for sections */
+  --ifm-background-color-hover: #f0f4f8; /* Hover effect background */
+  --ifm-background-color-active: #e2e8ec; /* Active state background */
+  --ifm-background-color-selected: #d4dce0; /* Selected state background */
+  --ifm-background-color-inverse: #000000; /* Inverse background for dark elements */
+
+  --ifm-color-text: #2d3748; /* Dark text color for readability */
+  --ifm-color-text-secondary: #4a5568; /* Slightly lighter for secondary text */
+  --ifm-color-text-tertiary: #718096; /* Lighter text for less important information */
+  --ifm-color-text-inverse: #ffffff; /* Inverse text color for dark backgrounds */
+
+  --ifm-color-border: #cbd5e0; /* Light border for elements */
+  --ifm-color-border-hover: #b0bec5; /* Hover state border color */
+  --ifm-color-border-active: #90a4ae; /* Active state border color */
+  --ifm-color-border-selected: #78909c; /* Selected state border color */
+
+  --ifm-color-code-background: #f5f5f5; /* Light background for code blocks */
+  --ifm-color-code-text: #2d3748; /* Dark text for code blocks */
+
+  /* Additional customizations for buttons and links */
+  --ifm-button-background-color: #36cfcc; /* Primary button background */
+  --ifm-button-background-hover: #32c6c4; /* Hover state for buttons */
+  --ifm-button-background-active: #2dbab8; /* Active state for buttons */
+  --ifm-button-background-selected: #29a9a7; /* Selected state for buttons */
+  --ifm-button-color: #ffffff; /* Button text color */
+
+  --ifm-link-color: #2d3748; /* Link color */
+  --ifm-link-hover-color: #36cfcc; /* Hover state for links */
+  --ifm-link-active-color: #2dbab8; /* Active state for links */
+  --ifm-link-visited-color: #718096; /* Visited link color */
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-background-color: #121212;
+  --ifm-background-color-secondary: #1e1e1e;
+  --ifm-color-primary: #36cfcc;
+  --ifm-color-primary-dark: #2dbab8;
+  --ifm-color-primary-darker: #29a9a7;
+  --ifm-color-primary-darkest: #228d8b;
+  --ifm-color-primary-light: #5dd9d8;
+  --ifm-color-primary-lighter: #86e3e2;
+  --ifm-color-primary-lightest: #b0eeed;
+  --ifm-code-font-size: 95%;
+  --ifm-color-background: #121212;
+  --ifm-color-background-secondary: #1e1e1e;
+  --ifm-color-background-tertiary: #232323;
+  --ifm-color-background-hover: #333333;
+  --ifm-color-background-active: #3e3e3e;
+  --ifm-color-background-selected: #424242;
+  --ifm-color-background-inverse: #ffffff;
+  --ifm-color-text: #e0e0e0;
+  --ifm-color-text-secondary: #bbbbbb;
+  --ifm-color-text-tertiary: #999999;
+  --ifm-color-text-inverse: #000000;
+  --ifm-color-border: #444444;
+  --ifm-color-border-hover: #555555;
+  --ifm-color-border-active: #666666;
+  --ifm-color-border-selected: #777777;
+  --ifm-color-code-background: #2d2d2d;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 255, 255, 0.1);
+}
