@@ -1,7 +1,11 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  UniqueAsset,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { HoldingType, ToggleOption } from '@ghostfolio/common/types';
 
@@ -85,6 +89,18 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public onSymbolClicked({ dataSource, symbol }: UniqueAsset) {
+    // TODO
+
+    // if (dataSource && symbol) {
+    //   this.router.navigate([], {
+    //     queryParams: { dataSource, symbol, holdingDetailDialog: true }
+    //   });
+    // }
+
+    console.log({ dataSource, symbol });
   }
 
   public ngOnDestroy() {

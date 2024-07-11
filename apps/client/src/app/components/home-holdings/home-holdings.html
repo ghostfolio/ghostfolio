@@ -6,7 +6,7 @@
   </div>
   <div class="row">
     <div class="col-lg">
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end mb-3">
         <gf-toggle
           class="d-none d-lg-block"
           [defaultValue]="holdingType"
@@ -15,6 +15,11 @@
           (change)="onChangeHoldingType($event.value)"
         />
       </div>
+      <gf-treemap-chart
+        cursor="pointer"
+        [holdings]="holdings"
+        (treemapChartClicked)="onSymbolClicked($event)"
+      />
       <gf-holdings-table
         [baseCurrency]="user?.settings?.baseCurrency"
         [deviceType]="deviceType"
