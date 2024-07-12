@@ -92,7 +92,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       this.viewModeFormControl.enable();
     } else if (this.holdingType === 'CLOSED') {
       this.viewModeFormControl.disable();
-
       this.viewModeFormControl.setValue('TABLE');
     }
 
