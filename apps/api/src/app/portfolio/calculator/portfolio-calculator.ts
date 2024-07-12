@@ -187,7 +187,7 @@ export abstract class PortfolioCalculator {
 
     if (!transactionPoints.length) {
       return {
-        chartData: [],
+        historicalData: [],
         currentValueInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
@@ -577,7 +577,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const chartData: HistoricalDataItem[] = Object.entries(
+    const historicalData: HistoricalDataItem[] = Object.entries(
       accumulatedValuesByDate
     ).map(([date, values]) => {
       const {
@@ -629,8 +629,8 @@ export abstract class PortfolioCalculator {
 
     return {
       ...overall,
-      chartData,
       errors,
+      historicalData,
       positions,
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
@@ -1095,7 +1095,7 @@ export abstract class PortfolioCalculator {
   public async getPerformance({ end, start }) {
     await this.snapshotPromise;
 
-    const { chartData } = this.snapshot;
+    const { historicalData } = this.snapshot;
 
     const newChartData: HistoricalDataItem[] = [];
 
@@ -1104,7 +1104,7 @@ export abstract class PortfolioCalculator {
     let netPerformanceInPercentageWithCurrencyEffectAtStartDate: number;
     let totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
-    for (let historicalDataItem of chartData) {
+    for (let historicalDataItem of historicalData) {
       if (
         !isBefore(parseDate(historicalDataItem.date), subDays(start, 1)) &&
         !isAfter(parseDate(historicalDataItem.date), end)

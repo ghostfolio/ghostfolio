@@ -70,7 +70,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, isNumber, uniq, uniqBy } from 'lodash';
+import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -1181,61 +1181,14 @@ export class PortfolioService {
           this.request.user.Settings.settings.isExperimentalFeatures
       });
 
-    const {
-      chartData,
-      currentValueInBaseCurrency,
-      errors,
-      grossPerformance,
-      grossPerformancePercentage,
-      grossPerformancePercentageWithCurrencyEffect,
-      grossPerformanceWithCurrencyEffect,
-      hasErrors,
-      netPerformance,
-      netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect,
-      netPerformanceWithCurrencyEffect,
-      totalInvestment
-    } = await portfolioCalculator.getSnapshot();
+    const { historicalData, errors, hasErrors } =
+      await portfolioCalculator.getSnapshot();
 
     console.timeEnd('------- PortfolioService.getPerformance - 3');
     console.time('------- PortfolioService.getPerformance - 4');
 
-    let currentNetPerformance = netPerformance;
-
-    let currentNetPerformancePercentage = netPerformancePercentage;
-
-    let currentNetPerformancePercentageWithCurrencyEffect =
-      netPerformancePercentageWithCurrencyEffect;
-
-    let currentNetPerformanceWithCurrencyEffect =
-      netPerformanceWithCurrencyEffect;
-
-    let currentNetWorth = 0;
-
     console.timeEnd('------- PortfolioService.getPerformance - 4');
     console.time('------- PortfolioService.getPerformance - 5');
-
-    const itemOfToday = chartData.find(({ date }) => {
-      return date === format(new Date(), DATE_FORMAT);
-    });
-
-    if (itemOfToday) {
-      currentNetPerformance = new Big(itemOfToday.netPerformance);
-
-      currentNetPerformancePercentage = new Big(
-        itemOfToday.netPerformanceInPercentage
-      ).div(100);
-
-      currentNetPerformancePercentageWithCurrencyEffect = new Big(
-        itemOfToday.netPerformanceInPercentageWithCurrencyEffect
-      ).div(100);
-
-      currentNetPerformanceWithCurrencyEffect = new Big(
-        itemOfToday.netPerformanceWithCurrencyEffect
-      );
-
-      currentNetWorth = itemOfToday.netWorth;
-    }
 
     console.timeEnd('------- PortfolioService.getPerformance - 5');
 
@@ -1246,27 +1199,37 @@ export class PortfolioService {
       start: startDate
     });
 
+    const {
+      grossPerformancePercent,
+      netPerformance,
+      netPerformanceInPercentage,
+      netPerformanceInPercentageWithCurrencyEffect,
+      netPerformanceWithCurrencyEffect,
+      netWorth,
+      totalInvestment,
+      valueWithCurrencyEffect
+    } = last(chart);
+
     return {
       chart,
       errors,
       hasErrors,
-      firstOrderDate: parseDate(chartData[0]?.date),
+      firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
-        currentNetWorth,
-        currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
-        grossPerformance: grossPerformance.toNumber(),
-        grossPerformancePercentage: grossPerformancePercentage.toNumber(),
-        grossPerformancePercentageWithCurrencyEffect:
-          grossPerformancePercentageWithCurrencyEffect.toNumber(),
-        grossPerformanceWithCurrencyEffect:
-          grossPerformanceWithCurrencyEffect.toNumber(),
-        netPerformance: currentNetPerformance.toNumber(),
-        netPerformancePercentage: currentNetPerformancePercentage.toNumber(),
+        netPerformance,
+        netPerformanceWithCurrencyEffect,
+        totalInvestment,
+        currentNetWorth: netWorth,
+        currentValueInBaseCurrency: valueWithCurrencyEffect,
+        // TODO
+        grossPerformance: 0,
+        grossPerformancePercentage: grossPerformancePercent / 100,
+        grossPerformancePercentageWithCurrencyEffect: 0 / 100,
+        // TODO
+        grossPerformanceWithCurrencyEffect: 0,
+        netPerformancePercentage: netPerformanceInPercentage / 100,
         netPerformancePercentageWithCurrencyEffect:
-          currentNetPerformancePercentageWithCurrencyEffect.toNumber(),
-        netPerformanceWithCurrencyEffect:
-          currentNetPerformanceWithCurrencyEffect.toNumber(),
-        totalInvestment: totalInvestment.toNumber()
+          netPerformanceInPercentageWithCurrencyEffect / 100
       }
     };
   }

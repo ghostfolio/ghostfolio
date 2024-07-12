@@ -6,8 +6,6 @@ import { Big } from 'big.js';
 import { Transform, Type } from 'class-transformer';
 
 export class PortfolioSnapshot {
-  chartData: HistoricalDataItem[];
-
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
@@ -31,6 +29,8 @@ export class PortfolioSnapshot {
   grossPerformancePercentageWithCurrencyEffect: Big;
 
   hasErrors: boolean;
+
+  historicalData: HistoricalDataItem[];
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

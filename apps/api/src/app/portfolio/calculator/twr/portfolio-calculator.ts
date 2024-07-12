@@ -115,7 +115,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       totalInterestWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
-      chartData: [],
+      historicalData: [],
       netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
         ? new Big(0)
         : netPerformance.div(totalTimeWeightedInvestment),
