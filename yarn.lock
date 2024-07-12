@@ -10071,6 +10071,11 @@ chartjs-adapter-date-fns@3.0.0:
   resolved "https://registry.yarnpkg.com/chartjs-adapter-date-fns/-/chartjs-adapter-date-fns-3.0.0.tgz#c25f63c7f317c1f96f9a7c44bd45eeedb8a478e5"
   integrity sha512-Rs3iEB3Q5pJ973J93OBTpnP7qoGwvq3nUnoMdtxO+9aoJof7UFcRbWcIDteXuYd1fgAvct/32T9qaLyLuZVwCg==
 
+chartjs-chart-treemap@2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/chartjs-chart-treemap/-/chartjs-chart-treemap-2.3.1.tgz#b0d27309ee373cb7706cabb262c48c53ffacf710"
+  integrity sha512-GW+iODLICIJhNZtHbTtaOjCwRIxmXcquXRKDFMsrkXyqyDeSN1aiVfzNNj6Xjy55soopqRA+YfHqjT2S2zF7lQ==
+
 chartjs-plugin-annotation@2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/chartjs-plugin-annotation/-/chartjs-plugin-annotation-2.1.2.tgz#8c307c931fda735a1acf1b606ad0e3fd7d96299b"
@@ -16756,6 +16761,11 @@ onetime@^5.1.0, onetime@^5.1.2:
   integrity sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==
   dependencies:
     mimic-fn "^2.1.0"
+
+open-color@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/open-color/-/open-color-1.9.1.tgz#a6e6328f60eff7aa60e3e8fcfa50f53ff3eece35"
+  integrity sha512-vCseG/EQ6/RcvxhUcGJiHViOgrtz4x0XbZepXvKik66TMGkvbmjeJrKFyBEx6daG5rNyyd14zYXhz0hZVwQFOw==
 
 open@8.4.2, open@^8.0.4, open@^8.0.9, open@^8.4.0:
   version "8.4.2"
