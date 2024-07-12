@@ -352,7 +352,6 @@ export class GfPortfolioProportionChartComponent
 
   /**
    * Color palette, inspired by https://yeun.github.io/open-color
-   *
    */
   private getColorPalette() {
     // TODO: Reuse require('open-color')

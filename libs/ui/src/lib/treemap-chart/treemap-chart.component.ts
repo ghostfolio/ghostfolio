@@ -35,11 +35,8 @@ const { gray, green, red } = require('open-color');
 export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
-  @Input() baseCurrency: string;
   @Input() cursor: string;
   @Input() holdings: PortfolioPosition[];
-  @Input() isInPercent = false;
-  @Input() locale = getLocale();
 
   @Output() treemapChartClicked = new EventEmitter<UniqueAsset>();
 
