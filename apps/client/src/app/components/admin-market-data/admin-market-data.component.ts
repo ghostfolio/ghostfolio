@@ -10,6 +10,7 @@ import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -97,6 +98,7 @@ export class AdminMarketDataComponent
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns = [
+    'select',
     'nameWithSymbol',
     'dataSource',
     'assetClass',
@@ -115,13 +117,14 @@ export class AdminMarketDataComponent
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
+  public selection: SelectionModel<Partial<SymbolProfile>>;
   public totalItems = 0;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -188,6 +191,8 @@ export class AdminMarketDataComponent
 
     this.benchmarks = benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.selection = new SelectionModel(true);
   }
 
   public onChangePage(page: PageEvent) {
@@ -198,8 +203,16 @@ export class AdminMarketDataComponent
     });
   }
 
-  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+  public onDeleteAssetProfile({ dataSource, symbol }: UniqueAsset) {
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
+  }
+
+  public onDeleteAssetProfiles() {
+    this.adminMarketDataService.deleteAssetProfiles(
+      this.selection.selected.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      })
+    );
   }
 
   public onGather7Days() {
@@ -285,6 +298,8 @@ export class AdminMarketDataComponent
 
     this.placeholder =
       this.activeFilters.length <= 0 ? $localize`Filter by...` : '';
+
+    this.selection.clear();
 
     this.adminService
       .fetchAdminMarketData({

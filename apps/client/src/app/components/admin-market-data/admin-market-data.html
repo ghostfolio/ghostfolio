@@ -20,6 +20,27 @@
           matSortDirection="asc"
           [dataSource]="dataSource"
         >
+          <ng-container matColumnDef="select">
+            <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              @if (
+                adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                  activitiesCount: element.activitiesCount,
+                  isBenchmark: element.isBenchmark,
+                  symbol: element.symbol
+                })
+              ) {
+                <mat-checkbox
+                  color="primary"
+                  [checked]="selection.isSelected(element)"
+                  (change)="$event ? selection.toggle(element) : null"
+                  (click)="$event.stopPropagation()"
+                >
+                </mat-checkbox>
+              }
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="symbol">
             <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header>
               <ng-container i18n>Symbol</ng-container>
@@ -152,6 +173,13 @@
                 <button mat-menu-item (click)="onGatherProfileData()">
                   <ng-container i18n>Gather Profile Data</ng-container>
                 </button>
+                <button
+                  mat-menu-item
+                  [disabled]="!selection.hasValue()"
+                  (click)="onDeleteAssetProfiles()"
+                >
+                  <ng-container i18n>Delete Profiles</ng-container>
+                </button>
               </mat-menu>
             </th>
             <td *matCellDef="let element" class="px-1 text-center" mat-cell>
@@ -181,12 +209,14 @@
                 <button
                   mat-menu-item
                   [disabled]="
-                    element.activitiesCount !== 0 ||
-                    element.isBenchmark ||
-                    element.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+                    !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+                      activitiesCount: element.activitiesCount,
+                      isBenchmark: element.isBenchmark,
+                      symbol: element.symbol
+                    })
                   "
                   (click)="
-                    onDeleteProfileData({
+                    onDeleteAssetProfile({
                       dataSource: element.dataSource,
                       symbol: element.symbol
                     })

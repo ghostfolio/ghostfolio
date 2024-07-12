@@ -514,7 +514,17 @@ export class PortfolioService {
           grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
         grossPerformanceWithCurrencyEffect:
           grossPerformanceWithCurrencyEffect?.toNumber() ?? 0,
-        holdings: assetProfile.holdings,
+        holdings: assetProfile.holdings.map(
+          ({ allocationInPercentage, name }) => {
+            return {
+              allocationInPercentage,
+              name,
+              valueInBaseCurrency: valueInBaseCurrency
+                .mul(allocationInPercentage)
+                .toNumber()
+            };
+          }
+        ),
         investment: investment.toNumber(),
         marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: assetProfile.name,

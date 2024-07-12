@@ -19,12 +19,30 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Investment Software Suite'
   },
   {
+    founded: 2016,
+    key: 'alphatrackr',
+    languages: ['English'],
+    name: 'AlphaTrackr',
+    slogan: 'Investment Portfolio Tracking Tool'
+  },
+  {
     founded: 2017,
     hasSelfHostingAbility: false,
     key: 'altoo',
     name: 'Altoo Wealth Platform',
     origin: `Switzerland`,
     slogan: 'Simplicity for Complex Wealth'
+  },
+  {
+    founded: 2018,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'anlage.app',
+    languages: ['English'],
+    name: 'Anlage.App',
+    origin: `Austria`,
+    pricingPerYear: '$120',
+    slogan: 'Analyze and track your portfolio.'
   },
   {
     founded: 2022,
@@ -193,6 +211,16 @@ export const personalFinanceTools: Product[] = [
   {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
+    key: 'holistic-capital',
+    languages: ['Deutsch'],
+    name: 'Holistic',
+    origin: `Germany`,
+    slogan: 'Die All-in-One Lösung für dein Vermögen.',
+    useAnonymously: true
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
     key: 'intuit-mint',
     name: 'Intuit Mint',
     note: 'Intuit Mint has discontinued in 2023',
@@ -265,6 +293,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your financial future, in your control'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'merlincrypto',
+    languages: ['English'],
+    name: 'Merlin',
+    origin: `United States`,
+    pricingPerYear: '$204',
+    region: 'Canada, United States',
+    slogan: 'The smartest way to track your crypto'
+  },
+  {
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -332,6 +371,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Tools for Better Investors'
   },
   {
+    hasFreePlan: true,
+    key: 'portfoloo',
+    name: 'Portfoloo',
+    note: 'Portfoloo has discontinued',
+    slogan:
+      'Free Stock Portfolio Tracker with unlimited portfolio and stocks for DIY investors'
+  },
+  {
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -371,6 +418,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Market Analysis & Tools for Investors'
   },
   {
+    founded: 2022,
+    key: 'segmio',
+    name: 'Segmio',
+    origin: `Romania`,
+    slogan: 'Wealth Management and Net Worth Tracking'
+  },
+  {
     founded: 2007,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -380,6 +434,13 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$135',
     region: `Global`,
     slogan: 'Stock Portfolio Tracker'
+  },
+  {
+    hasFreePlan: true,
+    key: 'sharesmaster',
+    name: 'SharesMaster',
+    note: 'SharesMaster has discontinued',
+    slogan: 'Free Stock Portfolio Tracker'
   },
   {
     hasFreePlan: true,

@@ -87,7 +87,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
@@ -176,7 +176,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }

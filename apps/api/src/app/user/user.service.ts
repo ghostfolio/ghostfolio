@@ -1,3 +1,4 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
@@ -40,6 +41,7 @@ export class UserService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -398,8 +400,8 @@ export class UserService {
     } catch {}
 
     try {
-      await this.prismaService.order.deleteMany({
-        where: { userId: where.id }
+      await this.orderService.deleteOrders({
+        userId: where.id
       });
     } catch {}
 

@@ -66,7 +66,6 @@ export class OrderController {
 
     return this.orderService.deleteOrders({
       filters,
-      userCurrency: this.request.user.Settings.settings.baseCurrency,
       userId: this.request.user.id
     });
   }

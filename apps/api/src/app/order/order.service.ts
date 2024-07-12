@@ -184,7 +184,15 @@ export class OrderService {
       where
     });
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
+    const [symbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesByIds([
+        order.symbolProfileId
+      ]);
+
+    if (
+      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
+      symbolProfile.activitiesCount === 0
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -200,18 +208,16 @@ export class OrderService {
 
   public async deleteOrders({
     filters,
-    userCurrency,
     userId
   }: {
     filters?: Filter[];
-    userCurrency: string;
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getOrders({
       filters,
       userId,
-      userCurrency,
       includeDrafts: true,
+      userCurrency: undefined,
       withExcludedAccounts: true
     });
 
@@ -224,6 +230,19 @@ export class OrderService {
         }
       }
     });
+
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByIds(
+        activities.map(({ symbolProfileId }) => {
+          return symbolProfileId;
+        })
+      );
+
+    for (const { activitiesCount, id } of symbolProfiles) {
+      if (activitiesCount === 0) {
+        await this.symbolProfileService.deleteById(id);
+      }
+    }
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
@@ -273,7 +292,8 @@ export class OrderService {
   }): Promise<Activities> {
     console.time('------ OrderService.getOrders');
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' }
+      { date: 'asc' },
+      { id: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
 
@@ -349,7 +369,7 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
     }
 
     if (types) {
