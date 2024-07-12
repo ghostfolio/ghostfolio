@@ -6,37 +6,60 @@
   </div>
   <div class="row">
     <div class="col-lg">
-      <div class="d-flex justify-content-end mb-3">
-        <gf-toggle
-          class="d-none d-lg-block"
-          [defaultValue]="holdingType"
-          [isLoading]="false"
-          [options]="holdingTypeOptions"
-          (change)="onChangeHoldingType($event.value)"
-        />
-      </div>
-      <gf-treemap-chart
-        cursor="pointer"
-        [holdings]="holdings"
-        (treemapChartClicked)="onSymbolClicked($event)"
-      />
-      <gf-holdings-table
-        [baseCurrency]="user?.settings?.baseCurrency"
-        [deviceType]="deviceType"
-        [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
-        [holdings]="holdings"
-        [locale]="user?.settings?.locale"
-      />
-      @if (hasPermissionToCreateOrder && holdings?.length > 0) {
-        <div class="text-center">
-          <a
-            class="mt-3"
-            i18n
-            mat-stroked-button
-            [routerLink]="['/portfolio', 'activities']"
-            >Manage Activities</a
-          >
+      <div class="d-flex">
+        @if (user?.settings?.isExperimentalFeatures) {
+          <div class="d-flex">
+            <div class="d-none d-lg-block">
+              <mat-button-toggle-group
+                [formControl]="viewModeFormControl"
+                [hideSingleSelectionIndicator]="true"
+              >
+                <mat-button-toggle value="TABLE">
+                  <ion-icon name="reorder-four-outline" />
+                </mat-button-toggle>
+                <mat-button-toggle value="CHART">
+                  <ion-icon name="grid-outline" />
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+        }
+        <div class="align-items-center d-flex flex-grow-1 justify-content-end">
+          <gf-toggle
+            class="d-none d-lg-block"
+            [defaultValue]="holdingType"
+            [isLoading]="false"
+            [options]="holdingTypeOptions"
+            (change)="onChangeHoldingType($event.value)"
+          />
         </div>
+      </div>
+      @if (viewModeFormControl.value === 'CHART') {
+        <gf-treemap-chart
+          class="mt-3"
+          cursor="pointer"
+          [holdings]="holdings"
+          (treemapChartClicked)="onSymbolClicked($event)"
+        />
+      } @else if (viewModeFormControl.value === 'TABLE') {
+        <gf-holdings-table
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [deviceType]="deviceType"
+          [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
+          [holdings]="holdings"
+          [locale]="user?.settings?.locale"
+        />
+        @if (hasPermissionToCreateOrder && holdings?.length > 0) {
+          <div class="text-center">
+            <a
+              class="mt-3"
+              i18n
+              mat-stroked-button
+              [routerLink]="['/portfolio', 'activities']"
+              >Manage Activities</a
+            >
+          </div>
+        }
       }
     </div>
   </div>

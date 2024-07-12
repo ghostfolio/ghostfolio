@@ -7,9 +7,15 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { HoldingType, ToggleOption } from '@ghostfolio/common/types';
+import {
+  HoldingType,
+  HoldingViewMode,
+  ToggleOption
+} from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -30,6 +36,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
   public user: User;
+  public viewModeFormControl = new FormControl<HoldingViewMode>('TABLE');
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -38,6 +45,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
+    private router: Router,
     private userService: UserService
   ) {}
 
@@ -80,6 +88,14 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public onChangeHoldingType(aHoldingType: HoldingType) {
     this.holdingType = aHoldingType;
 
+    if (this.holdingType === 'ACTIVE') {
+      this.viewModeFormControl.enable();
+    } else if (this.holdingType === 'CLOSED') {
+      this.viewModeFormControl.disable();
+
+      this.viewModeFormControl.setValue('TABLE');
+    }
+
     this.holdings = undefined;
 
     this.fetchHoldings()
@@ -92,15 +108,11 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   }
 
   public onSymbolClicked({ dataSource, symbol }: UniqueAsset) {
-    // TODO
-
-    // if (dataSource && symbol) {
-    //   this.router.navigate([], {
-    //     queryParams: { dataSource, symbol, holdingDetailDialog: true }
-    //   });
-    // }
-
-    console.log({ dataSource, symbol });
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
+      });
+    }
   }
 
   public ngOnDestroy() {

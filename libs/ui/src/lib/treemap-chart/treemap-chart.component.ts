@@ -19,6 +19,7 @@ import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 const { gray, green, red } = require('open-color');
@@ -102,7 +103,7 @@ export class GfTreemapChartComponent
             align: 'left',
             color: ['white'],
             display: true,
-            font: [{ size: 16, weight: 'bold' }, { size: 12 }],
+            font: [{ size: 14 }, { size: 11 }, { lineHeight: 2, size: 14 }],
             formatter(ctx) {
               const netPerformancePercentWithCurrencyEffect =
                 ctx.raw._data.netPerformancePercentWithCurrencyEffect;
@@ -133,11 +134,16 @@ export class GfTreemapChartComponent
             onClick: (event, activeElements) => {
               try {
                 const dataIndex = activeElements[0].index;
+                const datasetIndex = activeElements[0].datasetIndex;
 
-                const dataSource: DataSource =
-                  event.chart.data.datasets[0].tree[dataIndex].dataSource;
-                const symbol: string =
-                  event.chart.data.datasets[0].tree[dataIndex].symbol;
+                const dataset = orderBy(
+                  event.chart.data.datasets[datasetIndex].tree,
+                  ['allocationInPercentage'],
+                  ['desc']
+                );
+
+                const dataSource: DataSource = dataset[dataIndex].dataSource;
+                const symbol: string = dataset[dataIndex].symbol;
 
                 this.treemapChartClicked.emit({ dataSource, symbol });
               } catch {}
@@ -147,6 +153,11 @@ export class GfTreemapChartComponent
                 event.native.target.style.cursor = chartElement[0]
                   ? this.cursor
                   : 'default';
+              }
+            },
+            plugins: {
+              tooltip: {
+                enabled: false
               }
             }
           },
