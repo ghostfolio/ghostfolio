@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue in the portfolio summary with the currency conversion of fees
 - Removed the show condition of the experimental features setting in the user settings
 
 ## 2.95.0 - 2024-07-12

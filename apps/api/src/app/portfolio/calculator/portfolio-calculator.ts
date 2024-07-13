@@ -300,6 +300,12 @@ export abstract class PortfolioCalculator {
     const errors: ResponseError['errors'] = [];
 
     for (const item of lastTransactionPoint.items) {
+      const feeInBaseCurrency = item.fee.mul(
+        exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
+          lastTransactionPoint.date
+        ]
+      );
+
       const marketPriceInBaseCurrency = (
         marketSymbolMap[endDateString]?.[item.symbol] ?? item.averagePrice
       ).mul(
@@ -340,10 +346,11 @@ export abstract class PortfolioCalculator {
       hasAnySymbolMetricsErrors = hasAnySymbolMetricsErrors || hasErrors;
 
       positions.push({
-        dividend: totalDividend,
-        dividendInBaseCurrency: totalDividendInBaseCurrency,
+        feeInBaseCurrency,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
+        dividend: totalDividend,
+        dividendInBaseCurrency: totalDividendInBaseCurrency,
         averagePrice: item.averagePrice,
         currency: item.currency,
         dataSource: item.dataSource,
