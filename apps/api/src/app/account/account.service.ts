@@ -174,8 +174,8 @@ export class AccountService {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
       TAG: filtersByTag
-    } = groupBy(filters, (filter) => {
-      return filter.type;
+    } = groupBy(filters, ({ type }) => {
+      return type;
     });
 
     if (filtersByAccount?.length > 0) {

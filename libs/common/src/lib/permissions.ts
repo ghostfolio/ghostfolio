@@ -5,6 +5,7 @@ import { Role } from '@prisma/client';
 export const permissions = {
   accessAdminControl: 'accessAdminControl',
   accessAssistant: 'accessAssistant',
+  accessHoldingsChart: 'accessHoldingsChart',
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createAccountBalance: 'createAccountBalance',
@@ -47,6 +48,7 @@ export function getPermissions(aRole: Role): string[] {
       return [
         permissions.accessAdminControl,
         permissions.accessAssistant,
+        permissions.accessHoldingsChart,
         permissions.createAccess,
         permissions.createAccount,
         permissions.createAccountBalance,
@@ -72,11 +74,16 @@ export function getPermissions(aRole: Role): string[] {
       ];
 
     case 'DEMO':
-      return [permissions.accessAssistant, permissions.createUserAccount];
+      return [
+        permissions.accessAssistant,
+        permissions.accessHoldingsChart,
+        permissions.createUserAccount
+      ];
 
     case 'USER':
       return [
         permissions.accessAssistant,
+        permissions.accessHoldingsChart,
         permissions.createAccess,
         permissions.createAccount,
         permissions.createAccountBalance,

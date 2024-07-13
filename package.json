@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.94.0",
+  "version": "2.96.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -97,6 +97,7 @@
     "cache-manager-redis-store": "2.0.0",
     "chart.js": "4.2.0",
     "chartjs-adapter-date-fns": "3.0.0",
+    "chartjs-chart-treemap": "2.3.1",
     "chartjs-plugin-annotation": "2.1.2",
     "chartjs-plugin-datalabels": "2.2.0",
     "cheerio": "1.0.0-rc.12",
@@ -122,6 +123,7 @@
     "ngx-markdown": "18.0.0",
     "ngx-skeleton-loader": "7.0.0",
     "ngx-stripe": "18.0.0",
+    "open-color": "1.9.1",
     "papaparse": "5.3.1",
     "passport": "0.7.0",
     "passport-google-oauth20": "2.0.0",

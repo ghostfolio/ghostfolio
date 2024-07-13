@@ -313,9 +313,13 @@ export class OrderService {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
       TAG: filtersByTag
-    } = groupBy(filters, (filter) => {
-      return filter.type;
+    } = groupBy(filters, ({ type }) => {
+      return type;
     });
+
+    const searchQuery = filters?.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
 
     if (filtersByAccount?.length > 0) {
       where.accountId = {
@@ -356,6 +360,30 @@ export class OrderService {
           }
         ]
       };
+    }
+
+    if (searchQuery) {
+      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
+        { id: { mode: 'insensitive', startsWith: searchQuery } },
+        { isin: { mode: 'insensitive', startsWith: searchQuery } },
+        { name: { mode: 'insensitive', startsWith: searchQuery } },
+        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+      ];
+
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              OR: searchQueryWhereInput
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          OR: searchQueryWhereInput
+        };
+      }
     }
 
     if (filtersByTag?.length > 0) {

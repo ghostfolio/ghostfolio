@@ -352,6 +352,18 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Your Personal Finance Hub'
   },
   {
+    founded: 2008,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'pocketsmith',
+    languages: ['English'],
+    name: 'PocketSmith',
+    origin: `New Zealand`,
+    pricingPerYear: '$120',
+    region: `Global`,
+    slogan: 'Know where your money is going'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'portfolio-dividend-tracker',

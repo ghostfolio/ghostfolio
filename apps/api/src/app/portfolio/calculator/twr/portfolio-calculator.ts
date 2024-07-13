@@ -34,9 +34,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
 
     for (const currentPosition of positions) {
-      if (currentPosition.fee) {
+      if (currentPosition.feeInBaseCurrency) {
         totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
-          currentPosition.fee
+          currentPosition.feeInBaseCurrency
         );
       }
 

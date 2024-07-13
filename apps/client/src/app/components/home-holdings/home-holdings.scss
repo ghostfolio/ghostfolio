@@ -1,3 +1,9 @@
 :host {
   display: block;
+
+  .mat-button-toggle-group {
+    .mat-button-toggle-appearance-standard {
+      --mat-standard-button-toggle-height: 1.5rem;
+    }
+  }
 }

@@ -196,25 +196,23 @@
           />
         </div>
       </div>
-      @if (hasPermissionToUpdateUserSettings) {
-        <div class="align-items-center d-flex mt-4 py-1">
-          <div class="pr-1 w-50">
-            <div i18n>Experimental Features</div>
-            <div class="hint-text text-muted" i18n>
-              Sneak peek at upcoming functionality
-            </div>
-          </div>
-          <div class="pl-1 w-50">
-            <mat-slide-toggle
-              color="primary"
-              hideIcon="true"
-              [checked]="user.settings.isExperimentalFeatures"
-              [disabled]="!hasPermissionToUpdateUserSettings"
-              (change)="onExperimentalFeaturesChange($event)"
-            />
+      <div class="align-items-center d-flex mt-4 py-1">
+        <div class="pr-1 w-50">
+          <div i18n>Experimental Features</div>
+          <div class="hint-text text-muted" i18n>
+            Sneak peek at upcoming functionality
           </div>
         </div>
-      }
+        <div class="pl-1 w-50">
+          <mat-slide-toggle
+            color="primary"
+            hideIcon="true"
+            [checked]="user.settings.isExperimentalFeatures"
+            [disabled]="!hasPermissionToUpdateUserSettings"
+            (change)="onExperimentalFeaturesChange($event)"
+          />
+        </div>
+      </div>
       <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
           Ghostfolio <ng-container i18n>User ID</ng-container>
