@@ -29,6 +29,21 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
+const {
+  blue,
+  cyan,
+  grape,
+  green,
+  indigo,
+  lime,
+  orange,
+  pink,
+  red,
+  teal,
+  violet,
+  yellow
+} = require('open-color');
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
@@ -350,24 +365,20 @@ export class GfPortfolioProportionChartComponent
     this.isLoading = false;
   }
 
-  /**
-   * Color palette, inspired by https://yeun.github.io/open-color
-   */
   private getColorPalette() {
-    // TODO: Reuse require('open-color')
     return [
-      '#329af0', // blue 5
-      '#20c997', // teal 5
-      '#94d82d', // lime 5
-      '#ff922b', // orange 5
-      '#f06595', // pink 5
-      '#845ef7', // violet 5
-      '#5c7cfa', // indigo 5
-      '#22b8cf', // cyan 5
-      '#51cf66', // green 5
-      '#fcc419', // yellow 5
-      '#ff6b6b', // red 5
-      '#cc5de8' // grape 5
+      blue[5],
+      teal[5],
+      lime[5],
+      orange[5],
+      pink[5],
+      violet[5],
+      indigo[5],
+      cyan[5],
+      green[5],
+      yellow[5],
+      red[5],
+      grape[5]
     ];
   }
 
