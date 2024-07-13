@@ -77,6 +77,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
           );
 
           this.initialize();
+
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
@@ -134,7 +136,5 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
         this.changeDetectorRef.markForCheck();
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }
