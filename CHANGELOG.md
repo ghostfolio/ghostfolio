@@ -11,6 +11,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Node.js` from version `18` to `20` (`Dockerfile`)
 
+## 2.96.0 - 2024-07-13
+
+### Changed
+
+- Improved the chart of the holdings tab on the home page (experimental)
+- Separated the icon purposes in the `site.webmanifest`
+
+### Fixed
+
+- Fixed an issue in the portfolio summary with the currency conversion of fees
+- Fixed an issue in the the search for a holding
+- Removed the show condition of the experimental features setting in the user settings
+
+## 2.95.0 - 2024-07-12
+
+### Added
+
+- Added a chart to the holdings tab of the home page (experimental)
+
+## 2.94.0 - 2024-07-09
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed a pagination issue in the activities endpoint by adding `id` as a secondary sort criterion to `date` to ensure consistent ordering
+
 ## 2.93.0 - 2024-07-07
 
 ### Added

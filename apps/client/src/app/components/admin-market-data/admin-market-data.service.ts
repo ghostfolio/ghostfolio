@@ -31,7 +31,7 @@ export class AdminMarketDataService {
 
   public deleteAssetProfiles(uniqueAssets: UniqueAsset[]) {
     const confirmation = confirm(
-      $localize`Do you really want to delete these asset profiles?`
+      $localize`Do you really want to delete these profiles?`
     );
 
     if (confirmation) {
@@ -42,7 +42,7 @@ export class AdminMarketDataService {
       forkJoin(deleteRequests)
         .pipe(
           catchError(() => {
-            alert($localize`Oops! Could not delete asset profiles.`);
+            alert($localize`Oops! Could not delete profiles.`);
 
             return EMPTY;
           }),
