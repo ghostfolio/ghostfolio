@@ -237,6 +237,7 @@ export class UserService {
 
         currentPermissions = without(
           currentPermissions,
+          permissions.accessHoldingsChart,
           permissions.createAccess
         );
 

@@ -28,6 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasImpersonationId: boolean;
+  public hasPermissionToAccessHoldingsChart: boolean;
   public hasPermissionToCreateOrder: boolean;
   public holdings: PortfolioPosition[];
   public holdingType: HoldingType = 'ACTIVE';
@@ -65,20 +66,17 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          this.hasPermissionToAccessHoldingsChart = hasPermission(
+            this.user.permissions,
+            permissions.accessHoldingsChart
+          );
+
           this.hasPermissionToCreateOrder = hasPermission(
             this.user.permissions,
             permissions.createOrder
           );
 
-          this.holdings = undefined;
-
-          this.fetchHoldings()
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(({ holdings }) => {
-              this.holdings = holdings;
-
-              this.changeDetectorRef.markForCheck();
-            });
+          this.initialize();
 
           this.changeDetectorRef.markForCheck();
         }
@@ -88,22 +86,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public onChangeHoldingType(aHoldingType: HoldingType) {
     this.holdingType = aHoldingType;
 
-    if (this.holdingType === 'ACTIVE') {
-      this.viewModeFormControl.enable();
-    } else if (this.holdingType === 'CLOSED') {
-      this.viewModeFormControl.disable();
-      this.viewModeFormControl.setValue('TABLE');
-    }
-
-    this.holdings = undefined;
-
-    this.fetchHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
-        this.holdings = holdings;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.initialize();
   }
 
   public onSymbolClicked({ dataSource, symbol }: UniqueAsset) {
@@ -130,5 +113,28 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       filters,
       range: this.user?.settings?.dateRange
     });
+  }
+
+  private initialize() {
+    this.viewModeFormControl.disable();
+
+    if (
+      this.hasPermissionToAccessHoldingsChart &&
+      this.holdingType === 'ACTIVE'
+    ) {
+      this.viewModeFormControl.enable();
+    } else if (this.holdingType === 'CLOSED') {
+      this.viewModeFormControl.setValue('TABLE');
+    }
+
+    this.holdings = undefined;
+
+    this.fetchHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings;
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }
