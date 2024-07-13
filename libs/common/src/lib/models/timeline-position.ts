@@ -24,6 +24,10 @@ export class TimelinePosition {
   @Type(() => Big)
   fee: Big;
 
+  @Transform(transformToBig, { toClassOnly: true })
+  @Type(() => Big)
+  feeInBaseCurrency: Big;
+
   firstBuyDate: string;
 
   @Transform(transformToBig, { toClassOnly: true })
