@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the chart of the holdings tab on the home page (experimental)
 - Separated the icon purposes in the `site.webmanifest`
 
+### Fixed
+
+- Removed the show condition of the experimental features setting in the user settings
+
 ## 2.95.0 - 2024-07-12
 
 ### Added
