@@ -1,4 +1,3 @@
-import { getLocale } from '@ghostfolio/common/helper';
 import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
@@ -95,6 +94,7 @@ export class GfTreemapChartComponent
               return red[9];
             }
           },
+          borderRadius: 4,
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
