@@ -91,7 +91,11 @@ export class SymbolProfileService {
       });
   }
 
-  public async getSymbolProfilesWithSubscription(withSubscription = true) {
+  public async getSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
     return this.prismaService.symbolProfile.findMany({
       include: {
         Order: {
@@ -100,8 +104,9 @@ export class SymbolProfileService {
           }
         }
       },
+      orderBy: [{ symbol: 'asc' }],
       where: {
-        Order: withSubscription
+        Order: withUserSubscription
           ? {
               some: {
                 User: {

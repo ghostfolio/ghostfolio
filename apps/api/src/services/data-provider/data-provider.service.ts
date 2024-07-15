@@ -9,7 +9,6 @@ import {
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
@@ -37,8 +36,7 @@ export class DataProviderService {
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
-    private readonly redisCacheService: RedisCacheService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly redisCacheService: RedisCacheService
   ) {
     this.initialize();
   }
@@ -48,26 +46,6 @@ export class DataProviderService {
       ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
         [dataProviderName: string]: string;
       }) ?? {};
-
-    const withSubscription =
-      await this.symbolProfileService.getSymbolProfilesWithSubscription(true);
-    console.log('withSubscription', withSubscription.length);
-
-    // const vwrl = withSubscription.find(({ symbol }) => {
-    //   return symbol === 'VWRL.SW';
-    // });
-
-    // console.log({ vwrl });
-
-    const withoutSubscription =
-      await this.symbolProfileService.getSymbolProfilesWithSubscription(false);
-    console.log('withoutSubscription', withoutSubscription.length);
-
-    console.log(
-      'Total: ',
-      withSubscription.length + withoutSubscription.length,
-      await this.prismaService.symbolProfile.count()
-    );
   }
 
   public async checkQuote(dataSource: DataSource) {

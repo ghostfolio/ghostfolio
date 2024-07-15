@@ -10,6 +10,7 @@ import {
   DATA_GATHERING_QUEUE,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
   PROPERTY_BENCHMARKS
@@ -62,9 +63,22 @@ export class DataGatheringService {
   }
 
   public async gather7Days() {
-    const dataGatheringItems = await this.getSymbols7D();
     await this.gatherSymbols({
-      dataGatheringItems,
+      dataGatheringItems: await this.getCurrencies7D(),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: true
+      }),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: false
+      }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
     });
   }
@@ -290,43 +304,46 @@ export class DataGatheringService {
       });
   }
 
+  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
+    const startDate = subDays(resetHours(new Date()), 7);
+
+    const symbolsWithCompleteMarketData =
+      await this.getSymbolsWithCompleteMarketData();
+
+    return this.exchangeRateDataService
+      .getCurrencyPairs()
+      .filter(({ symbol }) => {
+        return !symbolsWithCompleteMarketData.includes(symbol);
+      })
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: startDate
+        };
+      });
+  }
+
   private getEarliestDate(aStartDate: Date) {
     return min([aStartDate, subYears(new Date(), 10)]);
   }
 
-  private async getSymbols7D(): Promise<IDataGatheringItem[]> {
+  private async getSymbols7D({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }): Promise<IDataGatheringItem[]> {
     const startDate = subDays(resetHours(new Date()), 7);
 
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }],
-      select: {
-        dataSource: true,
-        scraperConfiguration: true,
-        symbol: true
-      }
-    });
-
-    // Only consider symbols with incomplete market data for the last
-    // 7 days
-    const symbolsWithCompleteMarketData = (
-      await this.prismaService.marketData.groupBy({
-        _count: true,
-        by: ['symbol'],
-        orderBy: [{ symbol: 'asc' }],
-        where: {
-          date: { gt: startDate },
-          state: 'CLOSE'
-        }
-      })
-    )
-      .filter((group) => {
-        return group._count >= 6;
-      })
-      .map((group) => {
-        return group.symbol;
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByUserSubscription({
+        withUserSubscription
       });
 
-    const symbolProfilesToGather = symbolProfiles
+    const symbolsWithCompleteMarketData =
+      await this.getSymbolsWithCompleteMarketData();
+
+    return symbolProfiles
       .filter(({ dataSource, scraperConfiguration, symbol }) => {
         const manualDataSourceWithScraperConfiguration =
           dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
@@ -342,21 +359,6 @@ export class DataGatheringService {
           date: startDate
         };
       });
-
-    const currencyPairsToGather = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .filter(({ symbol }) => {
-        return !symbolsWithCompleteMarketData.includes(symbol);
-      })
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol,
-          date: startDate
-        };
-      });
-
-    return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
@@ -425,5 +427,27 @@ export class DataGatheringService {
       });
 
     return [...currencyPairsToGather, ...symbolProfilesToGather];
+  }
+
+  private async getSymbolsWithCompleteMarketData() {
+    const startDate = subDays(resetHours(new Date()), 7);
+
+    return (
+      await this.prismaService.marketData.groupBy({
+        _count: true,
+        by: ['symbol'],
+        orderBy: [{ symbol: 'asc' }],
+        where: {
+          date: { gt: startDate },
+          state: 'CLOSE'
+        }
+      })
+    )
+      .filter(({ _count }) => {
+        return _count >= 6;
+      })
+      .map(({ symbol }) => {
+        return symbol;
+      });
   }
 }
