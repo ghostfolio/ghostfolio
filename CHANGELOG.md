@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Optimized the 7d data gathering by prioritizing the currencies
+
 ### Fixed
 
 - Fixed the table sorting of the holdings tab on the home page
