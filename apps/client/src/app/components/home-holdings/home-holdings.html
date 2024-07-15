@@ -41,7 +41,8 @@
           [holdings]="holdings"
           (treemapChartClicked)="onSymbolClicked($event)"
         />
-      } @else if (viewModeFormControl.value === 'TABLE') {
+      }
+      <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE' }">
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="deviceType"
@@ -60,7 +61,7 @@
             >
           </div>
         }
-      }
+      </div>
     </div>
   </div>
 </div>
