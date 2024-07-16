@@ -152,7 +152,7 @@ export class DataGatheringService {
     });
 
     if (!uniqueAssets) {
-      uniqueAssets = await this.getUniqueAssets();
+      uniqueAssets = await this.getAllAssetProfileIdentifiers();
     }
 
     if (uniqueAssets.length <= 0) {
@@ -284,7 +284,7 @@ export class DataGatheringService {
     );
   }
 
-  public async getUniqueAssets(): Promise<UniqueAsset[]> {
+  public async getAllAssetProfileIdentifiers(): Promise<UniqueAsset[]> {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }]
     });
@@ -304,22 +304,44 @@ export class DataGatheringService {
       });
   }
 
-  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
-    const startDate = subDays(resetHours(new Date()), 7);
+  private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
+    UniqueAsset[]
+  > {
+    return (
+      await this.prismaService.marketData.groupBy({
+        _count: true,
+        by: ['dataSource', 'symbol'],
+        orderBy: [{ symbol: 'asc' }],
+        where: {
+          date: { gt: subDays(resetHours(new Date()), 7) },
+          state: 'CLOSE'
+        }
+      })
+    )
+      .filter(({ _count }) => {
+        return _count >= 6;
+      })
+      .map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      });
+  }
 
-    const symbolsWithCompleteMarketData =
-      await this.getSymbolsWithCompleteMarketData();
+  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
+    const assetProfileIdentifiersWithCompleteMarketData =
+      await this.getAssetProfileIdentifiersWithCompleteMarketData();
 
     return this.exchangeRateDataService
       .getCurrencyPairs()
-      .filter(({ symbol }) => {
-        return !symbolsWithCompleteMarketData.includes(symbol);
+      .filter(({ dataSource, symbol }) => {
+        return !assetProfileIdentifiersWithCompleteMarketData.some((item) => {
+          return item.dataSource === dataSource && item.symbol === symbol;
+        });
       })
       .map(({ dataSource, symbol }) => {
         return {
           dataSource,
           symbol,
-          date: startDate
+          date: subDays(resetHours(new Date()), 7)
         };
       });
   }
@@ -333,15 +355,13 @@ export class DataGatheringService {
   }: {
     withUserSubscription?: boolean;
   }): Promise<IDataGatheringItem[]> {
-    const startDate = subDays(resetHours(new Date()), 7);
-
     const symbolProfiles =
       await this.symbolProfileService.getSymbolProfilesByUserSubscription({
         withUserSubscription
       });
 
-    const symbolsWithCompleteMarketData =
-      await this.getSymbolsWithCompleteMarketData();
+    const assetProfileIdentifiersWithCompleteMarketData =
+      await this.getAssetProfileIdentifiersWithCompleteMarketData();
 
     return symbolProfiles
       .filter(({ dataSource, scraperConfiguration, symbol }) => {
@@ -349,14 +369,16 @@ export class DataGatheringService {
           dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
 
         return (
-          !symbolsWithCompleteMarketData.includes(symbol) &&
+          !assetProfileIdentifiersWithCompleteMarketData.some((item) => {
+            return item.dataSource === dataSource && item.symbol === symbol;
+          }) &&
           (dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration)
         );
       })
       .map((symbolProfile) => {
         return {
           ...symbolProfile,
-          date: startDate
+          date: subDays(resetHours(new Date()), 7)
         };
       });
   }
@@ -427,27 +449,5 @@ export class DataGatheringService {
       });
 
     return [...currencyPairsToGather, ...symbolProfilesToGather];
-  }
-
-  private async getSymbolsWithCompleteMarketData() {
-    const startDate = subDays(resetHours(new Date()), 7);
-
-    return (
-      await this.prismaService.marketData.groupBy({
-        _count: true,
-        by: ['symbol'],
-        orderBy: [{ symbol: 'asc' }],
-        where: {
-          date: { gt: startDate },
-          state: 'CLOSE'
-        }
-      })
-    )
-      .filter(({ _count }) => {
-        return _count >= 6;
-      })
-      .map(({ symbol }) => {
-        return symbol;
-      });
   }
 }
