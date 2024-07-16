@@ -144,6 +144,15 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="isUsedByUsersWithSubscription">
+            <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              @if (element.isUsedByUsersWithSubscription) {
+                <gf-premium-indicator [enableLink]="false" />
+              }
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="comment">
             <th *matHeaderCellDef class="px-1" mat-header-cell></th>
             <td *matCellDef="let element" class="px-1" mat-cell>
