@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the 7d data gathering by prioritizing the currencies
+- Upgraded `Nx` from version `19.4.0` to `19.4.3`
 
 ### Fixed
 
