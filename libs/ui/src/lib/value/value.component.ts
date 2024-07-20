@@ -58,8 +58,10 @@ export class GfValueComponent implements OnChanges {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
                 {
-                  maximumFractionDigits: this.precision,
-                  minimumFractionDigits: this.precision
+                  maximumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2,
+                  minimumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2
                 }
               );
             } catch {}
@@ -68,8 +70,10 @@ export class GfValueComponent implements OnChanges {
               this.formattedValue = (this.absoluteValue * 100).toLocaleString(
                 this.locale,
                 {
-                  maximumFractionDigits: this.precision,
-                  minimumFractionDigits: this.precision
+                  maximumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2,
+                  minimumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2
                 }
               );
             } catch {}
@@ -77,8 +81,8 @@ export class GfValueComponent implements OnChanges {
         } else if (this.isCurrency) {
           try {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: this.precision,
-              minimumFractionDigits: this.precision
+              maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
+              minimumFractionDigits: this.precision >= 0 ? this.precision : 2
             });
           } catch {}
         } else if (this.isPercent) {
@@ -86,10 +90,17 @@ export class GfValueComponent implements OnChanges {
             this.formattedValue = (this.value * 100).toLocaleString(
               this.locale,
               {
-                maximumFractionDigits: this.precision,
-                minimumFractionDigits: this.precision
+                maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
+                minimumFractionDigits: this.precision >= 0 ? this.precision : 2
               }
             );
+          } catch {}
+        } else if (this.precision >= 0) {
+          try {
+            this.formattedValue = this.value?.toLocaleString(this.locale, {
+              maximumFractionDigits: this.precision,
+              minimumFractionDigits: this.precision
+            });
           } catch {}
         } else {
           this.formattedValue = this.value?.toLocaleString(this.locale);
@@ -129,7 +140,7 @@ export class GfValueComponent implements OnChanges {
     this.isNumber = false;
     this.isString = false;
     this.locale = this.locale || getLocale();
-    this.precision = this.precision >= 0 ? this.precision : 2;
+    this.precision = this.precision >= 0 ? this.precision : undefined;
     this.useAbsoluteValue = false;
   }
 }
