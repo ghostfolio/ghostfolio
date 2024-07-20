@@ -10,6 +10,7 @@ import {
   DATA_GATHERING_QUEUE,
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
   PROPERTY_BENCHMARKS
@@ -62,9 +63,22 @@ export class DataGatheringService {
   }
 
   public async gather7Days() {
-    const dataGatheringItems = await this.getSymbols7D();
     await this.gatherSymbols({
-      dataGatheringItems,
+      dataGatheringItems: await this.getCurrencies7D(),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: true
+      }),
+      priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
+    });
+
+    await this.gatherSymbols({
+      dataGatheringItems: await this.getSymbols7D({
+        withUserSubscription: false
+      }),
       priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
     });
   }
@@ -138,7 +152,7 @@ export class DataGatheringService {
     });
 
     if (!uniqueAssets) {
-      uniqueAssets = await this.getUniqueAssets();
+      uniqueAssets = await this.getAllAssetProfileIdentifiers();
     }
 
     if (uniqueAssets.length <= 0) {
@@ -270,7 +284,7 @@ export class DataGatheringService {
     );
   }
 
-  public async getUniqueAssets(): Promise<UniqueAsset[]> {
+  public async getAllAssetProfileIdentifiers(): Promise<UniqueAsset[]> {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }]
     });
@@ -290,73 +304,83 @@ export class DataGatheringService {
       });
   }
 
-  private getEarliestDate(aStartDate: Date) {
-    return min([aStartDate, subYears(new Date(), 10)]);
-  }
-
-  private async getSymbols7D(): Promise<IDataGatheringItem[]> {
-    const startDate = subDays(resetHours(new Date()), 7);
-
-    const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }],
-      select: {
-        dataSource: true,
-        scraperConfiguration: true,
-        symbol: true
-      }
-    });
-
-    // Only consider symbols with incomplete market data for the last
-    // 7 days
-    const symbolsWithCompleteMarketData = (
+  private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
+    UniqueAsset[]
+  > {
+    return (
       await this.prismaService.marketData.groupBy({
         _count: true,
-        by: ['symbol'],
+        by: ['dataSource', 'symbol'],
         orderBy: [{ symbol: 'asc' }],
         where: {
-          date: { gt: startDate },
+          date: { gt: subDays(resetHours(new Date()), 7) },
           state: 'CLOSE'
         }
       })
     )
-      .filter((group) => {
-        return group._count >= 6;
+      .filter(({ _count }) => {
+        return _count >= 6;
       })
-      .map((group) => {
-        return group.symbol;
+      .map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      });
+  }
+
+  private async getCurrencies7D(): Promise<IDataGatheringItem[]> {
+    const assetProfileIdentifiersWithCompleteMarketData =
+      await this.getAssetProfileIdentifiersWithCompleteMarketData();
+
+    return this.exchangeRateDataService
+      .getCurrencyPairs()
+      .filter(({ dataSource, symbol }) => {
+        return !assetProfileIdentifiersWithCompleteMarketData.some((item) => {
+          return item.dataSource === dataSource && item.symbol === symbol;
+        });
+      })
+      .map(({ dataSource, symbol }) => {
+        return {
+          dataSource,
+          symbol,
+          date: subDays(resetHours(new Date()), 7)
+        };
+      });
+  }
+
+  private getEarliestDate(aStartDate: Date) {
+    return min([aStartDate, subYears(new Date(), 10)]);
+  }
+
+  private async getSymbols7D({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }): Promise<IDataGatheringItem[]> {
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByUserSubscription({
+        withUserSubscription
       });
 
-    const symbolProfilesToGather = symbolProfiles
+    const assetProfileIdentifiersWithCompleteMarketData =
+      await this.getAssetProfileIdentifiersWithCompleteMarketData();
+
+    return symbolProfiles
       .filter(({ dataSource, scraperConfiguration, symbol }) => {
         const manualDataSourceWithScraperConfiguration =
           dataSource === 'MANUAL' && !isEmpty(scraperConfiguration);
 
         return (
-          !symbolsWithCompleteMarketData.includes(symbol) &&
+          !assetProfileIdentifiersWithCompleteMarketData.some((item) => {
+            return item.dataSource === dataSource && item.symbol === symbol;
+          }) &&
           (dataSource !== 'MANUAL' || manualDataSourceWithScraperConfiguration)
         );
       })
       .map((symbolProfile) => {
         return {
           ...symbolProfile,
-          date: startDate
+          date: subDays(resetHours(new Date()), 7)
         };
       });
-
-    const currencyPairsToGather = this.exchangeRateDataService
-      .getCurrencyPairs()
-      .filter(({ symbol }) => {
-        return !symbolsWithCompleteMarketData.includes(symbol);
-      })
-      .map(({ dataSource, symbol }) => {
-        return {
-          dataSource,
-          symbol,
-          date: startDate
-        };
-      });
-
-    return [...currencyPairsToGather, ...symbolProfilesToGather];
   }
 
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {

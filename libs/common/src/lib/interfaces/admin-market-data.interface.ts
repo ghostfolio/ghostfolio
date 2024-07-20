@@ -15,6 +15,7 @@ export interface AdminMarketDataItem {
   date: Date;
   id: string;
   isBenchmark?: boolean;
+  isUsedByUsersWithSubscription?: boolean;
   marketDataItemCount: number;
   name: string;
   sectorsCount: number;

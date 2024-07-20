@@ -7,9 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _selfh.st_ to the _As seen in_ section on the landing page
+
 ### Changed
 
+- Optimized the 7d data gathering by prioritizing the currencies
+- Improved the language localization for German (`de`)
 - Upgraded `Node.js` from version `18` to `20` (`Dockerfile`)
+- Upgraded `Nx` from version `19.4.0` to `19.4.3`
+
+### Fixed
+
+- Fixed the table sorting of the holdings tab on the home page
 
 ## 2.96.0 - 2024-07-13
 

@@ -91,6 +91,40 @@ export class SymbolProfileService {
       });
   }
 
+  public async getSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
+    return this.prismaService.symbolProfile.findMany({
+      include: {
+        Order: {
+          include: {
+            User: true
+          }
+        }
+      },
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        Order: withUserSubscription
+          ? {
+              some: {
+                User: {
+                  Subscription: { some: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+          : {
+              every: {
+                User: {
+                  Subscription: { none: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+      }
+    });
+  }
+
   public updateSymbolProfile({
     assetClass,
     assetSubClass,
