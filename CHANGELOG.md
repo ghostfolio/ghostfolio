@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added _selfh.st_ to the _As seen in_ section on the landing page
+
 ### Changed
 
 - Optimized the 7d data gathering by prioritizing the currencies
