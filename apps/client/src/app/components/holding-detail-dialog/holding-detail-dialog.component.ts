@@ -167,7 +167,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
 
-          if (this.dividendInBaseCurrency >= NUMERICAL_PRECISION_THRESHOLD) {
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.dividendInBaseCurrency >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
             this.dividendInBaseCurrencyPrecision = 0;
           }
 
@@ -193,7 +196,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           this.investment = investment;
 
-          if (this.investment >= NUMERICAL_PRECISION_THRESHOLD) {
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.investment >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
             this.investmentPrecision = 0;
           }
 
@@ -202,7 +208,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.minPrice = minPrice;
           this.netPerformance = netPerformance;
 
-          if (this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD) {
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
             this.netPerformancePrecision = 0;
           }
 
@@ -215,8 +224,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             netPerformanceWithCurrencyEffect;
 
           if (
+            this.data.deviceType === 'mobile' &&
             this.netPerformanceWithCurrencyEffect >=
-            NUMERICAL_PRECISION_THRESHOLD
+              NUMERICAL_PRECISION_THRESHOLD
           ) {
             this.netPerformanceWithCurrencyEffectPrecision = 0;
           }

@@ -1,3 +1,4 @@
+import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import {
   getLocale,
   getNumberFormatDecimal,
@@ -54,7 +55,8 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
           decimal: getNumberFormatDecimal(this.locale),
           decimalPlaces:
             this.deviceType === 'mobile' &&
-            this.performance?.currentValueInBaseCurrency >= 100000
+            this.performance?.currentValueInBaseCurrency >=
+              NUMERICAL_PRECISION_THRESHOLD
               ? 0
               : 2,
           duration: 1,
