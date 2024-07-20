@@ -47,6 +47,7 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="netPerformanceWithCurrencyEffectPrecision"
             [unit]="data.baseCurrency"
             [value]="netPerformanceWithCurrencyEffect"
             >Change with currency effect</gf-value
@@ -58,6 +59,7 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="netPerformancePrecision"
             [unit]="data.baseCurrency"
             [value]="netPerformance"
             >Change</gf-value
@@ -160,6 +162,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="data.locale"
+          [precision]="investmentPrecision"
           [unit]="data.baseCurrency"
           [value]="investment"
           >Investment</gf-value
@@ -172,6 +175,7 @@
             size="medium"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="dividendInBaseCurrencyPrecision"
             [unit]="data.baseCurrency"
             [value]="dividendInBaseCurrency"
             >Dividend</gf-value

@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the numerical precision in the holding detail dialog
+- Improved the handling of the numerical precision in the value component
 - Optimized the 7d data gathering by prioritizing the currencies
 - Improved the language localization for German (`de`)
 - Upgraded `Node.js` from version `18` to `20` (`Dockerfile`)
@@ -4829,7 +4831,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the attribute `precision` in the value component
+- Added the attribute `precision` to the value component
 
 ### Fixed
 

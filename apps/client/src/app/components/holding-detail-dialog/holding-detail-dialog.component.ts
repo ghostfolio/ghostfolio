@@ -4,6 +4,7 @@ import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-foote
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -84,18 +85,22 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dataProviderInfo: DataProviderInfo;
   public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
+  public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public historicalDataItems: LineChartItem[];
   public investment: number;
+  public investmentPrecision = 2;
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
   public netPerformance: number;
+  public netPerformancePrecision = 2;
   public netPerformancePercent: number;
   public netPerformancePercentWithCurrencyEffect: number;
   public netPerformanceWithCurrencyEffect: number;
+  public netPerformanceWithCurrencyEffectPrecision = 2;
   public quantity: number;
   public quantityPrecision = 2;
   public reportDataGlitchMail: string;
@@ -161,10 +166,20 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.dataProviderInfo = dataProviderInfo;
           this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.dividendInBaseCurrency >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
+            this.dividendInBaseCurrencyPrecision = 0;
+          }
+
           this.dividendYieldPercentWithCurrencyEffect =
             dividendYieldPercentWithCurrencyEffect;
+
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
+
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
@@ -178,17 +193,58 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
               };
             }
           );
+
           this.investment = investment;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.investment >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
+            this.investmentPrecision = 0;
+          }
+
           this.marketPrice = marketPrice;
           this.maxPrice = maxPrice;
           this.minPrice = minPrice;
           this.netPerformance = netPerformance;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.netPerformance >= NUMERICAL_PRECISION_THRESHOLD
+          ) {
+            this.netPerformancePrecision = 0;
+          }
+
           this.netPerformancePercent = netPerformancePercent;
+
           this.netPerformancePercentWithCurrencyEffect =
             netPerformancePercentWithCurrencyEffect;
+
           this.netPerformanceWithCurrencyEffect =
             netPerformanceWithCurrencyEffect;
+
+          if (
+            this.data.deviceType === 'mobile' &&
+            this.netPerformanceWithCurrencyEffect >=
+              NUMERICAL_PRECISION_THRESHOLD
+          ) {
+            this.netPerformanceWithCurrencyEffectPrecision = 0;
+          }
+
           this.quantity = quantity;
+
+          if (Number.isInteger(this.quantity)) {
+            this.quantityPrecision = 0;
+          } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
+            if (this.quantity < 1) {
+              this.quantityPrecision = 7;
+            } else if (this.quantity < 1000) {
+              this.quantityPrecision = 5;
+            } else if (this.quantity >= 10000000) {
+              this.quantityPrecision = 0;
+            }
+          }
+
           this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
@@ -281,18 +337,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
               };
             }
           );
-
-          if (Number.isInteger(this.quantity)) {
-            this.quantityPrecision = 0;
-          } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
-            if (this.quantity < 1) {
-              this.quantityPrecision = 7;
-            } else if (this.quantity < 1000) {
-              this.quantityPrecision = 5;
-            } else if (this.quantity > 10000000) {
-              this.quantityPrecision = 0;
-            }
-          }
 
           this.changeDetectorRef.markForCheck();
         }
