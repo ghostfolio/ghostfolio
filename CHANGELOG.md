@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Catalan (`ca`)
 
+### Changed
+
+- Improved the handling of the numerical precision in the value component
+
 ## 2.97.0 - 2024-07-20
 
 ### Added
