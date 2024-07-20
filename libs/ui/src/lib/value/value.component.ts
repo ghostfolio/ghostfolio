@@ -29,7 +29,7 @@ export class GfValueComponent implements OnChanges {
   @Input() isPercent = false;
   @Input() locale: string;
   @Input() position = '';
-  @Input() precision: number | undefined;
+  @Input() precision: number;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
   @Input() unit = '';
