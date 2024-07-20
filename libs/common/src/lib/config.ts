@@ -132,6 +132,7 @@ export const REPLACE_NAME_PARTS = [
 ];
 
 export const SUPPORTED_LANGUAGE_CODES = [
+  'ca',
   'de',
   'en',
   'es',
