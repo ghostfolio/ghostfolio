@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for Catalan (`ca`)
 
+### Changed
+
+- Upgraded `prisma` from version `5.16.1` to `5.17.0`
+
 ## 2.97.0 - 2024-07-20
 
 ### Added
