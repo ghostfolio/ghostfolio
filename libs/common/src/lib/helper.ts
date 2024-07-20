@@ -11,7 +11,7 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
+import { ca, de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
 
 import {
   DEFAULT_CURRENCY,
@@ -171,7 +171,9 @@ export function getCurrencyFromSymbol(aSymbol = '') {
 }
 
 export function getDateFnsLocale(aLanguageCode: string) {
-  if (aLanguageCode === 'de') {
+  if (aLanguageCode === 'ca') {
+    return ca;
+  } else if (aLanguageCode === 'de') {
     return de;
   } else if (aLanguageCode === 'es') {
     return es;

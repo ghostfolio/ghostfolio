@@ -36,6 +36,10 @@
         "ngswConfigPath": "apps/client/ngsw-config.json"
       },
       "configurations": {
+        "development-ca": {
+          "baseHref": "/ca/",
+          "localize": ["ca"]
+        },
         "development-de": {
           "baseHref": "/de/",
           "localize": ["de"]
@@ -212,6 +216,7 @@
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
+          "messages.ca.xlf",
           "messages.de.xlf",
           "messages.es.xlf",
           "messages.fr.xlf",
@@ -240,6 +245,10 @@
   },
   "i18n": {
     "locales": {
+      "ca": {
+        "baseHref": "/ca/",
+        "translation": "apps/client/src/locales/messages.ca.xlf"
+      },
       "de": {
         "baseHref": "/de/",
         "translation": "apps/client/src/locales/messages.de.xlf"
