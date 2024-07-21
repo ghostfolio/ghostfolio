@@ -10,7 +10,7 @@ export interface Product {
   note?: string;
   origin?: string;
   pricingPerYear?: string;
-  region?: string;
+  regions?: string[];
   slogan?: string;
   useAnonymously?: boolean;
 }
