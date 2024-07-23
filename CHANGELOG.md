@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the dividend import from a data provider for holdings without an account
+- Fixed an issue in the public page related to a non-existent access
 
 ## 2.97.0 - 2024-07-20
 

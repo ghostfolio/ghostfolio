@@ -277,7 +277,7 @@ export const personalFinanceTools: Product[] = [
     name: 'markets.sh',
     origin: `Germany`,
     pricingPerYear: '€168',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Track your investments'
   },
   {
@@ -289,7 +289,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Maybe Finance has discontinued in 2023',
     origin: `United States`,
     pricingPerYear: '$145',
-    region: `United States`,
+    regions: [`United States`],
     slogan: 'Your financial future, in your control'
   },
   {
@@ -300,7 +300,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Merlin',
     origin: `United States`,
     pricingPerYear: '$204',
-    region: 'Canada, United States',
+    regions: ['Canada', 'United States'],
     slogan: 'The smartest way to track your crypto'
   },
   {
@@ -340,7 +340,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as Tresor One',
     origin: `Germany`,
     pricingPerYear: '€88',
-    region: 'Austria, Germany, Switzerland',
+    regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
@@ -360,7 +360,7 @@ export const personalFinanceTools: Product[] = [
     name: 'PocketSmith',
     origin: `New Zealand`,
     pricingPerYear: '$120',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Know where your money is going'
   },
   {
@@ -444,7 +444,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Sharesight',
     origin: `New Zealand`,
     pricingPerYear: '$135',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Stock Portfolio Tracker'
   },
   {
@@ -594,7 +594,7 @@ export const personalFinanceTools: Product[] = [
     languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
     origin: `Switzerland`,
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Connect. Share. Invest.'
   },
   {
