@@ -80,8 +80,24 @@
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>Region</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product1.region }}</td>
-                <td class="mat-mdc-cell px-1 py-2">{{ product2.region }}</td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    region of product1.regions;
+                    track region;
+                    let isLast = $last
+                  ) {
+                    {{ region }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
+                <td class="mat-mdc-cell px-1 py-2">
+                  @for (
+                    region of product2.regions;
+                    track region;
+                    let isLast = $last
+                  ) {
+                    {{ region }}{{ isLast ? '' : ', ' }}
+                  }
+                </td>
               </tr>
               <tr class="mat-mdc-row">
                 <td class="mat-mdc-cell px-3 py-2 text-right" i18n>
@@ -236,69 +252,11 @@
         </section>
         <section class="mb-4">
           <ul class="list-inline">
-            <li class="list-inline-item">
-              <span class="badge badge-light">Alternative</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">App</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Budgeting</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Community</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Family Office</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Fintech</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">{{ product1.name }}</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Investment</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Investor</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Open Source</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">OSS</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Personal Finance</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Privacy</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Portfolio</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Software</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Tool</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">User Experience</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Wealth</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">WealthTech</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">Wealth Management</span>
-            </li>
-            <li class="list-inline-item">
-              <span class="badge badge-light">{{ product2.name }}</span>
-            </li>
+            @for (tag of tags; track tag) {
+              <li class="list-inline-item">
+                <span class="badge badge-light">{{ tag }}</span>
+              </li>
+            }
           </ul>
         </section>
         <nav aria-label="breadcrumb">

@@ -12,11 +12,7 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Count</div>
             <div class="w-50">
-              <gf-value
-                [locale]="user?.settings?.locale"
-                [precision]="0"
-                [value]="userCount"
-              />
+              <gf-value [locale]="user?.settings?.locale" [value]="userCount" />
             </div>
           </div>
           <div class="d-flex my-3">
@@ -24,7 +20,6 @@
             <div class="w-50">
               <gf-value
                 [locale]="user?.settings?.locale"
-                [precision]="0"
                 [value]="transactionCount"
               />
               @if (transactionCount && userCount) {
