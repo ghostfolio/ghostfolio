@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `angular` from version `18.0.4` to `18.1.1`
 - Upgraded `Nx` from version `19.4.3` to `19.5.1`
 
+### Fixed
+
+- Fixed the dividend import from a data provider for holdings without an account
+
 ## 2.97.0 - 2024-07-20
 
 ### Added
