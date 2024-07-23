@@ -496,9 +496,6 @@ export class PortfolioController {
     @Param('accessId') accessId
   ): Promise<PortfolioPublicDetails> {
     const access = await this.accessService.access({ id: accessId });
-    const user = await this.userService.user({
-      id: access.userId
-    });
 
     if (!access) {
       throw new HttpException(
@@ -508,6 +505,11 @@ export class PortfolioController {
     }
 
     let hasDetails = true;
+
+    const user = await this.userService.user({
+      id: access.userId
+    });
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails = user.subscription.type === 'Premium';
     }
