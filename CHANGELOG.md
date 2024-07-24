@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the handling of the numerical precision in the value component
+- Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `18.0.4` to `18.1.1`
 - Upgraded `Nx` from version `19.4.3` to `19.5.1`
 
