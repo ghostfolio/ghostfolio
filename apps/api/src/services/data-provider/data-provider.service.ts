@@ -14,7 +14,12 @@ import {
   DERIVED_CURRENCIES,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getCurrencyFromSymbol,
+  getStartOfUtcDate,
+  isDerivedCurrency
+} from '@ghostfolio/common/helper';
 import { UniqueAsset } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
@@ -423,13 +428,18 @@ export class DataProviderService {
         continue;
       }
 
-      const symbols = dataGatheringItems.map((dataGatheringItem) => {
-        return dataGatheringItem.symbol;
-      });
+      const symbols = dataGatheringItems
+        .filter(({ symbol }) => {
+          return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+        })
+        .map(({ symbol }) => {
+          return symbol;
+        });
 
       const maximumNumberOfSymbolsPerRequest =
         dataProvider.getMaxNumberOfSymbolsPerRequest?.() ??
         Number.MAX_SAFE_INTEGER;
+
       for (
         let i = 0;
         i < symbols.length;
