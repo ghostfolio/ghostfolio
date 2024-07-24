@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `18.0.4` to `18.1.1`
 - Upgraded `Nx` from version `19.4.3` to `19.5.1`
+- Upgraded `prisma` from version `5.16.1` to `5.17.0`
 
 ### Fixed
 
