@@ -150,7 +150,6 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 
 - [Docker](https://www.docker.com/products/docker-desktop)
 - [Node.js](https://nodejs.org/en/download) (version 20+)
-- [npm](https://docs.npmjs.com/cli/v10/commands/npm-install)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 
