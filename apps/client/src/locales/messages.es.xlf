@@ -3332,7 +3332,7 @@
       </trans-unit>
       <trans-unit id="4555457172864212828" datatype="html">
         <source>Users</source>
-        <target state="translated">usuarios</target>
+        <target state="translated">Usuarios</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">40</context>
@@ -3476,7 +3476,7 @@
       </trans-unit>
       <trans-unit id="cb10143b41a58e68b0e5e8de3ab8aeb570fdaf88" datatype="html">
         <source>Portfolio Summary</source>
-        <target state="new">Portfolio Summary</target>
+        <target state="translated">Resumen de la cartera</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">22</context>
@@ -3492,7 +3492,7 @@
       </trans-unit>
       <trans-unit id="7890f6d6655c7c77a038355622d8042f2bc1e5f2" datatype="html">
         <source>Performance Benchmarks</source>
-        <target state="new">Performance Benchmarks</target>
+        <target state="translated">Puntos de referencia de rendimiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">30</context>
@@ -3524,7 +3524,7 @@
       </trans-unit>
       <trans-unit id="ae3ddc340195a1b9564574fd757c0cd1ab5cd765" datatype="html">
         <source>and more Features...</source>
-        <target state="new">and more Features...</target>
+        <target state="translated">y más características...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">42</context>
@@ -3540,7 +3540,7 @@
       </trans-unit>
       <trans-unit id="eb075d0450deb6f381616f7da4b9244ced843053" datatype="html">
         <source>Skip</source>
-        <target state="new">Skip</target>
+        <target state="translated">Saltar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">52</context>
@@ -3568,7 +3568,7 @@
       </trans-unit>
       <trans-unit id="fd30b4e3189726798f09fa0ce875486cf50dda2d" datatype="html">
         <source> For tech-savvy investors who prefer to run Ghostfolio on their own infrastructure. </source>
-        <target state="new"> For tech-savvy investors who prefer to run Ghostfolio on their own infrastructure. </target>
+        <target state="translated"> Para inversores expertos en tecnología que prefieren ejecutar Ghostfolio en su propia infraestructura. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">38</context>
@@ -3576,7 +3576,7 @@
       </trans-unit>
       <trans-unit id="435445e728dcf7fdf68fbae0e55e83f61591ac87" datatype="html">
         <source>Unlimited Transactions</source>
-        <target state="new">Unlimited Transactions</target>
+        <target state="translated">Transacciones ilimitadas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">45</context>
@@ -3592,7 +3592,7 @@
       </trans-unit>
       <trans-unit id="897e322427107efb4a101afcc9641f0e81ce9643" datatype="html">
         <source>Unlimited Accounts</source>
-        <target state="new">Unlimited Accounts</target>
+        <target state="translated">Cuentas ilimitadas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">49</context>
