@@ -171,15 +171,15 @@ Run `npm run watch:server` and click _Debug API_ in [Visual Studio Code](https:/
 
 #### Serve
 
-Run `npm start:server`
+Run `npm run start:server`
 
 ### Start Client
 
-Run `npm start:client` and open https://localhost:4200/en in your browser
+Run `npm run start:client` and open https://localhost:4200/en in your browser
 
 ### Start _Storybook_
 
-Run `npm start:storybook`
+Run `npm run start:storybook`
 
 ### Migrate Database
 
