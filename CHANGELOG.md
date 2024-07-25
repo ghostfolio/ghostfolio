@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the account selector of the create or update activity dialog
 - Improved the handling of the numerical precision in the value component
 - Skipped derived currencies in the get quotes functionality of the data provider service
 - Improved the language localization for Spanish (`es`)

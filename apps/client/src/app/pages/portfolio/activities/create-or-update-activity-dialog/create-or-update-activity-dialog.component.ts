@@ -51,6 +51,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
   public isToday = isToday;
+  public mode: 'create' | 'update';
   public platforms: { id: string; name: string }[];
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public tags: Tag[] = [];
@@ -71,6 +72,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.mode = this.data.activity.id ? 'update' : 'create';
     this.locale = this.data.user?.settings?.locale;
     this.dateAdapter.setLocale(this.locale);
 
@@ -92,7 +94,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     this.activityForm = this.formBuilder.group({
       accountId: [
-        this.data.accounts.length === 1 && !this.data.activity?.accountId
+        this.data.accounts.length === 1 &&
+        !this.data.activity?.accountId &&
+        this.mode === 'create'
           ? this.data.accounts[0].id
           : this.data.activity?.accountId,
         Validators.required
@@ -479,18 +483,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     };
 
     try {
-      if (this.data.activity.id) {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
-
-        await validateObjectForForm({
-          classDto: UpdateOrderDto,
-          form: this.activityForm,
-          ignoreFields: ['dataSource', 'date'],
-          object: activity as UpdateOrderDto
-        });
-
-        this.dialogRef.close(activity as UpdateOrderDto);
-      } else {
+      if (this.mode === 'create') {
         (activity as CreateOrderDto).updateAccountBalance =
           this.activityForm.get('updateAccountBalance').value;
 
@@ -502,6 +495,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         });
 
         this.dialogRef.close(activity as CreateOrderDto);
+      } else {
+        (activity as UpdateOrderDto).id = this.data.activity.id;
+
+        await validateObjectForForm({
+          classDto: UpdateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity as UpdateOrderDto
+        });
+
+        this.dialogRef.close(activity as UpdateOrderDto);
       }
     } catch (error) {
       console.error(error);
