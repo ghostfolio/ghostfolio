@@ -70,16 +70,16 @@
                   "
                 >
                   <mat-option [value]="null" />
+                  <mat-option value="de">Deutsch</mat-option>
+                  <mat-option value="en">English</mat-option>
                   @if (user?.settings?.isExperimentalFeatures) {
                     <!--
-                      <mat-option value="de"
+                      <mat-option value="ca"
                         >Català (<ng-container i18n>Community</ng-container
                         >)</mat-option
                       >
                     -->
                   }
-                  <mat-option value="de">Deutsch</mat-option>
-                  <mat-option value="en">English</mat-option>
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="zh"
                       >Chinese (<ng-container i18n>Community</ng-container
