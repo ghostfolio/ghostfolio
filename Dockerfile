@@ -11,7 +11,7 @@ COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
   g++ \
   git \
   make \
@@ -53,7 +53,7 @@ FROM node:20-slim
 
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt install -y \
   curl \
   openssl \
   && rm -rf /var/lib/apt/lists/*
