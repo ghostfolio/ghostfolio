@@ -1,5 +1,4 @@
 FROM --platform=$BUILDPLATFORM node:20-slim as builder
-ENV NODE_ENV=production
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -13,7 +12,7 @@ COPY ./yarn.lock yarn.lock
 COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-suggests \
     g++ \
     git \
     make \
@@ -63,5 +62,6 @@ COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 COPY ./docker/healthcheck.js /ghostfolio/healthcheck.js
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
+USER node
 CMD [ "/ghostfolio/entrypoint.sh" ]
 HEALTHCHECK --interval=15s --timeout=5s --start-period=2s --retries=3 CMD [ "node", "/ghostfolio/healthcheck.js" ]
