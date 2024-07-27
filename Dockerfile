@@ -13,7 +13,7 @@ COPY ./yarn.lock yarn.lock
 COPY ./.yarnrc .yarnrc
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y \
     g++ \
     git \
     make \
@@ -55,9 +55,7 @@ FROM node:20-slim
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 
-RUN apt update && apt install -y \
-    curl \
-    openssl \
+RUN apt-get update && apt-get install -y openssl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
