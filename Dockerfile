@@ -1,4 +1,5 @@
 FROM --platform=$BUILDPLATFORM node:20-slim as builder
+ENV NODE_ENV=production
 
 # Build application and add additional files
 WORKDIR /ghostfolio
@@ -51,8 +52,8 @@ RUN yarn database:generate-typings
 
 # Image to run, copy everything needed from builder
 FROM node:20-slim
-
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
+ENV NODE_ENV=production
 
 RUN apt update && apt install -y \
     curl \
