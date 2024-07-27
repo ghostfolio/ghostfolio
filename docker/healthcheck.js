@@ -1,10 +1,9 @@
-import { request } from "node:http";
+const request = require("node:http");
 
 const options = {
     host : "localhost",
     path: "/api/v1/health",
     port : "3333",
-    timeout : 2000
 };
 
 const healthCheck = request(options, (res) => {
@@ -18,7 +17,7 @@ const healthCheck = request(options, (res) => {
 });
 
 healthCheck.on('error', (err) => {
-    console.error(err);
+    console.error(err.message);
     process.exit(1);
 });
 
