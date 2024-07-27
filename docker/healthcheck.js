@@ -1,4 +1,4 @@
-const request = require("node:http");
+const http = require("node:http");
 
 const options = {
     host : "localhost",
@@ -6,7 +6,7 @@ const options = {
     port : "3333",
 };
 
-const healthCheck = request(options, (res) => {
+const healthCheck = http.request(options, (res) => {
     if (res.statusCode === 200) {
         process.exit(0);
     }
