@@ -59,6 +59,7 @@ services:
       - postgres:/var/lib/postgresql/data
 
   redis:
+    image: docker.io/library/redis:alpine
     cap_drop:
       - ALL
     cap_add:
@@ -72,7 +73,6 @@ services:
     #       cpus: "2"
     #       memory: 250m
     #       pids: 1024
-    image: docker.io/library/redis:alpine
     env_file:
       - ../.env
     command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
