@@ -39,7 +39,7 @@
     "postinstall": "prisma generate",
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
-    "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o",
+    "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o --host=0.0.0.0",
     "start:production": "yarn database:migrate && yarn database:seed && node main",
     "start:server": "nx run api:copy-assets && nx run api:serve --watch",
     "start:storybook": "nx run ui:storybook",
