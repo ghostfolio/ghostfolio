@@ -1979,7 +1979,7 @@
       </trans-unit>
       <trans-unit id="7fd64c34428887e4cd56d05534b89c100b8544ad" datatype="html">
         <source>Read-only Mode</source>
-        <target state="translated"Mode Només Lecutra</target>
+        <target state="translated">Mode Només Lecutra</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">129</context>
