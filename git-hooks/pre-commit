@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Will check if "yarn format" is run before executing.
+# Will check if "npm run format" is run before executing.
 # Called by "git commit" with no arguments. The hook should
 # exit with non-zero status after issuing an appropriate message if
 # it wants to stop the commit.
