@@ -72,9 +72,13 @@ export class ImportService {
         })
       ]);
 
-      const accounts = orders.map((order) => {
-        return order.Account;
-      });
+      const accounts = orders
+        .filter(({ Account }) => {
+          return !!Account;
+        })
+        .map(({ Account }) => {
+          return Account;
+        });
 
       const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 

@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.99.0 - 2024-07-29
+
+### Changed
+
+- Migrated the usage of `yarn` to `npm`
+- Upgraded `storybook` from version `7.0.9` to `8.2.5`
+- Downgraded `marked` from version `13.0.0` to `12.0.2`
+
+## 2.98.0 - 2024-07-27
 
 ### Added
 
@@ -13,8 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the handling of the numerical precision in the value component
 - Improved the account selector of the create or update activity dialog
+- Improved the handling of the numerical precision in the value component
+- Skipped derived currencies in the get quotes functionality of the data provider service
 - Improved the language localization for Spanish (`es`)
 - Upgraded `angular` from version `18.0.4` to `18.1.1`
 - Upgraded `Nx` from version `19.4.3` to `19.5.1`
@@ -22,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the dividend import from a data provider for holdings without an account
 - Fixed an issue in the public page related to a non-existent access
 
 ## 2.97.0 - 2024-07-20
