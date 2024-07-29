@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Migrated the usage of `yarn` to `npm`
+- Upgraded `storybook` from version `7.0.9` to `8.2.5`
+- Downgraded `marked` from version `13.0.0` to `12.0.2`
+
 ## 2.98.0 - 2024-07-27
 
 ### Added
@@ -17,12 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the handling of the numerical precision in the value component
 - Skipped derived currencies in the get quotes functionality of the data provider service
 - Improved the language localization for Spanish (`es`)
-- Migrated the usage of `yarn` to `npm`
 - Upgraded `angular` from version `18.0.4` to `18.1.1`
 - Upgraded `Nx` from version `19.4.3` to `19.5.1`
 - Upgraded `prisma` from version `5.16.1` to `5.17.0`
-- Upgraded `storybook` from version `7.0.9` to `8.2.5`
-- Downgraded `marked` from version `13.0.0` to `12.0.2`
 
 ### Fixed
 
