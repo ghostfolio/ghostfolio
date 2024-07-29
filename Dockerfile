@@ -54,7 +54,7 @@ FROM node:20-slim
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 
-RUN apt-get update && apt-get install -y openssl \
+RUN apt-get update && apt-get install -y openssl curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
