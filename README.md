@@ -117,7 +117,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker compose --env-file ./.env -f docker/docker-compose.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.yml up -d
 ```
 
 #### b. Build and run environment
@@ -125,8 +125,8 @@ docker compose --env-file ./.env -f docker/docker-compose.yml up -d
 Run the following commands to build and start the Docker images:
 
 ```bash
-docker compose --env-file ./.env -f docker/docker-compose.build.yml build
-docker compose --env-file ./.env -f docker/docker-compose.build.yml up -d
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml build
+docker-compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 ```
 
 #### Setup
@@ -137,7 +137,7 @@ docker compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 #### Upgrade Version
 
 1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker compose --env-file ./.env -f docker/docker-compose.yml up -d`  
+1. Run the following command to start the new Docker image: `docker-compose --env-file ./.env -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
 ### Home Server Systems (Community)
@@ -156,7 +156,7 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 ### Setup
 
 1. Run `npm install`
-1. Run `docker compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `docker-compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `npm run database:setup` to initialize the database schema
 1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
 1. Start the server and the client (see [_Development_](#Development))
