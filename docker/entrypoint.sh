@@ -1,7 +1,6 @@
 #!/bin/sh
 
 set -ex
-export NODE_ENV=production
 echo "Running database migrations"
 npx prisma migrate deploy
 
