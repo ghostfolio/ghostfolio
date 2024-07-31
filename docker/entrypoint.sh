@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -ex
+
 echo "Running database migrations"
 npx prisma migrate deploy
 
