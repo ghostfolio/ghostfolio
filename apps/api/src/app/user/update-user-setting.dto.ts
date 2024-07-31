@@ -2,6 +2,7 @@ import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import type {
   ColorScheme,
   DateRange,
+  HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
 
@@ -65,6 +66,10 @@ export class UpdateUserSettingDto {
   @IsArray()
   @IsOptional()
   'filters.tags'?: string[];
+
+  @IsIn(<HoldingsViewMode[]>['CHART', 'TABLE'])
+  @IsOptional()
+  holdingsViewMode?: HoldingsViewMode;
 
   @IsBoolean()
   @IsOptional()
