@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Improved the language localization for Catalan (`ca`)
 
 ## 2.99.0 - 2024-07-29
 
