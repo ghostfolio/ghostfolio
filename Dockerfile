@@ -12,12 +12,12 @@ COPY ./package-lock.json package-lock.json
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
 RUN apt-get update && apt-get install -y --no-install-suggests \
-    g++ \
-    git \
-    make \
-    openssl \
-    python3 \
-    && rm -rf /var/lib/apt/lists/*
+  g++ \
+  git \
+  make \
+  openssl \
+  python3 \
+  && rm -rf /var/lib/apt/lists/*
 RUN npm install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
@@ -54,9 +54,9 @@ LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 
 RUN apt-get update && apt-get install -y --no-install-suggests \
-    curl \
-    openssl \
-    && rm -rf /var/lib/apt/lists/*
+  curl \
+  openssl \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
