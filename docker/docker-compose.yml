@@ -1,6 +1,6 @@
 services:
   ghostfolio:
-    image: docker.io/ghostfolio/ghostfolio/ghostfolio:latest
+    image: docker.io/ghostfolio/ghostfolio:latest
     init: true
     read_only: true
     cap_drop:
@@ -64,10 +64,10 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
-    cap_drop:
-      - ALL
-    cap_add:
-      - DAC_OVERRIDE
+    # cap_drop:
+    #   - ALL
+    # cap_add:
+    #   - DAC_OVERRIDE
     security_opt:
       - no-new-privileges:true
     # uncomment to set resource usage limits
