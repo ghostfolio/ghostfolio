@@ -9,7 +9,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   HoldingType,
-  HoldingViewMode,
+  HoldingsViewMode,
   ToggleOption
 } from '@ghostfolio/common/types';
 
@@ -18,7 +18,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { skip, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-holdings',
@@ -26,6 +26,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home-holdings.html'
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
+  public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
+
   public deviceType: string;
   public hasImpersonationId: boolean;
   public hasPermissionToAccessHoldingsChart: boolean;
@@ -37,7 +39,9 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
   public user: User;
-  public viewModeFormControl = new FormControl<HoldingViewMode>('TABLE');
+  public viewModeFormControl = new FormControl<HoldingsViewMode>(
+    HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+  );
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -81,6 +85,21 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.viewModeFormControl.valueChanges
+      .pipe(
+        // Skip inizialization: "new FormControl"
+        skip(1),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe((holdingsViewMode) => {
+        this.dataService
+          .putUserSetting({ holdingsViewMode })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            this.userService.remove();
+          });
+      });
   }
 
   public onChangeHoldingType(aHoldingType: HoldingType) {
@@ -122,9 +141,20 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       this.hasPermissionToAccessHoldingsChart &&
       this.holdingType === 'ACTIVE'
     ) {
-      this.viewModeFormControl.enable();
+      this.viewModeFormControl.enable({ emitEvent: false });
+
+      this.viewModeFormControl.setValue(
+        this.deviceType === 'mobile'
+          ? HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+          : this.user?.settings?.holdingsViewMode ||
+              HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        { emitEvent: false }
+      );
     } else if (this.holdingType === 'CLOSED') {
-      this.viewModeFormControl.setValue('TABLE');
+      this.viewModeFormControl.setValue(
+        HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        { emitEvent: false }
+      );
     }
 
     this.holdings = undefined;
