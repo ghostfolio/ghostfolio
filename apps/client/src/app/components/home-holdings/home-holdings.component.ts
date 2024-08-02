@@ -144,8 +144,10 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       this.viewModeFormControl.enable({ emitEvent: false });
 
       this.viewModeFormControl.setValue(
-        this.user?.settings?.holdingsViewMode ||
-          HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        this.deviceType === 'mobile'
+          ? HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+          : this.user?.settings?.holdingsViewMode ||
+              HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
         { emitEvent: false }
       );
     } else if (this.holdingType === 'CLOSED') {
