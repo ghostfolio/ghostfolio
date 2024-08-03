@@ -7,18 +7,10 @@ services:
       - ALL
     security_opt:
       - no-new-privileges:true
-    # uncomment to set resource usage limits
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "4"
-    #       memory: 500m
-    #       pids: 1024
     env_file:
       - ../.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?connect_timeout=300&sslmode=prefer
-      NODE_ENV: production
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
@@ -33,6 +25,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   postgres:
     image: docker.io/library/postgres:15
     cap_drop:
@@ -45,13 +38,6 @@ services:
       - SETUID
     security_opt:
       - no-new-privileges:true
-    # uncomment to set resource usage limits
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "2"
-    #       memory: 250m
-    #       pids: 1024
     env_file:
       - ../.env
     healthcheck:
@@ -64,19 +50,11 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
-    # cap_drop:
-    #   - ALL
-    # cap_add:
-    #   - DAC_OVERRIDE
+    user: "999:1000"
+    cap_drop:
+      - ALL
     security_opt:
       - no-new-privileges:true
-    # uncomment to set resource usage limits
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: "2"
-    #       memory: 250m
-    #       pids: 1024
     env_file:
       - ../.env
     command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
