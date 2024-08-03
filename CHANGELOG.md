@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to manage tags of holdings in the holding detail dialog
+
 ### Changed
 
 - Improved the color assignment in the chart of the holdings tab on the home page (experimental)
