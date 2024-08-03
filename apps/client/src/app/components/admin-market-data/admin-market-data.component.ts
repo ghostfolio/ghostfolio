@@ -7,9 +7,9 @@ import {
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   Filter,
   InfoItem,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
@@ -225,7 +225,7 @@ export class AdminMarketDataComponent
     });
   }
 
-  public onDeleteAssetProfile({ dataSource, symbol }: UniqueAsset) {
+  public onDeleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
   }
 
@@ -266,21 +266,27 @@ export class AdminMarketDataComponent
       .subscribe(() => {});
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onOpenAssetProfileDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenAssetProfileDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: {
         dataSource,

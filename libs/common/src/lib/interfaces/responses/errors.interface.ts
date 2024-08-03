@@ -1,6 +1,6 @@
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 export interface ResponseError {
-  errors?: UniqueAsset[];
+  errors?: AssetProfileIdentifier[];
   hasErrors: boolean;
 }

@@ -1,6 +1,9 @@
-import { HistoricalDataItem, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 
-export interface SymbolItem extends UniqueAsset {
+export interface SymbolItem extends AssetProfileIdentifier {
   currency: string;
   historicalData: HistoricalDataItem[];
   marketPrice: number;

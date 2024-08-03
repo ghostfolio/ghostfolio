@@ -5,9 +5,9 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import {
+  AssetProfileIdentifier,
   LineChartItem,
   PortfolioPerformance,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -26,7 +26,7 @@ import { takeUntil } from 'rxjs/operators';
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
-  public errors: UniqueAsset[];
+  public errors: AssetProfileIdentifier[];
   public hasError: boolean;
   public hasImpersonationId: boolean;
   public hasPermissionToCreateOrder: boolean;

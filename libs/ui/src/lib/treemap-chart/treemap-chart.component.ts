@@ -1,5 +1,8 @@
 import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -40,7 +43,7 @@ export class GfTreemapChartComponent
   @Input() cursor: string;
   @Input() holdings: PortfolioPosition[];
 
-  @Output() treemapChartClicked = new EventEmitter<UniqueAsset>();
+  @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 

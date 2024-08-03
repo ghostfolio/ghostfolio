@@ -3,7 +3,7 @@ import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.i
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import {
@@ -17,7 +17,7 @@ import {
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async deleteMany({ dataSource, symbol }: UniqueAsset) {
+  public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.deleteMany({
       where: {
         dataSource,
@@ -40,7 +40,7 @@ export class MarketDataService {
     });
   }
 
-  public async getMax({ dataSource, symbol }: UniqueAsset) {
+  public async getMax({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.findFirst({
       select: {
         date: true,
@@ -63,7 +63,7 @@ export class MarketDataService {
     uniqueAssets
   }: {
     dateQuery: DateQuery;
-    uniqueAssets: UniqueAsset[];
+    uniqueAssets: AssetProfileIdentifier[];
   }): Promise<MarketData[]> {
     return this.prismaService.marketData.findMany({
       orderBy: [

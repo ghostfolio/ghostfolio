@@ -8,7 +8,7 @@ import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  UniqueAsset
+  AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -175,20 +175,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
-  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
+  public onDeleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -242,7 +245,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   }
 
-  public onSetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -342,7 +345,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))

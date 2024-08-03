@@ -1,7 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { DataSource, MarketData } from '@prisma/client';
 
@@ -30,7 +30,7 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
         }: {
           dateRangeEnd: Date;
           dateRangeStart: Date;
-          uniqueAssets: UniqueAsset[];
+          uniqueAssets: AssetProfileIdentifier[];
         }) => {
           return Promise.resolve<MarketData[]>([
             {

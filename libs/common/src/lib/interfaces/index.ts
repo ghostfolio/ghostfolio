@@ -61,6 +61,7 @@ export {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
@@ -101,7 +102,6 @@ export {
   Subscription,
   SymbolMetrics,
   TabConfiguration,
-  AssetProfileIdentifier as UniqueAsset,
   User,
   UserSettings
 };

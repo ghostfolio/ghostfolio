@@ -3,9 +3,9 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   DataProviderInfo,
-  ResponseError,
-  UniqueAsset
+  ResponseError
 } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -80,17 +80,16 @@ export class CurrentRateService {
       );
     }
 
-    const uniqueAssets: UniqueAsset[] = dataGatheringItems.map(
-      ({ dataSource, symbol }) => {
+    const assetProfileIdentifiers: AssetProfileIdentifier[] =
+      dataGatheringItems.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
-      }
-    );
+      });
 
     promises.push(
       this.marketDataService
         .getRange({
           dateQuery,
-          uniqueAssets
+          uniqueAssets: assetProfileIdentifiers
         })
         .then((data) => {
           return data.map(({ dataSource, date, marketPrice, symbol }) => {

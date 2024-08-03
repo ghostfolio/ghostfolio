@@ -3,7 +3,7 @@ import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { GfActivityTypeComponent } from '@ghostfolio/ui/activity-type';
 import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
@@ -99,7 +99,7 @@ export class GfActivitiesTableComponent
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
-  @Output() importDividends = new EventEmitter<UniqueAsset>();
+  @Output() importDividends = new EventEmitter<AssetProfileIdentifier>();
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
@@ -263,7 +263,7 @@ export class GfActivitiesTableComponent
     alert(aComment);
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenPositionDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, holdingDetailDialog: true }
     });
