@@ -88,8 +88,8 @@ export class CurrentRateService {
     promises.push(
       this.marketDataService
         .getRange({
-          dateQuery,
-          uniqueAssets: assetProfileIdentifiers
+          assetProfileIdentifiers,
+          dateQuery
         })
         .then((data) => {
           return data.map(({ dataSource, date, marketPrice, symbol }) => {
