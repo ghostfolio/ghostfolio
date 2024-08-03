@@ -8,7 +8,7 @@ import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
 import type { HoldingType } from './holding-type.type';
-import type { HoldingViewMode } from './holding-view-mode.type';
+import type { HoldingsViewMode } from './holdings-view-mode.type';
 import type { MarketAdvanced } from './market-advanced.type';
 import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
@@ -31,7 +31,7 @@ export type {
   Granularity,
   GroupBy,
   HoldingType,
-  HoldingViewMode,
+  HoldingsViewMode,
   Market,
   MarketAdvanced,
   MarketDataPreset,

@@ -259,6 +259,10 @@ export class AppComponent implements OnDestroy, OnInit {
               this.user?.permissions,
               permissions.reportDataGlitch
             ),
+            hasPermissionToUpdateOrder:
+              !this.hasImpersonationId &&
+              hasPermission(this.user?.permissions, permissions.updateOrder) &&
+              !user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',

@@ -46,6 +46,39 @@ export class OrderService {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
+  public async assignTags({
+    dataSource,
+    symbol,
+    tags,
+    userId
+  }: { tags: Tag[]; userId: string } & UniqueAsset) {
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        userId,
+        SymbolProfile: {
+          dataSource,
+          symbol
+        }
+      }
+    });
+
+    return Promise.all(
+      orders.map(({ id }) =>
+        this.prismaService.order.update({
+          data: {
+            tags: {
+              // The set operation replaces all existing connections with the provided ones
+              set: tags.map(({ id }) => {
+                return { id };
+              })
+            }
+          },
+          where: { id }
+        })
+      )
+    );
+  }
+
   public async createOrder(
     data: Prisma.OrderCreateInput & {
       accountId?: string;

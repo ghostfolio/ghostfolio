@@ -190,7 +190,7 @@ export class UserService {
     (user.Settings.settings as UserSettings).dateRange =
       (user.Settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : (user.Settings.settings as UserSettings)?.dateRange ?? 'max';
+        : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
 
     // Set default value for view mode
     if (!(user.Settings.settings as UserSettings).viewMode) {
@@ -243,6 +243,9 @@ export class UserService {
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;
+
+        // Reset holdings view mode
+        user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
         currentPermissions.push(permissions.reportDataGlitch);
 

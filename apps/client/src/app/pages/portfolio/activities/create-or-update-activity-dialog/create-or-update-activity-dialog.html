@@ -378,11 +378,11 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">
+    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
-          @for (tag of activityForm.get('tags')?.value; track tag) {
+          @for (tag of activityForm.get('tags')?.value; track tag.id) {
             <mat-chip-row
               matChipRemove
               [removable]="true"
@@ -404,7 +404,7 @@
           #autocompleteTags="matAutocomplete"
           (optionSelected)="onAddTag($event)"
         >
-          @for (tag of filteredTagsObservable | async; track tag) {
+          @for (tag of filteredTagsObservable | async; track tag.id) {
             <mat-option [value]="tag.id">
               {{ tag.name }}
             </mat-option>

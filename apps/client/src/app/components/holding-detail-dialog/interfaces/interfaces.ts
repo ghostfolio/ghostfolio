@@ -9,6 +9,7 @@ export interface HoldingDetailDialogParams {
   deviceType: string;
   hasImpersonationId: boolean;
   hasPermissionToReportDataGlitch: boolean;
+  hasPermissionToUpdateOrder: boolean;
   locale: string;
   symbol: string;
 }
