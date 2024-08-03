@@ -420,6 +420,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         return id === event.option.value;
       })
     ]);
+
     this.tagInput.nativeElement.value = '';
   }
 
@@ -461,12 +462,12 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map((tag) => {
-      return tag.id;
+    const tagIds = aTags.map(({ id }) => {
+      return id;
     });
 
-    return this.tagsAvailable.filter((tag) => {
-      return !tagIds.includes(tag.id);
+    return this.tagsAvailable.filter(({ id }) => {
+      return !tagIds.includes(id);
     });
   }
 }

@@ -445,6 +445,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         return id === event.option.value;
       })
     ]);
+
     this.tagInput.nativeElement.value = '';
   }
 
@@ -518,12 +519,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   }
 
   private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map((tag) => {
-      return tag.id;
+    const tagIds = aTags.map(({ id }) => {
+      return id;
     });
 
-    return this.tagsAvailable.filter((tag) => {
-      return !tagIds.includes(tag.id);
+    return this.tagsAvailable.filter(({ id }) => {
+      return !tagIds.includes(id);
     });
   }
 
