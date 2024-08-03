@@ -1,6 +1,6 @@
-import { Role } from '@prisma/client';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 
-import { UniqueAsset } from './unique-asset.interface';
+import { Role } from '@prisma/client';
 
 export interface AdminData {
   exchangeRates: ({

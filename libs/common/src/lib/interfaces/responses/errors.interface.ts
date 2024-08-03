@@ -1,4 +1,4 @@
-import { UniqueAsset } from '../unique-asset.interface';
+import { UniqueAsset } from '@ghostfolio/common/interfaces';
 
 export interface ResponseError {
   errors?: UniqueAsset[];
