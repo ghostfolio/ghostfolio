@@ -11,7 +11,7 @@ COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y --no-install-suggests \
   g++ \
   git \
   make \
@@ -50,16 +50,18 @@ RUN npm run database:generate-typings
 
 # Image to run, copy everything needed from builder
 FROM node:20-slim
-
 LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
+ENV NODE_ENV=production
 
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y --no-install-suggests \
   curl \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
+RUN chown -R node:node /ghostfolio
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
+USER node
 CMD [ "/ghostfolio/entrypoint.sh" ]
