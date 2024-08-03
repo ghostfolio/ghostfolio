@@ -47,7 +47,8 @@ import { SortDirection } from '@angular/material/sort';
 import {
   AccountBalance,
   DataSource,
-  Order as OrderModel
+  Order as OrderModel,
+  Tag
 } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -647,6 +648,17 @@ export class DataService {
 
   public putAdminSetting(key: string, aData: PropertyDto) {
     return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
+  }
+
+  public putHoldingTags({
+    dataSource,
+    symbol,
+    tags
+  }: { tags: Tag[] } & UniqueAsset) {
+    return this.http.put<void>(
+      `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
+      { tags }
+    );
   }
 
   public putOrder(aOrder: UpdateOrderDto) {

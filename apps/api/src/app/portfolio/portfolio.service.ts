@@ -59,7 +59,8 @@ import {
   DataSource,
   Order,
   Platform,
-  Prisma
+  Prisma,
+  Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
 import {
@@ -1302,6 +1303,24 @@ export class PortfolioService {
         )
       }
     };
+  }
+
+  public async updateTags({
+    dataSource,
+    impersonationId,
+    symbol,
+    tags,
+    userId
+  }: {
+    dataSource: DataSource;
+    impersonationId: string;
+    symbol: string;
+    tags: Tag[];
+    userId: string;
+  }) {
+    userId = await this.getUserId(impersonationId, userId);
+
+    await this.orderService.assignTags({ dataSource, symbol, tags, userId });
   }
 
   private async getCashPositions({

@@ -19,16 +19,24 @@ import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  ViewChild
 } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import {
+  MatAutocompleteModule,
+  MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -36,14 +44,15 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Account, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -60,9 +69,11 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
+    MatAutocompleteModule,
     MatButtonModule,
     MatChipsModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatTabsModule,
     NgxSkeletonLoaderModule
   ],
@@ -73,6 +84,9 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
+  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
+
+  public activityForm: FormGroup;
   public accounts: Account[];
   public activities: Activity[];
   public assetClass: string;
@@ -88,6 +102,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
+  public filteredTagsObservable: Observable<Tag[]> = of([]);
   public firstBuyDate: string;
   public historicalDataItems: LineChartItem[];
   public investment: number;
@@ -107,10 +122,12 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+  public separatorKeysCodes: number[] = [COMMA, ENTER];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
   public SymbolProfile: EnhancedSymbolProfile;
   public tags: Tag[];
+  public tagsAvailable: Tag[];
   public totalItems: number;
   public transactionCount: number;
   public user: User;
@@ -123,10 +140,38 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
+    private formBuilder: FormBuilder,
     private userService: UserService
   ) {}
 
   public ngOnInit() {
+    const { tags } = this.dataService.fetchInfo();
+
+    this.activityForm = this.formBuilder.group({
+      tags: <string[]>[]
+    });
+
+    this.tagsAvailable = tags.map(({ id, name }) => {
+      return {
+        id,
+        name: translate(name)
+      };
+    });
+
+    this.activityForm
+      .get('tags')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((tags) => {
+        this.dataService
+          .putHoldingTags({
+            tags,
+            dataSource: this.data.dataSource,
+            symbol: this.data.symbol
+          })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+      });
+
     this.dataService
       .fetchHoldingDetail({
         dataSource: this.data.dataSource,
@@ -248,12 +293,27 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.reportDataGlitchMail = `mailto:hi@ghostfol.io?Subject=Ghostfolio Data Glitch Report&body=Hello%0D%0DI would like to report a data glitch for%0D%0DSymbol: ${SymbolProfile?.symbol}%0DData Source: ${SymbolProfile?.dataSource}%0D%0DAdditional notes:%0D%0DCan you please take a look?%0D%0DKind regards`;
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
+
           this.tags = tags.map(({ id, name }) => {
             return {
               id,
               name: translate(name)
             };
           });
+
+          this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
+
+          this.filteredTagsObservable = this.activityForm.controls[
+            'tags'
+          ].valueChanges.pipe(
+            startWith(this.activityForm.get('tags').value),
+            map((aTags: Tag[] | null) => {
+              return aTags
+                ? this.filterTags(aTags)
+                : this.tagsAvailable.slice();
+            })
+          );
+
           this.transactionCount = transactionCount;
           this.totalItems = transactionCount;
           this.value = value;
@@ -353,6 +413,16 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onAddTag(event: MatAutocompleteSelectedEvent) {
+    this.activityForm.get('tags').setValue([
+      ...(this.activityForm.get('tags').value ?? []),
+      this.tagsAvailable.find(({ id }) => {
+        return id === event.option.value;
+      })
+    ]);
+    this.tagInput.nativeElement.value = '';
+  }
+
   public onClose() {
     this.dialogRef.close();
   }
@@ -377,8 +447,26 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onRemoveTag(aTag: Tag) {
+    this.activityForm.get('tags').setValue(
+      this.activityForm.get('tags').value.filter(({ id }) => {
+        return id !== aTag.id;
+      })
+    );
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private filterTags(aTags: Tag[]) {
+    const tagIds = aTags.map((tag) => {
+      return tag.id;
+    });
+
+    return this.tagsAvailable.filter((tag) => {
+      return !tagIds.includes(tag.id);
+    });
   }
 }

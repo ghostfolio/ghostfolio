@@ -53,8 +53,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public isToday = isToday;
   public mode: 'create' | 'update';
   public platforms: { id: string; name: string }[];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public tags: Tag[] = [];
+  public separatorKeysCodes: number[] = [COMMA, ENTER];
+  public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
@@ -81,7 +81,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
-    this.tags = tags.map(({ id, name }) => {
+    this.tagsAvailable = tags.map(({ id, name }) => {
       return {
         id,
         name: translate(name)
@@ -287,7 +287,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     ].valueChanges.pipe(
       startWith(this.activityForm.get('tags').value),
       map((aTags: Tag[] | null) => {
-        return aTags ? this.filterTags(aTags) : this.tags.slice();
+        return aTags ? this.filterTags(aTags) : this.tagsAvailable.slice();
       })
     );
 
@@ -441,7 +441,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public onAddTag(event: MatAutocompleteSelectedEvent) {
     this.activityForm.get('tags').setValue([
       ...(this.activityForm.get('tags').value ?? []),
-      this.tags.find(({ id }) => {
+      this.tagsAvailable.find(({ id }) => {
         return id === event.option.value;
       })
     ]);
@@ -522,7 +522,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       return tag.id;
     });
 
-    return this.tags.filter((tag) => {
+    return this.tagsAvailable.filter((tag) => {
       return !tagIds.includes(tag.id);
     });
   }
