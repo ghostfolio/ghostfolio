@@ -399,8 +399,8 @@ export class AdminService {
       url: url as string
     };
 
-    const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput &
-      AssetProfileIdentifier = {
+    const updatedSymbolProfile: AssetProfileIdentifier &
+      Prisma.SymbolProfileUpdateInput = {
       comment,
       countries,
       currency,
