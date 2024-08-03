@@ -50,7 +50,7 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
-    user: "999:1000"
+    user: '999:1000'
     cap_drop:
       - ALL
     security_opt:
