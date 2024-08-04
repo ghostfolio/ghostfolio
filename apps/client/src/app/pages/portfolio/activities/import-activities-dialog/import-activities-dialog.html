@@ -25,14 +25,14 @@
       <div class="pt-3">
         @if (mode === 'DIVIDEND') {
           <form
-            [formGroup]="uniqueAssetForm"
+            [formGroup]="assetProfileForm"
             (ngSubmit)="onLoadDividends(stepper)"
           >
             <mat-form-field appearance="outline" class="w-100">
               <mat-label i18n>Holding</mat-label>
-              <mat-select formControlName="uniqueAsset">
+              <mat-select formControlName="assetProfileIdentifier">
                 <mat-select-trigger>{{
-                  uniqueAssetForm.get('uniqueAsset')?.value?.name
+                  assetProfileForm.get('assetProfileIdentifier')?.value?.name
                 }}</mat-select-trigger>
                 @for (holding of holdings; track holding) {
                   <mat-option
@@ -63,7 +63,7 @@
                 color="primary"
                 mat-flat-button
                 type="submit"
-                [disabled]="!uniqueAssetForm.valid"
+                [disabled]="!assetProfileForm.valid"
               >
                 <span i18n>Load Dividends</span>
               </button>

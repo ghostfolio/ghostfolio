@@ -91,6 +91,8 @@ export const HEADER_KEY_TOKEN = 'Authorization';
 export const MAX_CHART_ITEMS = 365;
 export const MAX_TOP_HOLDINGS = 50;
 
+export const NUMERICAL_PRECISION_THRESHOLD = 100000;
+
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
 export const PROPERTY_COUNTRIES_OF_SUBSCRIBERS = 'COUNTRIES_OF_SUBSCRIBERS';
@@ -130,6 +132,7 @@ export const REPLACE_NAME_PARTS = [
 ];
 
 export const SUPPORTED_LANGUAGE_CODES = [
+  'ca',
   'de',
   'en',
   'es',

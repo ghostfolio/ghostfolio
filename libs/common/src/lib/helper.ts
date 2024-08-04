@@ -11,7 +11,7 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
+import { ca, de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
 
 import {
   DEFAULT_CURRENCY,
@@ -19,7 +19,7 @@ import {
   ghostfolioScraperApiSymbolPrefix,
   locale
 } from './config';
-import { Benchmark, UniqueAsset } from './interfaces';
+import { AssetProfileIdentifier, Benchmark } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
@@ -147,7 +147,10 @@ export function getAllActivityTypes(): ActivityType[] {
   return Object.values(ActivityType);
 }
 
-export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {
+export function getAssetProfileIdentifier({
+  dataSource,
+  symbol
+}: AssetProfileIdentifier) {
   return `${dataSource}-${symbol}`;
 }
 
@@ -171,7 +174,9 @@ export function getCurrencyFromSymbol(aSymbol = '') {
 }
 
 export function getDateFnsLocale(aLanguageCode: string) {
-  if (aLanguageCode === 'de') {
+  if (aLanguageCode === 'ca') {
+    return ca;
+  } else if (aLanguageCode === 'de') {
     return de;
   } else if (aLanguageCode === 'es') {
     return es;
@@ -375,7 +380,7 @@ export function parseDate(date: string): Date | null {
   return parseISO(date);
 }
 
-export function parseSymbol({ dataSource, symbol }: UniqueAsset) {
+export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
   const [ticker, exchange] = symbol.split('.');
 
   return {

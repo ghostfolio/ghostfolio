@@ -6,8 +6,14 @@ import {
   ghostfolioScraperApiSymbolPrefix
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Filter,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -97,22 +103,11 @@ export class AdminMarketDataComponent
     new MatTableDataSource();
   public defaultDateFormat: string;
   public deviceType: string;
-  public displayedColumns = [
-    'select',
-    'nameWithSymbol',
-    'dataSource',
-    'assetClass',
-    'assetSubClass',
-    'date',
-    'activitiesCount',
-    'marketDataItemCount',
-    'sectorsCount',
-    'countriesCount',
-    'comment',
-    'actions'
-  ];
+  public displayedColumns: string[] = [];
   public filters$ = new Subject<Filter[]>();
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
+  public hasPermissionForSubscription: boolean;
+  public info: InfoItem;
   public isLoading = false;
   public isUUID = isUUID;
   public placeholder = '';
@@ -134,6 +129,33 @@ export class AdminMarketDataComponent
     private router: Router,
     private userService: UserService
   ) {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
+
+    this.displayedColumns = [
+      'select',
+      'nameWithSymbol',
+      'dataSource',
+      'assetClass',
+      'assetSubClass',
+      'date',
+      'activitiesCount',
+      'marketDataItemCount',
+      'sectorsCount',
+      'countriesCount'
+    ];
+
+    if (this.hasPermissionForSubscription) {
+      this.displayedColumns.push('isUsedByUsersWithSubscription');
+    }
+
+    this.displayedColumns.push('comment');
+    this.displayedColumns.push('actions');
+
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -203,7 +225,7 @@ export class AdminMarketDataComponent
     });
   }
 
-  public onDeleteAssetProfile({ dataSource, symbol }: UniqueAsset) {
+  public onDeleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
   }
 
@@ -244,21 +266,27 @@ export class AdminMarketDataComponent
       .subscribe(() => {});
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onOpenAssetProfileDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenAssetProfileDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: {
         dataSource,

@@ -76,7 +76,7 @@ export const personalFinanceTools: Product[] = [
     key: 'capmon',
     name: 'CapMon.org',
     origin: `Germany`,
-    note: 'CapMon.org has discontinued in 2023',
+    note: 'CapMon.org was discontinued in 2023',
     slogan: 'Next Generation Assets Tracking'
   },
   {
@@ -223,7 +223,7 @@ export const personalFinanceTools: Product[] = [
     hasSelfHostingAbility: false,
     key: 'intuit-mint',
     name: 'Intuit Mint',
-    note: 'Intuit Mint has discontinued in 2023',
+    note: 'Intuit Mint was discontinued in 2023',
     origin: `United States`,
     pricingPerYear: '$60',
     slogan: 'Managing money, made simple'
@@ -277,7 +277,7 @@ export const personalFinanceTools: Product[] = [
     name: 'markets.sh',
     origin: `Germany`,
     pricingPerYear: '€168',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Track your investments'
   },
   {
@@ -286,10 +286,10 @@ export const personalFinanceTools: Product[] = [
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
-    note: 'Maybe Finance has discontinued in 2023',
+    note: 'Maybe Finance was discontinued in 2023',
     origin: `United States`,
     pricingPerYear: '$145',
-    region: `United States`,
+    regions: [`United States`],
     slogan: 'Your financial future, in your control'
   },
   {
@@ -300,7 +300,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Merlin',
     origin: `United States`,
     pricingPerYear: '$204',
-    region: 'Canada, United States',
+    regions: ['Canada', 'United States'],
     slogan: 'The smartest way to track your crypto'
   },
   {
@@ -340,7 +340,7 @@ export const personalFinanceTools: Product[] = [
     note: 'Originally named as Tresor One',
     origin: `Germany`,
     pricingPerYear: '€88',
-    region: 'Austria, Germany, Switzerland',
+    regions: ['Austria', 'Germany', 'Switzerland'],
     slogan: 'Dein Vermögen immer im Blick'
   },
   {
@@ -360,7 +360,7 @@ export const personalFinanceTools: Product[] = [
     name: 'PocketSmith',
     origin: `New Zealand`,
     pricingPerYear: '$120',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Know where your money is going'
   },
   {
@@ -386,7 +386,7 @@ export const personalFinanceTools: Product[] = [
     hasFreePlan: true,
     key: 'portfoloo',
     name: 'Portfoloo',
-    note: 'Portfoloo has discontinued',
+    note: 'Portfoloo was discontinued',
     slogan:
       'Free Stock Portfolio Tracker with unlimited portfolio and stocks for DIY investors'
   },
@@ -444,14 +444,14 @@ export const personalFinanceTools: Product[] = [
     name: 'Sharesight',
     origin: `New Zealand`,
     pricingPerYear: '$135',
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Stock Portfolio Tracker'
   },
   {
     hasFreePlan: true,
     key: 'sharesmaster',
     name: 'SharesMaster',
-    note: 'SharesMaster has discontinued',
+    note: 'SharesMaster was discontinued',
     slogan: 'Free Stock Portfolio Tracker'
   },
   {
@@ -492,7 +492,7 @@ export const personalFinanceTools: Product[] = [
     key: 'stockmarketeye',
     name: 'StockMarketEye',
     origin: `France`,
-    note: 'StockMarketEye has discontinued in 2023',
+    note: 'StockMarketEye was discontinued in 2023',
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
@@ -593,8 +593,9 @@ export const personalFinanceTools: Product[] = [
     key: 'yeekatee',
     languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
+    note: 'yeekatee was discontinued in 2024',
     origin: `Switzerland`,
-    region: `Global`,
+    regions: [`Global`],
     slogan: 'Connect. Share. Invest.'
   },
   {

@@ -19,7 +19,7 @@ import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
   OrderWithAccount,
@@ -51,7 +51,7 @@ export class ImportService {
     dataSource,
     symbol,
     userCurrency
-  }: UniqueAsset & { userCurrency: string }): Promise<Activity[]> {
+  }: AssetProfileIdentifier & { userCurrency: string }): Promise<Activity[]> {
     try {
       const { firstBuyDate, historicalData, orders } =
         await this.portfolioService.getPosition(dataSource, undefined, symbol);
@@ -72,9 +72,13 @@ export class ImportService {
         })
       ]);
 
-      const accounts = orders.map((order) => {
-        return order.Account;
-      });
+      const accounts = orders
+        .filter(({ Account }) => {
+          return !!Account;
+        })
+        .map(({ Account }) => {
+          return Account;
+        });
 
       const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 

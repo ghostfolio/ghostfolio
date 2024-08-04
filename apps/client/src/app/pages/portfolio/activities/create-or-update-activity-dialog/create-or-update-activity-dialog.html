@@ -4,10 +4,10 @@
   (keyup.enter)="activityForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  @if (data.activity.id) {
-    <h1 i18n mat-dialog-title>Update activity</h1>
-  } @else {
+  @if (mode === 'create') {
     <h1 i18n mat-dialog-title>Add activity</h1>
+  } @else {
+    <h1 i18n mat-dialog-title>Update activity</h1>
   }
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="mb-3">
@@ -76,16 +76,17 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{ 'mb-3': data.activity.id }">
+    <div [ngClass]="{ 'mb-3': mode === 'update' }">
       <mat-form-field
         appearance="outline"
         class="w-100"
-        [ngClass]="{ 'mb-1 without-hint': !data.activity.id }"
+        [ngClass]="{ 'mb-1 without-hint': mode === 'create' }"
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
           @if (
-            !activityForm.get('accountId').hasValidator(Validators.required)
+            !activityForm.get('accountId').hasValidator(Validators.required) ||
+            (!activityForm.get('accountId').value && mode === 'update')
           ) {
             <mat-option [value]="null" />
           }
@@ -106,7 +107,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': data.activity.id }">
+    <div class="mb-3" [ngClass]="{ 'd-none': mode === 'update' }">
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
         >Update Cash Balance</mat-checkbox
       >
@@ -377,11 +378,11 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">
+    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
-          @for (tag of activityForm.get('tags')?.value; track tag) {
+          @for (tag of activityForm.get('tags')?.value; track tag.id) {
             <mat-chip-row
               matChipRemove
               [removable]="true"
@@ -403,7 +404,7 @@
           #autocompleteTags="matAutocomplete"
           (optionSelected)="onAddTag($event)"
         >
-          @for (tag of filteredTagsObservable | async; track tag) {
+          @for (tag of filteredTagsObservable | async; track tag.id) {
             <mat-option [value]="tag.id">
               {{ tag.name }}
             </mat-option>

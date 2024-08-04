@@ -47,6 +47,7 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="netPerformanceWithCurrencyEffectPrecision"
             [unit]="data.baseCurrency"
             [value]="netPerformanceWithCurrencyEffect"
             >Change with currency effect</gf-value
@@ -58,6 +59,7 @@
             [colorizeSign]="true"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="netPerformancePrecision"
             [unit]="data.baseCurrency"
             [value]="netPerformance"
             >Change</gf-value
@@ -160,6 +162,7 @@
           size="medium"
           [isCurrency]="true"
           [locale]="data.locale"
+          [precision]="investmentPrecision"
           [unit]="data.baseCurrency"
           [value]="investment"
           >Investment</gf-value
@@ -172,6 +175,7 @@
             size="medium"
             [isCurrency]="true"
             [locale]="data.locale"
+            [precision]="dividendInBaseCurrencyPrecision"
             [unit]="data.baseCurrency"
             [value]="dividendInBaseCurrency"
             >Dividend</gf-value
@@ -321,7 +325,7 @@
 
     <mat-tab-group
       animationDuration="0"
-      class="mb-3"
+      class="mb-5"
       [mat-stretch-tabs]="false"
       [ngClass]="{ 'd-none': !activities?.length }"
     >
@@ -371,7 +375,49 @@
       </mat-tab>
     </mat-tab-group>
 
-    @if (tags?.length > 0) {
+    <div
+      class="row"
+      [ngClass]="{
+        'd-none': !data.hasPermissionToUpdateOrder
+      }"
+    >
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-label i18n>Tags</mat-label>
+          <mat-chip-grid #tagsChipList>
+            @for (tag of activityForm.get('tags')?.value; track tag.id) {
+              <mat-chip-row
+                matChipRemove
+                [removable]="true"
+                (removed)="onRemoveTag(tag)"
+              >
+                {{ tag.name }}
+                <ion-icon class="ml-2" matPrefix name="close-outline" />
+              </mat-chip-row>
+            }
+            <input
+              #tagInput
+              name="close-outline"
+              [matAutocomplete]="autocompleteTags"
+              [matChipInputFor]="tagsChipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            />
+          </mat-chip-grid>
+          <mat-autocomplete
+            #autocompleteTags="matAutocomplete"
+            (optionSelected)="onAddTag($event)"
+          >
+            @for (tag of filteredTagsObservable | async; track tag.id) {
+              <mat-option [value]="tag.id">
+                {{ tag.name }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+
+    @if (!data.hasPermissionToUpdateOrder && tagsAvailable?.length > 0) {
       <div class="row">
         <div class="col">
           <div class="h5" i18n>Tags</div>

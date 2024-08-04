@@ -19,12 +19,12 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   DataProviderInfo,
   HistoricalDataItem,
   InvestmentItem,
   ResponseError,
-  SymbolMetrics,
-  UniqueAsset
+  SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange, GroupBy } from '@ghostfolio/common/types';
@@ -447,15 +447,15 @@ export abstract class PortfolioCalculator {
         dataSource: item.dataSource,
         fee: item.fee,
         firstBuyDate: item.firstBuyDate,
-        grossPerformance: !hasErrors ? grossPerformance ?? null : null,
+        grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
-          ? grossPerformancePercentage ?? null
+          ? (grossPerformancePercentage ?? null)
           : null,
         grossPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? grossPerformancePercentageWithCurrencyEffect ?? null
+          ? (grossPerformancePercentageWithCurrencyEffect ?? null)
           : null,
         grossPerformanceWithCurrencyEffect: !hasErrors
-          ? grossPerformanceWithCurrencyEffect ?? null
+          ? (grossPerformanceWithCurrencyEffect ?? null)
           : null,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
@@ -463,15 +463,15 @@ export abstract class PortfolioCalculator {
           marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
         marketPriceInBaseCurrency:
           marketPriceInBaseCurrency?.toNumber() ?? null,
-        netPerformance: !hasErrors ? netPerformance ?? null : null,
+        netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
-          ? netPerformancePercentage ?? null
+          ? (netPerformancePercentage ?? null)
           : null,
         netPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? netPerformancePercentageWithCurrencyEffect ?? null
+          ? (netPerformancePercentageWithCurrencyEffect ?? null)
           : null,
         netPerformanceWithCurrencyEffect: !hasErrors
-          ? netPerformanceWithCurrencyEffect ?? null
+          ? (netPerformanceWithCurrencyEffect ?? null)
           : null,
         quantity: item.quantity,
         symbol: item.symbol,
@@ -1213,7 +1213,7 @@ export abstract class PortfolioCalculator {
     };
     start: Date;
     step?: number;
-  } & UniqueAsset): SymbolMetrics;
+  } & AssetProfileIdentifier): SymbolMetrics;
 
   public getTransactionPoints() {
     return this.transactionPoints;

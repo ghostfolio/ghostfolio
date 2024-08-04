@@ -2,7 +2,10 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { SymbolMetrics, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  SymbolMetrics
+} from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 
 import { Logger } from '@nestjs/common';
@@ -157,7 +160,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     };
     start: Date;
     step?: number;
-  } & UniqueAsset): SymbolMetrics {
+  } & AssetProfileIdentifier): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};

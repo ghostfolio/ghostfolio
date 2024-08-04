@@ -18,6 +18,7 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
   EMERGENCY_FUND_TAG_ID,
@@ -58,7 +59,8 @@ import {
   DataSource,
   Order,
   Platform,
-  Prisma
+  Prisma,
+  Tag
 } from '@prisma/client';
 import { Big } from 'big.js';
 import {
@@ -70,7 +72,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, isNumber, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -204,24 +206,6 @@ export class PortfolioService {
       totalBalanceInBaseCurrency: totalBalanceInBaseCurrency.toNumber(),
       totalValueInBaseCurrency: totalValueInBaseCurrency.toNumber()
     };
-  }
-
-  public getAnnualizedPerformancePercent({
-    daysInMarket,
-    netPerformancePercentage
-  }: {
-    daysInMarket: number;
-    netPerformancePercentage: Big;
-  }): Big {
-    if (isNumber(daysInMarket) && daysInMarket > 0) {
-      const exponent = new Big(365).div(daysInMarket).toNumber();
-
-      return new Big(
-        Math.pow(netPerformancePercentage.plus(1).toNumber(), exponent)
-      ).minus(1);
-    }
-
-    return new Big(0);
   }
 
   public async getDividends({
@@ -734,7 +718,7 @@ export class PortfolioService {
         return Account;
       });
 
-      const dividendYieldPercent = this.getAnnualizedPerformancePercent({
+      const dividendYieldPercent = getAnnualizedPerformancePercent({
         daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
         netPerformancePercentage: timeWeightedInvestment.eq(0)
           ? new Big(0)
@@ -742,7 +726,7 @@ export class PortfolioService {
       });
 
       const dividendYieldPercentWithCurrencyEffect =
-        this.getAnnualizedPerformancePercent({
+        getAnnualizedPerformancePercent({
           daysInMarket: differenceInDays(new Date(), parseDate(firstBuyDate)),
           netPerformancePercentage: timeWeightedInvestmentWithCurrencyEffect.eq(
             0
@@ -1329,6 +1313,24 @@ export class PortfolioService {
     };
   }
 
+  public async updateTags({
+    dataSource,
+    impersonationId,
+    symbol,
+    tags,
+    userId
+  }: {
+    dataSource: DataSource;
+    impersonationId: string;
+    symbol: string;
+    tags: Tag[];
+    userId: string;
+  }) {
+    userId = await this.getUserId(impersonationId, userId);
+
+    await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+  }
+
   private async getCashPositions({
     cashDetails,
     userCurrency,
@@ -1746,13 +1748,13 @@ export class PortfolioService {
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
-    const annualizedPerformancePercent = this.getAnnualizedPerformancePercent({
+    const annualizedPerformancePercent = getAnnualizedPerformancePercent({
       daysInMarket,
       netPerformancePercentage: new Big(netPerformancePercentage)
     })?.toNumber();
 
     const annualizedPerformancePercentWithCurrencyEffect =
-      this.getAnnualizedPerformancePercent({
+      getAnnualizedPerformancePercent({
         daysInMarket,
         netPerformancePercentage: new Big(
           netPerformancePercentageWithCurrencyEffect

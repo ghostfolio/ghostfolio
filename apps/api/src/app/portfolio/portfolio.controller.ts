@@ -1,6 +1,7 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
@@ -29,7 +30,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import {
   hasReadRestrictedAccessPermission,
-  isRestrictedView
+  isRestrictedView,
+  permissions
 } from '@ghostfolio/common/permissions';
 import type {
   DateRange,
@@ -38,12 +40,14 @@ import type {
 } from '@ghostfolio/common/types';
 
 import {
+  Body,
   Controller,
   Get,
   Headers,
   HttpException,
   Inject,
   Param,
+  Put,
   Query,
   UseGuards,
   UseInterceptors,
@@ -51,12 +55,13 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { PortfolioService } from './portfolio.service';
+import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -508,9 +513,6 @@ export class PortfolioController {
     @Param('accessId') accessId
   ): Promise<PortfolioPublicDetails> {
     const access = await this.accessService.access({ id: accessId });
-    const user = await this.userService.user({
-      id: access.userId
-    });
 
     if (!access) {
       throw new HttpException(
@@ -520,6 +522,11 @@ export class PortfolioController {
     }
 
     let hasDetails = true;
+
+    const user = await this.userService.user({
+      id: access.userId
+    });
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails = user.subscription.type === 'Premium';
     }
@@ -576,23 +583,23 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPosition(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource,
-    @Param('symbol') symbol
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
   ): Promise<PortfolioHoldingDetail> {
-    const position = await this.portfolioService.getPosition(
+    const holding = await this.portfolioService.getPosition(
       dataSource,
       impersonationId,
       symbol
     );
 
-    if (position) {
-      return position;
+    if (!holding) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
     }
 
-    throw new HttpException(
-      getReasonPhrase(StatusCodes.NOT_FOUND),
-      StatusCodes.NOT_FOUND
-    );
+    return holding;
   }
 
   @Get('report')
@@ -614,5 +621,37 @@ export class PortfolioController {
     }
 
     return report;
+  }
+
+  @HasPermission(permissions.updateOrder)
+  @Put('position/:dataSource/:symbol/tags')
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateHoldingTags(
+    @Body() data: UpdateHoldingTagsDto,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    const holding = await this.portfolioService.getPosition(
+      dataSource,
+      impersonationId,
+      symbol
+    );
+
+    if (!holding) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    await this.portfolioService.updateTags({
+      dataSource,
+      impersonationId,
+      symbol,
+      tags: data.tags,
+      userId: this.request.user.id
+    });
   }
 }

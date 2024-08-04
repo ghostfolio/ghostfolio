@@ -5,6 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `Nx` from version `19.5.1` to `19.5.6`
+
+## 2.101.0 - 2024-08-03
+
+### Changed
+
+- Hardened container security by switching to a non-root user, setting the filesystem to read-only, and dropping unnecessary capabilities
+
+## 2.100.0 - 2024-08-03
+
+### Added
+
+- Added support to manage tags of holdings in the holding detail dialog
+
+### Changed
+
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Persisted the view mode of the holdings tab on the home page (experimental)
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Spanish (`es`)
+
+## 2.99.0 - 2024-07-29
+
+### Changed
+
+- Migrated the usage of `yarn` to `npm`
+- Upgraded `storybook` from version `7.0.9` to `8.2.5`
+- Downgraded `marked` from version `13.0.0` to `12.0.2`
+
+## 2.98.0 - 2024-07-27
+
+### Added
+
+- Set up the language localization for Catalan (`ca`)
+
+### Changed
+
+- Improved the account selector of the create or update activity dialog
+- Improved the handling of the numerical precision in the value component
+- Skipped derived currencies in the get quotes functionality of the data provider service
+- Improved the language localization for Spanish (`es`)
+- Upgraded `angular` from version `18.0.4` to `18.1.1`
+- Upgraded `Nx` from version `19.4.3` to `19.5.1`
+- Upgraded `prisma` from version `5.16.1` to `5.17.0`
+
+### Fixed
+
+- Fixed the dividend import from a data provider for holdings without an account
+- Fixed an issue in the public page related to a non-existent access
+
+## 2.97.0 - 2024-07-20
+
+### Added
+
+- Added _selfh.st_ to the _As seen in_ section on the landing page
+
+### Changed
+
+- Improved the numerical precision in the holding detail dialog
+- Improved the handling of the numerical precision in the value component
+- Optimized the 7d data gathering by prioritizing the currencies
+- Improved the language localization for German (`de`)
+- Upgraded `Node.js` from version `18` to `20` (`Dockerfile`)
+- Upgraded `Nx` from version `19.4.0` to `19.4.3`
+- Upgraded `prettier` from version `3.3.1` to `3.3.3`
+
+### Fixed
+
+- Fixed the table sorting of the holdings tab on the home page
+
 ## 2.96.0 - 2024-07-13
 
 ### Changed
@@ -4812,7 +4886,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the attribute `precision` in the value component
+- Added the attribute `precision` to the value component
 
 ### Fixed
 

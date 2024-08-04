@@ -47,6 +47,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
+    'ca',
     'de',
     'de-CH',
     'en-GB',

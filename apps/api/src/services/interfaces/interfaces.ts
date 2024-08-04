@@ -1,4 +1,7 @@
-import { DataProviderInfo, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  DataProviderInfo
+} from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
 
 import {
@@ -34,6 +37,6 @@ export interface IDataProviderResponse {
   marketState: MarketState;
 }
 
-export interface IDataGatheringItem extends UniqueAsset {
+export interface IDataGatheringItem extends AssetProfileIdentifier {
   date?: Date;
 }

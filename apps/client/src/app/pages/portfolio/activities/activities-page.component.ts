@@ -33,7 +33,6 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
-  public activities: Activity[];
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -66,13 +65,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         if (params['createDialog']) {
           this.openCreateActivityDialog();
         } else if (params['editDialog']) {
-          if (this.activities) {
-            const activity = this.activities.find(({ id }) => {
-              return id === params['activityId'];
-            });
-
-            this.openUpdateActivityDialog(activity);
-          } else if (this.dataSource) {
+          if (this.dataSource && params['activityId']) {
             const activity = this.dataSource.data.find(({ id }) => {
               return id === params['activityId'];
             });

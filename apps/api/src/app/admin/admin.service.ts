@@ -21,18 +21,19 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
-  Filter,
-  UniqueAsset
+  Filter
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
   DataSource,
   Prisma,
+  PrismaClient,
   Property,
   SymbolProfile
 } from '@prisma/client';
@@ -58,7 +59,9 @@ export class AdminService {
     currency,
     dataSource,
     symbol
-  }: UniqueAsset & { currency?: string }): Promise<SymbolProfile | never> {
+  }: AssetProfileIdentifier & { currency?: string }): Promise<
+    SymbolProfile | never
+  > {
     try {
       if (dataSource === 'MANUAL') {
         return this.symbolProfileService.add({
@@ -95,7 +98,10 @@ export class AdminService {
     }
   }
 
-  public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
+  public async deleteProfileData({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
     await this.symbolProfileService.delete({ dataSource, symbol });
   }
@@ -212,104 +218,119 @@ export class AdminService {
       }
     }
 
-    let [assetProfiles, count] = await Promise.all([
-      this.prismaService.symbolProfile.findMany({
-        orderBy,
-        skip,
-        take,
-        where,
-        select: {
-          _count: {
-            select: { Order: true }
-          },
-          assetClass: true,
-          assetSubClass: true,
-          comment: true,
-          countries: true,
-          currency: true,
-          dataSource: true,
-          id: true,
-          name: true,
-          Order: {
-            orderBy: [{ date: 'asc' }],
-            select: { date: true },
-            take: 1
-          },
-          scraperConfiguration: true,
-          sectors: true,
-          symbol: true
+    const extendedPrismaClient = this.getExtendedPrismaClient();
+
+    try {
+      let [assetProfiles, count] = await Promise.all([
+        extendedPrismaClient.symbolProfile.findMany({
+          orderBy,
+          skip,
+          take,
+          where,
+          select: {
+            _count: {
+              select: { Order: true }
+            },
+            assetClass: true,
+            assetSubClass: true,
+            comment: true,
+            countries: true,
+            currency: true,
+            dataSource: true,
+            id: true,
+            isUsedByUsersWithSubscription: true,
+            name: true,
+            Order: {
+              orderBy: [{ date: 'asc' }],
+              select: { date: true },
+              take: 1
+            },
+            scraperConfiguration: true,
+            sectors: true,
+            symbol: true
+          }
+        }),
+        this.prismaService.symbolProfile.count({ where })
+      ]);
+
+      let marketData: AdminMarketDataItem[] = await Promise.all(
+        assetProfiles.map(
+          async ({
+            _count,
+            assetClass,
+            assetSubClass,
+            comment,
+            countries,
+            currency,
+            dataSource,
+            id,
+            isUsedByUsersWithSubscription,
+            name,
+            Order,
+            sectors,
+            symbol
+          }) => {
+            const countriesCount = countries
+              ? Object.keys(countries).length
+              : 0;
+            const marketDataItemCount =
+              marketDataItems.find((marketDataItem) => {
+                return (
+                  marketDataItem.dataSource === dataSource &&
+                  marketDataItem.symbol === symbol
+                );
+              })?._count ?? 0;
+            const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+            return {
+              assetClass,
+              assetSubClass,
+              comment,
+              currency,
+              countriesCount,
+              dataSource,
+              id,
+              name,
+              symbol,
+              marketDataItemCount,
+              sectorsCount,
+              activitiesCount: _count.Order,
+              date: Order?.[0]?.date,
+              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
+            };
+          }
+        )
+      );
+
+      if (presetId) {
+        if (presetId === 'ETF_WITHOUT_COUNTRIES') {
+          marketData = marketData.filter(({ countriesCount }) => {
+            return countriesCount === 0;
+          });
+        } else if (presetId === 'ETF_WITHOUT_SECTORS') {
+          marketData = marketData.filter(({ sectorsCount }) => {
+            return sectorsCount === 0;
+          });
         }
-      }),
-      this.prismaService.symbolProfile.count({ where })
-    ]);
 
-    let marketData: AdminMarketDataItem[] = assetProfiles.map(
-      ({
-        _count,
-        assetClass,
-        assetSubClass,
-        comment,
-        countries,
-        currency,
-        dataSource,
-        id,
-        name,
-        Order,
-        sectors,
-        symbol
-      }) => {
-        const countriesCount = countries ? Object.keys(countries).length : 0;
-        const marketDataItemCount =
-          marketDataItems.find((marketDataItem) => {
-            return (
-              marketDataItem.dataSource === dataSource &&
-              marketDataItem.symbol === symbol
-            );
-          })?._count ?? 0;
-        const sectorsCount = sectors ? Object.keys(sectors).length : 0;
-
-        return {
-          assetClass,
-          assetSubClass,
-          comment,
-          currency,
-          countriesCount,
-          dataSource,
-          id,
-          name,
-          symbol,
-          marketDataItemCount,
-          sectorsCount,
-          activitiesCount: _count.Order,
-          date: Order?.[0]?.date
-        };
-      }
-    );
-
-    if (presetId) {
-      if (presetId === 'ETF_WITHOUT_COUNTRIES') {
-        marketData = marketData.filter(({ countriesCount }) => {
-          return countriesCount === 0;
-        });
-      } else if (presetId === 'ETF_WITHOUT_SECTORS') {
-        marketData = marketData.filter(({ sectorsCount }) => {
-          return sectorsCount === 0;
-        });
+        count = marketData.length;
       }
 
-      count = marketData.length;
+      return {
+        count,
+        marketData
+      };
+    } finally {
+      await extendedPrismaClient.$disconnect();
+
+      Logger.debug('Disconnect extended prisma client', 'AdminService');
     }
-
-    return {
-      count,
-      marketData
-    };
   }
 
   public async getMarketDataBySymbol({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<AdminMarketDataDetails> {
+  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
     let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
     let currency: EnhancedSymbolProfile['currency'] = '-';
     let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
@@ -370,7 +391,7 @@ export class AdminService {
     symbol,
     symbolMapping,
     url
-  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
     const symbolProfileOverrides = {
       assetClass: assetClass as AssetClass,
       assetSubClass: assetSubClass as AssetSubClass,
@@ -378,28 +399,28 @@ export class AdminService {
       url: url as string
     };
 
-    const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput & UniqueAsset =
-      {
-        comment,
-        countries,
-        currency,
-        dataSource,
-        holdings,
-        scraperConfiguration,
-        sectors,
-        symbol,
-        symbolMapping,
-        ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, name, url }
-          : {
-              SymbolProfileOverrides: {
-                upsert: {
-                  create: symbolProfileOverrides,
-                  update: symbolProfileOverrides
-                }
+    const updatedSymbolProfile: AssetProfileIdentifier &
+      Prisma.SymbolProfileUpdateInput = {
+      comment,
+      countries,
+      currency,
+      dataSource,
+      holdings,
+      scraperConfiguration,
+      sectors,
+      symbol,
+      symbolMapping,
+      ...(dataSource === 'MANUAL'
+        ? { assetClass, assetSubClass, name, url }
+        : {
+            SymbolProfileOverrides: {
+              upsert: {
+                create: symbolProfileOverrides,
+                update: symbolProfileOverrides
               }
-            })
-      };
+            }
+          })
+    };
 
     await this.symbolProfileService.updateSymbolProfile(updatedSymbolProfile);
 
@@ -429,6 +450,52 @@ export class AdminService {
     }
 
     return response;
+  }
+
+  private getExtendedPrismaClient() {
+    Logger.debug('Connect extended prisma client', 'AdminService');
+
+    const symbolProfileExtension = Prisma.defineExtension((client) => {
+      return client.$extends({
+        result: {
+          symbolProfile: {
+            isUsedByUsersWithSubscription: {
+              compute: async ({ id }) => {
+                const { _count } =
+                  await this.prismaService.symbolProfile.findUnique({
+                    select: {
+                      _count: {
+                        select: {
+                          Order: {
+                            where: {
+                              User: {
+                                Subscription: {
+                                  some: {
+                                    expiresAt: {
+                                      gt: new Date()
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    where: {
+                      id
+                    }
+                  });
+
+                return _count.Order > 0;
+              }
+            }
+          }
+        }
+      });
+    });
+
+    return new PrismaClient().$extends(symbolProfileExtension);
   }
 
   private async getMarketDataForCurrencies(): Promise<AdminMarketData> {

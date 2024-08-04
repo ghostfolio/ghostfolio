@@ -45,10 +45,11 @@ export class CronService {
   @Cron(CronService.EVERY_SUNDAY_AT_LUNCH_TIME)
   public async runEverySundayAtTwelvePm() {
     if (await this.isDataGatheringEnabled()) {
-      const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+      const assetProfileIdentifiers =
+        await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
       await this.dataGatheringService.addJobsToQueue(
-        uniqueAssets.map(({ dataSource, symbol }) => {
+        assetProfileIdentifiers.map(({ dataSource, symbol }) => {
           return {
             data: {
               dataSource,
