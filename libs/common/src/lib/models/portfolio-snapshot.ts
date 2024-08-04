@@ -1,5 +1,8 @@
 import { transformToBig } from '@ghostfolio/common/class-transformer';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
@@ -9,6 +12,7 @@ export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
+
   errors?: AssetProfileIdentifier[];
 
   @Transform(transformToBig, { toClassOnly: true })
@@ -28,6 +32,8 @@ export class PortfolioSnapshot {
   grossPerformancePercentageWithCurrencyEffect: Big;
 
   hasErrors: boolean;
+
+  historicalData: HistoricalDataItem[];
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
