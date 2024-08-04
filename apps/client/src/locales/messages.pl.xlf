@@ -3163,7 +3163,7 @@
       </trans-unit>
       <trans-unit id="7f44fdbb881db76676fff811a21dc3eadcf11a33" datatype="html">
         <source> Sneak peek at upcoming functionality </source>
-        <target state="translated"> Sneak peek at upcoming functionality </target>
+        <target state="translated"> Włącz podgląd nadchodzących funkcji </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">212</context>
