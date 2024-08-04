@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the caching of the benchmarks in the markets overview by returning cached data and recalculating in the background when it expires
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `Nx` from version `19.5.1` to `19.5.6`
