@@ -66,10 +66,9 @@ export const personalFinanceTools: Product[] = [
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
-    key: 'capitalyse',
+    key: 'degiro-portfolio-tracker-by-capitalyse',
     languages: ['English'],
-    name: 'Capitalyse',
-    note: 'DEGIRO Portfolio Tracker',
+    name: 'DEGIRO Portfolio Tracker by Capitalyse',
     origin: 'Netherlands',
     pricingPerYear: '€24',
     slogan: 'Democratizing Data Analytics'
