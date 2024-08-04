@@ -3,6 +3,14 @@ FROM --platform=$BUILDPLATFORM node:20-slim AS builder
 # Build application and add additional files
 WORKDIR /ghostfolio
 
+RUN apt-get update && apt-get install -y --no-install-suggests \
+  g++ \
+  git \
+  make \
+  openssl \
+  python3 \
+  && rm -rf /var/lib/apt/lists/*
+
 # Only add basic files without the application itself to avoid rebuilding
 # layers when files (package.json etc.) have not changed
 COPY ./CHANGELOG.md CHANGELOG.md
@@ -11,13 +19,6 @@ COPY ./package.json package.json
 COPY ./package-lock.json package-lock.json
 COPY ./prisma/schema.prisma prisma/schema.prisma
 
-RUN apt-get update && apt-get install -y --no-install-suggests \
-  g++ \
-  git \
-  make \
-  openssl \
-  python3 \
-  && rm -rf /var/lib/apt/lists/*
 RUN npm install
 
 # See https://github.com/nrwl/nx/issues/6586 for further details
@@ -58,9 +59,8 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
-COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
-RUN chown -R node:node /ghostfolio
+COPY --from=builder --chown=node:node /ghostfolio/dist/apps /ghostfolio/apps
+COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
 USER node
