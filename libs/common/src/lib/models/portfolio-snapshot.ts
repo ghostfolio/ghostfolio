@@ -1,5 +1,5 @@
 import { transformToBig } from '@ghostfolio/common/class-transformer';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { Big } from 'big.js';
@@ -9,7 +9,7 @@ export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
-  errors?: UniqueAsset[];
+  errors?: AssetProfileIdentifier[];
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

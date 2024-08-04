@@ -11,9 +11,9 @@ import {
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
-  Filter,
-  UniqueAsset
+  Filter
 } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
@@ -51,7 +51,7 @@ export class OrderService {
     symbol,
     tags,
     userId
-  }: { tags: Tag[]; userId: string } & UniqueAsset) {
+  }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
     const orders = await this.prismaService.order.findMany({
       where: {
         userId,
@@ -285,7 +285,7 @@ export class OrderService {
     return count;
   }
 
-  public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
+  public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
       orderBy: {
         date: 'desc'
@@ -464,7 +464,7 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
-    const uniqueAssets = uniqBy(
+    const assetProfileIdentifiers = uniqBy(
       orders.map(({ SymbolProfile }) => {
         return {
           dataSource: SymbolProfile.dataSource,
@@ -479,8 +479,9 @@ export class OrderService {
       }
     );
 
-    const assetProfiles =
-      await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
+    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
+      assetProfileIdentifiers
+    );
 
     const activities = orders.map((order) => {
       const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {

@@ -6,10 +6,10 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   Holding,
   PortfolioDetails,
   PortfolioPosition,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
@@ -161,7 +161,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ symbol }: UniqueAsset) {
+  public onAccountChartClicked({ symbol }: AssetProfileIdentifier) {
     if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
@@ -169,7 +169,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
+  public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }

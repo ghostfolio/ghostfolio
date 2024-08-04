@@ -4,9 +4,9 @@ import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import type {
+  AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
-  BenchmarkResponse,
-  UniqueAsset
+  BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
@@ -41,7 +41,9 @@ export class BenchmarkController {
   @HasPermission(permissions.accessAdminControl)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
+  public async addBenchmark(
+    @Body() { dataSource, symbol }: AssetProfileIdentifier
+  ) {
     try {
       const benchmark = await this.benchmarkService.addBenchmark({
         dataSource,

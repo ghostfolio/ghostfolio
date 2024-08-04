@@ -2,8 +2,8 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import {
-  AdminMarketDataItem,
-  UniqueAsset
+  AssetProfileIdentifier,
+  AdminMarketDataItem
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
@@ -13,7 +13,7 @@ import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
 export class AdminMarketDataService {
   public constructor(private adminService: AdminService) {}
 
-  public deleteAssetProfile({ dataSource, symbol }: UniqueAsset) {
+  public deleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     const confirmation = confirm(
       $localize`Do you really want to delete this asset profile?`
     );
@@ -29,15 +29,19 @@ export class AdminMarketDataService {
     }
   }
 
-  public deleteAssetProfiles(uniqueAssets: UniqueAsset[]) {
+  public deleteAssetProfiles(
+    aAssetProfileIdentifiers: AssetProfileIdentifier[]
+  ) {
     const confirmation = confirm(
       $localize`Do you really want to delete these profiles?`
     );
 
     if (confirmation) {
-      const deleteRequests = uniqueAssets.map(({ dataSource, symbol }) => {
-        return this.adminService.deleteProfileData({ dataSource, symbol });
-      });
+      const deleteRequests = aAssetProfileIdentifiers.map(
+        ({ dataSource, symbol }) => {
+          return this.adminService.deleteProfileData({ dataSource, symbol });
+        }
+      );
 
       forkJoin(deleteRequests)
         .pipe(

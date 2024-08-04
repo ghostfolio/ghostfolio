@@ -7,7 +7,7 @@ import {
   GATHER_HISTORICAL_MARKET_DATA_PROCESS
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { Process, Processor } from '@nestjs/bull';
 import { Injectable, Logger } from '@nestjs/common';
@@ -35,7 +35,7 @@ export class DataGatheringProcessor {
   ) {}
 
   @Process({ concurrency: 1, name: GATHER_ASSET_PROFILE_PROCESS })
-  public async gatherAssetProfile(job: Job<UniqueAsset>) {
+  public async gatherAssetProfile(job: Job<AssetProfileIdentifier>) {
     try {
       Logger.log(
         `Asset profile data gathering has been started for ${job.data.symbol} (${job.data.dataSource})`,

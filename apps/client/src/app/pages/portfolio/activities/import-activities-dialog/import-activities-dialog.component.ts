@@ -38,6 +38,7 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
 export class ImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];
   public activities: Activity[] = [];
+  public assetProfileForm: FormGroup;
   public dataSource: MatTableDataSource<Activity>;
   public details: any[] = [];
   public deviceType: string;
@@ -53,7 +54,6 @@ export class ImportActivitiesDialog implements OnDestroy {
   public sortDirection: SortDirection = 'desc';
   public stepperOrientation: StepperOrientation;
   public totalItems: number;
-  public uniqueAssetForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -73,8 +73,8 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.stepperOrientation =
       this.deviceType === 'mobile' ? 'vertical' : 'horizontal';
 
-    this.uniqueAssetForm = this.formBuilder.group({
-      uniqueAsset: [undefined, Validators.required]
+    this.assetProfileForm = this.formBuilder.group({
+      assetProfileIdentifier: [undefined, Validators.required]
     });
 
     if (
@@ -85,7 +85,7 @@ export class ImportActivitiesDialog implements OnDestroy {
 
       this.dialogTitle = $localize`Import Dividends`;
       this.mode = 'DIVIDEND';
-      this.uniqueAssetForm.get('uniqueAsset').disable();
+      this.assetProfileForm.get('assetProfileIdentifier').disable();
 
       this.dataService
         .fetchPortfolioHoldings({
@@ -102,7 +102,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           this.holdings = sortBy(holdings, ({ name }) => {
             return name.toLowerCase();
           });
-          this.uniqueAssetForm.get('uniqueAsset').enable();
+          this.assetProfileForm.get('assetProfileIdentifier').enable();
 
           this.isLoading = false;
 
@@ -167,10 +167,11 @@ export class ImportActivitiesDialog implements OnDestroy {
   }
 
   public onLoadDividends(aStepper: MatStepper) {
-    this.uniqueAssetForm.get('uniqueAsset').disable();
+    this.assetProfileForm.get('assetProfileIdentifier').disable();
 
-    const { dataSource, symbol } =
-      this.uniqueAssetForm.get('uniqueAsset').value;
+    const { dataSource, symbol } = this.assetProfileForm.get(
+      'assetProfileIdentifier'
+    ).value;
 
     this.dataService
       .fetchDividendsImport({
@@ -193,7 +194,7 @@ export class ImportActivitiesDialog implements OnDestroy {
     this.details = [];
     this.errorMessages = [];
     this.importStep = ImportStep.SELECT_ACTIVITIES;
-    this.uniqueAssetForm.get('uniqueAsset').enable();
+    this.assetProfileForm.get('assetProfileIdentifier').enable();
 
     aStepper.reset();
   }

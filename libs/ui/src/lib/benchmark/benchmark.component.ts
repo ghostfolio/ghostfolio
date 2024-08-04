@@ -1,5 +1,9 @@
 import { getLocale, resolveMarketCondition } from '@ghostfolio/common/helper';
-import { Benchmark, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Benchmark,
+  User
+} from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfTrendIndicatorComponent } from '@ghostfolio/ui/trend-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -84,7 +88,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onOpenBenchmarkDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenBenchmarkDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: { dataSource, symbol, benchmarkDetailDialog: true }
     });
@@ -95,7 +99,10 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  private openBenchmarkDetailDialog({ dataSource, symbol }: UniqueAsset) {
+  private openBenchmarkDetailDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
       data: <BenchmarkDetailDialogParams>{
         dataSource,

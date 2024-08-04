@@ -1,10 +1,10 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Holding,
-  ScraperConfiguration,
-  UniqueAsset
+  ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
@@ -23,7 +23,7 @@ export class SymbolProfileService {
     return this.prismaService.symbolProfile.create({ data: assetProfile });
   }
 
-  public async delete({ dataSource, symbol }: UniqueAsset) {
+  public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.symbolProfile.delete({
       where: { dataSource_symbol: { dataSource, symbol } }
     });
@@ -36,7 +36,7 @@ export class SymbolProfileService {
   }
 
   public async getSymbolProfiles(
-    aUniqueAssets: UniqueAsset[]
+    aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedSymbolProfile[]> {
     return this.prismaService.symbolProfile
       .findMany({
@@ -54,7 +54,7 @@ export class SymbolProfileService {
           SymbolProfileOverrides: true
         },
         where: {
-          OR: aUniqueAssets.map(({ dataSource, symbol }) => {
+          OR: aAssetProfileIdentifiers.map(({ dataSource, symbol }) => {
             return {
               dataSource,
               symbol
@@ -140,7 +140,7 @@ export class SymbolProfileService {
     symbolMapping,
     SymbolProfileOverrides,
     url
-  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
     return this.prismaService.symbolProfile.update({
       data: {
         assetClass,

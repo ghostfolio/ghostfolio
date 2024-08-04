@@ -40,13 +40,13 @@ export class SymbolService {
         const days = includeHistoricalData;
 
         const marketData = await this.marketDataService.getRange({
-          dateQuery: { gte: subDays(new Date(), days) },
-          uniqueAssets: [
+          assetProfileIdentifiers: [
             {
               dataSource: dataGatheringItem.dataSource,
               symbol: dataGatheringItem.symbol
             }
-          ]
+          ],
+          dateQuery: { gte: subDays(new Date(), days) }
         });
 
         historicalData = marketData.map(({ date, marketPrice: value }) => {
