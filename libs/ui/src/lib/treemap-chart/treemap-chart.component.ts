@@ -1,4 +1,8 @@
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -14,10 +18,12 @@ import {
   ViewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
+import { Big } from 'big.js';
 import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
+import { differenceInDays } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -37,9 +43,11 @@ export class GfTreemapChartComponent
   @Input() cursor: string;
   @Input() holdings: PortfolioPosition[];
 
-  @Output() treemapChartClicked = new EventEmitter<UniqueAsset>();
+  @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
+
+  public static readonly HEAT_MULTIPLIER = 5;
 
   public chart: Chart<'treemap'>;
   public isLoading = true;
@@ -71,24 +79,52 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor(ctx) {
-            const netPerformancePercentWithCurrencyEffect =
-              ctx.raw._data.netPerformancePercentWithCurrencyEffect;
+            const annualizedNetPerformancePercentWithCurrencyEffect =
+              getAnnualizedPerformancePercent({
+                daysInMarket: differenceInDays(
+                  new Date(),
+                  ctx.raw._data.dateOfFirstActivity
+                ),
+                netPerformancePercentage: new Big(
+                  ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                )
+              }).toNumber();
 
-            if (netPerformancePercentWithCurrencyEffect > 0.03) {
+            if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return green[9];
-            } else if (netPerformancePercentWithCurrencyEffect > 0.02) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return green[7];
-            } else if (netPerformancePercentWithCurrencyEffect > 0.01) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return green[5];
-            } else if (netPerformancePercentWithCurrencyEffect > 0) {
+            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
               return green[3];
-            } else if (netPerformancePercentWithCurrencyEffect === 0) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect === 0
+            ) {
               return gray[3];
-            } else if (netPerformancePercentWithCurrencyEffect > -0.01) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              -0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return red[3];
-            } else if (netPerformancePercentWithCurrencyEffect > -0.02) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              -0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return red[5];
-            } else if (netPerformancePercentWithCurrencyEffect > -0.03) {
+            } else if (
+              annualizedNetPerformancePercentWithCurrencyEffect >
+              -0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            ) {
               return red[7];
             } else {
               return red[9];

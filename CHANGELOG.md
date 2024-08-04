@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `Nx` from version `19.5.1` to `19.5.6`
+
+## 2.101.0 - 2024-08-03
+
+### Changed
+
+- Hardened container security by switching to a non-root user, setting the filesystem to read-only, and dropping unnecessary capabilities
+
+## 2.100.0 - 2024-08-03
+
+### Added
+
+- Added support to manage tags of holdings in the holding detail dialog
+
+### Changed
+
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Persisted the view mode of the holdings tab on the home page (experimental)
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Spanish (`es`)
+
 ## 2.99.0 - 2024-07-29
 
 ### Changed

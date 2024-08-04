@@ -1,7 +1,10 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { getLocale, getTextColor } from '@ghostfolio/common/helper';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -71,7 +74,7 @@ export class GfPortfolioProportionChartComponent
     };
   } = {};
 
-  @Output() proportionChartClicked = new EventEmitter<UniqueAsset>();
+  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 

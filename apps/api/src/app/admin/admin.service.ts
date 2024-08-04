@@ -21,9 +21,9 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AssetProfileIdentifier,
   EnhancedSymbolProfile,
-  Filter,
-  UniqueAsset
+  Filter
 } from '@ghostfolio/common/interfaces';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
@@ -59,7 +59,9 @@ export class AdminService {
     currency,
     dataSource,
     symbol
-  }: UniqueAsset & { currency?: string }): Promise<SymbolProfile | never> {
+  }: AssetProfileIdentifier & { currency?: string }): Promise<
+    SymbolProfile | never
+  > {
     try {
       if (dataSource === 'MANUAL') {
         return this.symbolProfileService.add({
@@ -96,7 +98,10 @@ export class AdminService {
     }
   }
 
-  public async deleteProfileData({ dataSource, symbol }: UniqueAsset) {
+  public async deleteProfileData({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
     await this.symbolProfileService.delete({ dataSource, symbol });
   }
@@ -325,7 +330,7 @@ export class AdminService {
   public async getMarketDataBySymbol({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<AdminMarketDataDetails> {
+  }: AssetProfileIdentifier): Promise<AdminMarketDataDetails> {
     let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
     let currency: EnhancedSymbolProfile['currency'] = '-';
     let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
@@ -386,7 +391,7 @@ export class AdminService {
     symbol,
     symbolMapping,
     url
-  }: Prisma.SymbolProfileUpdateInput & UniqueAsset) {
+  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
     const symbolProfileOverrides = {
       assetClass: assetClass as AssetClass,
       assetSubClass: assetSubClass as AssetSubClass,
@@ -394,28 +399,28 @@ export class AdminService {
       url: url as string
     };
 
-    const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput & UniqueAsset =
-      {
-        comment,
-        countries,
-        currency,
-        dataSource,
-        holdings,
-        scraperConfiguration,
-        sectors,
-        symbol,
-        symbolMapping,
-        ...(dataSource === 'MANUAL'
-          ? { assetClass, assetSubClass, name, url }
-          : {
-              SymbolProfileOverrides: {
-                upsert: {
-                  create: symbolProfileOverrides,
-                  update: symbolProfileOverrides
-                }
+    const updatedSymbolProfile: AssetProfileIdentifier &
+      Prisma.SymbolProfileUpdateInput = {
+      comment,
+      countries,
+      currency,
+      dataSource,
+      holdings,
+      scraperConfiguration,
+      sectors,
+      symbol,
+      symbolMapping,
+      ...(dataSource === 'MANUAL'
+        ? { assetClass, assetSubClass, name, url }
+        : {
+            SymbolProfileOverrides: {
+              upsert: {
+                create: symbolProfileOverrides,
+                update: symbolProfileOverrides
               }
-            })
-      };
+            }
+          })
+    };
 
     await this.symbolProfileService.updateSymbolProfile(updatedSymbolProfile);
 
