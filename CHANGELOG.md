@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Polish (`pl`)
 - Upgraded `Nx` from version `19.5.1` to `19.5.6`
 
+### Fixed
+
+- Fixed the cache flush endpoint response
+
 ## 2.101.0 - 2024-08-03
 
 ### Changed
