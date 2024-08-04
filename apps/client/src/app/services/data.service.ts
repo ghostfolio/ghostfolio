@@ -20,6 +20,7 @@ import {
   AccountBalancesResponse,
   Accounts,
   AdminMarketDataDetails,
+  AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -34,7 +35,6 @@ import {
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -230,7 +230,7 @@ export class DataService {
     });
   }
 
-  public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
+  public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.get<ImportResponse>(
       `/api/v1/import/dividends/${dataSource}/${symbol}`
     );
@@ -270,7 +270,7 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
-  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
@@ -289,7 +289,7 @@ export class DataService {
   public fetchAsset({
     dataSource,
     symbol
-  }: UniqueAsset): Observable<AdminMarketDataDetails> {
+  }: AssetProfileIdentifier): Observable<AdminMarketDataDetails> {
     return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
@@ -308,7 +308,7 @@ export class DataService {
   }: {
     range: DateRange;
     startDate: Date;
-  } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
     let params = new HttpParams();
 
     if (range) {
@@ -630,7 +630,7 @@ export class DataService {
     );
   }
 
-  public postBenchmark(benchmark: UniqueAsset) {
+  public postBenchmark(benchmark: AssetProfileIdentifier) {
     return this.http.post(`/api/v1/benchmark`, benchmark);
   }
 
@@ -654,7 +654,7 @@ export class DataService {
     dataSource,
     symbol,
     tags
-  }: { tags: Tag[] } & UniqueAsset) {
+  }: { tags: Tag[] } & AssetProfileIdentifier) {
     return this.http.put<void>(
       `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
       { tags }

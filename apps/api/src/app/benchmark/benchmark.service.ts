@@ -17,11 +17,11 @@ import {
   resetHours
 } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
-  BenchmarkResponse,
-  UniqueAsset
+  BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
 
@@ -61,7 +61,10 @@ export class BenchmarkService {
     return 0;
   }
 
-  public async getBenchmarkTrends({ dataSource, symbol }: UniqueAsset) {
+  public async getBenchmarkTrends({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     const historicalData = await this.marketDataService.marketDataItems({
       orderBy: {
         date: 'desc'
@@ -228,7 +231,7 @@ export class BenchmarkService {
     endDate?: Date;
     startDate: Date;
     userCurrency: string;
-  } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
 
     const days = differenceInDays(endDate, startDate) + 1;
@@ -348,7 +351,7 @@ export class BenchmarkService {
   public async addBenchmark({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -385,7 +388,7 @@ export class BenchmarkService {
   public async deleteBenchmark({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,

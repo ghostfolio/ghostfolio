@@ -7,6 +7,7 @@ import type {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
+import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
@@ -48,7 +49,6 @@ import type { Subscription } from './subscription.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
-import type { UniqueAsset } from './unique-asset.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
 
@@ -61,6 +61,7 @@ export {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
@@ -101,7 +102,6 @@ export {
   Subscription,
   SymbolMetrics,
   TabConfiguration,
-  UniqueAsset,
   User,
   UserSettings
 };

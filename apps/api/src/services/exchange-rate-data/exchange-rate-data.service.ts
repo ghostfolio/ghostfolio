@@ -361,13 +361,13 @@ export class ExchangeRateDataService {
       const symbol = `${currencyFrom}${currencyTo}`;
 
       const marketData = await this.marketDataService.getRange({
-        dateQuery: { gte: startDate, lt: endDate },
-        uniqueAssets: [
+        assetProfileIdentifiers: [
           {
             dataSource,
             symbol
           }
-        ]
+        ],
+        dateQuery: { gte: startDate, lt: endDate }
       });
 
       if (marketData?.length > 0) {
@@ -392,13 +392,13 @@ export class ExchangeRateDataService {
             }
           } else {
             const marketData = await this.marketDataService.getRange({
-              dateQuery: { gte: startDate, lt: endDate },
-              uniqueAssets: [
+              assetProfileIdentifiers: [
                 {
                   dataSource,
                   symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
                 }
-              ]
+              ],
+              dateQuery: { gte: startDate, lt: endDate }
             });
 
             for (const { date, marketPrice } of marketData) {
@@ -415,16 +415,16 @@ export class ExchangeRateDataService {
             }
           } else {
             const marketData = await this.marketDataService.getRange({
-              dateQuery: {
-                gte: startDate,
-                lt: endDate
-              },
-              uniqueAssets: [
+              assetProfileIdentifiers: [
                 {
                   dataSource,
                   symbol: `${DEFAULT_CURRENCY}${currencyTo}`
                 }
-              ]
+              ],
+              dateQuery: {
+                gte: startDate,
+                lt: endDate
+              }
             });
 
             for (const { date, marketPrice } of marketData) {

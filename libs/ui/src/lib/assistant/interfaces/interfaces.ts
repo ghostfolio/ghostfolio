@@ -1,4 +1,4 @@
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
 export interface IDateRangeOption {
@@ -6,7 +6,7 @@ export interface IDateRangeOption {
   value: DateRange;
 }
 
-export interface ISearchResultItem extends UniqueAsset {
+export interface ISearchResultItem extends AssetProfileIdentifier {
   assetSubClassString: string;
   currency: string;
   name: string;

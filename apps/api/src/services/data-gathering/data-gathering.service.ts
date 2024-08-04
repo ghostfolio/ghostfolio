@@ -20,7 +20,10 @@ import {
   getAssetProfileIdentifier,
   resetHours
 } from '@ghostfolio/common/helper';
-import { BenchmarkProperty, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  BenchmarkProperty
+} from '@ghostfolio/common/interfaces';
 
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -91,7 +94,7 @@ export class DataGatheringService {
     });
   }
 
-  public async gatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public async gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
 
     const dataGatheringItems = (await this.getSymbolsMax()).filter(
@@ -146,23 +149,29 @@ export class DataGatheringService {
     }
   }
 
-  public async gatherAssetProfiles(aUniqueAssets?: UniqueAsset[]) {
-    let uniqueAssets = aUniqueAssets?.filter((dataGatheringItem) => {
-      return dataGatheringItem.dataSource !== 'MANUAL';
-    });
+  public async gatherAssetProfiles(
+    aAssetProfileIdentifiers?: AssetProfileIdentifier[]
+  ) {
+    let assetProfileIdentifiers = aAssetProfileIdentifiers?.filter(
+      (dataGatheringItem) => {
+        return dataGatheringItem.dataSource !== 'MANUAL';
+      }
+    );
 
-    if (!uniqueAssets) {
-      uniqueAssets = await this.getAllAssetProfileIdentifiers();
+    if (!assetProfileIdentifiers) {
+      assetProfileIdentifiers = await this.getAllAssetProfileIdentifiers();
     }
 
-    if (uniqueAssets.length <= 0) {
+    if (assetProfileIdentifiers.length <= 0) {
       return;
     }
 
-    const assetProfiles =
-      await this.dataProviderService.getAssetProfiles(uniqueAssets);
-    const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
+    const assetProfiles = await this.dataProviderService.getAssetProfiles(
+      assetProfileIdentifiers
+    );
+    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+      assetProfileIdentifiers
+    );
 
     for (const [symbol, assetProfile] of Object.entries(assetProfiles)) {
       const symbolMapping = symbolProfiles.find((symbolProfile) => {
@@ -248,7 +257,7 @@ export class DataGatheringService {
           'DataGatheringService'
         );
 
-        if (uniqueAssets.length === 1) {
+        if (assetProfileIdentifiers.length === 1) {
           throw error;
         }
       }
@@ -284,7 +293,9 @@ export class DataGatheringService {
     );
   }
 
-  public async getAllAssetProfileIdentifiers(): Promise<UniqueAsset[]> {
+  public async getAllAssetProfileIdentifiers(): Promise<
+    AssetProfileIdentifier[]
+  > {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
       orderBy: [{ symbol: 'asc' }]
     });
@@ -305,7 +316,7 @@ export class DataGatheringService {
   }
 
   private async getAssetProfileIdentifiersWithCompleteMarketData(): Promise<
-    UniqueAsset[]
+    AssetProfileIdentifier[]
   > {
     return (
       await this.prismaService.marketData.groupBy({

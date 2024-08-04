@@ -20,7 +20,7 @@ import {
   getStartOfUtcDate,
   isDerivedCurrency
 } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -75,7 +75,7 @@ export class DataProviderService {
     return false;
   }
 
-  public async getAssetProfiles(items: UniqueAsset[]): Promise<{
+  public async getAssetProfiles(items: AssetProfileIdentifier[]): Promise<{
     [symbol: string]: Partial<SymbolProfile>;
   }> {
     const response: {
@@ -173,7 +173,7 @@ export class DataProviderService {
   }
 
   public async getHistorical(
-    aItems: UniqueAsset[],
+    aItems: AssetProfileIdentifier[],
     aGranularity: Granularity = 'month',
     from: Date,
     to: Date
@@ -243,7 +243,7 @@ export class DataProviderService {
     from,
     to
   }: {
-    dataGatheringItems: UniqueAsset[];
+    dataGatheringItems: AssetProfileIdentifier[];
     from: Date;
     to: Date;
   }): Promise<{
@@ -350,7 +350,7 @@ export class DataProviderService {
     useCache = true,
     user
   }: {
-    items: UniqueAsset[];
+    items: AssetProfileIdentifier[];
     requestTimeout?: number;
     useCache?: boolean;
     user?: UserWithSettings;
@@ -376,7 +376,7 @@ export class DataProviderService {
     }
 
     // Get items from cache
-    const itemsToFetch: UniqueAsset[] = [];
+    const itemsToFetch: AssetProfileIdentifier[] = [];
 
     for (const { dataSource, symbol } of items) {
       if (useCache) {
@@ -633,7 +633,7 @@ export class DataProviderService {
     dataGatheringItems
   }: {
     currency: string;
-    dataGatheringItems: UniqueAsset[];
+    dataGatheringItems: AssetProfileIdentifier[];
   }) {
     return dataGatheringItems.some(({ dataSource, symbol }) => {
       return (
