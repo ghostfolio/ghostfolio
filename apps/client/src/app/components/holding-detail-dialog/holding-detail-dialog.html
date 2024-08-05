@@ -346,12 +346,18 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="data.locale"
-          [showActions]="false"
+          [showActions]="
+            !data.hasImpersonationId &&
+            data.hasPermissionToCreateOrder &&
+            !user.settings.isRestrictedView
+          "
           [showNameColumn]="false"
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [sortDisabled]="true"
           [totalItems]="totalItems"
+          (activityToClone)="onCloneActivity($event)"
+          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
         />
       </mat-tab>

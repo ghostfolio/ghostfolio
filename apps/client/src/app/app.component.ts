@@ -255,6 +255,10 @@ export class AppComponent implements OnDestroy, OnInit {
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToCreateOrder:
+              !this.hasImpersonationId &&
+              hasPermission(this.user?.permissions, permissions.createOrder) &&
+              !user?.settings?.isRestrictedView,
             hasPermissionToReportDataGlitch: hasPermission(
               this.user?.permissions,
               permissions.reportDataGlitch

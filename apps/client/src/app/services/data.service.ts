@@ -4,7 +4,10 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  Activities,
+  Activity
+} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -208,6 +211,17 @@ export class DataService {
           activity.date = parseISO(activity.date);
         }
         return { activities, count };
+      })
+    );
+  }
+
+  public fetchActivity(aActivityId: string) {
+    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+      map((activity) => {
+        activity.createdAt = parseISO(<string>(<unknown>activity.createdAt));
+        activity.date = parseISO(<string>(<unknown>activity.date));
+
+        return activity;
       })
     );
   }
