@@ -54,14 +54,15 @@ LABEL org.opencontainers.image.source="https://github.com/ghostfolio/ghostfolio"
 ENV NODE_ENV=production
 
 RUN apt-get update && apt-get install -y --no-install-suggests \
-  curl \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
+COPY ./docker/healthcheck.js /ghostfolio/healthcheck.js
 RUN chown -R node:node /ghostfolio
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
 USER node
 CMD [ "/ghostfolio/entrypoint.sh" ]
+HEALTHCHECK --interval=15s --timeout=5s --start-period=2s --retries=3 CMD [ "node", "/ghostfolio/healthcheck.js" ]
