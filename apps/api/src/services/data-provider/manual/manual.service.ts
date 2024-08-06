@@ -257,13 +257,15 @@ export class ManualService implements DataProviderInterface {
         signal: abortController.signal
       });
 
+      let factor = isNaN(+scraperConfiguration.postprocessor)
+        ? 1.0
+        : +scraperConfiguration.postprocessor;
       if (headers['content-type'].includes('application/json')) {
         const data = JSON.parse(body);
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
-
-        return extractNumberFromString({ locale, value });
+        return factor * extractNumberFromString({ locale, value });
       } else {
         const $ = cheerio.load(body);
 
@@ -273,10 +275,13 @@ export class ManualService implements DataProviderInterface {
           } catch {}
         }
 
-        return extractNumberFromString({
-          locale,
-          value: $(scraperConfiguration.selector).first().text()
-        });
+        return (
+          factor *
+          extractNumberFromString({
+            locale,
+            value: $(scraperConfiguration.selector).first().text()
+          })
+        );
       }
     } catch (error) {
       throw error;
