@@ -36,7 +36,7 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { CreateOrderDto } from './create-order.dto';
-import { Activities } from './interfaces/activities.interface';
+import { Activities, Activity } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './update-order.dto';
 
@@ -138,6 +138,38 @@ export class OrderController {
     });
 
     return { activities, count };
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getOrderById(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Param('id') id: string
+  ): Promise<Activity> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const { activities } = await this.orderService.getOrders({
+      userCurrency,
+      userId: impersonationUserId || this.request.user.id,
+      withExcludedAccounts: true
+    });
+
+    const activity = activities.find((activity) => {
+      return activity.id === id;
+    });
+
+    if (!activity) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return activity;
   }
 
   @HasPermission(permissions.createOrder)
