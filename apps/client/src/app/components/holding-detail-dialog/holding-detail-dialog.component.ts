@@ -48,6 +48,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 import { Account, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -141,6 +142,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
     private formBuilder: FormBuilder,
+    private router: Router,
     private userService: UserService
   ) {}
 
@@ -424,6 +426,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.tagInput.nativeElement.value = '';
   }
 
+  public onCloneActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, createDialog: true }
+    });
+
+    this.dialogRef.close();
+  }
+
   public onClose() {
     this.dialogRef.close();
   }
@@ -454,6 +464,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         return id !== aTag.id;
       })
     );
+  }
+
+  public onUpdateActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, editDialog: true }
+    });
+
+    this.dialogRef.close();
   }
 
   public ngOnDestroy() {
