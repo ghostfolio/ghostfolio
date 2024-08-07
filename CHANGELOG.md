@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `Nx` from version `19.5.1` to `19.5.6`
+- Upgraded `prisma` from version `5.16.1` to `5.17.0`
 
 ### Fixed
 
