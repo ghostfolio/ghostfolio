@@ -258,7 +258,7 @@ export class AppComponent implements OnDestroy, OnInit {
             hasPermissionToCreateOrder:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.createOrder) &&
-              !user?.settings?.isRestrictedView,
+              !this.user?.settings?.isRestrictedView,
             hasPermissionToReportDataGlitch: hasPermission(
               this.user?.permissions,
               permissions.reportDataGlitch
@@ -266,7 +266,7 @@ export class AppComponent implements OnDestroy, OnInit {
             hasPermissionToUpdateOrder:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
-              !user?.settings?.isRestrictedView,
+              !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
