@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support to clone an activity from the account detail dialog (experimental)
+- Added support to edit an activity from the account detail dialog (experimental)
 - Added support to clone an activity from the holding detail dialog (experimental)
 - Added support to edit an activity from the holding detail dialog (experimental)
 
