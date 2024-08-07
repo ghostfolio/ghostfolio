@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to clone an activity from the account detail dialog (experimental)
+- Added support to edit an activity from the account detail dialog (experimental)
+
 ### Changed
 
 - Improved the caching of the benchmarks in the markets overview by returning cached data and recalculating in the background when it expires
