@@ -349,7 +349,8 @@
           [showActions]="
             !data.hasImpersonationId &&
             data.hasPermissionToCreateOrder &&
-            !user.settings.isRestrictedView
+            user?.settings?.isExperimentalFeatures &&
+            !user?.settings?.isRestrictedView
           "
           [showNameColumn]="false"
           [sortColumn]="sortColumn"
