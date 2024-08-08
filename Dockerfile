@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder --chown=node:node /ghostfolio/dist/apps /ghostfolio/apps
+COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
