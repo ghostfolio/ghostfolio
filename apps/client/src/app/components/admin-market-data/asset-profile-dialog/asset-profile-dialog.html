@@ -48,9 +48,11 @@
         mat-menu-item
         type="button"
         [disabled]="
-          assetProfile?.activitiesCount !== 0 ||
-          isBenchmark ||
-          data.symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+          !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+            activitiesCount: assetProfile?.activitiesCount,
+            isBenchmark: isBenchmark,
+            symbol: data.symbol
+          })
         "
         (click)="
           onDeleteProfileData({

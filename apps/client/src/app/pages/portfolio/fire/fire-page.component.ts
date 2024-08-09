@@ -224,9 +224,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
       inactiveRules = inactiveRules.concat(
         rulesArray.filter((rule) => !rule.isActive)
       );
-      rulesArray.filter((rule) => rule.isActive);
     }
-    console.log(inactiveRules);
     return inactiveRules;
   }
 
