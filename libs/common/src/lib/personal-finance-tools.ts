@@ -431,6 +431,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Track your net worth'
   },
   {
+    founded: 2019,
+    hasSelfHostingAbility: false,
+    key: 'sarmaaya.pk',
+    name: 'Sarmaaya.pk Portfolio Tracking',
+    note: 'Sarmaaya.pk Portfolio Tracking was discontinued in 2024',
+    origin: 'Pakistan',
+    slogan: 'Unified platform for financial research and portfolio tracking'
+  },
+  {
     founded: 2004,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
