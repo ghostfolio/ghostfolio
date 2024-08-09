@@ -182,6 +182,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
   },
   {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'finateka',
+    languages: ['English'],
+    name: 'FINATEKA',
+    origin: 'United States',
+    slogan:
+      'The most convenient mobile application for personal finance accounting'
+  },
+  {
     founded: 2023,
     hasFreePlan: true,
     key: 'finwise',
