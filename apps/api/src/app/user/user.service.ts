@@ -197,7 +197,7 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
-    // Set default values for x-ray rules
+    // Set default values for X-ray rules
     if (!(user.Settings.settings as UserSettings).xRayRules) {
       (user.Settings.settings as UserSettings).xRayRules = {
         AccountClusterRiskCurrentInvestment: { isActive: true },
