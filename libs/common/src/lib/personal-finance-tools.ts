@@ -376,6 +376,7 @@ export const personalFinanceTools: Product[] = [
   {
     founded: 2023,
     hasFreePlan: true,
+    hasSelfHostingAbility: false,
     key: 'plainzer',
     languages: ['English'],
     name: 'Plainzer',
