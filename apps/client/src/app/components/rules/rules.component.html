@@ -12,6 +12,7 @@
       @if (rules?.length === 0) {
         <gf-rule [isLoading]="true" />
       }
+
       @if (rules !== null && rules !== undefined) {
         @for (rule of rules; track rule.key) {
           <gf-rule [rule]="rule" (ruleUpdated)="onRulesUpdated($event)" />

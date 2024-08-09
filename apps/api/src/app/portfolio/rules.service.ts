@@ -20,10 +20,10 @@ export class RulesService {
 
         return {
           evaluation,
+          value,
           isActive: true,
           key: rule.getKey(),
-          name: rule.getName(),
-          value
+          name: rule.getName()
         };
       } else {
         return {

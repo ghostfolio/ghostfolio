@@ -19,6 +19,7 @@ import {
 export class RuleComponent implements OnInit {
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;
+
   @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
 
   public constructor() {}

@@ -2,7 +2,11 @@ import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setti
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioReport,
+  PortfolioReportRule,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -27,6 +31,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateOrder: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public isLoading = false;
+  public isLoadingPortfolioReport = false;
+  public inactiveRules: PortfolioReportRule[];
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
@@ -65,21 +71,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.dataService
-      .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk'] || null;
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk'] || null;
-        this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund'] || null;
-        this.feeRules = portfolioReport.rules['fees'] || null;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
+    this.initializePortfolioReport();
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -108,6 +100,32 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
           this.changeDetectorRef.markForCheck();
         }
+      });
+  }
+
+  public initializePortfolioReport() {
+    this.isLoadingPortfolioReport = true;
+    this.dataService
+      .fetchPortfolioReport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((portfolioReport) => {
+        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
+        this.accountClusterRiskRules =
+          portfolioReport.rules['accountClusterRisk'].filter(
+            (rule) => rule.isActive
+          ) || null;
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk'].filter(
+            (rule) => rule.isActive
+          ) || null;
+        this.emergencyFundRules =
+          portfolioReport.rules['emergencyFund'].filter(
+            (rule) => rule.isActive
+          ) || null;
+        this.feeRules =
+          portfolioReport.rules['fees'].filter((rule) => rule.isActive) || null;
+        this.isLoadingPortfolioReport = false;
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -156,20 +174,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting(event)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.dataService
-          .fetchPortfolioReport()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((portfolioReport) => {
-            this.accountClusterRiskRules =
-              portfolioReport.rules['accountClusterRisk'] || null;
-            this.currencyClusterRiskRules =
-              portfolioReport.rules['currencyClusterRisk'] || null;
-            this.emergencyFundRules =
-              portfolioReport.rules['emergencyFund'] || null;
-            this.feeRules = portfolioReport.rules['fees'] || null;
-            this.isLoading = false;
-            this.changeDetectorRef.markForCheck();
-          });
+        this.initializePortfolioReport();
       });
   }
 
@@ -210,6 +215,19 @@ export class FirePageComponent implements OnDestroy, OnInit {
             this.changeDetectorRef.markForCheck();
           });
       });
+  }
+
+  public mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
+    let inactiveRules: PortfolioReportRule[] = [];
+    for (const category in report.rules) {
+      const rulesArray = report.rules[category];
+      inactiveRules = inactiveRules.concat(
+        rulesArray.filter((rule) => !rule.isActive)
+      );
+      rulesArray.filter((rule) => rule.isActive);
+    }
+    console.log(inactiveRules);
+    return inactiveRules;
   }
 
   public ngOnDestroy() {

@@ -64,7 +64,7 @@
         </button>
         <mat-menu #accountMenu="matMenu" xPosition="before">
           <button mat-menu-item (click)="onUpdateRule(rule)">
-            @if (rule?.evaluation) {
+            @if (rule?.isActive) {
               <ng-container i18n>Deactivate</ng-container>
             } @else {
               <ng-container i18n>Activate</ng-container>

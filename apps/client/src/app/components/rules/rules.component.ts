@@ -18,6 +18,7 @@ import {
 export class RulesComponent {
   @Input() hasPermissionToCreateOrder: boolean;
   @Input() rules: PortfolioReportRule[];
+
   @Output() rulesUpdated = new EventEmitter<UpdateUserSettingDto>();
 
   public constructor() {}

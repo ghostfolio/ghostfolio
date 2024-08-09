@@ -24,7 +24,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { size, merge } from 'lodash';
+import { merge, size } from 'lodash';
 
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
