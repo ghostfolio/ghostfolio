@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Portuguese (`pt`)
 - Optimized the docker image layers to reduce the image size
 - Updated the binary targets of `debian-openssl` for `prisma`
 - Upgraded `prisma` from version `5.17.0` to `5.18.0`
