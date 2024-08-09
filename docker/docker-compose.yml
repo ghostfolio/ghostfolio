@@ -2,7 +2,6 @@ services:
   ghostfolio:
     image: docker.io/ghostfolio/ghostfolio:latest
     init: true
-    read_only: true
     cap_drop:
       - ALL
     security_opt:
