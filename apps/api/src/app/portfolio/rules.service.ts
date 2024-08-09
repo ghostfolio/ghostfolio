@@ -12,11 +12,8 @@ export class RulesService {
     aRules: Rule<T>[],
     aUserSettings: UserSettings
   ) {
-    return aRules
-      .filter((rule) => {
-        return rule.getSettings(aUserSettings)?.isActive;
-      })
-      .map((rule) => {
+    return aRules.map((rule) => {
+      if (rule.getSettings(aUserSettings)?.isActive) {
         const { evaluation, value } = rule.evaluate(
           rule.getSettings(aUserSettings)
         );
@@ -24,9 +21,17 @@ export class RulesService {
         return {
           evaluation,
           value,
+          isActive: true,
           key: rule.getKey(),
           name: rule.getName()
         };
-      });
+      } else {
+        return {
+          isActive: false,
+          key: rule.getKey(),
+          name: rule.getName()
+        };
+      }
+    });
   }
 }

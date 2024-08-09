@@ -197,6 +197,18 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
+    // Set default values for X-ray rules
+    if (!(user.Settings.settings as UserSettings).xRayRules) {
+      (user.Settings.settings as UserSettings).xRayRules = {
+        AccountClusterRiskCurrentInvestment: { isActive: true },
+        AccountClusterRiskSingleAccount: { isActive: true },
+        CurrencyClusterRiskBaseCurrencyCurrentInvestment: { isActive: true },
+        CurrencyClusterRiskCurrentInvestment: { isActive: true },
+        EmergencyFundSetup: { isActive: true },
+        FeeRatioInitialInvestment: { isActive: true }
+      };
+    }
+
     let currentPermissions = getPermissions(user.role);
 
     if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {

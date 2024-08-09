@@ -124,10 +124,13 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-          [rules]="emergencyFundRules"
-        />
+        @if (!isLoadingPortfolioReport) {
+          <gf-rules
+            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [rules]="emergencyFundRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        }
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -136,10 +139,13 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-          [rules]="currencyClusterRiskRules"
-        />
+        @if (!isLoadingPortfolioReport) {
+          <gf-rules
+            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [rules]="currencyClusterRiskRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        }
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -148,10 +154,13 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-          [rules]="accountClusterRiskRules"
-        />
+        @if (!isLoadingPortfolioReport) {
+          <gf-rules
+            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [rules]="accountClusterRiskRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        }
       </div>
       <div>
         <h4 class="align-items-center d-flex m-0">
@@ -160,10 +169,28 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-          [rules]="feeRules"
-        />
+        @if (!isLoadingPortfolioReport) {
+          <gf-rules
+            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [rules]="feeRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        }
+      </div>
+      <div>
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Inactive</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        @if (!isLoadingPortfolioReport) {
+          <gf-rules
+            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [rules]="inactiveRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        }
       </div>
     </div>
   </div>
