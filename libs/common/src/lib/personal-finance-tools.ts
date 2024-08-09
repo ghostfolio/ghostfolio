@@ -375,6 +375,16 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2023,
+    hasFreePlan: true,
+    key: 'plainzer',
+    languages: ['English'],
+    name: 'Plainzer',
+    origin: 'Poland',
+    pricingPerYear: '$74',
+    slogan: 'Free dividend tracker for your portfolio'
+  },
+  {
+    founded: 2023,
     hasSelfHostingAbility: false,
     key: 'plannix',
     name: 'Plannix',
