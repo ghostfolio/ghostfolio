@@ -240,6 +240,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Managing money, made simple'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'investify',
+    name: 'Investify',
+    origin: 'Pakistan',
+    slogan: 'Advanced portfolio tracking and stock market information'
+  },
+  {
     founded: 2011,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
