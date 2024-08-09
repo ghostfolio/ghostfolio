@@ -105,6 +105,8 @@ export class BenchmarkService {
         const { benchmarks, expiration }: BenchmarkValue =
           JSON.parse(cachedBenchmarkValue);
 
+        Logger.debug('Fetched benchmarks from cache', 'BenchmarkService');
+
         if (isAfter(new Date(), new Date(expiration))) {
           this.calculateAndCacheBenchmarks({
             enableSharing
@@ -356,6 +358,8 @@ export class BenchmarkService {
   private async calculateAndCacheBenchmarks({
     enableSharing = false
   }): Promise<BenchmarkResponse['benchmarks']> {
+    Logger.debug('Calculate benchmarks', 'BenchmarkService');
+
     const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles({
       enableSharing
     });
