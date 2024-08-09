@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enabled Catalan (`ca`) as an option in the user settings (experimental)
+- Enabled Polish (`pl`) as an option in the user settings (experimental)
 - Improved the language localization for Portuguese (`pt`)
 - Optimized the docker image layers to reduce the image size
 - Updated the binary targets of `debian-openssl` for `prisma`
