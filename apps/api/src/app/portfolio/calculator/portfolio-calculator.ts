@@ -4,13 +4,11 @@ import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfol
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import {
-  getFactor,
-  getInterval
-} from '@ghostfolio/api/helper/portfolio.helper';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -133,7 +131,7 @@ export abstract class PortfolioCalculator {
     this.useCache = useCache;
     this.userId = userId;
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     this.endDate = endDate;
     this.startDate = startDate;
@@ -433,7 +431,10 @@ export abstract class PortfolioCalculator {
     dateRange?: DateRange;
     withDataDecimation?: boolean;
   }): Promise<HistoricalDataItem[]> {
-    const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
+    const { endDate, startDate } = getIntervalFromDateRange(
+      dateRange,
+      this.getStartDate()
+    );
 
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation

@@ -1,12 +1,12 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
@@ -110,7 +110,7 @@ export class OrderController {
     let startDate: Date;
 
     if (dateRange) {
-      ({ endDate, startDate } = getInterval(dateRange));
+      ({ endDate, startDate } = getIntervalFromDateRange(dateRange));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({

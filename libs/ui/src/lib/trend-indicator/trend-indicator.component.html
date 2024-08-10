@@ -8,9 +8,9 @@
     }"
   />
 } @else {
-  @if (marketState === 'closed' && range === '1d') {
+  @if (marketState === 'closed' && dateRange === '1d') {
     <ion-icon class="text-muted" name="pause-circle-outline" [size]="size" />
-  } @else if (marketState === 'delayed' && range === '1d') {
+  } @else if (marketState === 'delayed' && dateRange === '1d') {
     <ion-icon class="text-muted" name="time-outline" [size]="size" />
   } @else if (value <= -0.0005) {
     <ion-icon

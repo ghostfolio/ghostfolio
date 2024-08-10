@@ -1,8 +1,12 @@
-import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
+import {
+  getAnnualizedPerformancePercent,
+  getIntervalFromDateRange
+} from '@ghostfolio/common/calculation-helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -23,7 +27,7 @@ import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { Chart } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -41,6 +45,7 @@ export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() cursor: string;
+  @Input() dateRange: DateRange;
   @Input() holdings: PortfolioPosition[];
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
@@ -75,6 +80,8 @@ export class GfTreemapChartComponent
   private initialize() {
     this.isLoading = true;
 
+    const { startDate } = getIntervalFromDateRange(this.dateRange);
+
     const data: ChartConfiguration['data'] = <any>{
       datasets: [
         {
@@ -83,7 +90,10 @@ export class GfTreemapChartComponent
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   new Date(),
-                  ctx.raw._data.dateOfFirstActivity
+                  max([
+                    ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                    startDate
+                  ])
                 ),
                 netPerformancePercentage: new Big(
                   ctx.raw._data.netPerformancePercentWithCurrencyEffect
