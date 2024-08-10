@@ -301,7 +301,7 @@ export abstract class PortfolioCalculator {
       const feeInBaseCurrency = item.fee.mul(
         exchangeRatesByCurrency[`${item.currency}${this.currency}`]?.[
           lastTransactionPoint.date
-        ]
+        ] ?? 1
       );
 
       const marketPriceInBaseCurrency = (

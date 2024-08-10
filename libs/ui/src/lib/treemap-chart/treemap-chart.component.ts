@@ -80,7 +80,7 @@ export class GfTreemapChartComponent
   private initialize() {
     this.isLoading = true;
 
-    const { startDate } = getIntervalFromDateRange(this.dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
 
     const data: ChartConfiguration['data'] = <any>{
       datasets: [
@@ -89,7 +89,7 @@ export class GfTreemapChartComponent
             const annualizedNetPerformancePercentWithCurrencyEffect =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
-                  new Date(),
+                  endDate,
                   max([
                     ctx.raw._data.dateOfFirstActivity ?? new Date(0),
                     startDate
