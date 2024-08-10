@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
 - Enabled Catalan (`ca`) as an option in the user settings (experimental)
 - Enabled Polish (`pl`) as an option in the user settings (experimental)
 - Improved the language localization for Portuguese (`pt`)
