@@ -182,6 +182,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Real-Time Portfolio Tracker & Stock Tracker'
   },
   {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'finateka',
+    languages: ['English'],
+    name: 'FINATEKA',
+    origin: 'United States',
+    slogan:
+      'The most convenient mobile application for personal finance accounting'
+  },
+  {
     founded: 2023,
     hasFreePlan: true,
     key: 'finwise',
@@ -238,6 +249,14 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$60',
     slogan: 'Managing money, made simple'
+  },
+  {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'investify',
+    name: 'Investify',
+    origin: 'Pakistan',
+    slogan: 'Advanced portfolio tracking and stock market information'
   },
   {
     founded: 2011,
@@ -356,6 +375,17 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2023,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'plainzer',
+    languages: ['English'],
+    name: 'Plainzer',
+    origin: 'Poland',
+    pricingPerYear: '$74',
+    slogan: 'Free dividend tracker for your portfolio'
+  },
+  {
+    founded: 2023,
     hasSelfHostingAbility: false,
     key: 'plannix',
     name: 'Plannix',
@@ -429,6 +459,15 @@ export const personalFinanceTools: Product[] = [
     name: 'Rocket Money',
     origin: 'United States',
     slogan: 'Track your net worth'
+  },
+  {
+    founded: 2019,
+    hasSelfHostingAbility: false,
+    key: 'sarmaaya.pk',
+    name: 'Sarmaaya.pk Portfolio Tracking',
+    note: 'Sarmaaya.pk Portfolio Tracking was discontinued in 2024',
+    origin: 'Pakistan',
+    slogan: 'Unified platform for financial research and portfolio tracking'
   },
   {
     founded: 2004,
