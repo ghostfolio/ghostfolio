@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Removed `read_only: true` from the `docker-compose.yml` file to allow prisma running migrations
+- Removed `read_only: true` from the `docker-compose.yml` file to allow `prisma` to run migrations
 
 ## 2.103.0 - 2024-08-10
 
