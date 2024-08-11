@@ -26,7 +26,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .date-range-selector-container {
     border-color: rgba(var(--light-dividers));
   }

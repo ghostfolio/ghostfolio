@@ -120,7 +120,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .button-container {
     .mat-mdc-outlined-button {
       background-color: var(--dark-background);

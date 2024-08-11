@@ -21,7 +21,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   ::ng-deep {
     .svgMap-map-wrapper {
       .svgMap-country {

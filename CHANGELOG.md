@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored the dark theme CSS selector
 - Improved the language localization for German (`de`)
 
 ### Fixed

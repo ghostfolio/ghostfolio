@@ -20,7 +20,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .icon-container {
     background-color: rgba(var(--light-primary-text), 0.05);
   }
