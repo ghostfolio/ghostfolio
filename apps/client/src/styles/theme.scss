@@ -3,7 +3,7 @@
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
 
-$mat-css-dark-theme-selector: '.is-dark-theme';
+$mat-css-dark-theme-selector: '.theme-dark';
 
 $gf-primary: (
   50: var(--gf-theme-primary-50),
@@ -99,7 +99,7 @@ $gf-theme-dark: mat.m2-define-dark-theme(
   )
 );
 
-.is-dark-theme {
+.theme-dark {
   @include mat.all-component-colors($gf-theme-dark);
 }
 

@@ -11,6 +11,6 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   border-color: rgba(var(--light-dividers));
 }

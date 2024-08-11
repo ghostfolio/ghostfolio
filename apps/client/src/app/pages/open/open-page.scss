@@ -14,6 +14,6 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   color: rgb(var(--light-primary-text));
 }
