@@ -1,3 +1,5 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getLocale } from '@ghostfolio/common/helper';
 
 import {
@@ -54,7 +56,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
+  public constructor(
+    private notificationService: NotificationService,
+    private router: Router
+  ) {}
 
   public ngOnInit() {}
 
@@ -97,13 +102,13 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onDeleteAccount(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this account?`
-    );
-
-    if (confirmation) {
-      this.accountDeleted.emit(aId);
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.accountDeleted.emit(aId);
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this account?`
+    });
   }
 
   public onOpenAccountDetailDialog(accountId: string) {

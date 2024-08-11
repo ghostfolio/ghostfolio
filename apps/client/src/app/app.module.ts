@@ -33,6 +33,7 @@ import { GfSubscriptionInterstitialDialogModule } from './components/subscriptio
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
 import { LanguageService } from './core/language.service';
+import { GfNotificationModule } from './core/notification/notification.module';
 
 export function NgxStripeFactory(): string {
   return environment.stripePublicKey;
@@ -47,6 +48,7 @@ export function NgxStripeFactory(): string {
     BrowserModule,
     GfHeaderModule,
     GfLogoComponent,
+    GfNotificationModule,
     GfSubscriptionInterstitialDialogModule,
     MarkdownModule.forRoot(),
     MatAutocompleteModule,

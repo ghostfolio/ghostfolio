@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import {
   getLocale,
   getNumberFormatDecimal,
@@ -39,7 +40,7 @@ export class PortfolioPerformanceComponent implements OnChanges {
 
   @ViewChild('value') value: ElementRef;
 
-  public constructor() {}
+  public constructor(private notificationService: NotificationService) {}
 
   public ngOnChanges() {
     this.precision = this.precision >= 0 ? this.precision : 2;
@@ -74,12 +75,15 @@ export class PortfolioPerformanceComponent implements OnChanges {
   }
 
   public onShowErrors() {
-    const errorMessageParts = [$localize`Market data is delayed for`];
+    const errorMessageParts = [];
 
     for (const error of this.errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
     }
 
-    alert(errorMessageParts.join('\n'));
+    this.notificationService.alert({
+      message: errorMessageParts.join('<br />'),
+      title: $localize`Market data is delayed for`
+    });
   }
 }
