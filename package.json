@@ -171,7 +171,7 @@
     "@types/big.js": "6.2.2",
     "@types/body-parser": "1.19.5",
     "@types/cache-manager": "3.4.2",
-    "@types/color": "3.0.3",
+    "@types/color": "3.0.6",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.4.4",
     "@types/lodash": "4.17.0",
