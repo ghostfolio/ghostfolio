@@ -60,8 +60,8 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -122,15 +122,13 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
 
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {
     this.notificationService.alert({
-      title: '',
-      message: JSON.stringify(aData, null, '  ')
+      title: JSON.stringify(aData, null, '  ')
     });
   }
 
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
     this.notificationService.alert({
-      title: '',
-      message: JSON.stringify(aStacktrace, null, '  ')
+      title: JSON.stringify(aStacktrace, null, '  ')
     });
   }
 

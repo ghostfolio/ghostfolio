@@ -95,8 +95,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit() {
@@ -332,8 +332,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .pipe(
         catchError(({ error }) => {
           this.notificationService.alert({
-            title: '',
-            message: `Error: ${error?.message}`
+            title: `Error: ${error?.message}`
           });
           return EMPTY;
         }),
@@ -341,8 +340,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       )
       .subscribe(({ price }) => {
         this.notificationService.alert({
-          title: '',
-          message:
+          title:
             $localize`The current market price is` +
             ' ' +
             price +

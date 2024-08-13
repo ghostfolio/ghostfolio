@@ -94,11 +94,11 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
+    private notificationService: NotificationService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -243,8 +243,7 @@ export class HeaderComponent implements OnChanges {
             .pipe(
               catchError(() => {
                 this.notificationService.alert({
-                  title: 'Wrong',
-                  message: $localize`Oops! Incorrect Security Token.`
+                  title: $localize`Oops! Incorrect Security Token.`
                 });
 
                 return EMPTY;

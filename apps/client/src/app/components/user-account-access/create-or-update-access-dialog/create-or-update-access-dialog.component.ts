@@ -88,8 +88,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
           catchError((error) => {
             if (error.status === StatusCodes.BAD_REQUEST) {
               this.notificationService.alert({
-                title: 'Bad Request',
-                message: $localize`Oops! Could not grant access.`
+                title: $localize`Oops! Could not grant access.`
               });
             }
 

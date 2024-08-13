@@ -122,8 +122,8 @@ export class GfActivitiesTableComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {}
 
   public ngOnInit() {
@@ -265,8 +265,7 @@ export class GfActivitiesTableComponent
 
   public onOpenComment(aComment: string) {
     this.notificationService.alert({
-      title: '',
-      message: aComment
+      title: aComment
     });
   }
 
