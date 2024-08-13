@@ -1,3 +1,5 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
@@ -39,7 +41,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.info = this.dataService.fetchInfo();
 
@@ -109,20 +112,20 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteUser(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this user?`
-    );
-
-    if (confirmation) {
-      this.dataService
-        .deleteUser(aId)
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe({
-          next: () => {
-            this.fetchAdminData();
-          }
-        });
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .deleteUser(aId)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe({
+            next: () => {
+              this.fetchAdminData();
+            }
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this user?`
+    });
   }
 
   public onImpersonateUser(aId: string) {

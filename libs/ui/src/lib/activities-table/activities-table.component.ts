@@ -1,5 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
@@ -120,7 +122,10 @@ export class GfActivitiesTableComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
+  public constructor(
+    private router: Router,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {
     if (this.showCheckbox) {
@@ -212,23 +217,23 @@ export class GfActivitiesTableComponent
   }
 
   public onDeleteActivities() {
-    const confirmation = confirm(
-      $localize`Do you really want to delete these activities?`
-    );
-
-    if (confirmation) {
-      this.activitiesDeleted.emit();
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.activitiesDeleted.emit();
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete these activities?`
+    });
   }
 
   public onDeleteActivity(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this activity?`
-    );
-
-    if (confirmation) {
-      this.activityDeleted.emit(aId);
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.activityDeleted.emit(aId);
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this activity?`
+    });
   }
 
   public onExport() {

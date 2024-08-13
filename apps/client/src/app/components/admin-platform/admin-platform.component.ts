@@ -1,5 +1,7 @@
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -47,7 +49,8 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -75,13 +78,13 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
   }
 
   public onDeletePlatform(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this platform?`
-    );
-
-    if (confirmation) {
-      this.deletePlatform(aId);
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.deletePlatform(aId);
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this platform?`
+    });
   }
 
   public onUpdatePlatform({ id }: Platform) {
