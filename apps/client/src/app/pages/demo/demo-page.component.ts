@@ -20,8 +20,8 @@ export class GfDemoPageComponent implements OnDestroy {
 
   public constructor(
     private dataService: DataService,
-    private router: Router,
     private notificationService: NotificationService,
+    private router: Router,
     private tokenStorageService: TokenStorageService
   ) {
     this.info = this.dataService.fetchInfo();
