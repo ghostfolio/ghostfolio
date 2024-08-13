@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
@@ -11,7 +12,10 @@ import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
 
 @Injectable()
 export class AdminMarketDataService {
-  public constructor(private adminService: AdminService) {}
+  public constructor(
+    private adminService: AdminService,
+    private notificationService: NotificationService
+  ) {}
 
   public deleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     const confirmation = confirm(
@@ -46,7 +50,10 @@ export class AdminMarketDataService {
       forkJoin(deleteRequests)
         .pipe(
           catchError(() => {
-            alert($localize`Oops! Could not delete profiles.`);
+            this.notificationService.alert({
+              title: '',
+              message: $localize`Oops! Could not delete profiles.`
+            });
 
             return EMPTY;
           }),

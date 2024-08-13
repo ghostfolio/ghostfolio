@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
@@ -59,7 +60,8 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -119,11 +121,17 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
   }
 
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {
-    alert(JSON.stringify(aData, null, '  '));
+    this.notificationService.alert({
+      title: '',
+      message: JSON.stringify(aData, null, '  ')
+    });
   }
 
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
-    alert(JSON.stringify(aStacktrace, null, '  '));
+    this.notificationService.alert({
+      title: '',
+      message: JSON.stringify(aStacktrace, null, '  ')
+    });
   }
 
   public ngOnDestroy() {

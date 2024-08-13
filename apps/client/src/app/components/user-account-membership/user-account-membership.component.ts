@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
@@ -48,7 +49,8 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private snackBar: MatSnackBar,
     private stripeService: StripeService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     const { baseCurrency, globalPermissions, subscriptions } =
       this.dataService.fetchInfo();
@@ -96,13 +98,19 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
           return this.stripeService.redirectToCheckout({ sessionId });
         }),
         catchError((error) => {
-          alert(error.message);
+          this.notificationService.alert({
+            title: '',
+            message: error
+          });
           throw error;
         })
       )
       .subscribe((result) => {
         if (result.error) {
-          alert(result.error.message);
+          this.notificationService.alert({
+            title: result.error.type,
+            message: result.error.message
+          });
         }
       });
   }

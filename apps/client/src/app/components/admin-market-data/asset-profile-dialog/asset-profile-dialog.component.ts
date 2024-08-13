@@ -1,6 +1,7 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
@@ -94,7 +95,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) {}
 
   public ngOnInit() {
@@ -329,19 +331,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .pipe(
         catchError(({ error }) => {
-          alert(`Error: ${error?.message}`);
+          this.notificationService.alert({
+            title: '',
+            message: `Error: ${error?.message}`
+          });
           return EMPTY;
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ price }) => {
-        alert(
-          $localize`The current market price is` +
+        this.notificationService.alert({
+          title: '',
+          message:
+            $localize`The current market price is` +
             ' ' +
             price +
             ' ' +
             this.assetProfileForm.get('currency').value
-        );
+        });
       });
   }
 

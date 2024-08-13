@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
@@ -42,7 +43,8 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private stripeService: StripeService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {}
 
   public ngOnInit() {
@@ -82,13 +84,19 @@ export class PricingPageComponent implements OnDestroy, OnInit {
           return this.stripeService.redirectToCheckout({ sessionId });
         }),
         catchError((error) => {
-          alert(error.message);
+          this.notificationService.alert({
+            title: '',
+            message: error
+          });
           throw error;
         })
       )
       .subscribe((result) => {
         if (result.error) {
-          alert(result.error.message);
+          this.notificationService.alert({
+            title: result.error.type,
+            message: result.error.message
+          });
         }
       });
   }

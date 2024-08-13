@@ -120,7 +120,10 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onOpenComment(aComment: string) {
-    alert(aComment);
+    this.notificationService.alert({
+      title: '',
+      message: aComment
+    });
   }
 
   public onTransferBalance() {

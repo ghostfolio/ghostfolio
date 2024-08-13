@@ -28,6 +28,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { NotificationService } from './core/notification/notification.service';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
@@ -85,7 +86,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.initializeTheme();
     this.user = undefined;
@@ -199,7 +201,10 @@ export class AppComponent implements OnDestroy, OnInit {
     if (this.user.systemMessage.routerLink) {
       this.router.navigate(this.user.systemMessage.routerLink);
     } else {
-      alert(this.user.systemMessage.message);
+      this.notificationService.alert({
+        title: '',
+        message: this.user.systemMessage.message
+      });
     }
   }
 

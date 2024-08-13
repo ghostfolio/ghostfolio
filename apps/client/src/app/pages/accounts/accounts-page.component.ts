@@ -3,6 +3,7 @@ import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -48,7 +49,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -305,7 +307,10 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             })
             .pipe(
               catchError(() => {
-                alert($localize`Oops, cash balance transfer has failed.`);
+                this.notificationService.alert({
+                  title: '',
+                  message: $localize`Oops, cash balance transfer has failed.`
+                });
 
                 return EMPTY;
               }),

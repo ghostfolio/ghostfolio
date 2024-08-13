@@ -1,4 +1,5 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
@@ -33,7 +34,8 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) private data: CreateOrUpdateAccessDialogParams,
     public dialogRef: MatDialogRef<CreateOrUpdateAccessDialog>,
     private dataService: DataService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -85,7 +87,10 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
         .pipe(
           catchError((error) => {
             if (error.status === StatusCodes.BAD_REQUEST) {
-              alert($localize`Oops! Could not grant access.`);
+              this.notificationService.alert({
+                title: 'Bad Request',
+                message: $localize`Oops! Could not grant access.`
+              });
             }
 
             return EMPTY;

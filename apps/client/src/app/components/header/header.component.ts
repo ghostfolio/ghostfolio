@@ -1,6 +1,7 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -96,7 +97,8 @@ export class HeaderComponent implements OnChanges {
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -240,7 +242,10 @@ export class HeaderComponent implements OnChanges {
             .loginAnonymous(data?.accessToken)
             .pipe(
               catchError(() => {
-                alert($localize`Oops! Incorrect Security Token.`);
+                this.notificationService.alert({
+                  title: 'Wrong',
+                  message: $localize`Oops! Incorrect Security Token.`
+                });
 
                 return EMPTY;
               }),

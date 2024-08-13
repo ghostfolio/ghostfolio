@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
@@ -20,7 +21,8 @@ export class GfDemoPageComponent implements OnDestroy {
   public constructor(
     private dataService: DataService,
     private router: Router,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private notificationService: NotificationService
   ) {
     this.info = this.dataService.fetchInfo();
   }
@@ -29,9 +31,10 @@ export class GfDemoPageComponent implements OnDestroy {
     const hasToken = this.tokenStorageService.getToken()?.length > 0;
 
     if (hasToken) {
-      alert(
-        $localize`As you are already logged in, you cannot access the demo account.`
-      );
+      this.notificationService.alert({
+        title: '',
+        message: $localize`As you are already logged in, you cannot access the demo account.`
+      });
     } else {
       this.tokenStorageService.saveToken(this.info.demoAuthToken, true);
     }
