@@ -82,60 +82,64 @@ export class ImportService {
 
       const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
-      return Object.entries(dividends).map(([dateString, { marketPrice }]) => {
-        const quantity =
-          historicalData.find((historicalDataItem) => {
-            return historicalDataItem.date === dateString;
-          })?.quantity ?? 0;
+      return await Promise.all(
+        Object.entries(dividends).map(async ([dateString, { marketPrice }]) => {
+          const quantity =
+            historicalData.find((historicalDataItem) => {
+              return historicalDataItem.date === dateString;
+            })?.quantity ?? 0;
 
-        const value = new Big(quantity).mul(marketPrice).toNumber();
+          const value = new Big(quantity).mul(marketPrice).toNumber();
 
-        const date = parseDate(dateString);
-        const isDuplicate = orders.some((activity) => {
-          return (
-            activity.accountId === Account?.id &&
-            activity.SymbolProfile.currency === assetProfile.currency &&
-            activity.SymbolProfile.dataSource === assetProfile.dataSource &&
-            isSameSecond(activity.date, date) &&
-            activity.quantity === quantity &&
-            activity.SymbolProfile.symbol === assetProfile.symbol &&
-            activity.type === 'DIVIDEND' &&
-            activity.unitPrice === marketPrice
-          );
-        });
+          const date = parseDate(dateString);
+          const isDuplicate = orders.some((activity) => {
+            return (
+              activity.accountId === Account?.id &&
+              activity.SymbolProfile.currency === assetProfile.currency &&
+              activity.SymbolProfile.dataSource === assetProfile.dataSource &&
+              isSameSecond(activity.date, date) &&
+              activity.quantity === quantity &&
+              activity.SymbolProfile.symbol === assetProfile.symbol &&
+              activity.type === 'DIVIDEND' &&
+              activity.unitPrice === marketPrice
+            );
+          });
 
-        const error: ActivityError = isDuplicate
-          ? { code: 'IS_DUPLICATE' }
-          : undefined;
+          const error: ActivityError = isDuplicate
+            ? { code: 'IS_DUPLICATE' }
+            : undefined;
 
-        return {
-          Account,
-          date,
-          error,
-          quantity,
-          value,
-          accountId: Account?.id,
-          accountUserId: undefined,
-          comment: undefined,
-          currency: undefined,
-          createdAt: undefined,
-          fee: 0,
-          feeInBaseCurrency: 0,
-          id: assetProfile.id,
-          isDraft: false,
-          SymbolProfile: assetProfile,
-          symbolProfileId: assetProfile.id,
-          type: 'DIVIDEND',
-          unitPrice: marketPrice,
-          updatedAt: undefined,
-          userId: Account?.userId,
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          return {
+            Account,
+            date,
+            error,
+            quantity,
             value,
-            assetProfile.currency,
-            userCurrency
-          )
-        };
-      });
+            accountId: Account?.id,
+            accountUserId: undefined,
+            comment: undefined,
+            currency: undefined,
+            createdAt: undefined,
+            fee: 0,
+            feeInBaseCurrency: 0,
+            id: assetProfile.id,
+            isDraft: false,
+            SymbolProfile: assetProfile,
+            symbolProfileId: assetProfile.id,
+            type: 'DIVIDEND',
+            unitPrice: marketPrice,
+            updatedAt: undefined,
+            userId: Account?.userId,
+            valueInBaseCurrency:
+              await this.exchangeRateDataService.toCurrencyAtDate(
+                value,
+                assetProfile.currency,
+                userCurrency,
+                date
+              )
+          };
+        })
+      );
     } catch {
       return [];
     }
@@ -432,18 +436,21 @@ export class ImportService {
         ...order,
         error,
         value,
-        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        feeInBaseCurrency: await this.exchangeRateDataService.toCurrencyAtDate(
           fee,
           assetProfile.currency,
-          userCurrency
+          userCurrency,
+          date
         ),
         // @ts-ignore
         SymbolProfile: assetProfile,
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          value,
-          assetProfile.currency,
-          userCurrency
-        )
+        valueInBaseCurrency:
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            value,
+            assetProfile.currency,
+            userCurrency,
+            date
+          )
       });
     }
 
