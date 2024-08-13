@@ -40,7 +40,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .activity-type-badge {
     background-color: rgba(var(--palette-foreground-text-dark), 0.1) !important;
   }

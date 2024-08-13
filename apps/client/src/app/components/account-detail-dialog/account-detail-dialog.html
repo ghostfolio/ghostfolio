@@ -101,10 +101,17 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
-          [showActions]="false"
+          [showActions]="
+            !data.hasImpersonationId &&
+            data.hasPermissionToCreateOrder &&
+            user?.settings?.isExperimentalFeatures &&
+            !user?.settings?.isRestrictedView
+          "
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [totalItems]="totalItems"
+          (activityToClone)="onCloneActivity($event)"
+          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
         />

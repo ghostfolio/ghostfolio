@@ -71,7 +71,7 @@ The backend is based on [NestJS](https://nestjs.com) using [PostgreSQL](https://
 
 ### Frontend
 
-The frontend is built with [Angular](https://angular.io) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
+The frontend is built with [Angular](https://angular.dev) and uses [Angular Material](https://material.angular.io) with utility classes from [Bootstrap](https://getbootstrap.com).
 
 ## Self-hosting
 

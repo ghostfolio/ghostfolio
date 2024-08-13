@@ -255,6 +255,10 @@ export class AppComponent implements OnDestroy, OnInit {
             colorScheme: this.user?.settings?.colorScheme,
             deviceType: this.deviceType,
             hasImpersonationId: this.hasImpersonationId,
+            hasPermissionToCreateOrder:
+              !this.hasImpersonationId &&
+              hasPermission(this.user?.permissions, permissions.createOrder) &&
+              !this.user?.settings?.isRestrictedView,
             hasPermissionToReportDataGlitch: hasPermission(
               this.user?.permissions,
               permissions.reportDataGlitch
@@ -262,10 +266,11 @@ export class AppComponent implements OnDestroy, OnInit {
             hasPermissionToUpdateOrder:
               !this.hasImpersonationId &&
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
-              !user?.settings?.isRestrictedView,
+              !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
           },
           height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          maxWidth: this.deviceType === 'mobile' ? '95vw' : '50rem',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 
@@ -292,9 +297,9 @@ export class AppComponent implements OnDestroy, OnInit {
     );
 
     if (isDarkTheme) {
-      this.document.body.classList.add('is-dark-theme');
+      this.document.body.classList.add('theme-dark');
     } else {
-      this.document.body.classList.remove('is-dark-theme');
+      this.document.body.classList.remove('theme-dark');
     }
 
     this.document

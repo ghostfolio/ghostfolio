@@ -25,7 +25,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .mat-mdc-radio-button {
     &.mat-mdc-radio-checked {
       background-color: rgba(var(--light-dividers));

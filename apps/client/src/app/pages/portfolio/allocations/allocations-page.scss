@@ -43,7 +43,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .mat-mdc-progress-bar {
     ::ng-deep {
       .mdc-linear-progress__buffer-bar {

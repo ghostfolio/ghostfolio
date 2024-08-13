@@ -214,7 +214,7 @@ body {
     }
   }
 
-  &.is-dark-theme {
+  &.theme-dark {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
 
@@ -358,10 +358,6 @@ ngx-skeleton-loader {
 .cdk-overlay-container {
   .cdk-global-overlay-wrapper {
     justify-content: center !important;
-  }
-
-  .cdk-overlay-pane {
-    max-width: 95vw !important;
   }
 }
 

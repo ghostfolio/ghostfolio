@@ -4,10 +4,7 @@ import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import {
-  getFactor,
-  getInterval
-} from '@ghostfolio/api/helper/portfolio.helper';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -18,7 +15,10 @@ import { DataProviderService } from '@ghostfolio/api/services/data-provider/data
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { getAnnualizedPerformancePercent } from '@ghostfolio/common/calculation-helper';
+import {
+  getAnnualizedPerformancePercent,
+  getIntervalFromDateRange
+} from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
   EMERGENCY_FUND_TAG_ID,
@@ -72,7 +72,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -933,7 +933,7 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { endDate } = getInterval(dateRange);
+    const { endDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -1115,7 +1115,7 @@ export class PortfolioService {
       )
     );
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     console.time('------- PortfolioService.getPerformance - 2');
 

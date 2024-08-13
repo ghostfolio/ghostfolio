@@ -6,7 +6,9 @@ const locales = {
   ASSET_CLASS: $localize`Asset Class`,
   ASSET_SUB_CLASS: $localize`Asset Sub Class`,
   BUY_AND_SELL_ACTIVITIES_TOOLTIP: $localize`Buy and sell`,
+  CANCEL: $localize`Cancel`,
   CORE: $localize`Core`,
+  CLOSE: $localize`Close`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC: $localize`Switch to Ghostfolio Premium or Ghostfolio Open Source easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_OSS: $localize`Switch to Ghostfolio Premium easily`,
   DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM: $localize`Switch to Ghostfolio Open Source or Ghostfolio Basic easily`,
@@ -26,6 +28,7 @@ const locales = {
   TAG: $localize`Tag`,
   YEAR: $localize`Year`,
   YEARS: $localize`Years`,
+  YES: $localize`Yes`,
 
   // Activity types
   BUY: $localize`Buy`,

@@ -1,0 +1,20 @@
+@if (title) {
+  <div mat-dialog-title [innerHTML]="title"></div>
+}
+
+@if (message) {
+  <div mat-dialog-content [innerHTML]="message"></div>
+}
+
+<div align="end" mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close('discard')">
+    {{ discardLabel }}
+  </button>
+  <button
+    mat-flat-button
+    [color]="confirmType"
+    (click)="dialogRef.close('confirm')"
+  >
+    {{ confirmLabel }}
+  </button>
+</div>

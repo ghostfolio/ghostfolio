@@ -19,9 +19,9 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   templateUrl: './trend-indicator.component.html'
 })
 export class GfTrendIndicatorComponent {
+  @Input() dateRange: DateRange;
   @Input() isLoading = false;
   @Input() marketState: MarketState = 'open';
-  @Input() range: DateRange = 'max';
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() value = 0;
 

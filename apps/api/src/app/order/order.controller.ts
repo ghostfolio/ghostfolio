@@ -1,12 +1,12 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   HEADER_KEY_IMPERSONATION
@@ -36,7 +36,7 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { CreateOrderDto } from './create-order.dto';
-import { Activities } from './interfaces/activities.interface';
+import { Activities, Activity } from './interfaces/activities.interface';
 import { OrderService } from './order.service';
 import { UpdateOrderDto } from './update-order.dto';
 
@@ -110,7 +110,7 @@ export class OrderController {
     let startDate: Date;
 
     if (dateRange) {
-      ({ endDate, startDate } = getInterval(dateRange));
+      ({ endDate, startDate } = getIntervalFromDateRange(dateRange));
     }
 
     const filters = this.apiService.buildFiltersFromQueryParams({
@@ -138,6 +138,38 @@ export class OrderController {
     });
 
     return { activities, count };
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async getOrderById(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Param('id') id: string
+  ): Promise<Activity> {
+    const impersonationUserId =
+      await this.impersonationService.validateImpersonationId(impersonationId);
+    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const { activities } = await this.orderService.getOrders({
+      userCurrency,
+      userId: impersonationUserId || this.request.user.id,
+      withExcludedAccounts: true
+    });
+
+    const activity = activities.find((activity) => {
+      return activity.id === id;
+    });
+
+    if (!activity) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    return activity;
   }
 
   @HasPermission(permissions.createOrder)

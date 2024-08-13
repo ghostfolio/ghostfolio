@@ -7,9 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up a notification service for alert and confirmation dialogs
+
 ### Changed
 
+- Refactored the dark theme CSS selector
+- Improved the language localization for German (`de`)
+- Upgraded `zone.js` from version `0.14.7` to `0.14.10`
+
+### Fixed
+
+- Removed `read_only: true` from the `docker-compose.yml` file to allow `prisma` to run migrations
+
+## 2.103.0 - 2024-08-10
+
+### Changed
+
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Enabled Catalan (`ca`) as an option in the user settings (experimental)
+- Enabled Polish (`pl`) as an option in the user settings (experimental)
+- Improved the language localization for Portuguese (`pt`)
+- Optimized the docker image layers to reduce the image size
+- Updated the binary targets of `debian-openssl` for `prisma`
+- Upgraded `prisma` from version `5.17.0` to `5.18.0`
+
+## 2.102.0 - 2024-08-07
+
+### Added
+
+- Added support to clone an activity from the account detail dialog (experimental)
+- Added support to edit an activity from the account detail dialog (experimental)
+- Added support to clone an activity from the holding detail dialog (experimental)
+- Added support to edit an activity from the holding detail dialog (experimental)
+
+### Changed
+
+- Improved the caching of the benchmarks in the markets overview by returning cached data and recalculating in the background when it expires
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
 - Upgraded `Nx` from version `19.5.1` to `19.5.6`
+
+### Fixed
+
+- Fixed the cache flush endpoint response
 
 ## 2.101.0 - 2024-08-03
 

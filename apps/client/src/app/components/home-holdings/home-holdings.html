@@ -38,6 +38,7 @@
         <gf-treemap-chart
           class="mt-3"
           cursor="pointer"
+          [dateRange]="user?.settings?.dateRange"
           [holdings]="holdings"
           (treemapChartClicked)="onSymbolClicked($event)"
         />

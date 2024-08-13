@@ -50,7 +50,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .mat-toolbar {
     background-color: var(--dark-background);
 
