@@ -129,8 +129,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
       } else {
         this.notificationService.alert({
-          title: '',
-          message: $localize`${currency} is an invalid currency!`
+          title: $localize`${currency} is an invalid currency!`
         });
       }
     }

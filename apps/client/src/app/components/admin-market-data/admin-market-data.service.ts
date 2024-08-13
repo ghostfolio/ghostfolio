@@ -51,8 +51,7 @@ export class AdminMarketDataService {
         .pipe(
           catchError(() => {
             this.notificationService.alert({
-              title: '',
-              message: $localize`Oops! Could not delete profiles.`
+              title: $localize`Oops! Could not delete profiles.`
             });
 
             return EMPTY;

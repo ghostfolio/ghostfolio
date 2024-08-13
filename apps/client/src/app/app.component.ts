@@ -82,12 +82,12 @@ export class AppComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     @Inject(DOCUMENT) private document: Document,
     private impersonationStorageService: ImpersonationStorageService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {
     this.initializeTheme();
     this.user = undefined;
@@ -202,8 +202,7 @@ export class AppComponent implements OnDestroy, OnInit {
       this.router.navigate(this.user.systemMessage.routerLink);
     } else {
       this.notificationService.alert({
-        title: '',
-        message: this.user.systemMessage.message
+        title: this.user.systemMessage.message
       });
     }
   }

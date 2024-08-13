@@ -47,10 +47,10 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -308,8 +308,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             .pipe(
               catchError(() => {
                 this.notificationService.alert({
-                  title: '',
-                  message: $localize`Oops, cash balance transfer has failed.`
+                  title: $localize`Oops, cash balance transfer has failed.`
                 });
 
                 return EMPTY;

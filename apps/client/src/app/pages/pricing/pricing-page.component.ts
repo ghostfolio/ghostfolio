@@ -42,9 +42,9 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private stripeService: StripeService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {}
 
   public ngOnInit() {
@@ -85,8 +85,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
         }),
         catchError((error) => {
           this.notificationService.alert({
-            title: '',
-            message: error
+            title: error
           });
           throw error;
         })

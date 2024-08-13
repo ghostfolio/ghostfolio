@@ -70,12 +70,12 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
     private snackBar: MatSnackBar,
     private tokenStorageService: TokenStorageService,
     private userService: UserService,
-    public webAuthnService: WebAuthnService,
-    private notificationService: NotificationService
+    public webAuthnService: WebAuthnService
   ) {
     const { baseCurrency, currencies } = this.dataService.fetchInfo();
 
@@ -158,8 +158,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
         .pipe(
           catchError(() => {
             this.notificationService.alert({
-              title: '',
-              message: $localize`Oops! Incorrect Security Token.`
+              title: $localize`Oops! Incorrect Security Token.`
             });
 
             return EMPTY;

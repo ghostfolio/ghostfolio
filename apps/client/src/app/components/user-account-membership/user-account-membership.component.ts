@@ -47,10 +47,10 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private stripeService: StripeService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {
     const { baseCurrency, globalPermissions, subscriptions } =
       this.dataService.fetchInfo();
@@ -99,8 +99,7 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
         }),
         catchError((error) => {
           this.notificationService.alert({
-            title: '',
-            message: error
+            title: error
           });
           throw error;
         })
