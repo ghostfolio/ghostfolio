@@ -316,7 +316,7 @@ export abstract class PortfolioCalculator {
       : 1;
 
     let chartDates = eachDayOfInterval(
-      { start: chartStartDate, end },
+      { end, start: chartStartDate },
       { step }
     ).map((date) => {
       return resetHours(date);

@@ -1165,7 +1165,7 @@ export class PortfolioService {
           this.request.user.Settings.settings.isExperimentalFeatures
       });
 
-    const { historicalData, errors, hasErrors } =
+    const { errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
 
     console.timeEnd('------- PortfolioService.getPerformance - 3');
