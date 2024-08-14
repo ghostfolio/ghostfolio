@@ -346,7 +346,7 @@ export class PortfolioService {
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
-      hasFilters: true, // disable cache
+      hasFilters: filters?.length > 0, // TODO
       isExperimentalFeatures:
         this.request.user?.Settings.settings.isExperimentalFeatures
     });
@@ -412,10 +412,8 @@ export class PortfolioService {
     console.timeEnd('-- PortfolioService.getDetails - 3');
     console.time('-- PortfolioService.getDetails - 4');
 
-    const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
-      this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
-    ]);
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfiles(dataGatheringItems);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
     for (const symbolProfile of symbolProfiles) {
@@ -442,8 +440,10 @@ export class PortfolioService {
       marketPrice,
       netPerformance,
       netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect,
-      netPerformanceWithCurrencyEffect,
+      netPerformancePercentageWithCurrencyEffect, // TODO: Remove?
+      netPerformancePercentageWithCurrencyEffectMap,
+      netPerformanceWithCurrencyEffect, // TODO: Remove?
+      netPerformanceWithCurrencyEffectMap,
       quantity,
       symbol,
       tags,
@@ -463,7 +463,6 @@ export class PortfolioService {
       }
 
       const assetProfile = symbolProfileMap[symbol];
-      const dataProviderResponse = dataProviderResponses[symbol];
 
       let markets: PortfolioPosition['markets'];
       let marketsAdvanced: PortfolioPosition['marketsAdvanced'];
@@ -510,14 +509,15 @@ export class PortfolioService {
           }
         ),
         investment: investment.toNumber(),
-        marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: assetProfile.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
-          netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+          netPerformancePercentageWithCurrencyEffectMap?.[
+            dateRange
+          ]?.toNumber() ?? 0,
         netPerformanceWithCurrencyEffect:
-          netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+          netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
         sectors: assetProfile.sectors,
         url: assetProfile.url,
@@ -1489,7 +1489,6 @@ export class PortfolioService {
       holdings: [],
       investment: balance,
       marketPrice: 0,
-      marketState: 'open',
       name: currency,
       netPerformance: 0,
       netPerformancePercent: 0,

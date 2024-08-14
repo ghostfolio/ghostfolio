@@ -136,7 +136,7 @@ export abstract class PortfolioCalculator {
       });
 
     this.redisCacheService = redisCacheService;
-    this.useCache = false; // TODO: useCache
+    this.useCache = useCache;
     this.userId = userId;
 
     const { endDate, startDate } = getIntervalFromDateRange(
@@ -394,9 +394,11 @@ export abstract class PortfolioCalculator {
         netPerformance,
         netPerformancePercentage,
         netPerformancePercentageWithCurrencyEffect,
+        netPerformancePercentageWithCurrencyEffectMap,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
         netPerformanceWithCurrencyEffect,
+        netPerformanceWithCurrencyEffectMap,
         timeWeightedInvestment,
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect,
@@ -468,8 +470,14 @@ export abstract class PortfolioCalculator {
         netPerformancePercentageWithCurrencyEffect: !hasErrors
           ? (netPerformancePercentageWithCurrencyEffect ?? null)
           : null,
+        netPerformancePercentageWithCurrencyEffectMap: !hasErrors
+          ? (netPerformancePercentageWithCurrencyEffectMap ?? null)
+          : null,
         netPerformanceWithCurrencyEffect: !hasErrors
           ? (netPerformanceWithCurrencyEffect ?? null)
+          : null,
+        netPerformanceWithCurrencyEffectMap: !hasErrors
+          ? (netPerformanceWithCurrencyEffectMap ?? null)
           : null,
         quantity: item.quantity,
         symbol: item.symbol,

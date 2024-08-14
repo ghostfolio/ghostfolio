@@ -1,12 +1,14 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
 import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
@@ -14,6 +16,7 @@ import {
   addDays,
   addMilliseconds,
   differenceInDays,
+  eachDayOfInterval,
   format,
   isBefore
 } from 'date-fns';
@@ -236,9 +239,11 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
+        netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
         netPerformanceWithCurrencyEffect: new Big(0),
+        netPerformanceWithCurrencyEffectMap: {},
         timeWeightedInvestment: new Big(0),
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
@@ -286,6 +291,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
+        netPerformancePercentageWithCurrencyEffectMap: {},
+        netPerformanceWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
         netPerformanceWithCurrencyEffect: new Big(0),
@@ -841,6 +848,87 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           )
         : new Big(0);
 
+    const netPerformancePercentageWithCurrencyEffectMap: {
+      [key: DateRange]: Big;
+    } = {};
+
+    const netPerformanceWithCurrencyEffectMap: {
+      [key: DateRange]: Big;
+    } = {};
+
+    for (const dateRange of <DateRange[]>[
+      '1d',
+      '1y',
+      '5y',
+      'max',
+      'mtd',
+      'wtd',
+      'ytd'
+      // TODO: '2024', '2023', '2022', etc.
+    ]) {
+      // TODO: getIntervalFromDateRange(dateRange, start)
+      let { endDate, startDate } = getIntervalFromDateRange(dateRange);
+
+      if (isBefore(startDate, start)) {
+        startDate = addDays(start, 1);
+      }
+
+      let average = new Big(0);
+
+      const currentValuesAtStartDateWithCurrencyEffect =
+        currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)];
+
+      const investmentValuesAccumulatedAtStartDateWithCurrencyEffect =
+        investmentValuesAccumulatedWithCurrencyEffect[
+          format(startDate, DATE_FORMAT)
+        ];
+
+      // TODO: Rename?
+      const grossPerformanceAtStartDateWithCurrencyEffect2 =
+        currentValuesAtStartDateWithCurrencyEffect.minus(
+          investmentValuesAccumulatedAtStartDateWithCurrencyEffect
+        );
+
+      const dates = eachDayOfInterval({
+        end: endDate,
+        start: startDate
+      }).map((date) => {
+        return format(date, DATE_FORMAT);
+      });
+
+      let dayCount = 0;
+
+      for (const date of dates) {
+        if (
+          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big
+        ) {
+          average = average.add(
+            investmentValuesAccumulatedWithCurrencyEffect[date].add(
+              grossPerformanceAtStartDateWithCurrencyEffect2
+            )
+          );
+
+          dayCount++;
+        }
+      }
+
+      average = average.div(dayCount);
+
+      netPerformanceWithCurrencyEffectMap[dateRange] = average.gt(0)
+        ? netPerformanceValuesWithCurrencyEffect[
+            format(endDate, DATE_FORMAT)
+          ].minus(
+            netPerformanceValuesWithCurrencyEffect[
+              format(startDate, DATE_FORMAT)
+            ]
+          )
+        : new Big(0);
+
+      netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
+        ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
+        : new Big(0);
+    }
+
     if (PortfolioCalculator.ENABLE_LOGGING) {
       console.log(
         `
@@ -893,8 +981,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       investmentValuesWithCurrencyEffect,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
+      netPerformancePercentageWithCurrencyEffectMap,
       netPerformanceValues,
       netPerformanceValuesWithCurrencyEffect,
+      netPerformanceWithCurrencyEffectMap,
       timeWeightedInvestmentValues,
       timeWeightedInvestmentValuesWithCurrencyEffect,
       totalAccountBalanceInBaseCurrency,

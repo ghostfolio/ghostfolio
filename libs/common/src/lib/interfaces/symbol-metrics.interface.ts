@@ -1,3 +1,5 @@
+import { DateRange } from '@ghostfolio/common/types';
+
 import { Big } from 'big.js';
 
 export interface SymbolMetrics {
@@ -27,11 +29,13 @@ export interface SymbolMetrics {
   netPerformance: Big;
   netPerformancePercentage: Big;
   netPerformancePercentageWithCurrencyEffect: Big;
+  netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
   netPerformanceValues: {
     [date: string]: Big;
   };
   netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
   netPerformanceWithCurrencyEffect: Big;
+  netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
   timeWeightedInvestment: Big;
   timeWeightedInvestmentValues: {
     [date: string]: Big;
