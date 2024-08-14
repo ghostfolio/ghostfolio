@@ -61,8 +61,8 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
 

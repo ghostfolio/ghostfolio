@@ -332,7 +332,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .pipe(
         catchError(({ error }) => {
           this.notificationService.alert({
-            title: `Error: ${error?.message}`
+            message: error?.message,
+            title: $localize`Error`
           });
           return EMPTY;
         }),
