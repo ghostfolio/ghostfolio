@@ -17,6 +17,7 @@ import {
   addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
+  eachYearOfInterval,
   format,
   isBefore
 } from 'date-fns';
@@ -863,8 +864,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       'max',
       'mtd',
       'wtd',
-      'ytd'
-      // TODO: '2024', '2023', '2022', etc.
+      'ytd',
+      ...eachYearOfInterval({ end, start }).map((date) => {
+        return format(date, 'yyyy');
+      })
     ]) {
       // TODO: getIntervalFromDateRange(dateRange, start)
       let { endDate, startDate } = getIntervalFromDateRange(dateRange);
