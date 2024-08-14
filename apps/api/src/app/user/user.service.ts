@@ -1,6 +1,7 @@
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -26,6 +27,7 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
@@ -38,6 +40,7 @@ export class UserService {
 
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -440,6 +443,14 @@ export class UserService {
         userId
       }
     });
+
+    // TODO: Handle changes in filters?
+    // this.eventEmitter.emit(
+    //   PortfolioChangedEvent.getName(),
+    //   new PortfolioChangedEvent({
+    //     userId
+    //   })
+    // );
 
     return settings;
   }
