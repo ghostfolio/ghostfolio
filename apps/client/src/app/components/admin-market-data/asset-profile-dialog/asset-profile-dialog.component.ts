@@ -1,6 +1,7 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
@@ -94,6 +95,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -329,19 +331,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .pipe(
         catchError(({ error }) => {
-          alert(`Error: ${error?.message}`);
+          this.notificationService.alert({
+            message: error?.message,
+            title: $localize`Error`
+          });
           return EMPTY;
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ price }) => {
-        alert(
-          $localize`The current market price is` +
+        this.notificationService.alert({
+          title:
+            $localize`The current market price is` +
             ' ' +
             price +
             ' ' +
             this.assetProfileForm.get('currency').value
-        );
+        });
       });
   }
 

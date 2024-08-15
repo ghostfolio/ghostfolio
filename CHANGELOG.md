@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the dark theme CSS selector
 - Improved the language localization for German (`de`)
+- Upgraded `date-fns` from version `2.29.3` to `3.6.0`
 - Upgraded `zone.js` from version `0.14.7` to `0.14.10`
 
 ### Fixed
