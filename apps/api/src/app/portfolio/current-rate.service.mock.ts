@@ -1,6 +1,12 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 
-import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
+import {
+  addDays,
+  eachDayOfInterval,
+  endOfDay,
+  isBefore,
+  isSameDay
+} from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -97,7 +103,10 @@ export const CurrentRateServiceMock = {
         }
       }
     } else {
-      for (const date of dateQuery.in) {
+      for (const date of eachDayOfInterval({
+        end: dateQuery.lt,
+        start: dateQuery.gte
+      })) {
         for (const dataGatheringItem of dataGatheringItems) {
           values.push({
             date,
