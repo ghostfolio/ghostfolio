@@ -1,3 +1,5 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Access } from '@ghostfolio/common/interfaces';
 
@@ -29,7 +31,7 @@ export class AccessTableComponent implements OnChanges, OnInit {
   public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public displayedColumns = [];
 
-  public constructor() {}
+  public constructor(private notificationService: NotificationService) {}
 
   public ngOnInit() {}
 
@@ -46,12 +48,12 @@ export class AccessTableComponent implements OnChanges, OnInit {
   }
 
   public onDeleteAccess(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to revoke this granted access?`
-    );
-
-    if (confirmation) {
-      this.accessDeleted.emit(aId);
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.accessDeleted.emit(aId);
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to revoke this granted access?`
+    });
   }
 }

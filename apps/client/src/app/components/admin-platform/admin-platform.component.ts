@@ -47,10 +47,10 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private userService: UserService
   ) {
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))

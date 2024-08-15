@@ -41,8 +41,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
-    private userService: UserService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
 

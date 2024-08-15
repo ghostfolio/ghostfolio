@@ -50,27 +50,19 @@ export class AdminMarketDataService {
           .pipe(
             catchError(() => {
               this.notificationService.alert({
-                title: '',
-                message: $localize`Oops! Could not delete profiles.`
+                title: $localize`Oops! Could not delete profiles.`
               });
 
-      forkJoin(deleteRequests)
-        .pipe(
-          catchError(() => {
-            this.notificationService.alert({
-              title: $localize`Oops! Could not delete profiles.`
-            });
-
-            return EMPTY;
-          }),
-          finalize(() => {
+              return EMPTY;
+            }),
+            finalize(() => {
               window.location.reload();
-            setTimeout(() => {
-            }, 300);
-          })
-        )
-        .subscribe(() => {});
+              setTimeout(() => {}, 300);
+            })
+          )
+          .subscribe(() => {});
       },
+
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`
     });
