@@ -101,6 +101,7 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
           this.notificationService.alert({
             title: error.message
           });
+
           throw error;
         })
       )

@@ -87,6 +87,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
           this.notificationService.alert({
             title: error.message
           });
+
           throw error;
         })
       )
