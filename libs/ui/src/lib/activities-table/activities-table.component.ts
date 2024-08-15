@@ -1,7 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
@@ -123,8 +123,8 @@ export class GfActivitiesTableComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
   ) {}
 
   public ngOnInit() {
@@ -265,7 +265,9 @@ export class GfActivitiesTableComponent
   }
 
   public onOpenComment(aComment: string) {
-    alert(aComment);
+    this.notificationService.alert({
+      title: aComment
+    });
   }
 
   public onOpenPositionDialog({ dataSource, symbol }: AssetProfileIdentifier) {

@@ -136,7 +136,7 @@
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.1",
     "yahoo-finance2": "2.11.3",
-    "zone.js": "0.14.7"
+    "zone.js": "0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "18.1.1",
@@ -174,7 +174,7 @@
     "@types/color": "3.0.3",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.4.4",
-    "@types/lodash": "4.17.0",
+    "@types/lodash": "4.17.7",
     "@types/node": "20.14.10",
     "@types/papaparse": "5.3.7",
     "@types/passport-google-oauth20": "2.0.16",

@@ -1,5 +1,5 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
@@ -71,6 +71,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
     private snackBar: MatSnackBar,
     private tokenStorageService: TokenStorageService,
@@ -160,6 +161,17 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
                 message: $localize`Oops! Incorrect Security Token.`
               });
 
+    if (confirmation) {
+      this.dataService
+        .deleteOwnUser({
+          accessToken: this.deleteOwnUserForm.get('accessToken').value
+        })
+        .pipe(
+          catchError(() => {
+            this.notificationService.alert({
+              title: $localize`Oops! Incorrect Security Token.`
+            });
+            
               return EMPTY;
             }),
             takeUntil(this.unsubscribeSubject)

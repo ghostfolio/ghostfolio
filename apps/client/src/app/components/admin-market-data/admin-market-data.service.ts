@@ -54,15 +54,22 @@ export class AdminMarketDataService {
                 message: $localize`Oops! Could not delete profiles.`
               });
 
-              return EMPTY;
-            }),
-            finalize(() => {
-              setTimeout(() => {
-                window.location.reload();
-              }, 300);
-            })
-          )
-          .subscribe(() => {});
+      forkJoin(deleteRequests)
+        .pipe(
+          catchError(() => {
+            this.notificationService.alert({
+              title: $localize`Oops! Could not delete profiles.`
+            });
+
+            return EMPTY;
+          }),
+          finalize(() => {
+              window.location.reload();
+            setTimeout(() => {
+            }, 300);
+          })
+        )
+        .subscribe(() => {});
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`

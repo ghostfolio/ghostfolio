@@ -28,6 +28,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
+import { NotificationService } from './core/notification/notification.service';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
@@ -81,6 +82,7 @@ export class AppComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     @Inject(DOCUMENT) private document: Document,
     private impersonationStorageService: ImpersonationStorageService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private title: Title,
@@ -199,7 +201,9 @@ export class AppComponent implements OnDestroy, OnInit {
     if (this.user.systemMessage.routerLink) {
       this.router.navigate(this.user.systemMessage.routerLink);
     } else {
-      alert(this.user.systemMessage.message);
+      this.notificationService.alert({
+        title: this.user.systemMessage.message
+      });
     }
   }
 
