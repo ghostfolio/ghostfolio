@@ -19,7 +19,8 @@ import {
   eachDayOfInterval,
   eachYearOfInterval,
   format,
-  isBefore
+  isBefore,
+  isThisYear
 } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
 
@@ -104,11 +105,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         hasErrors = true;
       }
     }
-
-    console.log(
-      'Overall: totalTimeWeightedInvestmentValue',
-      totalTimeWeightedInvestment.toFixed()
-    );
 
     return {
       currentValueInBaseCurrency,
@@ -865,9 +861,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       'mtd',
       'wtd',
       'ytd',
-      ...eachYearOfInterval({ end, start }).map((date) => {
-        return format(date, 'yyyy');
-      })
+      ...eachYearOfInterval({ end, start })
+        .filter((date) => {
+          return !isThisYear(date);
+        })
+        .map((date) => {
+          return format(date, 'yyyy');
+        })
     ]) {
       // TODO: getIntervalFromDateRange(dateRange, start)
       let { endDate, startDate } = getIntervalFromDateRange(dateRange);
