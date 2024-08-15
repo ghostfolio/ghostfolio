@@ -281,7 +281,10 @@ export abstract class PortfolioCalculator {
     } = await this.currentRateService.getValues({
       dataGatheringItems,
       dateQuery: {
-        gte: parseDate(firstTransactionPoint?.date),
+        // TODO: Improve?
+        gte: firstTransactionPoint?.date
+          ? parseDate(firstTransactionPoint.date)
+          : endDate,
         lt: endDate
       }
     });
