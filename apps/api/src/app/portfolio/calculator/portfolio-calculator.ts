@@ -282,7 +282,7 @@ export abstract class PortfolioCalculator {
       dataGatheringItems,
       dateQuery: {
         gte: parseDate(firstTransactionPoint?.date),
-        lt: end
+        lt: endDate
       }
     });
 
@@ -316,16 +316,16 @@ export abstract class PortfolioCalculator {
       : 1;
 
     let chartDates = eachDayOfInterval(
-      { end, start: chartStartDate },
+      { end: endDate, start: chartStartDate },
       { step }
     ).map((date) => {
       return resetHours(date);
     });
 
-    const includesEndDate = isSameDay(last(chartDates), end);
+    const includesEndDate = isSameDay(last(chartDates), endDate);
 
     if (!includesEndDate) {
-      chartDates.push(resetHours(end));
+      chartDates.push(resetHours(endDate));
     }
 
     if (firstIndex > 0) {
@@ -983,11 +983,6 @@ export abstract class PortfolioCalculator {
         totalTimeWeightedInvestmentValue,
         totalTimeWeightedInvestmentValueWithCurrencyEffect
       } = values;
-
-      console.log(
-        'Chart: totalTimeWeightedInvestmentValue',
-        totalTimeWeightedInvestmentValue.toFixed()
-      );
 
       const netPerformanceInPercentage = totalTimeWeightedInvestmentValue.eq(0)
         ? 0

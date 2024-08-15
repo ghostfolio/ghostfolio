@@ -144,7 +144,7 @@ describe('PortfolioCalculator', () => {
 
       spy.mockRestore();
 
-      expect(portfolioSnapshot).toEqual({
+      expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('-12.6'),

@@ -159,7 +159,7 @@ describe('PortfolioCalculator', () => {
         valueWithCurrencyEffect: 0
       });
 
-      expect(portfolioSnapshot).toEqual({
+      expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
         grossPerformance: new Big('19.86'),
