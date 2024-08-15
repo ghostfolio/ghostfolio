@@ -17,13 +17,14 @@ import {
 })
 export class RulesComponent {
   @Input() hasPermissionToCreateOrder: boolean;
+  @Input() isLoading: boolean;
   @Input() rules: PortfolioReportRule[];
 
   @Output() rulesUpdated = new EventEmitter<UpdateUserSettingDto>();
 
   public constructor() {}
 
-  public onRulesUpdated(event: UpdateUserSettingDto) {
+  public onRuleUpdated(event: UpdateUserSettingDto) {
     this.rulesUpdated.emit(event);
   }
 }

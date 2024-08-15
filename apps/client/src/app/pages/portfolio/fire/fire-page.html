@@ -124,13 +124,12 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        @if (!isLoadingPortfolioReport) {
-          <gf-rules
-            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-            [rules]="emergencyFundRules"
-            (rulesUpdated)="onRulesUpdated($event)"
-          />
-        }
+        <gf-rules
+          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="emergencyFundRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -139,13 +138,12 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        @if (!isLoadingPortfolioReport) {
-          <gf-rules
-            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-            [rules]="currencyClusterRiskRules"
-            (rulesUpdated)="onRulesUpdated($event)"
-          />
-        }
+        <gf-rules
+          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="currencyClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
@@ -154,13 +152,12 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        @if (!isLoadingPortfolioReport) {
-          <gf-rules
-            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-            [rules]="accountClusterRiskRules"
-            (rulesUpdated)="onRulesUpdated($event)"
-          />
-        }
+        <gf-rules
+          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="accountClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
       </div>
       <div>
         <h4 class="align-items-center d-flex m-0">
@@ -169,29 +166,29 @@
             <gf-premium-indicator class="ml-1" />
           }
         </h4>
-        @if (!isLoadingPortfolioReport) {
-          <gf-rules
-            [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
-            [rules]="feeRules"
-            (rulesUpdated)="onRulesUpdated($event)"
-          />
-        }
+        <gf-rules
+          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="feeRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
       </div>
-      <div>
-        <h4 class="align-items-center d-flex m-0">
-          <span i18n>Inactive</span>
-          @if (user?.subscription?.type === 'Basic') {
-            <gf-premium-indicator class="ml-1" />
-          }
-        </h4>
-        @if (!isLoadingPortfolioReport) {
+      @if (inactiveRules?.length > 0) {
+        <div>
+          <h4 class="align-items-center d-flex m-0">
+            <span i18n>Inactive</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
+          </h4>
           <gf-rules
             [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+            [isLoading]="isLoadingPortfolioReport"
             [rules]="inactiveRules"
             (rulesUpdated)="onRulesUpdated($event)"
           />
-        }
-      </div>
+        </div>
+      }
     </div>
   </div>
 </div>

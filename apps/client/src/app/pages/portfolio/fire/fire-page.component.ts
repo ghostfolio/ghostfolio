@@ -105,6 +105,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
   public initializePortfolioReport() {
     this.isLoadingPortfolioReport = true;
+
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -125,6 +126,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
         this.feeRules =
           portfolioReport.rules['fees'].filter((rule) => rule.isActive) || null;
         this.isLoadingPortfolioReport = false;
+
         this.changeDetectorRef.markForCheck();
       });
   }
@@ -170,6 +172,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
   public onRulesUpdated(event: UpdateUserSettingDto) {
     this.isLoading = true;
+
     this.dataService
       .putUserSetting(event)
       .pipe(takeUntil(this.unsubscribeSubject))

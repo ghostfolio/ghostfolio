@@ -9,13 +9,13 @@
         </mat-card>
       }
 
-      @if (rules?.length === 0) {
+      @if (isLoading) {
         <gf-rule [isLoading]="true" />
       }
 
       @if (rules !== null && rules !== undefined) {
         @for (rule of rules; track rule.key) {
-          <gf-rule [rule]="rule" (ruleUpdated)="onRulesUpdated($event)" />
+          <gf-rule [rule]="rule" (ruleUpdated)="onRuleUpdated($event)" />
         }
       }
     </div>
