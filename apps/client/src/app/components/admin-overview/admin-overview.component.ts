@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -60,6 +61,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -126,7 +128,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
         const currencies = uniq([...this.customCurrencies, currency]);
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
       } else {
-        alert($localize`${currency} is an invalid currency!`);
+        this.notificationService.alert({
+          title: $localize`${currency} is an invalid currency!`
+        });
       }
     }
   }
