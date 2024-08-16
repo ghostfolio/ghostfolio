@@ -881,12 +881,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       let average = new Big(0);
 
       const currentValuesAtStartDateWithCurrencyEffect =
-        currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)];
+        currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)] ??
+        new Big(0);
 
       const investmentValuesAccumulatedAtStartDateWithCurrencyEffect =
         investmentValuesAccumulatedWithCurrencyEffect[
           format(startDate, DATE_FORMAT)
-        ];
+        ] ?? new Big(0);
 
       // TODO: Rename?
       const grossPerformanceAtStartDateWithCurrencyEffect2 =
