@@ -161,7 +161,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     start: Date;
     step?: number;
   } & AssetProfileIdentifier): SymbolMetrics {
-    const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
+    const currentExchangeRate =
+      exchangeRates[format(new Date(Date.now()), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let fees = new Big(0);
@@ -860,14 +861,15 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       'max',
       'mtd',
       'wtd',
-      'ytd',
-      ...eachYearOfInterval({ end, start })
-        .filter((date) => {
-          return !isThisYear(date);
-        })
-        .map((date) => {
-          return format(date, 'yyyy');
-        })
+      'ytd'
+      // TODO
+      // ...eachYearOfInterval({ end, start })
+      //   .filter((date) => {
+      //     return !isThisYear(date);
+      //   })
+      //   .map((date) => {
+      //     return format(date, 'yyyy');
+      //   })
     ]) {
       // TODO: getIntervalFromDateRange(dateRange, start)
       let { endDate, startDate } = getIntervalFromDateRange(dateRange);
