@@ -140,19 +140,17 @@ describe('PortfolioCalculator', () => {
         currentValueInBaseCurrency: new Big('13298.425356'),
         errors: [],
         grossPerformance: new Big('27172.74').mul(0.97373),
-        // TODO
-        // grossPerformancePercentage: new Big('42.41978276196153750666'),
-        // grossPerformancePercentageWithCurrencyEffect: new Big(
-        //   '41.6401219622042072686'
-        // ),
+        grossPerformancePercentage: new Big('42.41983590271396606847'),
+        grossPerformancePercentageWithCurrencyEffect: new Big(
+          '41.64017412624815595315'
+        ),
         grossPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         hasErrors: false,
         netPerformance: new Big('27172.74').mul(0.97373),
-        // TODO
-        // netPerformancePercentage: new Big('42.41978276196153750666'),
-        // netPerformancePercentageWithCurrencyEffect: new Big(
-        //   '41.6401219622042072686'
-        // ),
+        netPerformancePercentage: new Big('42.41983590271396606847'),
+        netPerformancePercentageWithCurrencyEffect: new Big(
+          '41.64017412624815595315'
+        ),
         netPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         positions: [
           {
@@ -165,11 +163,10 @@ describe('PortfolioCalculator', () => {
             feeInBaseCurrency: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74').mul(0.97373),
-            // TODO
-            // grossPerformancePercentage: new Big('42.41978276196153750666'),
-            // grossPerformancePercentageWithCurrencyEffect: new Big(
-            //   '41.6401219622042072686'
-            // ),
+            grossPerformancePercentage: new Big('42.41983590271396606847'),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '41.64017412624815595315'
+            ),
             grossPerformanceWithCurrencyEffect: new Big(
               '26516.208701400000064086'
             ),
@@ -178,22 +175,20 @@ describe('PortfolioCalculator', () => {
             marketPrice: 13657.2,
             marketPriceInBaseCurrency: 13298.425356,
             netPerformance: new Big('27172.74').mul(0.97373),
-            // TODO
-            // netPerformancePercentage: new Big('42.41978276196153750666'),
-            // netPerformancePercentageWithCurrencyEffect: new Big(
-            //   '41.6401219622042072686'
-            // ),
+            netPerformancePercentage: new Big('42.41983590271396606847'),
+            netPerformancePercentageWithCurrencyEffect: new Big(
+              '41.64017412624815595315'
+            ),
             netPerformanceWithCurrencyEffect: new Big(
               '26516.208701400000064086'
             ),
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],
-            // TODO
-            // timeWeightedInvestment: new Big('640.56763686131386861314'),
-            // timeWeightedInvestmentWithCurrencyEffect: new Big(
-            //   '636.79469348020066587024'
-            // ),
+            timeWeightedInvestment: new Big('623.73914366102470303356'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big(
+              '636.79389574611155572775'
+            ),
             transactionCount: 2,
             valueInBaseCurrency: new Big('13298.425356')
           }
