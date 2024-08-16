@@ -80,9 +80,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2018-01-01').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
 
       const activities: Activity[] = [
         {
@@ -137,8 +135,6 @@ describe('PortfolioCalculator', () => {
         data: chartData,
         groupBy: 'month'
       });
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('13298.425356'),

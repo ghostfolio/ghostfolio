@@ -80,9 +80,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2023-07-10').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
@@ -122,8 +120,6 @@ describe('PortfolioCalculator', () => {
         data: chartData,
         groupBy: 'month'
       });
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('103.10483'),

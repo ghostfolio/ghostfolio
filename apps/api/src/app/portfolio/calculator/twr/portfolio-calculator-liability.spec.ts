@@ -67,9 +67,7 @@ describe('PortfolioCalculator', () => {
 
   describe('compute portfolio snapshot', () => {
     it.only('with liability activity', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2022-01-31').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
 
       const activities: Activity[] = [
         {
@@ -96,8 +94,6 @@ describe('PortfolioCalculator', () => {
         hasFilters: false,
         userId: userDummyData.id
       });
-
-      spy.mockRestore();
 
       const liabilitiesInBaseCurrency =
         await portfolioCalculator.getLiabilitiesInBaseCurrency();

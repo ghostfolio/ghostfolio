@@ -67,9 +67,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with BALN.SW buy and sell', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
         {
@@ -124,8 +122,6 @@ describe('PortfolioCalculator', () => {
         data: chartData,
         groupBy: 'month'
       });
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),

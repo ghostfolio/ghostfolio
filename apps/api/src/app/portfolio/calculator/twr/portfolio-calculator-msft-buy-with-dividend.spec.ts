@@ -80,9 +80,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with MSFT buy', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2023-07-10').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
@@ -126,8 +124,6 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         errors: [],

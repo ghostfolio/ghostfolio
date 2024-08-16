@@ -67,9 +67,7 @@ describe('PortfolioCalculator', () => {
 
   describe('compute portfolio snapshot', () => {
     it.only('with fee activity', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
         {
@@ -98,8 +96,6 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),

@@ -63,9 +63,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const portfolioCalculator = factory.createCalculator({
         activities: [],
@@ -87,8 +85,6 @@ describe('PortfolioCalculator', () => {
         data: chartData,
         groupBy: 'month'
       });
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big(0),

@@ -67,9 +67,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell partially', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2022-04-11').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
       const activities: Activity[] = [
         {
@@ -124,8 +122,6 @@ describe('PortfolioCalculator', () => {
         data: chartData,
         groupBy: 'month'
       });
-
-      spy.mockRestore();
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('87.8'),
