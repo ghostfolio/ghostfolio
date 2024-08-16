@@ -114,9 +114,7 @@ describe('PortfolioCalculator', () => {
         start: parseDate('2023-01-03')
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
-        parseDate('2023-01-03')
-      );
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 

@@ -163,7 +163,7 @@ export abstract class PortfolioCalculator {
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
 
-  public async computeSnapshot(
+  private async computeSnapshot(
     start: Date,
     end?: Date
   ): Promise<PortfolioSnapshot> {

@@ -97,9 +97,7 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
-        parseDate('2022-01-01')
-      );
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       spy.mockRestore();
 

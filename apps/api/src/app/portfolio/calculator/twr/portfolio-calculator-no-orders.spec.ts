@@ -79,8 +79,7 @@ describe('PortfolioCalculator', () => {
 
       const chartData = await portfolioCalculator.getChartData({ start });
 
-      const portfolioSnapshot =
-        await portfolioCalculator.computeSnapshot(start);
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
