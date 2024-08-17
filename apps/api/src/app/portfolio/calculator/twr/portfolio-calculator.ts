@@ -873,8 +873,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         startDate = addDays(start, 1);
       }
 
-      let average = new Big(0);
-
       const currentValuesAtStartDateWithCurrencyEffect =
         currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)] ??
         new Big(0);
@@ -897,11 +895,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         return format(date, DATE_FORMAT);
       });
 
+      let average = new Big(0);
       let dayCount = 0;
 
       for (const date of dates) {
         if (
-          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big
+          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
+          investmentValuesAccumulatedWithCurrencyEffect[date].gt(0)
         ) {
           average = average.add(
             investmentValuesAccumulatedWithCurrencyEffect[date].add(
@@ -913,18 +913,23 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         }
       }
 
-      average = average.div(dayCount);
+      if (dayCount > 0) {
+        average = average.div(dayCount);
+      }
 
-      // TODO: Why without minus?
-      netPerformanceWithCurrencyEffectMap[dateRange] = average.gt(0)
-        ? netPerformanceValuesWithCurrencyEffect[
-            format(endDate, DATE_FORMAT)
-          ] /*.minus(
-            netPerformanceValuesWithCurrencyEffect[
-              format(startDate, DATE_FORMAT)
-            ]
-          )*/
-        : new Big(0);
+      netPerformanceWithCurrencyEffectMap[dateRange] =
+        netPerformanceValuesWithCurrencyEffect[
+          format(endDate, DATE_FORMAT)
+        ]?.minus(
+          // If the date range is 'max', take 0 as a start value. Otherwise,
+          // the value of the end of the day of the start date is taken which
+          // differs from the buying price.
+          dateRange === 'max'
+            ? new Big(0)
+            : (netPerformanceValuesWithCurrencyEffect[
+                format(startDate, DATE_FORMAT)
+              ] ?? new Big(0))
+        ) ?? new Big(0);
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
