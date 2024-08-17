@@ -261,7 +261,6 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency,
@@ -340,7 +339,6 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency,
@@ -930,7 +928,6 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
       userId,
       calculationType: PerformanceCalculationType.TWR,
       currency: this.request.user.Settings.settings.baseCurrency,
@@ -1127,7 +1124,6 @@ export class PortfolioService {
       this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
-        dateRange,
         userId,
         calculationType: PerformanceCalculationType.TWR,
         currency: userCurrency,

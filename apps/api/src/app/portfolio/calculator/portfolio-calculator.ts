@@ -54,7 +54,6 @@ export abstract class PortfolioCalculator {
   private currency: string;
   private currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
-  private dateRange: DateRange;
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
   private redisCacheService: RedisCacheService;
@@ -71,7 +70,6 @@ export abstract class PortfolioCalculator {
     configurationService,
     currency,
     currentRateService,
-    dateRange,
     exchangeRateDataService,
     redisCacheService,
     useCache,
@@ -82,7 +80,6 @@ export abstract class PortfolioCalculator {
     configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;
-    dateRange: DateRange;
     exchangeRateDataService: ExchangeRateDataService;
     redisCacheService: RedisCacheService;
     useCache: boolean;
@@ -92,7 +89,6 @@ export abstract class PortfolioCalculator {
     this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
-    this.dateRange = dateRange;
     this.exchangeRateDataService = exchangeRateDataService;
 
     let dateOfFirstActivity = new Date();

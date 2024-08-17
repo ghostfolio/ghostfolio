@@ -4,7 +4,6 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
-import { DateRange, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
@@ -31,7 +30,6 @@ export class PortfolioCalculatorFactory {
     activities,
     calculationType,
     currency,
-    dateRange = 'max',
     hasFilters,
     isExperimentalFeatures = false,
     userId
@@ -40,7 +38,6 @@ export class PortfolioCalculatorFactory {
     activities: Activity[];
     calculationType: PerformanceCalculationType;
     currency: string;
-    dateRange?: DateRange;
     hasFilters: boolean;
     isExperimentalFeatures?: boolean;
     userId: string;
@@ -53,7 +50,6 @@ export class PortfolioCalculatorFactory {
           accountBalanceItems,
           activities,
           currency,
-          dateRange,
           useCache,
           userId,
           configurationService: this.configurationService,
@@ -67,7 +63,6 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           currentRateService: this.currentRateService,
-          dateRange,
           useCache,
           userId,
           configurationService: this.configurationService,
