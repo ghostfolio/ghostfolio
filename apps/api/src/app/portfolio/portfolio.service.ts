@@ -1153,7 +1153,19 @@ export class PortfolioService {
       netWorth,
       totalInvestment,
       valueWithCurrencyEffect
-    } = last(chart);
+    } =
+      chart?.length > 0
+        ? last(chart)
+        : {
+            grossPerformancePercent: 0,
+            netPerformance: 0,
+            netPerformanceInPercentage: 0,
+            netPerformanceInPercentageWithCurrencyEffect: 0,
+            netPerformanceWithCurrencyEffect: 0,
+            netWorth: 0,
+            totalInvestment: 0,
+            valueWithCurrencyEffect: 0
+          };
 
     return {
       chart,

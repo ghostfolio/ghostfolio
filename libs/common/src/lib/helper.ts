@@ -350,7 +350,11 @@ export function isDerivedCurrency(aCurrency: string) {
   });
 }
 
-export function parseDate(date: string): Date | null {
+export function parseDate(date: string): Date {
+  if (!date) {
+    return undefined;
+  }
+
   // Transform 'yyyyMMdd' format to supported format by parse function
   if (date?.length === 8) {
     const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);

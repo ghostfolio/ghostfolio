@@ -144,6 +144,11 @@ export class UserController {
       );
     }
 
+    const haveFiltersChanged =
+      'filters.accounts' in data ||
+      'filters.assetClasses' in data ||
+      'filters.tags' in data;
+
     const userSettings: UserSettings = {
       ...(<UserSettings>this.request.user.Settings.settings),
       ...data
@@ -157,6 +162,7 @@ export class UserController {
 
     return this.userService.updateUserSetting({
       userSettings,
+      emitPortfolioChangedEvent: haveFiltersChanged,
       userId: this.request.user.id
     });
   }
