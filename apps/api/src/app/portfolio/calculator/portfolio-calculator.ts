@@ -1188,6 +1188,16 @@ export abstract class PortfolioCalculator {
       chartDateMap[format(date, DATE_FORMAT)] = true;
     }
 
+    if (step > 1) {
+      // Reduce the step size of recent dates
+      for (let date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 90) },
+        { step: 1 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+    }
+
     // Make sure the end date is present
     chartDateMap[format(endDate, DATE_FORMAT)] = true;
 
