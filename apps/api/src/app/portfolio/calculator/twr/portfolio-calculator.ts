@@ -17,10 +17,8 @@ import {
   addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
-  eachYearOfInterval,
   format,
-  isBefore,
-  isThisYear
+  isBefore
 } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
 
@@ -143,15 +141,16 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
   }
 
   protected getSymbolMetrics({
+    chartDateMap,
     dataSource,
     end,
     exchangeRates,
     isChartMode = false,
     marketSymbolMap,
     start,
-    step = 1,
     symbol
   }: {
+    chartDateMap?: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
     isChartMode?: boolean;
@@ -159,7 +158,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       [date: string]: { [symbol: string]: Big };
     };
     start: Date;
-    step?: number;
   } & AssetProfileIdentifier): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
@@ -352,15 +350,16 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
 
       while (isBefore(day, end)) {
-        if (ordersByDate[format(day, DATE_FORMAT)]?.length > 0) {
-          for (let order of ordersByDate[format(day, DATE_FORMAT)]) {
+        const dateString = format(day, DATE_FORMAT);
+
+        if (ordersByDate[dateString]?.length > 0) {
+          for (let order of ordersByDate[dateString]) {
             order.unitPriceFromMarketData =
-              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
-              lastUnitPrice;
+              marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
           }
-        } else {
+        } else if (chartDateMap[dateString]) {
           orders.push({
-            date: format(day, DATE_FORMAT),
+            date: dateString,
             fee: new Big(0),
             feeInBaseCurrency: new Big(0),
             quantity: new Big(0),
@@ -369,12 +368,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
               symbol
             },
             type: 'BUY',
-            unitPrice:
-              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
-              lastUnitPrice,
+            unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
             unitPriceFromMarketData:
-              marketSymbolMap[format(day, DATE_FORMAT)]?.[symbol] ??
-              lastUnitPrice
+              marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice
           });
         }
 
@@ -383,7 +379,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         lastUnitPrice =
           lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
 
-        day = addDays(day, step);
+        day = addDays(day, 1);
       }
     }
 

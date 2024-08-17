@@ -37,12 +37,11 @@ import {
   format,
   isAfter,
   isBefore,
-  isSameDay,
   max,
   min,
   subDays
 } from 'date-fns';
-import { first, last, sum, uniq, uniqBy } from 'lodash';
+import { first, last, sortBy, sum, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -195,14 +194,11 @@ export abstract class PortfolioCalculator {
 
     const currencies: { [symbol: string]: string } = {};
     const dataGatheringItems: IDataGatheringItem[] = [];
-    let dates: Date[] = [];
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalLiabilitiesWithCurrencyEffect = new Big(0);
     let totalValuablesWithCurrencyEffect = new Big(0);
-
-    dates.push(resetHours(start));
 
     for (const { currency, dataSource, symbol } of transactionPoints[
       firstIndex - 1
@@ -223,35 +219,7 @@ export abstract class PortfolioCalculator {
         firstTransactionPoint = transactionPoints[i];
         firstIndex = i;
       }
-
-      if (firstTransactionPoint !== null) {
-        dates.push(resetHours(parseDate(transactionPoints[i].date)));
-      }
     }
-
-    dates.push(resetHours(endDate));
-
-    // Add dates of last week for fallback
-    dates.push(subDays(resetHours(new Date()), 7));
-    dates.push(subDays(resetHours(new Date()), 6));
-    dates.push(subDays(resetHours(new Date()), 5));
-    dates.push(subDays(resetHours(new Date()), 4));
-    dates.push(subDays(resetHours(new Date()), 3));
-    dates.push(subDays(resetHours(new Date()), 2));
-    dates.push(subDays(resetHours(new Date()), 1));
-    dates.push(resetHours(new Date()));
-
-    dates = uniq(
-      dates.map((date) => {
-        return date.getTime();
-      })
-    )
-      .map((timestamp) => {
-        return new Date(timestamp);
-      })
-      .sort((a, b) => {
-        return a.getTime() - b.getTime();
-      });
 
     let exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
@@ -268,10 +236,7 @@ export abstract class PortfolioCalculator {
     } = await this.currentRateService.getValues({
       dataGatheringItems,
       dateQuery: {
-        // TODO: Improve?
-        gte: firstTransactionPoint?.date
-          ? parseDate(firstTransactionPoint.date)
-          : endDate,
+        gte: this.getStartDate(),
         lt: endDate
       }
     });
@@ -301,22 +266,15 @@ export abstract class PortfolioCalculator {
     const chartStartDate = this.getStartDate();
     const daysInMarket = differenceInDays(endDate, chartStartDate) + 1;
 
-    const step = false /*withDataDecimation*/
-      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
-      : 1;
-
-    let chartDates = eachDayOfInterval(
-      { end: endDate, start: chartStartDate },
-      { step }
-    ).map((date) => {
-      return resetHours(date);
+    let chartDateMap = this.getChartDateMap({
+      endDate,
+      startDate: chartStartDate,
+      step: Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
     });
 
-    const includesEndDate = isSameDay(last(chartDates), endDate);
-
-    if (!includesEndDate) {
-      chartDates.push(resetHours(endDate));
-    }
+    const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
+      return chartDate;
+    });
 
     if (firstIndex > 0) {
       firstIndex--;
@@ -401,9 +359,9 @@ export abstract class PortfolioCalculator {
         totalLiabilitiesInBaseCurrency,
         totalValuablesInBaseCurrency
       } = this.getSymbolMetrics({
+        chartDateMap,
         marketSymbolMap,
         start,
-        step,
         dataSource: item.dataSource,
         end: endDate,
         exchangeRates:
@@ -500,9 +458,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    for (const currentDate of chartDates) {
-      const dateString = format(currentDate, DATE_FORMAT);
-
+    for (const dateString of chartDates) {
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
 
@@ -692,16 +648,6 @@ export abstract class PortfolioCalculator {
     const dataGatheringItems: IDataGatheringItem[] = [];
     const firstIndex = transactionPointsBeforeEndDate.length;
 
-    let dates = eachDayOfInterval({ start, end }, { step }).map((date) => {
-      return resetHours(date);
-    });
-
-    const includesEndDate = isSameDay(last(dates), end);
-
-    if (!includesEndDate) {
-      dates.push(resetHours(end));
-    }
-
     if (transactionPointsBeforeEndDate.length > 0) {
       for (const {
         currency,
@@ -781,6 +727,16 @@ export abstract class PortfolioCalculator {
       };
     } = {};
 
+    let chartDateMap = this.getChartDateMap({
+      step,
+      endDate: end,
+      startDate: start
+    });
+
+    const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
+      return chartDate;
+    });
+
     for (const symbol of Object.keys(symbols)) {
       const {
         currentValues,
@@ -793,10 +749,10 @@ export abstract class PortfolioCalculator {
         timeWeightedInvestmentValues,
         timeWeightedInvestmentValuesWithCurrencyEffect
       } = this.getSymbolMetrics({
+        chartDateMap,
         end,
         marketSymbolMap,
         start,
-        step,
         symbol,
         dataSource: null,
         exchangeRates:
@@ -819,9 +775,7 @@ export abstract class PortfolioCalculator {
 
     let lastDate = format(this.startDate, DATE_FORMAT);
 
-    for (const currentDate of dates) {
-      const dateString = format(currentDate, DATE_FORMAT);
-
+    for (const dateString of chartDates) {
       accumulatedValuesByDate[dateString] = {
         investmentValueWithCurrencyEffect: new Big(0),
         totalAccountBalanceWithCurrencyEffect: new Big(0),
@@ -1181,15 +1135,16 @@ export abstract class PortfolioCalculator {
   }
 
   protected abstract getSymbolMetrics({
+    chartDateMap,
     dataSource,
     end,
     exchangeRates,
     isChartMode,
     marketSymbolMap,
     start,
-    step,
     symbol
   }: {
+    chartDateMap: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
     isChartMode?: boolean;
@@ -1197,7 +1152,6 @@ export abstract class PortfolioCalculator {
       [date: string]: { [symbol: string]: Big };
     };
     start: Date;
-    step?: number;
   } & AssetProfileIdentifier): SymbolMetrics;
 
   public getTransactionPoints() {
@@ -1208,6 +1162,56 @@ export abstract class PortfolioCalculator {
     await this.snapshotPromise;
 
     return this.snapshot.totalValuablesWithCurrencyEffect;
+  }
+
+  private getChartDateMap({
+    endDate,
+    startDate,
+    step
+  }: {
+    endDate: Date;
+    startDate: Date;
+    step: number;
+  }) {
+    // Create a map of all relevant chart dates:
+    // 1. Add transaction point dates
+    let chartDateMap = this.transactionPoints.reduce((result, { date }) => {
+      result[date] = true;
+      return result;
+    }, {});
+
+    // 2. Add dates between transactions respecting the specified step size
+    for (let date of eachDayOfInterval(
+      { end: endDate, start: startDate },
+      { step }
+    )) {
+      chartDateMap[format(date, DATE_FORMAT)] = true;
+    }
+
+    // Make sure the end date is present
+    chartDateMap[format(endDate, DATE_FORMAT)] = true;
+
+    // Make sure some key dates are present
+    for (let dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
+      const { endDate: dateRangeEnd, startDate: dateRangeStart } =
+        getIntervalFromDateRange(dateRange);
+
+      if (
+        !isBefore(dateRangeStart, startDate) &&
+        !isAfter(dateRangeStart, endDate)
+      ) {
+        chartDateMap[format(dateRangeStart, DATE_FORMAT)] = true;
+      }
+
+      if (
+        !isBefore(dateRangeEnd, startDate) &&
+        !isAfter(dateRangeEnd, endDate)
+      ) {
+        chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
+      }
+    }
+
+    return chartDateMap;
   }
 
   private computeTransactionPoints() {
