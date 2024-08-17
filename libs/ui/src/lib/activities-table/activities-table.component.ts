@@ -1,7 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
