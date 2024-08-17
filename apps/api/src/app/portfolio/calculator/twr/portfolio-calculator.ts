@@ -161,8 +161,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     start: Date;
     step?: number;
   } & AssetProfileIdentifier): SymbolMetrics {
-    const currentExchangeRate =
-      exchangeRates[format(new Date(Date.now()), DATE_FORMAT)];
+    const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};
     const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
     let fees = new Big(0);

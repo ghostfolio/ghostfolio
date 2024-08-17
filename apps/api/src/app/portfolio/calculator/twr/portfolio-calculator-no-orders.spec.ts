@@ -73,7 +73,7 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const start = subDays(new Date(Date.now()), 10);
+      const start = subDays(new Date(), 10);
 
       const chartData = await portfolioCalculator.getChartData({ start });
 

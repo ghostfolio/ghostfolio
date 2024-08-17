@@ -97,7 +97,7 @@ export abstract class PortfolioCalculator {
     this.dateRange = dateRange;
     this.exchangeRateDataService = exchangeRateDataService;
 
-    let dateOfFirstActivity = new Date(Date.now());
+    let dateOfFirstActivity = new Date();
 
     this.activities = activities
       .map(
@@ -114,10 +114,10 @@ export abstract class PortfolioCalculator {
             dateOfFirstActivity = date;
           }
 
-          if (isAfter(date, new Date(Date.now()))) {
+          if (isAfter(date, new Date())) {
             // Adapt date to today if activity is in future (e.g. liability)
             // to include it in the interval
-            date = endOfDay(new Date(Date.now()));
+            date = endOfDay(new Date());
           }
 
           return {
@@ -172,7 +172,7 @@ export abstract class PortfolioCalculator {
     let endDate = end;
 
     if (!endDate) {
-      endDate = new Date(Date.now());
+      endDate = new Date();
 
       if (lastTransactionPoint) {
         endDate = max([endDate, parseDate(lastTransactionPoint.date)]);
@@ -245,14 +245,14 @@ export abstract class PortfolioCalculator {
     dates.push(resetHours(endDate));
 
     // Add dates of last week for fallback
-    dates.push(subDays(resetHours(new Date(Date.now())), 7));
-    dates.push(subDays(resetHours(new Date(Date.now())), 6));
-    dates.push(subDays(resetHours(new Date(Date.now())), 5));
-    dates.push(subDays(resetHours(new Date(Date.now())), 4));
-    dates.push(subDays(resetHours(new Date(Date.now())), 3));
-    dates.push(subDays(resetHours(new Date(Date.now())), 2));
-    dates.push(subDays(resetHours(new Date(Date.now())), 1));
-    dates.push(resetHours(new Date(Date.now())));
+    dates.push(subDays(resetHours(new Date()), 7));
+    dates.push(subDays(resetHours(new Date()), 6));
+    dates.push(subDays(resetHours(new Date()), 5));
+    dates.push(subDays(resetHours(new Date()), 4));
+    dates.push(subDays(resetHours(new Date()), 3));
+    dates.push(subDays(resetHours(new Date()), 2));
+    dates.push(subDays(resetHours(new Date()), 1));
+    dates.push(resetHours(new Date()));
 
     dates = uniq(
       dates.map((date) => {
@@ -690,7 +690,7 @@ export abstract class PortfolioCalculator {
   }
 
   public async getChartData({
-    end = new Date(Date.now()),
+    end = new Date(),
     start,
     step = 1
   }: {
@@ -1185,18 +1185,18 @@ export abstract class PortfolioCalculator {
       )?.date;
       firstAccountBalanceDate = firstAccountBalanceDateString
         ? parseDate(firstAccountBalanceDateString)
-        : new Date(Date.now());
+        : new Date();
     } catch (error) {
-      firstAccountBalanceDate = new Date(Date.now());
+      firstAccountBalanceDate = new Date();
     }
 
     try {
       const firstActivityDateString = this.transactionPoints[0].date;
       firstActivityDate = firstActivityDateString
         ? parseDate(firstActivityDateString)
-        : new Date(Date.now());
+        : new Date();
     } catch (error) {
-      firstActivityDate = new Date(Date.now());
+      firstActivityDate = new Date();
     }
 
     return min([firstAccountBalanceDate, firstActivityDate]);
