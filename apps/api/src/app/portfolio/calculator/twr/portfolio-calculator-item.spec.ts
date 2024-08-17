@@ -130,6 +130,7 @@ describe('PortfolioCalculator', () => {
             netPerformance: null,
             netPerformancePercentage: null,
             netPerformancePercentageWithCurrencyEffect: null,
+            netPerformancePercentageWithCurrencyEffectMap: null,
             netPerformanceWithCurrencyEffect: null,
             netPerformanceWithCurrencyEffectMap: null,
             quantity: new Big('0'),
