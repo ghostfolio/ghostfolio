@@ -924,9 +924,16 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       netPerformanceWithCurrencyEffectMap[dateRange] =
         netPerformanceValuesWithCurrencyEffect[
           format(endDate, DATE_FORMAT)
-        ].minus(
-          netPerformanceValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)]
-        );
+        ]?.minus(
+          // If the date range is 'max', take 0 as a start value. Otherwise,
+          // the value of the end of the day of the start date is taken which
+          // can differ.
+          dateRange === 'max'
+            ? new Big(0)
+            : (netPerformanceValuesWithCurrencyEffect[
+                format(startDate, DATE_FORMAT)
+              ] ?? new Big(0))
+        ) ?? new Big(0);
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
