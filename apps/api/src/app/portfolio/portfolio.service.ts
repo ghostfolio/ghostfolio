@@ -67,6 +67,7 @@ import {
   differenceInDays,
   format,
   isAfter,
+  isBefore,
   isSameMonth,
   isSameYear,
   parseISO,
@@ -244,6 +245,8 @@ export class PortfolioService {
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+
     const { activities } = await this.orderService.getOrders({
       filters,
       userId,
@@ -269,9 +272,10 @@ export class PortfolioService {
         this.request.user.Settings.settings.isExperimentalFeatures
     });
 
-    const items = await portfolioCalculator.getChart({
-      dateRange,
-      withDataDecimation: false
+    const { historicalData } = await portfolioCalculator.getSnapshot();
+
+    const items = historicalData.filter(({ date }) => {
+      return !isBefore(date, startDate) && !isAfter(date, endDate);
     });
 
     let investments: InvestmentItem[];
