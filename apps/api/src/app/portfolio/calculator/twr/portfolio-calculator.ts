@@ -920,14 +920,15 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
 
       average = average.div(dayCount);
 
+      // TODO: Why without minus?
       netPerformanceWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceValuesWithCurrencyEffect[
             format(endDate, DATE_FORMAT)
-          ].minus(
+          ] /*.minus(
             netPerformanceValuesWithCurrencyEffect[
               format(startDate, DATE_FORMAT)
             ]
-          )
+          )*/
         : new Big(0);
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)

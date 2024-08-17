@@ -182,6 +182,9 @@ describe('PortfolioCalculator', () => {
             netPerformanceWithCurrencyEffect: new Big(
               '26516.208701400000064086'
             ),
+            netPerformanceWithCurrencyEffectMap: {
+              max: new Big('26516.208701400000064086')
+            },
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],

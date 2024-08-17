@@ -131,6 +131,7 @@ describe('PortfolioCalculator', () => {
             netPerformancePercentage: null,
             netPerformancePercentageWithCurrencyEffect: null,
             netPerformanceWithCurrencyEffect: null,
+            netPerformanceWithCurrencyEffectMap: null,
             quantity: new Big('0'),
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
             tags: [],

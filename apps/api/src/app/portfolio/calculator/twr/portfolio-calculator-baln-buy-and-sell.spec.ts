@@ -163,6 +163,9 @@ describe('PortfolioCalculator', () => {
               '-0.0552834149755073478'
             ),
             netPerformanceWithCurrencyEffect: new Big('-15.8'),
+            netPerformanceWithCurrencyEffectMap: {
+              max: new Big('-15.8')
+            },
             marketPrice: 148.9,
             marketPriceInBaseCurrency: 148.9,
             quantity: new Big('0'),
