@@ -124,16 +124,12 @@ describe.skip('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const chartData = await portfolioCalculator.getChartData({
-        start: parseDate('2015-01-01')
-      });
-
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
+        data: portfolioSnapshot.historicalData,
         groupBy: 'month'
       });
 

@@ -73,16 +73,12 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const start = subDays(new Date(), 10);
-
-      const chartData = await portfolioCalculator.getChartData({ start });
-
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
+        data: portfolioSnapshot.historicalData,
         groupBy: 'month'
       });
 

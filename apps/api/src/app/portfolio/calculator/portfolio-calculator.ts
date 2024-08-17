@@ -288,6 +288,7 @@ export abstract class PortfolioCalculator {
     const accumulatedValuesByDate: {
       [date: string]: {
         investmentValueWithCurrencyEffect: Big;
+        totalAccountBalanceWithCurrencyEffect: Big;
         totalCurrentValue: Big;
         totalCurrentValueWithCurrencyEffect: Big;
         totalInvestmentValue: Big;
@@ -458,6 +459,8 @@ export abstract class PortfolioCalculator {
       }
     }
 
+    let lastDate = chartDates[0];
+
     for (const dateString of chartDates) {
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
@@ -501,6 +504,18 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.investmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueWithCurrencyEffect),
+          totalAccountBalanceWithCurrencyEffect: this.accountBalanceItems.some(
+            ({ date }) => {
+              return date === dateString;
+            }
+          )
+            ? new Big(
+                this.accountBalanceItems.find(({ date }) => {
+                  return date === dateString;
+                }).value
+              )
+            : (accumulatedValuesByDate[lastDate]
+                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0)),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -534,6 +549,8 @@ export abstract class PortfolioCalculator {
           ).add(timeWeightedInvestmentValueWithCurrencyEffect)
         };
       }
+
+      lastDate = dateString;
     }
 
     const historicalData: HistoricalDataItem[] = Object.entries(
@@ -541,6 +558,7 @@ export abstract class PortfolioCalculator {
     ).map(([date, values]) => {
       const {
         investmentValueWithCurrencyEffect,
+        totalAccountBalanceWithCurrencyEffect,
         totalCurrentValue,
         totalCurrentValueWithCurrencyEffect,
         totalInvestmentValue,
@@ -575,7 +593,11 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        netWorth: 0, // TODO
+        // TODO: Add valuables
+        netWorth: totalCurrentValueWithCurrencyEffect
+          .plus(totalAccountBalanceWithCurrencyEffect)
+          .toNumber(),
+        totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
         totalInvestment: totalInvestmentValue.toNumber(),
         totalInvestmentValueWithCurrencyEffect:
           totalInvestmentValueWithCurrencyEffect.toNumber(),

@@ -110,20 +110,16 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const chartData = await portfolioCalculator.getChartData({
-        start: parseDate('2022-03-07')
-      });
-
       const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
+        data: portfolioSnapshot.historicalData,
         groupBy: 'month'
       });
 
-      expect(chartData[0]).toEqual({
+      expect(portfolioSnapshot.historicalData[0]).toEqual({
         date: '2022-03-07',
         investmentValueWithCurrencyEffect: 151.6,
         netPerformance: 0,
@@ -138,7 +134,11 @@ describe('PortfolioCalculator', () => {
         valueWithCurrencyEffect: 151.6
       });
 
-      expect(chartData[chartData.length - 1]).toEqual({
+      expect(
+        portfolioSnapshot.historicalData[
+          portfolioSnapshot.historicalData.length - 1
+        ]
+      ).toEqual({
         date: '2022-04-11',
         investmentValueWithCurrencyEffect: 0,
         netPerformance: 19.86,
