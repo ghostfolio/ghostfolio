@@ -88,8 +88,6 @@ export abstract class PortfolioCalculator {
     useCache: boolean;
     userId: string;
   }) {
-    console.time('--- PortfolioCalculator.constructor - 1');
-
     this.accountBalanceItems = accountBalanceItems;
     this.configurationService = configurationService;
     this.currency = currency;
@@ -147,16 +145,9 @@ export abstract class PortfolioCalculator {
     this.endDate = endDate;
     this.startDate = startDate;
 
-    console.timeEnd('--- PortfolioCalculator.constructor - 1');
-    console.time('--- PortfolioCalculator.constructor - 2');
-
     this.computeTransactionPoints();
 
-    console.timeEnd('--- PortfolioCalculator.constructor - 2');
-
-    console.time('--- PortfolioCalculator.constructor - 3');
     this.snapshotPromise = this.initialize();
-    console.timeEnd('--- PortfolioCalculator.constructor - 3');
   }
 
   protected abstract calculateOverallPerformance(
@@ -662,8 +653,6 @@ export abstract class PortfolioCalculator {
     dateRange?: DateRange;
     withDataDecimation?: boolean;
   }): Promise<HistoricalDataItem[]> {
-    console.time('-------- PortfolioCalculator.getChart');
-
     if (this.getTransactionPoints().length === 0) {
       return [];
     }
@@ -683,8 +672,6 @@ export abstract class PortfolioCalculator {
       end: endDate,
       start: startDate
     });
-
-    console.timeEnd('-------- PortfolioCalculator.getChart');
 
     return chartData;
   }
@@ -1098,10 +1085,7 @@ export abstract class PortfolioCalculator {
   }
 
   public async getSnapshot() {
-    console.time('getSnapshot');
     await this.snapshotPromise;
-
-    console.timeEnd('getSnapshot');
 
     return this.snapshot;
   }

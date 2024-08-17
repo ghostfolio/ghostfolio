@@ -89,8 +89,6 @@ export class PortfolioController {
     @Query('tags') filterByTags?: string,
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
-    console.time('TOTAL');
-
     const withMarkets = withMarketsParam === 'true';
 
     let hasDetails = true;
@@ -106,8 +104,6 @@ export class PortfolioController {
       filterByTags
     });
 
-    console.time('- PortfolioController.getDetails - 1');
-
     const { accounts, hasErrors, holdings, platforms, summary } =
       await this.portfolioService.getDetails({
         dateRange,
@@ -117,10 +113,6 @@ export class PortfolioController {
         userId: this.request.user.id,
         withSummary: true
       });
-
-    console.timeEnd('- PortfolioController.getDetails - 1');
-
-    console.time('- PortfolioController.getDetails - 2');
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -225,10 +217,6 @@ export class PortfolioController {
         sectors: hasDetails ? portfolioPosition.sectors : []
       };
     }
-
-    console.timeEnd('- PortfolioController.getDetails - 2');
-
-    console.timeEnd('TOTAL');
 
     return {
       accounts,
