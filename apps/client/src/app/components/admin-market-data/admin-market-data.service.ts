@@ -9,7 +9,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
-import { title } from 'process';
 import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
 
 @Injectable()
@@ -62,7 +61,6 @@ export class AdminMarketDataService {
           )
           .subscribe(() => {});
       },
-
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`
     });

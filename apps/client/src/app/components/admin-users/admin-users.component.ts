@@ -117,10 +117,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
         this.dataService
           .deleteUser(aId)
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe({
-            next: () => {
-              this.fetchAdminData();
-            }
+          .subscribe(() => {
+            this.fetchAdminData();
           });
       },
       confirmType: ConfirmationDialogType.Warn,
