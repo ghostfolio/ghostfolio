@@ -171,13 +171,13 @@ export abstract class PortfolioCalculator {
 
     if (!transactionPoints.length) {
       return {
-        historicalData: [],
         currentValueInBaseCurrency: new Big(0),
         grossPerformance: new Big(0),
         grossPerformancePercentage: new Big(0),
         grossPerformancePercentageWithCurrencyEffect: new Big(0),
         grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
+        historicalData: [],
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
         netPerformancePercentageWithCurrencyEffect: new Big(0),
