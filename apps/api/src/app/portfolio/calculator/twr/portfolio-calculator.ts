@@ -877,8 +877,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         startDate = addDays(start, 1);
       }
 
-      let average = new Big(0);
-
       const currentValuesAtStartDateWithCurrencyEffect =
         currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)] ??
         new Big(0);
@@ -901,11 +899,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         return format(date, DATE_FORMAT);
       });
 
+      let average = new Big(0);
       let dayCount = 0;
 
       for (const date of dates) {
         if (
-          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big
+          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
+          investmentValuesAccumulatedWithCurrencyEffect[date].gt(0)
         ) {
           average = average.add(
             investmentValuesAccumulatedWithCurrencyEffect[date].add(
@@ -917,18 +917,16 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         }
       }
 
-      average = average.div(dayCount);
+      if (dayCount > 0) {
+        average = average.div(dayCount);
+      }
 
-      // TODO: Why without minus?
-      netPerformanceWithCurrencyEffectMap[dateRange] = average.gt(0)
-        ? netPerformanceValuesWithCurrencyEffect[
-            format(endDate, DATE_FORMAT)
-          ] /*.minus(
-            netPerformanceValuesWithCurrencyEffect[
-              format(startDate, DATE_FORMAT)
-            ]
-          )*/
-        : new Big(0);
+      netPerformanceWithCurrencyEffectMap[dateRange] =
+        netPerformanceValuesWithCurrencyEffect[
+          format(endDate, DATE_FORMAT)
+        ].minus(
+          netPerformanceValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)]
+        );
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
         ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
