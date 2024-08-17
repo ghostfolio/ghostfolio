@@ -728,9 +728,9 @@ export abstract class PortfolioCalculator {
     } = {};
 
     let chartDateMap = this.getChartDateMap({
+      step,
       endDate: end,
-      startDate: start,
-      step
+      startDate: start
     });
 
     const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
