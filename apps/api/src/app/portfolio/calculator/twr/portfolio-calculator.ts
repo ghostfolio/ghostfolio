@@ -927,7 +927,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         ]?.minus(
           // If the date range is 'max', take 0 as a start value. Otherwise,
           // the value of the end of the day of the start date is taken which
-          // can differ.
+          // differs from the buying price.
           dateRange === 'max'
             ? new Big(0)
             : (netPerformanceValuesWithCurrencyEffect[
