@@ -156,10 +156,15 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       let scaleXMin: string;
 
       if (this.daysInMarket) {
-        const minDate = min([
-          parseDate(first(this.investments)?.date),
+        const dates = [
           subDays(new Date().setHours(0, 0, 0, 0), this.daysInMarket)
-        ]);
+        ];
+
+        if (first(this.investments)?.date) {
+          dates.push(parseDate(first(this.investments)?.date));
+        }
+
+        const minDate = min(dates);
 
         scaleXMin = isValid(minDate) ? minDate.toISOString() : undefined;
       }
