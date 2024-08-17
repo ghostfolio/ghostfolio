@@ -1122,6 +1122,7 @@ export abstract class PortfolioCalculator {
           netPerformanceWithCurrencyEffectAtStartDate;
 
         if (historicalDataItem.totalInvestmentValueWithCurrencyEffect > 0) {
+          // TODO: Not sure if this is correct
           totalInvestmentValuesWithCurrencyEffect.push(
             historicalDataItem.totalInvestmentValueWithCurrencyEffect
           );
@@ -1132,9 +1133,6 @@ export abstract class PortfolioCalculator {
             ? sum(totalInvestmentValuesWithCurrencyEffect) /
               totalInvestmentValuesWithCurrencyEffect.length
             : 0;
-
-        // TODO: Not sure if this is correct
-        console.log(historicalDataItem.totalInvestmentValueWithCurrencyEffect);
 
         // TODO: Normalize remaining metrics
         newChartData.push({
