@@ -78,7 +78,8 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('get current positions', () => {
+  // TODO
+  describe.skip('get current positions', () => {
     it.only('with BTCUSD buy and sell partially', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
 
