@@ -1,3 +1,4 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
@@ -146,32 +147,32 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   }
 
   public onCloseAccount() {
-    const confirmation = confirm(
-      $localize`Do you really want to close your Ghostfolio account?`
-    );
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .deleteOwnUser({
+            accessToken: this.deleteOwnUserForm.get('accessToken').value
+          })
+          .pipe(
+            catchError(() => {
+              this.notificationService.alert({
+                title: $localize`Oops! Incorrect Security Token.`
+              });
 
-    if (confirmation) {
-      this.dataService
-        .deleteOwnUser({
-          accessToken: this.deleteOwnUserForm.get('accessToken').value
-        })
-        .pipe(
-          catchError(() => {
-            this.notificationService.alert({
-              title: $localize`Oops! Incorrect Security Token.`
-            });
+              return EMPTY;
+            }),
+            takeUntil(this.unsubscribeSubject)
+          )
+          .subscribe(() => {
+            this.tokenStorageService.signOut();
+            this.userService.remove();
 
-            return EMPTY;
-          }),
-          takeUntil(this.unsubscribeSubject)
-        )
-        .subscribe(() => {
-          this.tokenStorageService.signOut();
-          this.userService.remove();
-
-          document.location.href = `/${document.documentElement.lang}`;
-        });
-    }
+            document.location.href = `/${document.documentElement.lang}`;
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to close your Ghostfolio account?`
+    });
   }
 
   public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
@@ -240,15 +241,16 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       }
     } else {
-      const confirmation = confirm(
-        $localize`Do you really want to remove this sign in method?`
-      );
-
-      if (confirmation) {
-        this.deregisterDevice();
-      } else {
-        this.update();
-      }
+      this.notificationService.confirm({
+        confirmFn: () => {
+          this.deregisterDevice();
+        },
+        discardFn: () => {
+          this.update();
+        },
+        confirmType: ConfirmationDialogType.Warn,
+        title: $localize`Do you really want to remove this sign in method?`
+      });
     }
   }
 
