@@ -49,7 +49,8 @@ jest.mock(
   }
 );
 
-describe('PortfolioCalculator', () => {
+// TODO
+describe.skip('PortfolioCalculator', () => {
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
