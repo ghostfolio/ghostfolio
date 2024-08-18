@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed the currency conversion for fees and values in the dividend import by applying the correct rate based on the activity date
 - Fixed the currency conversion for fees and values in the activities service by applying the correct rate based on the activity date
 
+## 2.104.1 - 2024-08-17
+
+### Fixed
+
+- Fixed an issue with the clone functionality of an activity caused by a changed date format
+
 ## 2.104.0 - 2024-08-17
 
 ### Added
