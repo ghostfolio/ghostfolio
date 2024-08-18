@@ -42,7 +42,7 @@ export class PortfolioCalculatorFactory {
     isExperimentalFeatures?: boolean;
     userId: string;
   }): PortfolioCalculator {
-    const useCache = !hasFilters && isExperimentalFeatures;
+    const useCache = true; // TODO
 
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
