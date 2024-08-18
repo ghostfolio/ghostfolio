@@ -483,34 +483,38 @@ export class OrderService {
       assetProfileIdentifiers
     );
 
-    const activities = orders.map((order) => {
-      const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
-        return (
-          dataSource === order.SymbolProfile.dataSource &&
-          symbol === order.SymbolProfile.symbol
-        );
-      });
+    const activities = await Promise.all(
+      orders.map(async (order) => {
+        const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
+          return (
+            dataSource === order.SymbolProfile.dataSource &&
+            symbol === order.SymbolProfile.symbol
+          );
+        });
 
-      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+        const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
-      return {
-        ...order,
-        value,
-        // TODO: Use exchange rate of date
-        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.SymbolProfile.currency,
-          userCurrency
-        ),
-        SymbolProfile: assetProfile,
-        // TODO: Use exchange rate of date
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        return {
+          ...order,
           value,
-          order.SymbolProfile.currency,
-          userCurrency
-        )
-      };
-    });
+          feeInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              order.fee,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            ),
+          SymbolProfile: assetProfile,
+          valueInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              value,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            )
+        };
+      })
+    );
 
     return { activities, count };
   }
