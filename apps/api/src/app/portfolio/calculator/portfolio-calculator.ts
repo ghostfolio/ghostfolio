@@ -10,12 +10,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  getSum,
-  parseDate,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   DataProviderInfo,
@@ -25,7 +20,7 @@ import {
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
-import { DateRange, GroupBy } from '@ghostfolio/common/types';
+import { GroupBy } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
