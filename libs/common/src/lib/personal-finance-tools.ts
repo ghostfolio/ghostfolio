@@ -63,6 +63,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
+    founded: 2013,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'cointracking',
+    languages: ['Deutsch', 'English'],
+    name: 'CoinTracking',
+    origin: 'Germany',
+    pricingPerYear: '$120',
+    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
