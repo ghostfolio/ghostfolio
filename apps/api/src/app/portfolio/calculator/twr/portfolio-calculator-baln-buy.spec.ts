@@ -17,6 +17,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -148,7 +149,13 @@ describe('PortfolioCalculator', () => {
             },
             netPerformanceWithCurrencyEffect: new Big('23.05'),
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('23.05')
+              '1d': new Big('8.45'), // wrong
+              '1y': new Big('23.05'), // wrong
+              '5y': new Big('23.05'), // wrong
+              max: new Big('23.05'), // ok: 2 * (148.9 - 136.6) - 1.55
+              mtd: new Big('23.05'), // wrong
+              wtd: new Big('12.25'), // wrong: 2 * (148.9 - 142) - 1.55
+              ytd: new Big('23.05') // wrong
             },
             marketPrice: 148.9,
             marketPriceInBaseCurrency: 148.9,
@@ -168,6 +175,14 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
+
+      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+        expect.objectContaining({
+          netPerformanceInPercentageWithCurrencyEffect: 8.437042459736457,
+          netPerformanceWithCurrencyEffect: 23.05,
+          totalInvestmentValueWithCurrencyEffect: 273.2
+        })
+      );
 
       expect(investments).toEqual([
         { date: '2021-11-30', investment: new Big('273.2') }
