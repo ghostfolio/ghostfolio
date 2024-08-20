@@ -1,10 +1,10 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
-import { XRayRules } from '@ghostfolio/common/interfaces/x-ray-rule.interface';
 import type {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode
+  ViewMode,
+  XRayRulesSettings
 } from '@ghostfolio/common/types';
 
 import {
@@ -105,5 +105,5 @@ export class UpdateUserSettingDto {
   viewMode?: ViewMode;
 
   @IsOptional()
-  xRayRules?: XRayRules;
+  xRayRules?: XRayRulesSettings;
 }

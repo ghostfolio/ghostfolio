@@ -17,6 +17,7 @@ import {
   styleUrls: ['./rule.component.scss']
 })
 export class RuleComponent implements OnInit {
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;
 
@@ -27,11 +28,12 @@ export class RuleComponent implements OnInit {
   public ngOnInit() {}
 
   public onUpdateRule(rule: PortfolioReportRule) {
-    let settings: UpdateUserSettingDto = {
+    const settings: UpdateUserSettingDto = {
       xRayRules: {
         [rule.key]: { isActive: !rule.isActive }
       }
     };
+
     this.ruleUpdated.emit(settings);
   }
 }

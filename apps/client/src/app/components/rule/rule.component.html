@@ -21,8 +21,10 @@
       >
         @if (rule?.value === true) {
           <ion-icon name="checkmark-circle-outline" />
-        } @else {
+        } @else if (rule?.isActive === true) {
           <ion-icon name="warning-outline" />
+        } @else {
+          <ion-icon class="text-muted" name="remove-circle-outline" />
         }
       </div>
     }
@@ -50,23 +52,25 @@
         <div class="evaluation">{{ rule?.evaluation }}</div>
       </div>
       <div>
-        <button
-          class="mx-1 no-min-width px-2"
-          mat-button
-          [matMenuTriggerFor]="rulesMenu"
-          (click)="$event.stopPropagation()"
-        >
-          <ion-icon name="ellipsis-horizontal" />
-        </button>
-        <mat-menu #rulesMenu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="onUpdateRule(rule)">
-            @if (rule?.isActive) {
-              <ng-container i18n>Deactivate</ng-container>
-            } @else {
-              <ng-container i18n>Activate</ng-container>
-            }
+        @if (hasPermissionToUpdateUserSettings) {
+          <button
+            class="mx-1 no-min-width px-2"
+            mat-button
+            [matMenuTriggerFor]="rulesMenu"
+            (click)="$event.stopPropagation()"
+          >
+            <ion-icon name="ellipsis-horizontal" />
           </button>
-        </mat-menu>
+          <mat-menu #rulesMenu="matMenu" xPosition="before">
+            <button mat-menu-item (click)="onUpdateRule(rule)">
+              @if (rule?.isActive) {
+                <ng-container i18n>Deactivate</ng-container>
+              } @else {
+                <ng-container i18n>Activate</ng-container>
+              }
+            </button>
+          </mat-menu>
+        }
       </div>
     }
   </div>

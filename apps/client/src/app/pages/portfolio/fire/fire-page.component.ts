@@ -28,11 +28,10 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
   public isLoadingPortfolioReport = false;
-  public inactiveRules: PortfolioReportRule[];
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
@@ -71,7 +70,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.initializePortfolioReport();
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -85,11 +83,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
-
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === 'Basic'
               ? false
@@ -101,34 +94,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-  }
 
-  public initializePortfolioReport() {
-    this.isLoadingPortfolioReport = true;
-
-    this.dataService
-      .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
-        this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk'].filter(
-            (rule) => rule.isActive
-          ) || null;
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk'].filter(
-            (rule) => rule.isActive
-          ) || null;
-        this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund'].filter(
-            (rule) => rule.isActive
-          ) || null;
-        this.feeRules =
-          portfolioReport.rules['fees'].filter((rule) => rule.isActive) || null;
-        this.isLoadingPortfolioReport = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
+    this.initializePortfolioReport();
   }
 
   public onAnnualInterestRateChange(annualInterestRate: number) {
@@ -220,21 +187,63 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-    for (const category in report.rules) {
-      const rulesArray = report.rules[category];
-      inactiveRules = inactiveRules.concat(
-        rulesArray.filter((rule) => !rule.isActive)
-      );
-      rulesArray.filter((rule) => rule.isActive);
-    }
-    console.log(inactiveRules);
-    return inactiveRules;
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private initializePortfolioReport() {
+    this.isLoadingPortfolioReport = true;
+
+    this.dataService
+      .fetchPortfolioReport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((portfolioReport) => {
+        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
+
+        this.accountClusterRiskRules =
+          portfolioReport.rules['accountClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.emergencyFundRules =
+          portfolioReport.rules['emergencyFund']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.feeRules =
+          portfolioReport.rules['fees']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.isLoadingPortfolioReport = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
+    let inactiveRules: PortfolioReportRule[] = [];
+
+    for (const category in report.rules) {
+      const rulesArray = report.rules[category];
+
+      inactiveRules = inactiveRules.concat(
+        rulesArray.filter(({ isActive }) => {
+          return !isActive;
+        })
+      );
+    }
+
+    return inactiveRules;
   }
 }

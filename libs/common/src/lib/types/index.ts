@@ -19,6 +19,7 @@ import type { SubscriptionOffer } from './subscription-offer.type';
 import type { ToggleOption } from './toggle-option.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
+import type { XRayRulesSettings } from './x-ray-rules-settings.type';
 
 export type {
   AccessType,
@@ -41,5 +42,6 @@ export type {
   SubscriptionOffer,
   ToggleOption,
   UserWithSettings,
-  ViewMode
+  ViewMode,
+  XRayRulesSettings
 };

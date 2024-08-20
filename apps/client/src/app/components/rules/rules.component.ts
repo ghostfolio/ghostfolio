@@ -16,7 +16,7 @@ import {
   styleUrls: ['./rules.component.scss']
 })
 export class RulesComponent {
-  @Input() hasPermissionToCreateOrder: boolean;
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rules: PortfolioReportRule[];
 
