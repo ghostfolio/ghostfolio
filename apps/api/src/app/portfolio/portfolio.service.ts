@@ -1440,6 +1440,8 @@ export class PortfolioService {
   }: {
     holdings: PortfolioDetails['holdings'];
   }) {
+    // TODO: Use current value of activities instead of holdings
+    // tagged with EMERGENCY_FUND_TAG_ID
     const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
       return (
         tags?.some(({ id }) => {
