@@ -149,13 +149,13 @@ describe('PortfolioCalculator', () => {
             },
             netPerformanceWithCurrencyEffect: new Big('23.05'),
             netPerformanceWithCurrencyEffectMap: {
-              '1d': new Big('8.45'), // wrong
-              '1y': new Big('23.05'), // wrong
-              '5y': new Big('23.05'), // wrong
-              max: new Big('23.05'), // ok: 2 * (148.9 - 136.6) - 1.55
-              mtd: new Big('23.05'), // wrong
-              wtd: new Big('12.25'), // wrong: 2 * (148.9 - 142) - 1.55
-              ytd: new Big('23.05') // wrong
+              '1d': new Big('10.00'), // 2 * (148.9 - 143.9) -> no fees in this time period
+              '1y': new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              '5y': new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              max: new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              mtd: new Big('24.60'), // 2 * (148.9 - 136.6) -> no fees in this time period
+              wtd: new Big('13.80'), // 2 * (148.9 - 142.0) -> no fees in this time period
+              ytd: new Big('23.05') // 2 * (148.9 - 136.6) - 1.55
             },
             marketPrice: 148.9,
             marketPriceInBaseCurrency: 148.9,
