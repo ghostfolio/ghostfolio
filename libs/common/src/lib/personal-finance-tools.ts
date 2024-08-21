@@ -668,5 +668,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$99',
     slogan: 'Change Your Relationship With Money'
+  },
+  {
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'ziggma',
+    name: 'Ziggma',
+    origin: 'United States',
+    pricingPerYear: '$90',
+    slogan: 'Your solution for investing success'
   }
 ];
