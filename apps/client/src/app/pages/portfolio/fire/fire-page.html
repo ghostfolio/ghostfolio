@@ -126,7 +126,9 @@
         </h4>
         <gf-rules
           [hasPermissionToUpdateUserSettings]="
-            hasPermissionToUpdateUserSettings
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="emergencyFundRules"
@@ -142,7 +144,9 @@
         </h4>
         <gf-rules
           [hasPermissionToUpdateUserSettings]="
-            hasPermissionToUpdateUserSettings
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="currencyClusterRiskRules"
@@ -158,7 +162,9 @@
         </h4>
         <gf-rules
           [hasPermissionToUpdateUserSettings]="
-            hasPermissionToUpdateUserSettings
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="accountClusterRiskRules"
@@ -174,7 +180,9 @@
         </h4>
         <gf-rules
           [hasPermissionToUpdateUserSettings]="
-            hasPermissionToUpdateUserSettings
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="feeRules"
@@ -186,7 +194,9 @@
           <h4 class="m-0" i18n>Inactive</h4>
           <gf-rules
             [hasPermissionToUpdateUserSettings]="
-              hasPermissionToUpdateUserSettings
+              !hasImpersonationId &&
+              hasPermissionToUpdateUserSettings &&
+              user?.settings?.isExperimentalFeatures
             "
             [isLoading]="isLoadingPortfolioReport"
             [rules]="inactiveRules"
