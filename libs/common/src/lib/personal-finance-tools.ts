@@ -63,6 +63,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
+    founded: 2013,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'cointracking',
+    languages: ['Deutsch', 'English'],
+    name: 'CoinTracking',
+    origin: 'Germany',
+    pricingPerYear: '$120',
+    slogan: 'The leading Crypto Portfolio Tracker & Tax Calculator'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -657,5 +668,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$99',
     slogan: 'Change Your Relationship With Money'
+  },
+  {
+    founded: 2019,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'ziggma',
+    name: 'Ziggma',
+    origin: 'United States',
+    pricingPerYear: '$90',
+    slogan: 'Your solution for investing success'
   }
 ];

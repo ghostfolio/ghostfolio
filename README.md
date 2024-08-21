@@ -146,52 +146,7 @@ Ghostfolio is available for various home server systems, including [CasaOS](http
 
 ## Development
 
-### Prerequisites
-
-- [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 20+)
-- Create a local copy of this Git repository (clone)
-- Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
-
-### Setup
-
-1. Run `npm install`
-1. Run `docker compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
-1. Run `npm run database:setup` to initialize the database schema
-1. Run `git config core.hooksPath ./git-hooks/` to setup git hooks
-1. Start the server and the client (see [_Development_](#Development))
-1. Open https://localhost:4200/en in your browser
-1. Create a new user via _Get Started_ (this first user will get the role `ADMIN`)
-
-### Start Server
-
-#### Debug
-
-Run `npm run watch:server` and click _Debug API_ in [Visual Studio Code](https://code.visualstudio.com)
-
-#### Serve
-
-Run `npm run start:server`
-
-### Start Client
-
-Run `npm run start:client` and open https://localhost:4200/en in your browser
-
-### Start _Storybook_
-
-Run `npm run start:storybook`
-
-### Migrate Database
-
-With the following command you can keep your database schema in sync:
-
-```bash
-npm run database:push
-```
-
-## Testing
-
-Run `npm test`
+For detailed information on the environment setup and development process, please refer to [DEVELOPMENT.md](./DEVELOPMENT.md).
 
 ## Public API
 

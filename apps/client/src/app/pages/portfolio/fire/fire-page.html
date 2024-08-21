@@ -125,8 +125,14 @@
           }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="emergencyFundRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
       <div class="mb-4">
@@ -137,8 +143,14 @@
           }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="currencyClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
       <div class="mb-4">
@@ -149,11 +161,17 @@
           }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="accountClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div>
+      <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Fees</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -161,10 +179,31 @@
           }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="feeRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
+      @if (inactiveRules?.length > 0) {
+        <div>
+          <h4 class="m-0" i18n>Inactive</h4>
+          <gf-rules
+            [hasPermissionToUpdateUserSettings]="
+              !hasImpersonationId &&
+              hasPermissionToUpdateUserSettings &&
+              user?.settings?.isExperimentalFeatures
+            "
+            [isLoading]="isLoadingPortfolioReport"
+            [rules]="inactiveRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        </div>
+      }
     </div>
   </div>
 </div>

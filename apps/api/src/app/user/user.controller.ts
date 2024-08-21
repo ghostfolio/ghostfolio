@@ -24,7 +24,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { User as UserModel } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
-import { size } from 'lodash';
+import { merge, size } from 'lodash';
 
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
@@ -149,10 +149,11 @@ export class UserController {
       'filters.assetClasses' in data ||
       'filters.tags' in data;
 
-    const userSettings: UserSettings = {
-      ...(<UserSettings>this.request.user.Settings.settings),
-      ...data
-    };
+    const userSettings: UserSettings = merge(
+      {},
+      <UserSettings>this.request.user.Settings.settings,
+      data
+    );
 
     for (const key in userSettings) {
       if (userSettings[key] === false || userSettings[key] === null) {
