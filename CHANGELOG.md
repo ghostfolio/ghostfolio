@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to deactivate rules in the _X-ray_ section
+- Added support to deactivate rules in the _X-ray_ section (experimental)
 
 ### Fixed
 
