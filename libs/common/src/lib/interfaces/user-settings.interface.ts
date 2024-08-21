@@ -2,7 +2,8 @@ import {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode
+  ViewMode,
+  XRayRulesSettings
 } from '@ghostfolio/common/types';
 
 export interface UserSettings {
@@ -23,4 +24,5 @@ export interface UserSettings {
   retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
+  xRayRules?: XRayRulesSettings;
 }

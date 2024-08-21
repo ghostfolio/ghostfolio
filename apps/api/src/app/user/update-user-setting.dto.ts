@@ -3,7 +3,8 @@ import type {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode
+  ViewMode,
+  XRayRulesSettings
 } from '@ghostfolio/common/types';
 
 import {
@@ -102,4 +103,7 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsOptional()
+  xRayRules?: XRayRulesSettings;
 }

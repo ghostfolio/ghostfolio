@@ -1,10 +1,13 @@
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
-  OnInit
+  OnInit,
+  Output
 } from '@angular/core';
 
 @Component({
@@ -14,10 +17,23 @@ import {
   styleUrls: ['./rule.component.scss']
 })
 export class RuleComponent implements OnInit {
+  @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;
+
+  @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
 
   public constructor() {}
 
   public ngOnInit() {}
+
+  public onUpdateRule(rule: PortfolioReportRule) {
+    const settings: UpdateUserSettingDto = {
+      xRayRules: {
+        [rule.key]: { isActive: !rule.isActive }
+      }
+    };
+
+    this.ruleUpdated.emit(settings);
+  }
 }

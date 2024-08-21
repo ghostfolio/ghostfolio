@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to deactivate rules in the _X-ray_ section (experimental)
+
 ### Fixed
 
 - Fixed the currency conversion for fees and values in the dividend import by applying the correct rate based on the activity date

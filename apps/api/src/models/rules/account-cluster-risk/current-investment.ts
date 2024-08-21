@@ -79,7 +79,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   public getSettings(aUserSettings: UserSettings): Settings {
     return {
       baseCurrency: aUserSettings.baseCurrency,
-      isActive: true,
+      isActive: aUserSettings.xRayRules[this.getKey()].isActive,
       thresholdMax: 0.5
     };
   }
