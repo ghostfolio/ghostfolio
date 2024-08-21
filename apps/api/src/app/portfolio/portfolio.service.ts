@@ -573,7 +573,6 @@ export class PortfolioService {
     if (withSummary) {
       summary = await this.getSummary({
         filteredValueInBaseCurrency,
-        holdings,
         impersonationId,
         portfolioCalculator,
         userCurrency,
@@ -1110,10 +1109,6 @@ export class PortfolioService {
         performance: {
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
-          grossPerformance: 0,
-          grossPerformancePercentage: 0,
-          grossPerformancePercentageWithCurrencyEffect: 0,
-          grossPerformanceWithCurrencyEffect: 0,
           netPerformance: 0,
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
@@ -1145,7 +1140,6 @@ export class PortfolioService {
     });
 
     const {
-      grossPerformancePercent,
       netPerformance,
       netPerformanceInPercentage,
       netPerformanceInPercentageWithCurrencyEffect,
@@ -1157,7 +1151,6 @@ export class PortfolioService {
       chart?.length > 0
         ? last(chart)
         : {
-            grossPerformancePercent: 0,
             netPerformance: 0,
             netPerformanceInPercentage: 0,
             netPerformanceInPercentageWithCurrencyEffect: 0,
@@ -1178,13 +1171,7 @@ export class PortfolioService {
         totalInvestment,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
-        // TODO
-        grossPerformance: 0,
-        grossPerformancePercentage: grossPerformancePercent / 100,
-        grossPerformancePercentageWithCurrencyEffect: 0 / 100,
-        // TODO
-        grossPerformanceWithCurrencyEffect: 0,
-        netPerformancePercentage: netPerformanceInPercentage / 100,
+        netPerformancePercentage: netPerformanceInPercentage / 100 / 100,
         netPerformancePercentageWithCurrencyEffect:
           netPerformanceInPercentageWithCurrencyEffect / 100
       }
@@ -1582,7 +1569,6 @@ export class PortfolioService {
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
     filteredValueInBaseCurrency,
-    holdings,
     impersonationId,
     portfolioCalculator,
     userCurrency,
@@ -1591,7 +1577,6 @@ export class PortfolioService {
     balanceInBaseCurrency: number;
     emergencyFundPositionsValueInBaseCurrency: number;
     filteredValueInBaseCurrency: Big;
-    holdings: PortfolioDetails['holdings'];
     impersonationId: string;
     portfolioCalculator: PortfolioCalculator;
     userCurrency: string;
