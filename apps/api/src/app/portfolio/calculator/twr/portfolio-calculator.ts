@@ -857,7 +857,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       'mtd',
       'wtd',
       'ytd'
-      // TODO
+      // TODO:
       // ...eachYearOfInterval({ end, start })
       //   .filter((date) => {
       //     return !isThisYear(date);
@@ -870,10 +870,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       let { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
       if (isBefore(startDate, start)) {
-        startDate = addDays(start, 1);
+        startDate = start;
       }
 
-      const currentValuesAtStartDateWithCurrencyEffect =
+      const currentValuesAtDateRangeStartWithCurrencyEffect =
         currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)] ??
         new Big(0);
 
@@ -882,9 +882,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           format(startDate, DATE_FORMAT)
         ] ?? new Big(0);
 
-      // TODO: Rename?
-      const grossPerformanceAtStartDateWithCurrencyEffect2 =
-        currentValuesAtStartDateWithCurrencyEffect.minus(
+      const grossPerformanceAtDateRangeStartWithCurrencyEffect =
+        currentValuesAtDateRangeStartWithCurrencyEffect.minus(
           investmentValuesAccumulatedAtStartDateWithCurrencyEffect
         );
 
@@ -905,7 +904,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         ) {
           average = average.add(
             investmentValuesAccumulatedWithCurrencyEffect[date].add(
-              grossPerformanceAtStartDateWithCurrencyEffect2
+              grossPerformanceAtDateRangeStartWithCurrencyEffect
             )
           );
 

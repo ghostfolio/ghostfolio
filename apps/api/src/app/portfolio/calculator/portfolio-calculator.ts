@@ -36,7 +36,7 @@ import {
   min,
   subDays
 } from 'date-fns';
-import { first, last, sortBy, sum, uniq, uniqBy } from 'lodash';
+import { first, isNumber, last, sortBy, sum, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -144,24 +144,11 @@ export abstract class PortfolioCalculator {
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
 
-  private async computeSnapshot(
-    start: Date,
-    end?: Date
-  ): Promise<PortfolioSnapshot> {
+  private async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
 
-    let endDate = end;
-
-    if (!endDate) {
-      endDate = new Date();
-
-      if (lastTransactionPoint) {
-        endDate = max([endDate, parseDate(lastTransactionPoint.date)]);
-      }
-    }
-
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
-      return isBefore(parseDate(date), endDate);
+      return isBefore(parseDate(date), this.endDate);
     });
 
     if (!transactionPoints.length) {
@@ -208,7 +195,7 @@ export abstract class PortfolioCalculator {
 
     for (let i = 0; i < transactionPoints.length; i++) {
       if (
-        !isBefore(parseDate(transactionPoints[i].date), start) &&
+        !isBefore(parseDate(transactionPoints[i].date), this.startDate) &&
         firstTransactionPoint === null
       ) {
         firstTransactionPoint = transactionPoints[i];
@@ -219,8 +206,8 @@ export abstract class PortfolioCalculator {
     let exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: uniq(Object.values(currencies)),
-        endDate: endOfDay(endDate),
-        startDate: this.getStartDate(),
+        endDate: endOfDay(this.endDate),
+        startDate: this.startDate,
         targetCurrency: this.currency
       });
 
@@ -231,8 +218,8 @@ export abstract class PortfolioCalculator {
     } = await this.currentRateService.getValues({
       dataGatheringItems,
       dateQuery: {
-        gte: this.getStartDate(),
-        lt: endDate
+        gte: this.startDate,
+        lt: this.endDate
       }
     });
 
@@ -256,14 +243,13 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const endDateString = format(endDate, DATE_FORMAT);
+    const endDateString = format(this.endDate, DATE_FORMAT);
 
-    const chartStartDate = this.getStartDate();
-    const daysInMarket = differenceInDays(endDate, chartStartDate) + 1;
+    const daysInMarket = differenceInDays(this.endDate, this.startDate);
 
     let chartDateMap = this.getChartDateMap({
-      endDate,
-      startDate: chartStartDate,
+      endDate: this.endDate,
+      startDate: this.startDate,
       step: Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
     });
 
@@ -357,12 +343,12 @@ export abstract class PortfolioCalculator {
       } = this.getSymbolMetrics({
         chartDateMap,
         marketSymbolMap,
-        start,
         dataSource: item.dataSource,
-        end: endDate,
+        end: this.endDate,
         exchangeRates:
           exchangeRatesByCurrency[`${item.currency}${this.currency}`],
         isChartMode: true,
+        start: this.startDate,
         symbol: item.symbol
       });
 
@@ -710,7 +696,7 @@ export abstract class PortfolioCalculator {
         !isBefore(parseDate(historicalDataItem.date), subDays(start, 1)) &&
         !isAfter(parseDate(historicalDataItem.date), end)
       ) {
-        if (!netPerformanceAtStartDate) {
+        if (!isNumber(netPerformanceAtStartDate)) {
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
           netPerformanceWithCurrencyEffectAtStartDate =
@@ -1039,10 +1025,7 @@ export abstract class PortfolioCalculator {
           'PortfolioCalculator'
         );
       } else {
-        this.snapshot = await this.computeSnapshot(
-          this.startDate,
-          this.endDate
-        );
+        this.snapshot = await this.computeSnapshot();
 
         this.redisCacheService.set(
           this.redisCacheService.getPortfolioSnapshotKey({
@@ -1061,7 +1044,7 @@ export abstract class PortfolioCalculator {
         );
       }
     } else {
-      this.snapshot = await this.computeSnapshot(this.startDate, this.endDate);
+      this.snapshot = await this.computeSnapshot();
     }
   }
 }

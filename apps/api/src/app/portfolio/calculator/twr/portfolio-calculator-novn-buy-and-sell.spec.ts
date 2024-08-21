@@ -120,6 +120,21 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(portfolioSnapshot.historicalData[0]).toEqual({
+        date: '2022-03-06',
+        investmentValueWithCurrencyEffect: 0,
+        netPerformance: 0,
+        netPerformanceInPercentage: 0,
+        netPerformanceInPercentageWithCurrencyEffect: 0,
+        netPerformanceWithCurrencyEffect: 0,
+        netWorth: 0,
+        totalAccountBalance: 0,
+        totalInvestment: 0,
+        totalInvestmentValueWithCurrencyEffect: 0,
+        value: 0,
+        valueWithCurrencyEffect: 0
+      });
+
+      expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2022-03-07',
         investmentValueWithCurrencyEffect: 151.6,
         netPerformance: 0,
