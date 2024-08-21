@@ -1171,9 +1171,9 @@ export class PortfolioService {
         totalInvestment,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
-        netPerformancePercentage: netPerformanceInPercentage / 100 / 100,
+        netPerformancePercentage: netPerformanceInPercentage / 100, // TODO
         netPerformancePercentageWithCurrencyEffect:
-          netPerformanceInPercentageWithCurrencyEffect / 100
+          netPerformanceInPercentageWithCurrencyEffect / 100 // TODO
       }
     };
   }
