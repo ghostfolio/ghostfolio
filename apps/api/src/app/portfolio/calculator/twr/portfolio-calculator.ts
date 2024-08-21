@@ -857,7 +857,16 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       'mtd',
       'wtd',
       'ytd'
+      // TODO:
+      // ...eachYearOfInterval({ end, start })
+      //   .filter((date) => {
+      //     return !isThisYear(date);
+      //   })
+      //   .map((date) => {
+      //     return format(date, 'yyyy');
+      //   })
     ]) {
+      // TODO: getIntervalFromDateRange(dateRange, start)
       let { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
       if (isBefore(startDate, start)) {
