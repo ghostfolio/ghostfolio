@@ -66,8 +66,6 @@ export class RedisCacheService {
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
 
-    console.log(keys);
-
     for (const key of keys) {
       this.remove(key);
     }
