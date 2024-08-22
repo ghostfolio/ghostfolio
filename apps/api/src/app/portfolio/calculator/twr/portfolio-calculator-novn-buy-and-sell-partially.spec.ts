@@ -156,7 +156,7 @@ describe('PortfolioCalculator', () => {
             netPerformance: new Big('17.68'),
             netPerformancePercentage: new Big('0.12184460284330327256'),
             netPerformancePercentageWithCurrencyEffect: new Big(
-              '0.12184460284330327256'
+              '0.12348284960422163588'
             ),
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('0.12348284960422163588')
