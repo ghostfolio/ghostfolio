@@ -91,7 +91,6 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'USD',
-        hasFilters: false,
         userId: userDummyData.id
       });
 

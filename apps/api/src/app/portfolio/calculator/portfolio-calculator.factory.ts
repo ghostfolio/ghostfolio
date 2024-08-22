@@ -3,7 +3,7 @@ import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.s
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 
@@ -30,27 +30,23 @@ export class PortfolioCalculatorFactory {
     activities,
     calculationType,
     currency,
-    hasFilters,
-    isExperimentalFeatures = false,
+    filters = [],
     userId
   }: {
     accountBalanceItems?: HistoricalDataItem[];
     activities: Activity[];
     calculationType: PerformanceCalculationType;
     currency: string;
-    hasFilters: boolean;
-    isExperimentalFeatures?: boolean;
+    filters?: Filter[];
     userId: string;
   }): PortfolioCalculator {
-    const useCache = true; // TODO
-
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
         return new MWRPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,
-          useCache,
+          filters,
           userId,
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
@@ -63,7 +59,7 @@ export class PortfolioCalculatorFactory {
           activities,
           currency,
           currentRateService: this.currentRateService,
-          useCache,
+          filters,
           userId,
           configurationService: this.configurationService,
           exchangeRateDataService: this.exchangeRateDataService,

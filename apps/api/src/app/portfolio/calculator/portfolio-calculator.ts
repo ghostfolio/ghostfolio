@@ -19,6 +19,7 @@ import {
 import {
   AssetProfileIdentifier,
   DataProviderInfo,
+  Filter,
   HistoricalDataItem,
   InvestmentItem,
   ResponseError,
@@ -54,12 +55,12 @@ export abstract class PortfolioCalculator {
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
+  private filters: Filter[];
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
-  private useCache: boolean;
   private userId: string;
 
   public constructor({
@@ -69,8 +70,8 @@ export abstract class PortfolioCalculator {
     currency,
     currentRateService,
     exchangeRateDataService,
+    filters,
     redisCacheService,
-    useCache,
     userId
   }: {
     accountBalanceItems: HistoricalDataItem[];
@@ -79,8 +80,8 @@ export abstract class PortfolioCalculator {
     currency: string;
     currentRateService: CurrentRateService;
     exchangeRateDataService: ExchangeRateDataService;
+    filters: Filter[];
     redisCacheService: RedisCacheService;
-    useCache: boolean;
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
@@ -88,6 +89,7 @@ export abstract class PortfolioCalculator {
     this.currency = currency;
     this.currentRateService = currentRateService;
     this.exchangeRateDataService = exchangeRateDataService;
+    this.filters = filters;
 
     let dateOfFirstActivity = new Date();
 
@@ -128,7 +130,6 @@ export abstract class PortfolioCalculator {
       });
 
     this.redisCacheService = redisCacheService;
-    this.useCache = useCache;
     this.userId = userId;
 
     const { endDate, startDate } = getIntervalFromDateRange(
@@ -1007,49 +1008,47 @@ export abstract class PortfolioCalculator {
   }
 
   private async initialize() {
-    if (this.useCache) {
-      const startTimeTotal = performance.now();
+    const startTimeTotal = performance.now();
 
-      const cachedSnapshot = await this.redisCacheService.get(
-        this.redisCacheService.getPortfolioSnapshotKey({
-          userId: this.userId
-        })
+    const cachedSnapshot = await this.redisCacheService.get(
+      this.redisCacheService.getPortfolioSnapshotKey({
+        filters: this.filters,
+        userId: this.userId
+      })
+    );
+
+    if (cachedSnapshot) {
+      this.snapshot = plainToClass(
+        PortfolioSnapshot,
+        JSON.parse(cachedSnapshot)
       );
 
-      if (cachedSnapshot) {
-        this.snapshot = plainToClass(
-          PortfolioSnapshot,
-          JSON.parse(cachedSnapshot)
-        );
-
-        Logger.debug(
-          `Fetched portfolio snapshot from cache in ${(
-            (performance.now() - startTimeTotal) /
-            1000
-          ).toFixed(3)} seconds`,
-          'PortfolioCalculator'
-        );
-      } else {
-        this.snapshot = await this.computeSnapshot();
-
-        this.redisCacheService.set(
-          this.redisCacheService.getPortfolioSnapshotKey({
-            userId: this.userId
-          }),
-          JSON.stringify(this.snapshot),
-          this.configurationService.get('CACHE_QUOTES_TTL')
-        );
-
-        Logger.debug(
-          `Computed portfolio snapshot in ${(
-            (performance.now() - startTimeTotal) /
-            1000
-          ).toFixed(3)} seconds`,
-          'PortfolioCalculator'
-        );
-      }
+      Logger.debug(
+        `Fetched portfolio snapshot from cache in ${(
+          (performance.now() - startTimeTotal) /
+          1000
+        ).toFixed(3)} seconds`,
+        'PortfolioCalculator'
+      );
     } else {
       this.snapshot = await this.computeSnapshot();
+
+      this.redisCacheService.set(
+        this.redisCacheService.getPortfolioSnapshotKey({
+          filters: this.filters,
+          userId: this.userId
+        }),
+        JSON.stringify(this.snapshot),
+        this.configurationService.get('CACHE_QUOTES_TTL')
+      );
+
+      Logger.debug(
+        `Computed portfolio snapshot in ${(
+          (performance.now() - startTimeTotal) /
+          1000
+        ).toFixed(3)} seconds`,
+        'PortfolioCalculator'
+      );
     }
   }
 }

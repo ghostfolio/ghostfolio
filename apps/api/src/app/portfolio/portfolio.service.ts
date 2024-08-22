@@ -264,12 +264,10 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
@@ -343,12 +341,10 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: filters?.length > 0, // TODO
-      isExperimentalFeatures:
-        this.request.user?.Settings.settings.isExperimentalFeatures
+      currency: userCurrency
     });
 
     const { currentValueInBaseCurrency, hasErrors, positions } =
@@ -652,18 +648,13 @@ export class PortfolioService {
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
 
-    // TODO: Always use same parameters when calling
-    // this.calculatorFactory.createCalculator()
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       userId,
       activities: orders.filter((order) => {
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: true,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: userCurrency
     });
 
     const portfolioStart = portfolioCalculator.getStartDate();
@@ -933,12 +924,10 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
@@ -1125,12 +1114,10 @@ export class PortfolioService {
       this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
+        filters,
         userId,
         calculationType: PerformanceCalculationType.TWR,
-        currency: userCurrency,
-        hasFilters: filters?.length > 0,
-        isExperimentalFeatures:
-          this.request.user.Settings.settings.isExperimentalFeatures
+        currency: userCurrency
       });
 
     const { errors, hasErrors, historicalData } =
@@ -1194,10 +1181,7 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: false,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
