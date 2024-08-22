@@ -131,7 +131,7 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
           ({ date, netPerformanceInPercentageWithCurrencyEffect }) => {
             return {
               date,
-              value: netPerformanceInPercentageWithCurrencyEffect
+              value: netPerformanceInPercentageWithCurrencyEffect * 100
             };
           }
         );
