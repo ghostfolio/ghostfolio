@@ -10,7 +10,12 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getSum,
+  parseDate,
+  resetHours
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   DataProviderInfo,
@@ -32,7 +37,6 @@ import {
   format,
   isAfter,
   isBefore,
-  max,
   min,
   subDays
 } from 'date-fns';
@@ -398,7 +402,7 @@ export abstract class PortfolioCalculator {
           ? (netPerformancePercentage ?? null)
           : null,
         netPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? (netPerformancePercentageWithCurrencyEffect ?? null)
+          ? (netPerformancePercentageWithCurrencyEffectMap['max'] ?? null)
           : null,
         netPerformancePercentageWithCurrencyEffectMap: !hasErrors
           ? (netPerformancePercentageWithCurrencyEffectMap ?? null)
@@ -554,7 +558,6 @@ export abstract class PortfolioCalculator {
         ? 0
         : totalNetPerformanceValue
             .div(totalTimeWeightedInvestmentValue)
-            .mul(100)
             .toNumber();
 
       const netPerformanceInPercentageWithCurrencyEffect =
@@ -562,7 +565,6 @@ export abstract class PortfolioCalculator {
           ? 0
           : totalNetPerformanceValueWithCurrencyEffect
               .div(totalTimeWeightedInvestmentValueWithCurrencyEffect)
-              .mul(100)
               .toNumber();
 
       return {
@@ -692,10 +694,9 @@ export abstract class PortfolioCalculator {
     let totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (let historicalDataItem of historicalData) {
-      if (
-        !isBefore(parseDate(historicalDataItem.date), subDays(start, 1)) &&
-        !isAfter(parseDate(historicalDataItem.date), end)
-      ) {
+      const date = resetHours(parseDate(historicalDataItem.date));
+
+      if (!isBefore(date, start) && !isAfter(date, end)) {
         if (!isNumber(netPerformanceAtStartDate)) {
           netPerformanceAtStartDate = historicalDataItem.netPerformance;
 
@@ -705,6 +706,9 @@ export abstract class PortfolioCalculator {
           netPerformanceInPercentageWithCurrencyEffectAtStartDate =
             historicalDataItem.netPerformanceInPercentageWithCurrencyEffect;
         }
+
+        const netPerformanceSinceStartDate =
+          historicalDataItem.netPerformance - netPerformanceAtStartDate;
 
         const netPerformanceWithCurrencyEffectSinceStartDate =
           historicalDataItem.netPerformanceWithCurrencyEffect -
@@ -730,10 +734,11 @@ export abstract class PortfolioCalculator {
             historicalDataItem.netPerformance - netPerformanceAtStartDate,
           netPerformanceWithCurrencyEffect:
             netPerformanceWithCurrencyEffectSinceStartDate,
+          netPerformanceInPercentage:
+            netPerformanceSinceStartDate / timeWeightedInvestmentValue,
           netPerformanceInPercentageWithCurrencyEffect:
-            (netPerformanceWithCurrencyEffectSinceStartDate /
-              timeWeightedInvestmentValue) *
-            100,
+            netPerformanceWithCurrencyEffectSinceStartDate /
+            timeWeightedInvestmentValue,
           // TODO: Add net worth with valuables
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)

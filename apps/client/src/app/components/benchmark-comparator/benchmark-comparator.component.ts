@@ -111,7 +111,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value };
+            return { x: parseDate(date).getTime(), y: value * 100 };
           }),
           label: $localize`Portfolio`
         },

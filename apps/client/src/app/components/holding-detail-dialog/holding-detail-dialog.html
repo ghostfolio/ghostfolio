@@ -37,60 +37,44 @@
 
     <div class="row">
       <div class="col-6 mb-3">
-        @if (
-          SymbolProfile?.currency &&
-          data.baseCurrency !== SymbolProfile?.currency
-        ) {
-          <gf-value
-            i18n
-            size="medium"
-            [colorizeSign]="true"
-            [isCurrency]="true"
-            [locale]="data.locale"
-            [precision]="netPerformanceWithCurrencyEffectPrecision"
-            [unit]="data.baseCurrency"
-            [value]="netPerformanceWithCurrencyEffect"
-            >Change with currency effect</gf-value
-          >
-        } @else {
-          <gf-value
-            i18n
-            size="medium"
-            [colorizeSign]="true"
-            [isCurrency]="true"
-            [locale]="data.locale"
-            [precision]="netPerformancePrecision"
-            [unit]="data.baseCurrency"
-            [value]="netPerformance"
-            >Change</gf-value
-          >
-        }
+        <gf-value
+          i18n
+          size="medium"
+          [colorizeSign]="true"
+          [isCurrency]="true"
+          [locale]="data.locale"
+          [precision]="netPerformanceWithCurrencyEffectPrecision"
+          [unit]="data.baseCurrency"
+          [value]="netPerformanceWithCurrencyEffect"
+        >
+          @if (
+            SymbolProfile?.currency &&
+            data.baseCurrency !== SymbolProfile?.currency
+          ) {
+            Change with currency effect
+          } @else {
+            Change
+          }
+        </gf-value>
       </div>
       <div class="col-6 mb-3">
-        @if (
-          SymbolProfile?.currency &&
-          data.baseCurrency !== SymbolProfile?.currency
-        ) {
-          <gf-value
-            i18n
-            size="medium"
-            [colorizeSign]="true"
-            [isPercent]="true"
-            [locale]="data.locale"
-            [value]="netPerformancePercentWithCurrencyEffect"
-            >Performance with currency effect</gf-value
-          >
-        } @else {
-          <gf-value
-            i18n
-            size="medium"
-            [colorizeSign]="true"
-            [isPercent]="true"
-            [locale]="data.locale"
-            [value]="netPerformancePercent"
-            >Performance</gf-value
-          >
-        }
+        <gf-value
+          i18n
+          size="medium"
+          [colorizeSign]="true"
+          [isPercent]="true"
+          [locale]="data.locale"
+          [value]="netPerformancePercentWithCurrencyEffect"
+        >
+          @if (
+            SymbolProfile?.currency &&
+            data.baseCurrency !== SymbolProfile?.currency
+          ) {
+            Performance with currency effect
+          } @else {
+            Performance
+          }
+        </gf-value>
       </div>
       <div class="col-6 mb-3">
         <gf-value

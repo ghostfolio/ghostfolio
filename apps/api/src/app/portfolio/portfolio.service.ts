@@ -652,6 +652,8 @@ export class PortfolioService {
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
 
+    // TODO: Always use same parameters when calling
+    // this.calculatorFactory.createCalculator()
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       userId,
       activities: orders.filter((order) => {
@@ -1171,9 +1173,9 @@ export class PortfolioService {
         totalInvestment,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
-        netPerformancePercentage: netPerformanceInPercentage / 100, // TODO
+        netPerformancePercentage: netPerformanceInPercentage,
         netPerformancePercentageWithCurrencyEffect:
-          netPerformanceInPercentageWithCurrencyEffect / 100 // TODO
+          netPerformanceInPercentageWithCurrencyEffect
       }
     };
   }

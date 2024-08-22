@@ -178,7 +178,7 @@ describe('PortfolioCalculator', () => {
 
       expect(last(portfolioSnapshot.historicalData)).toMatchObject(
         expect.objectContaining({
-          netPerformanceInPercentageWithCurrencyEffect: 8.437042459736457,
+          netPerformanceInPercentageWithCurrencyEffect: 0.08437042459736457,
           netPerformanceWithCurrencyEffect: 23.05,
           totalInvestmentValueWithCurrencyEffect: 273.2
         })
