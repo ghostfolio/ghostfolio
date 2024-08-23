@@ -867,7 +867,7 @@
       </trans-unit>
       <trans-unit id="4b00337456de4a757f7abc8224d8b391f5d0634a" datatype="html">
         <source>Transfer Cash Balance</source>
-        <target state="translated">Transfer salda gotówkowego</target>
+        <target state="translated">Transfer Salda Gotówkowego</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
           <context context-type="linenumber">10</context>
