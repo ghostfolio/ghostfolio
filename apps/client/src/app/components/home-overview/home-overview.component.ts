@@ -91,24 +91,6 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onChangeDateRange(dateRange: DateRange) {
-    this.dataService
-      .putUserSetting({ dateRange })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService.remove();
-
-        this.userService
-          .get()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
-
-            this.changeDetectorRef.markForCheck();
-          });
-      });
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
