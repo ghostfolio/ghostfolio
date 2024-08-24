@@ -149,9 +149,9 @@ describe('PortfolioCalculator', () => {
             feeInBaseCurrency: new Big('0'),
             firstBuyDate: '2015-01-01',
             grossPerformance: new Big('27172.74').mul(0.97373),
-            grossPerformancePercentage: new Big('42.41983590271396609433'),
+            grossPerformancePercentage: new Big('0.4241983590271396608571'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '41.64017412624815597854'
+              '0.4164017412624815597008'
             ),
             grossPerformanceWithCurrencyEffect: new Big(
               '26516.208701400000064086'
@@ -161,9 +161,9 @@ describe('PortfolioCalculator', () => {
             marketPrice: 13657.2,
             marketPriceInBaseCurrency: 13298.425356,
             netPerformance: new Big('27172.74').mul(0.97373),
-            netPerformancePercentage: new Big('42.41983590271396609433'),
+            netPerformancePercentage: new Big('0.4241983590271396608571'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('41.73453461766058626637')
+              max: new Big('0.417188277288666871633')
             },
             netPerformanceWithCurrencyEffectMap: {
               max: new Big('26516.208701400000064086')
