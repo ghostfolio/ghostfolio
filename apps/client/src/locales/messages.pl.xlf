@@ -299,7 +299,7 @@
       </trans-unit>
       <trans-unit id="6948811958230386934" datatype="html">
         <source>privacy-policy</source>
-        <target state="translated">polityka-prywatności</target>
+        <target state="translated">polityka-prywatnosci</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.ts</context>
           <context context-type="linenumber">65</context>
