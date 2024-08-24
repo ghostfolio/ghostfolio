@@ -81,30 +81,6 @@
     </div>
   </div>
   <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1 ml-3 text-truncate">
-      <ng-container i18n>Gross Performance</ng-container>
-      <abbr
-        class="initialism ml-2 text-muted"
-        title="Time-Weighted Rate of Return"
-        >(TWR)</abbr
-      >
-    </div>
-    <div class="flex-column flex-wrap justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        position="end"
-        [colorizeSign]="true"
-        [isPercent]="true"
-        [locale]="locale"
-        [value]="
-          isLoading
-            ? undefined
-            : summary?.grossPerformancePercentageWithCurrencyEffect
-        "
-      />
-    </div>
-  </div>
-  <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
       @if (summary?.fees || summary?.fees === 0) {

@@ -1596,8 +1596,6 @@ export class PortfolioService {
       userId
     });
 
-    console.log(performance);
-
     const {
       netPerformance,
       netPerformancePercentage,
@@ -1725,8 +1723,6 @@ export class PortfolioService {
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
       grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
-      grossPerformancePercentage: undefined, // TODO
-      grossPerformancePercentageWithCurrencyEffect: undefined, // TODO
       grossPerformanceWithCurrencyEffect: new Big(
         netPerformanceWithCurrencyEffect
       )

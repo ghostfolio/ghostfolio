@@ -18,8 +18,6 @@ export interface PortfolioSummary extends PortfolioPerformance {
   fireWealth: number;
   firstOrderDate: Date;
   grossPerformance: number;
-  grossPerformancePercentage: number;
-  grossPerformancePercentageWithCurrencyEffect: number;
   grossPerformanceWithCurrencyEffect: number;
   interest: number;
   items: number;
