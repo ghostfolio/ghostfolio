@@ -423,9 +423,7 @@ export class PortfolioService {
       marketPrice,
       netPerformance,
       netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect, // TODO: Remove?
       netPerformancePercentageWithCurrencyEffectMap,
-      netPerformanceWithCurrencyEffect, // TODO: Remove?
       netPerformanceWithCurrencyEffectMap,
       quantity,
       symbol,
@@ -803,9 +801,11 @@ export class PortfolioService {
         netPerformance: position.netPerformance?.toNumber(),
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
-          position.netPerformancePercentageWithCurrencyEffect?.toNumber(),
+          position.netPerformancePercentageWithCurrencyEffectMap?.[
+            'max'
+          ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
-          position.netPerformanceWithCurrencyEffect?.toNumber(),
+          position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -986,8 +986,8 @@ export class PortfolioService {
           investmentWithCurrencyEffect,
           netPerformance,
           netPerformancePercentage,
-          netPerformancePercentageWithCurrencyEffect,
-          netPerformanceWithCurrencyEffect,
+          netPerformancePercentageWithCurrencyEffectMap,
+          netPerformanceWithCurrencyEffectMap,
           quantity,
           symbol,
           timeWeightedInvestment,
@@ -1020,9 +1020,12 @@ export class PortfolioService {
             netPerformancePercentage:
               netPerformancePercentage?.toNumber() ?? null,
             netPerformancePercentageWithCurrencyEffect:
-              netPerformancePercentageWithCurrencyEffect?.toNumber() ?? null,
+              netPerformancePercentageWithCurrencyEffectMap?.[
+                dateRange
+              ]?.toNumber() ?? null,
             netPerformanceWithCurrencyEffect:
-              netPerformanceWithCurrencyEffect?.toNumber() ?? null,
+              netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ??
+              null,
             quantity: quantity.toNumber(),
             timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
             timeWeightedInvestmentWithCurrencyEffect:

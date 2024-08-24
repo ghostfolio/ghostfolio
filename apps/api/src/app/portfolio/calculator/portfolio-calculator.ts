@@ -394,14 +394,8 @@ export abstract class PortfolioCalculator {
         netPerformancePercentage: !hasErrors
           ? (netPerformancePercentage ?? null)
           : null,
-        netPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? (netPerformancePercentageWithCurrencyEffectMap['max'] ?? null)
-          : null,
         netPerformancePercentageWithCurrencyEffectMap: !hasErrors
           ? (netPerformancePercentageWithCurrencyEffectMap ?? null)
-          : null,
-        netPerformanceWithCurrencyEffect: !hasErrors
-          ? (netPerformanceWithCurrencyEffect ?? null)
           : null,
         netPerformanceWithCurrencyEffectMap: !hasErrors
           ? (netPerformanceWithCurrencyEffectMap ?? null)

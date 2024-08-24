@@ -79,7 +79,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
 
         netPerformanceWithCurrencyEffect =
           netPerformanceWithCurrencyEffect.plus(
-            currentPosition.netPerformanceWithCurrencyEffect
+            currentPosition.netPerformancePercentageWithCurrencyEffectMap['max']
           );
       } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;

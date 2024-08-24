@@ -143,13 +143,9 @@ describe('PortfolioCalculator', () => {
             investmentWithCurrencyEffect: new Big('75.80'),
             netPerformance: new Big('17.68'),
             netPerformancePercentage: new Big('0.12184460284330327256'),
-            netPerformancePercentageWithCurrencyEffect: new Big(
-              '0.12348284960422163588'
-            ),
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('0.12348284960422163588')
             },
-            netPerformanceWithCurrencyEffect: new Big('17.68'),
             netPerformanceWithCurrencyEffectMap: {
               max: new Big('17.68')
             },
