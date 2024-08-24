@@ -1588,18 +1588,27 @@ export class PortfolioService {
       }
     }
 
+    const { currentValueInBaseCurrency, totalInvestment } =
+      await portfolioCalculator.getSnapshot();
+
+    const { performance } = await this.getPerformance({
+      impersonationId,
+      userId
+    });
+
+    console.log(performance);
+
     const {
-      currentValueInBaseCurrency,
-      grossPerformance,
-      grossPerformancePercentage,
-      grossPerformancePercentageWithCurrencyEffect,
-      grossPerformanceWithCurrencyEffect,
+      // TODO
+      // grossPerformance,
+      // grossPerformancePercentage,
+      // grossPerformancePercentageWithCurrencyEffect,
+      // grossPerformanceWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
-      netPerformanceWithCurrencyEffect,
-      totalInvestment
-    } = await portfolioCalculator.getSnapshot();
+      netPerformanceWithCurrencyEffect
+    } = performance;
 
     const dividendInBaseCurrency =
       await portfolioCalculator.getDividendInBaseCurrency();
@@ -1696,6 +1705,10 @@ export class PortfolioService {
       cash,
       excludedAccountsAndActivities,
       firstOrderDate,
+      netPerformance,
+      netPerformancePercentage,
+      netPerformancePercentageWithCurrencyEffect,
+      netPerformanceWithCurrencyEffect,
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
@@ -1716,21 +1729,14 @@ export class PortfolioService {
       fireWealth: new Big(currentValueInBaseCurrency)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
-      grossPerformance: grossPerformance.toNumber(),
-      grossPerformancePercentage: grossPerformancePercentage.toNumber(),
-      grossPerformancePercentageWithCurrencyEffect:
-        grossPerformancePercentageWithCurrencyEffect.toNumber(),
-      grossPerformanceWithCurrencyEffect:
-        grossPerformanceWithCurrencyEffect.toNumber(),
+      // TODO
+      grossPerformance: 0,
+      grossPerformancePercentage: 0,
+      grossPerformancePercentageWithCurrencyEffect: 0,
+      grossPerformanceWithCurrencyEffect: 0,
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
-      netPerformance: netPerformance.toNumber(),
-      netPerformancePercentage: netPerformancePercentage.toNumber(),
-      netPerformancePercentageWithCurrencyEffect:
-        netPerformancePercentageWithCurrencyEffect.toNumber(),
-      netPerformanceWithCurrencyEffect:
-        netPerformanceWithCurrencyEffect.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,

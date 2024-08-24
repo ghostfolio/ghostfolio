@@ -15,49 +15,9 @@ export class PortfolioSnapshot {
 
   errors?: AssetProfileIdentifier[];
 
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  grossPerformance: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  grossPerformanceWithCurrencyEffect: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  grossPerformancePercentage: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  grossPerformancePercentageWithCurrencyEffect: Big;
-
   hasErrors: boolean;
 
   historicalData: HistoricalDataItem[];
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netAnnualizedPerformance?: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netAnnualizedPerformanceWithCurrencyEffect?: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformance: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformanceWithCurrencyEffect: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformancePercentage: Big;
-
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformancePercentageWithCurrencyEffect: Big;
 
   @Type(() => TimelinePosition)
   positions: TimelinePosition[];

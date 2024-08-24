@@ -106,35 +106,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
 
     return {
       currentValueInBaseCurrency,
-      grossPerformance,
-      grossPerformanceWithCurrencyEffect,
       hasErrors,
-      netPerformance,
-      netPerformanceWithCurrencyEffect,
       positions,
       totalFeesWithCurrencyEffect,
       totalInterestWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
       historicalData: [],
-      netPerformancePercentage: totalTimeWeightedInvestment.eq(0)
-        ? new Big(0)
-        : netPerformance.div(totalTimeWeightedInvestment),
-      netPerformancePercentageWithCurrencyEffect:
-        totalTimeWeightedInvestmentWithCurrencyEffect.eq(0)
-          ? new Big(0)
-          : netPerformanceWithCurrencyEffect.div(
-              totalTimeWeightedInvestmentWithCurrencyEffect
-            ),
-      grossPerformancePercentage: totalTimeWeightedInvestment.eq(0)
-        ? new Big(0)
-        : grossPerformance.div(totalTimeWeightedInvestment),
-      grossPerformancePercentageWithCurrencyEffect:
-        totalTimeWeightedInvestmentWithCurrencyEffect.eq(0)
-          ? new Big(0)
-          : grossPerformanceWithCurrencyEffect.div(
-              totalTimeWeightedInvestmentWithCurrencyEffect
-            ),
       totalLiabilitiesWithCurrencyEffect: new Big(0),
       totalValuablesWithCurrencyEffect: new Big(0)
     };
