@@ -1599,11 +1599,6 @@ export class PortfolioService {
     console.log(performance);
 
     const {
-      // TODO
-      // grossPerformance,
-      // grossPerformancePercentage,
-      // grossPerformancePercentageWithCurrencyEffect,
-      // grossPerformanceWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
@@ -1729,11 +1724,14 @@ export class PortfolioService {
       fireWealth: new Big(currentValueInBaseCurrency)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
-      // TODO
-      grossPerformance: 0,
-      grossPerformancePercentage: 0,
-      grossPerformancePercentageWithCurrencyEffect: 0,
-      grossPerformanceWithCurrencyEffect: 0,
+      grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
+      grossPerformancePercentage: undefined, // TODO
+      grossPerformancePercentageWithCurrencyEffect: undefined, // TODO
+      grossPerformanceWithCurrencyEffect: new Big(
+        netPerformanceWithCurrencyEffect
+      )
+        .plus(fees)
+        .toNumber(),
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
