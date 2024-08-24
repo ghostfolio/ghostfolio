@@ -247,13 +247,12 @@ export class PortfolioService {
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
-    const { activities } = await this.orderService.getOrders({
-      filters,
-      userId,
-      includeDrafts: true,
-      types: ['BUY', 'SELL'],
-      userCurrency: this.getUserCurrency()
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        filters,
+        userId,
+        userCurrency: this.getUserCurrency()
+      });
 
     if (activities.length === 0) {
       return {
@@ -332,12 +331,12 @@ export class PortfolioService {
       (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
-    const { activities } = await this.orderService.getOrders({
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccounts
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        filters,
+        userCurrency,
+        userId
+      });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
@@ -597,11 +596,11 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities } = await this.orderService.getOrders({
-      userCurrency,
-      userId,
-      withExcludedAccounts: true
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        userCurrency,
+        userId
+      });
 
     const orders = activities.filter(({ SymbolProfile }) => {
       return (
@@ -906,14 +905,12 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
 
-    const { endDate } = getIntervalFromDateRange(dateRange);
-
-    const { activities } = await this.orderService.getOrders({
-      endDate,
-      filters,
-      userId,
-      userCurrency: this.getUserCurrency()
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        filters,
+        userId,
+        userCurrency: this.getUserCurrency()
+      });
 
     if (activities?.length <= 0) {
       return {
@@ -1085,15 +1082,12 @@ export class PortfolioService {
       )
     );
 
-    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
-
-    const { activities } = await this.orderService.getOrders({
-      endDate,
-      filters,
-      userCurrency,
-      userId,
-      withExcludedAccounts
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        filters,
+        userCurrency,
+        userId
+      });
 
     if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
       return {
@@ -1125,6 +1119,8 @@ export class PortfolioService {
 
     const { errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
+
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { chart } = await portfolioCalculator.getPerformance({
       end: endDate,
@@ -1175,10 +1171,11 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const { activities } = await this.orderService.getOrders({
-      userCurrency,
-      userId
-    });
+    const { activities } =
+      await this.orderService.getOrdersForPortfolioCalculator({
+        userCurrency,
+        userId
+      });
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
