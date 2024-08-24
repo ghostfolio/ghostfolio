@@ -107,19 +107,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('297.8'),
         errors: [],
-        grossPerformance: new Big('24.6'),
-        grossPerformancePercentage: new Big('0.09004392386530014641'),
-        grossPerformancePercentageWithCurrencyEffect: new Big(
-          '0.09004392386530014641'
-        ),
-        grossPerformanceWithCurrencyEffect: new Big('24.6'),
         hasErrors: false,
-        netPerformance: new Big('23.05'),
-        netPerformancePercentage: new Big('0.08437042459736456808'),
-        netPerformancePercentageWithCurrencyEffect: new Big(
-          '0.08437042459736456808'
-        ),
-        netPerformanceWithCurrencyEffect: new Big('23.05'),
         positions: [
           {
             averagePrice: new Big('136.6'),
@@ -177,6 +165,8 @@ describe('PortfolioCalculator', () => {
 
       expect(last(portfolioSnapshot.historicalData)).toMatchObject(
         expect.objectContaining({
+          netPerformance: 23.05,
+          netPerformanceInPercentage: 0.08437042459736457,
           netPerformanceInPercentageWithCurrencyEffect: 0.08437042459736457,
           netPerformanceWithCurrencyEffect: 23.05,
           totalInvestmentValueWithCurrencyEffect: 273.2

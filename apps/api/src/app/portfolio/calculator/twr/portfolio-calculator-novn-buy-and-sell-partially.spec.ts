@@ -17,6 +17,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -121,19 +122,7 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('87.8'),
         errors: [],
-        grossPerformance: new Big('21.93'),
-        grossPerformancePercentage: new Big('0.15113417083448194384'),
-        grossPerformancePercentageWithCurrencyEffect: new Big(
-          '0.15113417083448194384'
-        ),
-        grossPerformanceWithCurrencyEffect: new Big('21.93'),
         hasErrors: false,
-        netPerformance: new Big('17.68'),
-        netPerformancePercentage: new Big('0.12184460284330327256'),
-        netPerformancePercentageWithCurrencyEffect: new Big(
-          '0.12184460284330327256'
-        ),
-        netPerformanceWithCurrencyEffect: new Big('17.68'),
         positions: [
           {
             averagePrice: new Big('75.80'),
@@ -184,6 +173,16 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
+
+      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: 17.68,
+          netPerformanceInPercentage: 0.12184460284330327256,
+          netPerformanceInPercentageWithCurrencyEffect: 0.12184460284330327256,
+          netPerformanceWithCurrencyEffect: 17.68,
+          totalInvestmentValueWithCurrencyEffect: 75.8
+        })
+      );
 
       expect(investments).toEqual([
         { date: '2022-03-07', investment: new Big('151.6') },

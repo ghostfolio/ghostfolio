@@ -13,6 +13,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 import { subDays } from 'date-fns';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -83,15 +84,8 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0),
-        grossPerformancePercentageWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffect: new Big(0),
-        netPerformanceWithCurrencyEffect: new Big(0),
+        historicalData: [],
         positions: [],
         totalFeesWithCurrencyEffect: new Big('0'),
         totalInterestWithCurrencyEffect: new Big('0'),
