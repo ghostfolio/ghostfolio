@@ -144,10 +144,7 @@ export class UserController {
       );
     }
 
-    const haveFiltersChanged =
-      'filters.accounts' in data ||
-      'filters.assetClasses' in data ||
-      'filters.tags' in data;
+    const emitPortfolioChangedEvent = 'baseCurrency' in data;
 
     const userSettings: UserSettings = merge(
       {},
@@ -162,8 +159,8 @@ export class UserController {
     }
 
     return this.userService.updateUserSetting({
+      emitPortfolioChangedEvent,
       userSettings,
-      emitPortfolioChangedEvent: haveFiltersChanged,
       userId: this.request.user.id
     });
   }

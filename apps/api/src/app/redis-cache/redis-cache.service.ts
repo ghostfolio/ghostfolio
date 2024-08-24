@@ -26,7 +26,13 @@ export class RedisCacheService {
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
-    return this.cache.store.keys(aPrefix);
+    let prefix = aPrefix;
+
+    if (prefix) {
+      prefix = `${prefix}*`;
+    }
+
+    return this.cache.store.keys(prefix);
   }
 
   public getPortfolioSnapshotKey({
@@ -67,7 +73,7 @@ export class RedisCacheService {
     );
 
     for (const key of keys) {
-      this.remove(key);
+      await this.remove(key);
     }
   }
 
