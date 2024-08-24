@@ -28,13 +28,11 @@ export interface SymbolMetrics {
   };
   netPerformance: Big;
   netPerformancePercentage: Big;
-  netPerformancePercentageWithCurrencyEffect: Big;
   netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
   netPerformanceValues: {
     [date: string]: Big;
   };
   netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
-  netPerformanceWithCurrencyEffect: Big;
   netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
   timeWeightedInvestment: Big;
   timeWeightedInvestmentValues: {

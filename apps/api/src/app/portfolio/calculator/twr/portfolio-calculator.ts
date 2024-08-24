@@ -31,7 +31,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceWithCurrencyEffect = new Big(0);
     let hasErrors = false;
     let netPerformance = new Big(0);
-    let netPerformanceWithCurrencyEffect = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
@@ -76,11 +75,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           );
 
         netPerformance = netPerformance.plus(currentPosition.netPerformance);
-
-        netPerformanceWithCurrencyEffect =
-          netPerformanceWithCurrencyEffect.plus(
-            currentPosition.netPerformancePercentageWithCurrencyEffectMap['max']
-          );
       } else if (!currentPosition.quantity.eq(0)) {
         hasErrors = true;
       }
@@ -123,7 +117,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     dataSource,
     end,
     exchangeRates,
-    isChartMode = false,
     marketSymbolMap,
     start,
     symbol
@@ -131,7 +124,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     chartDateMap?: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
-    isChartMode?: boolean;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
@@ -211,11 +203,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
-        netPerformanceWithCurrencyEffect: new Big(0),
         netPerformanceWithCurrencyEffectMap: {},
         timeWeightedInvestment: new Big(0),
         timeWeightedInvestmentValues: {},
@@ -263,12 +253,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffect: new Big(0),
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
-        netPerformanceWithCurrencyEffect: new Big(0),
         timeWeightedInvestment: new Big(0),
         timeWeightedInvestmentValues: {},
         timeWeightedInvestmentValuesWithCurrencyEffect: {},
@@ -319,46 +307,43 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let day = start;
     let lastUnitPrice: Big;
 
-    if (isChartMode) {
-      const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
+    const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
 
-      for (const order of orders) {
-        ordersByDate[order.date] = ordersByDate[order.date] ?? [];
-        ordersByDate[order.date].push(order);
-      }
+    for (const order of orders) {
+      ordersByDate[order.date] = ordersByDate[order.date] ?? [];
+      ordersByDate[order.date].push(order);
+    }
 
-      while (isBefore(day, end)) {
-        const dateString = format(day, DATE_FORMAT);
+    while (isBefore(day, end)) {
+      const dateString = format(day, DATE_FORMAT);
 
-        if (ordersByDate[dateString]?.length > 0) {
-          for (let order of ordersByDate[dateString]) {
-            order.unitPriceFromMarketData =
-              marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
-          }
-        } else if (chartDateMap[dateString]) {
-          orders.push({
-            date: dateString,
-            fee: new Big(0),
-            feeInBaseCurrency: new Big(0),
-            quantity: new Big(0),
-            SymbolProfile: {
-              dataSource,
-              symbol
-            },
-            type: 'BUY',
-            unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
-            unitPriceFromMarketData:
-              marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice
-          });
+      if (ordersByDate[dateString]?.length > 0) {
+        for (let order of ordersByDate[dateString]) {
+          order.unitPriceFromMarketData =
+            marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
         }
-
-        const lastOrder = last(orders);
-
-        lastUnitPrice =
-          lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
-
-        day = addDays(day, 1);
+      } else if (chartDateMap[dateString]) {
+        orders.push({
+          date: dateString,
+          fee: new Big(0),
+          feeInBaseCurrency: new Big(0),
+          quantity: new Big(0),
+          SymbolProfile: {
+            dataSource,
+            symbol
+          },
+          type: 'BUY',
+          unitPrice: marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice,
+          unitPriceFromMarketData:
+            marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice
+        });
       }
+
+      const lastOrder = last(orders);
+
+      lastUnitPrice = lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
+
+      day = addDays(day, 1);
     }
 
     // Sort orders so that the start and end placeholder order are at the correct
@@ -681,44 +666,42 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
             );
         }
 
-        if (isChartMode) {
-          currentValues[order.date] = valueOfInvestment;
+        currentValues[order.date] = valueOfInvestment;
 
-          currentValuesWithCurrencyEffect[order.date] =
-            valueOfInvestmentWithCurrencyEffect;
+        currentValuesWithCurrencyEffect[order.date] =
+          valueOfInvestmentWithCurrencyEffect;
 
-          netPerformanceValues[order.date] = grossPerformance
-            .minus(grossPerformanceAtStartDate)
-            .minus(fees.minus(feesAtStartDate));
+        netPerformanceValues[order.date] = grossPerformance
+          .minus(grossPerformanceAtStartDate)
+          .minus(fees.minus(feesAtStartDate));
 
-          netPerformanceValuesWithCurrencyEffect[order.date] =
-            grossPerformanceWithCurrencyEffect
-              .minus(grossPerformanceAtStartDateWithCurrencyEffect)
-              .minus(
-                feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
-              );
+        netPerformanceValuesWithCurrencyEffect[order.date] =
+          grossPerformanceWithCurrencyEffect
+            .minus(grossPerformanceAtStartDateWithCurrencyEffect)
+            .minus(
+              feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect)
+            );
 
-          investmentValuesAccumulated[order.date] = totalInvestment;
+        investmentValuesAccumulated[order.date] = totalInvestment;
 
-          investmentValuesAccumulatedWithCurrencyEffect[order.date] =
-            totalInvestmentWithCurrencyEffect;
+        investmentValuesAccumulatedWithCurrencyEffect[order.date] =
+          totalInvestmentWithCurrencyEffect;
 
-          investmentValuesWithCurrencyEffect[order.date] = (
-            investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
-          ).add(transactionInvestmentWithCurrencyEffect);
+        investmentValuesWithCurrencyEffect[order.date] = (
+          investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
+        ).add(transactionInvestmentWithCurrencyEffect);
 
-          timeWeightedInvestmentValues[order.date] =
-            totalInvestmentDays > 0
-              ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
-              : new Big(0);
+        timeWeightedInvestmentValues[order.date] =
+          totalInvestmentDays > 0
+            ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
+            : new Big(0);
 
-          timeWeightedInvestmentValuesWithCurrencyEffect[order.date] =
-            totalInvestmentDays > 0
-              ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
-                  totalInvestmentDays
-                )
-              : new Big(0);
-        }
+        timeWeightedInvestmentValuesWithCurrencyEffect[order.date] =
+          totalInvestmentDays > 0
+            ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
+                totalInvestmentDays
+              )
+            : new Big(0);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -759,11 +742,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     const totalNetPerformance = grossPerformance
       .minus(grossPerformanceAtStartDate)
       .minus(fees.minus(feesAtStartDate));
-
-    const totalNetPerformanceWithCurrencyEffect =
-      grossPerformanceWithCurrencyEffect
-        .minus(grossPerformanceAtStartDateWithCurrencyEffect)
-        .minus(feesWithCurrencyEffect.minus(feesAtStartDateWithCurrencyEffect));
 
     const timeWeightedAverageInvestmentBetweenStartAndEndDate =
       totalInvestmentDays > 0
@@ -807,15 +785,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
         ? totalNetPerformance.div(
             timeWeightedAverageInvestmentBetweenStartAndEndDate
-          )
-        : new Big(0);
-
-    const netPerformancePercentageWithCurrencyEffect =
-      timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect.gt(
-        0
-      )
-        ? totalNetPerformanceWithCurrencyEffect.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
           )
         : new Big(0);
 
@@ -946,9 +915,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         Net performance: ${totalNetPerformance.toFixed(
           2
         )} / ${netPerformancePercentage.mul(100).toFixed(2)}%
-        Net performance with currency effect: ${totalNetPerformanceWithCurrencyEffect.toFixed(
-          2
-        )} / ${netPerformancePercentageWithCurrencyEffect.mul(100).toFixed(2)}%`
+        Net performance with currency effect: ${netPerformancePercentageWithCurrencyEffectMap[
+          'max'
+        ].toFixed(2)}%`
       );
     }
 
@@ -964,7 +933,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       investmentValuesAccumulatedWithCurrencyEffect,
       investmentValuesWithCurrencyEffect,
       netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect,
       netPerformancePercentageWithCurrencyEffectMap,
       netPerformanceValues,
       netPerformanceValuesWithCurrencyEffect,
@@ -987,7 +955,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalGrossPerformanceWithCurrencyEffect,
       hasErrors: totalUnits.gt(0) && (!initialValue || !unitPriceAtEndDate),
       netPerformance: totalNetPerformance,
-      netPerformanceWithCurrencyEffect: totalNetPerformanceWithCurrencyEffect,
       timeWeightedInvestment:
         timeWeightedAverageInvestmentBetweenStartAndEndDate,
       timeWeightedInvestmentWithCurrencyEffect:

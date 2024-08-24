@@ -16,7 +16,6 @@ export class MWRPortfolioCalculator extends PortfolioCalculator {
     dataSource,
     end,
     exchangeRates,
-    isChartMode = false,
     marketSymbolMap,
     start,
     step = 1,
@@ -24,7 +23,6 @@ export class MWRPortfolioCalculator extends PortfolioCalculator {
   }: {
     end: Date;
     exchangeRates: { [dateString: string]: number };
-    isChartMode?: boolean;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };

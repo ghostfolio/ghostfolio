@@ -320,11 +320,9 @@ export abstract class PortfolioCalculator {
         investmentValuesWithCurrencyEffect,
         netPerformance,
         netPerformancePercentage,
-        netPerformancePercentageWithCurrencyEffect,
         netPerformancePercentageWithCurrencyEffectMap,
         netPerformanceValues,
         netPerformanceValuesWithCurrencyEffect,
-        netPerformanceWithCurrencyEffect,
         netPerformanceWithCurrencyEffectMap,
         timeWeightedInvestment,
         timeWeightedInvestmentValues,
@@ -344,7 +342,6 @@ export abstract class PortfolioCalculator {
         end: this.endDate,
         exchangeRates:
           exchangeRatesByCurrency[`${item.currency}${this.currency}`],
-        isChartMode: true,
         start: this.startDate,
         symbol: item.symbol
       });
@@ -673,11 +670,10 @@ export abstract class PortfolioCalculator {
 
     const { historicalData } = this.snapshot;
 
-    const newChartData: HistoricalDataItem[] = [];
+    const chart: HistoricalDataItem[] = [];
 
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
-    let netPerformanceInPercentageWithCurrencyEffectAtStartDate: number;
     let totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (let historicalDataItem of historicalData) {
@@ -689,9 +685,6 @@ export abstract class PortfolioCalculator {
 
           netPerformanceWithCurrencyEffectAtStartDate =
             historicalDataItem.netPerformanceWithCurrencyEffect;
-
-          netPerformanceInPercentageWithCurrencyEffectAtStartDate =
-            historicalDataItem.netPerformanceInPercentageWithCurrencyEffect;
         }
 
         const netPerformanceSinceStartDate =
@@ -713,7 +706,7 @@ export abstract class PortfolioCalculator {
               totalInvestmentValuesWithCurrencyEffect.length
             : 0;
 
-        newChartData.push({
+        chart.push({
           ...historicalDataItem,
           netPerformance:
             historicalDataItem.netPerformance - netPerformanceAtStartDate,
@@ -733,7 +726,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    return { chart: newChartData };
+    return { chart };
   }
 
   public getStartDate() {
@@ -768,7 +761,6 @@ export abstract class PortfolioCalculator {
     dataSource,
     end,
     exchangeRates,
-    isChartMode,
     marketSymbolMap,
     start,
     symbol
@@ -776,7 +768,6 @@ export abstract class PortfolioCalculator {
     chartDateMap: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
-    isChartMode?: boolean;
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
