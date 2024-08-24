@@ -1,9 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { createHash } from 'crypto';
 
 import type { RedisCache } from './interfaces/redis-cache.interface';
 
@@ -24,8 +25,34 @@ export class RedisCacheService {
     return this.cache.get(key);
   }
 
-  public getPortfolioSnapshotKey({ userId }: { userId: string }) {
-    return `portfolio-snapshot-${userId}`;
+  public async getKeys(aPrefix?: string): Promise<string[]> {
+    let prefix = aPrefix;
+
+    if (prefix) {
+      prefix = `${prefix}*`;
+    }
+
+    return this.cache.store.keys(prefix);
+  }
+
+  public getPortfolioSnapshotKey({
+    filters,
+    userId
+  }: {
+    filters?: Filter[];
+    userId: string;
+  }) {
+    let portfolioSnapshotKey = `portfolio-snapshot-${userId}`;
+
+    if (filters?.length > 0) {
+      const filtersHash = createHash('sha256')
+        .update(JSON.stringify(filters))
+        .digest('hex');
+
+      portfolioSnapshotKey = `${portfolioSnapshotKey}-${filtersHash}`;
+    }
+
+    return portfolioSnapshotKey;
   }
 
   public getQuoteKey({ dataSource, symbol }: AssetProfileIdentifier) {
@@ -34,6 +61,20 @@ export class RedisCacheService {
 
   public async remove(key: string) {
     return this.cache.del(key);
+  }
+
+  public async removePortfolioSnapshotsByUserId({
+    userId
+  }: {
+    userId: string;
+  }) {
+    const keys = await this.getKeys(
+      `${this.getPortfolioSnapshotKey({ userId })}`
+    );
+
+    for (const key of keys) {
+      await this.remove(key);
+    }
   }
 
   public async reset() {

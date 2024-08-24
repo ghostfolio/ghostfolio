@@ -1,6 +1,12 @@
 import { parseDate, resetHours } from '@ghostfolio/common/helper';
 
-import { addDays, endOfDay, isBefore, isSameDay } from 'date-fns';
+import {
+  addDays,
+  eachDayOfInterval,
+  endOfDay,
+  isBefore,
+  isSameDay
+} from 'date-fns';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -24,6 +30,10 @@ function mockGetValue(symbol: string, date: Date) {
         return { marketPrice: 139.9 };
       } else if (isSameDay(parseDate('2021-11-30'), date)) {
         return { marketPrice: 136.6 };
+      } else if (isSameDay(parseDate('2021-12-12'), date)) {
+        return { marketPrice: 142.0 };
+      } else if (isSameDay(parseDate('2021-12-17'), date)) {
+        return { marketPrice: 143.9 };
       } else if (isSameDay(parseDate('2021-12-18'), date)) {
         return { marketPrice: 148.9 };
       }
@@ -97,7 +107,10 @@ export const CurrentRateServiceMock = {
         }
       }
     } else {
-      for (const date of dateQuery.in) {
+      for (const date of eachDayOfInterval({
+        end: dateQuery.lt,
+        start: dateQuery.gte
+      })) {
         for (const dataGatheringItem of dataGatheringItems) {
           values.push({
             date,

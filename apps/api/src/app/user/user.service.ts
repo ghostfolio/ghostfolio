@@ -433,9 +433,11 @@ export class UserService {
   }
 
   public async updateUserSetting({
+    emitPortfolioChangedEvent,
     userId,
     userSettings
   }: {
+    emitPortfolioChangedEvent: boolean;
     userId: string;
     userSettings: UserSettings;
   }) {
@@ -456,12 +458,14 @@ export class UserService {
       }
     });
 
-    this.eventEmitter.emit(
-      PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId
-      })
-    );
+    if (emitPortfolioChangedEvent) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({
+          userId
+        })
+      );
+    }
 
     return settings;
   }

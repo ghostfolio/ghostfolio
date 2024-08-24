@@ -4,6 +4,7 @@ import { DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
 import { bool, cleanEnv, host, json, num, port, str, url } from 'envalid';
+import ms from 'ms';
 
 @Injectable()
 export class ConfigurationService {
@@ -20,7 +21,7 @@ export class ConfigurationService {
       API_KEY_FINANCIAL_MODELING_PREP: str({ default: '' }),
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
-      CACHE_QUOTES_TTL: num({ default: 1 }),
+      CACHE_QUOTES_TTL: num({ default: ms('1 minute') / 1000 }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),

@@ -36,48 +36,36 @@ export function getIntervalFromDateRange(
   aDateRange: DateRange,
   portfolioStart = new Date(0)
 ) {
-  let endDate = endOfDay(new Date(Date.now()));
+  let endDate = endOfDay(new Date());
   let startDate = portfolioStart;
 
   switch (aDateRange) {
     case '1d':
-      startDate = max([
-        startDate,
-        subDays(resetHours(new Date(Date.now())), 1)
-      ]);
+      startDate = max([startDate, subDays(resetHours(new Date()), 1)]);
       break;
     case 'mtd':
       startDate = max([
         startDate,
-        subDays(startOfMonth(resetHours(new Date(Date.now()))), 1)
+        subDays(startOfMonth(resetHours(new Date())), 1)
       ]);
       break;
     case 'wtd':
       startDate = max([
         startDate,
-        subDays(
-          startOfWeek(resetHours(new Date(Date.now())), { weekStartsOn: 1 }),
-          1
-        )
+        subDays(startOfWeek(resetHours(new Date()), { weekStartsOn: 1 }), 1)
       ]);
       break;
     case 'ytd':
       startDate = max([
         startDate,
-        subDays(startOfYear(resetHours(new Date(Date.now()))), 1)
+        subDays(startOfYear(resetHours(new Date())), 1)
       ]);
       break;
     case '1y':
-      startDate = max([
-        startDate,
-        subYears(resetHours(new Date(Date.now())), 1)
-      ]);
+      startDate = max([startDate, subYears(resetHours(new Date()), 1)]);
       break;
     case '5y':
-      startDate = max([
-        startDate,
-        subYears(resetHours(new Date(Date.now())), 5)
-      ]);
+      startDate = max([startDate, subYears(resetHours(new Date()), 5)]);
       break;
     case 'max':
       break;

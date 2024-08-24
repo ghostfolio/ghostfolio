@@ -67,12 +67,13 @@ import {
   differenceInDays,
   format,
   isAfter,
+  isBefore,
   isSameMonth,
   isSameYear,
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -244,6 +245,8 @@ export class PortfolioService {
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
 
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+
     const { activities } = await this.orderService.getOrders({
       filters,
       userId,
@@ -261,18 +264,16 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    const items = await portfolioCalculator.getChart({
-      dateRange,
-      withDataDecimation: false
+    const { historicalData } = await portfolioCalculator.getSnapshot();
+
+    const items = historicalData.filter(({ date }) => {
+      return !isBefore(date, startDate) && !isAfter(date, endDate);
     });
 
     let investments: InvestmentItem[];
@@ -340,13 +341,10 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: true, // disable cache
-      isExperimentalFeatures:
-        this.request.user?.Settings.settings.isExperimentalFeatures
+      currency: userCurrency
     });
 
     const { currentValueInBaseCurrency, hasErrors, positions } =
@@ -400,10 +398,8 @@ export class PortfolioService {
       };
     });
 
-    const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
-      this.symbolProfileService.getSymbolProfiles(dataGatheringItems)
-    ]);
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfiles(dataGatheringItems);
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
     for (const symbolProfile of symbolProfiles) {
@@ -427,8 +423,8 @@ export class PortfolioService {
       marketPrice,
       netPerformance,
       netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect,
-      netPerformanceWithCurrencyEffect,
+      netPerformancePercentageWithCurrencyEffectMap,
+      netPerformanceWithCurrencyEffectMap,
       quantity,
       symbol,
       tags,
@@ -448,7 +444,6 @@ export class PortfolioService {
       }
 
       const assetProfile = symbolProfileMap[symbol];
-      const dataProviderResponse = dataProviderResponses[symbol];
 
       let markets: PortfolioPosition['markets'];
       let marketsAdvanced: PortfolioPosition['marketsAdvanced'];
@@ -495,14 +490,15 @@ export class PortfolioService {
           }
         ),
         investment: investment.toNumber(),
-        marketState: dataProviderResponse?.marketState ?? 'delayed',
         name: assetProfile.name,
         netPerformance: netPerformance?.toNumber() ?? 0,
         netPerformancePercent: netPerformancePercentage?.toNumber() ?? 0,
         netPerformancePercentWithCurrencyEffect:
-          netPerformancePercentageWithCurrencyEffect?.toNumber() ?? 0,
+          netPerformancePercentageWithCurrencyEffectMap?.[
+            dateRange
+          ]?.toNumber() ?? 0,
         netPerformanceWithCurrencyEffect:
-          netPerformanceWithCurrencyEffect?.toNumber() ?? 0,
+          netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ?? 0,
         quantity: quantity.toNumber(),
         sectors: assetProfile.sectors,
         url: assetProfile.url,
@@ -571,7 +567,6 @@ export class PortfolioService {
     if (withSummary) {
       summary = await this.getSummary({
         filteredValueInBaseCurrency,
-        holdings,
         impersonationId,
         portfolioCalculator,
         userCurrency,
@@ -657,10 +652,7 @@ export class PortfolioService {
         return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
       }),
       calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: true,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: userCurrency
     });
 
     const portfolioStart = portfolioCalculator.getStartDate();
@@ -809,9 +801,11 @@ export class PortfolioService {
         netPerformance: position.netPerformance?.toNumber(),
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
-          position.netPerformancePercentageWithCurrencyEffect?.toNumber(),
+          position.netPerformancePercentageWithCurrencyEffectMap?.[
+            'max'
+          ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
-          position.netPerformanceWithCurrencyEffect?.toNumber(),
+          position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -930,13 +924,10 @@ export class PortfolioService {
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
-      dateRange,
+      filters,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
@@ -995,8 +986,8 @@ export class PortfolioService {
           investmentWithCurrencyEffect,
           netPerformance,
           netPerformancePercentage,
-          netPerformancePercentageWithCurrencyEffect,
-          netPerformanceWithCurrencyEffect,
+          netPerformancePercentageWithCurrencyEffectMap,
+          netPerformanceWithCurrencyEffectMap,
           quantity,
           symbol,
           timeWeightedInvestment,
@@ -1029,9 +1020,12 @@ export class PortfolioService {
             netPerformancePercentage:
               netPerformancePercentage?.toNumber() ?? null,
             netPerformancePercentageWithCurrencyEffect:
-              netPerformancePercentageWithCurrencyEffect?.toNumber() ?? null,
+              netPerformancePercentageWithCurrencyEffectMap?.[
+                dateRange
+              ]?.toNumber() ?? null,
             netPerformanceWithCurrencyEffect:
-              netPerformanceWithCurrencyEffect?.toNumber() ?? null,
+              netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ??
+              null,
             quantity: quantity.toNumber(),
             timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
             timeWeightedInvestmentWithCurrencyEffect:
@@ -1046,12 +1040,14 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
+    portfolioCalculator,
     userId,
     withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
+    portfolioCalculator?: PortfolioCalculator;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
@@ -1089,7 +1085,7 @@ export class PortfolioService {
       )
     );
 
-    const { endDate } = getIntervalFromDateRange(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -1107,10 +1103,6 @@ export class PortfolioService {
         performance: {
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
-          grossPerformance: 0,
-          grossPerformancePercentage: 0,
-          grossPerformancePercentageWithCurrencyEffect: 0,
-          grossPerformanceWithCurrencyEffect: 0,
           netPerformance: 0,
           netPerformancePercentage: 0,
           netPerformancePercentageWithCurrencyEffect: 0,
@@ -1120,92 +1112,60 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      accountBalanceItems,
-      activities,
-      dateRange,
-      userId,
-      calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+    portfolioCalculator =
+      portfolioCalculator ??
+      this.calculatorFactory.createCalculator({
+        accountBalanceItems,
+        activities,
+        filters,
+        userId,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: userCurrency
+      });
+
+    const { errors, hasErrors, historicalData } =
+      await portfolioCalculator.getSnapshot();
+
+    const { chart } = await portfolioCalculator.getPerformance({
+      end: endDate,
+      start: startDate
     });
 
     const {
-      currentValueInBaseCurrency,
-      errors,
-      grossPerformance,
-      grossPerformancePercentage,
-      grossPerformancePercentageWithCurrencyEffect,
-      grossPerformanceWithCurrencyEffect,
-      hasErrors,
       netPerformance,
-      netPerformancePercentage,
-      netPerformancePercentageWithCurrencyEffect,
+      netPerformanceInPercentage,
+      netPerformanceInPercentageWithCurrencyEffect,
       netPerformanceWithCurrencyEffect,
-      totalInvestment
-    } = await portfolioCalculator.getSnapshot();
-
-    let currentNetPerformance = netPerformance;
-
-    let currentNetPerformancePercentage = netPerformancePercentage;
-
-    let currentNetPerformancePercentageWithCurrencyEffect =
-      netPerformancePercentageWithCurrencyEffect;
-
-    let currentNetPerformanceWithCurrencyEffect =
-      netPerformanceWithCurrencyEffect;
-
-    let currentNetWorth = 0;
-
-    const items = await portfolioCalculator.getChart({
-      dateRange
-    });
-
-    const itemOfToday = items.find(({ date }) => {
-      return date === format(new Date(), DATE_FORMAT);
-    });
-
-    if (itemOfToday) {
-      currentNetPerformance = new Big(itemOfToday.netPerformance);
-
-      currentNetPerformancePercentage = new Big(
-        itemOfToday.netPerformanceInPercentage
-      ).div(100);
-
-      currentNetPerformancePercentageWithCurrencyEffect = new Big(
-        itemOfToday.netPerformanceInPercentageWithCurrencyEffect
-      ).div(100);
-
-      currentNetPerformanceWithCurrencyEffect = new Big(
-        itemOfToday.netPerformanceWithCurrencyEffect
-      );
-
-      currentNetWorth = itemOfToday.netWorth;
-    }
+      netWorth,
+      totalInvestment,
+      valueWithCurrencyEffect
+    } =
+      chart?.length > 0
+        ? last(chart)
+        : {
+            netPerformance: 0,
+            netPerformanceInPercentage: 0,
+            netPerformanceInPercentageWithCurrencyEffect: 0,
+            netPerformanceWithCurrencyEffect: 0,
+            netWorth: 0,
+            totalInvestment: 0,
+            valueWithCurrencyEffect: 0
+          };
 
     return {
+      chart,
       errors,
       hasErrors,
-      chart: items,
-      firstOrderDate: parseDate(items[0]?.date),
+      firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
-        currentNetWorth,
-        currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
-        grossPerformance: grossPerformance.toNumber(),
-        grossPerformancePercentage: grossPerformancePercentage.toNumber(),
-        grossPerformancePercentageWithCurrencyEffect:
-          grossPerformancePercentageWithCurrencyEffect.toNumber(),
-        grossPerformanceWithCurrencyEffect:
-          grossPerformanceWithCurrencyEffect.toNumber(),
-        netPerformance: currentNetPerformance.toNumber(),
-        netPerformancePercentage: currentNetPerformancePercentage.toNumber(),
+        netPerformance,
+        netPerformanceWithCurrencyEffect,
+        totalInvestment,
+        currentNetWorth: netWorth,
+        currentValueInBaseCurrency: valueWithCurrencyEffect,
+        netPerformancePercentage: netPerformanceInPercentage,
         netPerformancePercentageWithCurrencyEffect:
-          currentNetPerformancePercentageWithCurrencyEffect.toNumber(),
-        netPerformanceWithCurrencyEffect:
-          currentNetPerformanceWithCurrencyEffect.toNumber(),
-        totalInvestment: totalInvestment.toNumber()
+          netPerformanceInPercentageWithCurrencyEffect
       }
     };
   }
@@ -1224,10 +1184,7 @@ export class PortfolioService {
       activities,
       userId,
       calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency,
-      hasFilters: false,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
+      currency: this.request.user.Settings.settings.baseCurrency
     });
 
     let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
@@ -1481,7 +1438,6 @@ export class PortfolioService {
       holdings: [],
       investment: balance,
       marketPrice: 0,
-      marketState: 'open',
       name: currency,
       netPerformance: 0,
       netPerformancePercent: 0,
@@ -1602,7 +1558,6 @@ export class PortfolioService {
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
     filteredValueInBaseCurrency,
-    holdings,
     impersonationId,
     portfolioCalculator,
     userCurrency,
@@ -1611,7 +1566,6 @@ export class PortfolioService {
     balanceInBaseCurrency: number;
     emergencyFundPositionsValueInBaseCurrency: number;
     filteredValueInBaseCurrency: Big;
-    holdings: PortfolioDetails['holdings'];
     impersonationId: string;
     portfolioCalculator: PortfolioCalculator;
     userCurrency: string;
@@ -1637,18 +1591,20 @@ export class PortfolioService {
       }
     }
 
+    const { currentValueInBaseCurrency, totalInvestment } =
+      await portfolioCalculator.getSnapshot();
+
+    const { performance } = await this.getPerformance({
+      impersonationId,
+      userId
+    });
+
     const {
-      currentValueInBaseCurrency,
-      grossPerformance,
-      grossPerformancePercentage,
-      grossPerformancePercentageWithCurrencyEffect,
-      grossPerformanceWithCurrencyEffect,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
-      netPerformanceWithCurrencyEffect,
-      totalInvestment
-    } = await portfolioCalculator.getSnapshot();
+      netPerformanceWithCurrencyEffect
+    } = performance;
 
     const dividendInBaseCurrency =
       await portfolioCalculator.getDividendInBaseCurrency();
@@ -1745,6 +1701,10 @@ export class PortfolioService {
       cash,
       excludedAccountsAndActivities,
       firstOrderDate,
+      netPerformance,
+      netPerformancePercentage,
+      netPerformancePercentageWithCurrencyEffect,
+      netPerformanceWithCurrencyEffect,
       totalBuy,
       totalSell,
       committedFunds: committedFunds.toNumber(),
@@ -1765,21 +1725,15 @@ export class PortfolioService {
       fireWealth: new Big(currentValueInBaseCurrency)
         .minus(emergencyFundPositionsValueInBaseCurrency)
         .toNumber(),
-      grossPerformance: grossPerformance.toNumber(),
-      grossPerformancePercentage: grossPerformancePercentage.toNumber(),
-      grossPerformancePercentageWithCurrencyEffect:
-        grossPerformancePercentageWithCurrencyEffect.toNumber(),
-      grossPerformanceWithCurrencyEffect:
-        grossPerformanceWithCurrencyEffect.toNumber(),
+      grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
+      grossPerformanceWithCurrencyEffect: new Big(
+        netPerformanceWithCurrencyEffect
+      )
+        .plus(fees)
+        .toNumber(),
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
-      netPerformance: netPerformance.toNumber(),
-      netPerformancePercentage: netPerformancePercentage.toNumber(),
-      netPerformancePercentageWithCurrencyEffect:
-        netPerformancePercentageWithCurrencyEffect.toNumber(),
-      netPerformanceWithCurrencyEffect:
-        netPerformanceWithCurrencyEffect.toNumber(),
       ordersCount: activities.filter(({ type }) => {
         return ['BUY', 'SELL'].includes(type);
       }).length,

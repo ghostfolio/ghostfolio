@@ -18,6 +18,7 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -80,9 +81,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with GOOGL buy', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2023-07-10').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
@@ -106,43 +105,22 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF',
-        hasFilters: false,
         userId: userDummyData.id
       });
 
-      const chartData = await portfolioCalculator.getChartData({
-        start: parseDate('2023-01-03')
-      });
-
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
-        parseDate('2023-01-03')
-      );
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
+        data: portfolioSnapshot.historicalData,
         groupBy: 'month'
       });
 
-      spy.mockRestore();
-
-      expect(portfolioSnapshot).toEqual({
+      expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
-        grossPerformance: new Big('27.33'),
-        grossPerformancePercentage: new Big('0.3066651705565529623'),
-        grossPerformancePercentageWithCurrencyEffect: new Big(
-          '0.25235044599563974109'
-        ),
-        grossPerformanceWithCurrencyEffect: new Big('20.775774'),
         hasErrors: false,
-        netPerformance: new Big('26.33'),
-        netPerformancePercentage: new Big('0.29544434470377019749'),
-        netPerformancePercentageWithCurrencyEffect: new Big(
-          '0.24112962014285697628'
-        ),
-        netPerformanceWithCurrencyEffect: new Big('19.851974'),
         positions: [
           {
             averagePrice: new Big('89.12'),
@@ -153,26 +131,28 @@ describe('PortfolioCalculator', () => {
             fee: new Big('1'),
             feeInBaseCurrency: new Big('0.9238'),
             firstBuyDate: '2023-01-03',
-            grossPerformance: new Big('27.33'),
+            grossPerformance: new Big('27.33').mul(0.8854),
             grossPerformancePercentage: new Big('0.3066651705565529623'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
               '0.25235044599563974109'
             ),
             grossPerformanceWithCurrencyEffect: new Big('20.775774'),
-            investment: new Big('89.12'),
+            investment: new Big('89.12').mul(0.8854),
             investmentWithCurrencyEffect: new Big('82.329056'),
-            netPerformance: new Big('26.33'),
+            netPerformance: new Big('26.33').mul(0.8854),
             netPerformancePercentage: new Big('0.29544434470377019749'),
-            netPerformancePercentageWithCurrencyEffect: new Big(
-              '0.24112962014285697628'
-            ),
-            netPerformanceWithCurrencyEffect: new Big('19.851974'),
+            netPerformancePercentageWithCurrencyEffectMap: {
+              max: new Big('0.24112962014285697628')
+            },
+            netPerformanceWithCurrencyEffectMap: {
+              max: new Big('19.851974')
+            },
             marketPrice: 116.45,
             marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
             symbol: 'GOOGL',
             tags: [],
-            timeWeightedInvestment: new Big('89.12'),
+            timeWeightedInvestment: new Big('89.12').mul(0.8854),
             timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
             transactionCount: 1,
             valueInBaseCurrency: new Big('103.10483')
@@ -180,11 +160,21 @@ describe('PortfolioCalculator', () => {
         ],
         totalFeesWithCurrencyEffect: new Big('0.9238'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('89.12'),
+        totalInvestment: new Big('89.12').mul(0.8854),
         totalInvestmentWithCurrencyEffect: new Big('82.329056'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
+
+      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: new Big('26.33').mul(0.8854).toNumber(),
+          netPerformanceInPercentage: 0.29544434470377019749,
+          netPerformanceInPercentageWithCurrencyEffect: 0.24112962014285697628,
+          netPerformanceWithCurrencyEffect: 19.851974,
+          totalInvestmentValueWithCurrencyEffect: 82.329056
+        })
+      );
 
       expect(investments).toEqual([
         { date: '2023-01-03', investment: new Big('89.12') }

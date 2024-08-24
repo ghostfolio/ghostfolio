@@ -13,6 +13,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 import { subDays } from 'date-fns';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -63,45 +64,28 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it('with no orders', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const portfolioCalculator = factory.createCalculator({
         activities: [],
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF',
-        hasFilters: false,
         userId: userDummyData.id
       });
 
-      const start = subDays(new Date(Date.now()), 10);
-
-      const chartData = await portfolioCalculator.getChartData({ start });
-
-      const portfolioSnapshot =
-        await portfolioCalculator.computeSnapshot(start);
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
       const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: chartData,
+        data: portfolioSnapshot.historicalData,
         groupBy: 'month'
       });
 
-      spy.mockRestore();
-
-      expect(portfolioSnapshot).toEqual({
+      expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big(0),
-        grossPerformance: new Big(0),
-        grossPerformancePercentage: new Big(0),
-        grossPerformancePercentageWithCurrencyEffect: new Big(0),
-        grossPerformanceWithCurrencyEffect: new Big(0),
         hasErrors: false,
-        netPerformance: new Big(0),
-        netPerformancePercentage: new Big(0),
-        netPerformancePercentageWithCurrencyEffect: new Big(0),
-        netPerformanceWithCurrencyEffect: new Big(0),
+        historicalData: [],
         positions: [],
         totalFeesWithCurrencyEffect: new Big('0'),
         totalInterestWithCurrencyEffect: new Big('0'),
@@ -113,12 +97,7 @@ describe('PortfolioCalculator', () => {
 
       expect(investments).toEqual([]);
 
-      expect(investmentsByMonth).toEqual([
-        {
-          date: '2021-12-01',
-          investment: 0
-        }
-      ]);
+      expect(investmentsByMonth).toEqual([]);
     });
   });
 });

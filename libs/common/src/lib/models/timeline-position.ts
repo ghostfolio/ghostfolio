@@ -1,4 +1,8 @@
-import { transformToBig } from '@ghostfolio/common/class-transformer';
+import {
+  transformToBig,
+  transformToMapOfBig
+} from '@ghostfolio/common/class-transformer';
+import { DateRange } from '@ghostfolio/common/types';
 
 import { DataSource, Tag } from '@prisma/client';
 import { Big } from 'big.js';
@@ -65,13 +69,11 @@ export class TimelinePosition {
   @Type(() => Big)
   netPerformancePercentage: Big;
 
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformancePercentageWithCurrencyEffect: Big;
+  @Transform(transformToMapOfBig, { toClassOnly: true })
+  netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
 
-  @Transform(transformToBig, { toClassOnly: true })
-  @Type(() => Big)
-  netPerformanceWithCurrencyEffect: Big;
+  @Transform(transformToMapOfBig, { toClassOnly: true })
+  netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

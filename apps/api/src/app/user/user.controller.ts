@@ -144,6 +144,8 @@ export class UserController {
       );
     }
 
+    const emitPortfolioChangedEvent = 'baseCurrency' in data;
+
     const userSettings: UserSettings = merge(
       {},
       <UserSettings>this.request.user.Settings.settings,
@@ -157,6 +159,7 @@ export class UserController {
     }
 
     return this.userService.updateUserSetting({
+      emitPortfolioChangedEvent,
       userSettings,
       userId: this.request.user.id
     });
