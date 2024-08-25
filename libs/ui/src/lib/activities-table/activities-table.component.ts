@@ -201,9 +201,7 @@ export class GfActivitiesTableComponent
       this.hasPermissionToOpenDetails &&
       activity.Account?.isExcluded !== true &&
       activity.isDraft === false &&
-      (activity.type === 'BUY' ||
-        activity.type === 'DIVIDEND' ||
-        activity.type === 'SELL')
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     ) {
       this.onOpenPositionDialog({
         dataSource: activity.SymbolProfile.dataSource,

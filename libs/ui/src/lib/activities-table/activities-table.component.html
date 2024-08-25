@@ -468,7 +468,7 @@
           hasPermissionToOpenDetails &&
           row.Account?.isExcluded !== true &&
           row.isDraft === false &&
-          (row.type === 'BUY' || row.type === 'DIVIDEND' || row.type === 'SELL')
+          ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
       (click)="onClickActivity(row)"
     ></tr>
