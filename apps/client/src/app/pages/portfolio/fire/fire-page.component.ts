@@ -103,10 +103,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting({ annualInterestRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -124,10 +122,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -153,10 +149,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting({ savingsRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -174,10 +168,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;

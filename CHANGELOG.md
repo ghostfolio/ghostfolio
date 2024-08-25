@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reworked the portfolio calculator
 
+### Fixed
+
+- Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
+
 ## 2.105.0 - 2024-08-21
 
 ### Added

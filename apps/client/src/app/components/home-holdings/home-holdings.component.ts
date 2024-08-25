@@ -18,7 +18,7 @@ import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
-import { skip, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-home-holdings',
@@ -87,20 +87,14 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       });
 
     this.viewModeFormControl.valueChanges
-      .pipe(
-        // Skip inizialization: "new FormControl"
-        skip(1),
-        takeUntil(this.unsubscribeSubject)
-      )
+      .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((holdingsViewMode) => {
         this.dataService
           .putUserSetting({ holdingsViewMode })
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(() => {
-            this.userService.remove();
-
             this.userService
-              .get()
+              .get(true)
               .pipe(takeUntil(this.unsubscribeSubject))
               .subscribe((user) => {
                 this.user = user;
@@ -144,7 +138,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   }
 
   private initialize() {
-    this.viewModeFormControl.disable();
+    this.viewModeFormControl.disable({ emitEvent: false });
 
     if (
       this.hasPermissionToAccessHoldingsChart &&

@@ -73,10 +73,8 @@ export class HomeSummaryComponent implements OnDestroy, OnInit {
       .putUserSetting({ emergencyFund })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;

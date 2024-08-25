@@ -125,10 +125,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ [aKey]: aValue })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -180,10 +178,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -218,10 +214,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -259,10 +253,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
