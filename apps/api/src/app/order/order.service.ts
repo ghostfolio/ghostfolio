@@ -519,6 +519,23 @@ export class OrderService {
     return { activities, count };
   }
 
+  public async getOrdersForPortfolioCalculator({
+    filters,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }) {
+    return this.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts: false // TODO
+    });
+  }
+
   public async getStatisticsByCurrency(
     currency: EnhancedSymbolProfile['currency']
   ): Promise<{
