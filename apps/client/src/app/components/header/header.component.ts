@@ -161,10 +161,8 @@ export class HeaderComponent implements OnChanges {
       .putUserSetting({ dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe();
       });
@@ -191,10 +189,8 @@ export class HeaderComponent implements OnChanges {
       .putUserSetting(userSetting)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe();
       });
