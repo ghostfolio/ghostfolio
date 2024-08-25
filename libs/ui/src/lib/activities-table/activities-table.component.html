@@ -466,11 +466,9 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          !row.isDraft &&
-          row.type !== 'FEE' &&
-          row.type !== 'INTEREST' &&
-          row.type !== 'ITEM' &&
-          row.type !== 'LIABILITY'
+          row.Account?.isExcluded !== true &&
+          row.isDraft === false &&
+          ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
       (click)="onClickActivity(row)"
     ></tr>
