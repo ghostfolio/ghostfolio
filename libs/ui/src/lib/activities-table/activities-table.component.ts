@@ -199,11 +199,11 @@ export class GfActivitiesTableComponent
       }
     } else if (
       this.hasPermissionToOpenDetails &&
-      !activity.isDraft &&
-      activity.type !== 'FEE' &&
-      activity.type !== 'INTEREST' &&
-      activity.type !== 'ITEM' &&
-      activity.type !== 'LIABILITY'
+      activity.Account?.isExcluded !== true &&
+      activity.isDraft === false &&
+      (activity.type === 'BUY' ||
+        activity.type === 'DIVIDEND' ||
+        activity.type === 'SELL')
     ) {
       this.onOpenPositionDialog({
         dataSource: activity.SymbolProfile.dataSource,
