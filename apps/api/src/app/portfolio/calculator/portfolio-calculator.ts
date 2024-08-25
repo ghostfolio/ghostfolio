@@ -713,10 +713,14 @@ export abstract class PortfolioCalculator {
           netPerformanceWithCurrencyEffect:
             netPerformanceWithCurrencyEffectSinceStartDate,
           netPerformanceInPercentage:
-            netPerformanceSinceStartDate / timeWeightedInvestmentValue,
+            timeWeightedInvestmentValue === 0
+              ? 0
+              : netPerformanceSinceStartDate / timeWeightedInvestmentValue,
           netPerformanceInPercentageWithCurrencyEffect:
-            netPerformanceWithCurrencyEffectSinceStartDate /
-            timeWeightedInvestmentValue,
+            timeWeightedInvestmentValue === 0
+              ? 0
+              : netPerformanceWithCurrencyEffectSinceStartDate /
+                timeWeightedInvestmentValue,
           // TODO: Add net worth with valuables
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)
