@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Reworked the portfolio calculator
+- Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
 
 ### Fixed
 

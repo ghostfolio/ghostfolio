@@ -1,15 +1,13 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  MAX_CHART_ITEMS,
-  PROPERTY_BENCHMARKS
-} from '@ghostfolio/common/config';
+import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
@@ -47,6 +45,7 @@ export class BenchmarkService {
   private readonly CACHE_KEY_BENCHMARKS = 'BENCHMARKS';
 
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
@@ -173,7 +172,12 @@ export class BenchmarkService {
         start: startDate,
         end: endDate
       },
-      { step: Math.round(days / Math.min(days, MAX_CHART_ITEMS)) }
+      {
+        step: Math.round(
+          days /
+            Math.min(days, this.configurationService.get('MAX_CHART_ITEMS'))
+        )
+      }
     ).map((date) => {
       return resetHours(date);
     });
