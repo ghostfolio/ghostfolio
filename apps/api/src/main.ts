@@ -1,4 +1,9 @@
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import {
+  Logger,
+  LogLevel,
+  ValidationPipe,
+  VersioningType
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -12,11 +17,20 @@ import { HtmlTemplateMiddleware } from './middlewares/html-template.middleware';
 async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
   const configService = configApp.get<ConfigService>(ConfigService);
+  let customLogLevels: LogLevel[];
+
+  try {
+    customLogLevels = JSON.parse(
+      configService.get<string>('LOG_LEVELS')
+    ) as LogLevel[];
+  } catch {}
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: environment.production
-      ? ['error', 'log', 'warn']
-      : ['debug', 'error', 'log', 'verbose', 'warn']
+    logger:
+      customLogLevels ??
+      (environment.production
+        ? ['error', 'log', 'warn']
+        : ['debug', 'error', 'log', 'verbose', 'warn'])
   });
 
   app.enableCors();
