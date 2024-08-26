@@ -9,7 +9,6 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getSum,
@@ -247,7 +246,13 @@ export abstract class PortfolioCalculator {
     let chartDateMap = this.getChartDateMap({
       endDate: this.endDate,
       startDate: this.startDate,
-      step: Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      step: Math.round(
+        daysInMarket /
+          Math.min(
+            daysInMarket,
+            this.configurationService.get('MAX_CHART_ITEMS')
+          )
+      )
     });
 
     const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
@@ -659,12 +664,6 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
-  public async getSnapshot() {
-    await this.snapshotPromise;
-
-    return this.snapshot;
-  }
-
   public async getPerformance({ end, start }) {
     await this.snapshotPromise;
 
@@ -731,6 +730,12 @@ export abstract class PortfolioCalculator {
     }
 
     return { chart };
+  }
+
+  public async getSnapshot() {
+    await this.snapshotPromise;
+
+    return this.snapshot;
   }
 
   public getStartDate() {
@@ -813,9 +818,17 @@ export abstract class PortfolioCalculator {
     }
 
     if (step > 1) {
-      // Reduce the step size of recent dates
+      // Reduce the step size of last 90 days
       for (let date of eachDayOfInterval(
         { end: endDate, start: subDays(endDate, 90) },
+        { step: 3 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+
+      // Reduce the step size of last 30 days
+      for (let date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 30) },
         { step: 1 }
       )) {
         chartDateMap[format(date, DATE_FORMAT)] = true;

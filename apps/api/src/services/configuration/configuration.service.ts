@@ -42,6 +42,7 @@ export class ConfigurationService {
       HOST: host({ default: '0.0.0.0' }),
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
+      MAX_CHART_ITEMS: num({ default: 365 }),
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       PORT: port({ default: 3333 }),
       REDIS_DB: num({ default: 0 }),
