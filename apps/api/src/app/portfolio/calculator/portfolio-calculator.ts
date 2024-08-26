@@ -5,6 +5,7 @@ import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -148,6 +149,7 @@ export abstract class PortfolioCalculator {
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
 
+  @LogPerformance
   private async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
 
@@ -861,6 +863,7 @@ export abstract class PortfolioCalculator {
     return chartDateMap;
   }
 
+  @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
@@ -999,6 +1002,7 @@ export abstract class PortfolioCalculator {
     }
   }
 
+  @LogPerformance
   private async initialize() {
     const startTimeTotal = performance.now();
 

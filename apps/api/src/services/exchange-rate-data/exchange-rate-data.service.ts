@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -46,6 +47,7 @@ export class ExchangeRateDataService {
     return this.currencyPairs;
   }
 
+  @LogPerformance
   public async getExchangeRatesByCurrency({
     currencies,
     endDate = new Date(),
