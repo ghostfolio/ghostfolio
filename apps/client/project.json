@@ -165,7 +165,7 @@
       }
     },
     "serve": {
-      "executor": "@nx/angular:dev-server",
+      "executor": "@nx/angular:webpack-dev-server",
       "options": {
         "buildTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json",
@@ -175,37 +175,37 @@
       },
       "configurations": {
         "development-de": {
-          "buildTarget": "client:build:development-de"
+          "browserTarget": "client:build:development-de"
         },
         "development-en": {
-          "buildTarget": "client:build:development-en"
+          "browserTarget": "client:build:development-en"
         },
         "development-es": {
-          "buildTarget": "client:build:development-es"
+          "browserTarget": "client:build:development-es"
         },
         "development-fr": {
-          "buildTarget": "client:build:development-fr"
+          "browserTarget": "client:build:development-fr"
         },
         "development-it": {
-          "buildTarget": "client:build:development-it"
+          "browserTarget": "client:build:development-it"
         },
         "development-nl": {
-          "buildTarget": "client:build:development-nl"
+          "browserTarget": "client:build:development-nl"
         },
         "development-pl": {
-          "buildTarget": "client:build:development-pl"
+          "browserTarget": "client:build:development-pl"
         },
         "development-pt": {
-          "buildTarget": "client:build:development-pt"
+          "browserTarget": "client:build:development-pt"
         },
         "development-tr": {
-          "buildTarget": "client:build:development-tr"
+          "browserTarget": "client:build:development-tr"
         },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
         },
         "production": {
-          "buildTarget": "client:build:production"
+          "browserTarget": "client:build:production"
         }
       }
     },

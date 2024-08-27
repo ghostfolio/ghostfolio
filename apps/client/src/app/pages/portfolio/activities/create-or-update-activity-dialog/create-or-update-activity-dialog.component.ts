@@ -215,6 +215,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value +
               this.activityForm.get('fee').value ?? 0;
+        } else if (this.activityForm.get('type').value === 'STAKE') {
+          this.total =
+            this.activityForm.get('quantity').value * this.currentMarketPrice ??
+            0;
         } else {
           this.total =
             this.activityForm.get('quantity').value *
@@ -268,7 +272,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       if (this.activityForm.get('searchSymbol').invalid) {
         this.data.activity.SymbolProfile = null;
       } else if (
-        ['BUY', 'DIVIDEND', 'SELL'].includes(
+        ['BUY', 'DIVIDEND', 'SELL', 'STAKE'].includes(
           this.activityForm.get('type').value
         )
       ) {

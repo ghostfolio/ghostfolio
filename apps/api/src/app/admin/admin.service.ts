@@ -8,6 +8,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { SymbolProfileOverwriteService } from '@ghostfolio/api/services/symbol-profile/symbol-profile-overwrite.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -31,11 +32,13 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
   Prisma,
   PrismaClient,
   Property,
-  SymbolProfile
+  SymbolProfile,
+  DataSource,
+  Tag,
+  SymbolProfileOverrides
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
@@ -52,7 +55,8 @@ export class AdminService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly symbolProfileOverwriteService: SymbolProfileOverwriteService
   ) {}
 
   public async addAssetProfile({
@@ -247,7 +251,8 @@ export class AdminService {
             },
             scraperConfiguration: true,
             sectors: true,
-            symbol: true
+            symbol: true,
+            tags: true
           }
         }),
         this.prismaService.symbolProfile.count({ where })
@@ -268,7 +273,8 @@ export class AdminService {
             name,
             Order,
             sectors,
-            symbol
+            symbol,
+            tags
           }) => {
             const countriesCount = countries
               ? Object.keys(countries).length
@@ -296,7 +302,9 @@ export class AdminService {
               sectorsCount,
               activitiesCount: _count.Order,
               date: Order?.[0]?.date,
-              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
+              isUsedByUsersWithSubscription:
+                await isUsedByUsersWithSubscription,
+              tags
             };
           }
         )
@@ -386,6 +394,7 @@ export class AdminService {
     dataSource,
     holdings,
     name,
+    tags,
     scraperConfiguration,
     sectors,
     symbol,
@@ -527,18 +536,16 @@ export class AdminService {
             })?._count ?? 0;
 
           return {
-            activitiesCount,
-            currency,
             dataSource,
             marketDataItemCount,
             symbol,
             assetClass: AssetClass.LIQUIDITY,
-            assetSubClass: AssetSubClass.CASH,
             countriesCount: 0,
-            date: dateOfFirstActivity,
+            currency: symbol.replace(DEFAULT_CURRENCY, ''),
             id: undefined,
             name: symbol,
-            sectorsCount: 0
+            sectorsCount: 0,
+            tags: []
           };
         });
 

@@ -53,21 +53,21 @@ export class UserService extends ObservableStore<UserStoreState> {
 
     if (user?.settings['filters.accounts']) {
       filters.push({
-        id: user.settings['filters.accounts'][0],
+        id: user.settings['filters.accounts'].join(','),
         type: 'ACCOUNT'
       });
     }
 
     if (user?.settings['filters.assetClasses']) {
       filters.push({
-        id: user.settings['filters.assetClasses'][0],
+        id: user.settings['filters.assetClasses'].join(','),
         type: 'ASSET_CLASS'
       });
     }
 
     if (user?.settings['filters.tags']) {
       filters.push({
-        id: user.settings['filters.tags'][0],
+        id: user.settings['filters.tags'].join(','),
         type: 'TAG'
       });
     }

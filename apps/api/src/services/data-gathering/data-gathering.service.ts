@@ -28,6 +28,7 @@ import {
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
+import AwaitLock from 'await-lock';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -46,6 +47,8 @@ export class DataGatheringService {
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  lock = new AwaitLock();
 
   public async addJobToQueue({
     data,

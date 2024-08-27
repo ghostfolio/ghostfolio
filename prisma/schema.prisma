@@ -175,6 +175,7 @@ model SymbolProfile {
   symbolMapping          Json?
   url                    String?
   Order                  Order[]
+  tags                   Tag[]
   SymbolProfileOverrides SymbolProfileOverrides?
 
   @@unique([dataSource, symbol])
@@ -215,6 +216,7 @@ model Tag {
   id     String  @id @default(uuid())
   name   String  @unique
   orders Order[]
+  symbolProfile SymbolProfile[]
 
   @@index([name])
 }
@@ -306,6 +308,7 @@ enum Type {
   ITEM
   LIABILITY
   SELL
+  STAKE
 }
 
 enum ViewMode {

@@ -100,6 +100,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dataProviderInfo: DataProviderInfo;
   public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
+  public stakeRewards: number;
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
@@ -119,6 +120,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public netPerformanceWithCurrencyEffectPrecision = 2;
   public quantity: number;
   public quantityPrecision = 2;
+  public stakePrecision = 2;
   public reportDataGlitchMail: string;
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -186,10 +188,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
-          dividendYieldPercentWithCurrencyEffect,
-          feeInBaseCurrency,
-          firstBuyDate,
-          historicalData,
+          stakeRewards,
           investment,
           marketPrice,
           maxPrice,
@@ -203,7 +202,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           SymbolProfile,
           tags,
           transactionCount,
-          value
+          value,
+          dividendYieldPercentWithCurrencyEffect,
+          feeInBaseCurrency,
+          firstBuyDate,
+          historicalData
         }) => {
           this.accounts = accounts;
           this.activities = orders;
@@ -213,6 +216,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.dataProviderInfo = dataProviderInfo;
           this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
+          this.stakeRewards = stakeRewards;
 
           if (
             this.data.deviceType === 'mobile' &&
@@ -399,6 +403,26 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
               };
             }
           );
+
+          if (Number.isInteger(this.quantity)) {
+            this.quantityPrecision = 0;
+            if (
+              orders
+                .filter((o) => o.type === 'STAKE')
+                .every((o) => Number.isInteger(o.quantity))
+            ) {
+              this.stakeRewards = 0;
+            }
+          } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
+            if (this.quantity < 1) {
+              this.quantityPrecision = 7;
+            } else if (this.quantity < 1000) {
+              this.quantityPrecision = 5;
+            } else if (this.quantity > 10000000) {
+              this.quantityPrecision = 0;
+            }
+            this.stakePrecision = this.quantityPrecision;
+          }
 
           this.changeDetectorRef.markForCheck();
         }

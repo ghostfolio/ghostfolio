@@ -75,7 +75,8 @@ describe('PortfolioCalculator', () => {
       configurationService,
       currentRateService,
       exchangeRateDataService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 

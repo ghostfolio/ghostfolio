@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
@@ -49,18 +50,19 @@ export abstract class PortfolioCalculator {
   protected activities: PortfolioOrder[];
 
   private configurationService: ConfigurationService;
-  private currency: string;
-  private currentRateService: CurrentRateService;
+  protected currency: string;
+  protected currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
-  private exchangeRateDataService: ExchangeRateDataService;
+  protected exchangeRateDataService: ExchangeRateDataService;
   private filters: Filter[];
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
-  private userId: string;
+  protected userId: string;
+  protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
 
   public constructor({
     accountBalanceItems,
@@ -148,7 +150,8 @@ export abstract class PortfolioCalculator {
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
 
-  private async computeSnapshot(): Promise<PortfolioSnapshot> {
+  @LogPerformance
+  protected async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
@@ -376,15 +379,15 @@ export abstract class PortfolioCalculator {
         dataSource: item.dataSource,
         fee: item.fee,
         firstBuyDate: item.firstBuyDate,
-        grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
+        grossPerformance: !hasErrors ? grossPerformance ?? null : null,
         grossPerformancePercentage: !hasErrors
-          ? (grossPerformancePercentage ?? null)
+          ? grossPerformancePercentage ?? null
           : null,
         grossPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? (grossPerformancePercentageWithCurrencyEffect ?? null)
+          ? grossPerformancePercentageWithCurrencyEffect ?? null
           : null,
         grossPerformanceWithCurrencyEffect: !hasErrors
-          ? (grossPerformanceWithCurrencyEffect ?? null)
+          ? grossPerformanceWithCurrencyEffect ?? null
           : null,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
@@ -392,15 +395,15 @@ export abstract class PortfolioCalculator {
           marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
         marketPriceInBaseCurrency:
           marketPriceInBaseCurrency?.toNumber() ?? null,
-        netPerformance: !hasErrors ? (netPerformance ?? null) : null,
+        netPerformance: !hasErrors ? netPerformance ?? null : null,
         netPerformancePercentage: !hasErrors
-          ? (netPerformancePercentage ?? null)
+          ? netPerformancePercentage ?? null
           : null,
         netPerformancePercentageWithCurrencyEffectMap: !hasErrors
-          ? (netPerformancePercentageWithCurrencyEffectMap ?? null)
+          ? netPerformancePercentageWithCurrencyEffectMap ?? null
           : null,
         netPerformanceWithCurrencyEffectMap: !hasErrors
-          ? (netPerformanceWithCurrencyEffectMap ?? null)
+          ? netPerformanceWithCurrencyEffectMap ?? null
           : null,
         quantity: item.quantity,
         symbol: item.symbol,
@@ -488,8 +491,8 @@ export abstract class PortfolioCalculator {
                   return date === dateString;
                 }).value
               )
-            : (accumulatedValuesByDate[lastDate]
-                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0)),
+            : accumulatedValuesByDate[lastDate]
+                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -592,10 +595,12 @@ export abstract class PortfolioCalculator {
     };
   }
 
+  @LogPerformance
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
 
+  @LogPerformance
   public async getDividendInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -606,18 +611,21 @@ export abstract class PortfolioCalculator {
     );
   }
 
+  @LogPerformance
   public async getFeesInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalFeesWithCurrencyEffect;
   }
 
+  @LogPerformance
   public async getInterestInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalInterestWithCurrencyEffect;
   }
 
+  @LogPerformance
   public getInvestments(): { date: string; investment: Big }[] {
     if (this.transactionPoints.length === 0) {
       return [];
@@ -635,6 +643,7 @@ export abstract class PortfolioCalculator {
     });
   }
 
+  @LogPerformance
   public getInvestmentsByGroup({
     data,
     groupBy
@@ -658,6 +667,7 @@ export abstract class PortfolioCalculator {
     }));
   }
 
+  @LogPerformance
   public async getLiabilitiesInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -732,6 +742,7 @@ export abstract class PortfolioCalculator {
     return { chart };
   }
 
+  @LogPerformance
   public async getSnapshot() {
     await this.snapshotPromise;
 
@@ -787,6 +798,7 @@ export abstract class PortfolioCalculator {
     return this.transactionPoints;
   }
 
+  @LogPerformance
   public async getValuablesInBaseCurrency() {
     await this.snapshotPromise;
 
@@ -861,7 +873,76 @@ export abstract class PortfolioCalculator {
     return chartDateMap;
   }
 
-  private computeTransactionPoints() {
+  private getChartDateMap({
+    endDate,
+    startDate,
+    step
+  }: {
+    endDate: Date;
+    startDate: Date;
+    step: number;
+  }) {
+    // Create a map of all relevant chart dates:
+    // 1. Add transaction point dates
+    let chartDateMap = this.transactionPoints.reduce((result, { date }) => {
+      result[date] = true;
+      return result;
+    }, {});
+
+    // 2. Add dates between transactions respecting the specified step size
+    for (let date of eachDayOfInterval(
+      { end: endDate, start: startDate },
+      { step }
+    )) {
+      chartDateMap[format(date, DATE_FORMAT)] = true;
+    }
+
+    if (step > 1) {
+      // Reduce the step size of last 90 days
+      for (let date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 90) },
+        { step: 3 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+
+      // Reduce the step size of last 30 days
+      for (let date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 30) },
+        { step: 1 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+    }
+
+    // Make sure the end date is present
+    chartDateMap[format(endDate, DATE_FORMAT)] = true;
+
+    // Make sure some key dates are present
+    for (let dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
+      const { endDate: dateRangeEnd, startDate: dateRangeStart } =
+        getIntervalFromDateRange(dateRange);
+
+      if (
+        !isBefore(dateRangeStart, startDate) &&
+        !isAfter(dateRangeStart, endDate)
+      ) {
+        chartDateMap[format(dateRangeStart, DATE_FORMAT)] = true;
+      }
+
+      if (
+        !isBefore(dateRangeEnd, startDate) &&
+        !isAfter(dateRangeEnd, endDate)
+      ) {
+        chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
+      }
+    }
+
+    return chartDateMap;
+  }
+
+  @LogPerformance
+  protected computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
 
@@ -999,7 +1080,8 @@ export abstract class PortfolioCalculator {
     }
   }
 
-  private async initialize() {
+  @LogPerformance
+  protected async initialize() {
     const startTimeTotal = performance.now();
 
     const cachedSnapshot = await this.redisCacheService.get(
