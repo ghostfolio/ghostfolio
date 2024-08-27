@@ -13,6 +13,7 @@ export interface User {
     id: string;
   }[];
   accounts: Account[];
+  dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
   settings: UserSettings;

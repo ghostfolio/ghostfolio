@@ -9,9 +9,19 @@
     class="flex-nowrap px-3 py-1 row"
     [hidden]="summary?.ordersCount === null"
   >
-    <div class="flex-grow-1 ml-3 text-truncate" i18n>
+    <div class="d-flex flex-grow-1 ml-3 text-truncate">
       {{ summary?.ordersCount }}
-      {summary?.ordersCount, plural, =1 {transaction} other {transactions}}
+      <ng-container i18n>{summary?.ordersCount, plural,
+        =1 {activity}
+        other {activities}
+      }</ng-container>
+      <span
+        class="align-items-center d-flex ml-1"
+        matTooltipPosition="above"
+        [matTooltip]="buyAndSellActivitiesTooltip"
+      >
+        <ion-icon name="information-circle-outline" />
+      </span>
     </div>
   </div>
   <div class="row">
@@ -64,28 +74,8 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentGrossPerformance"
-      />
-    </div>
-  </div>
-  <div class="flex-nowrap px-3 py-1 row">
-    <div class="align-items-center d-flex flex-grow-1 ml-3 text-truncate">
-      <ng-container i18n>Gross Performance</ng-container>
-      <abbr
-        class="initialism ml-2 text-muted"
-        title="Time-Weighted Rate of Return"
-        >(TWR)</abbr
-      >
-    </div>
-    <div class="flex-column flex-wrap justify-content-end">
-      <gf-value
-        class="justify-content-end"
-        position="end"
-        [colorizeSign]="true"
-        [isPercent]="true"
-        [locale]="locale"
         [value]="
-          isLoading ? undefined : summary?.currentGrossPerformancePercent
+          isLoading ? undefined : summary?.grossPerformanceWithCurrencyEffect
         "
       />
     </div>
@@ -93,7 +83,9 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Fees</div>
     <div class="d-flex justify-content-end">
-      <span *ngIf="summary?.fees || summary?.fees === 0" class="mr-1">-</span>
+      @if (summary?.fees || summary?.fees === 0) {
+        <span class="mr-1">-</span>
+      }
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
@@ -114,7 +106,9 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentNetPerformance"
+        [value]="
+          isLoading ? undefined : summary?.netPerformanceWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -134,7 +128,11 @@
         [colorizeSign]="true"
         [isPercent]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : summary?.currentNetPerformancePercent"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.netPerformancePercentageWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -150,7 +148,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.currentValue"
+        [value]="isLoading ? undefined : summary?.currentValueInBaseCurrency"
       />
     </div>
   </div>
@@ -170,14 +168,27 @@
     <div class="flex-grow-1 text-truncate" i18n>Emergency Fund</div>
     <div
       class="align-items-center d-flex justify-content-end"
-      [ngClass]="{ 'cursor-pointer': hasPermissionToUpdateUserSettings }"
-      (click)="hasPermissionToUpdateUserSettings && onEditEmergencyFund()"
+      [ngClass]="{
+        'cursor-pointer':
+          hasPermissionToUpdateUserSettings &&
+          user?.subscription?.type !== 'Basic'
+      }"
+      (click)="
+        hasPermissionToUpdateUserSettings &&
+          user?.subscription?.type !== 'Basic' &&
+          onEditEmergencyFund()
+      "
     >
-      <ion-icon
-        *ngIf="hasPermissionToUpdateUserSettings && !isLoading"
-        class="mr-1 text-muted"
-        name="ellipsis-horizontal-circle-outline"
-      />
+      @if (
+        hasPermissionToUpdateUserSettings &&
+        user?.subscription?.type !== 'Basic' &&
+        !isLoading
+      ) {
+        <ion-icon
+          class="mr-1 text-muted"
+          name="ellipsis-horizontal-circle-outline"
+        />
+      }
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
@@ -243,11 +254,9 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate" i18n>Liabilities</div>
     <div class="d-flex justify-content-end">
-      <span
-        *ngIf="summary?.liabilities || summary?.liabilities === 0"
-        class="mr-1"
-        >-</span
-      >
+      @if (summary?.liabilities || summary?.liabilities === 0) {
+        <span class="mr-1">-</span>
+      }
       <gf-value
         class="justify-content-end"
         [isCurrency]="true"
@@ -268,7 +277,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.netWorth"
+        [value]="isLoading ? undefined : summary?.totalValueInBaseCurrency"
       />
     </div>
   </div>
@@ -283,7 +292,11 @@
         [colorizeSign]="true"
         [isPercent]="true"
         [locale]="locale"
-        [value]="isLoading ? undefined : summary?.annualizedPerformancePercent"
+        [value]="
+          isLoading
+            ? undefined
+            : summary?.annualizedPerformancePercentWithCurrencyEffect
+        "
       />
     </div>
   </div>
@@ -310,7 +323,7 @@
         [isCurrency]="true"
         [locale]="locale"
         [unit]="baseCurrency"
-        [value]="isLoading ? undefined : summary?.dividend"
+        [value]="isLoading ? undefined : summary?.dividendInBaseCurrency"
       />
     </div>
   </div>

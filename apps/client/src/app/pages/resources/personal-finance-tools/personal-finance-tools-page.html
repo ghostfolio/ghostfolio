@@ -18,33 +18,43 @@
           with Ghostfolio.
         </p>
       </div>
-      @for (product of products; track product) {
-      <mat-card appearance="outlined" class="mb-3">
-        <mat-card-content>
-          <div class="container p-0">
-            <div class="flex-nowrap no-gutters row">
-              <a
-                class="d-flex overflow-hidden w-100"
-                title="Compare Ghostfolio to {{ product.name }} - {{ product.slogan }}"
-                [routerLink]="[pathResources, 'personal-finance-tools', pathAlternativeTo + (product.alias ?? product.key)]"
-              >
-                <div class="flex-grow-1 overflow-hidden">
-                  <div class="h6 m-0 text-truncate" i18n>
-                    Open Source Alternative to {{ product.name }}
+      @for (
+        personalFinanceTool of personalFinanceTools;
+        track personalFinanceTool
+      ) {
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-content class="p-0">
+            <div class="container p-0">
+              <div class="flex-nowrap no-gutters row">
+                <a
+                  class="d-flex overflow-hidden p-3 w-100"
+                  title="Compare Ghostfolio to {{
+                    personalFinanceTool.name
+                  }} - {{ personalFinanceTool.slogan }}"
+                  [routerLink]="[
+                    pathResources,
+                    'personal-finance-tools',
+                    pathAlternativeTo +
+                      (personalFinanceTool.alias ?? personalFinanceTool.key)
+                  ]"
+                >
+                  <div class="flex-grow-1 overflow-hidden">
+                    <div class="h6 m-0 text-truncate" i18n>
+                      Open Source Alternative to {{ personalFinanceTool.name }}
+                    </div>
                   </div>
-                </div>
-                <div class="align-items-center d-flex">
-                  <ion-icon
-                    class="chevron text-muted"
-                    name="chevron-forward-outline"
-                    size="small"
-                  />
-                </div>
-              </a>
+                  <div class="align-items-center d-flex">
+                    <ion-icon
+                      class="chevron text-muted"
+                      name="chevron-forward-outline"
+                      size="small"
+                    />
+                  </div>
+                </a>
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
       }
     </div>
   </div>

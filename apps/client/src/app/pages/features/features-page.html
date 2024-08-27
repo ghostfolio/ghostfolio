@@ -140,13 +140,14 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Portfolio Calculations</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
                   Check the rate of return of your portfolio for
-                  <code>Today</code>, <code>YTD</code>, <code>1Y</code>,
-                  <code>5Y</code>, and <code>Max</code>.
+                  <code>Today</code>, <code>WTD</code>, <code>MTD</code>,
+                  <code>YTD</code>, <code>1Y</code>, <code>5Y</code>, and
+                  <code>Max</code>.
                 </p>
               </div>
             </mat-card-content>
@@ -159,7 +160,7 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Portfolio Allocations</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -197,24 +198,24 @@
           </mat-card>
         </div>
         @if (hasPermissionForSubscription) {
-        <div class="col-xs-12 col-md-4 mb-3">
-          <mat-card appearance="outlined" class="d-flex flex-column h-100">
-            <mat-card-content>
-              <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
-                  <span i18n>Market Mood</span>
-                  <gf-premium-indicator class="ml-1" />
-                </h4>
-                <p class="m-0">
-                  Check the current market mood (<a
-                    [routerLink]="routerLinkResources"
-                    >Fear & Greed Index</a
-                  >) within the app.
-                </p>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+          <div class="col-xs-12 col-md-4 mb-3">
+            <mat-card appearance="outlined" class="d-flex flex-column h-100">
+              <mat-card-content>
+                <div class="flex-grow-1">
+                  <h4 class="align-items-center d-flex">
+                    <span i18n>Market Mood</span>
+                    <gf-premium-indicator class="ml-1" />
+                  </h4>
+                  <p class="m-0">
+                    Check the current market mood (<a
+                      [routerLink]="routerLinkResources"
+                      >Fear & Greed Index</a
+                    >) within the app.
+                  </p>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         }
         <div class="col-xs-12 col-md-4 mb-3">
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
@@ -223,7 +224,7 @@
                 <h4 class="align-items-center d-flex">
                   <span i18n>Static Analysis</span>
                   @if (hasPermissionForSubscription) {
-                  <gf-premium-indicator class="ml-1" />
+                    <gf-premium-indicator class="ml-1" />
                   }
                 </h4>
                 <p class="m-0">
@@ -240,10 +241,12 @@
               <div class="flex-grow-1">
                 <h4 i18n>Multi-Language</h4>
                 <p class="m-0">
-                  Use Ghostfolio in multiple languages: English, Dutch, French,
-                  German, Italian,
-                  <!-- Polish, -->Portuguese, Spanish and Turkish are currently
-                  supported.
+                  Use Ghostfolio in multiple languages: English,
+                  <!--Català, -->
+                  <!-- Chinese, -->
+                  Dutch, French, German, Italian,
+                  <!-- Polish, -->
+                  Portuguese, Spanish and Turkish are currently supported.
                 </p>
               </div>
             </mat-card-content>
@@ -290,12 +293,16 @@
     </div>
   </div>
   @if (!user) {
-  <div class="row">
-    <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="routerLinkRegister"
-        >Get Started</a
-      >
+    <div class="row">
+      <div class="col mt-3 text-center">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+          >Get Started</a
+        >
+      </div>
     </div>
-  </div>
   }
 </div>

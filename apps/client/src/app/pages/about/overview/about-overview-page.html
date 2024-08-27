@@ -21,11 +21,12 @@
             title="GNU Affero General Public License"
             >AGPL-3.0 license</a
           >
-          <ng-container *ngIf="hasPermissionForStatistics">
+          @if (hasPermissionForStatistics) {
             and we share aggregated
             <a title="Open Startup" [routerLink]="['/open']">key metrics</a>
-            of the platform’s performance</ng-container
-          >. The project has been initiated by
+            of the platform’s performance
+          }
+          . The project has been initiated by
           <a href="https://dotsilver.ch" title="Website of Thomas Kaul"
             >Thomas Kaul</a
           >
@@ -35,12 +36,12 @@
             title="Contributors to Ghostfolio"
             >contributors</a
           >.
-          <ng-container *ngIf="hasPermissionForSubscription"
-            >Check the system status at
+          @if (hasPermissionForSubscription) {
+            Check the system status at
             <a href="https://status.ghostfol.io" title="Ghostfolio Status"
               >status.ghostfol.io</a
-            >.</ng-container
-          >
+            >.
+          }
         </p>
         <p>
           If you encounter a bug or would like to suggest an improvement or a
@@ -54,15 +55,16 @@
           >
           community, post to
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >, send an e-mail to
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            , send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or start a discussion at
           <a
             href="https://github.com/ghostfolio/ghostfolio"
@@ -73,21 +75,22 @@
         <p class="align-items-center d-flex justify-content-center">
           <a
             class="mx-2"
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             mat-icon-button
             title="Follow Ghostfolio on X (formerly Twitter)"
           >
-            <span class="line-height-1 text-center w-100">𝕏</span>
+            <ion-icon name="logo-x" />
           </a>
-          <a
-            *ngIf="user?.subscription?.type === 'Premium'"
-            class="mx-2"
-            href="mailto:hi@ghostfol.io"
-            mat-icon-button
-            title="Send an e-mail"
-          >
-            <ion-icon name="mail" />
-          </a>
+          @if (user?.subscription?.type === 'Premium') {
+            <a
+              class="mx-2"
+              href="mailto:hi@ghostfol.io"
+              mat-icon-button
+              title="Send an e-mail"
+            >
+              <ion-icon name="mail" />
+            </a>
+          }
           <a
             class="mx-2"
             href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
@@ -105,29 +108,26 @@
             <ion-icon name="logo-github" />
           </a>
         </p>
-        <div
-          *ngIf="hasPermissionForSubscription"
-          class="d-flex justify-content-center"
-        >
-          <div
-            class="independent-and-bootstrapped-logo mb-2"
-            title="Ghostfolio is an independent & bootstrapped business"
-          ></div>
-        </div>
-        <div
-          *ngIf="!hasPermissionForSubscription"
-          class="d-flex justify-content-center"
-        >
-          <a
-            href="https://www.buymeacoffee.com/ghostfolio"
-            target="_blank"
-            title="Support Ghostfolio"
-            ><img
-              class="mb-2"
-              src="../assets/images/button-buy-me-a-coffee.png"
-              width="180"
-          /></a>
-        </div>
+        @if (hasPermissionForSubscription) {
+          <div class="d-flex justify-content-center">
+            <div
+              class="independent-and-bootstrapped-logo mb-2"
+              title="Ghostfolio is an independent & bootstrapped business"
+            ></div>
+          </div>
+        } @else {
+          <div class="d-flex justify-content-center">
+            <a
+              href="https://www.buymeacoffee.com/ghostfolio"
+              target="_blank"
+              title="Support Ghostfolio"
+              ><img
+                class="mb-2"
+                src="../assets/images/button-buy-me-a-coffee.png"
+                width="180"
+            /></a>
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -147,15 +147,15 @@
       >
     </div>
     @if (hasPermissionForSubscription) {
-    <div class="col-md-6 col-xs-12 my-2">
-      <a
-        class="py-4 w-100"
-        color="primary"
-        mat-flat-button
-        [routerLink]="['/blog']"
-        >Blog</a
-      >
-    </div>
+      <div class="col-md-6 col-xs-12 my-2">
+        <a
+          class="py-4 w-100"
+          color="primary"
+          mat-flat-button
+          [routerLink]="['/blog']"
+          >Blog</a
+        >
+      </div>
     }
   </div>
 </div>

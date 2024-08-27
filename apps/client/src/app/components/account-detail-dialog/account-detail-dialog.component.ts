@@ -1,3 +1,5 @@
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -21,7 +23,8 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import Big from 'big.js';
+import { Router } from '@angular/router';
+import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
 import { Subject } from 'rxjs';
@@ -41,7 +44,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   public activities: OrderWithAccount[];
   public balance: number;
   public currency: string;
-  public dataSource: MatTableDataSource<OrderWithAccount>;
+  public dataSource: MatTableDataSource<Activity>;
   public equity: number;
   public hasPermissionToDeleteAccountBalance: boolean;
   public historicalDataItems: HistoricalDataItem[];
@@ -64,6 +67,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
+    private router: Router,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -83,75 +87,44 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.dataService
-      .fetchAccount(this.data.accountId)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({
-          balance,
-          currency,
-          name,
-          Platform,
-          transactionCount,
-          value,
-          valueInBaseCurrency
-        }) => {
-          this.balance = balance;
-          this.currency = currency;
-
-          if (isNumber(balance) && isNumber(value)) {
-            this.equity = new Big(value).minus(balance).toNumber();
-          } else {
-            this.equity = null;
-          }
-
-          this.name = name;
-          this.platformName = Platform?.name ?? '-';
-          this.transactionCount = transactionCount;
-          this.valueInBaseCurrency = valueInBaseCurrency;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      );
-
-    this.dataService
-      .fetchPortfolioDetails({
-        filters: [
-          {
-            type: 'ACCOUNT',
-            id: this.data.accountId
-          }
-        ]
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
-        this.holdings = [];
-
-        for (const [symbol, holding] of Object.entries(holdings)) {
-          this.holdings.push(holding);
-        }
-
-        this.changeDetectorRef.markForCheck();
-      });
-
+    this.fetchAccount();
     this.fetchAccountBalances();
     this.fetchActivities();
+    this.fetchPortfolioHoldings();
     this.fetchPortfolioPerformance();
+  }
+
+  public onCloneActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, createDialog: true }
+    });
+
+    this.dialogRef.close();
   }
 
   public onClose() {
     this.dialogRef.close();
   }
 
+  public onAddAccountBalance(accountBalance: CreateAccountBalanceDto) {
+    this.dataService
+      .postAccountBalance(accountBalance)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchAccount();
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
+      });
+  }
+
   public onDeleteAccountBalance(aId: string) {
     this.dataService
       .deleteAccountBalance(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.fetchAccountBalances();
-          this.fetchPortfolioPerformance();
-        }
+      .subscribe(() => {
+        this.fetchAccount();
+        this.fetchAccountBalances();
+        this.fetchPortfolioPerformance();
       });
   }
 
@@ -182,6 +155,47 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.sortDirection = direction;
 
     this.fetchActivities();
+  }
+
+  public onUpdateActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, editDialog: true }
+    });
+
+    this.dialogRef.close();
+  }
+
+  private fetchAccount() {
+    this.dataService
+      .fetchAccount(this.data.accountId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(
+        ({
+          balance,
+          currency,
+          name,
+          Platform,
+          transactionCount,
+          value,
+          valueInBaseCurrency
+        }) => {
+          this.balance = balance;
+          this.currency = currency;
+
+          if (isNumber(balance) && isNumber(value)) {
+            this.equity = new Big(value).minus(balance).toNumber();
+          } else {
+            this.equity = null;
+          }
+
+          this.name = name;
+          this.platformName = Platform?.name ?? '-';
+          this.transactionCount = transactionCount;
+          this.valueInBaseCurrency = valueInBaseCurrency;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      );
   }
 
   private fetchAccountBalances() {
@@ -215,6 +229,24 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
+  private fetchPortfolioHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings({
+        filters: [
+          {
+            type: 'ACCOUNT',
+            id: this.data.accountId
+          }
+        ]
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
   private fetchPortfolioPerformance() {
     this.isLoadingChart = true;
 
@@ -227,7 +259,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
         ],
         range: 'max',
-        withExcludedAccounts: true
+        withExcludedAccounts: true,
+        withItems: true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart }) => {
@@ -235,11 +268,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           ({ date, netWorth, netWorthInPercentage }) => {
             return {
               date,
-              value:
-                this.data.hasImpersonationId ||
-                this.user.settings.isRestrictedView
-                  ? netWorthInPercentage
-                  : netWorth
+              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
             };
           }
         );

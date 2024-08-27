@@ -8,22 +8,23 @@
   [disablePagination]="true"
   [tabPanel]="tabPanel"
 >
-  <ng-container *ngFor="let tab of tabs">
-    <a
-      #rla="routerLinkActive"
-      *ngIf="tab.showCondition !== false"
-      class="no-min-width px-3"
-      mat-tab-link
-      routerLinkActive
-      [active]="rla.isActive"
-      [routerLink]="tab.path"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <ion-icon
-        [name]="tab.iconName"
-        [size]="deviceType === 'mobile' ? 'large': 'small'"
-      />
-      <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
-    </a>
-  </ng-container>
+  @for (tab of tabs; track tab) {
+    @if (tab.showCondition !== false) {
+      <a
+        #rla="routerLinkActive"
+        class="no-min-width px-3"
+        mat-tab-link
+        routerLinkActive
+        [active]="rla.isActive"
+        [routerLink]="tab.path"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <ion-icon
+          [name]="tab.iconName"
+          [size]="deviceType === 'mobile' ? 'large' : 'small'"
+        />
+        <div class="d-none d-sm-block ml-2">{{ tab.label }}</div>
+      </a>
+    }
+  }
 </nav>

@@ -1,4 +1,5 @@
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_LOW,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
   PROPERTY_IS_DATA_GATHERING_ENABLED
@@ -44,10 +45,11 @@ export class CronService {
   @Cron(CronService.EVERY_SUNDAY_AT_LUNCH_TIME)
   public async runEverySundayAtTwelvePm() {
     if (await this.isDataGatheringEnabled()) {
-      const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+      const assetProfileIdentifiers =
+        await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
       await this.dataGatheringService.addJobsToQueue(
-        uniqueAssets.map(({ dataSource, symbol }) => {
+        assetProfileIdentifiers.map(({ dataSource, symbol }) => {
           return {
             data: {
               dataSource,
@@ -56,7 +58,8 @@ export class CronService {
             name: GATHER_ASSET_PROFILE_PROCESS,
             opts: {
               ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-              jobId: getAssetProfileIdentifier({ dataSource, symbol })
+              jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+              priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
             }
           };
         })

@@ -16,174 +16,176 @@
   >
     <mat-step [completed]="importStep === 0" [selected]="importStep === 0">
       <ng-template matStepLabel>
-        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
-          >Select Holding</ng-container
-        >
-        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
-          >Select File</ng-container
-        >
+        @if (mode === 'DIVIDEND') {
+          <ng-container i18n>Select Holding</ng-container>
+        } @else {
+          <ng-container i18n>Select File</ng-container>
+        }
       </ng-template>
       <div class="pt-3">
         @if (mode === 'DIVIDEND') {
-        <form
-          [formGroup]="uniqueAssetForm"
-          (ngSubmit)="onLoadDividends(stepper)"
-        >
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label i18n>Holding</mat-label>
-            <mat-select formControlName="uniqueAsset">
-              <mat-select-trigger
-                >{{ uniqueAssetForm.controls['uniqueAsset']?.value?.name
-                }}</mat-select-trigger
+          <form
+            [formGroup]="assetProfileForm"
+            (ngSubmit)="onLoadDividends(stepper)"
+          >
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label i18n>Holding</mat-label>
+              <mat-select formControlName="assetProfileIdentifier">
+                <mat-select-trigger>{{
+                  assetProfileForm.get('assetProfileIdentifier')?.value?.name
+                }}</mat-select-trigger>
+                @for (holding of holdings; track holding) {
+                  <mat-option
+                    class="line-height-1"
+                    [value]="{
+                      dataSource: holding.dataSource,
+                      name: holding.name,
+                      symbol: holding.symbol
+                    }"
+                  >
+                    <span
+                      ><b>{{ holding.name }}</b></span
+                    >
+                    <br />
+                    <small class="text-muted"
+                      >{{ holding.symbol | gfSymbol }} ·
+                      {{ holding.currency }}</small
+                    >
+                  </mat-option>
+                }
+              </mat-select>
+              @if (isLoading) {
+                <mat-spinner class="position-absolute" [diameter]="20" />
+              }
+            </mat-form-field>
+            <div class="d-flex flex-column justify-content-center">
+              <button
+                color="primary"
+                mat-flat-button
+                type="submit"
+                [disabled]="!assetProfileForm.valid"
               >
-              <mat-option
-                *ngFor="let holding of holdings"
-                class="line-height-1"
-                [value]="{ dataSource: holding.dataSource, name: holding.name, symbol: holding.symbol }"
-              >
-                <span><b>{{ holding.name }}</b></span>
-                <br />
-                <small class="text-muted"
-                  >{{ holding.symbol | gfSymbol }} · {{ holding.currency
-                  }}</small
-                >
-              </mat-option>
-            </mat-select>
-            <mat-spinner
-              *ngIf="isLoading"
-              class="position-absolute"
-              [diameter]="20"
-            />
-          </mat-form-field>
+                <span i18n>Load Dividends</span>
+              </button>
+            </div>
+          </form>
+        } @else {
           <div class="d-flex flex-column justify-content-center">
             <button
-              color="primary"
-              mat-flat-button
-              type="submit"
-              [disabled]="!uniqueAssetForm.valid"
+              class="drop-area p-4 text-center text-muted"
+              gfFileDrop
+              (click)="onSelectFile(stepper)"
+              (filesDropped)="onFilesDropped({ stepper, files: $event })"
             >
-              <span i18n>Load Dividends</span>
+              <div
+                class="align-items-center d-flex flex-column justify-content-center"
+              >
+                <ion-icon class="cloud-icon" name="cloud-upload-outline" />
+                <span i18n>Choose or drop a file here</span>
+              </div>
             </button>
+            <p class="mb-0 mt-3 text-center">
+              <small>
+                <span class="mr-1" i18n
+                  >The following file formats are supported:</span
+                >
+                <a
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
+                  target="_blank"
+                  >CSV</a
+                >
+                <span class="mx-1" i18n>or</span>
+                <a
+                  href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
+                  target="_blank"
+                  >JSON</a
+                >
+              </small>
+            </p>
           </div>
-        </form>
-        } @else {
-        <div class="d-flex flex-column justify-content-center">
-          <button
-            class="drop-area p-4 text-center text-muted"
-            gfFileDrop
-            (click)="onSelectFile(stepper)"
-            (filesDropped)="onFilesDropped({stepper, files: $event})"
-          >
-            <div
-              class="align-items-center d-flex flex-column justify-content-center"
-            >
-              <ion-icon class="cloud-icon" name="cloud-upload-outline" />
-              <span i18n>Choose or drop a file here</span>
-            </div>
-          </button>
-          <p class="mb-0 mt-3 text-center">
-            <small>
-              <span class="mr-1" i18n
-                >The following file formats are supported:</span
-              >
-              <a
-                href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.csv"
-                target="_blank"
-                >CSV</a
-              >
-              <span class="mx-1" i18n>or</span>
-              <a
-                href="https://github.com/ghostfolio/ghostfolio/blob/main/test/import/ok.json"
-                target="_blank"
-                >JSON</a
-              >
-            </small>
-          </p>
-        </div>
         }
       </div>
     </mat-step>
 
     <mat-step [completed]="importStep === 1" [selected]="importStep === 1">
       <ng-template matStepLabel>
-        <ng-container *ngIf="mode === 'DIVIDEND'" i18n
-          >Select Dividends</ng-container
-        >
-        <ng-container *ngIf="mode !== 'DIVIDEND'" i18n
-          >Select Activities</ng-container
-        >
+        @if (mode === 'DIVIDEND') {
+          <ng-container i18n>Select Dividends</ng-container>
+        } @else {
+          <ng-container i18n>Select Activities</ng-container>
+        }
       </ng-template>
       <div class="pt-3">
-        @if(errorMessages?.length === 0) {
-        <gf-activities-table
-          *ngIf="importStep === 1"
-          [baseCurrency]="data?.user?.settings?.baseCurrency"
-          [dataSource]="dataSource"
-          [deviceType]="data?.deviceType"
-          [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="false"
-          [hasPermissionToFilter]="false"
-          [hasPermissionToOpenDetails]="false"
-          [locale]="data?.user?.settings?.locale"
-          [pageSize]="maxSafeInteger"
-          [showActions]="false"
-          [showCheckbox]="true"
-          [showSymbolColumn]="false"
-          [sortColumn]="sortColumn"
-          [sortDirection]="sortDirection"
-          [sortDisabled]="true"
-          [totalItems]="totalItems"
-          (selectedActivities)="updateSelection($event)"
-        />
-        <div class="d-flex justify-content-end mt-3">
-          <button mat-button (click)="onReset(stepper)">
-            <ng-container i18n>Back</ng-container>
-          </button>
-          <button
-            class="ml-1"
-            color="primary"
-            mat-flat-button
-            [disabled]="!selectedActivities?.length"
-            (click)="onImportActivities()"
-          >
-            <ng-container i18n>Import</ng-container>
-          </button>
-        </div>
+        @if (errorMessages?.length === 0) {
+          @if (importStep === 1) {
+            <gf-activities-table
+              [baseCurrency]="data?.user?.settings?.baseCurrency"
+              [dataSource]="dataSource"
+              [deviceType]="data?.deviceType"
+              [hasPermissionToCreateActivity]="false"
+              [hasPermissionToDeleteActivity]="false"
+              [hasPermissionToExportActivities]="false"
+              [hasPermissionToFilter]="false"
+              [hasPermissionToOpenDetails]="false"
+              [locale]="data?.user?.settings?.locale"
+              [pageSize]="maxSafeInteger"
+              [showActions]="false"
+              [showCheckbox]="true"
+              [showSymbolColumn]="false"
+              [sortColumn]="sortColumn"
+              [sortDirection]="sortDirection"
+              [sortDisabled]="true"
+              [totalItems]="totalItems"
+              (selectedActivities)="updateSelection($event)"
+            />
+          }
+          <div class="d-flex justify-content-end mt-3">
+            <button mat-button (click)="onReset(stepper)">
+              <ng-container i18n>Back</ng-container>
+            </button>
+            <button
+              class="ml-1"
+              color="primary"
+              mat-flat-button
+              [disabled]="!selectedActivities?.length"
+              (click)="onImportActivities()"
+            >
+              <ng-container i18n>Import</ng-container>
+            </button>
+          </div>
         } @else {
-        <mat-accordion displayMode="flat">
-          <mat-expansion-panel
-            *ngFor="let message of errorMessages; let i = index"
-            [disabled]="!details[i]"
-          >
-            <mat-expansion-panel-header class="pl-1">
-              <mat-panel-title>
-                <div class="d-flex">
-                  <div class="align-items-center d-flex mr-2">
-                    <ion-icon name="warning-outline" />
-                  </div>
-                  <div>{{ message }}</div>
-                </div>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <pre
-              *ngIf="details[i]"
-              class="m-0"
-            ><code>{{ details[i] | json }}</code></pre>
-          </mat-expansion-panel>
-        </mat-accordion>
-        <div class="d-flex justify-content-end mt-3">
-          <button mat-button (click)="onReset(stepper)">
-            <ng-container i18n>Back</ng-container>
-          </button>
-          <button
-            class="ml-1"
-            color="primary"
-            mat-flat-button
-            [disabled]="true"
-          >
-            <ng-container i18n>Import</ng-container>
-          </button>
-        </div>
+          <mat-accordion displayMode="flat">
+            @for (message of errorMessages; track message; let i = $index) {
+              <mat-expansion-panel [disabled]="!details[i]">
+                <mat-expansion-panel-header class="pl-1">
+                  <mat-panel-title>
+                    <div class="d-flex">
+                      <div class="align-items-center d-flex mr-2">
+                        <ion-icon name="warning-outline" />
+                      </div>
+                      <div>{{ message }}</div>
+                    </div>
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                @if (details[i]) {
+                  <pre class="m-0"><code>{{ details[i] | json }}</code></pre>
+                }
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+          <div class="d-flex justify-content-end mt-3">
+            <button mat-button (click)="onReset(stepper)">
+              <ng-container i18n>Back</ng-container>
+            </button>
+            <button
+              class="ml-1"
+              color="primary"
+              mat-flat-button
+              [disabled]="true"
+            >
+              <ng-container i18n>Import</ng-container>
+            </button>
+          </div>
         }
       </div>
     </mat-step>

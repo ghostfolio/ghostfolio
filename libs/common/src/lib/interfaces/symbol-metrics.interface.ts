@@ -1,4 +1,6 @@
-import Big from 'big.js';
+import { DateRange } from '@ghostfolio/common/types';
+
+import { Big } from 'big.js';
 
 export interface SymbolMetrics {
   currentValues: {
@@ -7,6 +9,7 @@ export interface SymbolMetrics {
   currentValuesWithCurrencyEffect: {
     [date: string]: Big;
   };
+  feesWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
   grossPerformancePercentageWithCurrencyEffect: Big;
@@ -25,12 +28,12 @@ export interface SymbolMetrics {
   };
   netPerformance: Big;
   netPerformancePercentage: Big;
-  netPerformancePercentageWithCurrencyEffect: Big;
+  netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
   netPerformanceValues: {
     [date: string]: Big;
   };
   netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
-  netPerformanceWithCurrencyEffect: Big;
+  netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
   timeWeightedInvestment: Big;
   timeWeightedInvestmentValues: {
     [date: string]: Big;
@@ -39,6 +42,15 @@ export interface SymbolMetrics {
     [date: string]: Big;
   };
   timeWeightedInvestmentWithCurrencyEffect: Big;
+  totalAccountBalanceInBaseCurrency: Big;
+  totalDividend: Big;
+  totalDividendInBaseCurrency: Big;
+  totalInterest: Big;
+  totalInterestInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
+  totalLiabilities: Big;
+  totalLiabilitiesInBaseCurrency: Big;
+  totalValuables: Big;
+  totalValuablesInBaseCurrency: Big;
 }

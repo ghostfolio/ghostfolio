@@ -1,6 +1,5 @@
 export interface Product {
   alias?: string;
-  component: any;
   founded?: number;
   hasFreePlan?: boolean;
   hasSelfHostingAbility?: boolean;
@@ -11,7 +10,7 @@ export interface Product {
   note?: string;
   origin?: string;
   pricingPerYear?: string;
-  region?: string;
+  regions?: string[];
   slogan?: string;
   useAnonymously?: boolean;
 }

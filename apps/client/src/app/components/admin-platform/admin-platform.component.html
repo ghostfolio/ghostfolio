@@ -30,12 +30,13 @@
             <ng-container i18n>Name</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1" mat-cell>
-            <gf-symbol-icon
-              *ngIf="element.url"
-              class="d-inline mr-1"
-              [tooltip]="element.name"
-              [url]="element.url"
-            />
+            @if (element.url) {
+              <gf-asset-profile-icon
+                class="d-inline mr-1"
+                [tooltip]="element.name"
+                [url]="element.url"
+              />
+            }
             <span>{{ element.name }}</span>
           </td></ng-container
         >
@@ -91,7 +92,11 @@
                   <span i18n>Edit</span>
                 </span>
               </button>
-              <button mat-menu-item (click)="onDeletePlatform(element.id)">
+              <button
+                mat-menu-item
+                [disabled]="element.accountCount > 0"
+                (click)="onDeletePlatform(element.id)"
+              >
                 <span class="align-items-center d-flex">
                   <ion-icon class="mr-2" name="trash-outline" />
                   <span i18n>Delete</span>

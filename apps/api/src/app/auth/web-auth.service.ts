@@ -41,7 +41,7 @@ export class WebAuthService {
   ) {}
 
   get rpID() {
-    return this.configurationService.get('WEB_AUTH_RP_ID');
+    return new URL(this.configurationService.get('ROOT_URL')).hostname;
   }
 
   get expectedOrigin() {

@@ -1,3 +1,4 @@
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Filter, User } from '@ghostfolio/common/interfaces';
@@ -5,7 +6,9 @@ import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -21,9 +24,20 @@ import {
   ViewChild,
   ViewChildren
 } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { RouterModule } from '@angular/router';
 import { Account, AssetClass } from '@prisma/client';
+import { eachYearOfInterval, format } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
   catchError,
@@ -34,16 +48,34 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
-import { AssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
-import { ISearchResultItem, ISearchResults } from './interfaces/interfaces';
+import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
+import {
+  IDateRangeOption,
+  ISearchResultItem,
+  ISearchResults
+} from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfAssetProfileIconComponent,
+    GfAssistantListItemComponent,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NgxSkeletonLoaderModule,
+    ReactiveFormsModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
+  standalone: true,
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
-export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
+export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @HostListener('document:keydown', ['$event']) onKeydown(
     event: KeyboardEvent
   ) {
@@ -87,35 +119,15 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   @ViewChild('menuTrigger') menuTriggerElement: MatMenuTrigger;
   @ViewChild('search', { static: true }) searchElement: ElementRef;
 
-  @ViewChildren(AssistantListItemComponent)
-  assistantListItems: QueryList<AssistantListItemComponent>;
+  @ViewChildren(GfAssistantListItemComponent)
+  assistantListItems: QueryList<GfAssistantListItemComponent>;
 
   public static readonly SEARCH_RESULTS_DEFAULT_LIMIT = 5;
 
   public accounts: Account[] = [];
   public assetClasses: Filter[] = [];
   public dateRangeFormControl = new FormControl<string>(undefined);
-  public readonly dateRangeOptions = [
-    { label: $localize`Today`, value: '1d' },
-    {
-      label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
-      value: 'wtd'
-    },
-    {
-      label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
-      value: 'mtd'
-    },
-    {
-      label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
-      value: 'ytd'
-    },
-    { label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')', value: '1y' },
-    {
-      label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
-      value: '5y'
-    },
-    { label: $localize`Max`, value: 'max' }
-  ];
+  public dateRangeOptions: IDateRangeOption[] = [];
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
@@ -132,7 +144,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   public tags: Filter[] = [];
 
   private filterTypes: Filter['type'][] = ['ACCOUNT', 'ASSET_CLASS', 'TAG'];
-  private keyManager: FocusKeyManager<AssistantListItemComponent>;
+  private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -199,6 +211,49 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
+    this.dateRangeOptions = [
+      { label: $localize`Today`, value: '1d' },
+      {
+        label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
+        value: 'wtd'
+      },
+      {
+        label: $localize`Month to date` + ' (' + $localize`MTD` + ')',
+        value: 'mtd'
+      },
+      {
+        label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
+        value: 'ytd'
+      },
+      {
+        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
+        value: '1y'
+      }
+    ];
+
+    // TODO
+    // if (this.user?.settings?.isExperimentalFeatures) {
+    //   this.dateRangeOptions = this.dateRangeOptions.concat(
+    //     eachYearOfInterval({
+    //       end: new Date(),
+    //       start: this.user?.dateOfFirstActivity ?? new Date()
+    //     })
+    //       .map((date) => {
+    //         return { label: format(date, 'yyyy'), value: format(date, 'yyyy') };
+    //       })
+    //       .slice(0, -1)
+    //       .reverse()
+    //   );
+    // }
+
+    this.dateRangeOptions = this.dateRangeOptions.concat([
+      {
+        label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
+        value: '5y'
+      },
+      { label: $localize`Max`, value: 'max' }
+    ]);
+
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
 
     this.filterForm.setValue(
@@ -310,7 +365,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
         );
         assetProfiles = assetProfiles.slice(
           0,
-          AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+          GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
         );
       } catch {}
     }
@@ -319,7 +374,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
       holdings = await lastValueFrom(this.searchHoldings(aSearchTerm));
       holdings = holdings.slice(
         0,
-        AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+        GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
       );
     } catch {}
 
@@ -340,7 +395,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
             type: 'SEARCH_QUERY'
           }
         ],
-        take: AssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+        take: GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
       })
       .pipe(
         catchError(() => {
@@ -365,7 +420,7 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private searchHoldings(aSearchTerm: string): Observable<ISearchResultItem[]> {
     return this.dataService
-      .fetchPositions({
+      .fetchPortfolioHoldings({
         filters: [
           {
             id: aSearchTerm,
@@ -378,8 +433,8 @@ export class AssistantComponent implements OnChanges, OnDestroy, OnInit {
         catchError(() => {
           return EMPTY;
         }),
-        map(({ positions }) => {
-          return positions.map(
+        map(({ holdings }) => {
+          return holdings.map(
             ({ assetSubClass, currency, dataSource, name, symbol }) => {
               return {
                 currency,

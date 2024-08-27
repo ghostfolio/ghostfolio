@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import Big from 'big.js';
+import { Big } from 'big.js';
 
 @Injectable()
 export class FireCalculatorService {

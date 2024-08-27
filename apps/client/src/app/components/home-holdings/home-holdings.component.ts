@@ -1,21 +1,24 @@
-import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
-import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Position, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { DateRange } from '@ghostfolio/common/types';
+import {
+  HoldingType,
+  HoldingsViewMode,
+  ToggleOption
+} from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DataSource } from '@prisma/client';
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { PositionDetailDialogParams } from '../position/position-detail-dialog/interfaces/interfaces';
 
 @Component({
   selector: 'gf-home-holdings',
@@ -23,12 +26,22 @@ import { PositionDetailDialogParams } from '../position/position-detail-dialog/i
   templateUrl: './home-holdings.html'
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
-  public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
+
   public deviceType: string;
   public hasImpersonationId: boolean;
+  public hasPermissionToAccessHoldingsChart: boolean;
   public hasPermissionToCreateOrder: boolean;
-  public positions: Position[];
+  public holdings: PortfolioPosition[];
+  public holdingType: HoldingType = 'ACTIVE';
+  public holdingTypeOptions: ToggleOption[] = [
+    { label: $localize`Active`, value: 'ACTIVE' },
+    { label: $localize`Closed`, value: 'CLOSED' }
+  ];
   public user: User;
+  public viewModeFormControl = new FormControl<HoldingsViewMode>(
+    HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+  );
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -36,42 +49,10 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
-    private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
-    private route: ActivatedRoute,
     private router: Router,
     private userService: UserService
-  ) {
-    this.route.queryParams
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((params) => {
-        if (
-          params['dataSource'] &&
-          params['positionDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openPositionDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
-        }
-      });
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
-
-          this.update();
-        }
-      });
-  }
+  ) {}
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
@@ -82,24 +63,60 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
       });
-  }
 
-  public onChangeDateRange(dateRange: DateRange) {
-    this.dataService
-      .putUserSetting({ dateRange })
+    this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService.remove();
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
 
-        this.userService
-          .get()
+          this.hasPermissionToAccessHoldingsChart = hasPermission(
+            this.user.permissions,
+            permissions.accessHoldingsChart
+          );
+
+          this.hasPermissionToCreateOrder = hasPermission(
+            this.user.permissions,
+            permissions.createOrder
+          );
+
+          this.initialize();
+
+          this.changeDetectorRef.markForCheck();
+        }
+      });
+
+    this.viewModeFormControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((holdingsViewMode) => {
+        this.dataService
+          .putUserSetting({ holdingsViewMode })
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe((user) => {
-            this.user = user;
+          .subscribe(() => {
+            this.userService
+              .get(true)
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((user) => {
+                this.user = user;
 
-            this.changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
+              });
           });
       });
+  }
+
+  public onChangeHoldingType(aHoldingType: HoldingType) {
+    this.holdingType = aHoldingType;
+
+    this.initialize();
+  }
+
+  public onSymbolClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (dataSource && symbol) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
+      });
+    }
   }
 
   public ngOnDestroy() {
@@ -107,59 +124,50 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((user) => {
-        this.user = user;
+  private fetchHoldings() {
+    const filters = this.userService.getFilters();
 
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
-          autoFocus: false,
-          data: <PositionDetailDialogParams>{
-            dataSource,
-            symbol,
-            baseCurrency: this.user?.settings?.baseCurrency,
-            colorScheme: this.user?.settings?.colorScheme,
-            deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToReportDataGlitch: hasPermission(
-              this.user?.permissions,
-              permissions.reportDataGlitch
-            ),
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
+    if (this.holdingType === 'CLOSED') {
+      filters.push({ id: 'CLOSED', type: 'HOLDING_TYPE' });
+    }
 
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
-      });
+    return this.dataService.fetchPortfolioHoldings({
+      filters,
+      range: this.user?.settings?.dateRange
+    });
   }
 
-  private update() {
-    this.positions = undefined;
+  private initialize() {
+    this.viewModeFormControl.disable({ emitEvent: false });
 
-    this.dataService
-      .fetchPositions({ range: this.user?.settings?.dateRange })
+    if (
+      this.hasPermissionToAccessHoldingsChart &&
+      this.holdingType === 'ACTIVE'
+    ) {
+      this.viewModeFormControl.enable({ emitEvent: false });
+
+      this.viewModeFormControl.setValue(
+        this.deviceType === 'mobile'
+          ? HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
+          : this.user?.settings?.holdingsViewMode ||
+              HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        { emitEvent: false }
+      );
+    } else if (this.holdingType === 'CLOSED') {
+      this.viewModeFormControl.setValue(
+        HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE,
+        { emitEvent: false }
+      );
+    }
+
+    this.holdings = undefined;
+
+    this.fetchHoldings()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((response) => {
-        this.positions = response.positions;
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings;
 
         this.changeDetectorRef.markForCheck();
       });
-
-    this.changeDetectorRef.markForCheck();
   }
 }

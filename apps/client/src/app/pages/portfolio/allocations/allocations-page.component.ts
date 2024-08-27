@@ -1,16 +1,15 @@
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialogParams } from '@ghostfolio/client/components/position/position-detail-dialog/interfaces/interfaces';
-import { PositionDetailDialog } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.component';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
+  Holding,
   PortfolioDetails,
   PortfolioPosition,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -87,6 +86,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
+  public topHoldings: Holding[];
+  public topHoldingsMap: {
+    [name: string]: { name: string; value: number };
+  };
+  public totalValueInEtf = 0;
   public UNKNOWN_KEY = UNKNOWN_KEY;
   public user: User;
   public worldMapChartFormat: string;
@@ -103,20 +107,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     private router: Router,
     private userService: UserService
   ) {
-    route.queryParams
+    this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['accountId'] && params['accountDetailDialog']) {
           this.openAccountDetailDialog(params['accountId']);
-        } else if (
-          params['dataSource'] &&
-          params['positionDetailDialog'] &&
-          params['symbol']
-        ) {
-          this.openPositionDialog({
-            dataSource: params['dataSource'],
-            symbol: params['symbol']
-          });
         }
       });
   }
@@ -167,7 +162,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ symbol }: UniqueAsset) {
+  public onAccountChartClicked({ symbol }: AssetProfileIdentifier) {
     if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
@@ -175,10 +170,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
+  public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
-        queryParams: { dataSource, symbol, positionDetailDialog: true }
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
   }
@@ -205,7 +200,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
   private fetchPortfolioDetails() {
     return this.dataService.fetchPortfolioDetails({
-      filters: this.userService.getFilters()
+      filters: this.userService.getFilters(),
+      withMarkets: true
     });
   }
 
@@ -281,7 +277,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
-      filteredValueInPercentage: 0,
       holdings: {},
       platforms: {},
       summary: undefined
@@ -300,6 +295,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+    this.topHoldingsMap = {};
   }
 
   private initializeAllocationsData() {
@@ -348,8 +344,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         name: position.name
       };
 
-      if (position.assetClass !== AssetClass.CASH) {
-        // Prepare analysis data by continents, countries and sectors except for cash
+      if (position.assetClass !== AssetClass.LIQUIDITY) {
+        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
         if (position.countries.length > 0) {
           this.markets.developedMarkets.value +=
@@ -457,6 +453,28 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
 
+        if (position.holdings.length > 0) {
+          for (const holding of position.holdings) {
+            const { allocationInPercentage, name, valueInBaseCurrency } =
+              holding;
+
+            if (this.topHoldingsMap[name]?.value) {
+              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+                ? valueInBaseCurrency
+                : allocationInPercentage *
+                  this.portfolioDetails.holdings[symbol].valueInPercentage;
+            } else {
+              this.topHoldingsMap[name] = {
+                name,
+                value: isNumber(valueInBaseCurrency)
+                  ? valueInBaseCurrency
+                  : allocationInPercentage *
+                    this.portfolioDetails.holdings[symbol].valueInPercentage
+              };
+            }
+          }
+        }
+
         if (position.sectors.length > 0) {
           for (const sector of position.sectors) {
             const { name, weight } = sector;
@@ -485,6 +503,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
+      }
+
+      if (this.positions[symbol].assetSubClass === 'ETF') {
+        this.totalValueInEtf += this.positions[symbol].value;
       }
 
       this.symbols[prettifySymbol(symbol)] = {
@@ -530,6 +552,31 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.otherMarkets.value / marketsTotal;
     this.markets[UNKNOWN_KEY].value =
       this.markets[UNKNOWN_KEY].value / marketsTotal;
+
+    this.topHoldings = Object.values(this.topHoldingsMap)
+      .map(({ name, value }) => {
+        if (this.hasImpersonationId || this.user.settings.isRestrictedView) {
+          return {
+            name,
+            allocationInPercentage: value,
+            valueInBaseCurrency: null
+          };
+        }
+
+        return {
+          name,
+          allocationInPercentage:
+            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+          valueInBaseCurrency: value
+        };
+      })
+      .sort((a, b) => {
+        return b.allocationInPercentage - a.allocationInPercentage;
+      });
+
+    if (this.topHoldings.length > MAX_TOP_HOLDINGS) {
+      this.topHoldings = this.topHoldings.slice(0, MAX_TOP_HOLDINGS);
+    }
   }
 
   private openAccountDetailDialog(aAccountId: string) {
@@ -538,7 +585,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       data: <AccountDetailDialogParams>{
         accountId: aAccountId,
         deviceType: this.deviceType,
-        hasImpersonationId: this.hasImpersonationId
+        hasImpersonationId: this.hasImpersonationId,
+        hasPermissionToCreateOrder:
+          !this.hasImpersonationId &&
+          hasPermission(this.user?.permissions, permissions.createOrder) &&
+          !this.user?.settings?.isRestrictedView
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -549,47 +600,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         this.router.navigate(['.'], { relativeTo: this.route });
-      });
-  }
-
-  private openPositionDialog({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    this.userService
-      .get()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((user) => {
-        this.user = user;
-
-        const dialogRef = this.dialog.open(PositionDetailDialog, {
-          autoFocus: false,
-          data: <PositionDetailDialogParams>{
-            dataSource,
-            symbol,
-            baseCurrency: this.user?.settings?.baseCurrency,
-            colorScheme: this.user?.settings?.colorScheme,
-            deviceType: this.deviceType,
-            hasImpersonationId: this.hasImpersonationId,
-            hasPermissionToReportDataGlitch: hasPermission(
-              this.user?.permissions,
-              permissions.reportDataGlitch
-            ),
-            locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-        });
-
-        dialogRef
-          .afterClosed()
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
       });
   }
 }

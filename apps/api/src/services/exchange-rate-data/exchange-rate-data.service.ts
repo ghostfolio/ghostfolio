@@ -73,7 +73,17 @@ export class ExchangeRateDataService {
           currencyTo: targetCurrency
         });
 
-      let previousExchangeRate = 1;
+      const dateStrings = Object.keys(
+        exchangeRatesByCurrency[`${currency}${targetCurrency}`]
+      );
+      const lastDateString = dateStrings.reduce((a, b) => {
+        return a > b ? a : b;
+      }, undefined);
+
+      let previousExchangeRate =
+        exchangeRatesByCurrency[`${currency}${targetCurrency}`]?.[
+          lastDateString
+        ] ?? 1;
 
       // Start from the most recent date and fill in missing exchange rates
       // using the latest available rate
@@ -94,7 +104,7 @@ export class ExchangeRateDataService {
           exchangeRatesByCurrency[`${currency}${targetCurrency}`][dateString] =
             previousExchangeRate;
 
-          if (currency === DEFAULT_CURRENCY) {
+          if (currency === DEFAULT_CURRENCY && isBefore(date, new Date())) {
             Logger.error(
               `No exchange rate has been found for ${currency}${targetCurrency} at ${dateString}`,
               'ExchangeRateDataService'
@@ -351,13 +361,13 @@ export class ExchangeRateDataService {
       const symbol = `${currencyFrom}${currencyTo}`;
 
       const marketData = await this.marketDataService.getRange({
-        dateQuery: { gte: startDate, lt: endDate },
-        uniqueAssets: [
+        assetProfileIdentifiers: [
           {
             dataSource,
             symbol
           }
-        ]
+        ],
+        dateQuery: { gte: startDate, lt: endDate }
       });
 
       if (marketData?.length > 0) {
@@ -382,13 +392,13 @@ export class ExchangeRateDataService {
             }
           } else {
             const marketData = await this.marketDataService.getRange({
-              dateQuery: { gte: startDate, lt: endDate },
-              uniqueAssets: [
+              assetProfileIdentifiers: [
                 {
                   dataSource,
                   symbol: `${DEFAULT_CURRENCY}${currencyFrom}`
                 }
-              ]
+              ],
+              dateQuery: { gte: startDate, lt: endDate }
             });
 
             for (const { date, marketPrice } of marketData) {
@@ -405,16 +415,16 @@ export class ExchangeRateDataService {
             }
           } else {
             const marketData = await this.marketDataService.getRange({
-              dateQuery: {
-                gte: startDate,
-                lt: endDate
-              },
-              uniqueAssets: [
+              assetProfileIdentifiers: [
                 {
                   dataSource,
                   symbol: `${DEFAULT_CURRENCY}${currencyTo}`
                 }
-              ]
+              ],
+              dateQuery: {
+                gte: startDate,
+                lt: endDate
+              }
             });
 
             for (const { date, marketPrice } of marketData) {
@@ -433,15 +443,22 @@ export class ExchangeRateDataService {
                 ]) *
               marketPriceBaseCurrencyToCurrency[format(date, DATE_FORMAT)];
 
-            factors[format(date, DATE_FORMAT)] = factor;
+            if (isNaN(factor)) {
+              throw new Error('Exchange rate is not a number');
+            } else {
+              factors[format(date, DATE_FORMAT)] = factor;
+            }
           } catch {
-            Logger.error(
-              `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
-                date,
-                DATE_FORMAT
-              )}`,
-              'ExchangeRateDataService'
-            );
+            let errorMessage = `No exchange rate has been found for ${currencyFrom}${currencyTo} at ${format(
+              date,
+              DATE_FORMAT
+            )}. Please complement market data for ${DEFAULT_CURRENCY}${currencyFrom}`;
+
+            if (DEFAULT_CURRENCY !== currencyTo) {
+              errorMessage = `${errorMessage} and ${DEFAULT_CURRENCY}${currencyTo}`;
+            }
+
+            Logger.error(`${errorMessage}.`, 'ExchangeRateDataService');
           }
         }
       }
@@ -451,7 +468,7 @@ export class ExchangeRateDataService {
   }
 
   private async prepareCurrencies(): Promise<string[]> {
-    let currencies: string[] = [];
+    let currencies: string[] = [DEFAULT_CURRENCY];
 
     (
       await this.prismaService.account.findMany({

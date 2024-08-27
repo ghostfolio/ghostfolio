@@ -15,6 +15,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      key: AccountClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 
@@ -35,7 +36,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       };
     }
 
-    let maxItem;
+    let maxItem: (typeof accounts)[0];
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
@@ -52,12 +53,12 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     }
 
-    const maxInvestmentRatio = maxItem.investment / totalInvestment;
+    const maxInvestmentRatio = maxItem?.investment / totalInvestment || 0;
 
-    if (maxInvestmentRatio > ruleSettings.threshold) {
+    if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: `Over ${
-          ruleSettings.threshold * 100
+          ruleSettings.thresholdMax * 100
         }% of your current investment is at ${maxItem.name} (${(
           maxInvestmentRatio * 100
         ).toPrecision(3)}%)`,
@@ -69,7 +70,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       evaluation: `The major part of your current investment is at ${
         maxItem.name
       } (${(maxInvestmentRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.threshold * 100
+        ruleSettings.thresholdMax * 100
       }%`,
       value: true
     };
@@ -78,13 +79,13 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   public getSettings(aUserSettings: UserSettings): Settings {
     return {
       baseCurrency: aUserSettings.baseCurrency,
-      isActive: true,
-      threshold: 0.5
+      isActive: aUserSettings.xRayRules[this.getKey()].isActive,
+      thresholdMax: 0.5
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMax: number;
 }

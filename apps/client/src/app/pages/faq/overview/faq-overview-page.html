@@ -33,10 +33,8 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
-          <mat-card-title
-            >What else is included in Ghostfolio?</mat-card-title
-          ></mat-card-header
-        >
+          <mat-card-title>What else is included in Ghostfolio?</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
           Please find a feature overview to manage your wealth
           <a [routerLink]="routerLinkFeatures">here</a>.
@@ -44,10 +42,8 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
-          <mat-card-title
-            >Can I use Ghostfolio anonymously?</mat-card-title
-          ></mat-card-header
-        >
+          <mat-card-title>Can I use Ghostfolio anonymously?</mat-card-title>
+        </mat-card-header>
         <mat-card-content>
           Yes, the authentication system via security token enables you to sign
           in securely and anonymously to Ghostfolio. There is no need for an
@@ -56,10 +52,8 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
-          <mat-card-title
-            >How can Ghostfolio be free?</mat-card-title
-          ></mat-card-header
-        >
+          <mat-card-title>How can Ghostfolio be free?</mat-card-title>
+        </mat-card-header>
         <mat-card-content
           >This project is driven by the efforts of contributors from around the
           world. The
@@ -75,8 +69,8 @@
         <mat-card-header>
           <mat-card-title
             >Do you monetize or sell my financial data?</mat-card-title
-          ></mat-card-header
-        >
+          >
+        </mat-card-header>
         <mat-card-content
           >No, we value your privacy. We do not sell or share your financial
           data with any third parties.</mat-card-content
@@ -84,16 +78,23 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
-          <mat-card-title
-            >What is your business model?</mat-card-title
-          ></mat-card-header
-        >
+          <mat-card-title>What is your business model?</mat-card-title>
+        </mat-card-header>
         <mat-card-content
           >By offering
           <a href="https://ghostfol.io/en/pricing">Ghostfolio Premium</a>, a
           subscription plan with a managed hosting service and enhanced
           features, we fund our business while providing added value to our
           users.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is your product roadmap?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          >At this time, we do not have a public roadmap
+          available.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -121,15 +122,16 @@
           >
           community,
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >,
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            ,
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or
           <a
             href="https://github.com/ghostfolio/ghostfolio"
@@ -150,15 +152,16 @@
             >Slack </a
           >community, post to
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >, send an e-mail to
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            , send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or start a discussion at
           <a
             href="https://github.com/ghostfolio/ghostfolio"

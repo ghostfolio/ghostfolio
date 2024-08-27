@@ -1,7 +1,4 @@
 {
-  "affected": {
-    "defaultBase": "origin/main"
-  },
   "defaultProject": "api",
   "generators": {
     "@nx/angular:application": {
@@ -64,14 +61,16 @@
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.storybook/**/*",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/tsconfig.storybook.json",
-      "!{projectRoot}/src/test-setup.[jt]s"
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/webpack.config.js"
     ]
   },
   "nxCloudAccessToken": "Mjg0ZGQ2YjAtNGI4NS00NmYwLThhOWEtMWZmNmQzODM4YzU4fHJlYWQ=",
-  "parallel": 1
+  "parallel": 1,
+  "defaultBase": "origin/main"
 }

@@ -1,7 +1,7 @@
 <div *ngIf="icon" class="align-self-center mr-3">
   <ion-icon class="h3 m-0" [name]="icon" />
 </div>
-<div class="w-100">
+<div class="d-flex flex-column w-100">
   <ng-template #label><ng-content></ng-content></ng-template>
   <ng-container *ngIf="value || value === 0 || value === null">
     <div
@@ -21,7 +21,11 @@
             h4: size === 'medium'
           }"
         >
-          {{ formattedValue }}%
+          @if (value === null) {
+            <span class="text-monospace text-muted">*****</span>%
+          } @else {
+            {{ formattedValue }}%
+          }
         </div>
         <div
           *ngIf="!isPercent"
@@ -31,12 +35,11 @@
             h4: size === 'medium'
           }"
         >
-          <ng-container *ngIf="value === null">
+          @if (value === null) {
             <span class="text-monospace text-muted">*****</span>
-          </ng-container>
-          <ng-container *ngIf="value !== null">
+          } @else {
             {{ formattedValue }}
-          </ng-container>
+          }
         </div>
         <small *ngIf="unit && size === 'medium'" class="ml-1">
           {{ unit }}
@@ -70,13 +73,13 @@
   />
 
   <ng-container>
-    <div *ngIf="size === 'large'">
+    <div *ngIf="size === 'large'" class="text-truncate">
       <span class="h6"
         ><ng-container *ngTemplateOutlet="label"></ng-container
       ></span>
       <span *ngIf="subLabel" class="text-muted"> {{ subLabel }}</span>
     </div>
-    <small *ngIf="size !== 'large'">
+    <small *ngIf="size !== 'large'" class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
   </ng-container>

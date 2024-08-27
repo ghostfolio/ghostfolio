@@ -1,29 +1,35 @@
 import { getLocale } from '@ghostfolio/common/helper';
 
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   Input,
   OnChanges
 } from '@angular/core';
 import { isNumber } from 'lodash';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-value',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './value.component.html',
-  styleUrls: ['./value.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  selector: 'gf-value',
+  standalone: true,
+  styleUrls: ['./value.component.scss'],
+  templateUrl: './value.component.html'
 })
-export class ValueComponent implements OnChanges {
+export class GfValueComponent implements OnChanges {
   @Input() colorizeSign = false;
   @Input() icon = '';
   @Input() isAbsolute = false;
   @Input() isCurrency = false;
   @Input() isDate = false;
   @Input() isPercent = false;
-  @Input() locale: string | undefined;
+  @Input() locale: string;
   @Input() position = '';
-  @Input() precision: number | undefined;
+  @Input() precision: number;
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() subLabel = '';
   @Input() unit = '';
@@ -52,8 +58,10 @@ export class ValueComponent implements OnChanges {
               this.formattedValue = this.absoluteValue.toLocaleString(
                 this.locale,
                 {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
+                  maximumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2,
+                  minimumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2
                 }
               );
             } catch {}
@@ -62,8 +70,10 @@ export class ValueComponent implements OnChanges {
               this.formattedValue = (this.absoluteValue * 100).toLocaleString(
                 this.locale,
                 {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
+                  maximumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2,
+                  minimumFractionDigits:
+                    this.precision >= 0 ? this.precision : 2
                 }
               );
             } catch {}
@@ -71,8 +81,8 @@ export class ValueComponent implements OnChanges {
         } else if (this.isCurrency) {
           try {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
+              maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
+              minimumFractionDigits: this.precision >= 0 ? this.precision : 2
             });
           } catch {}
         } else if (this.isPercent) {
@@ -80,12 +90,12 @@ export class ValueComponent implements OnChanges {
             this.formattedValue = (this.value * 100).toLocaleString(
               this.locale,
               {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2
+                maximumFractionDigits: this.precision >= 0 ? this.precision : 2,
+                minimumFractionDigits: this.precision >= 0 ? this.precision : 2
               }
             );
           } catch {}
-        } else if (this.precision || this.precision === 0) {
+        } else if (this.precision >= 0) {
           try {
             this.formattedValue = this.value?.toLocaleString(this.locale, {
               maximumFractionDigits: this.precision,
@@ -129,11 +139,8 @@ export class ValueComponent implements OnChanges {
     this.formattedValue = '';
     this.isNumber = false;
     this.isString = false;
-
-    if (!this.locale) {
-      this.locale = getLocale();
-    }
-
+    this.locale = this.locale || getLocale();
+    this.precision = this.precision >= 0 ? this.precision : undefined;
     this.useAbsoluteValue = false;
   }
 }

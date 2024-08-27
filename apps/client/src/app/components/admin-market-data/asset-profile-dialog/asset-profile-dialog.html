@@ -25,7 +25,9 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherSymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
+        "
       >
         <ng-container i18n>Gather Historical Data</ng-container>
       </button>
@@ -33,9 +35,33 @@
         mat-menu-item
         type="button"
         [disabled]="assetProfileForm.dirty"
-        (click)="onGatherProfileDataBySymbol({dataSource: data.dataSource, symbol: data.symbol})"
+        (click)="
+          onGatherProfileDataBySymbol({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
       >
         <ng-container i18n>Gather Profile Data</ng-container>
+      </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="
+          !adminMarketDataService.hasPermissionToDeleteAssetProfile({
+            activitiesCount: assetProfile?.activitiesCount,
+            isBenchmark: isBenchmark,
+            symbol: data.symbol
+          })
+        "
+        (click)="
+          onDeleteProfileData({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
+      >
+        <ng-container i18n>Delete</ng-container>
       </button>
     </mat-menu>
   </div>
@@ -73,7 +99,12 @@
         color="accent"
         mat-flat-button
         type="button"
-        [disabled]="!assetProfileForm.controls['historicalData']?.controls['csvString'].touched || assetProfileForm.controls['historicalData']?.controls['csvString']?.value === ''"
+        [disabled]="
+          !assetProfileForm.controls['historicalData']?.controls['csvString']
+            .touched ||
+          assetProfileForm.controls['historicalData']?.controls['csvString']
+            ?.value === ''
+        "
         (click)="onImportHistoricalData()"
       >
         <ng-container i18n>Import</ng-container>
@@ -87,10 +118,21 @@
         >
       </div>
       <div class="col-6 mb-3">
+        <gf-value
+          i18n
+          size="medium"
+          [value]="
+            assetProfile?.dataProviderInfo?.name ?? assetProfile?.dataSource
+          "
+          >Data Source</gf-value
+        >
+      </div>
+      <div class="col-6 mb-3">
         <gf-value i18n size="medium" [value]="assetProfile?.currency"
           >Currency</gf-value
         >
       </div>
+      <div class="col-6 mb-3"></div>
       <div class="col-6 mb-3">
         <gf-value
           i18n
@@ -106,7 +148,7 @@
           i18n
           size="medium"
           [locale]="data.locale"
-          [value]="assetProfile?.activitiesCount ?? 0"
+          [value]="assetProfile?.activitiesCount"
           >Activities</gf-value
         >
       </div>
@@ -128,91 +170,99 @@
           >Asset Sub Class</gf-value
         >
       </div>
-      <ng-container
-        *ngIf="assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0"
-      >
-        @if (assetProfile?.countries?.length === 1 &&
-        assetProfile?.sectors?.length === 1 ) {
-        <div *ngIf="assetProfile?.sectors?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.sectors[0].name"
-            >Sector</gf-value
-          >
-        </div>
-        <div *ngIf="assetProfile?.countries?.length === 1" class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [locale]="data.locale"
-            [value]="assetProfile?.countries[0].name"
-            >Country</gf-value
-          >
-        </div>
+      @if (
+        assetProfile?.countries?.length > 0 || assetProfile?.sectors?.length > 0
+      ) {
+        @if (
+          assetProfile?.countries?.length === 1 &&
+          assetProfile?.sectors?.length === 1
+        ) {
+          @if (assetProfile?.sectors?.length === 1) {
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [locale]="data.locale"
+                [value]="assetProfile?.sectors[0].name"
+                >Sector</gf-value
+              >
+            </div>
+          }
+          @if (assetProfile?.countries?.length === 1) {
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [locale]="data.locale"
+                [value]="assetProfile?.countries[0].name"
+                >Country</gf-value
+              >
+            </div>
+          }
         } @else {
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Sectors</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="sectors"
-          />
-        </div>
-        <div class="col-md-6 mb-3">
-          <div class="h5" i18n>Countries</div>
-          <gf-portfolio-proportion-chart
-            [colorScheme]="data.colorScheme"
-            [isInPercent]="true"
-            [keys]="['name']"
-            [maxItems]="10"
-            [positions]="countries"
-          />
-        </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Sectors</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="sectors"
+            />
+          </div>
+          <div class="col-md-6 mb-3">
+            <div class="h5" i18n>Countries</div>
+            <gf-portfolio-proportion-chart
+              [colorScheme]="data.colorScheme"
+              [isInPercent]="true"
+              [keys]="['name']"
+              [maxItems]="10"
+              [positions]="countries"
+            />
+          </div>
         }
-      </ng-container>
+      }
     </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+    <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Name</mat-label>
         <input formControlName="name" matInput type="text" />
       </mat-form-field>
     </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
-      <mat-form-field appearance="outline" class="w-100 without-hint">
-        <mat-label i18n>Currency</mat-label>
-        <gf-currency-selector
-          formControlName="currency"
-          [currencies]="currencies"
-        />
-      </mat-form-field>
-    </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+    @if (assetProfile?.dataSource === 'MANUAL') {
+      <div class="mt-3">
+        <mat-form-field appearance="outline" class="w-100 without-hint">
+          <mat-label i18n>Currency</mat-label>
+          <gf-currency-selector
+            formControlName="currency"
+            [currencies]="currencies"
+          />
+        </mat-form-field>
+      </div>
+    }
+    <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetClass of assetClasses"
-            [value]="assetClass.id"
-            >{{ assetClass.label }}</mat-option
-          >
+          @for (assetClass of assetClasses; track assetClass) {
+            <mat-option [value]="assetClass.id">{{
+              assetClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'" class="mt-3">
+    <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetSubClass of assetSubClasses"
-            [value]="assetSubClass.id"
-            >{{ assetSubClass.label }}</mat-option
-          >
+          @for (assetSubClass of assetSubClasses; track assetSubClass) {
+            <mat-option [value]="assetSubClass.id">{{
+              assetSubClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -222,7 +272,17 @@
           color="primary"
           i18n
           [checked]="isBenchmark"
-          (change)="isBenchmark ? onUnsetBenchmark({dataSource: data.dataSource, symbol: data.symbol}) : onSetBenchmark({dataSource: data.dataSource, symbol: data.symbol})"
+          (change)="
+            isBenchmark
+              ? onUnsetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+              : onSetBenchmark({
+                  dataSource: data.dataSource,
+                  symbol: data.symbol
+                })
+          "
           >Benchmark</mat-checkbox
         >
       </div>
@@ -238,52 +298,69 @@
         ></textarea>
       </mat-form-field>
     </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Scraper Configuration</mat-label>
-        <div class="align-items-end d-flex">
+    @if (assetProfile?.dataSource === 'MANUAL') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Scraper Configuration</mat-label>
+          <div class="align-items-end d-flex">
+            <textarea
+              cdkTextareaAutosize
+              formControlName="scraperConfiguration"
+              matInput
+              type="text"
+              (keyup.enter)="$event.stopPropagation()"
+            ></textarea>
+            <button
+              color="accent"
+              mat-flat-button
+              type="button"
+              [disabled]="
+                assetProfileForm.get('scraperConfiguration').value === '{}'
+              "
+              (click)="onTestMarketData()"
+            >
+              <ng-container i18n>Test</ng-container>
+            </button>
+          </div>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Sectors</mat-label>
           <textarea
             cdkTextareaAutosize
-            formControlName="scraperConfiguration"
+            formControlName="sectors"
             matInput
             type="text"
-            (keyup.enter)="$event.stopPropagation()"
           ></textarea>
-          <button
-            color="accent"
-            mat-flat-button
-            type="button"
-            [disabled]="assetProfileForm.controls['scraperConfiguration'].value === '{}'"
-            (click)="onTestMarketData()"
-          >
-            <ng-container i18n>Test</ng-container>
-          </button>
-        </div>
-      </mat-form-field>
-    </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Sectors</mat-label>
-        <textarea
-          cdkTextareaAutosize
-          formControlName="sectors"
-          matInput
-          type="text"
-        ></textarea>
-      </mat-form-field>
-    </div>
-    <div *ngIf="assetProfile?.dataSource === 'MANUAL'">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Countries</mat-label>
-        <textarea
-          cdkTextareaAutosize
-          formControlName="countries"
-          matInput
-          type="text"
-        ></textarea>
-      </mat-form-field>
-    </div>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Countries</mat-label>
+          <textarea
+            cdkTextareaAutosize
+            formControlName="countries"
+            matInput
+            type="text"
+          ></textarea>
+        </mat-form-field>
+      </div>
+    }
     <div>
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label i18n>Url</mat-label>
+        <input formControlName="url" matInput type="text" />
+        @if (assetProfileForm.get('url').value) {
+          <gf-asset-profile-icon
+            class="mr-3"
+            matSuffix
+            [url]="assetProfileForm.get('url').value"
+          />
+        }
+      </mat-form-field>
+    </div>
+    <div class="mt-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Note</mat-label>
         <textarea

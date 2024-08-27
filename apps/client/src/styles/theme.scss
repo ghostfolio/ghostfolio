@@ -3,6 +3,8 @@
 $dark-primary-text: rgba(black, 0.87);
 $light-primary-text: white;
 
+$mat-css-dark-theme-selector: '.theme-dark';
+
 $gf-primary: (
   50: var(--gf-theme-primary-50),
   100: var(--gf-theme-primary-100),
@@ -69,43 +71,44 @@ $gf-secondary: (
   )
 );
 
-$gf-typography: mat.define-typography-config();
-
-@include mat.core();
+$gf-typography: mat.m2-define-typography-config();
 
 // Create default theme
-$gf-theme-default: mat.define-light-theme(
+$gf-theme-default: mat.m2-define-light-theme(
   (
     color: (
-      primary: mat.define-palette($gf-primary),
-      accent: mat.define-palette($gf-secondary, 500, 900, A100)
+      accent: mat.m2-define-palette($gf-secondary, 500, 900, A100),
+      primary: mat.m2-define-palette($gf-primary)
     ),
     density: -3,
     typography: $gf-typography
   )
 );
+
 @include mat.all-component-themes($gf-theme-default);
-@include mat.button-density(0);
-@include mat.table-density(-1);
 
 // Create dark theme
-$gf-theme-dark: mat.define-dark-theme(
+$gf-theme-dark: mat.m2-define-dark-theme(
   (
     color: (
-      primary: mat.define-palette($gf-primary),
-      accent: mat.define-palette($gf-secondary, 500, 900, A100)
+      accent: mat.m2-define-palette($gf-secondary, 500, 900, A100),
+      primary: mat.m2-define-palette($gf-primary)
     ),
     density: -3,
     typography: $gf-typography
   )
 );
-.is-dark-theme {
+
+.theme-dark {
   @include mat.all-component-colors($gf-theme-dark);
-  @include mat.button-density(0);
-  @include mat.table-density(-1);
 }
 
+@include mat.button-density(0);
+@include mat.core();
+@include mat.table-density(-1);
+
 :root {
+  --gf-theme-alpha-hover: 0.04;
   --gf-theme-primary-500: #36cfcc;
   --gf-theme-primary-500-rgb: 0, 187, 255;
   --gf-theme-secondary-500: #3686cf;

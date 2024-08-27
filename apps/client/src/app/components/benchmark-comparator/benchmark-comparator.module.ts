@@ -1,4 +1,4 @@
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -15,7 +15,7 @@ import { BenchmarkComparatorComponent } from './benchmark-comparator.component';
   imports: [
     CommonModule,
     FormsModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     MatSelectModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,

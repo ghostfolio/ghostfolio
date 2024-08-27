@@ -1,41 +1,51 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  MAX_CHART_ITEMS,
-  PROPERTY_BENCHMARKS
-} from '@ghostfolio/common/config';
+import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
-  parseDate
+  parseDate,
+  resetHours
 } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
-  BenchmarkResponse,
-  UniqueAsset
+  BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { BenchmarkTrend } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
-import { format, isSameDay, subDays } from 'date-fns';
+import { Big } from 'big.js';
+import {
+  addHours,
+  differenceInDays,
+  eachDayOfInterval,
+  format,
+  isAfter,
+  isSameDay,
+  subDays
+} from 'date-fns';
 import { isNumber, last, uniqBy } from 'lodash';
 import ms from 'ms';
+
+import { BenchmarkValue } from './interfaces/benchmark-value.interface';
 
 @Injectable()
 export class BenchmarkService {
   private readonly CACHE_KEY_BENCHMARKS = 'BENCHMARKS';
 
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
@@ -54,7 +64,10 @@ export class BenchmarkService {
     return 0;
   }
 
-  public async getBenchmarkTrends({ dataSource, symbol }: UniqueAsset) {
+  public async getBenchmarkTrends({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     const historicalData = await this.marketDataService.marketDataItems({
       orderBy: {
         date: 'desc'
@@ -82,92 +95,28 @@ export class BenchmarkService {
     enableSharing = false,
     useCache = true
   } = {}): Promise<BenchmarkResponse['benchmarks']> {
-    let benchmarks: BenchmarkResponse['benchmarks'];
-
     if (useCache) {
       try {
-        benchmarks = JSON.parse(
-          await this.redisCacheService.get(this.CACHE_KEY_BENCHMARKS)
+        const cachedBenchmarkValue = await this.redisCacheService.get(
+          this.CACHE_KEY_BENCHMARKS
         );
 
-        if (benchmarks) {
-          return benchmarks;
+        const { benchmarks, expiration }: BenchmarkValue =
+          JSON.parse(cachedBenchmarkValue);
+
+        Logger.debug('Fetched benchmarks from cache', 'BenchmarkService');
+
+        if (isAfter(new Date(), new Date(expiration))) {
+          this.calculateAndCacheBenchmarks({
+            enableSharing
+          });
         }
+
+        return benchmarks;
       } catch {}
     }
 
-    const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles({
-      enableSharing
-    });
-
-    const promisesAllTimeHighs: Promise<{ date: Date; marketPrice: number }>[] =
-      [];
-    const promisesBenchmarkTrends: Promise<{
-      trend50d: BenchmarkTrend;
-      trend200d: BenchmarkTrend;
-    }>[] = [];
-
-    const quotes = await this.dataProviderService.getQuotes({
-      items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
-        return { dataSource, symbol };
-      })
-    });
-
-    for (const { dataSource, symbol } of benchmarkAssetProfiles) {
-      promisesAllTimeHighs.push(
-        this.marketDataService.getMax({ dataSource, symbol })
-      );
-      promisesBenchmarkTrends.push(
-        this.getBenchmarkTrends({ dataSource, symbol })
-      );
-    }
-
-    const [allTimeHighs, benchmarkTrends] = await Promise.all([
-      Promise.all(promisesAllTimeHighs),
-      Promise.all(promisesBenchmarkTrends)
-    ]);
-    let storeInCache = true;
-
-    benchmarks = allTimeHighs.map((allTimeHigh, index) => {
-      const { marketPrice } =
-        quotes[benchmarkAssetProfiles[index].symbol] ?? {};
-
-      let performancePercentFromAllTimeHigh = 0;
-
-      if (allTimeHigh?.marketPrice && marketPrice) {
-        performancePercentFromAllTimeHigh = this.calculateChangeInPercentage(
-          allTimeHigh.marketPrice,
-          marketPrice
-        );
-      } else {
-        storeInCache = false;
-      }
-
-      return {
-        marketCondition: this.getMarketCondition(
-          performancePercentFromAllTimeHigh
-        ),
-        name: benchmarkAssetProfiles[index].name,
-        performances: {
-          allTimeHigh: {
-            date: allTimeHigh?.date,
-            performancePercent: performancePercentFromAllTimeHigh
-          }
-        },
-        trend50d: benchmarkTrends[index].trend50d,
-        trend200d: benchmarkTrends[index].trend200d
-      };
-    });
-
-    if (storeInCache) {
-      await this.redisCacheService.set(
-        this.CACHE_KEY_BENCHMARKS,
-        JSON.stringify(benchmarks),
-        ms('4 hours') / 1000
-      );
-    }
-
-    return benchmarks;
+    return this.calculateAndCacheBenchmarks({ enableSharing });
   }
 
   public async getBenchmarkAssetProfiles({
@@ -204,16 +153,34 @@ export class BenchmarkService {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  public async getMarketDataBySymbol({
+  public async getMarketDataForUser({
     dataSource,
+    endDate = new Date(),
     startDate,
     symbol,
     userCurrency
   }: {
+    endDate?: Date;
     startDate: Date;
     userCurrency: string;
-  } & UniqueAsset): Promise<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
+
+    const days = differenceInDays(endDate, startDate) + 1;
+    const dates = eachDayOfInterval(
+      {
+        start: startDate,
+        end: endDate
+      },
+      {
+        step: Math.round(
+          days /
+            Math.min(days, this.configurationService.get('MAX_CHART_ITEMS'))
+        )
+      }
+    ).map((date) => {
+      return resetHours(date);
+    });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
       this.symbolService.get({
@@ -230,7 +197,7 @@ export class BenchmarkService {
           dataSource,
           symbol,
           date: {
-            gte: startDate
+            in: dates
           }
         }
       })
@@ -264,17 +231,7 @@ export class BenchmarkService {
       return { marketData };
     }
 
-    const step = Math.round(
-      marketDataItems.length / Math.min(marketDataItems.length, MAX_CHART_ITEMS)
-    );
-
-    let i = 0;
-
     for (let marketDataItem of marketDataItems) {
-      if (i % step !== 0) {
-        continue;
-      }
-
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
           format(marketDataItem.date, DATE_FORMAT)
@@ -297,15 +254,15 @@ export class BenchmarkService {
       });
     }
 
-    const includesToday = isSameDay(
+    const includesEndDate = isSameDay(
       parseDate(last(marketData).date),
-      new Date()
+      endDate
     );
 
-    if (currentSymbolItem?.marketPrice && !includesToday) {
+    if (currentSymbolItem?.marketPrice && !includesEndDate) {
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(new Date(), DATE_FORMAT)
+          format(endDate, DATE_FORMAT)
         ];
 
       const exchangeRateFactor =
@@ -314,7 +271,7 @@ export class BenchmarkService {
           : 1;
 
       marketData.push({
-        date: format(new Date(), DATE_FORMAT),
+        date: format(endDate, DATE_FORMAT),
         value:
           this.calculateChangeInPercentage(
             marketPriceAtStartDate,
@@ -331,7 +288,7 @@ export class BenchmarkService {
   public async addBenchmark({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -368,7 +325,7 @@ export class BenchmarkService {
   public async deleteBenchmark({
     dataSource,
     symbol
-  }: UniqueAsset): Promise<Partial<SymbolProfile>> {
+  }: AssetProfileIdentifier): Promise<Partial<SymbolProfile>> {
     const assetProfile = await this.prismaService.symbolProfile.findFirst({
       where: {
         dataSource,
@@ -402,10 +359,101 @@ export class BenchmarkService {
     };
   }
 
+  private async calculateAndCacheBenchmarks({
+    enableSharing = false
+  }): Promise<BenchmarkResponse['benchmarks']> {
+    Logger.debug('Calculate benchmarks', 'BenchmarkService');
+
+    const benchmarkAssetProfiles = await this.getBenchmarkAssetProfiles({
+      enableSharing
+    });
+
+    const promisesAllTimeHighs: Promise<{ date: Date; marketPrice: number }>[] =
+      [];
+    const promisesBenchmarkTrends: Promise<{
+      trend50d: BenchmarkTrend;
+      trend200d: BenchmarkTrend;
+    }>[] = [];
+
+    const quotes = await this.dataProviderService.getQuotes({
+      items: benchmarkAssetProfiles.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      requestTimeout: ms('30 seconds'),
+      useCache: false
+    });
+
+    for (const { dataSource, symbol } of benchmarkAssetProfiles) {
+      promisesAllTimeHighs.push(
+        this.marketDataService.getMax({ dataSource, symbol })
+      );
+      promisesBenchmarkTrends.push(
+        this.getBenchmarkTrends({ dataSource, symbol })
+      );
+    }
+
+    const [allTimeHighs, benchmarkTrends] = await Promise.all([
+      Promise.all(promisesAllTimeHighs),
+      Promise.all(promisesBenchmarkTrends)
+    ]);
+    let storeInCache = true;
+
+    const benchmarks = allTimeHighs.map((allTimeHigh, index) => {
+      const { marketPrice } =
+        quotes[benchmarkAssetProfiles[index].symbol] ?? {};
+
+      let performancePercentFromAllTimeHigh = 0;
+
+      if (allTimeHigh?.marketPrice && marketPrice) {
+        performancePercentFromAllTimeHigh = this.calculateChangeInPercentage(
+          allTimeHigh.marketPrice,
+          marketPrice
+        );
+      } else {
+        storeInCache = false;
+      }
+
+      return {
+        dataSource: benchmarkAssetProfiles[index].dataSource,
+        marketCondition: this.getMarketCondition(
+          performancePercentFromAllTimeHigh
+        ),
+        name: benchmarkAssetProfiles[index].name,
+        performances: {
+          allTimeHigh: {
+            date: allTimeHigh?.date,
+            performancePercent:
+              performancePercentFromAllTimeHigh >= 0
+                ? 0
+                : performancePercentFromAllTimeHigh
+          }
+        },
+        symbol: benchmarkAssetProfiles[index].symbol,
+        trend50d: benchmarkTrends[index].trend50d,
+        trend200d: benchmarkTrends[index].trend200d
+      };
+    });
+
+    if (storeInCache) {
+      const expiration = addHours(new Date(), 2);
+
+      await this.redisCacheService.set(
+        this.CACHE_KEY_BENCHMARKS,
+        JSON.stringify(<BenchmarkValue>{
+          benchmarks,
+          expiration: expiration.getTime()
+        }),
+        ms('12 hours') / 1000
+      );
+    }
+
+    return benchmarks;
+  }
+
   private getMarketCondition(
     aPerformanceInPercent: number
   ): Benchmark['marketCondition'] {
-    if (aPerformanceInPercent === 0) {
+    if (aPerformanceInPercent >= 0) {
       return 'ALL_TIME_HIGH';
     } else if (aPerformanceInPercent <= -0.2) {
       return 'BEAR_MARKET';

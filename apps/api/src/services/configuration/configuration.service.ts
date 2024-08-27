@@ -3,7 +3,8 @@ import { DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import { bool, cleanEnv, host, json, num, port, str } from 'envalid';
+import { bool, cleanEnv, host, json, num, port, str, url } from 'envalid';
+import ms from 'ms';
 
 @Injectable()
 export class ConfigurationService {
@@ -20,7 +21,7 @@ export class ConfigurationService {
       API_KEY_FINANCIAL_MODELING_PREP: str({ default: '' }),
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
-      CACHE_QUOTES_TTL: num({ default: 1 }),
+      CACHE_QUOTES_TTL: num({ default: ms('1 minute') / 1000 }),
       CACHE_TTL: num({ default: 1 }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
@@ -41,20 +42,21 @@ export class ConfigurationService {
       HOST: host({ default: '0.0.0.0' }),
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
+      MAX_CHART_ITEMS: num({ default: 365 }),
       MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       PORT: port({ default: 3333 }),
+      REDIS_DB: num({ default: 0 }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
       REQUEST_TIMEOUT: num({ default: 2000 }),
-      ROOT_URL: str({ default: DEFAULT_ROOT_URL }),
+      ROOT_URL: url({ default: DEFAULT_ROOT_URL }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
       TWITTER_ACCESS_TOKEN_SECRET: str({ default: 'dummyAccessTokenSecret' }),
       TWITTER_API_KEY: str({ default: 'dummyApiKey' }),
-      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' }),
-      WEB_AUTH_RP_ID: host({ default: 'localhost' })
+      TWITTER_API_SECRET: str({ default: 'dummyApiSecret' })
     });
   }
 

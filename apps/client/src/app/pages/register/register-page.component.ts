@@ -79,7 +79,7 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     accessToken: string,
     authToken: string,
     role: Role
-  ): void {
+  ) {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
       data: {
         accessToken,

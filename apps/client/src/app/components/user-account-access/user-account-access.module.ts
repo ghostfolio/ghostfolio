@@ -1,5 +1,5 @@
 import { GfPortfolioAccessTableModule } from '@ghostfolio/client/components/access-table/access-table.module';
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -17,7 +17,7 @@ import { UserAccountAccessComponent } from './user-account-access.component';
     CommonModule,
     GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     MatButtonModule,
     MatDialogModule,
     RouterModule

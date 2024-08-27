@@ -1,5 +1,3 @@
-@import 'apps/client/src/styles/ghostfolio-style';
-
 :host {
   display: block;
 
@@ -57,12 +55,8 @@
       mask-image: url('/assets/images/logo-hacker-news.svg');
     }
 
-    &.logo-openstartup {
-      background-image: url('/assets/images/logo-openstartup.png');
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: contain;
-      filter: grayscale(1);
+    &.logo-openalternative {
+      mask-image: url('/assets/images/logo-openalternative.svg');
     }
 
     &.logo-privacy-tools {
@@ -84,6 +78,11 @@
 
     &.logo-sackgeld {
       mask-image: url('/assets/images/logo-sackgeld.png');
+    }
+
+    &.logo-selfh-st {
+      mask-image: url('/assets/images/logo-selfh-st.svg');
+      max-height: 1.25rem;
     }
 
     &.logo-sourceforge {
@@ -121,7 +120,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .button-container {
     .mat-mdc-outlined-button {
       background-color: var(--dark-background);
@@ -133,9 +132,11 @@
     &.logo-alternative-to,
     &.logo-dev-community,
     &.logo-hacker-news,
+    &.logo-openalternative,
     &.logo-privacy-tools,
     &.logo-reddit,
     &.logo-sackgeld,
+    &.logo-selfh-st,
     &.logo-sourceforge,
     &.logo-umbrel,
     &.logo-unraid {

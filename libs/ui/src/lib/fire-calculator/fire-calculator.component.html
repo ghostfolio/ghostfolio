@@ -31,10 +31,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Retirement Date</mat-label>
           <div>
-            {{
-              calculatorForm.controls['retirementDate'].value
-                | date: 'MMMM YYYY'
-            }}
+            {{ calculatorForm.get('retirementDate').value | date: 'MMMM YYYY' }}
           </div>
           <input
             class="d-none"

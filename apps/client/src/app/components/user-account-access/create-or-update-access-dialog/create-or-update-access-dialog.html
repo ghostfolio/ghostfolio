@@ -27,31 +27,31 @@
       </mat-form-field>
     </div>
 
-    @if (accessForm.controls['type'].value === 'PRIVATE') {
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Permission</mat-label>
-        <mat-select formControlName="permissions">
-          <mat-option i18n value="READ_RESTRICTED">Restricted view</mat-option>
-          @if(data?.user?.settings?.isExperimentalFeatures) {
-          <mat-option i18n value="READ">View</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>
-          Ghostfolio <ng-container i18n>User ID</ng-container>
-        </mat-label>
-        <input
-          formControlName="userId"
-          matInput
-          type="text"
-          (keydown.enter)="$event.stopPropagation()"
-        />
-      </mat-form-field>
-    </div>
+    @if (accessForm.get('type').value === 'PRIVATE') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Permission</mat-label>
+          <mat-select formControlName="permissions">
+            <mat-option i18n value="READ_RESTRICTED"
+              >Restricted view</mat-option
+            >
+            <mat-option i18n value="READ">View</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>
+            Ghostfolio <ng-container i18n>User ID</ng-container>
+          </mat-label>
+          <input
+            formControlName="granteeUserId"
+            matInput
+            type="text"
+            (keydown.enter)="$event.stopPropagation()"
+          />
+        </mat-form-field>
+      </div>
     }
   </div>
   <div class="justify-content-end" mat-dialog-actions>

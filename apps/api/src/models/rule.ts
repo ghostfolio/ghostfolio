@@ -1,23 +1,32 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
-import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
+  private key: string;
   private name: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
+      key,
       name
     }: {
+      key: string;
       name: string;
     }
   ) {
+    this.key = key;
     this.name = name;
+  }
+
+  public getKey() {
+    return this.key;
   }
 
   public getName() {

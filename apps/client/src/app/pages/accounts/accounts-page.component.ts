@@ -3,6 +3,7 @@ import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
 import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -21,7 +22,7 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog/c
 import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialog.component';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'has-fab page' },
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
@@ -46,6 +47,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private userService: UserService
@@ -169,7 +171,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     isExcluded,
     name,
     platformId
-  }: AccountModel): void {
+  }: AccountModel) {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
@@ -189,9 +191,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: UpdateAccountDto = data?.account;
-
+      .subscribe((account: UpdateAccountDto | null) => {
         if (account) {
           this.dataService
             .putAccount(account)
@@ -223,7 +223,11 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       data: <AccountDetailDialogParams>{
         accountId: aAccountId,
         deviceType: this.deviceType,
-        hasImpersonationId: this.hasImpersonationId
+        hasImpersonationId: this.hasImpersonationId,
+        hasPermissionToCreateOrder:
+          !this.hasImpersonationId &&
+          hasPermission(this.user?.permissions, permissions.createOrder) &&
+          !this.user?.settings?.isRestrictedView
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
@@ -233,11 +237,13 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.fetchAccounts();
+
         this.router.navigate(['.'], { relativeTo: this.route });
       });
   }
 
-  private openCreateAccountDialog(): void {
+  private openCreateAccountDialog() {
     const dialogRef = this.dialog.open(CreateOrUpdateAccountDialog, {
       data: {
         account: {
@@ -256,9 +262,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data: any) => {
-        const account: CreateAccountDto = data?.account;
-
+      .subscribe((account: CreateAccountDto | null) => {
         if (account) {
           this.dataService
             .postAccount(account)
@@ -279,7 +283,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  private openTransferBalanceDialog(): void {
+  private openTransferBalanceDialog() {
     const dialogRef = this.dialog.open(TransferBalanceDialog, {
       data: {
         accounts: this.accounts
@@ -303,7 +307,9 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             })
             .pipe(
               catchError(() => {
-                alert($localize`Oops, cash balance transfer has failed.`);
+                this.notificationService.alert({
+                  title: $localize`Oops, cash balance transfer has failed.`
+                });
 
                 return EMPTY;
               }),

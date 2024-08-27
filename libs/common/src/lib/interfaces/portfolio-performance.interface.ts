@@ -1,14 +1,10 @@
 export interface PortfolioPerformance {
   annualizedPerformancePercent?: number;
-  currentGrossPerformance: number;
-  currentGrossPerformancePercent: number;
-  currentGrossPerformancePercentWithCurrencyEffect: number;
-  currentGrossPerformanceWithCurrencyEffect: number;
-  currentNetPerformance: number;
-  currentNetPerformancePercent: number;
-  currentNetPerformancePercentWithCurrencyEffect: number;
-  currentNetPerformanceWithCurrencyEffect: number;
-  currentNetWorth: number;
-  currentValue: number;
+  currentNetWorth?: number;
+  currentValueInBaseCurrency: number;
+  netPerformance: number;
+  netPerformancePercentage: number;
+  netPerformancePercentageWithCurrencyEffect: number;
+  netPerformanceWithCurrencyEffect: number;
   totalInvestment: number;
 }

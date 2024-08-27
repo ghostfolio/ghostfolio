@@ -11,6 +11,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -21,6 +22,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomeMarketComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
+  public deviceType: string;
   public fearAndGreedIndex: number;
   public fearLabel = $localize`Fear`;
   public greedLabel = $localize`Greed`;
@@ -36,8 +38,10 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private deviceService: DeviceDetectorService,
     private userService: UserService
   ) {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
     this.isLoading = true;
 

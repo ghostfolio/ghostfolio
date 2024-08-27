@@ -46,4 +46,11 @@ export class QueueController {
   public async deleteJob(@Param('id') id: string): Promise<void> {
     return this.queueService.deleteJob(id);
   }
+
+  @Get('job/:id/execute')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async executeJob(@Param('id') id: string): Promise<void> {
+    return this.queueService.executeJob(id);
+  }
 }

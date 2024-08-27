@@ -7,13 +7,13 @@ import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   AdminData,
   AdminJobs,
   AdminMarketData,
   AdminMarketDataDetails,
   EnhancedSymbolProfile,
-  Filter,
-  UniqueAsset
+  Filter
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -35,7 +35,7 @@ export class AdminService {
     private http: HttpClient
   ) {}
 
-  public addAssetProfile({ dataSource, symbol }: UniqueAsset) {
+  public addAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.post<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
       null
@@ -62,7 +62,7 @@ export class AdminService {
     return this.http.delete<void>(`/api/v1/platform/${aId}`);
   }
 
-  public deleteProfileData({ dataSource, symbol }: UniqueAsset) {
+  public deleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
     );
@@ -70,6 +70,10 @@ export class AdminService {
 
   public deleteTag(aId: string) {
     return this.http.delete<void>(`/api/v1/tag/${aId}`);
+  }
+
+  public executeJob(aId: string) {
+    return this.http.get<void>(`/api/v1/admin/queue/job/${aId}/execute`);
   }
 
   public fetchAdminData() {
@@ -163,7 +167,10 @@ export class AdminService {
     return this.http.post<void>('/api/v1/admin/gather/profile-data', {});
   }
 
-  public gatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public gatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     return this.http.post<void>(
       `/api/v1/admin/gather/profile-data/${dataSource}/${symbol}`,
       {}
@@ -174,7 +181,7 @@ export class AdminService {
     dataSource,
     date,
     symbol
-  }: UniqueAsset & {
+  }: AssetProfileIdentifier & {
     date?: Date;
   }) {
     let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
@@ -188,17 +195,14 @@ export class AdminService {
 
   public fetchSymbolForDate({
     dataSource,
-    date,
+    dateString,
     symbol
   }: {
     dataSource: DataSource;
-    date: Date;
+    dateString: string;
     symbol: string;
   }) {
-    const url = `/api/v1/symbol/${dataSource}/${symbol}/${format(
-      date,
-      DATE_FORMAT
-    )}`;
+    const url = `/api/v1/symbol/${dataSource}/${symbol}/${dateString}`;
 
     return this.http.get<IDataProviderHistoricalResponse>(url);
   }
@@ -214,8 +218,9 @@ export class AdminService {
     scraperConfiguration,
     sectors,
     symbol,
-    symbolMapping
-  }: UniqueAsset & UpdateAssetProfileDto) {
+    symbolMapping,
+    url
+  }: AssetProfileIdentifier & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
       {
@@ -227,7 +232,8 @@ export class AdminService {
         name,
         scraperConfiguration,
         sectors,
-        symbolMapping
+        symbolMapping,
+        url
       }
     );
   }
@@ -269,7 +275,7 @@ export class AdminService {
     dataSource,
     scraperConfiguration,
     symbol
-  }: UniqueAsset & UpdateAssetProfileDto['scraperConfiguration']) {
+  }: AssetProfileIdentifier & UpdateAssetProfileDto['scraperConfiguration']) {
     return this.http.post<any>(
       `/api/v1/admin/market-data/${dataSource}/${symbol}/test`,
       {

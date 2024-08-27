@@ -1,3 +1,5 @@
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -12,6 +14,7 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
   declarations: [CreateOrUpdatePlatformDialog],
   imports: [
     CommonModule,
+    GfAssetProfileIconComponent,
     FormsModule,
     MatButtonModule,
     MatDialogModule,

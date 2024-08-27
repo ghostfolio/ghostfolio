@@ -40,13 +40,13 @@ export class SymbolService {
         const days = includeHistoricalData;
 
         const marketData = await this.marketDataService.getRange({
-          dateQuery: { gte: subDays(new Date(), days) },
-          uniqueAssets: [
+          assetProfileIdentifiers: [
             {
               dataSource: dataGatheringItem.dataSource,
               symbol: dataGatheringItem.symbol
             }
-          ]
+          ],
+          dateQuery: { gte: subDays(new Date(), days) }
         });
 
         historicalData = marketData.map(({ date, marketPrice: value }) => {
@@ -74,11 +74,21 @@ export class SymbolService {
     date = new Date(),
     symbol
   }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
-    const historicalData = await this.dataProviderService.getHistoricalRaw(
-      [{ dataSource, symbol }],
-      date,
-      date
-    );
+    let historicalData: {
+      [symbol: string]: {
+        [date: string]: IDataProviderHistoricalResponse;
+      };
+    } = {
+      [symbol]: {}
+    };
+
+    try {
+      historicalData = await this.dataProviderService.getHistoricalRaw({
+        dataGatheringItems: [{ dataSource, symbol }],
+        from: date,
+        to: date
+      });
+    } catch {}
 
     return {
       marketPrice:

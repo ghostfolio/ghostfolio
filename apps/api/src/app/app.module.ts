@@ -1,3 +1,4 @@
+import { EventsModule } from '@ghostfolio/api/events/events.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CronService } from '@ghostfolio/api/services/cron.service';
 import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
@@ -14,6 +15,7 @@ import {
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
@@ -23,6 +25,7 @@ import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
+import { AssetModule } from './asset/asset.module';
 import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
@@ -44,15 +47,18 @@ import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 
 @Module({
+  controllers: [AppController],
   imports: [
     AdminModule,
     AccessModule,
     AccountModule,
+    AssetModule,
     AuthDeviceModule,
     AuthModule,
     BenchmarkModule,
     BullModule.forRoot({
       redis: {
+        db: parseInt(process.env.REDIS_DB ?? '0', 10),
         host: process.env.REDIS_HOST,
         port: parseInt(process.env.REDIS_PORT ?? '6379', 10),
         password: process.env.REDIS_PASSWORD
@@ -63,6 +69,8 @@ import { UserModule } from './user/user.module';
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,
+    EventEmitterModule.forRoot(),
+    EventsModule,
     ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
@@ -108,7 +116,6 @@ import { UserModule } from './user/user.module';
     TwitterBotModule,
     UserModule
   ],
-  controllers: [AppController],
   providers: [CronService]
 })
 export class AppModule {}

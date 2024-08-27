@@ -39,7 +39,7 @@
       </button>
     </div>
     <div
-      *ngIf="isLoading || searchFormControl.value"
+      *ngIf="isLoading || searchFormControl.value"
       class="overflow-auto py-3 result-container"
     >
       <div>
@@ -56,9 +56,9 @@
             animation="pulse"
             class="mx-2"
             [theme]="{
-            height: '1.5rem',
-            width: '100%'
-          }"
+              height: '1.5rem',
+              width: '100%'
+            }"
           />
           <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
         </ng-container>
@@ -77,9 +77,9 @@
             animation="pulse"
             class="mx-2"
             [theme]="{
-            height: '1.5rem',
-            width: '100%'
-          }"
+              height: '1.5rem',
+              width: '100%'
+            }"
           />
           <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
         </ng-container>
@@ -87,7 +87,7 @@
     </div>
   </div>
   <form [formGroup]="filterForm">
-    <ng-container *ngIf="!(isLoading || searchFormControl.value)">
+    <ng-container *ngIf="!(isLoading || searchFormControl.value)">
       <div class="date-range-selector-container p-3">
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-label i18n>Date Range</mat-label>
@@ -96,7 +96,7 @@
             (selectionChange)="onChangeDateRange($event.value)"
           >
             @for (range of dateRangeOptions; track range) {
-            <mat-option [value]="range.value">{{ range.label }}</mat-option>
+              <mat-option [value]="range.value">{{ range.label }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
@@ -108,16 +108,16 @@
             <mat-select formControlName="account">
               <mat-option [value]="null" />
               @for (account of accounts; track account.id) {
-              <mat-option [value]="account.id">
-                <div class="d-flex">
-                  <gf-symbol-icon
-                    *ngIf="account.Platform?.url"
-                    class="mr-1"
-                    [tooltip]="account.Platform?.name"
-                    [url]="account.Platform?.url"
-                  /><span>{{ account.name }}</span>
-                </div>
-              </mat-option>
+                <mat-option [value]="account.id">
+                  <div class="d-flex">
+                    <gf-asset-profile-icon
+                      *ngIf="account.Platform?.url"
+                      class="mr-1"
+                      [tooltip]="account.Platform?.name"
+                      [url]="account.Platform?.url"
+                    /><span>{{ account.name }}</span>
+                  </div>
+                </mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -128,7 +128,7 @@
             <mat-select formControlName="tag">
               <mat-option [value]="null" />
               @for (tag of tags; track tag.id) {
-              <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
+                <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -139,9 +139,9 @@
             <mat-select formControlName="assetClass">
               <mat-option [value]="null" />
               @for (assetClass of assetClasses; track assetClass.id) {
-              <mat-option [value]="assetClass.id"
-                >{{ assetClass.label }}</mat-option
-              >
+                <mat-option [value]="assetClass.id">{{
+                  assetClass.label
+                }}</mat-option>
               }
             </mat-select>
           </mat-form-field>

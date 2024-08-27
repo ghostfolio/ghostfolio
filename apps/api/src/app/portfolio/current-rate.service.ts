@@ -1,13 +1,16 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
   DataProviderInfo,
-  ResponseError,
-  UniqueAsset
+  ResponseError
 } from '@ghostfolio/common/interfaces';
+import type { RequestWithUser } from '@ghostfolio/common/types';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { isBefore, isToday } from 'date-fns';
 import { flatten, isEmpty, uniqBy } from 'lodash';
 
@@ -19,16 +22,19 @@ import { GetValuesParams } from './interfaces/get-values-params.interface';
 export class CurrentRateService {
   public constructor(
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly orderService: OrderService,
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  // TODO: Pass user instead of using this.request.user
   public async getValues({
     dataGatheringItems,
     dateQuery
   }: GetValuesParams): Promise<GetValuesObject> {
     const dataProviderInfos: DataProviderInfo[] = [];
 
-    const includeToday =
+    const includesToday =
       (!dateQuery.lt || isBefore(new Date(), dateQuery.lt)) &&
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
       (!dateQuery.in || this.containsToday(dateQuery.in));
@@ -37,10 +43,10 @@ export class CurrentRateService {
     const quoteErrors: ResponseError['errors'] = [];
     const today = resetHours(new Date());
 
-    if (includeToday) {
+    if (includesToday) {
       promises.push(
         this.dataProviderService
-          .getQuotes({ items: dataGatheringItems })
+          .getQuotes({ items: dataGatheringItems, user: this.request?.user })
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
 
@@ -74,17 +80,16 @@ export class CurrentRateService {
       );
     }
 
-    const uniqueAssets: UniqueAsset[] = dataGatheringItems.map(
-      ({ dataSource, symbol }) => {
+    const assetProfileIdentifiers: AssetProfileIdentifier[] =
+      dataGatheringItems.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
-      }
-    );
+      });
 
     promises.push(
       this.marketDataService
         .getRange({
-          dateQuery,
-          uniqueAssets
+          assetProfileIdentifiers,
+          dateQuery
         })
         .then((data) => {
           return data.map(({ dataSource, date, marketPrice, symbol }) => {
@@ -117,11 +122,17 @@ export class CurrentRateService {
           });
 
           if (!value) {
+            // Fallback to unit price of latest activity
+            const latestActivity = await this.orderService.getLatestOrder({
+              dataSource,
+              symbol
+            });
+
             value = {
               dataSource,
               symbol,
               date: today,
-              marketPrice: 0
+              marketPrice: latestActivity?.unitPrice ?? 0
             };
 
             response.values.push(value);

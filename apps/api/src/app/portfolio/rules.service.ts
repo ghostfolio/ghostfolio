@@ -12,13 +12,26 @@ export class RulesService {
     aRules: Rule<T>[],
     aUserSettings: UserSettings
   ) {
-    return aRules
-      .filter((rule) => {
-        return rule.getSettings(aUserSettings)?.isActive;
-      })
-      .map((rule) => {
-        const evaluationResult = rule.evaluate(rule.getSettings(aUserSettings));
-        return { ...evaluationResult, name: rule.getName() };
-      });
+    return aRules.map((rule) => {
+      if (rule.getSettings(aUserSettings)?.isActive) {
+        const { evaluation, value } = rule.evaluate(
+          rule.getSettings(aUserSettings)
+        );
+
+        return {
+          evaluation,
+          value,
+          isActive: true,
+          key: rule.getKey(),
+          name: rule.getName()
+        };
+      } else {
+        return {
+          isActive: false,
+          key: rule.getKey(),
+          name: rule.getName()
+        };
+      }
+    });
   }
 }

@@ -7,18 +7,23 @@
         [dataSource]="dataSource"
         [deviceType]="deviceType"
         [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
+        [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [locale]="user?.settings?.locale"
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
-        [showActions]="!hasImpersonationId && hasPermissionToDeleteActivity && !user.settings.isRestrictedView"
+        [showActions]="
+          !hasImpersonationId &&
+          hasPermissionToDeleteActivity &&
+          !user.settings.isRestrictedView
+        "
         [sortColumn]="sortColumn"
         [sortDirection]="sortDirection"
         [totalItems]="totalItems"
+        (activitiesDeleted)="onDeleteActivities()"
         (activityDeleted)="onDeleteActivity($event)"
         (activityToClone)="onCloneActivity($event)"
         (activityToUpdate)="onUpdateActivity($event)"
-        (deleteAllActivities)="onDeleteAllActivities()"
         (export)="onExport()"
         (exportDrafts)="onExportDrafts($event)"
         (import)="onImport()"
@@ -29,18 +34,21 @@
     </div>
   </div>
 
-  @if (!hasImpersonationId && hasPermissionToCreateActivity &&
-  !user.settings.isRestrictedView) {
-  <div class="fab-container">
-    <a
-      class="align-items-center d-flex justify-content-center"
-      color="primary"
-      mat-fab
-      [queryParams]="{ createDialog: true }"
-      [routerLink]="[]"
-    >
-      <ion-icon name="add-outline" size="large" />
-    </a>
-  </div>
+  @if (
+    !hasImpersonationId &&
+    hasPermissionToCreateActivity &&
+    !user.settings.isRestrictedView
+  ) {
+    <div class="fab-container">
+      <a
+        class="align-items-center d-flex justify-content-center"
+        color="primary"
+        mat-fab
+        [queryParams]="{ createDialog: true }"
+        [routerLink]="[]"
+      >
+        <ion-icon name="add-outline" size="large" />
+      </a>
+    </div>
   }
 </div>

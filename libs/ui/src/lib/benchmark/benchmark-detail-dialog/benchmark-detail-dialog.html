@@ -1,0 +1,30 @@
+<gf-dialog-header
+  mat-dialog-title
+  position="center"
+  [deviceType]="data.deviceType"
+  [title]="assetProfile?.name ?? assetProfile?.symbol"
+  (closeButtonClicked)="onClose()"
+/>
+
+<div class="flex-grow-1" mat-dialog-content>
+  <div class="container p-0">
+    <gf-line-chart
+      benchmarkLabel="Average Unit Price"
+      class="mb-4"
+      [colorScheme]="data.colorScheme"
+      [historicalDataItems]="historicalDataItems"
+      [isAnimated]="true"
+      [locale]="data.locale"
+      [showGradient]="true"
+      [showXAxis]="true"
+      [showYAxis]="true"
+      [symbol]="data.symbol"
+    />
+  </div>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onClose()"
+/>

@@ -51,21 +51,21 @@ export class UserService extends ObservableStore<UserStoreState> {
     const filters: Filter[] = [];
     const user = this.getState().user;
 
-    if (user.settings['filters.accounts']) {
+    if (user?.settings['filters.accounts']) {
       filters.push({
         id: user.settings['filters.accounts'][0],
         type: 'ACCOUNT'
       });
     }
 
-    if (user.settings['filters.assetClasses']) {
+    if (user?.settings['filters.assetClasses']) {
       filters.push({
         id: user.settings['filters.assetClasses'][0],
         type: 'ASSET_CLASS'
       });
     }
 
-    if (user.settings['filters.tags']) {
+    if (user?.settings['filters.tags']) {
       filters.push({
         id: user.settings['filters.tags'][0],
         type: 'TAG'
@@ -75,6 +75,10 @@ export class UserService extends ObservableStore<UserStoreState> {
     return filters;
   }
 
+  public hasFilters() {
+    return this.getFilters().length > 0;
+  }
+
   public remove() {
     this.setState({ user: null }, UserStoreActions.RemoveUser);
   }
@@ -82,6 +86,10 @@ export class UserService extends ObservableStore<UserStoreState> {
   private fetchUser(): Observable<User> {
     return this.http.get<any>('/api/v1/user').pipe(
       map((user) => {
+        if (user.dateOfFirstActivity) {
+          user.dateOfFirstActivity = parseISO(user.dateOfFirstActivity);
+        }
+
         if (user.settings?.retirementDate) {
           user.settings.retirementDate = parseISO(user.settings.retirementDate);
         }

@@ -45,7 +45,7 @@ export class MarketDataDetailDialog implements OnDestroy {
     this.adminService
       .fetchSymbolForDate({
         dataSource: this.data.dataSource,
-        date: this.data.date,
+        dateString: this.data.dateString,
         symbol: this.data.symbol
       })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -63,7 +63,7 @@ export class MarketDataDetailDialog implements OnDestroy {
         marketData: {
           marketData: [
             {
-              date: this.data.date.toISOString(),
+              date: this.data.dateString,
               marketPrice: this.data.marketPrice
             }
           ]

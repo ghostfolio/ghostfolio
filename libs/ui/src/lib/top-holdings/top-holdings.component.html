@@ -1,0 +1,90 @@
+<div class="overflow-x-auto">
+  <table
+    class="gf-table w-100"
+    mat-table
+    matSort
+    matSortActive="allocationInPercentage"
+    matSortDirection="desc"
+    [dataSource]="dataSource"
+  >
+    <ng-container matColumnDef="name">
+      <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+        <ng-container i18n>Name</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-2" mat-cell>
+        <div class="text-truncate">{{ element?.name | titlecase }}</div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="valueInBaseCurrency">
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-2"
+        mat-header-cell
+        mat-sort-header
+      >
+        <ng-container i18n>Value</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-2" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="element?.valueInBaseCurrency"
+          />
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="allocationInPercentage" stickyEnd>
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-2"
+        mat-header-cell
+        mat-sort-header
+      >
+        <span class="d-none d-sm-block" i18n>Allocation</span>
+        <span class="d-block d-sm-none" title="Allocation">%</span>
+      </th>
+      <td *matCellDef="let element" class="px-2" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isPercent]="true"
+            [locale]="locale"
+            [value]="element?.allocationInPercentage"
+          />
+        </div>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  </table>
+</div>
+
+<mat-paginator class="d-none" [pageSize]="pageSize" />
+
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}
+
+@if (dataSource.data.length > pageSize && !isLoading) {
+  <div class="my-3 text-center">
+    <button mat-stroked-button (click)="onShowAllHoldings()">
+      <ng-container i18n>Show more</ng-container>
+    </button>
+  </div>
+}
+
+@if (dataSource.data.length === 0 && !isLoading) {
+  <div class="p-3 text-center text-muted">
+    <small i18n>No data available</small>
+  </div>
+}

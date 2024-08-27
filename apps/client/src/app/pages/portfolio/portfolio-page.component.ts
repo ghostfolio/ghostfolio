@@ -35,11 +35,6 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
               path: ['/portfolio']
             },
             {
-              iconName: 'wallet-outline',
-              label: $localize`Holdings`,
-              path: ['/portfolio', 'holdings']
-            },
-            {
               iconName: 'swap-vertical-outline',
               label: $localize`Activities`,
               path: ['/portfolio', 'activities']

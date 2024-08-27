@@ -1,7 +1,8 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
   private positions: TimelinePosition[];
@@ -11,6 +12,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
+      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name,
       name: 'Investment: Base Currency'
     });
 
@@ -43,7 +45,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 
     const baseCurrencyValueRatio = baseCurrencyItem?.value / totalValue || 0;
 
-    if (maxItem.groupKey !== ruleSettings.baseCurrency) {
+    if (maxItem?.groupKey !== ruleSettings.baseCurrency) {
       return {
         evaluation: `The major part of your current investment is not in your base currency (${(
           baseCurrencyValueRatio * 100
@@ -63,7 +65,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
   public getSettings(aUserSettings: UserSettings): Settings {
     return {
       baseCurrency: aUserSettings.baseCurrency,
-      isActive: true
+      isActive: aUserSettings.xRayRules[this.getKey()].isActive
     };
   }
 }

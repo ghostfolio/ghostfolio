@@ -20,11 +20,169 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
+          <mat-card-title
+            >Which home server systems is Ghostfolio available
+            on?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          The community has made Ghostfolio available on various home server
+          systems, including
+          <a href="https://github.com/bigbeartechworld/big-bear-casaos"
+            >CasaOS</a
+          >,
+          <a href="https://github.com/lildude/ha-addon-ghostfolio"
+            >Home Assistant</a
+          >, <a href="https://www.runtipi.io/docs/apps-available">Runtipi</a>,
+          <a href="https://truecharts.org/charts/stable/ghostfolio"
+            >TrueCharts</a
+          >, <a href="https://apps.umbrel.com/app/ghostfolio">Umbrel</a>, and
+          <a href="https://unraid.net/community/apps?q=ghostfolio">Unraid</a>.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I add a new currency?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            Ghostfolio manages currencies automatically based on all the
+            recorded activities. If you need an additional currency, you can
+            manually enter it.
+          </p>
+          <ol>
+            <li>Go to the <i>Admin Control</i> panel</li>
+            <li>Click on the <i>Add Currency</i> button</li>
+            <li>Insert e.g. <code>EUR</code> in the prompt</li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >How do I resolve
+            <i>No exchange rate has been found</i> errors?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            In Ghostfolio, you are responsible for providing the relevant
+            historical exchange rates. This can be done with a one-time import
+            of the data. If you see errors like
+            <i
+              >Historical exchange rate at 2024-01-01 is not available from
+              "EUR" to "USD"</i
+            >
+            do the following:
+          </p>
+          <ol>
+            <li>Go to the <i>Admin Control</i> panel</li>
+            <li>Go to the <i>Market Data</i> section</li>
+            <li>Select <i>Filter by Currencies</i></li>
+            <li>Find the entry <i>USDEUR</i></li>
+            <li>
+              Click the menu item <i>Gather Historical Data</i> in the dialog
+            </li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>What is the concept of platforms?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          Platforms are used to group multiple accounts, such as a savings
+          account and a trading account at the same bank. By assigning accounts
+          to the same platform, they are displayed with a unified icon and you
+          gain insights into platform-specific risks.
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I add a new platform?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ol>
+            <li>Go to the <i>Admin Control</i> panel</li>
+            <li>Go to the <i>Settings</i> section</li>
+            <li>Click on the <i>Add Platform</i> button</li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I add a new tag?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ol>
+            <li>Go to the <i>Admin Control</i> panel</li>
+            <li>Go to the <i>Settings</i> section</li>
+            <li>Click on the <i>Add Tag</i> button</li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>Which data providers are supported?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content
+          ><code>COINGECKO</code>, <code>MANUAL</code> and
+          <code>YAHOO</code> are officially supported while all other data
+          providers are considered experimental.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title>How do I add a custom asset?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            If you want to track an asset that is not available from any data
+            provider, you can create a custom asset as follows.
+          </p>
+          <ol>
+            <li>Go to the <i>Admin Control</i> panel</li>
+            <li>Go to the <i>Market Data</i> section</li>
+            <li>Create an asset profile</li>
+            <li>Select <i>Add Manually</i> and enter a unique symbol</li>
+            <li>Edit your asset profile</li>
+            <li>Add a new activity by searching for the symbol</li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
           <mat-card-title>Which devices are supported?</mat-card-title>
         </mat-card-header>
         <mat-card-content
           >Ghostfolio works in every modern web browser on smartphones, tablets
           and desktop computers.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >Is there a mobile app for the self-hosting version of Ghostfolio
+            available in the app store?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >No, there is no mobile app for the self-hosting version of Ghostfolio
+          available in the app store. However, you can add the web app to your
+          home screen (e.g. by selecting <i>Add to Home screen</i> in
+          <i>Google Chrome</i>), which provides the same user
+          experience.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
+          <mat-card-title
+            >What is the best approach to managing backups?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >It is suggested to regularly back up your data by utilizing full
+          database dumps.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -39,7 +197,7 @@
             >Slack </a
           >community, post to
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
           >

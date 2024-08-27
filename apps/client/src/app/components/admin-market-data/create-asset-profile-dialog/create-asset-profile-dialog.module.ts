@@ -1,4 +1,4 @@
-import { GfSymbolAutocompleteModule } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -16,7 +16,7 @@ import { CreateAssetProfileDialog } from './create-asset-profile-dialog.componen
   imports: [
     CommonModule,
     FormsModule,
-    GfSymbolAutocompleteModule,
+    GfSymbolAutocompleteComponent,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,

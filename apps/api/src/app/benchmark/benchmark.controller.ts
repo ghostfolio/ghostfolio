@@ -1,14 +1,15 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
-import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response.interceptor';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import type {
+  AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
-  BenchmarkResponse,
-  UniqueAsset
+  BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { DateRange, RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -19,6 +20,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -39,7 +41,9 @@ export class BenchmarkController {
   @HasPermission(permissions.accessAdminControl)
   @Post()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async addBenchmark(@Body() { dataSource, symbol }: UniqueAsset) {
+  public async addBenchmark(
+    @Body() { dataSource, symbol }: AssetProfileIdentifier
+  ) {
     try {
       const benchmark = await this.benchmarkService.addBenchmark({
         dataSource,
@@ -103,16 +107,21 @@ export class BenchmarkController {
   @Get(':dataSource/:symbol/:startDateString')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
-  public async getBenchmarkMarketDataBySymbol(
+  public async getBenchmarkMarketDataForUser(
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
-    @Param('symbol') symbol: string
+    @Param('symbol') symbol: string,
+    @Query('range') dateRange: DateRange = 'max'
   ): Promise<BenchmarkMarketDataDetails> {
-    const startDate = new Date(startDateString);
+    const { endDate, startDate } = getIntervalFromDateRange(
+      dateRange,
+      new Date(startDateString)
+    );
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    return this.benchmarkService.getMarketDataBySymbol({
+    return this.benchmarkService.getMarketDataForUser({
       dataSource,
+      endDate,
       startDate,
       symbol,
       userCurrency

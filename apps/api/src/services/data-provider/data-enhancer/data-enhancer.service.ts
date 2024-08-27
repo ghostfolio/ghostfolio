@@ -36,6 +36,7 @@ export class DataEnhancerService {
 
       if (
         (assetProfile.countries as unknown as Prisma.JsonArray)?.length > 0 &&
+        (assetProfile.holdings as unknown as Prisma.JsonArray)?.length > 0 &&
         (assetProfile.sectors as unknown as Prisma.JsonArray)?.length > 0
       ) {
         return true;

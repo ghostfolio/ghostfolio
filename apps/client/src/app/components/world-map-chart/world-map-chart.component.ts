@@ -1,4 +1,4 @@
-import { getNumberFormatGroup } from '@ghostfolio/common/helper';
+import { getLocale, getNumberFormatGroup } from '@ghostfolio/common/helper';
 
 import {
   ChangeDetectionStrategy,
@@ -21,7 +21,7 @@ export class WorldMapChartComponent implements OnChanges, OnDestroy, OnInit {
   @Input() countries: { [code: string]: { name?: string; value: number } };
   @Input() format: string;
   @Input() isInPercent = false;
-  @Input() locale: string;
+  @Input() locale = getLocale();
 
   public isLoading = true;
   public svgMapElement;

@@ -1,7 +1,7 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { DataSource, MarketData } from '@prisma/client';
 
@@ -24,32 +24,32 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
           });
         },
         getRange: ({
+          assetProfileIdentifiers,
           dateRangeEnd,
-          dateRangeStart,
-          uniqueAssets
+          dateRangeStart
         }: {
+          assetProfileIdentifiers: AssetProfileIdentifier[];
           dateRangeEnd: Date;
           dateRangeStart: Date;
-          uniqueAssets: UniqueAsset[];
         }) => {
           return Promise.resolve<MarketData[]>([
             {
               createdAt: dateRangeStart,
-              dataSource: uniqueAssets[0].dataSource,
+              dataSource: assetProfileIdentifiers[0].dataSource,
               date: dateRangeStart,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
               state: 'CLOSE',
-              symbol: uniqueAssets[0].symbol
+              symbol: assetProfileIdentifiers[0].symbol
             },
             {
               createdAt: dateRangeEnd,
-              dataSource: uniqueAssets[0].dataSource,
+              dataSource: assetProfileIdentifiers[0].dataSource,
               date: dateRangeEnd,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
               state: 'CLOSE',
-              symbol: uniqueAssets[0].symbol
+              symbol: assetProfileIdentifiers[0].symbol
             }
           ]);
         }
@@ -107,7 +107,9 @@ describe('CurrentRateService', () => {
 
     currentRateService = new CurrentRateService(
       dataProviderService,
-      marketDataService
+      marketDataService,
+      null,
+      null
     );
   });
 

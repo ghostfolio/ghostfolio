@@ -3,19 +3,17 @@ import {
   getTooltipPositionerMapTop,
   getVerticalHoverLinePlugin
 } from '@ghostfolio/common/chart-helper';
-import {
-  locale,
-  primaryColorRgb,
-  secondaryColorRgb
-} from '@ghostfolio/common/config';
+import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -37,21 +35,26 @@ import {
   Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
-  selector: 'gf-line-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './line-chart.component.html',
-  styleUrls: ['./line-chart.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  selector: 'gf-line-chart',
+  standalone: true,
+  styleUrls: ['./line-chart.component.scss'],
+  templateUrl: './line-chart.component.html'
 })
-export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class GfLineChartComponent
+  implements AfterViewInit, OnChanges, OnDestroy
+{
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarkLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
   @Input() historicalDataItems: LineChartItem[];
   @Input() isAnimated = false;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() showGradient = false;
   @Input() showLegend = false;
   @Input() showLoader = true;
@@ -105,10 +108,6 @@ export class LineChartComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
-    }
-
-    if (!this.locale) {
-      this.locale = locale;
     }
   }
 

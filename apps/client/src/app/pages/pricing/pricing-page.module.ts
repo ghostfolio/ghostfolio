@@ -1,4 +1,4 @@
-import { GfPremiumIndicatorModule } from '@ghostfolio/ui/premium-indicator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -14,7 +14,7 @@ import { PricingPageComponent } from './pricing-page.component';
   declarations: [PricingPageComponent],
   imports: [
     CommonModule,
-    GfPremiumIndicatorModule,
+    GfPremiumIndicatorComponent,
     MatButtonModule,
     MatCardModule,
     MatTooltipModule,

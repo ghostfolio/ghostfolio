@@ -1,4 +1,4 @@
-<div class="holdings">
+<div class="overflow-x-auto">
   <table
     class="gf-table w-100"
     mat-table
@@ -7,10 +7,10 @@
     matSortDirection="desc"
     [dataSource]="dataSource"
   >
-    <ng-container matColumnDef="icon">
+    <ng-container matColumnDef="icon" sticky>
       <th *matHeaderCellDef class="px-1" mat-header-cell></th>
       <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-        <gf-symbol-icon
+        <gf-asset-profile-icon
           [dataSource]="element.dataSource"
           [symbol]="element.symbol"
           [tooltip]="element.name"
@@ -114,7 +114,30 @@
         *matHeaderCellDef
         class="justify-content-end px-1"
         mat-header-cell
-        mat-sort-header="netPerformancePercent"
+        mat-sort-header="netPerformanceWithCurrencyEffect"
+      >
+        <ng-container i18n>Change</ng-container>
+      </th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="
+              isLoading ? undefined : element.netPerformanceWithCurrencyEffect
+            "
+          />
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="performanceInPercentage" stickyEnd>
+      <th
+        *matHeaderCellDef
+        class="justify-content-end px-1"
+        mat-header-cell
+        mat-sort-header="netPerformancePercentWithCurrencyEffect"
       >
         <span class="d-none d-sm-block" i18n>Performance</span>
         <span class="d-block d-sm-none" title="Performance">±</span>
@@ -125,7 +148,11 @@
             [colorizeSign]="true"
             [isPercent]="true"
             [locale]="locale"
-            [value]="isLoading ? undefined : element.netPerformancePercent"
+            [value]="
+              isLoading
+                ? undefined
+                : element.netPerformancePercentWithCurrencyEffect
+            "
           />
         </div>
       </td>
@@ -137,13 +164,12 @@
       mat-row
       [ngClass]="{
         'cursor-pointer':
-          hasPermissionToShowValues &&
+          hasPermissionToOpenDetails &&
           !ignoreAssetSubClasses.includes(row.assetSubClass)
       }"
       (click)="
-        hasPermissionToShowValues &&
-          !ignoreAssetSubClasses.includes(row.assetSubClass) &&
-          onOpenPositionDialog({
+        !ignoreAssetSubClasses.includes(row.assetSubClass) &&
+          onOpenHoldingDialog({
             dataSource: row.dataSource,
             symbol: row.symbol
           })
@@ -167,7 +193,7 @@
 
 @if (dataSource.data.length > pageSize && !isLoading) {
   <div class="my-3 text-center">
-    <button mat-stroked-button (click)="onShowAllPositions()">
+    <button mat-stroked-button (click)="onShowAllHoldings()">
       <ng-container i18n>Show all</ng-container>
     </button>
   </div>

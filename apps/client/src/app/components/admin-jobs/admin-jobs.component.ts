@@ -1,6 +1,12 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { QUEUE_JOB_STATUS_LIST } from '@ghostfolio/common/config';
+import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DATA_GATHERING_QUEUE_PRIORITY_LOW,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
+  QUEUE_JOB_STATUS_LIST
+} from '@ghostfolio/common/config';
 import { getDateWithTimeFormatString } from '@ghostfolio/common/helper';
 import { AdminJobs, User } from '@ghostfolio/common/interfaces';
 
@@ -24,6 +30,11 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-jobs.html'
 })
 export class AdminJobsComponent implements OnDestroy, OnInit {
+  public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
+  public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
+    DATA_GATHERING_QUEUE_PRIORITY_HIGH;
+  public DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
+    DATA_GATHERING_QUEUE_PRIORITY_MEDIUM;
   public defaultDateTimeFormat: string;
   public filterForm: FormGroup;
   public dataSource: MatTableDataSource<AdminJobs['jobs'][0]> =
@@ -33,6 +44,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     'type',
     'symbol',
     'dataSource',
+    'priority',
     'attempts',
     'created',
     'finished',
@@ -48,6 +60,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -98,12 +111,25 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onExecuteJob(aId: string) {
+    this.adminService
+      .executeJob(aId)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.fetchJobs();
+      });
+  }
+
   public onViewData(aData: AdminJobs['jobs'][0]['data']) {
-    alert(JSON.stringify(aData, null, '  '));
+    this.notificationService.alert({
+      title: JSON.stringify(aData, null, '  ')
+    });
   }
 
   public onViewStacktrace(aStacktrace: AdminJobs['jobs'][0]['stacktrace']) {
-    alert(JSON.stringify(aStacktrace, null, '  '));
+    this.notificationService.alert({
+      title: JSON.stringify(aStacktrace, null, '  ')
+    });
   }
 
   public ngOnDestroy() {

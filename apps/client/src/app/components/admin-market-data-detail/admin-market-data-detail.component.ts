@@ -19,15 +19,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
+  addMonths,
   format,
   isBefore,
   isSameDay,
   isToday,
   isValid,
+  min,
   parse,
   parseISO
 } from 'date-fns';
-import { last } from 'lodash';
+import { first, last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -135,6 +137,27 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         marketPrice: marketDataItem.marketPrice
       };
     }
+
+    if (this.dateOfFirstActivity) {
+      // Fill up missing months
+      const dates = Object.keys(this.marketDataByMonth).sort();
+      const startDate = min([
+        parseISO(this.dateOfFirstActivity),
+        parseISO(first(dates))
+      ]);
+      const endDate = parseISO(last(dates));
+
+      let currentDate = startDate;
+
+      while (isBefore(currentDate, endDate)) {
+        const key = format(currentDate, 'yyyy-MM');
+        if (!this.marketDataByMonth[key]) {
+          this.marketDataByMonth[key] = {};
+        }
+
+        currentDate = addMonths(currentDate, 1);
+      }
+    }
   }
 
   public isDateOfInterest(aDateString: string) {
@@ -155,15 +178,14 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
     day: string;
     yearMonth: string;
   }) {
-    const date = parseISO(`${yearMonth}-${day}`);
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
       data: <MarketDataDetailDialogParams>{
-        date,
         marketPrice,
         currency: this.currency,
         dataSource: this.dataSource,
+        dateString: `${yearMonth}-${day}`,
         symbol: this.symbol,
         user: this.user
       },

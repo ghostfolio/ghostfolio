@@ -7,17 +7,18 @@ import type {
   AdminMarketData,
   AdminMarketDataItem
 } from './admin-market-data.interface';
+import type { AssetProfileIdentifier } from './asset-profile-identifier.interface';
 import type { BenchmarkMarketDataDetails } from './benchmark-market-data-details.interface';
 import type { BenchmarkProperty } from './benchmark-property.interface';
 import type { Benchmark } from './benchmark.interface';
 import type { Coupon } from './coupon.interface';
-import type { Currency } from './currency.interface';
 import type { DataProviderInfo } from './data-provider-info.interface';
 import type { EnhancedSymbolProfile } from './enhanced-symbol-profile.interface';
 import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
+import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
@@ -40,6 +41,7 @@ import type { BenchmarkResponse } from './responses/benchmark-response.interface
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
+import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
@@ -47,8 +49,6 @@ import type { Subscription } from './subscription.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
-import type { TimelinePosition } from './timeline-position.interface';
-import type { UniqueAsset } from './unique-asset.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
 
@@ -61,18 +61,19 @@ export {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
-  Currency,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Export,
   Filter,
   FilterGroup,
   HistoricalDataItem,
+  Holding,
   ImportResponse,
   InfoItem,
   InvestmentItem,
@@ -81,6 +82,7 @@ export {
   PortfolioChart,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioItem,
   PortfolioOverview,
@@ -100,8 +102,6 @@ export {
   Subscription,
   SymbolMetrics,
   TabConfiguration,
-  TimelinePosition,
-  UniqueAsset,
   User,
   UserSettings
 };

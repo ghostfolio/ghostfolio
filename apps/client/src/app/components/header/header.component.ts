@@ -1,6 +1,7 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -12,7 +13,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
-import { AssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
+import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
 import {
   ChangeDetectionStrategy,
@@ -62,9 +63,10 @@ export class HeaderComponent implements OnChanges {
 
   @Output() signOut = new EventEmitter<void>();
 
-  @ViewChild('assistant') assistantElement: AssistantComponent;
+  @ViewChild('assistant') assistantElement: GfAssistantComponent;
   @ViewChild('assistantTrigger') assistentMenuTriggerElement: MatMenuTrigger;
 
+  public hasFilters: boolean;
   public hasPermissionForSocialLogin: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessAdminControl: boolean;
@@ -92,6 +94,7 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
+    private notificationService: NotificationService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
@@ -106,6 +109,8 @@ export class HeaderComponent implements OnChanges {
   }
 
   public ngOnChanges() {
+    this.hasFilters = this.userService.hasFilters();
+
     this.hasPermissionForSocialLogin = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSocialLogin
@@ -156,10 +161,8 @@ export class HeaderComponent implements OnChanges {
       .putUserSetting({ dateRange })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe();
       });
@@ -186,10 +189,8 @@ export class HeaderComponent implements OnChanges {
       .putUserSetting(userSetting)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe();
       });
@@ -217,7 +218,7 @@ export class HeaderComponent implements OnChanges {
     this.signOut.next();
   }
 
-  public openLoginDialog(): void {
+  public openLoginDialog() {
     const dialogRef = this.dialog.open(LoginWithAccessTokenDialog, {
       autoFocus: false,
       data: {
@@ -237,7 +238,9 @@ export class HeaderComponent implements OnChanges {
             .loginAnonymous(data?.accessToken)
             .pipe(
               catchError(() => {
-                alert($localize`Oops! Incorrect Security Token.`);
+                this.notificationService.alert({
+                  title: $localize`Oops! Incorrect Security Token.`
+                });
 
                 return EMPTY;
               }),

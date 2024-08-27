@@ -134,31 +134,31 @@ export abstract class AbstractMatFormField<T>
     return this.focused || !this.empty;
   }
 
-  public ngDoCheck(): void {
+  public ngDoCheck() {
     if (this.ngControl) {
       this.errorState = this.ngControl.invalid && this.ngControl.touched;
       this.stateChanges.next();
     }
   }
 
-  public ngOnDestroy(): void {
+  public ngOnDestroy() {
     this.stateChanges.complete();
     this._focusMonitor.stopMonitoring(this._elementRef.nativeElement);
   }
 
-  public registerOnChange(fn: (_: T) => void): void {
+  public registerOnChange(fn: (_: T) => void) {
     this.onChange = fn;
   }
 
-  public registerOnTouched(fn: () => void): void {
+  public registerOnTouched(fn: () => void) {
     this.onTouched = fn;
   }
 
-  public setDescribedByIds(ids: string[]): void {
+  public setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }
 
-  public writeValue(value: T): void {
+  public writeValue(value: T) {
     this.value = value;
   }
 
@@ -173,7 +173,7 @@ export abstract class AbstractMatFormField<T>
     this.stateChanges.next();
   }
 
-  public onContainerClick(): void {
+  public onContainerClick() {
     if (!this.focused) {
       this.focus();
     }

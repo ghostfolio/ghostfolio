@@ -1,10 +1,13 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+
 import { AssetClass, AssetSubClass, Prisma } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
   IsObject,
   IsOptional,
-  IsString
+  IsString,
+  IsUrl
 } from 'class-validator';
 
 export class UpdateAssetProfileDto {
@@ -24,7 +27,7 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   countries?: Prisma.InputJsonArray;
 
-  @IsString()
+  @IsCurrencyCode()
   @IsOptional()
   currency?: string;
 
@@ -45,4 +48,11 @@ export class UpdateAssetProfileDto {
   symbolMapping?: {
     [dataProvider: string]: string;
   };
+
+  @IsOptional()
+  @IsUrl({
+    protocols: ['https'],
+    require_protocol: true
+  })
+  url?: string;
 }

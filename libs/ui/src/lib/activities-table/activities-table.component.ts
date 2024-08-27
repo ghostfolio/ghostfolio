@@ -1,12 +1,21 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { getDateFormatString } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
+import { GfActivityTypeComponent } from '@ghostfolio/ui/activity-type';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -17,30 +26,64 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent
+} from '@angular/material/paginator';
+import {
+  MatSort,
+  MatSortModule,
+  Sort,
+  SortDirection
+} from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterModule } from '@angular/router';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfActivityTypeComponent,
+    GfAssetProfileIconComponent,
+    GfNoTransactionsInfoComponent,
+    GfSymbolModule,
+    GfValueComponent,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    MatTooltipModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
+  standalone: true,
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })
-export class ActivitiesTableComponent
+export class GfActivitiesTableComponent
   implements AfterViewInit, OnChanges, OnDestroy, OnInit
 {
   @Input() baseCurrency: string;
   @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;
   @Input() hasPermissionToOpenDetails = true;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() pageIndex: number;
   @Input() pageSize = DEFAULT_PAGE_SIZE;
   @Input() showActions = true;
@@ -51,14 +94,14 @@ export class ActivitiesTableComponent
   @Input() sortDisabled = false;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
+  @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
-  @Output() deleteAllActivities = new EventEmitter<void>();
   @Output() export = new EventEmitter<void>();
   @Output() exportDrafts = new EventEmitter<string[]>();
   @Output() import = new EventEmitter<void>();
-  @Output() importDividends = new EventEmitter<UniqueAsset>();
+  @Output() importDividends = new EventEmitter<AssetProfileIdentifier>();
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
@@ -79,7 +122,10 @@ export class ActivitiesTableComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
+  public constructor(
+    private notificationService: NotificationService,
+    private router: Router
+  ) {}
 
   public ngOnInit() {
     if (this.showCheckbox) {
@@ -153,11 +199,9 @@ export class ActivitiesTableComponent
       }
     } else if (
       this.hasPermissionToOpenDetails &&
-      !activity.isDraft &&
-      activity.type !== 'FEE' &&
-      activity.type !== 'INTEREST' &&
-      activity.type !== 'ITEM' &&
-      activity.type !== 'LIABILITY'
+      activity.Account?.isExcluded !== true &&
+      activity.isDraft === false &&
+      ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     ) {
       this.onOpenPositionDialog({
         dataSource: activity.SymbolProfile.dataSource,
@@ -170,14 +214,24 @@ export class ActivitiesTableComponent
     this.activityToClone.emit(aActivity);
   }
 
-  public onDeleteActivity(aId: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this activity?`
-    );
+  public onDeleteActivities() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.activitiesDeleted.emit();
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete these activities?`
+    });
+  }
 
-    if (confirmation) {
-      this.activityDeleted.emit(aId);
-    }
+  public onDeleteActivity(aId: string) {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.activityDeleted.emit(aId);
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this activity?`
+    });
   }
 
   public onExport() {
@@ -200,10 +254,6 @@ export class ActivitiesTableComponent
     );
   }
 
-  public onDeleteAllActivities() {
-    this.deleteAllActivities.emit();
-  }
-
   public onImport() {
     this.import.emit();
   }
@@ -213,12 +263,14 @@ export class ActivitiesTableComponent
   }
 
   public onOpenComment(aComment: string) {
-    alert(aComment);
+    this.notificationService.alert({
+      title: aComment
+    });
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
+  public onOpenPositionDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     this.router.navigate([], {
-      queryParams: { dataSource, symbol, positionDetailDialog: true }
+      queryParams: { dataSource, symbol, holdingDetailDialog: true }
     });
   }
 

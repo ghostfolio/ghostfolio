@@ -1,9 +1,12 @@
-import { IsString } from 'class-validator';
+import { IsString, IsUrl } from 'class-validator';
 
 export class CreatePlatformDto {
   @IsString()
   name: string;
 
-  @IsString()
+  @IsUrl({
+    protocols: ['https'],
+    require_protocol: true
+  })
   url: string;
 }

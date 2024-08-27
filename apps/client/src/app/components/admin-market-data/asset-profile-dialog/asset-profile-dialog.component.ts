@@ -1,11 +1,15 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
+import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  Currency,
-  UniqueAsset
+  AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -61,14 +65,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     name: ['', Validators.required],
     scraperConfiguration: '',
     sectors: '',
-    symbolMapping: ''
+    symbolMapping: '',
+    url: ''
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public currencies: Currency[] = [];
+  public currencies: string[] = [];
+  public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
@@ -82,23 +88,22 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) {}
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
 
     this.benchmarks = benchmarks;
-    this.currencies = currencies.map((currency) => ({
-      label: currency,
-      value: currency
-    }));
+    this.currencies = currencies;
 
     this.initialize();
   }
@@ -158,7 +163,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfile?.scraperConfiguration ?? {}
           ),
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
-          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {})
+          symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
+          url: this.assetProfile?.url ?? ''
         });
 
         this.assetProfileForm.markAsPristine();
@@ -167,18 +173,27 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onClose(): void {
+  public onClose() {
     this.dialogRef.close();
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onDeleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
+
+    this.dialogRef.close();
+  }
+
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -195,15 +210,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           header: true,
           skipEmptyLines: true
         }
-      ).data;
+      ).data as UpdateMarketDataDto[];
 
       this.adminService
         .postMarketData({
           dataSource: this.data.dataSource,
           marketData: {
-            marketData: marketData.map(({ date, marketPrice }) => {
-              return { marketPrice, date: parseDate(date).toISOString() };
-            })
+            marketData
           },
           symbol: this.data.symbol
         })
@@ -234,7 +247,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   }
 
-  public onSetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -247,29 +260,29 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     let countries = [];
     let scraperConfiguration = {};
     let sectors = [];
     let symbolMapping = {};
 
     try {
-      countries = JSON.parse(this.assetProfileForm.controls['countries'].value);
+      countries = JSON.parse(this.assetProfileForm.get('countries').value);
     } catch {}
 
     try {
       scraperConfiguration = JSON.parse(
-        this.assetProfileForm.controls['scraperConfiguration'].value
+        this.assetProfileForm.get('scraperConfiguration').value
       );
     } catch {}
 
     try {
-      sectors = JSON.parse(this.assetProfileForm.controls['sectors'].value);
+      sectors = JSON.parse(this.assetProfileForm.get('sectors').value);
     } catch {}
 
     try {
       symbolMapping = JSON.parse(
-        this.assetProfileForm.controls['symbolMapping'].value
+        this.assetProfileForm.get('symbolMapping').value
       );
     } catch {}
 
@@ -278,14 +291,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       scraperConfiguration,
       sectors,
       symbolMapping,
-      assetClass: this.assetProfileForm.controls['assetClass'].value,
-      assetSubClass: this.assetProfileForm.controls['assetSubClass'].value,
-      comment: this.assetProfileForm.controls['comment'].value ?? null,
-      currency: (<Currency>(
-        (<unknown>this.assetProfileForm.controls['currency'].value)
-      ))?.value,
-      name: this.assetProfileForm.controls['name'].value
+      assetClass: this.assetProfileForm.get('assetClass').value,
+      assetSubClass: this.assetProfileForm.get('assetSubClass').value,
+      comment: this.assetProfileForm.get('comment').value || null,
+      currency: this.assetProfileForm.get('currency').value,
+      name: this.assetProfileForm.get('name').value,
+      url: this.assetProfileForm.get('url').value || null
     };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileForm,
+        object: assetProfileData
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
 
     this.adminService
       .patchAssetProfile({
@@ -302,31 +325,33 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
-        scraperConfiguration:
-          this.assetProfileForm.controls['scraperConfiguration'].value,
+        scraperConfiguration: this.assetProfileForm.get('scraperConfiguration')
+          .value,
         symbol: this.data.symbol
       })
       .pipe(
         catchError(({ error }) => {
-          alert(`Error: ${error?.message}`);
+          this.notificationService.alert({
+            message: error?.message,
+            title: $localize`Error`
+          });
           return EMPTY;
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ price }) => {
-        alert(
-          $localize`The current market price is` +
+        this.notificationService.alert({
+          title:
+            $localize`The current market price is` +
             ' ' +
             price +
             ' ' +
-            (<Currency>(
-              (<unknown>this.assetProfileForm.controls['currency'].value)
-            ))?.value
-        );
+            this.assetProfileForm.get('currency').value
+        });
       });
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))

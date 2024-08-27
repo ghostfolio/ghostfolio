@@ -1,1 +1,1 @@
-export * from './premium-indicator.module';
+export * from './premium-indicator.component';

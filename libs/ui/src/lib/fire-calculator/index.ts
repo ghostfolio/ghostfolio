@@ -1,1 +1,1 @@
-export * from './fire-calculator.module';
+export * from './fire-calculator.component';

@@ -1,10 +1,14 @@
 import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
-import { getTextColor } from '@ghostfolio/common/helper';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import { getLocale, getTextColor } from '@ghostfolio/common/helper';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { ColorScheme } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,7 +22,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { DataSource } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { ChartConfiguration, Tooltip } from 'chart.js';
 import { LinearScale } from 'chart.js';
 import { ArcElement } from 'chart.js';
@@ -26,14 +30,32 @@ import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import * as Color from 'color';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+const {
+  blue,
+  cyan,
+  grape,
+  green,
+  indigo,
+  lime,
+  orange,
+  pink,
+  red,
+  teal,
+  violet,
+  yellow
+} = require('open-color');
 
 @Component({
-  selector: 'gf-portfolio-proportion-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './portfolio-proportion-chart.component.html',
-  styleUrls: ['./portfolio-proportion-chart.component.scss']
+  imports: [CommonModule, NgxSkeletonLoaderModule],
+  selector: 'gf-portfolio-proportion-chart',
+  standalone: true,
+  styleUrls: ['./portfolio-proportion-chart.component.scss'],
+  templateUrl: './portfolio-proportion-chart.component.html'
 })
-export class PortfolioProportionChartComponent
+export class GfPortfolioProportionChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   @Input() baseCurrency: string;
@@ -41,7 +63,7 @@ export class PortfolioProportionChartComponent
   @Input() cursor: string;
   @Input() isInPercent = false;
   @Input() keys: string[] = [];
-  @Input() locale = '';
+  @Input() locale = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
   @Input() positions: {
@@ -52,7 +74,7 @@ export class PortfolioProportionChartComponent
     };
   } = {};
 
-  @Output() proportionChartClicked = new EventEmitter<UniqueAsset>();
+  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
@@ -108,7 +130,7 @@ export class PortfolioProportionChartComponent
               this.positions[symbol][this.keys[0]].toUpperCase()
             ].value = chartData[
               this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value.plus(this.positions[symbol].value);
+            ].value.plus(this.positions[symbol].value || 0);
 
             if (
               chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
@@ -120,20 +142,20 @@ export class PortfolioProportionChartComponent
                 chartData[
                   this.positions[symbol][this.keys[0]].toUpperCase()
                 ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-                  this.positions[symbol].value
+                  this.positions[symbol].value || 0
                 );
             } else {
               chartData[
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory[
                 this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-              ] = { value: new Big(this.positions[symbol].value) };
+              ] = { value: new Big(this.positions[symbol].value || 0) };
             }
           } else {
             chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
               name: this.positions[symbol][this.keys[0]],
               subCategory: {},
-              value: new Big(this.positions[symbol].value ?? 0)
+              value: new Big(this.positions[symbol].value || 0)
             };
 
             if (this.positions[symbol][this.keys[1]]) {
@@ -141,7 +163,7 @@ export class PortfolioProportionChartComponent
                 this.positions[symbol][this.keys[0]].toUpperCase()
               ].subCategory = {
                 [this.positions[symbol][this.keys[1]]]: {
-                  value: new Big(this.positions[symbol].value)
+                  value: new Big(this.positions[symbol].value || 0)
                 }
               };
             }
@@ -149,7 +171,7 @@ export class PortfolioProportionChartComponent
         } else {
           if (chartData[UNKNOWN_KEY]) {
             chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-              this.positions[symbol].value
+              this.positions[symbol].value || 0
             );
           } else {
             chartData[UNKNOWN_KEY] = {
@@ -157,7 +179,7 @@ export class PortfolioProportionChartComponent
               subCategory: this.keys[1]
                 ? { [this.keys[1]]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(this.positions[symbol].value)
+              value: new Big(this.positions[symbol].value || 0)
             };
           }
         }
@@ -166,7 +188,7 @@ export class PortfolioProportionChartComponent
       Object.keys(this.positions).forEach((symbol) => {
         chartData[symbol] = {
           name: this.positions[symbol].name,
-          value: new Big(this.positions[symbol].value)
+          value: new Big(this.positions[symbol].value || 0)
         };
       });
     }
@@ -346,24 +368,20 @@ export class PortfolioProportionChartComponent
     this.isLoading = false;
   }
 
-  /**
-   * Color palette, inspired by https://yeun.github.io/open-color
-   */
   private getColorPalette() {
-    //
     return [
-      '#329af0', // blue 5
-      '#20c997', // teal 5
-      '#94d82d', // lime 5
-      '#ff922b', // orange 5
-      '#f06595', // pink 5
-      '#845ef7', // violet 5
-      '#5c7cfa', // indigo 5
-      '#22b8cf', // cyan 5
-      '#51cf66', // green 5
-      '#fcc419', // yellow 5
-      '#ff6b6b', // red 5
-      '#cc5de8' // grape 5
+      blue[5],
+      teal[5],
+      lime[5],
+      orange[5],
+      pink[5],
+      violet[5],
+      indigo[5],
+      cyan[5],
+      green[5],
+      yellow[5],
+      red[5],
+      grape[5]
     ];
   }
 

@@ -33,25 +33,19 @@ export class YahooFinanceService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
-    const { assetClass, assetSubClass, currency, name, symbol } =
-      await this.yahooFinanceDataEnhancerService.getAssetProfile(aSymbol);
-
-    return {
-      assetClass,
-      assetSubClass,
-      currency,
-      name,
-      symbol,
-      dataSource: this.getName()
-    };
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
+    return this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Yahoo Finance',
+      url: 'https://finance.yahoo.com'
     };
   }
 

@@ -1,10 +1,12 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { translate } from '@ghostfolio/ui/i18n';
 import { AbstractMatFormField } from '@ghostfolio/ui/shared/abstract-mat-form-field';
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -14,13 +16,23 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, NgControl } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  NgControl,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {
   MatAutocomplete,
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import {
+  MatFormFieldControl,
+  MatFormFieldModule
+} from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { isString } from 'lodash';
 import { Subject, tap } from 'rxjs';
 import {
@@ -31,23 +43,37 @@ import {
   takeUntil
 } from 'rxjs/operators';
 
+import { GfPremiumIndicatorComponent } from '../premium-indicator';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[attr.aria-describedBy]': 'describedBy',
     '[id]': 'id'
   },
-  selector: 'gf-symbol-autocomplete',
-  styleUrls: ['./symbol-autocomplete.component.scss'],
-  templateUrl: 'symbol-autocomplete.component.html',
+  imports: [
+    FormsModule,
+    GfPremiumIndicatorComponent,
+    GfSymbolModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule
+  ],
   providers: [
     {
       provide: MatFormFieldControl,
-      useExisting: SymbolAutocompleteComponent
+      useExisting: GfSymbolAutocompleteComponent
     }
-  ]
+  ],
+  selector: 'gf-symbol-autocomplete',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  standalone: true,
+  styleUrls: ['./symbol-autocomplete.component.scss'],
+  templateUrl: 'symbol-autocomplete.component.html'
 })
-export class SymbolAutocompleteComponent
+export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {

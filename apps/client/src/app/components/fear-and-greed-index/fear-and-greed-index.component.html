@@ -12,12 +12,13 @@
       <small class="d-block" i18n>Current Market Mood</small>
     </div>
   </div>
-  <ngx-skeleton-loader
-    *ngIf="!fearAndGreedIndex"
-    animation="pulse"
-    class="position-absolute w-100"
-    [theme]="{
-      height: '100%'
-    }"
-  />
+  @if (!fearAndGreedIndex) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      class="position-absolute w-100"
+      [theme]="{
+        height: '100%'
+      }"
+    />
+  }
 </div>

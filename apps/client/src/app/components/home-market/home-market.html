@@ -1,47 +1,51 @@
 <div class="container">
   <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Markets</h1>
-  <div *ngIf="hasPermissionToAccessFearAndGreedIndex" class="mb-5 row">
-    <div class="col-xs-12 col-md-8 offset-md-2">
-      <div class="mb-2 text-center text-muted">
-        <small i18n>Last {{ numberOfDays }} Days</small>
+  @if (hasPermissionToAccessFearAndGreedIndex) {
+    <div class="mb-5 row">
+      <div class="col-xs-12 col-md-8 offset-md-2">
+        <div class="mb-2 text-center text-muted">
+          <small i18n>Last {{ numberOfDays }} Days</small>
+        </div>
+        <gf-line-chart
+          class="mb-3"
+          symbol="Fear & Greed Index"
+          [colorScheme]="user?.settings?.colorScheme"
+          [historicalDataItems]="historicalDataItems"
+          [isAnimated]="true"
+          [locale]="user?.settings?.locale || undefined"
+          [showXAxis]="true"
+          [showYAxis]="true"
+          [yMax]="100"
+          [yMaxLabel]="greedLabel"
+          [yMin]="0"
+          [yMinLabel]="fearLabel"
+        />
+        <gf-fear-and-greed-index
+          class="d-flex justify-content-center"
+          [fearAndGreedIndex]="fearAndGreedIndex"
+        />
       </div>
-      <gf-line-chart
-        class="mb-3"
-        symbol="Fear & Greed Index"
-        [colorScheme]="user?.settings?.colorScheme"
-        [historicalDataItems]="historicalDataItems"
-        [isAnimated]="true"
-        [locale]="user?.settings?.locale"
-        [showXAxis]="true"
-        [showYAxis]="true"
-        [yMax]="100"
-        [yMaxLabel]="greedLabel"
-        [yMin]="0"
-        [yMinLabel]="fearLabel"
-      />
-      <gf-fear-and-greed-index
-        class="d-flex justify-content-center"
-        [fearAndGreedIndex]="fearAndGreedIndex"
-      />
     </div>
-  </div>
+  }
 
   <div class="mb-3 row">
     <div class="col-xs-12 col-md-8 offset-md-2">
       <gf-benchmark
         [benchmarks]="benchmarks"
-        [locale]="user?.settings?.locale"
+        [deviceType]="deviceType"
+        [locale]="user?.settings?.locale || undefined"
         [user]="user"
       />
-      <ngx-skeleton-loader
-        *ngIf="isLoading"
-        animation="pulse"
-        class="px-2 py-3"
-        [theme]="{
-          height: '1.5rem',
-          width: '100%'
-        }"
-      />
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="px-2 py-3"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        />
+      }
     </div>
   </div>
 </div>

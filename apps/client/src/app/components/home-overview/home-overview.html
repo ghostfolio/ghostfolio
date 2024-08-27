@@ -1,100 +1,98 @@
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
-  @if(hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
-  <div class="justify-content-center row w-100">
-    <div class="col introduction">
-      <h4 i18n>Welcome to Ghostfolio</h4>
-      <p i18n>Ready to take control of your personal finances?</p>
-      <ol class="font-weight-bold">
-        <li
-          class="mb-2"
-          [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
-        >
-          <a class="d-block" [routerLink]="['/accounts']"
-            ><span i18n>Setup your accounts</span><br />
-            <span class="font-weight-normal" i18n
-              >Get a comprehensive financial overview by adding your bank and
-              brokerage accounts.</span
-            ></a
+  @if (hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
+    <div class="justify-content-center row w-100">
+      <div class="col introduction">
+        <h4 i18n>Welcome to Ghostfolio</h4>
+        <p i18n>Ready to take control of your personal finances?</p>
+        <ol class="font-weight-bold">
+          <li
+            class="mb-2"
+            [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
           >
-        </li>
-        <li class="mb-2">
-          <a class="d-block" [routerLink]="['/portfolio', 'activities']">
-            <span i18n>Capture your activities</span><br />
-            <span class="font-weight-normal" i18n
-              >Record your investment activities to keep your portfolio up to
-              date.</span
-            ></a
-          >
-        </li>
-        <li class="mb-2">
-          <a class="d-block" [routerLink]="['/portfolio']">
-            <span i18n>Monitor and analyze your portfolio</span><br />
-            <span class="font-weight-normal" i18n
-              >Track your progress in real-time with comprehensive analysis and
-              insights.</span
+            <a class="d-block" [routerLink]="['/accounts']"
+              ><span i18n>Setup your accounts</span><br />
+              <span class="font-weight-normal" i18n
+                >Get a comprehensive financial overview by adding your bank and
+                brokerage accounts.</span
+              ></a
             >
-          </a>
-        </li>
-      </ol>
-      <div class="d-flex justify-content-center">
-        <a
-          *ngIf="user?.accounts?.length === 1"
-          color="primary"
-          mat-flat-button
-          [routerLink]="['/accounts']"
-        >
-          <ng-container i18n>Setup accounts</ng-container>
-        </a>
-        <a
-          *ngIf="user?.accounts?.length > 1"
-          color="primary"
-          mat-flat-button
-          [routerLink]="['/portfolio', 'activities']"
-        >
-          <ng-container i18n>Add activity</ng-container>
-        </a>
+          </li>
+          <li class="mb-2">
+            <a class="d-block" [routerLink]="['/portfolio', 'activities']">
+              <span i18n>Capture your activities</span><br />
+              <span class="font-weight-normal" i18n
+                >Record your investment activities to keep your portfolio up to
+                date.</span
+              ></a
+            >
+          </li>
+          <li class="mb-2">
+            <a class="d-block" [routerLink]="['/portfolio']">
+              <span i18n>Monitor and analyze your portfolio</span><br />
+              <span class="font-weight-normal" i18n
+                >Track your progress in real-time with comprehensive analysis
+                and insights.</span
+              >
+            </a>
+          </li>
+        </ol>
+        <div class="d-flex justify-content-center">
+          @if (user?.accounts?.length === 1) {
+            <a color="primary" mat-flat-button [routerLink]="['/accounts']">
+              <ng-container i18n>Setup accounts</ng-container>
+            </a>
+          } @else if (user?.accounts?.length > 1) {
+            <a
+              color="primary"
+              mat-flat-button
+              [routerLink]="['/portfolio', 'activities']"
+            >
+              <ng-container i18n>Add activity</ng-container>
+            </a>
+          }
+        </div>
       </div>
     </div>
-  </div>
   } @else {
-  <div class="row w-100">
-    <div class="col p-0">
-      <div class="chart-container mx-auto position-relative">
-        <gf-line-chart
-          class="position-absolute"
-          symbol="Performance"
-          unit="%"
-          [colorScheme]="user?.settings?.colorScheme"
-          [hidden]="historicalDataItems?.length === 0"
-          [historicalDataItems]="historicalDataItems"
-          [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
+    <div class="row w-100">
+      <div class="col p-0">
+        <div class="chart-container mx-auto position-relative">
+          <gf-line-chart
+            class="position-absolute"
+            symbol="Performance"
+            unit="%"
+            [colorScheme]="user?.settings?.colorScheme"
+            [hidden]="historicalDataItems?.length === 0"
+            [historicalDataItems]="historicalDataItems"
+            [isAnimated]="user?.settings?.dateRange === '1d' ? false : true"
+            [locale]="user?.settings?.locale"
+            [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
+            [showGradient]="true"
+            [showLoader]="false"
+            [showXAxis]="false"
+            [showYAxis]="false"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="overview-container row mt-1">
+      <div class="col">
+        <gf-portfolio-performance
+          class="pb-4"
+          [deviceType]="deviceType"
+          [errors]="errors"
+          [isAllTimeHigh]="isAllTimeHigh"
+          [isAllTimeLow]="isAllTimeLow"
+          [isLoading]="isLoadingPerformance"
           [locale]="user?.settings?.locale"
-          [ngClass]="{ 'pr-3': deviceType === 'mobile' }"
-          [showGradient]="true"
-          [showLoader]="false"
-          [showXAxis]="false"
-          [showYAxis]="false"
+          [performance]="performance"
+          [precision]="precision"
+          [showDetails]="showDetails"
+          [unit]="unit"
         />
       </div>
     </div>
-  </div>
-  <div class="overview-container row mt-1">
-    <div class="col">
-      <gf-portfolio-performance
-        class="pb-4"
-        [deviceType]="deviceType"
-        [errors]="errors"
-        [isAllTimeHigh]="isAllTimeHigh"
-        [isAllTimeLow]="isAllTimeLow"
-        [isLoading]="isLoadingPerformance"
-        [locale]="user?.settings?.locale"
-        [performance]="performance"
-        [showDetails]="showDetails"
-        [unit]="unit"
-      />
-    </div>
-  </div>
   }
 </div>

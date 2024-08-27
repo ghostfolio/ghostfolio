@@ -12,11 +12,7 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>User Count</div>
             <div class="w-50">
-              <gf-value
-                [locale]="user?.settings?.locale"
-                [precision]="0"
-                [value]="userCount"
-              />
+              <gf-value [locale]="user?.settings?.locale" [value]="userCount" />
             </div>
           </div>
           <div class="d-flex my-3">
@@ -24,75 +20,79 @@
             <div class="w-50">
               <gf-value
                 [locale]="user?.settings?.locale"
-                [precision]="0"
                 [value]="transactionCount"
               />
-              <div *ngIf="transactionCount && userCount">
-                {{ transactionCount / userCount | number : '1.2-2' }}
-                <span i18n>per User</span>
-              </div>
+              @if (transactionCount && userCount) {
+                <div>
+                  {{ transactionCount / userCount | number: '1.2-2' }}
+                  <span i18n>per User</span>
+                </div>
+              }
             </div>
           </div>
           <div class="align-items-start d-flex my-3">
             <div class="w-50" i18n>Exchange Rates</div>
             <div class="w-50">
               <table>
-                <tr *ngFor="let exchangeRate of exchangeRates">
-                  <td>
-                    <gf-value [locale]="user?.settings?.locale" [value]="1" />
-                  </td>
-                  <td class="pl-1">{{ exchangeRate.label1 }}</td>
-                  <td class="px-1">=</td>
-                  <td align="right">
-                    <gf-value
-                      class="d-inline-block"
-                      [locale]="user?.settings?.locale"
-                      [precision]="4"
-                      [value]="exchangeRate.value"
-                    />
-                  </td>
-                  <td class="pl-1">{{ exchangeRate.label2 }}</td>
-                  <td>
-                    <button
-                      class="mx-1 no-min-width px-2"
-                      mat-button
-                      [matMenuTriggerFor]="exchangeRateActionsMenu"
-                      (click)="$event.stopPropagation()"
-                    >
-                      <ion-icon name="ellipsis-horizontal" />
-                    </button>
-                    <mat-menu
-                      #exchangeRateActionsMenu="matMenu"
-                      class="h-100 mx-1 no-min-width px-2"
-                      xPosition="before"
-                    >
-                      <a
-                        mat-menu-item
-                        [queryParams]="{
-                        assetProfileDialog: true,
-                        dataSource: exchangeRate.dataSource,
-                        symbol: exchangeRate.symbol
-                      }"
-                        [routerLink]="['/admin', 'market-data']"
-                      >
-                        <span class="align-items-center d-flex">
-                          <ion-icon class="mr-2" name="create-outline" />
-                          <span i18n>Edit</span>
-                        </span>
-                      </a>
+                @for (exchangeRate of exchangeRates; track exchangeRate) {
+                  <tr>
+                    <td>
+                      <gf-value [locale]="user?.settings?.locale" [value]="1" />
+                    </td>
+                    <td class="pl-1">{{ exchangeRate.label1 }}</td>
+                    <td class="px-1">=</td>
+                    <td align="right">
+                      <gf-value
+                        class="d-inline-block"
+                        [locale]="user?.settings?.locale"
+                        [precision]="4"
+                        [value]="exchangeRate.value"
+                      />
+                    </td>
+                    <td class="pl-1">{{ exchangeRate.label2 }}</td>
+                    <td>
                       <button
-                        *ngIf="customCurrencies.includes(exchangeRate.label2)"
-                        mat-menu-item
-                        (click)="onDeleteCurrency(exchangeRate.label2)"
+                        class="mx-1 no-min-width px-2"
+                        mat-button
+                        [matMenuTriggerFor]="exchangeRateActionsMenu"
+                        (click)="$event.stopPropagation()"
                       >
-                        <span class="align-items-center d-flex">
-                          <ion-icon class="mr-2" name="trash-outline" />
-                          <span i18n>Delete</span>
-                        </span>
+                        <ion-icon name="ellipsis-horizontal" />
                       </button>
-                    </mat-menu>
-                  </td>
-                </tr>
+                      <mat-menu
+                        #exchangeRateActionsMenu="matMenu"
+                        class="h-100 mx-1 no-min-width px-2"
+                        xPosition="before"
+                      >
+                        <a
+                          mat-menu-item
+                          [queryParams]="{
+                            assetProfileDialog: true,
+                            dataSource: exchangeRate.dataSource,
+                            symbol: exchangeRate.symbol
+                          }"
+                          [routerLink]="['/admin', 'market-data']"
+                        >
+                          <span class="align-items-center d-flex">
+                            <ion-icon class="mr-2" name="create-outline" />
+                            <span i18n>Edit</span>
+                          </span>
+                        </a>
+                        @if (customCurrencies.includes(exchangeRate.label2)) {
+                          <button
+                            mat-menu-item
+                            (click)="onDeleteCurrency(exchangeRate.label2)"
+                          >
+                            <span class="align-items-center d-flex">
+                              <ion-icon class="mr-2" name="trash-outline" />
+                              <span i18n>Delete</span>
+                            </span>
+                          </button>
+                        }
+                      </mat-menu>
+                    </td>
+                  </tr>
+                }
               </table>
               <div class="mt-2">
                 <button
@@ -112,22 +112,26 @@
               <mat-slide-toggle
                 color="primary"
                 hideIcon="true"
-                [checked]="info.globalPermissions.includes(permissions.createUserAccount)"
+                [checked]="
+                  info.globalPermissions.includes(permissions.createUserAccount)
+                "
                 (change)="onEnableUserSignupModeChange($event)"
               />
             </div>
           </div>
-          <div *ngIf="hasPermissionToToggleReadOnlyMode" class="d-flex my-3">
-            <div class="w-50" i18n>Read-only Mode</div>
-            <div class="w-50">
-              <mat-slide-toggle
-                color="primary"
-                hideIcon="true"
-                [checked]="info?.isReadOnlyMode"
-                (change)="onReadOnlyModeChange($event)"
-              />
+          @if (hasPermissionToToggleReadOnlyMode) {
+            <div class="d-flex my-3">
+              <div class="w-50" i18n>Read-only Mode</div>
+              <div class="w-50">
+                <mat-slide-toggle
+                  color="primary"
+                  hideIcon="true"
+                  [checked]="info?.isReadOnlyMode"
+                  (change)="onReadOnlyModeChange($event)"
+                />
+              </div>
             </div>
-          </div>
+          }
           <div class="d-flex my-3">
             <div class="w-50" i18n>Data Gathering</div>
             <div class="w-50">
@@ -139,99 +143,105 @@
               />
             </div>
           </div>
-          <div *ngIf="hasPermissionForSystemMessage" class="d-flex my-3">
-            <div class="w-50" i18n>System Message</div>
-            <div class="w-50">
-              <div *ngIf="systemMessage" class="align-items-center d-flex">
-                <div class="text-truncate">{{ systemMessage | json }}</div>
-                <button
-                  class="h-100 mx-1 no-min-width px-2"
-                  mat-button
-                  (click)="onDeleteSystemMessage()"
-                >
-                  <ion-icon name="trash-outline" />
-                </button>
-              </div>
-              <button
-                *ngIf="!info?.systemMessage"
-                class="mt-2"
-                color="accent"
-                mat-flat-button
-                (click)="onSetSystemMessage()"
-              >
-                <ion-icon class="mr-1" name="information-circle-outline" />
-                <span i18n>Set Message</span>
-              </button>
-            </div>
-          </div>
-          <div
-            *ngIf="hasPermissionForSubscription"
-            class="d-flex my-3 subscription"
-          >
-            <div class="w-50" i18n>Coupons</div>
-            <div class="w-50">
-              <table>
-                <tr *ngFor="let coupon of coupons">
-                  <td class="text-monospace">{{ coupon.code }}</td>
-                  <td class="pl-2 text-right">{{ coupon.duration }}</td>
-                  <td>
+          @if (hasPermissionForSystemMessage) {
+            <div class="d-flex my-3">
+              <div class="w-50" i18n>System Message</div>
+              <div class="w-50">
+                @if (systemMessage) {
+                  <div class="align-items-center d-flex">
+                    <div class="text-truncate">{{ systemMessage | json }}</div>
                     <button
-                      class="mx-1 no-min-width px-2"
-                      mat-button
-                      [matMenuTriggerFor]="couponActionsMenu"
-                      (click)="$event.stopPropagation()"
-                    >
-                      <ion-icon name="ellipsis-horizontal" />
-                    </button>
-                    <mat-menu
-                      #couponActionsMenu="matMenu"
                       class="h-100 mx-1 no-min-width px-2"
-                      xPosition="before"
+                      mat-button
+                      (click)="onDeleteSystemMessage()"
                     >
-                      <button
-                        mat-menu-item
-                        (click)="onDeleteCoupon(coupon.code)"
-                      >
-                        <span class="align-items-center d-flex">
-                          <ion-icon class="mr-2" name="trash-outline" />
-                          <span i18n>Delete</span>
-                        </span>
-                      </button>
-                    </mat-menu>
-                  </td>
-                </tr>
-              </table>
-              <div class="mt-2">
-                <form #couponForm="ngForm" class="align-items-center d-flex">
-                  <mat-form-field
-                    appearance="outline"
-                    class="mr-2 without-hint"
-                  >
-                    <mat-select
-                      name="duration"
-                      [value]="couponDuration"
-                      (selectionChange)="onChangeCouponDuration($event.value)"
-                    >
-                      <mat-option value="7 days">7 Days</mat-option>
-                      <mat-option value="14 days">14 Days</mat-option>
-                      <mat-option value="30 days">30 Days</mat-option>
-                      <mat-option value="90 days">90 Days</mat-option>
-                      <mat-option value="180 days">180 Days</mat-option>
-                      <mat-option value="1 year">1 Year</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                      <ion-icon name="trash-outline" />
+                    </button>
+                  </div>
+                }
+                @if (!info?.systemMessage) {
                   <button
-                    class="mt-1"
-                    color="primary"
+                    class="mt-2"
+                    color="accent"
                     mat-flat-button
-                    (click)="onAddCoupon()"
+                    (click)="onSetSystemMessage()"
                   >
-                    <span i18n>Add</span>
+                    <ion-icon class="mr-1" name="information-circle-outline" />
+                    <span i18n>Set Message</span>
                   </button>
-                </form>
+                }
               </div>
             </div>
-          </div>
+          }
+          @if (hasPermissionForSubscription) {
+            <div class="d-flex my-3 subscription">
+              <div class="w-50" i18n>Coupons</div>
+              <div class="w-50">
+                <table>
+                  @for (coupon of coupons; track coupon) {
+                    <tr>
+                      <td class="text-monospace">{{ coupon.code }}</td>
+                      <td class="pl-2 text-right">{{ coupon.duration }}</td>
+                      <td>
+                        <button
+                          class="mx-1 no-min-width px-2"
+                          mat-button
+                          [matMenuTriggerFor]="couponActionsMenu"
+                          (click)="$event.stopPropagation()"
+                        >
+                          <ion-icon name="ellipsis-horizontal" />
+                        </button>
+                        <mat-menu
+                          #couponActionsMenu="matMenu"
+                          class="h-100 mx-1 no-min-width px-2"
+                          xPosition="before"
+                        >
+                          <button
+                            mat-menu-item
+                            (click)="onDeleteCoupon(coupon.code)"
+                          >
+                            <span class="align-items-center d-flex">
+                              <ion-icon class="mr-2" name="trash-outline" />
+                              <span i18n>Delete</span>
+                            </span>
+                          </button>
+                        </mat-menu>
+                      </td>
+                    </tr>
+                  }
+                </table>
+                <div class="mt-2">
+                  <form #couponForm="ngForm" class="align-items-center d-flex">
+                    <mat-form-field
+                      appearance="outline"
+                      class="mr-2 without-hint"
+                    >
+                      <mat-select
+                        name="duration"
+                        [value]="couponDuration"
+                        (selectionChange)="onChangeCouponDuration($event.value)"
+                      >
+                        <mat-option value="7 days">7 Days</mat-option>
+                        <mat-option value="14 days">14 Days</mat-option>
+                        <mat-option value="30 days">30 Days</mat-option>
+                        <mat-option value="90 days">90 Days</mat-option>
+                        <mat-option value="180 days">180 Days</mat-option>
+                        <mat-option value="1 year">1 Year</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <button
+                      class="mt-1"
+                      color="primary"
+                      mat-flat-button
+                      (click)="onAddCoupon()"
+                    >
+                      <span i18n>Add</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          }
           <div class="d-flex my-3">
             <div class="w-50" i18n>Housekeeping</div>
             <div class="w-50">

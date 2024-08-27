@@ -1,7 +1,8 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { TimelinePosition, UserSettings } from '@ghostfolio/common/interfaces';
+import { UserSettings } from '@ghostfolio/common/interfaces';
+import { TimelinePosition } from '@ghostfolio/common/models';
 
 export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   private positions: TimelinePosition[];
@@ -11,6 +12,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     positions: TimelinePosition[]
   ) {
     super(exchangeRateDataService, {
+      key: CurrencyClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 
@@ -37,12 +39,12 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
       }
     });
 
-    const maxValueRatio = maxItem.value / totalValue;
+    const maxValueRatio = maxItem?.value / totalValue || 0;
 
-    if (maxValueRatio > ruleSettings.threshold) {
+    if (maxValueRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: `Over ${
-          ruleSettings.threshold * 100
+          ruleSettings.thresholdMax * 100
         }% of your current investment is in ${maxItem.groupKey} (${(
           maxValueRatio * 100
         ).toPrecision(3)}%)`,
@@ -52,9 +54,9 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
 
     return {
       evaluation: `The major part of your current investment is in ${
-        maxItem.groupKey
+        maxItem?.groupKey ?? ruleSettings.baseCurrency
       } (${(maxValueRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.threshold * 100
+        ruleSettings.thresholdMax * 100
       }%`,
       value: true
     };
@@ -63,13 +65,13 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
   public getSettings(aUserSettings: UserSettings): Settings {
     return {
       baseCurrency: aUserSettings.baseCurrency,
-      isActive: true,
-      threshold: 0.5
+      isActive: aUserSettings.xRayRules[this.getKey()].isActive,
+      thresholdMax: 0.5
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMax: number;
 }

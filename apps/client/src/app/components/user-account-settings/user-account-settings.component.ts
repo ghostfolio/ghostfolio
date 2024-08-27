@@ -1,9 +1,12 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   KEY_STAY_SIGNED_IN,
   KEY_TOKEN,
   SettingsStorageService
 } from '@ghostfolio/client/services/settings-storage.service';
+import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { downloadAsFile } from '@ghostfolio/common/helper';
@@ -17,10 +20,12 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
-import { EMPTY, Subject } from 'rxjs';
+import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -33,11 +38,18 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];
+  public deleteOwnUserForm = this.formBuilder.group({
+    accessToken: ['', Validators.required]
+  });
+  public hasPermissionToDeleteOwnUser: boolean;
   public hasPermissionToUpdateViewMode: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public isAccessTokenHidden = true;
+  public isFingerprintSupported = this.doesBrowserSupportAuthn();
   public isWebAuthnEnabled: boolean;
   public language = document.documentElement.lang;
   public locales = [
+    'ca',
     'de',
     'de-CH',
     'en-GB',
@@ -48,7 +60,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     'nl',
     'pl',
     'pt',
-    'tr'
+    'tr',
+    'zh'
   ];
   public user: User;
 
@@ -57,7 +70,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private settingsStorageService: SettingsStorageService,
+    private snackBar: MatSnackBar,
+    private tokenStorageService: TokenStorageService,
     private userService: UserService,
     public webAuthnService: WebAuthnService
   ) {
@@ -71,6 +88,11 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToDeleteOwnUser = hasPermission(
+            this.user.permissions,
+            permissions.deleteOwnUser
+          );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
             this.user.permissions,
@@ -103,10 +125,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ [aKey]: aValue })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -124,15 +144,42 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onCloseAccount() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .deleteOwnUser({
+            accessToken: this.deleteOwnUserForm.get('accessToken').value
+          })
+          .pipe(
+            catchError(() => {
+              this.notificationService.alert({
+                title: $localize`Oops! Incorrect Security Token.`
+              });
+
+              return EMPTY;
+            }),
+            takeUntil(this.unsubscribeSubject)
+          )
+          .subscribe(() => {
+            this.tokenStorageService.signOut();
+            this.userService.remove();
+
+            document.location.href = `/${document.documentElement.lang}`;
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to close your Ghostfolio account?`
+    });
+  }
+
   public onExperimentalFeaturesChange(aEvent: MatSlideToggleChange) {
     this.dataService
       .putUserSetting({ isExperimentalFeatures: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -167,10 +214,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ isRestrictedView: aEvent.checked })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -180,19 +225,26 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
+  public async onSignInWithFingerprintChange(aEvent: MatSlideToggleChange) {
     if (aEvent.checked) {
-      this.registerDevice();
-    } else {
-      const confirmation = confirm(
-        $localize`Do you really want to remove this sign in method?`
-      );
+      try {
+        await this.registerDevice();
+      } catch {
+        aEvent.source.checked = false;
 
-      if (confirmation) {
-        this.deregisterDevice();
-      } else {
-        this.update();
+        this.changeDetectorRef.markForCheck();
       }
+    } else {
+      this.notificationService.confirm({
+        confirmFn: () => {
+          this.deregisterDevice();
+        },
+        discardFn: () => {
+          this.update();
+        },
+        confirmType: ConfirmationDialogType.Warn,
+        title: $localize`Do you really want to remove this sign in method?`
+      });
     }
   }
 
@@ -201,10 +253,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
       .putUserSetting({ viewMode: aEvent.checked === true ? 'ZEN' : 'DEFAULT' })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -223,35 +273,54 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     this.webAuthnService
       .deregister()
       .pipe(
-        takeUntil(this.unsubscribeSubject),
         catchError(() => {
           this.update();
 
           return EMPTY;
-        })
+        }),
+        takeUntil(this.unsubscribeSubject)
       )
       .subscribe(() => {
         this.update();
       });
   }
 
-  private registerDevice() {
-    this.webAuthnService
-      .register()
-      .pipe(
-        takeUntil(this.unsubscribeSubject),
-        catchError(() => {
-          this.update();
+  private doesBrowserSupportAuthn() {
+    // Authn is built on top of PublicKeyCredential: https://stackoverflow.com/a/55868189
+    return typeof PublicKeyCredential !== 'undefined';
+  }
 
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
-        this.settingsStorageService.removeSetting(KEY_TOKEN);
+  private registerDevice(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.webAuthnService
+        .register()
+        .pipe(
+          catchError((error: Error) => {
+            this.snackBar.open(
+              $localize`Oops! There was an error setting up biometric authentication.`,
+              undefined,
+              { duration: 3000 }
+            );
 
-        this.update();
-      });
+            return throwError(() => {
+              return error;
+            });
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe({
+          next: () => {
+            this.settingsStorageService.removeSetting(KEY_STAY_SIGNED_IN);
+            this.settingsStorageService.removeSetting(KEY_TOKEN);
+
+            this.update();
+            resolve();
+          },
+          error: (error) => {
+            reject(error);
+          }
+        });
+    });
   }
 
   private update() {

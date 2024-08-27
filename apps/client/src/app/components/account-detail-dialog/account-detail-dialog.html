@@ -20,16 +20,20 @@
       </div>
     </div>
 
+    <!-- TODO
     <div class="chart-container mb-3">
       <gf-investment-chart
         class="h-100"
         [currency]="user?.settings?.baseCurrency"
         [historicalDataItems]="historicalDataItems"
-        [isInPercent]="data.hasImpersonationId || user.settings.isRestrictedView"
+        [isInPercent]="
+          data.hasImpersonationId || user.settings.isRestrictedView
+        "
         [isLoading]="isLoadingChart"
         [locale]="user?.settings?.locale"
       />
     </div>
+    -->
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">
@@ -77,6 +81,7 @@
         <gf-holdings-table
           [baseCurrency]="user?.settings?.baseCurrency"
           [deviceType]="data.deviceType"
+          [hasPermissionToOpenDetails]="false"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
         />
@@ -91,14 +96,24 @@
           [dataSource]="dataSource"
           [deviceType]="data.deviceType"
           [hasPermissionToCreateActivity]="false"
-          [hasPermissionToExportActivities]="!data.hasImpersonationId && !user.settings.isRestrictedView"
+          [hasPermissionToDeleteActivity]="false"
+          [hasPermissionToExportActivities]="
+            !data.hasImpersonationId && !user.settings.isRestrictedView
+          "
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
-          [showActions]="false"
+          [showActions]="
+            !data.hasImpersonationId &&
+            data.hasPermissionToCreateOrder &&
+            user?.settings?.isExperimentalFeatures &&
+            !user?.settings?.isRestrictedView
+          "
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [totalItems]="totalItems"
+          (activityToClone)="onCloneActivity($event)"
+          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
         />
@@ -110,9 +125,15 @@
         </ng-template>
         <gf-account-balances
           [accountBalances]="accountBalances"
+          [accountCurrency]="currency"
           [accountId]="data.accountId"
           [locale]="user?.settings?.locale"
-          [showActions]="!data.hasImpersonationId && hasPermissionToDeleteAccountBalance && !user.settings.isRestrictedView"
+          [showActions]="
+            !data.hasImpersonationId &&
+            hasPermissionToDeleteAccountBalance &&
+            !user.settings.isRestrictedView
+          "
+          (accountBalanceCreated)="onAddAccountBalance($event)"
           (accountBalanceDeleted)="onDeleteAccountBalance($event)"
         />
       </mat-tab>

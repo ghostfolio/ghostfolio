@@ -9,12 +9,13 @@
     "build": {
       "executor": "@nx/webpack:webpack",
       "options": {
-        "outputPath": "dist/apps/api",
-        "main": "apps/api/src/main.ts",
-        "tsConfig": "apps/api/tsconfig.app.json",
-        "assets": ["apps/api/src/assets"],
-        "target": "node",
         "compiler": "tsc",
+        "deleteOutputPath": false,
+        "main": "apps/api/src/main.ts",
+        "outputPath": "dist/apps/api",
+        "sourceMap": true,
+        "target": "node",
+        "tsConfig": "apps/api/tsconfig.app.json",
         "webpackConfig": "apps/api/webpack.config.js"
       },
       "configurations": {
@@ -32,6 +33,26 @@
         }
       },
       "outputs": ["{options.outputPath}"]
+    },
+    "copy-assets": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "shx rm -rf dist/apps/api"
+          },
+          {
+            "command": "shx mkdir -p dist/apps/api/assets/locales"
+          },
+          {
+            "command": "shx cp -r apps/api/src/assets/* dist/apps/api/assets"
+          },
+          {
+            "command": "shx cp -r apps/client/src/locales/* dist/apps/api/assets/locales"
+          }
+        ],
+        "parallel": false
+      }
     },
     "serve": {
       "executor": "@nx/js:node",

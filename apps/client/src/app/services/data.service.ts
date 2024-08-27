@@ -1,14 +1,18 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  Activities,
+  Activity
+} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioPositionDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-position-detail.interface';
-import { PortfolioPositions } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-positions.interface';
+import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
@@ -18,6 +22,8 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
+  AdminMarketDataDetails,
+  AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -27,11 +33,11 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -41,7 +47,12 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
-import { DataSource, Order as OrderModel } from '@prisma/client';
+import {
+  AccountBalance,
+  DataSource,
+  Order as OrderModel,
+  Tag
+} from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
@@ -61,6 +72,7 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
         TAG: filtersByTag
@@ -99,6 +111,10 @@ export class DataService {
             })
             .join(',')
         );
+      }
+
+      if (filtersByHoldingType) {
+        params = params.append('holdingType', filtersByHoldingType[0].id);
       }
 
       if (filtersByPresetId) {
@@ -153,18 +169,24 @@ export class DataService {
 
   public fetchActivities({
     filters,
+    range,
     skip,
     sortColumn,
     sortDirection,
     take
   }: {
     filters?: Filter[];
+    range?: DateRange;
     skip?: number;
     sortColumn?: string;
     sortDirection?: SortDirection;
     take?: number;
   }): Observable<Activities> {
     let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (range) {
+      params = params.append('range', range);
+    }
 
     if (skip) {
       params = params.append('skip', skip);
@@ -193,6 +215,17 @@ export class DataService {
     );
   }
 
+  public fetchActivity(aActivityId: string) {
+    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+      map((activity) => {
+        activity.createdAt = parseISO(<string>(<unknown>activity.createdAt));
+        activity.date = parseISO(<string>(<unknown>activity.date));
+
+        return activity;
+      })
+    );
+  }
+
   public fetchDividends({
     filters,
     groupBy = 'month',
@@ -211,7 +244,7 @@ export class DataService {
     });
   }
 
-  public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
+  public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.get<ImportResponse>(
       `/api/v1/import/dividends/${dataSource}/${symbol}`
     );
@@ -241,16 +274,22 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/account-balance/${aId}`);
   }
 
-  public deleteAllOrders() {
-    return this.http.delete<any>(`/api/v1/order/`);
+  public deleteActivities({ filters }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.delete<any>(`/api/v1/order`, { params });
   }
 
-  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public deleteActivity(aId: string) {
+    return this.http.delete<any>(`/api/v1/order/${aId}`);
+  }
+
+  public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
-  public deleteOrder(aId: string) {
-    return this.http.delete<any>(`/api/v1/order/${aId}`);
+  public deleteOwnUser(aData: DeleteOwnUserDto) {
+    return this.http.delete<any>(`/api/v1/user`, { body: aData });
   }
 
   public deleteUser(aId: string) {
@@ -261,18 +300,41 @@ export class DataService {
     return this.http.get<Access[]>('/api/v1/access');
   }
 
-  public fetchBenchmarkBySymbol({
+  public fetchAsset({
     dataSource,
+    symbol
+  }: AssetProfileIdentifier): Observable<AdminMarketDataDetails> {
+    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
+      map((data) => {
+        for (const item of data.marketData) {
+          item.date = parseISO(item.date);
+        }
+        return data;
+      })
+    );
+  }
+
+  public fetchBenchmarkForUser({
+    dataSource,
+    range,
     startDate,
     symbol
   }: {
+    range: DateRange;
     startDate: Date;
-  } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
+    let params = new HttpParams();
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
     return this.http.get<BenchmarkMarketDataDetails>(
       `/api/v1/benchmark/${dataSource}/${symbol}/${format(
         startDate,
         DATE_FORMAT
-      )}`
+      )}`,
+      { params }
     );
   }
 
@@ -296,6 +358,31 @@ export class DataService {
     return this.http.get<Export>('/api/v1/export', {
       params
     });
+  }
+
+  public fetchHoldingDetail({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }) {
+    return this.http
+      .get<PortfolioHoldingDetail>(
+        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      )
+      .pipe(
+        map((data) => {
+          if (data.orders) {
+            for (const order of data.orders) {
+              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
+              order.date = parseISO(<string>(<unknown>order.date));
+            }
+          }
+
+          return data;
+        })
+      );
   }
 
   public fetchInfo(): InfoItem {
@@ -351,21 +438,6 @@ export class DataService {
     });
   }
 
-  public fetchPositions({
-    filters,
-    range
-  }: {
-    filters?: Filter[];
-    range: DateRange;
-  }): Observable<PortfolioPositions> {
-    let params = this.buildFiltersAsQueryParams({ filters });
-    params = params.append('range', range);
-
-    return this.http.get<PortfolioPositions>('/api/v1/portfolio/positions', {
-      params
-    });
-  }
-
   public fetchSymbols({
     includeIndices = false,
     query
@@ -389,13 +461,21 @@ export class DataService {
   }
 
   public fetchPortfolioDetails({
-    filters
+    filters,
+    withMarkets = false
   }: {
     filters?: Filter[];
+    withMarkets?: boolean;
   } = {}): Observable<PortfolioDetails> {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (withMarkets) {
+      params = params.append('withMarkets', withMarkets);
+    }
+
     return this.http
       .get<any>('/api/v1/portfolio/details', {
-        params: this.buildFiltersAsQueryParams({ filters })
+        params
       })
       .pipe(
         map((response) => {
@@ -434,20 +514,74 @@ export class DataService {
       );
   }
 
+  public fetchPortfolioHoldings({
+    filters,
+    range
+  }: {
+    filters?: Filter[];
+    range?: DateRange;
+  }) {
+    let params = this.buildFiltersAsQueryParams({ filters });
+
+    if (range) {
+      params = params.append('range', range);
+    }
+
+    return this.http
+      .get<PortfolioHoldingsResponse>('/api/v1/portfolio/holdings', {
+        params
+      })
+      .pipe(
+        map((response) => {
+          if (response.holdings) {
+            for (const symbol of Object.keys(response.holdings)) {
+              response.holdings[symbol].assetClassLabel = translate(
+                response.holdings[symbol].assetClass
+              );
+
+              response.holdings[symbol].assetSubClassLabel = translate(
+                response.holdings[symbol].assetSubClass
+              );
+
+              response.holdings[symbol].dateOfFirstActivity = response.holdings[
+                symbol
+              ].dateOfFirstActivity
+                ? parseISO(response.holdings[symbol].dateOfFirstActivity)
+                : undefined;
+
+              response.holdings[symbol].value = isNumber(
+                response.holdings[symbol].value
+              )
+                ? response.holdings[symbol].value
+                : response.holdings[symbol].valueInPercentage;
+            }
+          }
+
+          return response;
+        })
+      );
+  }
+
   public fetchPortfolioPerformance({
     filters,
     range,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    withItems = false
   }: {
     filters?: Filter[];
     range: DateRange;
     withExcludedAccounts?: boolean;
+    withItems?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
     params = params.append('range', range);
 
     if (withExcludedAccounts) {
       params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
+
+    if (withItems) {
+      params = params.append('withItems', withItems);
     }
 
     return this.http
@@ -489,31 +623,6 @@ export class DataService {
     return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
-  public fetchPositionDetail({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }) {
-    return this.http
-      .get<PortfolioPositionDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
-      )
-      .pipe(
-        map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
-              order.createdAt = parseISO(<string>(<unknown>order.createdAt));
-              order.date = parseISO(<string>(<unknown>order.date));
-            }
-          }
-
-          return data;
-        })
-      );
-  }
-
   public loginAnonymous(accessToken: string) {
     return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
       accessToken
@@ -528,7 +637,14 @@ export class DataService {
     return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
   }
 
-  public postBenchmark(benchmark: UniqueAsset) {
+  public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
+    return this.http.post<AccountBalance>(
+      `/api/v1/account-balance`,
+      aAccountBalance
+    );
+  }
+
+  public postBenchmark(benchmark: AssetProfileIdentifier) {
     return this.http.post(`/api/v1/benchmark`, benchmark);
   }
 
@@ -546,6 +662,17 @@ export class DataService {
 
   public putAdminSetting(key: string, aData: PropertyDto) {
     return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
+  }
+
+  public putHoldingTags({
+    dataSource,
+    symbol,
+    tags
+  }: { tags: Tag[] } & AssetProfileIdentifier) {
+    return this.http.put<void>(
+      `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
+      { tags }
+    );
   }
 
   public putOrder(aOrder: UpdateOrderDto) {

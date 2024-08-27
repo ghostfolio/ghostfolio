@@ -1,11 +1,13 @@
-import { UniqueAsset } from './unique-asset.interface';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+
+import { Role } from '@prisma/client';
 
 export interface AdminData {
   exchangeRates: ({
     label1: string;
     label2: string;
     value: number;
-  } & UniqueAsset)[];
+  } & AssetProfileIdentifier)[];
   settings: { [key: string]: boolean | object | string | string[] };
   transactionCount: number;
   userCount: number;
@@ -16,6 +18,7 @@ export interface AdminData {
     engagement: number;
     id: string;
     lastActivity: Date;
+    role: Role;
     transactionCount: number;
   }[];
   version: string;

@@ -1,8 +1,11 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { Filter, FilterGroup } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { CommonModule } from '@angular/common';
 import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -14,23 +17,39 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocomplete,
+  MatAutocompleteModule,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfSymbolModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-filter',
+  standalone: true,
   styleUrls: ['./activities-filter.component.scss'],
   templateUrl: './activities-filter.component.html'
 })
-export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
+export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
   @Input() allFilters: Filter[];
   @Input() isLoading: boolean;
   @Input() placeholder: string;
@@ -72,7 +91,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onAddFilter({ input, value }: MatChipInputEvent): void {
+  public onAddFilter({ input, value }: MatChipInputEvent) {
     if (value?.trim()) {
       this.updateFilters();
     }
@@ -85,7 +104,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.searchControl.setValue(undefined);
   }
 
-  public onRemoveFilter(aFilter: Filter): void {
+  public onRemoveFilter(aFilter: Filter) {
     this.selectedFilters = this.selectedFilters.filter((filter) => {
       return filter.id !== aFilter.id;
     });
@@ -93,7 +112,7 @@ export class ActivitiesFilterComponent implements OnChanges, OnDestroy {
     this.updateFilters();
   }
 
-  public onSelectFilter(event: MatAutocompleteSelectedEvent): void {
+  public onSelectFilter(event: MatAutocompleteSelectedEvent) {
     this.selectedFilters.push(
       this.allFilters.find((filter) => {
         return filter.id === event.option.value;

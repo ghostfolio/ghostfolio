@@ -1,17 +1,24 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  EnhancedSymbolProfile,
+  Filter
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   AssetClass,
   AssetSubClass,
@@ -19,11 +26,11 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
-import { groupBy } from 'lodash';
+import { groupBy, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Activities } from './interfaces/activities.interface';
@@ -33,10 +40,44 @@ export class OrderService {
   public constructor(
     private readonly accountService: AccountService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly eventEmitter: EventEmitter2,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async assignTags({
+    dataSource,
+    symbol,
+    tags,
+    userId
+  }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        userId,
+        SymbolProfile: {
+          dataSource,
+          symbol
+        }
+      }
+    });
+
+    return Promise.all(
+      orders.map(({ id }) =>
+        this.prismaService.order.update({
+          data: {
+            tags: {
+              // The set operation replaces all existing connections with the provided ones
+              set: tags.map(({ id }) => {
+                return { id };
+              })
+            }
+          },
+          where: { id }
+        })
+      )
+    );
+  }
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -65,20 +106,13 @@ export class OrderService {
     }
 
     const accountId = data.accountId;
-    let currency = data.currency;
     const tags = data.tags ?? [];
     const updateAccountBalance = data.updateAccountBalance ?? false;
     const userId = data.userId;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       const assetClass = data.assetClass;
       const assetSubClass = data.assetSubClass;
-      currency = data.SymbolProfile.connectOrCreate.create.currency;
       const dataSource: DataSource = 'MANUAL';
       const id = uuidv4();
       const name = data.SymbolProfile.connectOrCreate.create.symbol;
@@ -86,7 +120,6 @@ export class OrderService {
       data.id = id;
       data.SymbolProfile.connectOrCreate.create.assetClass = assetClass;
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
-      data.SymbolProfile.connectOrCreate.create.currency = currency;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
       data.SymbolProfile.connectOrCreate.create.symbol = id;
@@ -108,7 +141,8 @@ export class OrderService {
           jobId: getAssetProfileIdentifier({
             dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
             symbol: data.SymbolProfile.connectOrCreate.create.symbol
-          })
+          }),
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
         }
       });
     }
@@ -121,7 +155,6 @@ export class OrderService {
       delete data.comment;
     }
 
-    delete data.currency;
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
@@ -130,13 +163,9 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft =
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-        ? false
-        : isAfter(data.date as Date, endOfToday());
+    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+      ? false
+      : isAfter(data.date as Date, endOfToday());
 
     const order = await this.prismaService.order.create({
       data: {
@@ -148,7 +177,8 @@ export class OrderService {
             return { id };
           })
         }
-      }
+      },
+      include: { SymbolProfile: true }
     });
 
     if (updateAccountBalance === true) {
@@ -157,18 +187,25 @@ export class OrderService {
         .plus(data.fee)
         .toNumber();
 
-      if (data.type === 'BUY') {
+      if (['BUY', 'FEE'].includes(data.type)) {
         amount = new Big(amount).mul(-1).toNumber();
       }
 
       await this.accountService.updateAccountBalance({
         accountId,
         amount,
-        currency,
         userId,
+        currency: data.SymbolProfile.connectOrCreate.create.currency,
         date: data.date as Date
       });
     }
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
 
     return order;
   }
@@ -180,61 +217,141 @@ export class OrderService {
       where
     });
 
+    const [symbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesByIds([
+        order.symbolProfileId
+      ]);
+
     if (
-      order.type === 'FEE' ||
-      order.type === 'INTEREST' ||
-      order.type === 'ITEM' ||
-      order.type === 'LIABILITY'
+      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
+      symbolProfile.activitiesCount === 0
     ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
+
     return order;
   }
 
-  public async deleteOrders(where: Prisma.OrderWhereInput): Promise<number> {
-    const { count } = await this.prismaService.order.deleteMany({
-      where
+  public async deleteOrders({
+    filters,
+    userId
+  }: {
+    filters?: Filter[];
+    userId: string;
+  }): Promise<number> {
+    const { activities } = await this.getOrders({
+      filters,
+      userId,
+      includeDrafts: true,
+      userCurrency: undefined,
+      withExcludedAccounts: true
     });
+
+    const { count } = await this.prismaService.order.deleteMany({
+      where: {
+        id: {
+          in: activities.map(({ id }) => {
+            return id;
+          })
+        }
+      }
+    });
+
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByIds(
+        activities.map(({ symbolProfileId }) => {
+          return symbolProfileId;
+        })
+      );
+
+    for (const { activitiesCount, id } of symbolProfiles) {
+      if (activitiesCount === 0) {
+        await this.symbolProfileService.deleteById(id);
+      }
+    }
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({ userId })
+    );
 
     return count;
   }
 
+  public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
+    return this.prismaService.order.findFirst({
+      orderBy: {
+        date: 'desc'
+      },
+      where: {
+        SymbolProfile: { dataSource, symbol }
+      }
+    });
+  }
+
   public async getOrders({
+    endDate,
     filters,
     includeDrafts = false,
     skip,
     sortColumn,
     sortDirection,
+    startDate,
     take = Number.MAX_SAFE_INTEGER,
     types,
     userCurrency,
     userId,
     withExcludedAccounts = false
   }: {
+    endDate?: Date;
     filters?: Filter[];
     includeDrafts?: boolean;
     skip?: number;
     sortColumn?: string;
     sortDirection?: Prisma.SortOrder;
+    startDate?: Date;
     take?: number;
-    types?: TypeOfOrder[];
+    types?: ActivityType[];
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' }
+      { date: 'asc' },
+      { id: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
+
+    if (endDate || startDate) {
+      where.AND = [];
+
+      if (endDate) {
+        where.AND.push({ date: { lte: endDate } });
+      }
+
+      if (startDate) {
+        where.AND.push({ date: { gt: startDate } });
+      }
+    }
 
     const {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
       TAG: filtersByTag
-    } = groupBy(filters, (filter) => {
-      return filter.type;
+    } = groupBy(filters, ({ type }) => {
+      return type;
     });
+
+    const searchQuery = filters?.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
 
     if (filtersByAccount?.length > 0) {
       where.accountId = {
@@ -277,6 +394,30 @@ export class OrderService {
       };
     }
 
+    if (searchQuery) {
+      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
+        { id: { mode: 'insensitive', startsWith: searchQuery } },
+        { isin: { mode: 'insensitive', startsWith: searchQuery } },
+        { name: { mode: 'insensitive', startsWith: searchQuery } },
+        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+      ];
+
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              OR: searchQueryWhereInput
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          OR: searchQueryWhereInput
+        };
+      }
+    }
+
     if (filtersByTag?.length > 0) {
       where.tags = {
         some: {
@@ -288,17 +429,18 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
     }
 
     if (types) {
-      where.OR = types.map((type) => {
-        return {
-          type: {
-            equals: type
-          }
-        };
-      });
+      where.type = { in: types };
+    }
+
+    if (withExcludedAccounts === false) {
+      where.OR = [
+        { Account: null },
+        { Account: { NOT: { isExcluded: true } } }
+      ];
     }
 
     const [orders, count] = await Promise.all([
@@ -322,34 +464,96 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
-    const activities = orders
-      .filter((order) => {
-        return (
-          withExcludedAccounts ||
-          !order.Account ||
-          order.Account?.isExcluded === false
-        );
-      })
-      .map((order) => {
+    const assetProfileIdentifiers = uniqBy(
+      orders.map(({ SymbolProfile }) => {
+        return {
+          dataSource: SymbolProfile.dataSource,
+          symbol: SymbolProfile.symbol
+        };
+      }),
+      ({ dataSource, symbol }) => {
+        return getAssetProfileIdentifier({
+          dataSource,
+          symbol
+        });
+      }
+    );
+
+    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
+      assetProfileIdentifiers
+    );
+
+    const activities = await Promise.all(
+      orders.map(async (order) => {
+        const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
+          return (
+            dataSource === order.SymbolProfile.dataSource &&
+            symbol === order.SymbolProfile.symbol
+          );
+        });
+
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
         return {
           ...order,
           value,
-          feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            order.fee,
-            order.SymbolProfile.currency,
-            userCurrency
-          ),
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            value,
-            order.SymbolProfile.currency,
-            userCurrency
-          )
+          feeInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              order.fee,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            ),
+          SymbolProfile: assetProfile,
+          valueInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              value,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            )
         };
-      });
+      })
+    );
 
     return { activities, count };
+  }
+
+  public async getOrdersForPortfolioCalculator({
+    filters,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }) {
+    return this.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts: false // TODO
+    });
+  }
+
+  public async getStatisticsByCurrency(
+    currency: EnhancedSymbolProfile['currency']
+  ): Promise<{
+    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+  }> {
+    const { _count, _min } = await this.prismaService.order.aggregate({
+      _count: true,
+      _min: {
+        date: true
+      },
+      where: { SymbolProfile: { currency } }
+    });
+
+    return {
+      activitiesCount: _count as number,
+      dateOfFirstActivity: _min.date
+    };
   }
 
   public async order(
@@ -371,13 +575,10 @@ export class OrderService {
       dataSource?: DataSource;
       symbol?: string;
       tags?: Tag[];
+      type?: ActivityType;
     };
     where: Prisma.OrderWhereUniqueInput;
   }): Promise<Order> {
-    if (data.Account.connect.id_userId.id === null) {
-      delete data.Account;
-    }
-
     if (!data.comment) {
       data.comment = null;
     }
@@ -386,13 +587,12 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (
-      data.type === 'FEE' ||
-      data.type === 'INTEREST' ||
-      data.type === 'ITEM' ||
-      data.type === 'LIABILITY'
-    ) {
+    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
+
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
     } else {
       delete data.SymbolProfile.update;
 
@@ -400,19 +600,22 @@ export class OrderService {
 
       if (!isDraft) {
         // Gather symbol data of order in the background, if not draft
-        this.dataGatheringService.gatherSymbols([
-          {
-            dataSource: data.SymbolProfile.connect.dataSource_symbol.dataSource,
-            date: <Date>data.date,
-            symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
-          }
-        ]);
+        this.dataGatheringService.gatherSymbols({
+          dataGatheringItems: [
+            {
+              dataSource:
+                data.SymbolProfile.connect.dataSource_symbol.dataSource,
+              date: <Date>data.date,
+              symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
+            }
+          ],
+          priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+        });
       }
     }
 
     delete data.assetClass;
     delete data.assetSubClass;
-    delete data.currency;
     delete data.dataSource;
     delete data.symbol;
     delete data.tags;
@@ -423,7 +626,7 @@ export class OrderService {
       where
     });
 
-    return this.prismaService.order.update({
+    const order = await this.prismaService.order.update({
       data: {
         ...data,
         isDraft,
@@ -435,6 +638,15 @@ export class OrderService {
       },
       where
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId: order.userId
+      })
+    );
+
+    return order;
   }
 
   private async orders(params: {

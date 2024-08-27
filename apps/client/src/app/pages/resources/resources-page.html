@@ -2,6 +2,23 @@
   <div class="row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Resources</h1>
+      <h2 class="h4 mb-3">Ghostfolio</h2>
+      <div class="mb-5">
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Frequently Asked Questions (FAQ)</h3>
+            <div class="mb-1">
+              Find quick answers to commonly asked questions about Ghostfolio in
+              our Frequently Asked Questions (FAQ) section.
+            </div>
+            <div>
+              <a [routerLink]="routerLinkFaq"
+                >Frequently Asked Questions (FAQ) →</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
       <h2 class="h4 mb-3" i18n>Guides</h2>
       <div class="mb-5">
         <div class="mb-4 media">
@@ -40,6 +57,22 @@
       <div class="mb-5">
         <div class="mb-4 media">
           <div class="media-body">
+            <h3 class="h5 mt-0">Crypto Coins Heatmap</h3>
+            <div class="mb-1">
+              With the <i>Crypto Coins Heatmap</i> you can track the daily
+              market movements of cryptocurrencies as a visual snapshot.
+            </div>
+            <div>
+              <a
+                href="https://www.tradingview.com/heatmap/crypto"
+                target="_blank"
+                >Crypto Coins Heatmap →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
             <h3 class="h5 mt-0">Fear & Greed Index</h3>
             <div class="mb-1">
               The fear and greed index was developed by <i>CNNMoney</i> to
@@ -56,10 +89,10 @@
           </div>
         </div>
         <div class="media">
-          <div class="media-body">
+          <div class="mb-4 media">
             <h3 class="h5 mt-0">Inflation Chart</h3>
             <div class="mb-1">
-              Inflation Chart helps you find the intrinsic value of stock
+              <i>Inflation Chart</i> helps you find the intrinsic value of stock
               markets, stock prices, goods and services by adjusting them to the
               amount of the money supply (M0, M1, M2) or price of other goods
               (food or oil).
@@ -67,6 +100,22 @@
             <div>
               <a href="https://inflationchart.com" target="_blank"
                 >Inflation Chart →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Stock Heatmap</h3>
+            <div class="mb-1">
+              With the <i>Stock Heatmap</i> you can track the daily market
+              movements of stocks as a visual snapshot.
+            </div>
+            <div>
+              <a
+                href="https://www.tradingview.com/heatmap/stock"
+                target="_blank"
+                >Stock Heatmap →</a
               >
             </div>
           </div>
@@ -171,21 +220,21 @@
           </div>
         </div>
         @if (hasPermissionForSubscription) {
-        <div class="mb-4 media">
-          <div class="media-body">
-            <h3 class="h5 mt-0">Personal Finance Tools</h3>
-            <div class="mb-1">
-              Personal finance tools are software applications that help
-              individuals manage their money, track expenses, set budgets,
-              monitor investments, and make informed financial decisions.
-            </div>
-            <div>
-              <a [routerLink]="routerLinkResourcesPersonalFinanceTools"
-                >Personal Finance Tools →</a
-              >
+          <div class="mb-4 media">
+            <div class="media-body">
+              <h3 class="h5 mt-0">Personal Finance Tools</h3>
+              <div class="mb-1">
+                Personal finance tools are software applications that help
+                individuals manage their money, track expenses, set budgets,
+                monitor investments, and make informed financial decisions.
+              </div>
+              <div>
+                <a [routerLink]="routerLinkResourcesPersonalFinanceTools"
+                  >Personal Finance Tools →</a
+                >
+              </div>
             </div>
           </div>
-        </div>
         }
         <div class="mb-4 media">
           <div class="media-body">

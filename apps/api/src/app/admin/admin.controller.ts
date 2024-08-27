@@ -1,19 +1,18 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request.interceptor';
+import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import {
+  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
+  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
-import {
-  getAssetProfileIdentifier,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -82,10 +81,11 @@ export class AdminController {
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
-    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
-      uniqueAssets.map(({ dataSource, symbol }) => {
+      assetProfileIdentifiers.map(({ dataSource, symbol }) => {
         return {
           data: {
             dataSource,
@@ -94,7 +94,8 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: getAssetProfileIdentifier({ dataSource, symbol })
+            jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+            priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
         };
       })
@@ -107,10 +108,11 @@ export class AdminController {
   @Post('gather/profile-data')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
-    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
-      uniqueAssets.map(({ dataSource, symbol }) => {
+      assetProfileIdentifiers.map(({ dataSource, symbol }) => {
         return {
           data: {
             dataSource,
@@ -119,7 +121,8 @@ export class AdminController {
           name: GATHER_ASSET_PROFILE_PROCESS,
           opts: {
             ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-            jobId: getAssetProfileIdentifier({ dataSource, symbol })
+            jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+            priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
         };
       })
@@ -141,7 +144,8 @@ export class AdminController {
       name: GATHER_ASSET_PROFILE_PROCESS,
       opts: {
         ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
-        jobId: getAssetProfileIdentifier({ dataSource, symbol })
+        jobId: getAssetProfileIdentifier({ dataSource, symbol }),
+        priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       }
     });
   }
@@ -339,6 +343,6 @@ export class AdminController {
     @Param('key') key: string,
     @Body() data: PropertyDto
   ) {
-    return await this.adminService.putSetting(key, data.value);
+    return this.adminService.putSetting(key, data.value);
   }
 }

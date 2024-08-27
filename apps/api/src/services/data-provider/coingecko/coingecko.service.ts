@@ -52,15 +52,17 @@ export class CoinGeckoService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {
-      assetClass: AssetClass.CASH,
+      symbol,
+      assetClass: AssetClass.LIQUIDITY,
       assetSubClass: AssetSubClass.CRYPTOCURRENCY,
       currency: DEFAULT_CURRENCY,
-      dataSource: this.getName(),
-      symbol: aSymbol
+      dataSource: this.getName()
     };
 
     try {
@@ -70,7 +72,7 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.apiUrl}/coins/${aSymbol}`, {
+      const { name } = await got(`${this.apiUrl}/coins/${symbol}`, {
         headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
@@ -81,7 +83,7 @@ export class CoinGeckoService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation to get the asset profile for ${aSymbol} was aborted because the request to the data provider took more than ${this.configurationService.get(
+        message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${this.configurationService.get(
           'REQUEST_TIMEOUT'
         )}ms`;
       }
@@ -241,7 +243,7 @@ export class CoinGeckoService implements DataProviderInterface {
         return {
           name,
           symbol,
-          assetClass: AssetClass.CASH,
+          assetClass: AssetClass.LIQUIDITY,
           assetSubClass: AssetSubClass.CRYPTOCURRENCY,
           currency: DEFAULT_CURRENCY,
           dataProviderInfo: this.getDataProviderInfo(),

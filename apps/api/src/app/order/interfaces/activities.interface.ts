@@ -1,13 +1,19 @@
-import { OrderWithAccount } from '@ghostfolio/common/types';
+import { EnhancedSymbolProfile } from '@ghostfolio/common/interfaces';
+import { AccountWithPlatform } from '@ghostfolio/common/types';
+
+import { Order, Tag } from '@prisma/client';
 
 export interface Activities {
   activities: Activity[];
   count: number;
 }
 
-export interface Activity extends OrderWithAccount {
+export interface Activity extends Order {
+  Account?: AccountWithPlatform;
   error?: ActivityError;
   feeInBaseCurrency: number;
+  SymbolProfile?: EnhancedSymbolProfile;
+  tags?: Tag[];
   updateAccountBalance?: boolean;
   value: number;
   valueInBaseCurrency: number;

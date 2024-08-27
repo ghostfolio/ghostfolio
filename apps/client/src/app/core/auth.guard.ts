@@ -1,4 +1,3 @@
-import { paths } from '@ghostfolio/client/app-routing.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -11,6 +10,8 @@ import {
 } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { paths } from './paths';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
@@ -54,9 +55,10 @@ export class AuthGuard {
               this.router.navigate(['/' + $localize`register`]);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) =>
-                state.url.startsWith(publicPageRoute)
-              )?.length > 0
+              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) => {
+                const [, url] = state.url.split('/');
+                return `/${url}` === publicPageRoute;
+              })?.length > 0
             ) {
               resolve(true);
               return EMPTY;

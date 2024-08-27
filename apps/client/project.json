@@ -13,13 +13,13 @@
     "build": {
       "executor": "@nx/angular:webpack-browser",
       "options": {
+        "deleteOutputPath": false,
         "localize": true,
         "outputPath": "dist/apps/client",
         "index": "apps/client/src/index.html",
         "main": "apps/client/src/main.ts",
         "polyfills": "apps/client/src/polyfills.ts",
         "tsConfig": "apps/client/tsconfig.app.json",
-        "assets": [],
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
@@ -36,6 +36,10 @@
         "ngswConfigPath": "apps/client/ngsw-config.json"
       },
       "configurations": {
+        "development-ca": {
+          "baseHref": "/ca/",
+          "localize": ["ca"]
+        },
         "development-de": {
           "baseHref": "/de/",
           "localize": ["de"]
@@ -71,6 +75,10 @@
         "development-tr": {
           "baseHref": "/tr/",
           "localize": ["tr"]
+        },
+        "development-zh": {
+          "baseHref": "/zh/",
+          "localize": ["zh"]
         },
         "production": {
           "fileReplacements": [
@@ -108,13 +116,22 @@
       "options": {
         "commands": [
           {
-            "command": "shx mkdir -p dist/apps/client"
+            "command": "shx rm -rf dist/apps/client"
           },
           {
-            "command": "shx cp -r apps/client/src/assets dist/apps/client"
+            "command": "shx mkdir -p dist/apps/client/.well-known"
           },
           {
-            "command": "shx cp -r apps/client/src/assets/.well-known dist/apps/client"
+            "command": "shx mkdir -p dist/apps/client/assets"
+          },
+          {
+            "command": "shx mkdir -p dist/apps/client/ionicons"
+          },
+          {
+            "command": "shx cp -r apps/client/src/assets/* dist/apps/client/assets"
+          },
+          {
+            "command": "shx cp -r apps/client/src/assets/.well-known/* dist/apps/client/.well-known"
           },
           {
             "command": "shx cp apps/client/src/assets/favicon.ico dist/apps/client"
@@ -129,16 +146,13 @@
             "command": "shx cp apps/client/src/assets/site.webmanifest dist/apps/client"
           },
           {
-            "command": "shx cp -r apps/client/src/locales dist/apps/api/assets"
-          },
-          {
             "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
           },
           {
             "command": "shx cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
           },
           {
-            "command": "shx cp -r node_modules/ionicons/dist/ionicons dist/apps/client/ionicons"
+            "command": "shx cp -r node_modules/ionicons/dist/ionicons/* dist/apps/client/ionicons"
           },
           {
             "command": "shx cp CHANGELOG.md dist/apps/client/assets"
@@ -146,14 +160,18 @@
           {
             "command": "shx cp LICENSE dist/apps/client/assets"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve": {
       "executor": "@nx/angular:dev-server",
       "options": {
+        "buildTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json",
-        "buildTarget": "client:build"
+        "ssl": true,
+        "sslCert": "apps/client/localhost.cert",
+        "sslKey": "apps/client/localhost.pem"
       },
       "configurations": {
         "development-de": {
@@ -183,6 +201,9 @@
         "development-tr": {
           "buildTarget": "client:build:development-tr"
         },
+        "development-zh": {
+          "buildTarget": "client:build:development-zh"
+        },
         "production": {
           "buildTarget": "client:build:production"
         }
@@ -195,6 +216,7 @@
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
+          "messages.ca.xlf",
           "messages.de.xlf",
           "messages.es.xlf",
           "messages.fr.xlf",
@@ -202,7 +224,8 @@
           "messages.nl.xlf",
           "messages.pl.xlf",
           "messages.pt.xlf",
-          "messages.tr.xlf"
+          "messages.tr.xlf",
+          "messages.zh.xlf"
         ]
       }
     },
@@ -222,6 +245,10 @@
   },
   "i18n": {
     "locales": {
+      "ca": {
+        "baseHref": "/ca/",
+        "translation": "apps/client/src/locales/messages.ca.xlf"
+      },
       "de": {
         "baseHref": "/de/",
         "translation": "apps/client/src/locales/messages.de.xlf"
@@ -253,6 +280,10 @@
       "tr": {
         "baseHref": "/tr/",
         "translation": "apps/client/src/locales/messages.tr.xlf"
+      },
+      "zh": {
+        "baseHref": "/zh/",
+        "translation": "apps/client/src/locales/messages.zh.xlf"
       }
     },
     "sourceLocale": "en"

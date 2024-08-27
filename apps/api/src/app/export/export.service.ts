@@ -95,7 +95,10 @@ export class ExportService {
                 : SymbolProfile.symbol
           };
         }
-      )
+      ),
+      user: {
+        settings: { currency: userCurrency }
+      }
     };
   }
 }

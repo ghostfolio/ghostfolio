@@ -1,5 +1,5 @@
-import { paths } from '@ghostfolio/client/app-routing.module';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

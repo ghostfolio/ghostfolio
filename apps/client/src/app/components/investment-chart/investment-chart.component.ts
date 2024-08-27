@@ -6,15 +6,15 @@ import {
 } from '@ghostfolio/common/chart-helper';
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
-  DATE_FORMAT,
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { ColorScheme, DateRange, GroupBy } from '@ghostfolio/common/types';
+import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -38,16 +38,8 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-  addDays,
-  format,
-  isAfter,
-  isValid,
-  min,
-  parseISO,
-  subDays
-} from 'date-fns';
-import { first, last } from 'lodash';
+import { isAfter, isValid, min, subDays } from 'date-fns';
+import { first } from 'lodash';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -65,8 +57,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
   @Input() isLoading = false;
-  @Input() locale: string;
-  @Input() range: DateRange = 'max';
+  @Input() locale = getLocale();
   @Input() savingsRate = 0;
 
   @ViewChild('chartCanvas') chartCanvas;
@@ -110,46 +101,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     this.values = this.historicalDataItems.map((item) =>
       Object.assign({}, item)
     );
-
-    if (!this.groupBy && this.investments?.length > 0) {
-      let date: string;
-
-      if (this.range === 'max') {
-        // Extend chart by 5% of days in market (before)
-        date = format(
-          subDays(
-            parseISO(this.investments[0].date),
-            this.daysInMarket * 0.05 || 90
-          ),
-          DATE_FORMAT
-        );
-        this.investments.unshift({
-          date,
-          investment: 0
-        });
-        this.values.unshift({
-          date,
-          value: 0
-        });
-      }
-
-      // Extend chart by 5% of days in market (after)
-      date = format(
-        addDays(
-          parseDate(last(this.investments).date),
-          this.daysInMarket * 0.05 || 90
-        ),
-        DATE_FORMAT
-      );
-      this.investments.push({
-        date,
-        investment: last(this.investments).investment
-      });
-      this.values.push({
-        date,
-        value: last(this.values).value
-      });
-    }
 
     const chartData: ChartData<'bar' | 'line'> = {
       labels: this.historicalDataItems.map(({ date }) => {
@@ -302,7 +253,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                   display: false
                 },
                 min: scaleXMin,
-                suggestedMax: new Date().toISOString(),
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),

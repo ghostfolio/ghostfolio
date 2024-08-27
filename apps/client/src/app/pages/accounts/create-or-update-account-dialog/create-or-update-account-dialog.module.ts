@@ -1,5 +1,5 @@
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
-import { GfCurrencySelectorModule } from '@ghostfolio/ui/currency-selector/currency-selector.module';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -18,8 +18,8 @@ import { CreateOrUpdateAccountDialog } from './create-or-update-account-dialog.c
   imports: [
     CommonModule,
     FormsModule,
-    GfCurrencySelectorModule,
-    GfSymbolIconModule,
+    GfAssetProfileIconComponent,
+    GfCurrencySelectorComponent,
     MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,

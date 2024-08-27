@@ -4,13 +4,14 @@
   [queryParams]="queryParams"
   [routerLink]="routerLink"
   (click)="onClick()"
-  ><span><b>{{ item?.name }}</b></span>
+  ><span
+    ><b>{{ item?.name }}</b></span
+  >
   <br />
   <small class="text-muted"
-    >{{ item?.symbol | gfSymbol }} · {{ item?.currency }}<ng-container
-      *ngIf="item?.assetSubClassString"
-    >
-      · {{ item?.assetSubClassString }}</ng-container
-    ></small
-  ></a
+    >{{ item?.symbol | gfSymbol }} · {{ item?.currency }}
+    @if (item?.assetSubClassString) {
+      · {{ item.assetSubClassString }}
+    }
+  </small></a
 >

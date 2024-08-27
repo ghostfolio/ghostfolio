@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>
-  <span i18n>Create Account</span
-  ><span *ngIf="data.role === 'ADMIN'" class="badge badge-light ml-2"
-    >{{ data.role }}</span
-  >
+  <span i18n>Create Account</span>
+  @if (data.role === 'ADMIN') {
+    <span class="badge badge-light ml-2">{{ data.role }}</span>
+  }
 </h1>
 <div class="py-3" mat-dialog-content>
   <div>

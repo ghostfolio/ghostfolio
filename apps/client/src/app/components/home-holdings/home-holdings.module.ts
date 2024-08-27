@@ -1,11 +1,12 @@
-import { GfPositionDetailDialogModule } from '@ghostfolio/client/components/position/position-detail-dialog/position-detail-dialog.module';
-import { GfPositionsModule } from '@ghostfolio/client/components/positions/positions.module';
 import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
+import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
+import { GfTreemapChartComponent } from '@ghostfolio/ui/treemap-chart';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
 
 import { HomeHoldingsComponent } from './home-holdings.component';
@@ -14,11 +15,13 @@ import { HomeHoldingsComponent } from './home-holdings.component';
   declarations: [HomeHoldingsComponent],
   imports: [
     CommonModule,
-    GfPositionDetailDialogModule,
-    GfPositionsModule,
+    FormsModule,
+    GfHoldingsTableComponent,
     GfToggleModule,
+    GfTreemapChartComponent,
     MatButtonModule,
-    MatCardModule,
+    MatButtonToggleModule,
+    ReactiveFormsModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

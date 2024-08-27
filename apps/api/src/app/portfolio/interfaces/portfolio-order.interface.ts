@@ -1,15 +1,12 @@
-import { DataSource, Tag, Type as TypeOfOrder } from '@prisma/client';
-import Big from 'big.js';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 
-export interface PortfolioOrder {
-  currency: string;
+export interface PortfolioOrder extends Pick<Activity, 'tags' | 'type'> {
   date: string;
-  dataSource: DataSource;
   fee: Big;
-  name: string;
   quantity: Big;
-  symbol: string;
-  tags?: Tag[];
-  type: TypeOfOrder;
+  SymbolProfile: Pick<
+    Activity['SymbolProfile'],
+    'currency' | 'dataSource' | 'name' | 'symbol'
+  >;
   unitPrice: Big;
 }

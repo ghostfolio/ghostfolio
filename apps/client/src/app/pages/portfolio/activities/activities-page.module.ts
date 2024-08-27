@@ -1,5 +1,5 @@
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -17,7 +17,7 @@ import { GfImportActivitiesDialogModule } from './import-activities-dialog/impor
   imports: [
     ActivitiesPageRoutingModule,
     CommonModule,
-    GfActivitiesTableModule,
+    GfActivitiesTableComponent,
     GfCreateOrUpdateActivityDialogModule,
     GfImportActivitiesDialogModule,
     MatButtonModule,

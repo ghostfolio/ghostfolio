@@ -1,6 +1,17 @@
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
-
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
+import { getLocale } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
+import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
+import { GfValueComponent } from '@ghostfolio/ui/value';
+
+import { CommonModule } from '@angular/common';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
   Input,
@@ -9,26 +20,47 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { AssetClass } from '@prisma/client';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router, RouterModule } from '@angular/router';
+import { AssetSubClass } from '@prisma/client';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommonModule,
+    GfAssetProfileIconComponent,
+    GfHoldingDetailDialogComponent,
+    GfNoTransactionsInfoComponent,
+    GfSymbolModule,
+    GfValueComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holdings-table',
+  standalone: true,
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
+export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
+  @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -37,7 +69,7 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   public dataSource: MatTableDataSource<PortfolioPosition> =
     new MatTableDataSource();
   public displayedColumns = [];
-  public ignoreAssetSubClasses = [AssetClass.CASH];
+  public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
@@ -55,7 +87,12 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     this.displayedColumns.push('allocationInPercentage');
-    this.displayedColumns.push('performance');
+
+    if (this.hasPermissionToShowValues) {
+      this.displayedColumns.push('performance');
+    }
+
+    this.displayedColumns.push('performanceInPercentage');
 
     this.isLoading = true;
 
@@ -68,13 +105,15 @@ export class HoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset): void {
-    this.router.navigate([], {
-      queryParams: { dataSource, symbol, positionDetailDialog: true }
-    });
+  public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
+    if (this.hasPermissionToOpenDetails) {
+      this.router.navigate([], {
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
+      });
+    }
   }
 
-  public onShowAllPositions() {
+  public onShowAllHoldings() {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {

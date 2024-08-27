@@ -37,18 +37,22 @@ export class AlphaVantageService implements DataProviderInterface {
     return !!this.configurationService.get('API_KEY_ALPHA_VANTAGE');
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
     return {
-      dataSource: this.getName(),
-      symbol: aSymbol
+      symbol,
+      dataSource: this.getName()
     };
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: false
+      isPremium: false,
+      name: 'Alpha Vantage',
+      url: 'https://www.alphavantage.co'
     };
   }
 

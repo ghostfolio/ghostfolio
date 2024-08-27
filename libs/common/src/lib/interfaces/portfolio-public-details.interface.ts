@@ -13,7 +13,7 @@ export interface PortfolioPublicDetails {
       | 'dateOfFirstActivity'
       | 'markets'
       | 'name'
-      | 'netPerformancePercent'
+      | 'netPerformancePercentWithCurrencyEffect'
       | 'sectors'
       | 'symbol'
       | 'url'

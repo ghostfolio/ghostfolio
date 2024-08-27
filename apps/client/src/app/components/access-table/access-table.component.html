@@ -1,67 +1,71 @@
-<table class="gf-table w-100" mat-table [dataSource]="dataSource">
-  <ng-container matColumnDef="alias">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      {{ element.alias }}
-    </td>
-  </ng-container>
+<div class="overflow-x-auto">
+  <table class="gf-table w-100" mat-table [dataSource]="dataSource">
+    <ng-container matColumnDef="alias">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Alias</th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        {{ element.alias }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="grantee">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
-    <td *matCellDef="let element" class="px-1" mat-cell>
-      {{ element.grantee }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="grantee">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Grantee</th>
+      <td *matCellDef="let element" class="px-1" mat-cell>
+        {{ element.grantee }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="type">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
-    <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-      <div class="align-items-center d-flex">
-        @if (element.permissions.includes('READ')) {
-          <ion-icon class="mr-1" name="lock-open-outline" />
-          <ng-container i18n>View</ng-container>
-        } @else if (element.permissions.includes('READ_RESTRICTED')) {
-          <ion-icon class="mr-1" name="lock-closed-outline" />
-          <ng-container i18n>Restricted view</ng-container>
+    <ng-container matColumnDef="type">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Permission</th>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        <div class="align-items-center d-flex">
+          @if (element.permissions.includes('READ')) {
+            <ion-icon class="mr-1" name="lock-open-outline" />
+            <ng-container i18n>View</ng-container>
+          } @else if (element.permissions.includes('READ_RESTRICTED')) {
+            <ion-icon class="mr-1" name="lock-closed-outline" />
+            <ng-container i18n>Restricted view</ng-container>
+          }
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="details">
+      <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
+      <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
+        @if (element.type === 'PUBLIC') {
+          <div class="align-items-center d-flex">
+            <ion-icon class="mr-1" name="link-outline" />
+            <a
+              href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
+              target="_blank"
+              >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
+            >
+          </div>
         }
-      </div>
-    </td>
-  </ng-container>
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="details">
-    <th *matHeaderCellDef class="px-1" i18n mat-header-cell>Details</th>
-    <td *matCellDef="let element" class="px-1 text-nowrap" mat-cell>
-      <div *ngIf="element.type === 'PUBLIC'" class="align-items-center d-flex">
-        <ion-icon class="mr-1" name="link-outline" />
-        <a
-          href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
-          target="_blank"
-          >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
+    <ng-container matColumnDef="actions" stickyEnd>
+      <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
+
+      <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+        <button
+          class="mx-1 no-min-width px-2"
+          mat-button
+          [matMenuTriggerFor]="transactionMenu"
+          (click)="$event.stopPropagation()"
         >
-      </div>
-    </td>
-  </ng-container>
-
-  <ng-container matColumnDef="actions" stickyEnd>
-    <th *matHeaderCellDef class="px-1 text-center" mat-header-cell></th>
-
-    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-      <button
-        class="mx-1 no-min-width px-2"
-        mat-button
-        [matMenuTriggerFor]="transactionMenu"
-        (click)="$event.stopPropagation()"
-      >
-        <ion-icon name="ellipsis-horizontal" />
-      </button>
-      <mat-menu #transactionMenu="matMenu" xPosition="before">
-        <button mat-menu-item (click)="onDeleteAccess(element.id)">
-          <ng-container i18n>Revoke</ng-container>
+          <ion-icon name="ellipsis-horizontal" />
         </button>
-      </mat-menu>
-    </td>
-  </ng-container>
+        <mat-menu #transactionMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="onDeleteAccess(element.id)">
+            <ng-container i18n>Revoke</ng-container>
+          </button>
+        </mat-menu>
+      </td>
+    </ng-container>
 
-  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-</table>
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  </table>
+</div>

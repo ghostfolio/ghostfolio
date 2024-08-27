@@ -1,21 +1,11 @@
+import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
 import { ModulePreloadService } from './core/module-preload.service';
-
-export const paths = {
-  about: $localize`about`,
-  faq: $localize`faq`,
-  features: $localize`features`,
-  license: $localize`license`,
-  markets: $localize`markets`,
-  pricing: $localize`pricing`,
-  privacyPolicy: $localize`privacy-policy`,
-  register: $localize`register`,
-  resources: $localize`resources`
-};
 
 const routes: Routes = [
   {
@@ -53,9 +43,12 @@ const routes: Routes = [
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
   },
   {
-    path: 'demo',
-    loadChildren: () =>
-      import('./pages/demo/demo-page.module').then((m) => m.DemoPageModule)
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/demo/demo-page.component').then(
+        (c) => c.GfDemoPageComponent
+      ),
+    path: 'demo'
   },
   {
     path: paths.faq,
@@ -63,11 +56,13 @@ const routes: Routes = [
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
   },
   {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/features/features-page.component').then(
+        (c) => c.GfFeaturesPageComponent
+      ),
     path: paths.features,
-    loadChildren: () =>
-      import('./pages/features/features-page.module').then(
-        (m) => m.FeaturesPageModule
-      )
+    title: $localize`Features`
   },
   {
     path: 'home',
@@ -75,9 +70,13 @@ const routes: Routes = [
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
   {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/i18n/i18n-page.component').then(
+        (c) => c.GfI18nPageComponent
+      ),
     path: 'i18n',
-    loadChildren: () =>
-      import('./pages/i18n/i18n-page.module').then((m) => m.I18nPageModule)
+    title: $localize`Internationalization`
   },
   {
     path: paths.markets,
@@ -134,11 +133,12 @@ const routes: Routes = [
       )
   },
   {
+    loadComponent: () =>
+      import('./pages/webauthn/webauthn-page.component').then(
+        (c) => c.GfWebauthnPageComponent
+      ),
     path: 'webauthn',
-    loadChildren: () =>
-      import('./pages/webauthn/webauthn-page.module').then(
-        (m) => m.WebauthnPageModule
-      )
+    title: $localize`Sign in`
   },
   {
     path: 'zen',

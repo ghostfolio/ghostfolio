@@ -1,3 +1,4 @@
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
@@ -14,6 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class HomePageComponent implements OnDestroy, OnInit {
   public deviceType: string;
+  public hasImpersonationId: boolean;
   public tabs: TabConfiguration[] = [];
   public user: User;
 
@@ -22,6 +24,7 @@ export class HomePageComponent implements OnDestroy, OnInit {
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private deviceService: DeviceDetectorService,
+    private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -59,6 +62,13 @@ export class HomePageComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
   }
 
   public ngOnDestroy() {

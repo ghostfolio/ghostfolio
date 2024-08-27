@@ -1,7 +1,10 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import type {
   ColorScheme,
   DateRange,
-  ViewMode
+  HoldingsViewMode,
+  ViewMode,
+  XRayRulesSettings
 } from '@ghostfolio/common/types';
 
 import {
@@ -13,14 +16,15 @@ import {
   IsOptional,
   IsString
 } from 'class-validator';
+import { eachYearOfInterval, format } from 'date-fns';
 
 export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
   annualInterestRate?: number;
 
+  @IsCurrencyCode()
   @IsOptional()
-  @IsString()
   baseCurrency?: string;
 
   @IsString()
@@ -31,7 +35,20 @@ export class UpdateUserSettingDto {
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd'])
+  @IsIn(<DateRange[]>[
+    '1d',
+    '1y',
+    '5y',
+    'max',
+    'mtd',
+    'wtd',
+    'ytd',
+    ...eachYearOfInterval({ end: new Date(), start: new Date(0) }).map(
+      (date) => {
+        return format(date, 'yyyy');
+      }
+    )
+  ])
   @IsOptional()
   dateRange?: DateRange;
 
@@ -50,6 +67,10 @@ export class UpdateUserSettingDto {
   @IsArray()
   @IsOptional()
   'filters.tags'?: string[];
+
+  @IsIn(<HoldingsViewMode[]>['CHART', 'TABLE'])
+  @IsOptional()
+  holdingsViewMode?: HoldingsViewMode;
 
   @IsBoolean()
   @IsOptional()
@@ -82,4 +103,7 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsOptional()
+  xRayRules?: XRayRulesSettings;
 }

@@ -66,8 +66,9 @@
         <mat-card-content
           >Yes, you can try
           <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> by signing
-          up for Ghostfolio and applying for a trial (see “My Ghostfolio”). It
-          is easy, free and there is no commitment. You can stop using it at any
+          up for Ghostfolio and applying for a trial (see
+          <a [routerLink]="['/account', 'membership']">Membership</a>). It is
+          easy, free and there is no commitment. You can stop using it at any
           time.</mat-card-content
         >
       </mat-card>
@@ -97,23 +98,21 @@
           start a new subscription.</mat-card-content
         >
       </mat-card>
-      <mat-card
-        *ngIf="user?.subscription?.type === 'Premium'"
-        appearance="outlined"
-        class="mb-3"
-      >
-        <mat-card-header>
-          <mat-card-title
-            >I cannot find my broker in the list of platforms. What can I
-            do?</mat-card-title
-          >
-        </mat-card-header>
-        <mat-card-content>
-          Please send an e-mail with the web address of your broker to
-          <a href="mailto:hi@ghostfol.io">hi&#64;ghostfol.io</a> and we are
-          happy to add it.
-        </mat-card-content>
-      </mat-card>
+      @if (user?.subscription?.type === 'Premium') {
+        <mat-card appearance="outlined" class="mb-3">
+          <mat-card-header>
+            <mat-card-title
+              >I cannot find my broker in the list of platforms. What can I
+              do?</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            Please send an e-mail with the web address of your broker to
+            <a href="mailto:hi@ghostfol.io">hi&#64;ghostfol.io</a> and we are
+            happy to add it.
+          </mat-card-content>
+        </mat-card>
+      }
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
           <mat-card-title>Which devices are supported?</mat-card-title>
@@ -130,6 +129,18 @@
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header>
+          <mat-card-title
+            >What is the best approach to managing backups?</mat-card-title
+          >
+        </mat-card-header>
+        <mat-card-content
+          >It is suggested to regularly back up your data via
+          <a [routerLink]="['/account']">My Ghostfolio</a> →
+          <i>Export Data</i>.</mat-card-content
+        >
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header>
           <mat-card-title>Got any other questions?</mat-card-title>
         </mat-card-header>
         <mat-card-content
@@ -140,15 +151,16 @@
             >Slack </a
           >community, post to
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >, send an e-mail to
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            , send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or start a discussion at
           <a
             href="https://github.com/ghostfolio/ghostfolio"

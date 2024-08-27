@@ -1,3 +1,4 @@
+import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Access, User } from '@ghostfolio/common/interfaces';
@@ -20,6 +21,7 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'has-fab' },
   selector: 'gf-user-account-access',
   styleUrls: ['./user-account-access.scss'],
   templateUrl: './user-account-access.html'
@@ -100,21 +102,20 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private openCreateAccessDialog(): void {
+  private openCreateAccessDialog() {
     const dialogRef = this.dialog.open(CreateOrUpdateAccessDialog, {
       data: {
         access: {
           alias: '',
           permissions: ['READ_RESTRICTED'],
           type: 'PRIVATE'
-        },
-        user: this.user
+        }
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
-    dialogRef.afterClosed().subscribe((access) => {
+    dialogRef.afterClosed().subscribe((access: CreateAccessDto | null) => {
       if (access) {
         this.update();
       }

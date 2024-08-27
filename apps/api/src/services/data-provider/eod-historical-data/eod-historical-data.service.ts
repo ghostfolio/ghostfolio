@@ -11,6 +11,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
@@ -35,7 +36,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private readonly URL = 'https://eodhistoricaldata.com/api';
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {
     this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
@@ -44,25 +46,29 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return true;
   }
 
-  public async getAssetProfile(
-    aSymbol: string
-  ): Promise<Partial<SymbolProfile>> {
-    const [searchResult] = await this.getSearchResult(aSymbol);
+  public async getAssetProfile({
+    symbol
+  }: {
+    symbol: string;
+  }): Promise<Partial<SymbolProfile>> {
+    const [searchResult] = await this.getSearchResult(symbol);
 
     return {
+      symbol,
       assetClass: searchResult?.assetClass,
       assetSubClass: searchResult?.assetSubClass,
       currency: this.convertCurrency(searchResult?.currency),
       dataSource: this.getName(),
       isin: searchResult?.isin,
-      name: searchResult?.name,
-      symbol: aSymbol
+      name: searchResult?.name
     };
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: true
+      isPremium: true,
+      name: 'EOD Historical Data',
+      url: 'https://eodhd.com'
     };
   }
 
@@ -228,51 +234,56 @@ export class EodHistoricalDataService implements DataProviderInterface {
           ? [realTimeResponse]
           : realTimeResponse;
 
-      const searchResponse = await Promise.all(
-        eodHistoricalDataSymbols
-          .filter((symbol) => {
-            return !symbol.endsWith('.FOREX');
-          })
-          .map((symbol) => {
-            return this.search({ query: symbol });
-          })
+      const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+        symbols.map((symbol) => {
+          return {
+            symbol,
+            dataSource: this.getName()
+          };
+        })
       );
 
-      const lookupItems = searchResponse.flat().map(({ items }) => {
-        return items[0];
-      });
+      for (const { close, code, timestamp } of quotes) {
+        let currency: string;
 
-      response = quotes.reduce(
-        (
-          result: { [symbol: string]: IDataProviderResponse },
-          { close, code, timestamp }
-        ) => {
-          const currency = lookupItems.find((lookupItem) => {
-            return lookupItem.symbol === code;
+        if (this.isForex(code)) {
+          currency = this.convertFromEodSymbol(code)?.replace(
+            DEFAULT_CURRENCY,
+            ''
+          );
+        }
+
+        if (!currency) {
+          currency = symbolProfiles.find(({ symbol }) => {
+            return symbol === code;
           })?.currency;
+        }
 
-          if (isNumber(close)) {
-            result[this.convertFromEodSymbol(code)] = {
-              currency:
-                currency ??
-                this.convertFromEodSymbol(code)?.replace(DEFAULT_CURRENCY, ''),
-              dataSource: this.getName(),
-              marketPrice: close,
-              marketState: isToday(new Date(timestamp * 1000))
+        if (!currency) {
+          const { items } = await this.search({ query: code });
+
+          if (items.length === 1) {
+            currency = items[0].currency;
+          }
+        }
+
+        if (isNumber(close)) {
+          response[this.convertFromEodSymbol(code)] = {
+            currency,
+            dataSource: this.getName(),
+            marketPrice: close,
+            marketState:
+              this.isForex(code) || isToday(new Date(timestamp * 1000))
                 ? 'open'
                 : 'closed'
-            };
-          } else {
-            Logger.error(
-              `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
-              'EodHistoricalDataService'
-            );
-          }
-
-          return result;
-        },
-        {}
-      );
+          };
+        } else {
+          Logger.error(
+            `Could not get quote for ${this.convertFromEodSymbol(code)} (${this.getName()})`,
+            'EodHistoricalDataService'
+          );
+        }
+      }
 
       return response;
     } catch (error) {
@@ -303,7 +314,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       items: searchResult
         .filter(({ currency, symbol }) => {
           // Remove 'NA' currency and exchange rates
-          return currency?.length === 3 && !symbol.endsWith('.FOREX');
+          return currency?.length === 3 && !this.isForex(symbol);
         })
         .map(
           ({
@@ -341,7 +352,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
   private convertFromEodSymbol(aEodSymbol: string) {
     let symbol = aEodSymbol;
 
-    if (symbol.endsWith('.FOREX')) {
+    if (this.isForex(symbol)) {
       symbol = symbol.replace('GBX', 'GBp');
       symbol = symbol.replace('.FOREX', '');
     }
@@ -443,6 +454,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return searchResult;
   }
 
+  private isForex(aCode: string) {
+    return aCode?.endsWith('.FOREX') || false;
+  }
+
   private parseAssetClass({
     Exchange,
     Type
@@ -462,7 +477,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         assetSubClass = AssetSubClass.STOCK;
         break;
       case 'currency':
-        assetClass = AssetClass.CASH;
+        assetClass = AssetClass.LIQUIDITY;
 
         if (Exchange?.toLowerCase() === 'cc') {
           assetSubClass = AssetSubClass.CRYPTOCURRENCY;

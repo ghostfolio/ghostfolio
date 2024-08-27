@@ -2,7 +2,7 @@ import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-foote
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { GfFileDropModule } from '@ghostfolio/client/directives/file-drop/file-drop.module';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -22,7 +22,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
   imports: [
     CommonModule,
     FormsModule,
-    GfActivitiesTableModule,
+    GfActivitiesTableComponent,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfFileDropModule,

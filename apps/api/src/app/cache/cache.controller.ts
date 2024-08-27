@@ -14,6 +14,6 @@ export class CacheController {
   @Post('flush')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async flushCache(): Promise<void> {
-    return this.redisCacheService.reset();
+    await this.redisCacheService.reset();
   }
 }

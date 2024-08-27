@@ -1,1 +1,1 @@
-export * from './symbol-autocomplete.module';
+export * from './symbol-autocomplete.component';

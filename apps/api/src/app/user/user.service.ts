@@ -1,11 +1,15 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
+  DEFAULT_LANGUAGE_CODE,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SYSTEM_MESSAGE,
   locale
@@ -23,6 +27,7 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
@@ -31,8 +36,12 @@ const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
+  private i18nService = new I18nService();
+
   public constructor(
     private readonly configurationService: ConfigurationService,
+    private readonly eventEmitter: EventEmitter2,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -47,13 +56,22 @@ export class UserService {
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
-    const access = await this.prismaService.access.findMany({
-      include: {
-        User: true
-      },
-      orderBy: { alias: 'asc' },
-      where: { GranteeUser: { id } }
-    });
+    let [access, firstActivity, tags] = await Promise.all([
+      this.prismaService.access.findMany({
+        include: {
+          User: true
+        },
+        orderBy: { alias: 'asc' },
+        where: { GranteeUser: { id } }
+      }),
+      this.prismaService.order.findFirst({
+        orderBy: {
+          date: 'asc'
+        },
+        where: { userId: id }
+      }),
+      this.tagService.getByUser(id)
+    ]);
 
     let systemMessage: SystemMessage;
 
@@ -64,8 +82,6 @@ export class UserService {
     if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
     }
-
-    let tags = await this.tagService.getByUser(id);
 
     if (
       this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
@@ -87,6 +103,7 @@ export class UserService {
         };
       }),
       accounts: Account,
+      dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(<UserSettings>Settings.settings),
         locale: (<UserSettings>Settings.settings)?.locale ?? aLocale
@@ -104,28 +121,6 @@ export class UserService {
     });
 
     return usersWithAdminRole.length > 0;
-  }
-
-  public hasReadRestrictedAccessPermission({
-    impersonationId,
-    user
-  }: {
-    impersonationId: string;
-    user: UserWithSettings;
-  }) {
-    if (!impersonationId) {
-      return false;
-    }
-
-    const access = user.Access?.find(({ id }) => {
-      return id === impersonationId;
-    });
-
-    return access?.permissions?.includes('READ_RESTRICTED') ?? true;
-  }
-
-  public isRestrictedView(aUser: UserWithSettings) {
-    return aUser.Settings.settings.isRestrictedView ?? false;
   }
 
   public async user(
@@ -195,11 +190,23 @@ export class UserService {
     (user.Settings.settings as UserSettings).dateRange =
       (user.Settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : (user.Settings.settings as UserSettings)?.dateRange ?? 'max';
+        : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
 
     // Set default value for view mode
     if (!(user.Settings.settings as UserSettings).viewMode) {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
+    }
+
+    // Set default values for X-ray rules
+    if (!(user.Settings.settings as UserSettings).xRayRules) {
+      (user.Settings.settings as UserSettings).xRayRules = {
+        AccountClusterRiskCurrentInvestment: { isActive: true },
+        AccountClusterRiskSingleAccount: { isActive: true },
+        CurrencyClusterRiskBaseCurrencyCurrentInvestment: { isActive: true },
+        CurrencyClusterRiskCurrentInvestment: { isActive: true },
+        EmergencyFundSetup: { isActive: true },
+        FeeRatioInitialInvestment: { isActive: true }
+      };
     }
 
     let currentPermissions = getPermissions(user.role);
@@ -242,15 +249,22 @@ export class UserService {
 
         currentPermissions = without(
           currentPermissions,
+          permissions.accessHoldingsChart,
           permissions.createAccess
         );
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;
-      }
 
-      if (user.subscription?.type === 'Premium') {
+        // Reset holdings view mode
+        user.Settings.settings.holdingsViewMode = undefined;
+      } else if (user.subscription?.type === 'Premium') {
         currentPermissions.push(permissions.reportDataGlitch);
+
+        currentPermissions = without(
+          currentPermissions,
+          permissions.deleteOwnUser
+        );
       }
     }
 
@@ -325,8 +339,10 @@ export class UserService {
         Account: {
           create: {
             currency: DEFAULT_CURRENCY,
-            isDefault: true,
-            name: 'Default Account'
+            name: this.i18nService.getTranslation({
+              id: 'myAccount',
+              languageCode: DEFAULT_LANGUAGE_CODE // TODO
+            })
           }
         },
         Settings: {
@@ -400,8 +416,8 @@ export class UserService {
     } catch {}
 
     try {
-      await this.prismaService.order.deleteMany({
-        where: { userId: where.id }
+      await this.orderService.deleteOrders({
+        userId: where.id
       });
     } catch {}
 
@@ -417,17 +433,17 @@ export class UserService {
   }
 
   public async updateUserSetting({
+    emitPortfolioChangedEvent,
     userId,
     userSettings
   }: {
+    emitPortfolioChangedEvent: boolean;
     userId: string;
     userSettings: UserSettings;
   }) {
-    const settings = userSettings as unknown as Prisma.JsonObject;
-
-    await this.prismaService.settings.upsert({
+    const { settings } = await this.prismaService.settings.upsert({
       create: {
-        settings,
+        settings: userSettings as unknown as Prisma.JsonObject,
         User: {
           connect: {
             id: userId
@@ -435,25 +451,35 @@ export class UserService {
         }
       },
       update: {
-        settings
+        settings: userSettings as unknown as Prisma.JsonObject
       },
       where: {
-        userId: userId
+        userId
       }
     });
 
-    return;
+    if (emitPortfolioChangedEvent) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({
+          userId
+        })
+      );
+    }
+
+    return settings;
   }
 
   private getRandomString(length: number) {
+    const bytes = crypto.randomBytes(length);
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const result = [];
 
     for (let i = 0; i < length; i++) {
-      result.push(
-        characters.charAt(Math.floor(Math.random() * characters.length))
-      );
+      const randomByte = bytes[i];
+      result.push(characters[randomByte % characters.length]);
     }
+
     return result.join('');
   }
 }

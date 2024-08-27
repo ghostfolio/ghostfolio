@@ -1,9 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { createHash } from 'crypto';
 
 import type { RedisCache } from './interfaces/redis-cache.interface';
 
@@ -21,23 +22,67 @@ export class RedisCacheService {
   }
 
   public async get(key: string): Promise<string> {
-    return await this.cache.get(key);
+    return this.cache.get(key);
   }
 
-  public getQuoteKey({ dataSource, symbol }: UniqueAsset) {
+  public async getKeys(aPrefix?: string): Promise<string[]> {
+    let prefix = aPrefix;
+
+    if (prefix) {
+      prefix = `${prefix}*`;
+    }
+
+    return this.cache.store.keys(prefix);
+  }
+
+  public getPortfolioSnapshotKey({
+    filters,
+    userId
+  }: {
+    filters?: Filter[];
+    userId: string;
+  }) {
+    let portfolioSnapshotKey = `portfolio-snapshot-${userId}`;
+
+    if (filters?.length > 0) {
+      const filtersHash = createHash('sha256')
+        .update(JSON.stringify(filters))
+        .digest('hex');
+
+      portfolioSnapshotKey = `${portfolioSnapshotKey}-${filtersHash}`;
+    }
+
+    return portfolioSnapshotKey;
+  }
+
+  public getQuoteKey({ dataSource, symbol }: AssetProfileIdentifier) {
     return `quote-${getAssetProfileIdentifier({ dataSource, symbol })}`;
   }
 
   public async remove(key: string) {
-    await this.cache.del(key);
+    return this.cache.del(key);
+  }
+
+  public async removePortfolioSnapshotsByUserId({
+    userId
+  }: {
+    userId: string;
+  }) {
+    const keys = await this.getKeys(
+      `${this.getPortfolioSnapshotKey({ userId })}`
+    );
+
+    for (const key of keys) {
+      await this.remove(key);
+    }
   }
 
   public async reset() {
-    await this.cache.reset();
+    return this.cache.reset();
   }
 
   public async set(key: string, value: string, ttlInSeconds?: number) {
-    await this.cache.set(
+    return this.cache.set(
       key,
       value,
       ttlInSeconds ?? this.configurationService.get('CACHE_TTL')

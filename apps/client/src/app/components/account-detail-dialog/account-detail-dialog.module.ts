@@ -1,10 +1,10 @@
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
-import { GfAccountBalancesModule } from '@ghostfolio/ui/account-balances/account-balances.module';
-import { GfActivitiesTableModule } from '@ghostfolio/ui/activities-table/activities-table.module';
-import { GfHoldingsTableModule } from '@ghostfolio/ui/holdings-table/holdings-table.module';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfAccountBalancesComponent } from '@ghostfolio/ui/account-balances';
+import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
+import { GfHoldingsTableComponent } from '@ghostfolio/ui/holdings-table';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -19,13 +19,13 @@ import { AccountDetailDialog } from './account-detail-dialog.component';
   declarations: [AccountDetailDialog],
   imports: [
     CommonModule,
-    GfAccountBalancesModule,
-    GfActivitiesTableModule,
+    GfAccountBalancesComponent,
+    GfActivitiesTableComponent,
     GfDialogFooterModule,
     GfDialogHeaderModule,
-    GfHoldingsTableModule,
+    GfHoldingsTableComponent,
     GfInvestmentChartModule,
-    GfValueModule,
+    GfValueComponent,
     MatButtonModule,
     MatDialogModule,
     MatTabsModule,

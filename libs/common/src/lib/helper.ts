@@ -1,7 +1,7 @@
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
-import { DataSource, MarketData } from '@prisma/client';
-import Big from 'big.js';
+import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
+import { Big } from 'big.js';
 import {
   getDate,
   getMonth,
@@ -11,10 +11,15 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { de, es, fr, it, nl, pl, pt, tr } from 'date-fns/locale';
+import { ca, de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
 
-import { ghostfolioScraperApiSymbolPrefix, locale } from './config';
-import { Benchmark, UniqueAsset } from './interfaces';
+import {
+  DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES,
+  ghostfolioScraperApiSymbolPrefix,
+  locale
+} from './config';
+import { AssetProfileIdentifier, Benchmark } from './interfaces';
 import { BenchmarkTrend, ColorScheme } from './types';
 
 export const DATE_FORMAT = 'yyyy-MM-dd';
@@ -138,7 +143,14 @@ export function extractNumberFromString({
   }
 }
 
-export function getAssetProfileIdentifier({ dataSource, symbol }: UniqueAsset) {
+export function getAllActivityTypes(): ActivityType[] {
+  return Object.values(ActivityType);
+}
+
+export function getAssetProfileIdentifier({
+  dataSource,
+  symbol
+}: AssetProfileIdentifier) {
   return `${dataSource}-${symbol}`;
 }
 
@@ -157,8 +169,14 @@ export function getCssVariable(aCssVariable: string) {
   );
 }
 
+export function getCurrencyFromSymbol(aSymbol = '') {
+  return aSymbol.replace(DEFAULT_CURRENCY, '');
+}
+
 export function getDateFnsLocale(aLanguageCode: string) {
-  if (aLanguageCode === 'de') {
+  if (aLanguageCode === 'ca') {
+    return ca;
+  } else if (aLanguageCode === 'de') {
     return de;
   } else if (aLanguageCode === 'es') {
     return es;
@@ -174,6 +192,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return pt;
   } else if (aLanguageCode === 'tr') {
     return tr;
+  } else if (aLanguageCode === 'zh') {
+    return zhCN;
   }
 
   return undefined;
@@ -217,9 +237,7 @@ export function getEmojiFlag(aCountryCode: string) {
 }
 
 export function getLocale() {
-  return navigator.languages?.length
-    ? navigator.languages[0]
-    : navigator.language ?? locale;
+  return navigator.language ?? locale;
 }
 
 export function getNumberFormatDecimal(aLocale?: string) {
@@ -230,7 +248,7 @@ export function getNumberFormatDecimal(aLocale?: string) {
   }).value;
 }
 
-export function getNumberFormatGroup(aLocale?: string) {
+export function getNumberFormatGroup(aLocale = getLocale()) {
   const formatObject = new Intl.NumberFormat(aLocale).formatToParts(9999.99);
 
   return formatObject.find((object) => {
@@ -318,11 +336,25 @@ export function interpolate(template: string, context: any) {
   });
 }
 
-export function isCurrency(aSymbol = '') {
-  return currencies[aSymbol];
+export function isCurrency(aCurrency = '') {
+  return currencies[aCurrency] || isDerivedCurrency(aCurrency);
 }
 
-export function parseDate(date: string): Date | null {
+export function isDerivedCurrency(aCurrency: string) {
+  if (aCurrency === 'USX') {
+    return true;
+  }
+
+  return DERIVED_CURRENCIES.find(({ currency }) => {
+    return currency === aCurrency;
+  });
+}
+
+export function parseDate(date: string): Date {
+  if (!date) {
+    return undefined;
+  }
+
   // Transform 'yyyyMMdd' format to supported format by parse function
   if (date?.length === 8) {
     const match = date.match(/^(\d{4})(\d{2})(\d{2})$/);
@@ -352,7 +384,7 @@ export function parseDate(date: string): Date | null {
   return parseISO(date);
 }
 
-export function parseSymbol({ dataSource, symbol }: UniqueAsset) {
+export function parseSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
   const [ticker, exchange] = symbol.split('.');
 
   return {
@@ -395,6 +427,6 @@ export function resolveMarketCondition(
   } else if (aMarketCondition === 'BEAR_MARKET') {
     return { emoji: '🐻' };
   } else {
-    return { emoji: '⚪' };
+    return { emoji: undefined };
   }
 }

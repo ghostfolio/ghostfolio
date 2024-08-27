@@ -1,50 +1,36 @@
-<ngx-skeleton-loader
-  *ngIf="isLoading; else other"
-  animation="pulse"
-  appearance="circle"
-  [theme]="{
-    height: '1.8rem',
-    width: '1.8rem'
-  }"
-/>
-
-<ng-template #other>
-  <ion-icon
-    *ngIf="marketState === 'closed' && range === '1d'; else delayed"
-    class="text-muted"
-    name="pause-circle-outline"
-    [size]="size"
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    appearance="circle"
+    [theme]="{
+      height: '1.8rem',
+      width: '1.8rem'
+    }"
   />
-  <ng-template #delayed>
+} @else {
+  @if (marketState === 'closed' && dateRange === '1d') {
+    <ion-icon class="text-muted" name="pause-circle-outline" [size]="size" />
+  } @else if (marketState === 'delayed' && dateRange === '1d') {
+    <ion-icon class="text-muted" name="time-outline" [size]="size" />
+  } @else if (value <= -0.0005) {
     <ion-icon
-      *ngIf="marketState === 'delayed' && range === '1d'; else trend"
-      class="text-muted"
-      name="time-outline"
+      class="text-danger"
+      name="arrow-down-circle-outline"
+      [ngClass]="{ 'rotate-45-down': value > -0.01 }"
       [size]="size"
     />
-  </ng-template>
-  <ng-template #trend>
-    <ng-container>
-      <ion-icon
-        *ngIf="value <= -0.0005"
-        class="text-danger"
-        name="arrow-down-circle-outline"
-        [ngClass]="{ 'rotate-45-down': value > -0.01 }"
-        [size]="size"
-      />
-      <ion-icon
-        *ngIf="value > -0.0005 && value < 0.0005"
-        class="text-muted"
-        name="arrow-forward-circle-outline"
-        [size]="size"
-      />
-      <ion-icon
-        *ngIf="value >= 0.0005"
-        class="text-success"
-        name="arrow-up-circle-outline"
-        [ngClass]="{ 'rotate-45-up': value < 0.01 }"
-        [size]="size"
-      />
-    </ng-container>
-  </ng-template>
-</ng-template>
+  } @else if (value > -0.0005 && value < 0.0005) {
+    <ion-icon
+      class="text-muted"
+      name="arrow-forward-circle-outline"
+      [size]="size"
+    />
+  } @else {
+    <ion-icon
+      class="text-success"
+      name="arrow-up-circle-outline"
+      [ngClass]="{ 'rotate-45-up': value < 0.01 }"
+      [size]="size"
+    />
+  }
+}

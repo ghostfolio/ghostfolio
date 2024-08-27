@@ -1,1 +1,1 @@
-export * from './membership-card.module';
+export * from './membership-card.component';

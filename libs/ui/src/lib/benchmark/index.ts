@@ -1,1 +1,1 @@
-export * from './benchmark.module';
+export * from './benchmark.component';

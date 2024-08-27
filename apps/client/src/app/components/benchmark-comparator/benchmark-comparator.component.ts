@@ -7,6 +7,7 @@ import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
   getDateFormatString,
+  getLocale,
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
@@ -45,13 +46,13 @@ import annotationPlugin from 'chartjs-plugin-annotation';
   styleUrls: ['./benchmark-comparator.component.scss']
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
+  @Input() benchmark: Partial<SymbolProfile>;
   @Input() benchmarkDataItems: LineChartItem[] = [];
-  @Input() benchmark: string;
   @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() colorScheme: ColorScheme;
   @Input() daysInMarket: number;
   @Input() isLoading: boolean;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
   @Input() user: User;
 
@@ -97,6 +98,12 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
+    const benchmarkDataValues: { [date: string]: number } = {};
+
+    for (const { date, value } of this.benchmarkDataItems) {
+      benchmarkDataValues[date] = value;
+    }
+
     const data: ChartData<'line'> = {
       datasets: [
         {
@@ -104,7 +111,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
           borderWidth: 2,
           data: this.performanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value };
+            return { x: parseDate(date).getTime(), y: value * 100 };
           }),
           label: $localize`Portfolio`
         },
@@ -112,10 +119,13 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
           borderWidth: 2,
-          data: this.benchmarkDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value };
+          data: this.performanceDataItems.map(({ date }) => {
+            return {
+              x: parseDate(date).getTime(),
+              y: benchmarkDataValues[date]
+            };
           }),
-          label: $localize`Benchmark`
+          label: this.benchmark?.name ?? $localize`Benchmark`
         }
       ]
     };
@@ -227,7 +237,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         locale: this.locale,
         unit: '%'
       }),
-      mode: 'x',
+      mode: 'index',
       position: <unknown>'top',
       xAlign: 'center',
       yAlign: 'bottom'

@@ -1,5 +1,6 @@
-import { getDateFnsLocale } from '@ghostfolio/common/helper';
-import { PortfolioSummary } from '@ghostfolio/common/interfaces';
+import { getDateFnsLocale, getLocale } from '@ghostfolio/common/helper';
+import { PortfolioSummary, User } from '@ghostfolio/common/interfaces';
+import { translate } from '@ghostfolio/ui/i18n';
 
 import {
   ChangeDetectionStrategy,
@@ -23,11 +24,15 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() language: string;
-  @Input() locale: string;
+  @Input() locale = getLocale();
   @Input() summary: PortfolioSummary;
+  @Input() user: User;
 
   @Output() emergencyFundChanged = new EventEmitter<number>();
 
+  public buyAndSellActivitiesTooltip = translate(
+    'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
+  );
   public timeInMarket: string;
 
   public constructor() {}

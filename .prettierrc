@@ -13,6 +13,12 @@
   "importOrderSeparation": true,
   "overrides": [
     {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    },
+    {
       "files": "*.ts",
       "options": {
         "importOrderParserPlugins": ["decorators-legacy", "typescript"]

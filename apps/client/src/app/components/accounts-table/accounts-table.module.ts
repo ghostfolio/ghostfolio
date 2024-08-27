@@ -1,5 +1,5 @@
-import { GfSymbolIconModule } from '@ghostfolio/client/components/symbol-icon/symbol-icon.module';
-import { GfValueModule } from '@ghostfolio/ui/value';
+import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -17,8 +17,8 @@ import { AccountsTableComponent } from './accounts-table.component';
   exports: [AccountsTableComponent],
   imports: [
     CommonModule,
-    GfSymbolIconModule,
-    GfValueModule,
+    GfAssetProfileIconComponent,
+    GfValueComponent,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,

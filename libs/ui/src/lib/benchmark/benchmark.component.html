@@ -102,7 +102,7 @@
     <th *matHeaderCellDef mat-header-cell></th>
     <td *matCellDef="let element" class="px-0" mat-cell>
       @if (element?.marketCondition) {
-        <div class="text-center" [title]="element?.marketCondition">
+        <div class="text-center" [title]="translate(element.marketCondition)">
           {{ resolveMarketCondition(element.marketCondition).emoji }}
         </div>
       }
@@ -110,5 +110,15 @@
   </ng-container>
 
   <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+  <tr
+    *matRowDef="let row; columns: displayedColumns"
+    class="cursor-pointer"
+    mat-row
+    (click)="
+      onOpenBenchmarkDialog({
+        dataSource: row.dataSource,
+        symbol: row.symbol
+      })
+    "
+  ></tr>
 </table>

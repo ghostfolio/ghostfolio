@@ -32,13 +32,13 @@
                   name="baseCurrency"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="user.settings.baseCurrency"
-                  (selectionChange)="onChangeUserSetting('baseCurrency', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('baseCurrency', $event.value)
+                  "
                 >
-                  <mat-option
-                    *ngFor="let currency of currencies"
-                    [value]="currency"
-                    >{{ currency }}</mat-option
-                  >
+                  @for (currency of currencies; track currency) {
+                    <mat-option [value]="currency">{{ currency }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -46,18 +46,18 @@
           <div class="align-items-center d-flex mb-2">
             <div class="pr-1 w-50">
               <div i18n>Language</div>
-              <div
-                *ngIf="isCommunityLanguage()"
-                class="hint-text text-muted"
-                i18n
-              >
-                If a translation is missing, kindly support us in extending it
-                <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{language}}.xlf"
-                  target="_blank"
-                  >here</a
-                >.
-              </div>
+              @if (isCommunityLanguage()) {
+                <div class="hint-text text-muted" i18n>
+                  If a translation is missing, kindly support us in extending it
+                  <a
+                    href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
+                      language
+                    }}.xlf"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              }
             </div>
             <div class="pl-1 w-50">
               <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -65,11 +65,25 @@
                   name="language"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="language"
-                  (selectionChange)="onChangeUserSetting('language', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('language', $event.value)
+                  "
                 >
                   <mat-option [value]="null" />
                   <mat-option value="de">Deutsch</mat-option>
                   <mat-option value="en">English</mat-option>
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="ca"
+                      >Català (<ng-container i18n>Community</ng-container
+                      >)</mat-option
+                    >
+                  }
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="zh"
+                      >Chinese (<ng-container i18n>Community</ng-container
+                      >)</mat-option
+                    >
+                  }
                   <mat-option value="es"
                     >Español (<ng-container i18n>Community</ng-container
                     >)</mat-option
@@ -86,10 +100,12 @@
                     >Nederlands (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
-                  <mat-option value="pl"
-                    >Polski (<ng-container i18n>Community</ng-container
-                    >)</mat-option
-                  >
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="pl"
+                      >Polski (<ng-container i18n>Community</ng-container
+                      >)</mat-option
+                    >
+                  }
                   <mat-option value="pt"
                     >Português (<ng-container i18n>Community</ng-container
                     >)</mat-option
@@ -115,12 +131,14 @@
                   name="locale"
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [value]="user.settings.locale"
-                  (selectionChange)="onChangeUserSetting('locale', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('locale', $event.value)
+                  "
                 >
                   <mat-option [value]="null" />
-                  <mat-option *ngFor="let locale of locales" [value]="locale"
-                    >{{ locale }}</mat-option
-                  >
+                  @for (locale of locales; track locale) {
+                    <mat-option [value]="locale">{{ locale }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -137,7 +155,9 @@
                   [disabled]="!hasPermissionToUpdateUserSettings"
                   [placeholder]="appearancePlaceholder"
                   [value]="user?.settings?.colorScheme"
-                  (selectionChange)="onChangeUserSetting('colorScheme', $event.value)"
+                  (selectionChange)="
+                    onChangeUserSetting('colorScheme', $event.value)
+                  "
                 >
                   <mat-option i18n [value]="null">Auto</mat-option>
                   <mat-option i18n value="LIGHT">Light</mat-option>
@@ -175,15 +195,14 @@
             color="primary"
             hideIcon="true"
             [checked]="isWebAuthnEnabled === true"
-            [disabled]="!hasPermissionToUpdateUserSettings"
+            [disabled]="
+              !hasPermissionToUpdateUserSettings || !isFingerprintSupported
+            "
             (change)="onSignInWithFingerprintChange($event)"
           />
         </div>
       </div>
-      <div
-        *ngIf="hasPermissionToUpdateUserSettings"
-        class="align-items-center d-flex mt-4 py-1"
-      >
+      <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
           <div i18n>Experimental Features</div>
           <div class="hint-text text-muted" i18n>
@@ -214,6 +233,55 @@
           </button>
         </div>
       </div>
+      @if (hasPermissionToDeleteOwnUser) {
+        <hr class="mt-5" />
+        <form
+          class="w-100"
+          [formGroup]="deleteOwnUserForm"
+          (ngSubmit)="onCloseAccount()"
+        >
+          <div class="d-flex py-1">
+            <div class="pr-1 text-danger w-50" i18n>Danger Zone</div>
+            <div class="pl-1 w-50">
+              <mat-form-field
+                appearance="outline"
+                class="without-hint w-100"
+                [hideRequiredMarker]="true"
+              >
+                <mat-label i18n>Security Token</mat-label>
+                <input
+                  formControlName="accessToken"
+                  matInput
+                  [type]="isAccessTokenHidden ? 'password' : 'text'"
+                />
+                <button
+                  mat-button
+                  matSuffix
+                  type="button"
+                  (click)="isAccessTokenHidden = !isAccessTokenHidden"
+                >
+                  <ion-icon
+                    [name]="
+                      isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'
+                    "
+                  />
+                </button>
+              </mat-form-field>
+              <button
+                class="mt-2"
+                color="warn"
+                mat-flat-button
+                type="submit"
+                [disabled]="
+                  !(deleteOwnUserForm.dirty && deleteOwnUserForm.valid)
+                "
+              >
+                <span i18n>Close Account</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      }
     </div>
   </div>
 </div>

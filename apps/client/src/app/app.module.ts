@@ -1,7 +1,10 @@
-import { GfLogoModule } from '@ghostfolio/ui/logo';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import { Platform } from '@angular/cdk/platform';
-import { HttpClientModule } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi
+} from '@angular/common/http';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
@@ -30,6 +33,7 @@ import { GfSubscriptionInterstitialDialogModule } from './components/subscriptio
 import { authInterceptorProviders } from './core/auth.interceptor';
 import { httpResponseInterceptorProviders } from './core/http-response.interceptor';
 import { LanguageService } from './core/language.service';
+import { GfNotificationModule } from './core/notification/notification.module';
 
 export function NgxStripeFactory(): string {
   return environment.stripePublicKey;
@@ -43,9 +47,9 @@ export function NgxStripeFactory(): string {
     BrowserAnimationsModule,
     BrowserModule,
     GfHeaderModule,
-    GfLogoModule,
+    GfLogoComponent,
+    GfNotificationModule,
     GfSubscriptionInterstitialDialogModule,
-    HttpClientModule,
     MarkdownModule.forRoot(),
     MatAutocompleteModule,
     MatChipsModule,
@@ -63,6 +67,7 @@ export function NgxStripeFactory(): string {
     authInterceptorProviders,
     httpResponseInterceptorProviders,
     LanguageService,
+    provideHttpClient(withInterceptorsFromDi()),
     {
       provide: DateAdapter,
       useClass: CustomDateAdapter,

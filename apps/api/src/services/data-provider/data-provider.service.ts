@@ -14,13 +14,18 @@ import {
   DERIVED_CURRENCIES,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  DATE_FORMAT,
+  getCurrencyFromSymbol,
+  getStartOfUtcDate,
+  isDerivedCurrency
+} from '@ghostfolio/common/helper';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
-import Big from 'big.js';
+import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
@@ -70,7 +75,7 @@ export class DataProviderService {
     return false;
   }
 
-  public async getAssetProfiles(items: UniqueAsset[]): Promise<{
+  public async getAssetProfiles(items: AssetProfileIdentifier[]): Promise<{
     [symbol: string]: Partial<SymbolProfile>;
   }> {
     const response: {
@@ -92,7 +97,9 @@ export class DataProviderService {
 
       for (const symbol of symbols) {
         const promise = Promise.resolve(
-          this.getDataProvider(DataSource[dataSource]).getAssetProfile(symbol)
+          this.getDataProvider(DataSource[dataSource]).getAssetProfile({
+            symbol
+          })
         );
 
         promises.push(
@@ -166,7 +173,7 @@ export class DataProviderService {
   }
 
   public async getHistorical(
-    aItems: UniqueAsset[],
+    aItems: AssetProfileIdentifier[],
     aGranularity: Granularity = 'month',
     from: Date,
     to: Date
@@ -202,13 +209,14 @@ export class DataProviderService {
     });
 
     try {
-      const queryRaw = `SELECT *
-                        FROM "MarketData"
-                        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
-                          AND "symbol" IN ('${symbols.join(
-                            `','`
-                          )}') ${granularityQuery} ${rangeQuery}
-                        ORDER BY date;`;
+      const queryRaw = `
+        SELECT *
+        FROM "MarketData"
+        WHERE "dataSource" IN ('${dataSources.join(`','`)}')
+          AND "symbol" IN ('${symbols.join(
+            `','`
+          )}') ${granularityQuery} ${rangeQuery}
+        ORDER BY date;`;
 
       const marketDataByGranularity: MarketData[] =
         await this.prismaService.$queryRawUnsafe(queryRaw);
@@ -230,15 +238,17 @@ export class DataProviderService {
     }
   }
 
-  public async getHistoricalRaw(
-    aDataGatheringItems: UniqueAsset[],
-    from: Date,
-    to: Date
-  ): Promise<{
+  public async getHistoricalRaw({
+    dataGatheringItems,
+    from,
+    to
+  }: {
+    dataGatheringItems: AssetProfileIdentifier[];
+    from: Date;
+    to: Date;
+  }): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    let dataGatheringItems = aDataGatheringItems;
-
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
         this.hasCurrency({
@@ -327,6 +337,8 @@ export class DataProviderService {
       }
     } catch (error) {
       Logger.error(error, 'DataProviderService');
+
+      throw error;
     }
 
     return result;
@@ -335,11 +347,13 @@ export class DataProviderService {
   public async getQuotes({
     items,
     requestTimeout,
-    useCache = true
+    useCache = true,
+    user
   }: {
-    items: UniqueAsset[];
+    items: AssetProfileIdentifier[];
     requestTimeout?: number;
     useCache?: boolean;
+    user?: UserWithSettings;
   }): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
@@ -362,7 +376,7 @@ export class DataProviderService {
     }
 
     // Get items from cache
-    const itemsToFetch: UniqueAsset[] = [];
+    const itemsToFetch: AssetProfileIdentifier[] = [];
 
     for (const { dataSource, symbol } of items) {
       if (useCache) {
@@ -390,7 +404,8 @@ export class DataProviderService {
           numberOfItemsInCache > 1 ? 's' : ''
         } from cache in ${((performance.now() - startTimeTotal) / 1000).toFixed(
           3
-        )} seconds`
+        )} seconds`,
+        'DataProviderService'
       );
     }
 
@@ -405,13 +420,26 @@ export class DataProviderService {
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
 
-      const symbols = dataGatheringItems.map((dataGatheringItem) => {
-        return dataGatheringItem.symbol;
-      });
+      if (
+        dataProvider.getDataProviderInfo().isPremium &&
+        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+        user?.subscription.type === 'Basic'
+      ) {
+        continue;
+      }
+
+      const symbols = dataGatheringItems
+        .filter(({ symbol }) => {
+          return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+        })
+        .map(({ symbol }) => {
+          return symbol;
+        });
 
       const maximumNumberOfSymbolsPerRequest =
         dataProvider.getMaxNumberOfSymbolsPerRequest?.() ??
         Number.MAX_SAFE_INTEGER;
+
       for (
         let i = 0;
         i < symbols.length;
@@ -488,7 +516,8 @@ export class DataProviderService {
               } from ${dataSource} in ${(
                 (performance.now() - startTimeDataSource) /
                 1000
-              ).toFixed(3)} seconds`
+              ).toFixed(3)} seconds`,
+              'DataProviderService'
             );
 
             try {
@@ -497,7 +526,8 @@ export class DataProviderService {
                   .filter((symbol) => {
                     return (
                       isNumber(response[symbol].marketPrice) &&
-                      response[symbol].marketPrice > 0
+                      response[symbol].marketPrice > 0 &&
+                      response[symbol].marketState === 'open'
                     );
                   })
                   .map((symbol) => {
@@ -518,14 +548,15 @@ export class DataProviderService {
 
     await Promise.all(promises);
 
-    Logger.debug('------------------------------------------------');
+    Logger.debug('--------------------------------------------------------');
     Logger.debug(
       `Fetched ${items.length} quote${items.length > 1 ? 's' : ''} in ${(
         (performance.now() - startTimeTotal) /
         1000
-      ).toFixed(3)} seconds`
+      ).toFixed(3)} seconds`,
+      'DataProviderService'
     );
-    Logger.debug('================================================');
+    Logger.debug('========================================================');
 
     return response;
   }
@@ -578,10 +609,14 @@ export class DataProviderService {
         return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
       })
       .map((lookupItem) => {
-        if (
-          !this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') ||
-          user.subscription.type === 'Premium'
-        ) {
+        if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+          if (user.subscription.type === 'Premium') {
+            lookupItem.dataProviderInfo.isPremium = false;
+          }
+
+          lookupItem.dataProviderInfo.name = undefined;
+          lookupItem.dataProviderInfo.url = undefined;
+        } else {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
@@ -598,7 +633,7 @@ export class DataProviderService {
     dataGatheringItems
   }: {
     currency: string;
-    dataGatheringItems: UniqueAsset[];
+    dataGatheringItems: AssetProfileIdentifier[];
   }) {
     return dataGatheringItems.some(({ dataSource, symbol }) => {
       return (

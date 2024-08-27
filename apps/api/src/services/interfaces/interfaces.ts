@@ -1,11 +1,14 @@
-import { DataProviderInfo, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  DataProviderInfo
+} from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
 
 import {
   Account,
   DataSource,
   SymbolProfile,
-  Type as TypeOfOrder
+  Type as ActivityType
 } from '@prisma/client';
 
 export interface IOrder {
@@ -18,7 +21,7 @@ export interface IOrder {
   quantity: number;
   symbol: string;
   symbolProfile: SymbolProfile;
-  type: TypeOfOrder;
+  type: ActivityType;
   unitPrice: number;
 }
 
@@ -34,6 +37,6 @@ export interface IDataProviderResponse {
   marketState: MarketState;
 }
 
-export interface IDataGatheringItem extends UniqueAsset {
+export interface IDataGatheringItem extends AssetProfileIdentifier {
   date?: Date;
 }

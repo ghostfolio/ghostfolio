@@ -9,39 +9,38 @@
     [showYAxis]="true"
     [symbol]="symbol"
   />
-  <div
-    *ngFor="let itemByMonth of marketDataByMonth | keyvalue"
-    class="d-flex"
-    [hidden]="!marketData.length > 0"
-  >
-    <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
-    <div class="align-items-center d-flex flex-grow-1 px-1">
-      <div
-        *ngFor="let dayItem of days; let i = index"
-        class="day"
-        [ngClass]="{
-          'cursor-pointer valid': isDateOfInterest(
-            itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
-          ),
-          available:
-            marketDataByMonth[itemByMonth.key][
-              i + 1 < 10 ? '0' + (i + 1) : i + 1
-            ]?.marketPrice,
-          today: isToday(
-            itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
-          )
-        }"
-        [title]="
-          (itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
-            | date: defaultDateFormat) ?? ''
-        "
-        (click)="
-          onOpenMarketDataDetail({
-            day: i + 1 < 10 ? '0' + (i + 1) : i + 1,
-            yearMonth: itemByMonth.key
-          })
-        "
-      ></div>
+  @for (itemByMonth of marketDataByMonth | keyvalue; track itemByMonth) {
+    <div class="d-flex">
+      <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
+      <div class="align-items-center d-flex flex-grow-1 px-1">
+        @for (dayItem of days; track dayItem; let i = $index) {
+          <div
+            class="day"
+            [ngClass]="{
+              'cursor-pointer valid': isDateOfInterest(
+                itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+              ),
+              available:
+                marketDataByMonth[itemByMonth.key][
+                  i + 1 < 10 ? '0' + (i + 1) : i + 1
+                ]?.marketPrice,
+              today: isToday(
+                itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+              )
+            }"
+            [title]="
+              (itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+                | date: defaultDateFormat) ?? ''
+            "
+            (click)="
+              onOpenMarketDataDetail({
+                day: i + 1 < 10 ? '0' + (i + 1) : i + 1,
+                yearMonth: itemByMonth.key
+              })
+            "
+          ></div>
+        }
+      </div>
     </div>
-  </div>
+  }
 </div>

@@ -1,16 +1,17 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
+import { countries } from 'countries-list';
 import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static baseUrl = 'https://www.trackinsight.com/data-api';
-  private static countries = require('countries-list/dist/countries.json');
   private static countriesMapping = {
     'Russian Federation': 'Russia'
   };
@@ -131,20 +132,19 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       (response.countries as unknown as Country[]).length === 0
     ) {
       response.countries = [];
+
       for (const [name, value] of Object.entries<any>(
         holdings?.countries ?? {}
       )) {
         let countryCode: string;
 
-        for (const [key, country] of Object.entries<any>(
-          TrackinsightDataEnhancerService.countries
-        )) {
+        for (const [code, country] of Object.entries(countries)) {
           if (
             country.name === name ||
             country.name ===
               TrackinsightDataEnhancerService.countriesMapping[name]
           ) {
-            countryCode = key;
+            countryCode = code;
             break;
           }
         }
@@ -157,10 +157,29 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     if (
+      !response.holdings ||
+      (response.holdings as unknown as Holding[]).length === 0
+    ) {
+      response.holdings = [];
+
+      for (const { label, weight } of holdings?.topHoldings ?? []) {
+        if (label?.toLowerCase() === 'other') {
+          continue;
+        }
+
+        response.holdings.push({
+          weight,
+          name: label
+        });
+      }
+    }
+
+    if (
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
       response.sectors = [];
+
       for (const [name, value] of Object.entries<any>(
         holdings?.sectors ?? {}
       )) {

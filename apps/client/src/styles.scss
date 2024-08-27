@@ -214,17 +214,7 @@ body {
     }
   }
 
-  .mat-mdc-menu-panel {
-    &.assistant {
-      max-width: unset !important;
-
-      .mat-mdc-menu-content {
-        padding: 0;
-      }
-    }
-  }
-
-  &.is-dark-theme {
+  &.theme-dark {
     background: var(--dark-background);
     color: rgba(var(--light-primary-text));
 
@@ -366,8 +356,8 @@ ngx-skeleton-loader {
 }
 
 .cdk-overlay-container {
-  .cdk-overlay-pane {
-    max-width: 95vw !important;
+  .cdk-global-overlay-wrapper {
+    justify-content: center !important;
   }
 }
 
@@ -385,6 +375,10 @@ ngx-skeleton-loader {
 
 .gf-table {
   @include gf-table;
+}
+
+.has-fab {
+  padding-bottom: 3rem !important;
 }
 
 .has-info-message {
@@ -449,6 +443,14 @@ ngx-skeleton-loader {
 }
 
 .mat-mdc-menu-panel {
+  &.assistant {
+    max-width: unset !important;
+
+    .mat-mdc-menu-content {
+      padding: 0;
+    }
+  }
+
   .mat-mdc-menu-item {
     &.font-weight-bold {
       .mat-mdc-menu-item-text {
@@ -505,6 +507,10 @@ ngx-skeleton-loader {
   min-width: unset !important;
 }
 
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
 .page {
   display: flex;
   flex-direction: column;
@@ -543,6 +549,10 @@ ngx-skeleton-loader {
       --mdc-tab-indicator-active-indicator-color: transparent;
     }
 
+    .mat-mdc-tab-nav-panel {
+      padding: 2rem 0;
+    }
+
     @media (max-width: 575.98px) {
       .mat-mdc-tab-link {
         --mdc-secondary-navigation-tab-container-height: 3rem;
@@ -567,10 +577,6 @@ ngx-skeleton-loader {
           }
         }
       }
-
-      .mat-mdc-tab-nav-panel {
-        padding: 2rem 0;
-      }
     }
   }
 }
@@ -585,6 +591,10 @@ ngx-skeleton-loader {
 
 .text-decoration-underline {
   text-decoration: underline !important;
+}
+
+.text-line-through {
+  text-decoration: line-through;
 }
 
 .with-placeholder-as-option {

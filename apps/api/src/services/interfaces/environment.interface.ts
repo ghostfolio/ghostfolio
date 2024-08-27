@@ -28,8 +28,10 @@ export interface Environment extends CleanedEnvAccessors {
   GOOGLE_SHEETS_PRIVATE_KEY: string;
   JWT_SECRET_KEY: string;
   MAX_ACTIVITIES_TO_IMPORT: number;
+  MAX_CHART_ITEMS: number;
   MAX_ITEM_IN_CACHE: number;
   PORT: number;
+  REDIS_DB: number;
   REDIS_HOST: string;
   REDIS_PASSWORD: string;
   REDIS_PORT: number;
@@ -41,5 +43,4 @@ export interface Environment extends CleanedEnvAccessors {
   TWITTER_ACCESS_TOKEN_SECRET: string;
   TWITTER_API_KEY: string;
   TWITTER_API_SECRET: string;
-  WEB_AUTH_RP_ID: string;
 }

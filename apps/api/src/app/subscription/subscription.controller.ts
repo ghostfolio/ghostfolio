@@ -116,7 +116,7 @@ export class SubscriptionController {
     @Body() { couponId, priceId }: { couponId: string; priceId: string }
   ) {
     try {
-      return await this.subscriptionService.createCheckoutSession({
+      return this.subscriptionService.createCheckoutSession({
         couponId,
         priceId,
         user: this.request.user

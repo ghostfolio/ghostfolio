@@ -4,55 +4,71 @@
   (keyup.enter)="activityForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 *ngIf="data.activity.id" i18n mat-dialog-title>Update activity</h1>
-  <h1 *ngIf="!data.activity.id" i18n mat-dialog-title>Add activity</h1>
+  @if (mode === 'create') {
+    <h1 i18n mat-dialog-title>Add activity</h1>
+  } @else {
+    <h1 i18n mat-dialog-title>Update activity</h1>
+  }
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Type</mat-label>
         <mat-select formControlName="type">
-          <mat-select-trigger
-            >{{ typesTranslationMap[activityForm.controls['type'].value]
-            }}</mat-select-trigger
-          >
+          <mat-select-trigger>{{
+            typesTranslationMap[activityForm.get('type').value]
+          }}</mat-select-trigger>
           <mat-option value="BUY">
-            <span><b>{{ typesTranslationMap['BUY'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['BUY'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
           <mat-option value="FEE">
-            <span><b>{{ typesTranslationMap['FEE'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['FEE'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >One-time fee, annual account fees</small
             >
           </mat-option>
           <mat-option value="DIVIDEND">
-            <span><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['DIVIDEND'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Distribution of corporate earnings</small
             >
           </mat-option>
           <mat-option value="INTEREST">
-            <span><b>{{ typesTranslationMap['INTEREST'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['INTEREST'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Revenue for lending out money</small
             >
           </mat-option>
           <mat-option value="LIABILITY">
-            <span><b>{{ typesTranslationMap['LIABILITY'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['LIABILITY'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Mortgages, personal loans, credit cards</small
             >
           </mat-option>
           <mat-option value="SELL">
-            <span><b>{{ typesTranslationMap['SELL'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['SELL'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Stocks, ETFs, bonds, cryptocurrencies, commodities</small
             >
           </mat-option>
           <mat-option value="ITEM">
-            <span><b>{{ typesTranslationMap['ITEM'] }}</b></span>
+            <span
+              ><b>{{ typesTranslationMap['ITEM'] }}</b></span
+            >
             <small class="d-block line-height-1 text-muted text-nowrap" i18n
               >Luxury items, real estate, private companies</small
             >
@@ -60,42 +76,49 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div [ngClass]="{'mb-3': data.activity.id}">
+    <div [ngClass]="{ 'mb-3': mode === 'update' }">
       <mat-form-field
         appearance="outline"
         class="w-100"
-        [ngClass]="{'mb-1 without-hint': !data.activity.id}"
+        [ngClass]="{ 'mb-1 without-hint': mode === 'create' }"
       >
         <mat-label i18n>Account</mat-label>
         <mat-select formControlName="accountId">
-          <mat-option
-            *ngIf="!activityForm.controls['accountId'].hasValidator(Validators.required)"
-            [value]="null"
-          />
-          <mat-option
-            *ngFor="let account of data.accounts"
-            [value]="account.id"
-          >
-            <div class="d-flex">
-              <gf-symbol-icon
-                *ngIf="account.Platform?.url"
-                class="mr-1"
-                [tooltip]="account.Platform?.name"
-                [url]="account.Platform?.url"
-              /><span>{{ account.name }}</span>
-            </div>
-          </mat-option>
+          @if (
+            !activityForm.get('accountId').hasValidator(Validators.required) ||
+            (!activityForm.get('accountId').value && mode === 'update')
+          ) {
+            <mat-option [value]="null" />
+          }
+          @for (account of data.accounts; track account) {
+            <mat-option [value]="account.id">
+              <div class="d-flex">
+                @if (account.Platform?.url) {
+                  <gf-asset-profile-icon
+                    class="mr-1"
+                    [tooltip]="account.Platform?.name"
+                    [url]="account.Platform?.url"
+                  />
+                }
+                <span>{{ account.name }}</span>
+              </div>
+            </mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{'d-none': data.activity.id}">
+    <div class="mb-3" [ngClass]="{ 'd-none': mode === 'update' }">
       <mat-checkbox color="primary" formControlName="updateAccountBalance" i18n
         >Update Cash Balance</mat-checkbox
       >
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': !activityForm.controls['searchSymbol'].hasValidator(Validators.required) }"
+      [ngClass]="{
+        'd-none': !activityForm
+          .get('searchSymbol')
+          .hasValidator(Validators.required)
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name, symbol or ISIN</mat-label>
@@ -107,7 +130,9 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': !activityForm.controls['name'].hasValidator(Validators.required) }"
+      [ngClass]="{
+        'd-none': !activityForm.get('name').hasValidator(Validators.required)
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Name</mat-label>
@@ -118,9 +143,9 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Currency</mat-label>
         <mat-select formControlName="currency">
-          <mat-option *ngFor="let currency of currencies" [value]="currency"
-            >{{ currency }}</mat-option
-          >
+          @for (currency of currencies; track currency) {
+            <mat-option [value]="currency">{{ currency }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
@@ -133,7 +158,12 @@
     <div class="mb-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Date</mat-label>
-        <input formControlName="date" matInput [matDatepicker]="date" />
+        <input
+          formControlName="date"
+          matInput
+          [matDatepicker]="date"
+          [matDatepickerFilter]="dateFilter"
+        />
         <mat-datepicker-toggle class="mr-2" matSuffix [for]="date">
           <ion-icon
             class="text-muted"
@@ -146,7 +176,13 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' || activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{
+        'd-none':
+          activityForm.get('type')?.value === 'FEE' ||
+          activityForm.get('type')?.value === 'INTEREST' ||
+          activityForm.get('type')?.value === 'ITEM' ||
+          activityForm.get('type')?.value === 'LIABILITY'
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Quantity</mat-label>
@@ -155,22 +191,28 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'FEE' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value === 'FEE' }"
     >
       <div class="align-items-start d-flex">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label
-            ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
-              <ng-container *ngSwitchCase="'DIVIDEND'" i18n
-                >Dividend</ng-container
-              >
-              <ng-container *ngSwitchCase="'INTEREST'" i18n>Value</ng-container>
-              <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
-              <ng-container *ngSwitchCase="'LIABILITY'" i18n
-                >Value</ng-container
-              >
-              <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
-            </ng-container>
+          <mat-label>
+            @switch (activityForm.get('type')?.value) {
+              @case ('DIVIDEND') {
+                <ng-container i18n>Dividend</ng-container>
+              }
+              @case ('INTEREST') {
+                <ng-container i18n>Value</ng-container>
+              }
+              @case ('ITEM') {
+                <ng-container i18n>Value</ng-container>
+              }
+              @case ('LIABILITY') {
+                <ng-container i18n>Value</ng-container>
+              }
+              @default {
+                <ng-container i18n>Unit Price</ng-container>
+              }
+            }
           </mat-label>
           <input
             formControlName="unitPriceInCustomCurrency"
@@ -180,62 +222,85 @@
           <div
             class="ml-2"
             matTextSuffix
-            [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+            [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
           >
             <mat-select formControlName="currencyOfUnitPrice">
-              <mat-option
-                *ngFor="let currency of currencies"
-                [value]="currency"
-              >
-                {{ currency }}
-              </mat-option>
+              @for (currency of currencies; track currency) {
+                <mat-option [value]="currency">
+                  {{ currency }}
+                </mat-option>
+              }
             </mat-select>
           </div>
-          <mat-error
-            *ngIf="activityForm.controls['unitPriceInCustomCurrency'].hasError('invalid')"
-            ><ng-container i18n
-              >Oops! Could not get the historical exchange rate
-              from</ng-container
+          @if (
+            activityForm.get('unitPriceInCustomCurrency').hasError('invalid')
+          ) {
+            <mat-error
+              ><ng-container i18n
+                >Oops! Could not get the historical exchange rate
+                from</ng-container
+              >
+              {{
+                activityForm.get('date')?.value | date: defaultDateFormat
+              }}</mat-error
             >
-            {{ activityForm.controls['date']?.value | date: defaultDateFormat
-            }}</mat-error
-          >
+          }
         </mat-form-field>
-        <button
-          *ngIf="currentMarketPrice && (data.activity.type === 'BUY' || data.activity.type === 'SELL')"
-          class="ml-2 mt-1 no-min-width"
-          mat-button
-          title="Apply current market price"
-          type="button"
-          (click)="applyCurrentMarketPrice()"
-        >
-          <ion-icon class="text-muted" name="refresh-outline" />
-        </button>
+        @if (
+          currentMarketPrice &&
+          (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
+          isToday(activityForm.get('date')?.value)
+        ) {
+          <button
+            class="ml-2 mt-1 no-min-width"
+            mat-button
+            title="Apply current market price"
+            type="button"
+            (click)="applyCurrentMarketPrice()"
+          >
+            <ion-icon class="text-muted" name="refresh-outline" />
+          </button>
+        }
       </div>
     </div>
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label
-          ><ng-container [ngSwitch]="activityForm.controls['type']?.value">
-            <ng-container *ngSwitchCase="'DIVIDEND'" i18n
-              >Dividend</ng-container
-            >
-            <ng-container *ngSwitchCase="'FEE'" i18n>Value</ng-container>
-            <ng-container *ngSwitchCase="'INTEREST'" i18n>Value</ng-container>
-            <ng-container *ngSwitchCase="'ITEM'" i18n>Value</ng-container>
-            <ng-container *ngSwitchCase="'LIABILITY'" i18n>Value</ng-container>
-            <ng-container *ngSwitchDefault i18n>Unit Price</ng-container>
-          </ng-container>
+        <mat-label>
+          @switch (activityForm.get('type')?.value) {
+            @case ('DIVIDEND') {
+              <ng-container i18n>Dividend</ng-container>
+            }
+            @case ('FEE') {
+              <ng-container i18n>Value</ng-container>
+            }
+            @case ('INTEREST') {
+              <ng-container i18n>Value</ng-container>
+            }
+            @case ('ITEM') {
+              <ng-container i18n>Value</ng-container>
+            }
+            @case ('LIABILITY') {
+              <ng-container i18n>Value</ng-container>
+            }
+            @default {
+              <ng-container i18n>Unit Price</ng-container>
+            }
+          }
         </mat-label>
         <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix
-          >{{ activityForm.controls['currency'].value }}</span
-        >
+        <span class="ml-2" matTextSuffix>{{
+          activityForm.get('currency').value
+        }}</span>
       </mat-form-field>
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value === 'INTEREST' || activityForm.controls['type']?.value === 'ITEM' || activityForm.controls['type']?.value === 'LIABILITY' }"
+      [ngClass]="{
+        'd-none':
+          activityForm.get('type')?.value === 'INTEREST' ||
+          activityForm.get('type')?.value === 'ITEM' ||
+          activityForm.get('type')?.value === 'LIABILITY'
+      }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
@@ -243,31 +308,30 @@
         <div
           class="ml-2"
           matTextSuffix
-          [ngClass]="{ 'd-none': !activityForm.controls['currency']?.value }"
+          [ngClass]="{ 'd-none': !activityForm.get('currency')?.value }"
         >
-          <mat-select formControlName="currencyOfFee">
-            <mat-option *ngFor="let currency of currencies" [value]="currency">
-              {{ currency }}
-            </mat-option>
-          </mat-select>
+          {{ activityForm.get('currencyOfUnitPrice').value }}
         </div>
-        <mat-error
-          *ngIf="activityForm.controls['feeInCustomCurrency'].hasError('invalid')"
-          ><ng-container i18n
-            >Oops! Could not get the historical exchange rate from</ng-container
+        @if (activityForm.get('feeInCustomCurrency').hasError('invalid')) {
+          <mat-error
+            ><ng-container i18n
+              >Oops! Could not get the historical exchange rate
+              from</ng-container
+            >
+            {{
+              activityForm.get('date')?.value | date: defaultDateFormat
+            }}</mat-error
           >
-          {{ activityForm.controls['date']?.value | date: defaultDateFormat
-          }}</mat-error
-        >
+        }
       </mat-form-field>
     </div>
     <div class="d-none">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
         <input formControlName="fee" matInput type="number" />
-        <span class="ml-2" matTextSuffix
-          >{{ activityForm.controls['currency'].value }}</span
-        >
+        <span class="ml-2" matTextSuffix>{{
+          activityForm.get('currency').value
+        }}</span>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -284,49 +348,50 @@
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Class</mat-label>
         <mat-select formControlName="assetClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetClass of assetClasses"
-            [value]="assetClass.id"
-            >{{ assetClass.label }}</mat-option
-          >
+          @for (assetClass of assetClasses; track assetClass) {
+            <mat-option [value]="assetClass.id">{{
+              assetClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
     <div
       class="mb-3"
-      [ngClass]="{ 'd-none': activityForm.controls['type']?.value !== 'ITEM' }"
+      [ngClass]="{ 'd-none': activityForm.get('type')?.value !== 'ITEM' }"
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Asset Sub Class</mat-label>
         <mat-select formControlName="assetSubClass">
           <mat-option [value]="null" />
-          <mat-option
-            *ngFor="let assetSubClass of assetSubClasses"
-            [value]="assetSubClass.id"
-            >{{ assetSubClass.label }}</mat-option
-          >
+          @for (assetSubClass of assetSubClasses; track assetSubClass) {
+            <mat-option [value]="assetSubClass.id">{{
+              assetSubClass.label
+            }}</mat-option>
+          }
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tags?.length < 1 }">
+    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Tags</mat-label>
         <mat-chip-grid #tagsChipList>
-          <mat-chip-row
-            *ngFor="let tag of activityForm.controls['tags']?.value"
-            matChipRemove
-            [removable]="true"
-            (removed)="onRemoveTag(tag)"
-          >
-            {{ tag.name }}
-            <ion-icon class="ml-2" matPrefix name="close-outline" />
-          </mat-chip-row>
+          @for (tag of activityForm.get('tags')?.value; track tag.id) {
+            <mat-chip-row
+              matChipRemove
+              [removable]="true"
+              (removed)="onRemoveTag(tag)"
+            >
+              {{ tag.name }}
+              <ion-icon class="ml-2" matPrefix name="close-outline" />
+            </mat-chip-row>
+          }
           <input
             #tagInput
             name="close-outline"
@@ -339,12 +404,11 @@
           #autocompleteTags="matAutocomplete"
           (optionSelected)="onAddTag($event)"
         >
-          <mat-option
-            *ngFor="let tag of filteredTagsObservable | async"
-            [value]="tag.id"
-          >
-            {{ tag.name }}
-          </mat-option>
+          @for (tag of filteredTagsObservable | async; track tag.id) {
+            <mat-option [value]="tag.id">
+              {{ tag.name }}
+            </mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
     </div>
@@ -354,7 +418,9 @@
       class="flex-grow-1"
       [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
-      [unit]="activityForm.controls['currency']?.value ?? data.user?.settings?.baseCurrency"
+      [unit]="
+        activityForm.get('currency')?.value ?? data.user?.settings?.baseCurrency
+      "
       [value]="total"
     />
     <div>

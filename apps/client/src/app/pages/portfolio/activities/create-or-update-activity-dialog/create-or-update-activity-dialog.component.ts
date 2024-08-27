@@ -1,6 +1,7 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -20,6 +21,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
+import { isAfter, isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -48,9 +50,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public defaultDateFormat: string;
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
+  public isToday = isToday;
+  public mode: 'create' | 'update';
   public platforms: { id: string; name: string }[];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public tags: Tag[] = [];
+  public separatorKeysCodes: number[] = [COMMA, ENTER];
+  public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
@@ -68,6 +72,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.mode = this.data.activity.id ? 'update' : 'create';
     this.locale = this.data.user?.settings?.locale;
     this.dateAdapter.setLocale(this.locale);
 
@@ -76,7 +81,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
-    this.tags = tags.map(({ id, name }) => {
+    this.tagsAvailable = tags.map(({ id, name }) => {
       return {
         id,
         name: translate(name)
@@ -88,15 +93,18 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
 
     this.activityForm = this.formBuilder.group({
-      accountId: [this.data.activity?.accountId, Validators.required],
+      accountId: [
+        this.data.accounts.length === 1 &&
+        !this.data.activity?.accountId &&
+        this.mode === 'create'
+          ? this.data.accounts[0].id
+          : this.data.activity?.accountId,
+        Validators.required
+      ],
       assetClass: [this.data.activity?.SymbolProfile?.assetClass],
       assetSubClass: [this.data.activity?.SymbolProfile?.assetSubClass],
       comment: [this.data.activity?.comment],
       currency: [
-        this.data.activity?.SymbolProfile?.currency,
-        Validators.required
-      ],
-      currencyOfFee: [
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
@@ -147,44 +155,16 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(async () => {
-        let exchangeRateOfFee = 1;
         let exchangeRateOfUnitPrice = 1;
 
-        this.activityForm.controls['feeInCustomCurrency'].setErrors(null);
-        this.activityForm.controls['unitPriceInCustomCurrency'].setErrors(null);
+        this.activityForm.get('feeInCustomCurrency').setErrors(null);
+        this.activityForm.get('unitPriceInCustomCurrency').setErrors(null);
 
-        const currency = this.activityForm.controls['currency'].value;
-        const currencyOfFee = this.activityForm.controls['currencyOfFee'].value;
-        const currencyOfUnitPrice =
-          this.activityForm.controls['currencyOfUnitPrice'].value;
-        const date = this.activityForm.controls['date'].value;
-
-        if (currency && currencyOfFee && currency !== currencyOfFee && date) {
-          try {
-            const { marketPrice } = await lastValueFrom(
-              this.dataService
-                .fetchExchangeRateForDate({
-                  date,
-                  symbol: `${currencyOfFee}-${currency}`
-                })
-                .pipe(takeUntil(this.unsubscribeSubject))
-            );
-
-            exchangeRateOfFee = marketPrice;
-          } catch {
-            this.activityForm.controls['feeInCustomCurrency'].setErrors({
-              invalid: true
-            });
-          }
-        }
-
-        const feeInCustomCurrency =
-          this.activityForm.controls['feeInCustomCurrency'].value *
-          exchangeRateOfFee;
-
-        this.activityForm.controls['fee'].setValue(feeInCustomCurrency, {
-          emitEvent: false
-        });
+        const currency = this.activityForm.get('currency').value;
+        const currencyOfUnitPrice = this.activityForm.get(
+          'currencyOfUnitPrice'
+        ).value;
+        const date = this.activityForm.get('date').value;
 
         if (
           currency &&
@@ -204,75 +184,97 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
             exchangeRateOfUnitPrice = marketPrice;
           } catch {
-            this.activityForm.controls['unitPriceInCustomCurrency'].setErrors({
+            this.activityForm.get('unitPriceInCustomCurrency').setErrors({
               invalid: true
             });
           }
         }
 
-        const unitPriceInCustomCurrency =
-          this.activityForm.controls['unitPriceInCustomCurrency'].value *
+        const feeInCustomCurrency =
+          this.activityForm.get('feeInCustomCurrency').value *
           exchangeRateOfUnitPrice;
 
-        this.activityForm.controls['unitPrice'].setValue(
-          unitPriceInCustomCurrency,
-          {
-            emitEvent: false
-          }
-        );
+        const unitPriceInCustomCurrency =
+          this.activityForm.get('unitPriceInCustomCurrency').value *
+          exchangeRateOfUnitPrice;
+
+        this.activityForm.get('fee').setValue(feeInCustomCurrency, {
+          emitEvent: false
+        });
+
+        this.activityForm.get('unitPrice').setValue(unitPriceInCustomCurrency, {
+          emitEvent: false
+        });
 
         if (
-          this.activityForm.controls['type'].value === 'BUY' ||
-          this.activityForm.controls['type'].value === 'FEE' ||
-          this.activityForm.controls['type'].value === 'ITEM'
+          this.activityForm.get('type').value === 'BUY' ||
+          this.activityForm.get('type').value === 'FEE' ||
+          this.activityForm.get('type').value === 'ITEM'
         ) {
           this.total =
-            this.activityForm.controls['quantity'].value *
-              this.activityForm.controls['unitPrice'].value +
-              this.activityForm.controls['fee'].value ?? 0;
+            this.activityForm.get('quantity').value *
+              this.activityForm.get('unitPrice').value +
+              this.activityForm.get('fee').value ?? 0;
         } else {
           this.total =
-            this.activityForm.controls['quantity'].value *
-              this.activityForm.controls['unitPrice'].value -
-              this.activityForm.controls['fee'].value ?? 0;
+            this.activityForm.get('quantity').value *
+              this.activityForm.get('unitPrice').value -
+              this.activityForm.get('fee').value ?? 0;
         }
 
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.controls['accountId'].valueChanges.subscribe(
-      (accountId) => {
-        const type = this.activityForm.controls['type'].value;
+    this.activityForm.get('accountId').valueChanges.subscribe((accountId) => {
+      const type = this.activityForm.get('type').value;
 
-        if (
-          type === 'FEE' ||
-          type === 'INTEREST' ||
-          type === 'ITEM' ||
-          type === 'LIABILITY'
-        ) {
-          const currency =
-            this.data.accounts.find(({ id }) => {
-              return id === accountId;
-            })?.currency ?? this.data.user.settings.baseCurrency;
+      if (
+        type === 'FEE' ||
+        type === 'INTEREST' ||
+        type === 'ITEM' ||
+        type === 'LIABILITY'
+      ) {
+        const currency =
+          this.data.accounts.find(({ id }) => {
+            return id === accountId;
+          })?.currency ?? this.data.user.settings.baseCurrency;
 
-          this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+        this.activityForm.get('currency').setValue(currency);
+        this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+
+        if (['FEE', 'INTEREST'].includes(type)) {
+          if (this.activityForm.get('accountId').value) {
+            this.activityForm.get('updateAccountBalance').enable();
+          } else {
+            this.activityForm.get('updateAccountBalance').disable();
+            this.activityForm.get('updateAccountBalance').setValue(false);
+          }
         }
       }
-    );
+    });
 
-    this.activityForm.controls['searchSymbol'].valueChanges.subscribe(() => {
-      if (this.activityForm.controls['searchSymbol'].invalid) {
+    this.activityForm.get('date').valueChanges.subscribe(() => {
+      if (isToday(this.activityForm.get('date').value)) {
+        this.activityForm.get('updateAccountBalance').enable();
+      } else {
+        this.activityForm.get('updateAccountBalance').disable();
+        this.activityForm.get('updateAccountBalance').setValue(false);
+      }
+
+      this.changeDetectorRef.markForCheck();
+    });
+
+    this.activityForm.get('searchSymbol').valueChanges.subscribe(() => {
+      if (this.activityForm.get('searchSymbol').invalid) {
         this.data.activity.SymbolProfile = null;
       } else if (
         ['BUY', 'DIVIDEND', 'SELL'].includes(
-          this.activityForm.controls['type'].value
+          this.activityForm.get('type').value
         )
       ) {
-        this.activityForm.controls['dataSource'].setValue(
-          this.activityForm.controls['searchSymbol'].value.dataSource
-        );
+        this.activityForm
+          .get('dataSource')
+          .setValue(this.activityForm.get('searchSymbol').value.dataSource);
 
         this.updateSymbol();
       }
@@ -283,125 +285,127 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.filteredTagsObservable = this.activityForm.controls[
       'tags'
     ].valueChanges.pipe(
-      startWith(this.activityForm.controls['tags'].value),
+      startWith(this.activityForm.get('tags').value),
       map((aTags: Tag[] | null) => {
-        return aTags ? this.filterTags(aTags) : this.tags.slice();
+        return aTags ? this.filterTags(aTags) : this.tagsAvailable.slice();
       })
     );
 
-    this.activityForm.controls['type'].valueChanges
-      .pipe(takeUntil(this.unsubscribeSubject))
+    this.activityForm
+      .get('type')
+      .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
         if (type === 'ITEM') {
-          this.activityForm.controls['accountId'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['accountId'].updateValueAndValidity();
+          this.activityForm
+            .get('accountId')
+            .removeValidators(Validators.required);
+          this.activityForm.get('accountId').updateValueAndValidity();
 
           const currency =
             this.data.accounts.find(({ id }) => {
-              return id === this.activityForm.controls['accountId'].value;
+              return id === this.activityForm.get('accountId').value;
             })?.currency ?? this.data.user.settings.baseCurrency;
 
-          this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+          this.activityForm.get('currency').setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
 
-          this.activityForm.controls['dataSource'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['dataSource'].updateValueAndValidity();
-          this.activityForm.controls['feeInCustomCurrency'].reset();
-          this.activityForm.controls['name'].setValidators(Validators.required);
-          this.activityForm.controls['name'].updateValueAndValidity();
-          this.activityForm.controls['quantity'].setValue(1);
-          this.activityForm.controls['searchSymbol'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
-          this.activityForm.controls['updateAccountBalance'].disable();
-          this.activityForm.controls['updateAccountBalance'].setValue(false);
+          this.activityForm
+            .get('dataSource')
+            .removeValidators(Validators.required);
+          this.activityForm.get('dataSource').updateValueAndValidity();
+          this.activityForm.get('feeInCustomCurrency').reset();
+          this.activityForm.get('name').setValidators(Validators.required);
+          this.activityForm.get('name').updateValueAndValidity();
+          this.activityForm.get('quantity').setValue(1);
+          this.activityForm
+            .get('searchSymbol')
+            .removeValidators(Validators.required);
+          this.activityForm.get('searchSymbol').updateValueAndValidity();
+          this.activityForm.get('updateAccountBalance').disable();
+          this.activityForm.get('updateAccountBalance').setValue(false);
         } else if (
           type === 'FEE' ||
           type === 'INTEREST' ||
           type === 'LIABILITY'
         ) {
-          this.activityForm.controls['accountId'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['accountId'].updateValueAndValidity();
+          this.activityForm
+            .get('accountId')
+            .removeValidators(Validators.required);
+          this.activityForm.get('accountId').updateValueAndValidity();
 
           const currency =
             this.data.accounts.find(({ id }) => {
-              return id === this.activityForm.controls['accountId'].value;
+              return id === this.activityForm.get('accountId').value;
             })?.currency ?? this.data.user.settings.baseCurrency;
 
-          this.activityForm.controls['currency'].setValue(currency);
-          this.activityForm.controls['currencyOfFee'].setValue(currency);
-          this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
+          this.activityForm.get('currency').setValue(currency);
+          this.activityForm.get('currencyOfUnitPrice').setValue(currency);
 
-          this.activityForm.controls['dataSource'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['dataSource'].updateValueAndValidity();
+          this.activityForm
+            .get('dataSource')
+            .removeValidators(Validators.required);
+          this.activityForm.get('dataSource').updateValueAndValidity();
 
           if (
             (type === 'FEE' &&
-              this.activityForm.controls['feeInCustomCurrency'].value === 0) ||
+              this.activityForm.get('feeInCustomCurrency').value === 0) ||
             type === 'INTEREST' ||
             type === 'LIABILITY'
           ) {
-            this.activityForm.controls['feeInCustomCurrency'].reset();
+            this.activityForm.get('feeInCustomCurrency').reset();
           }
 
-          this.activityForm.controls['name'].setValidators(Validators.required);
-          this.activityForm.controls['name'].updateValueAndValidity();
+          this.activityForm.get('name').setValidators(Validators.required);
+          this.activityForm.get('name').updateValueAndValidity();
 
           if (type === 'FEE') {
-            this.activityForm.controls['quantity'].setValue(0);
+            this.activityForm.get('quantity').setValue(0);
           } else if (type === 'INTEREST' || type === 'LIABILITY') {
-            this.activityForm.controls['quantity'].setValue(1);
+            this.activityForm.get('quantity').setValue(1);
           }
 
-          this.activityForm.controls['searchSymbol'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
+          this.activityForm
+            .get('searchSymbol')
+            .removeValidators(Validators.required);
+          this.activityForm.get('searchSymbol').updateValueAndValidity();
 
           if (type === 'FEE') {
-            this.activityForm.controls['unitPriceInCustomCurrency'].setValue(0);
+            this.activityForm.get('unitPriceInCustomCurrency').setValue(0);
           }
 
-          this.activityForm.controls['updateAccountBalance'].disable();
-          this.activityForm.controls['updateAccountBalance'].setValue(false);
+          if (
+            ['FEE', 'INTEREST'].includes(type) &&
+            this.activityForm.get('accountId').value
+          ) {
+            this.activityForm.get('updateAccountBalance').enable();
+          } else {
+            this.activityForm.get('updateAccountBalance').disable();
+            this.activityForm.get('updateAccountBalance').setValue(false);
+          }
         } else {
-          this.activityForm.controls['accountId'].setValidators(
-            Validators.required
-          );
-          this.activityForm.controls['accountId'].updateValueAndValidity();
-          this.activityForm.controls['dataSource'].setValidators(
-            Validators.required
-          );
-          this.activityForm.controls['dataSource'].updateValueAndValidity();
-          this.activityForm.controls['name'].removeValidators(
-            Validators.required
-          );
-          this.activityForm.controls['name'].updateValueAndValidity();
-          this.activityForm.controls['searchSymbol'].setValidators(
-            Validators.required
-          );
-          this.activityForm.controls['searchSymbol'].updateValueAndValidity();
-          this.activityForm.controls['updateAccountBalance'].enable();
+          this.activityForm.get('accountId').setValidators(Validators.required);
+          this.activityForm.get('accountId').updateValueAndValidity();
+          this.activityForm
+            .get('dataSource')
+            .setValidators(Validators.required);
+          this.activityForm.get('dataSource').updateValueAndValidity();
+          this.activityForm.get('name').removeValidators(Validators.required);
+          this.activityForm.get('name').updateValueAndValidity();
+          this.activityForm
+            .get('searchSymbol')
+            .setValidators(Validators.required);
+          this.activityForm.get('searchSymbol').updateValueAndValidity();
+          this.activityForm.get('updateAccountBalance').enable();
         }
 
         this.changeDetectorRef.markForCheck();
       });
 
-    this.activityForm.controls['type'].setValue(this.data.activity?.type);
+    this.activityForm.get('type').setValue(this.data.activity?.type);
 
     if (this.data.activity?.id) {
-      this.activityForm.controls['searchSymbol'].disable();
-      this.activityForm.controls['type'].disable();
+      this.activityForm.get('searchSymbol').disable();
+      this.activityForm.get('type').disable();
     }
 
     if (this.data.activity?.SymbolProfile?.symbol) {
@@ -421,18 +425,27 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
   public applyCurrentMarketPrice() {
     this.activityForm.patchValue({
-      currencyOfUnitPrice: this.activityForm.controls['currency'].value,
+      currencyOfUnitPrice: this.activityForm.get('currency').value,
       unitPriceInCustomCurrency: this.currentMarketPrice
     });
   }
 
+  public dateFilter(aDate: Date) {
+    if (!aDate) {
+      return true;
+    }
+
+    return isAfter(aDate, new Date(0));
+  }
+
   public onAddTag(event: MatAutocompleteSelectedEvent) {
-    this.activityForm.controls['tags'].setValue([
-      ...(this.activityForm.controls['tags'].value ?? []),
-      this.tags.find(({ id }) => {
+    this.activityForm.get('tags').setValue([
+      ...(this.activityForm.get('tags').value ?? []),
+      this.tagsAvailable.find(({ id }) => {
         return id === event.option.value;
       })
     ]);
+
     this.tagInput.nativeElement.value = '';
   }
 
@@ -441,43 +454,63 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   }
 
   public onRemoveTag(aTag: Tag) {
-    this.activityForm.controls['tags'].setValue(
-      this.activityForm.controls['tags'].value.filter(({ id }) => {
+    this.activityForm.get('tags').setValue(
+      this.activityForm.get('tags').value.filter(({ id }) => {
         return id !== aTag.id;
       })
     );
   }
 
-  public onSubmit() {
+  public async onSubmit() {
     const activity: CreateOrderDto | UpdateOrderDto = {
-      accountId: this.activityForm.controls['accountId'].value,
-      assetClass: this.activityForm.controls['assetClass'].value,
-      assetSubClass: this.activityForm.controls['assetSubClass'].value,
-      comment: this.activityForm.controls['comment'].value,
-      currency: this.activityForm.controls['currency'].value,
-      date: this.activityForm.controls['date'].value,
-      dataSource: this.activityForm.controls['dataSource'].value,
-      fee: this.activityForm.controls['fee'].value,
-      quantity: this.activityForm.controls['quantity'].value,
+      accountId: this.activityForm.get('accountId').value,
+      assetClass: this.activityForm.get('assetClass').value,
+      assetSubClass: this.activityForm.get('assetSubClass').value,
+      comment: this.activityForm.get('comment').value || null,
+      currency: this.activityForm.get('currency').value,
+      customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      date: this.activityForm.get('date').value,
+      dataSource: this.activityForm.get('dataSource').value,
+      fee: this.activityForm.get('fee').value,
+      quantity: this.activityForm.get('quantity').value,
       symbol:
-        this.activityForm.controls['searchSymbol'].value?.symbol ===
-          undefined ||
-        isUUID(this.activityForm.controls['searchSymbol'].value?.symbol)
-          ? this.activityForm.controls['name'].value
-          : this.activityForm.controls['searchSymbol'].value.symbol,
-      tags: this.activityForm.controls['tags'].value,
-      type: this.activityForm.controls['type'].value,
-      unitPrice: this.activityForm.controls['unitPrice'].value
+        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
+        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
+          ? this.activityForm.get('name').value
+          : this.activityForm.get('searchSymbol').value.symbol,
+      tags: this.activityForm.get('tags').value,
+      type: this.activityForm.get('type').value,
+      unitPrice: this.activityForm.get('unitPrice').value
     };
 
-    if (this.data.activity.id) {
-      (activity as UpdateOrderDto).id = this.data.activity.id;
-    } else {
-      (activity as CreateOrderDto).updateAccountBalance =
-        this.activityForm.controls['updateAccountBalance'].value;
-    }
+    try {
+      if (this.mode === 'create') {
+        (activity as CreateOrderDto).updateAccountBalance =
+          this.activityForm.get('updateAccountBalance').value;
 
-    this.dialogRef.close({ activity });
+        await validateObjectForForm({
+          classDto: CreateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity
+        });
+
+        this.dialogRef.close(activity as CreateOrderDto);
+      } else {
+        (activity as UpdateOrderDto).id = this.data.activity.id;
+
+        await validateObjectForForm({
+          classDto: UpdateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity as UpdateOrderDto
+        });
+
+        this.dialogRef.close(activity as UpdateOrderDto);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   public ngOnDestroy() {
@@ -486,12 +519,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   }
 
   private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map((tag) => {
-      return tag.id;
+    const tagIds = aTags.map(({ id }) => {
+      return id;
     });
 
-    return this.tags.filter((tag) => {
-      return !tagIds.includes(tag.id);
+    return this.tagsAvailable.filter(({ id }) => {
+      return !tagIds.includes(id);
     });
   }
 
@@ -501,8 +534,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     this.dataService
       .fetchSymbolItem({
-        dataSource: this.activityForm.controls['dataSource'].value,
-        symbol: this.activityForm.controls['searchSymbol'].value.symbol
+        dataSource: this.activityForm.get('dataSource').value,
+        symbol: this.activityForm.get('searchSymbol').value.symbol
       })
       .pipe(
         catchError(() => {
@@ -517,10 +550,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ currency, dataSource, marketPrice }) => {
-        this.activityForm.controls['currency'].setValue(currency);
-        this.activityForm.controls['currencyOfFee'].setValue(currency);
-        this.activityForm.controls['currencyOfUnitPrice'].setValue(currency);
-        this.activityForm.controls['dataSource'].setValue(dataSource);
+        this.activityForm.get('currency').setValue(currency);
+        this.activityForm.get('currencyOfUnitPrice').setValue(currency);
+        this.activityForm.get('dataSource').setValue(dataSource);
 
         this.currentMarketPrice = marketPrice;
 
