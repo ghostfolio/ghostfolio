@@ -49,7 +49,7 @@ export abstract class PortfolioCalculator {
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
 
-  private configurationService: ConfigurationService;
+  protected configurationService: ConfigurationService;
   protected currency: string;
   protected currentRateService: CurrentRateService;
   private dataProviderInfos: DataProviderInfo[];
@@ -379,15 +379,15 @@ export abstract class PortfolioCalculator {
         dataSource: item.dataSource,
         fee: item.fee,
         firstBuyDate: item.firstBuyDate,
-        grossPerformance: !hasErrors ? grossPerformance ?? null : null,
+        grossPerformance: !hasErrors ? (grossPerformance ?? null) : null,
         grossPerformancePercentage: !hasErrors
-          ? grossPerformancePercentage ?? null
+          ? (grossPerformancePercentage ?? null)
           : null,
         grossPerformancePercentageWithCurrencyEffect: !hasErrors
-          ? grossPerformancePercentageWithCurrencyEffect ?? null
+          ? (grossPerformancePercentageWithCurrencyEffect ?? null)
           : null,
         grossPerformanceWithCurrencyEffect: !hasErrors
-          ? grossPerformanceWithCurrencyEffect ?? null
+          ? (grossPerformanceWithCurrencyEffect ?? null)
           : null,
         investment: totalInvestment,
         investmentWithCurrencyEffect: totalInvestmentWithCurrencyEffect,
@@ -395,15 +395,15 @@ export abstract class PortfolioCalculator {
           marketSymbolMap[endDateString]?.[item.symbol]?.toNumber() ?? null,
         marketPriceInBaseCurrency:
           marketPriceInBaseCurrency?.toNumber() ?? null,
-        netPerformance: !hasErrors ? netPerformance ?? null : null,
+        netPerformance: !hasErrors ? (netPerformance ?? null) : null,
         netPerformancePercentage: !hasErrors
-          ? netPerformancePercentage ?? null
+          ? (netPerformancePercentage ?? null)
           : null,
         netPerformancePercentageWithCurrencyEffectMap: !hasErrors
-          ? netPerformancePercentageWithCurrencyEffectMap ?? null
+          ? (netPerformancePercentageWithCurrencyEffectMap ?? null)
           : null,
         netPerformanceWithCurrencyEffectMap: !hasErrors
-          ? netPerformanceWithCurrencyEffectMap ?? null
+          ? (netPerformanceWithCurrencyEffectMap ?? null)
           : null,
         quantity: item.quantity,
         symbol: item.symbol,
@@ -491,8 +491,8 @@ export abstract class PortfolioCalculator {
                   return date === dateString;
                 }).value
               )
-            : accumulatedValuesByDate[lastDate]
-                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0),
+            : (accumulatedValuesByDate[lastDate]
+                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0)),
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -803,74 +803,6 @@ export abstract class PortfolioCalculator {
     await this.snapshotPromise;
 
     return this.snapshot.totalValuablesWithCurrencyEffect;
-  }
-
-  private getChartDateMap({
-    endDate,
-    startDate,
-    step
-  }: {
-    endDate: Date;
-    startDate: Date;
-    step: number;
-  }) {
-    // Create a map of all relevant chart dates:
-    // 1. Add transaction point dates
-    let chartDateMap = this.transactionPoints.reduce((result, { date }) => {
-      result[date] = true;
-      return result;
-    }, {});
-
-    // 2. Add dates between transactions respecting the specified step size
-    for (let date of eachDayOfInterval(
-      { end: endDate, start: startDate },
-      { step }
-    )) {
-      chartDateMap[format(date, DATE_FORMAT)] = true;
-    }
-
-    if (step > 1) {
-      // Reduce the step size of last 90 days
-      for (let date of eachDayOfInterval(
-        { end: endDate, start: subDays(endDate, 90) },
-        { step: 3 }
-      )) {
-        chartDateMap[format(date, DATE_FORMAT)] = true;
-      }
-
-      // Reduce the step size of last 30 days
-      for (let date of eachDayOfInterval(
-        { end: endDate, start: subDays(endDate, 30) },
-        { step: 1 }
-      )) {
-        chartDateMap[format(date, DATE_FORMAT)] = true;
-      }
-    }
-
-    // Make sure the end date is present
-    chartDateMap[format(endDate, DATE_FORMAT)] = true;
-
-    // Make sure some key dates are present
-    for (let dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
-      const { endDate: dateRangeEnd, startDate: dateRangeStart } =
-        getIntervalFromDateRange(dateRange);
-
-      if (
-        !isBefore(dateRangeStart, startDate) &&
-        !isAfter(dateRangeStart, endDate)
-      ) {
-        chartDateMap[format(dateRangeStart, DATE_FORMAT)] = true;
-      }
-
-      if (
-        !isBefore(dateRangeEnd, startDate) &&
-        !isAfter(dateRangeEnd, endDate)
-      ) {
-        chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
-      }
-    }
-
-    return chartDateMap;
   }
 
   private getChartDateMap({

@@ -536,6 +536,8 @@ export class AdminService {
             })?._count ?? 0;
 
           return {
+            activitiesCount,
+            date: dateOfFirstActivity,
             dataSource,
             marketDataItemCount,
             symbol,

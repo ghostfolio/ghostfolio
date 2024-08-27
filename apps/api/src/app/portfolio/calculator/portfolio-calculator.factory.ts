@@ -66,12 +66,11 @@ export class PortfolioCalculatorFactory {
             activities,
             currency,
             currentRateService: this.currentRateService,
-            dateRange,
-            useCache,
             userId,
             configurationService: this.configurationService,
             exchangeRateDataService: this.exchangeRateDataService,
-            redisCacheService: this.redisCacheService
+            redisCacheService: this.redisCacheService,
+            filters
           },
           this.orderservice
         );
@@ -82,12 +81,11 @@ export class PortfolioCalculatorFactory {
             activities,
             currency,
             currentRateService: this.currentRateService,
-            dateRange,
-            useCache,
             userId,
             configurationService: this.configurationService,
             exchangeRateDataService: this.exchangeRateDataService,
-            redisCacheService: this.redisCacheService
+            redisCacheService: this.redisCacheService,
+            filters
           },
           this.orderservice
         );

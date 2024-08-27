@@ -2,16 +2,13 @@ import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import {
-  getFactor,
-  getInterval
-} from '@ghostfolio/api/helper/portfolio.helper';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MAX_CHART_ITEMS } from '@ghostfolio/common/config';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 
 import { Inject, Logger } from '@nestjs/common';
@@ -43,21 +40,19 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       configurationService,
       currency,
       currentRateService,
-      dateRange,
       exchangeRateDataService,
       redisCacheService,
-      useCache,
-      userId
+      userId,
+      filters
     }: {
       accountBalanceItems: HistoricalDataItem[];
       activities: Activity[];
       configurationService: ConfigurationService;
       currency: string;
       currentRateService: CurrentRateService;
-      dateRange: DateRange;
       exchangeRateDataService: ExchangeRateDataService;
       redisCacheService: RedisCacheService;
-      useCache: boolean;
+      filters: Filter[];
       userId: string;
     },
     @Inject()
@@ -68,11 +63,10 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       activities,
       configurationService,
       currency,
+      filters,
       currentRateService,
-      dateRange,
       exchangeRateDataService,
       redisCacheService,
-      useCache,
       userId
     });
   }
@@ -87,23 +81,31 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     withDataDecimation?: boolean;
     withTimeWeightedReturn?: boolean;
   }): Promise<HistoricalDataItem[]> {
-    const { endDate, startDate } = getInterval(dateRange, this.getStartDate());
+    const { endDate, startDate } = getIntervalFromDateRange(
+      dateRange,
+      this.getStartDate()
+    );
 
     const daysInMarket = differenceInDays(endDate, startDate) + 1;
     const step = withDataDecimation
-      ? Math.round(daysInMarket / Math.min(daysInMarket, MAX_CHART_ITEMS))
+      ? Math.round(
+          daysInMarket /
+            Math.min(
+              daysInMarket,
+              this.configurationService.get('MAX_CHART_ITEMS')
+            )
+        )
       : 1;
 
-    let item = super.getChartData({
-      step,
+    let item = await super.getPerformance({
       end: endDate,
       start: startDate
     });
 
     if (!withTimeWeightedReturn) {
-      return item;
+      return item.chart;
     } else {
-      let itemResult = await item;
+      let itemResult = item.chart;
       let dates = itemResult.map((item) => parseDate(item.date));
       let timeWeighted = await this.getTimeWeightedChartData({
         dates
@@ -145,13 +147,14 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     const end = new Date(Date.now());
 
     const holdings = await this.getHoldings(orders, parseDate(start), end);
-    const marketMap = await this.currentRateService.getToday(
-      this.mapToDataGatheringItems(orders)
-    );
+    const marketMap = await this.currentRateService.getValues({
+      dataGatheringItems: this.mapToDataGatheringItems(orders),
+      dateQuery: { in: [end] }
+    });
     const endString = format(end, DATE_FORMAT);
     let exchangeRates = await Promise.all(
       Object.keys(holdings[endString]).map(async (holding) => {
-        let symbol = marketMap.find((m) => m.symbol === holding);
+        let symbol = marketMap.values.find((m) => m.symbol === holding);
         let symbolCurrency = this.getCurrencyFromActivities(orders, holding);
         let exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
           1,
@@ -175,7 +178,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
         if (!holdings[endString][holding].toNumber()) {
           return sum;
         }
-        let symbol = marketMap.find((m) => m.symbol === holding);
+        let symbol = marketMap.values.find((m) => m.symbol === holding);
 
         if (symbol?.marketPrice === undefined) {
           Logger.warn(
