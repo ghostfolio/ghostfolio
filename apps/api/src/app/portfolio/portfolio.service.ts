@@ -214,7 +214,7 @@ export class PortfolioService {
     };
   }
 
-   @LogPerformance
+  @LogPerformance
   public async getDividends({
     activities,
     groupBy
@@ -1225,18 +1225,6 @@ export class PortfolioService {
       };
     }
 
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      accountBalanceItems,
-      activities,
-      dateRange,
-      userId,
-      calculationType: PerformanceCalculationType.TWR,
-      currency: userCurrency,
-      hasFilters: filters?.length > 0,
-      isExperimentalFeatures:
-        this.request.user.Settings.settings.isExperimentalFeatures
-    });
-
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { chart } = await portfolioCalculator.getPerformance({
@@ -1267,9 +1255,8 @@ export class PortfolioService {
 
     return {
       chart,
-      errors,
-      hasErrors,
-      firstOrderDate: parseDate(historicalData[0]?.date),
+      hasErrors: false,
+      firstOrderDate: parseDate(chart[0]?.date),
       performance: {
         netPerformance,
         netPerformanceWithCurrencyEffect,

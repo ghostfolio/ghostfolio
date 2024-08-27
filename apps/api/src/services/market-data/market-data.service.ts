@@ -24,10 +24,6 @@ export class MarketDataService {
 
   private dateQueryHelper = new DateQueryHelper();
 
-  lock = new AwaitLock();
-
-  private dateQueryHelper = new DateQueryHelper();
-
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.deleteMany({
       where: {

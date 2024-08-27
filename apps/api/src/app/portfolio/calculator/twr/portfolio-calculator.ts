@@ -1292,7 +1292,6 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       netPerformanceWithCurrencyEffectMap,
       timeWeightedInvestmentValues,
       timeWeightedInvestmentValuesWithCurrencyEffect,
-      totalAccountBalanceInBaseCurrency,
       totalDividend,
       totalDividendInBaseCurrency,
       totalInterest,
