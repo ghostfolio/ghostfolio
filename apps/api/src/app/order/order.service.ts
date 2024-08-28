@@ -367,10 +367,6 @@ export class OrderService {
       return type;
     });
 
-    const searchQuery = filters?.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-
     if (filtersByAccount?.length > 0) {
       where.accountId = {
         in: filtersByAccount.map(({ id }) => {
