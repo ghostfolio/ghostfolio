@@ -18,6 +18,7 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -81,9 +82,7 @@ describe('PortfolioCalculator', () => {
 
   describe('get current positions', () => {
     it.only('with MSFT buy', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2023-07-10').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
@@ -122,15 +121,10 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'USD',
-        hasFilters: false,
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
-        parseDate('2023-07-10')
-      );
-
-      spy.mockRestore();
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
       expect(portfolioSnapshot).toMatchObject({
         errors: [],
@@ -161,6 +155,12 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
+
+      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+        expect.objectContaining({
+          totalInvestmentValueWithCurrencyEffect: 298.58
+        })
+      );
     });
   });
 });

@@ -70,7 +70,7 @@
   </div>
 }
 
-<div class="activities">
+<div class="overflow-x-auto">
   <table
     class="gf-table w-100"
     mat-table
@@ -466,11 +466,9 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          !row.isDraft &&
-          row.type !== 'FEE' &&
-          row.type !== 'INTEREST' &&
-          row.type !== 'ITEM' &&
-          row.type !== 'LIABILITY'
+          row.Account?.isExcluded !== true &&
+          row.isDraft === false &&
+          ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
       (click)="onClickActivity(row)"
     ></tr>

@@ -19,29 +19,29 @@ export class EmergencyFundSetup extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    if (this.emergencyFund > ruleSettings.threshold) {
+    if (this.emergencyFund < ruleSettings.thresholdMin) {
       return {
-        evaluation: 'An emergency fund has been set up',
-        value: true
+        evaluation: 'No emergency fund has been set up',
+        value: false
       };
     }
 
     return {
-      evaluation: 'No emergency fund has been set up',
-      value: false
+      evaluation: 'An emergency fund has been set up',
+      value: true
     };
   }
 
   public getSettings(aUserSettings: UserSettings): Settings {
     return {
       baseCurrency: aUserSettings.baseCurrency,
-      isActive: true,
-      threshold: 0
+      isActive: aUserSettings.xRayRules[this.getKey()].isActive,
+      thresholdMin: 0
     };
   }
 }
 
 interface Settings extends RuleSettings {
   baseCurrency: string;
-  threshold: number;
+  thresholdMin: number;
 }

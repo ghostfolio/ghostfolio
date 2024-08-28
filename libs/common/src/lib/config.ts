@@ -41,7 +41,7 @@ export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
-export const DEFAULT_ROOT_URL = 'http://localhost:4200';
+export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -88,7 +88,9 @@ export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
 export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
 
-export const MAX_CHART_ITEMS = 365;
+export const MAX_TOP_HOLDINGS = 50;
+
+export const NUMERICAL_PRECISION_THRESHOLD = 100000;
 
 export const PROPERTY_BENCHMARKS = 'BENCHMARKS';
 export const PROPERTY_BETTER_UPTIME_MONITOR_ID = 'BETTER_UPTIME_MONITOR_ID';
@@ -129,6 +131,7 @@ export const REPLACE_NAME_PARTS = [
 ];
 
 export const SUPPORTED_LANGUAGE_CODES = [
+  'ca',
   'de',
   'en',
   'es',

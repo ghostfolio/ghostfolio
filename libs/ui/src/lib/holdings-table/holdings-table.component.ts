@@ -2,7 +2,10 @@ import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset
 import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
-import { PortfolioPosition, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -102,7 +105,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onOpenPositionDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -110,7 +113,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public onShowAllPositions() {
+  public onShowAllHoldings() {
     this.pageSize = Number.MAX_SAFE_INTEGER;
 
     setTimeout(() => {

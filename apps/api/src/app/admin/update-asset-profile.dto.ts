@@ -1,8 +1,9 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+
 import { AssetClass, AssetSubClass, Prisma, Tag } from '@prisma/client';
 import {
   IsArray,
   IsEnum,
-  IsISO4217CurrencyCode,
   IsObject,
   IsOptional,
   IsString,
@@ -26,7 +27,7 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   countries?: Prisma.InputJsonArray;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   @IsOptional()
   currency?: string;
 

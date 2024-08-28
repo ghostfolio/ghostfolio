@@ -6,10 +6,17 @@ import {
   ghostfolioScraperApiSymbolPrefix
 } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Filter,
+  InfoItem,
+  User
+} from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { SelectionModel } from '@angular/cdk/collections';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -69,6 +76,11 @@ export class AdminMarketDataComponent
     })
     .concat([
       {
+        id: 'BENCHMARKS',
+        label: $localize`Benchmarks`,
+        type: <Filter['type']>'PRESET_ID'
+      },
+      {
         id: 'CURRENCIES',
         label: $localize`Currencies`,
         type: <Filter['type']>'PRESET_ID'
@@ -91,32 +103,23 @@ export class AdminMarketDataComponent
     new MatTableDataSource();
   public defaultDateFormat: string;
   public deviceType: string;
-  public displayedColumns = [
-    'nameWithSymbol',
-    'dataSource',
-    'assetClass',
-    'assetSubClass',
-    'date',
-    'activitiesCount',
-    'marketDataItemCount',
-    'sectorsCount',
-    'countriesCount',
-    'comment',
-    'actions'
-  ];
+  public displayedColumns: string[] = [];
   public filters$ = new Subject<Filter[]>();
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
+  public hasPermissionForSubscription: boolean;
+  public info: InfoItem;
   public isLoading = false;
   public isUUID = isUUID;
   public placeholder = '';
   public pageSize = DEFAULT_PAGE_SIZE;
+  public selection: SelectionModel<Partial<SymbolProfile>>;
   public totalItems = 0;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
@@ -126,6 +129,33 @@ export class AdminMarketDataComponent
     private router: Router,
     private userService: UserService
   ) {
+    this.info = this.dataService.fetchInfo();
+
+    this.hasPermissionForSubscription = hasPermission(
+      this.info?.globalPermissions,
+      permissions.enableSubscription
+    );
+
+    this.displayedColumns = [
+      'select',
+      'nameWithSymbol',
+      'dataSource',
+      'assetClass',
+      'assetSubClass',
+      'date',
+      'activitiesCount',
+      'marketDataItemCount',
+      'sectorsCount',
+      'countriesCount'
+    ];
+
+    if (this.hasPermissionForSubscription) {
+      this.displayedColumns.push('isUsedByUsersWithSubscription');
+    }
+
+    this.displayedColumns.push('comment');
+    this.displayedColumns.push('actions');
+
     this.route.queryParams
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
@@ -183,6 +213,8 @@ export class AdminMarketDataComponent
 
     this.benchmarks = benchmarks;
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.selection = new SelectionModel(true);
   }
 
   public onChangePage(page: PageEvent) {
@@ -193,8 +225,16 @@ export class AdminMarketDataComponent
     });
   }
 
-  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+  public onDeleteAssetProfile({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
+  }
+
+  public onDeleteAssetProfiles() {
+    this.adminMarketDataService.deleteAssetProfiles(
+      this.selection.selected.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      })
+    );
   }
 
   public onGather7Days() {
@@ -226,21 +266,27 @@ export class AdminMarketDataComponent
       .subscribe(() => {});
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onOpenAssetProfileDialog({ dataSource, symbol }: UniqueAsset) {
+  public onOpenAssetProfileDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.router.navigate([], {
       queryParams: {
         dataSource,
@@ -280,6 +326,8 @@ export class AdminMarketDataComponent
 
     this.placeholder =
       this.activeFilters.length <= 0 ? $localize`Filter by...` : '';
+
+    this.selection.clear();
 
     this.adminService
       .fetchAdminMarketData({

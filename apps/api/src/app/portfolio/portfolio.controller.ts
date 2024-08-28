@@ -2,12 +2,12 @@ import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
-import { getInterval } from '@ghostfolio/api/helper/portfolio.helper';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
@@ -15,6 +15,7 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
   HEADER_KEY_IMPERSONATION
@@ -30,7 +31,8 @@ import {
 } from '@ghostfolio/common/interfaces';
 import {
   hasReadRestrictedAccessPermission,
-  isRestrictedView
+  isRestrictedView,
+  permissions
 } from '@ghostfolio/common/permissions';
 import type {
   DateRange,
@@ -39,12 +41,14 @@ import type {
 } from '@ghostfolio/common/types';
 
 import {
+  Body,
   Controller,
   Get,
   Headers,
   HttpException,
   Inject,
   Param,
+  Put,
   Query,
   UseGuards,
   UseInterceptors,
@@ -52,12 +56,13 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { AssetClass, AssetSubClass } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { PortfolioService } from './portfolio.service';
+import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -224,6 +229,7 @@ export class PortfolioController {
             : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
+        holdings: hasDetails ? portfolioPosition.holdings : [],
         markets: hasDetails ? portfolioPosition.markets : undefined,
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
@@ -261,7 +267,7 @@ export class PortfolioController {
       await this.impersonationService.validateImpersonationId(impersonationId);
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
-    const { endDate, startDate } = getInterval(dateRange);
+    const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } = await this.orderService.getOrders({
       endDate,
@@ -517,9 +523,6 @@ export class PortfolioController {
     @Param('accessId') accessId
   ): Promise<PortfolioPublicDetails> {
     const access = await this.accessService.access({ id: accessId });
-    const user = await this.userService.user({
-      id: access.userId
-    });
 
     if (!access) {
       throw new HttpException(
@@ -529,6 +532,11 @@ export class PortfolioController {
     }
 
     let hasDetails = true;
+
+    const user = await this.userService.user({
+      id: access.userId
+    });
+
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       hasDetails = user.subscription.type === 'Premium';
     }
@@ -585,23 +593,23 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPosition(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
-    @Param('dataSource') dataSource,
-    @Param('symbol') symbol
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
   ): Promise<PortfolioHoldingDetail> {
-    const position = await this.portfolioService.getPosition(
+    const holding = await this.portfolioService.getPosition(
       dataSource,
       impersonationId,
       symbol
     );
 
-    if (position) {
-      return position;
+    if (!holding) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
     }
 
-    throw new HttpException(
-      getReasonPhrase(StatusCodes.NOT_FOUND),
-      StatusCodes.NOT_FOUND
-    );
+    return holding;
   }
 
   @Get('report')
@@ -623,5 +631,37 @@ export class PortfolioController {
     }
 
     return report;
+  }
+
+  @HasPermission(permissions.updateOrder)
+  @Put('position/:dataSource/:symbol/tags')
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateHoldingTags(
+    @Body() data: UpdateHoldingTagsDto,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    const holding = await this.portfolioService.getPosition(
+      dataSource,
+      impersonationId,
+      symbol
+    );
+
+    if (!holding) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.NOT_FOUND),
+        StatusCodes.NOT_FOUND
+      );
+    }
+
+    await this.portfolioService.updateTags({
+      dataSource,
+      impersonationId,
+      symbol,
+      tags: data.tags,
+      userId: this.request.user.id
+    });
   }
 }

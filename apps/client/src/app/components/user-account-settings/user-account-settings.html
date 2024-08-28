@@ -36,11 +36,9 @@
                     onChangeUserSetting('baseCurrency', $event.value)
                   "
                 >
-                  <mat-option
-                    *ngFor="let currency of currencies"
-                    [value]="currency"
-                    >{{ currency }}</mat-option
-                  >
+                  @for (currency of currencies; track currency) {
+                    <mat-option [value]="currency">{{ currency }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -48,20 +46,18 @@
           <div class="align-items-center d-flex mb-2">
             <div class="pr-1 w-50">
               <div i18n>Language</div>
-              <div
-                *ngIf="isCommunityLanguage()"
-                class="hint-text text-muted"
-                i18n
-              >
-                If a translation is missing, kindly support us in extending it
-                <a
-                  href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
-                    language
-                  }}.xlf"
-                  target="_blank"
-                  >here</a
-                >.
-              </div>
+              @if (isCommunityLanguage()) {
+                <div class="hint-text text-muted" i18n>
+                  If a translation is missing, kindly support us in extending it
+                  <a
+                    href="https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{
+                      language
+                    }}.xlf"
+                    target="_blank"
+                    >here</a
+                  >.
+                </div>
+              }
             </div>
             <div class="pl-1 w-50">
               <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -76,6 +72,12 @@
                   <mat-option [value]="null" />
                   <mat-option value="de">Deutsch</mat-option>
                   <mat-option value="en">English</mat-option>
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="ca"
+                      >Català (<ng-container i18n>Community</ng-container
+                      >)</mat-option
+                    >
+                  }
                   @if (user?.settings?.isExperimentalFeatures) {
                     <mat-option value="zh"
                       >Chinese (<ng-container i18n>Community</ng-container
@@ -134,9 +136,9 @@
                   "
                 >
                   <mat-option [value]="null" />
-                  <mat-option *ngFor="let locale of locales" [value]="locale">{{
-                    locale
-                  }}</mat-option>
+                  @for (locale of locales; track locale) {
+                    <mat-option [value]="locale">{{ locale }}</mat-option>
+                  }
                 </mat-select>
               </mat-form-field>
             </div>
@@ -193,15 +195,14 @@
             color="primary"
             hideIcon="true"
             [checked]="isWebAuthnEnabled === true"
-            [disabled]="!hasPermissionToUpdateUserSettings"
+            [disabled]="
+              !hasPermissionToUpdateUserSettings || !isFingerprintSupported
+            "
             (change)="onSignInWithFingerprintChange($event)"
           />
         </div>
       </div>
-      <div
-        *ngIf="hasPermissionToUpdateUserSettings"
-        class="align-items-center d-flex mt-4 py-1"
-      >
+      <div class="align-items-center d-flex mt-4 py-1">
         <div class="pr-1 w-50">
           <div i18n>Experimental Features</div>
           <div class="hint-text text-muted" i18n>

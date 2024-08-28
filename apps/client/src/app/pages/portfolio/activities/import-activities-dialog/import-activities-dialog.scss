@@ -53,7 +53,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .drop-area {
     border-color: rgba(
       var(--palette-foreground-divider-dark),

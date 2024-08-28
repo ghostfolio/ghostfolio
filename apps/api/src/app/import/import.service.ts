@@ -13,16 +13,13 @@ import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/da
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import {
-  DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
-} from '@ghostfolio/common/config';
+import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import {
   AccountWithPlatform,
   OrderWithAccount,
@@ -54,7 +51,7 @@ export class ImportService {
     dataSource,
     symbol,
     userCurrency
-  }: UniqueAsset & { userCurrency: string }): Promise<Activity[]> {
+  }: AssetProfileIdentifier & { userCurrency: string }): Promise<Activity[]> {
     try {
       const { firstBuyDate, historicalData, orders } =
         await this.portfolioService.getPosition(dataSource, undefined, symbol);
@@ -75,66 +72,74 @@ export class ImportService {
         })
       ]);
 
-      const accounts = orders.map((order) => {
-        return order.Account;
-      });
+      const accounts = orders
+        .filter(({ Account }) => {
+          return !!Account;
+        })
+        .map(({ Account }) => {
+          return Account;
+        });
 
       const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
-      return Object.entries(dividends).map(([dateString, { marketPrice }]) => {
-        const quantity =
-          historicalData.find((historicalDataItem) => {
-            return historicalDataItem.date === dateString;
-          })?.quantity ?? 0;
+      return await Promise.all(
+        Object.entries(dividends).map(async ([dateString, { marketPrice }]) => {
+          const quantity =
+            historicalData.find((historicalDataItem) => {
+              return historicalDataItem.date === dateString;
+            })?.quantity ?? 0;
 
-        const value = new Big(quantity).mul(marketPrice).toNumber();
+          const value = new Big(quantity).mul(marketPrice).toNumber();
 
-        const date = parseDate(dateString);
-        const isDuplicate = orders.some((activity) => {
-          return (
-            activity.accountId === Account?.id &&
-            activity.SymbolProfile.currency === assetProfile.currency &&
-            activity.SymbolProfile.dataSource === assetProfile.dataSource &&
-            isSameSecond(activity.date, date) &&
-            activity.quantity === quantity &&
-            activity.SymbolProfile.symbol === assetProfile.symbol &&
-            activity.type === 'DIVIDEND' &&
-            activity.unitPrice === marketPrice
-          );
-        });
+          const date = parseDate(dateString);
+          const isDuplicate = orders.some((activity) => {
+            return (
+              activity.accountId === Account?.id &&
+              activity.SymbolProfile.currency === assetProfile.currency &&
+              activity.SymbolProfile.dataSource === assetProfile.dataSource &&
+              isSameSecond(activity.date, date) &&
+              activity.quantity === quantity &&
+              activity.SymbolProfile.symbol === assetProfile.symbol &&
+              activity.type === 'DIVIDEND' &&
+              activity.unitPrice === marketPrice
+            );
+          });
 
-        const error: ActivityError = isDuplicate
-          ? { code: 'IS_DUPLICATE' }
-          : undefined;
+          const error: ActivityError = isDuplicate
+            ? { code: 'IS_DUPLICATE' }
+            : undefined;
 
-        return {
-          Account,
-          date,
-          error,
-          quantity,
-          value,
-          accountId: Account?.id,
-          accountUserId: undefined,
-          comment: undefined,
-          currency: undefined,
-          createdAt: undefined,
-          fee: 0,
-          feeInBaseCurrency: 0,
-          id: assetProfile.id,
-          isDraft: false,
-          SymbolProfile: assetProfile,
-          symbolProfileId: assetProfile.id,
-          type: 'DIVIDEND',
-          unitPrice: marketPrice,
-          updatedAt: undefined,
-          userId: Account?.userId,
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+          return {
+            Account,
+            date,
+            error,
+            quantity,
             value,
-            assetProfile.currency,
-            userCurrency
-          )
-        };
-      });
+            accountId: Account?.id,
+            accountUserId: undefined,
+            comment: undefined,
+            currency: undefined,
+            createdAt: undefined,
+            fee: 0,
+            feeInBaseCurrency: 0,
+            id: assetProfile.id,
+            isDraft: false,
+            SymbolProfile: assetProfile,
+            symbolProfileId: assetProfile.id,
+            type: 'DIVIDEND',
+            unitPrice: marketPrice,
+            updatedAt: undefined,
+            userId: Account?.userId,
+            valueInBaseCurrency:
+              await this.exchangeRateDataService.toCurrencyAtDate(
+                value,
+                assetProfile.currency,
+                userCurrency,
+                date
+              )
+          };
+        })
+      );
     } catch {
       return [];
     }
@@ -295,6 +300,7 @@ export class ImportService {
         figi,
         figiComposite,
         figiShareClass,
+        holdings,
         id,
         isin,
         name,
@@ -367,6 +373,7 @@ export class ImportService {
             figi,
             figiComposite,
             figiShareClass,
+            holdings,
             id,
             isin,
             name,
@@ -429,18 +436,21 @@ export class ImportService {
         ...order,
         error,
         value,
-        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        feeInBaseCurrency: await this.exchangeRateDataService.toCurrencyAtDate(
           fee,
           assetProfile.currency,
-          userCurrency
+          userCurrency,
+          date
         ),
         // @ts-ignore
         SymbolProfile: assetProfile,
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          value,
-          assetProfile.currency,
-          userCurrency
-        )
+        valueInBaseCurrency:
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            value,
+            assetProfile.currency,
+            userCurrency,
+            date
+          )
       });
     }
 
@@ -538,6 +548,7 @@ export class ImportService {
             assetSubClass: undefined,
             countries: undefined,
             createdAt: undefined,
+            holdings: undefined,
             id: undefined,
             sectors: undefined,
             updatedAt: undefined

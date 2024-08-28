@@ -1,6 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { UniqueAsset } from '@ghostfolio/common/interfaces';
+import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -17,7 +17,7 @@ export class LogoService {
   public async getLogoByDataSourceAndSymbol({
     dataSource,
     symbol
-  }: UniqueAsset) {
+  }: AssetProfileIdentifier) {
     if (!DataSource[dataSource]) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),

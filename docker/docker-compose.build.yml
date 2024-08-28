@@ -1,4 +1,3 @@
-version: '3.9'
 services:
   ghostfolio:
     build: ../
@@ -7,7 +6,6 @@ services:
       - ../.env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?connect_timeout=300&sslmode=prefer
-      NODE_ENV: production
       REDIS_HOST: redis
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
@@ -22,8 +20,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   postgres:
-    image: postgres:15
+    image: docker.io/library/postgres:15
     env_file:
       - ../.env
     healthcheck:
@@ -33,8 +32,9 @@ services:
       retries: 5
     volumes:
       - postgres:/var/lib/postgresql/data
+
   redis:
-    image: redis:alpine
+    image: docker.io/library/redis:alpine
     env_file:
       - ../.env
     command: ['redis-server', '--requirepass', $REDIS_PASSWORD]

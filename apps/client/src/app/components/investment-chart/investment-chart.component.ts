@@ -14,7 +14,7 @@ import {
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { ColorScheme, DateRange, GroupBy } from '@ghostfolio/common/types';
+import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -58,7 +58,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() isInPercent = false;
   @Input() isLoading = false;
   @Input() locale = getLocale();
-  @Input() range: DateRange = 'max';
   @Input() savingsRate = 0;
 
   @ViewChild('chartCanvas') chartCanvas;

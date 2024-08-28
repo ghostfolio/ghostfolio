@@ -5,11 +5,14 @@
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-select formControlName="status">
             <mat-option />
-            <mat-option
-              *ngFor="let statusFilterOption of statusFilterOptions"
-              [value]="statusFilterOption"
-              >{{ statusFilterOption }}</mat-option
-            >
+            @for (
+              statusFilterOption of statusFilterOptions;
+              track statusFilterOption
+            ) {
+              <mat-option [value]="statusFilterOption">{{
+                statusFilterOption
+              }}</mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </form>
@@ -28,15 +31,11 @@
             <ng-container i18n>Type</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <ng-container *ngIf="element.name === 'GATHER_ASSET_PROFILE'" i18n>
-              Asset Profile
-            </ng-container>
-            <ng-container
-              *ngIf="element.name === 'GATHER_HISTORICAL_MARKET_DATA'"
-              i18n
-            >
-              Historical Market Data
-            </ng-container>
+            @if (element.name === 'GATHER_ASSET_PROFILE') {
+              <ng-container i18n>Asset Profile</ng-container>
+            } @else if (element.name === 'GATHER_HISTORICAL_MARKET_DATA') {
+              <ng-container i18n>Historical Market Data</ng-container>
+            }
           </td>
         </ng-container>
 
@@ -109,37 +108,29 @@
             <ng-container i18n>Status</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <ion-icon
-              *ngIf="element.state === 'active'"
-              class="h6 mb-0"
-              name="play-outline"
-            />
-            <ion-icon
-              *ngIf="element.state === 'completed'"
-              class="h6 mb-0 text-success"
-              name="checkmark-circle-outline"
-            />
-            <ion-icon
-              *ngIf="element.state === 'delayed'"
-              class="h6 mb-0"
-              name="time-outline"
-              [ngClass]="{ 'text-danger': element.stacktrace?.length > 0 }"
-            />
-            <ion-icon
-              *ngIf="element.state === 'failed'"
-              class="h6 mb-0 text-danger"
-              name="alert-circle-outline"
-            />
-            <ion-icon
-              *ngIf="element.state === 'paused'"
-              class="h6 mb-0"
-              name="pause-outline"
-            />
-            <ion-icon
-              *ngIf="element.state === 'waiting'"
-              class="h6 mb-0"
-              name="cafe-outline"
-            />
+            @if (element.state === 'active') {
+              <ion-icon class="h6 mb-0" name="play-outline" />
+            } @else if (element.state === 'completed') {
+              <ion-icon
+                class="h6 mb-0 text-success"
+                name="checkmark-circle-outline"
+              />
+            } @else if (element.state === 'delayed') {
+              <ion-icon
+                class="h6 mb-0"
+                name="time-outline"
+                [ngClass]="{ 'text-danger': element.stacktrace?.length > 0 }"
+              />
+            } @else if (element.state === 'failed') {
+              <ion-icon
+                class="h6 mb-0 text-danger"
+                name="alert-circle-outline"
+              />
+            } @else if (element.state === 'paused') {
+              <ion-icon class="h6 mb-0" name="pause-outline" />
+            } @else if (element.state === 'waiting') {
+              <ion-icon class="h6 mb-0" name="cafe-outline" />
+            }
           </td>
         </ng-container>
 

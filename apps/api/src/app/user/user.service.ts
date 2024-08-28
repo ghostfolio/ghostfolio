@@ -1,3 +1,4 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
@@ -40,6 +41,7 @@ export class UserService {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
@@ -188,11 +190,23 @@ export class UserService {
     (user.Settings.settings as UserSettings).dateRange =
       (user.Settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : (user.Settings.settings as UserSettings)?.dateRange ?? 'max';
+        : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
 
     // Set default value for view mode
     if (!(user.Settings.settings as UserSettings).viewMode) {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
+    }
+
+    // Set default values for X-ray rules
+    if (!(user.Settings.settings as UserSettings).xRayRules) {
+      (user.Settings.settings as UserSettings).xRayRules = {
+        AccountClusterRiskCurrentInvestment: { isActive: true },
+        AccountClusterRiskSingleAccount: { isActive: true },
+        CurrencyClusterRiskBaseCurrencyCurrentInvestment: { isActive: true },
+        CurrencyClusterRiskCurrentInvestment: { isActive: true },
+        EmergencyFundSetup: { isActive: true },
+        FeeRatioInitialInvestment: { isActive: true }
+      };
     }
 
     let currentPermissions = getPermissions(user.role);
@@ -235,11 +249,15 @@ export class UserService {
 
         currentPermissions = without(
           currentPermissions,
+          permissions.accessHoldingsChart,
           permissions.createAccess
         );
 
         // Reset benchmark
         user.Settings.settings.benchmark = undefined;
+
+        // Reset holdings view mode
+        user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
         currentPermissions.push(permissions.reportDataGlitch);
 
@@ -398,8 +416,8 @@ export class UserService {
     } catch {}
 
     try {
-      await this.prismaService.order.deleteMany({
-        where: { userId: where.id }
+      await this.orderService.deleteOrders({
+        userId: where.id
       });
     } catch {}
 
@@ -415,9 +433,11 @@ export class UserService {
   }
 
   public async updateUserSetting({
+    emitPortfolioChangedEvent,
     userId,
     userSettings
   }: {
+    emitPortfolioChangedEvent: boolean;
     userId: string;
     userSettings: UserSettings;
   }) {
@@ -438,12 +458,14 @@ export class UserService {
       }
     });
 
-    this.eventEmitter.emit(
-      PortfolioChangedEvent.getName(),
-      new PortfolioChangedEvent({
-        userId
-      })
-    );
+    if (emitPortfolioChangedEvent) {
+      this.eventEmitter.emit(
+        PortfolioChangedEvent.getName(),
+        new PortfolioChangedEvent({
+          userId
+        })
+      );
+    }
 
     return settings;
   }

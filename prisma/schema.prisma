@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = []
-  binaryTargets   = ["debian-openssl-1.1.x", "linux-arm64-openssl-3.0.x", "native"]
+  binaryTargets   = ["debian-openssl-3.0.x", "linux-arm64-openssl-3.0.x", "native"]
 }
 
 datasource db {
@@ -164,6 +164,7 @@ model SymbolProfile {
   figi                   String?
   figiComposite          String?
   figiShareClass         String?
+  holdings               Json?                   @default("[]")
   id                     String                  @id @default(uuid())
   isin                   String?
   name                   String?
@@ -190,6 +191,7 @@ model SymbolProfileOverrides {
   assetClass      AssetClass?
   assetSubClass   AssetSubClass?
   countries       Json?          @default("[]")
+  holdings        Json?          @default("[]")
   name            String?
   sectors         Json?          @default("[]")
   url             String?

@@ -175,9 +175,10 @@ export class ManualService implements DataProviderInterface {
         .then((_result) => _result.flat());
 
       for (const { currency, symbol } of symbolProfiles) {
-        let marketPrice = marketData.find((marketDataItem) => {
-          return marketDataItem.symbol === symbol;
-        })?.marketPrice;
+        let marketPrice =
+          marketData.find((marketDataItem) => {
+            return marketDataItem.symbol === symbol;
+          })?.marketPrice ?? 0;
 
         response[symbol] = {
           currency,
@@ -264,7 +265,7 @@ export class ManualService implements DataProviderInterface {
         signal: abortController.signal
       });
 
-      if (headers['content-type'] === 'application/json') {
+      if (headers['content-type'].includes('application/json')) {
         const data = JSON.parse(body);
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]

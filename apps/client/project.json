@@ -36,6 +36,10 @@
         "ngswConfigPath": "apps/client/ngsw-config.json"
       },
       "configurations": {
+        "development-ca": {
+          "baseHref": "/ca/",
+          "localize": ["ca"]
+        },
         "development-de": {
           "baseHref": "/de/",
           "localize": ["de"]
@@ -163,8 +167,11 @@
     "serve": {
       "executor": "@nx/angular:webpack-dev-server",
       "options": {
+        "buildTarget": "client:build",
         "proxyConfig": "apps/client/proxy.conf.json",
-        "browserTarget": "client:build"
+        "ssl": true,
+        "sslCert": "apps/client/localhost.cert",
+        "sslKey": "apps/client/localhost.pem"
       },
       "configurations": {
         "development-de": {
@@ -209,6 +216,7 @@
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
+          "messages.ca.xlf",
           "messages.de.xlf",
           "messages.es.xlf",
           "messages.fr.xlf",
@@ -237,6 +245,10 @@
   },
   "i18n": {
     "locales": {
+      "ca": {
+        "baseHref": "/ca/",
+        "translation": "apps/client/src/locales/messages.ca.xlf"
+      },
       "de": {
         "baseHref": "/de/",
         "translation": "apps/client/src/locales/messages.de.xlf"

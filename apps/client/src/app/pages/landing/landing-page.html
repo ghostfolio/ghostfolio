@@ -32,7 +32,7 @@
 <div class="container">
   <div class="button-container mb-5 row">
     <div class="align-items-center col d-flex justify-content-center">
-      <ng-container *ngIf="hasPermissionToCreateUser">
+      @if (hasPermissionToCreateUser) {
         <a
           color="primary"
           i18n
@@ -41,72 +41,74 @@
         >
           Get Started
         </a>
-      </ng-container>
-      <ng-container *ngIf="hasPermissionForDemo">
-        <div *ngIf="hasPermissionToCreateUser" class="mx-3 text-muted" i18n>
-          or
-        </div>
+      }
+      @if (hasPermissionForDemo) {
+        @if (hasPermissionToCreateUser) {
+          <div class="mx-3 text-muted" i18n>or</div>
+        }
         <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
-      </ng-container>
+      }
     </div>
   </div>
 
-  <div *ngIf="hasPermissionForStatistics" class="row mb-5">
-    <div
-      class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
-    >
-      <a
-        class="d-block"
-        title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
-        [routerLink]="['/open']"
+  @if (hasPermissionForStatistics) {
+    <div class="row mb-5">
+      <div
+        class="col-md-4 d-flex my-1"
+        [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
       >
-        <gf-value
-          i18n
-          icon="people-outline"
-          size="large"
-          [value]="statistics?.activeUsers30d ?? '-'"
-          >Monthly Active Users</gf-value
+        <a
+          class="d-block"
+          title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
+          [routerLink]="['/open']"
         >
-      </a>
-    </div>
-    <div
-      class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
-    >
-      <a
-        class="d-block"
-        title="Ghostfolio in Numbers: Stars on GitHub"
-        [routerLink]="['/open']"
+          <gf-value
+            i18n
+            icon="people-outline"
+            size="large"
+            [value]="statistics?.activeUsers30d ?? '-'"
+            >Monthly Active Users</gf-value
+          >
+        </a>
+      </div>
+      <div
+        class="col-md-4 d-flex my-1"
+        [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
       >
-        <gf-value
-          i18n
-          icon="star-outline"
-          size="large"
-          [value]="statistics?.gitHubStargazers ?? '-'"
-          >Stars on GitHub</gf-value
+        <a
+          class="d-block"
+          title="Ghostfolio in Numbers: Stars on GitHub"
+          [routerLink]="['/open']"
         >
-      </a>
-    </div>
-    <div
-      class="col-md-4 d-flex my-1"
-      [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
-    >
-      <a
-        class="d-block"
-        title="Ghostfolio in Numbers: Pulls on Docker Hub"
-        [routerLink]="['/open']"
+          <gf-value
+            i18n
+            icon="star-outline"
+            size="large"
+            [value]="statistics?.gitHubStargazers ?? '-'"
+            >Stars on GitHub</gf-value
+          >
+        </a>
+      </div>
+      <div
+        class="col-md-4 d-flex my-1"
+        [ngClass]="{ 'justify-content-center': deviceType !== 'mobile' }"
       >
-        <gf-value
-          i18n
-          icon="cloud-download-outline"
-          size="large"
-          [value]="statistics?.dockerHubPulls ?? '-'"
-          >Pulls on Docker Hub</gf-value
+        <a
+          class="d-block"
+          title="Ghostfolio in Numbers: Pulls on Docker Hub"
+          [routerLink]="['/open']"
         >
-      </a>
+          <gf-value
+            i18n
+            icon="cloud-download-outline"
+            size="large"
+            [value]="statistics?.dockerHubPulls ?? '-'"
+            >Pulls on Docker Hub</gf-value
+          >
+        </a>
+      </div>
     </div>
-  </div>
+  }
 
   <div class="row mb-5">
     <div class="col-12 text-center text-muted">
@@ -182,6 +184,14 @@
         href="https://www.sackgeld.com"
         target="_blank"
         title="Sackgeld.com – Apps für ein höheres Sackgeld"
+      ></a>
+    </div>
+    <div class="align-items-center col-md-3 d-flex justify-content-center my-1">
+      <a
+        class="d-block logo logo-selfh-st mask"
+        href="https://selfh.st"
+        target="_blank"
+        title="selfh.st — Self-hosted content and software"
       ></a>
     </div>
     <div class="col-md-3 d-flex justify-content-center my-1">
@@ -320,112 +330,130 @@
     </div>
     <div class="col-md-8 offset-md-2">
       <gf-carousel [aria-label]="'Testimonials'">
-        <div *ngFor="let testimonial of testimonials" gf-carousel-item>
-          <div class="d-flex px-4">
-            <gf-logo class="mr-3 mt-2 pt-1" size="medium" [showLabel]="false" />
-            <div>
-              <div>{{ testimonial.quote }}</div>
-              <div class="mt-2 text-muted">
-                —
-                <a
-                  *ngIf="testimonial.url"
-                  target="_blank"
-                  [href]="testimonial.url"
-                  >{{ testimonial.author }}</a
-                >
-                <span *ngIf="!testimonial.url">{{ testimonial.author }}</span
-                >,
-                {{ testimonial.country }}
+        @for (testimonial of testimonials; track testimonial) {
+          <div gf-carousel-item>
+            <div class="d-flex px-4">
+              <gf-logo
+                class="mr-3 mt-2 pt-1"
+                size="medium"
+                [showLabel]="false"
+              />
+              <div>
+                <div>{{ testimonial.quote }}</div>
+                <div class="mt-2 text-muted">
+                  —
+                  @if (testimonial.url) {
+                    <a target="_blank" [href]="testimonial.url">{{
+                      testimonial.author
+                    }}</a>
+                  } @else {
+                    <span>{{ testimonial.author }}</span>
+                  }
+                  ,
+                  {{ testimonial.country }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        }
       </gf-carousel>
     </div>
   </div>
 
-  <div *ngIf="hasPermissionForSubscription" class="row my-5">
-    <div class="col-12">
-      <h2 class="h4 text-center" i18n>
-        Members from around the globe are using
-        <a href="pricing"><strong>Ghostfolio Premium</strong></a>
-      </h2>
-    </div>
-    <div class="col-md-8 customer-map-container offset-md-2">
-      <gf-world-map-chart format="👻" [countries]="countriesOfSubscribersMap" />
-    </div>
-  </div>
-
-  <div *ngIf="hasPermissionForSubscription" class="row my-3">
-    <div class="col-12">
-      <h2 class="h4 mb-1 text-center" i18n>
-        How does <strong>Ghostfolio</strong> work?
-      </h2>
-      <p class="lead mb-3 text-center" i18n>Get started in only 3 steps</p>
-    </div>
-    <div class="col-md-4 my-2">
-      <mat-card appearance="outlined" class="h-100">
-        <mat-card-content class="d-flex flex-row">
-          <div class="flex-grow-1">
-            <div class="font-weight-bold" i18n>Sign up anonymously*</div>
-            <div class="text-muted" i18n>
-              <small>* no e-mail address nor credit card required</small>
-            </div>
-          </div>
-          <div class="pl-2 text-muted text-right">1</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-4 my-2">
-      <mat-card appearance="outlined" class="h-100">
-        <mat-card-content class="d-flex flex-row">
-          <div class="flex-grow-1">
-            <div class="font-weight-bold" i18n>
-              Add any of your historical transactions
-            </div>
-          </div>
-          <div class="pl-2 text-muted text-right">2</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-    <div class="col-md-4 my-2">
-      <mat-card appearance="outlined" class="h-100">
-        <mat-card-content class="d-flex flex-row">
-          <div class="flex-grow-1">
-            <div class="font-weight-bold" i18n>
-              Get valuable insights of your portfolio composition
-            </div>
-          </div>
-          <div class="pl-2 text-muted text-right">3</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  </div>
-
-  <div *ngIf="hasPermissionToCreateUser" class="row my-5">
-    <div class="col">
-      <h2 class="h4 mb-1 text-center" i18n>Are <strong>you</strong> ready?</h2>
-      <p class="lead mb-3 text-center" i18n>
-        Join now<ng-container *ngIf="hasPermissionForDemo">
-          or check out the example account</ng-container
-        >
-      </p>
-      <div class="align-items-center d-flex justify-content-center py-2">
-        <a
-          color="primary"
-          i18n
-          mat-flat-button
-          [routerLink]="routerLinkRegister"
-        >
-          Get Started
-        </a>
-        <ng-container *ngIf="hasPermissionForDemo">
-          <div class="mx-3 text-muted" i18n>or</div>
-          <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
-        </ng-container>
+  @if (hasPermissionForSubscription) {
+    <div class="row my-5">
+      <div class="col-12">
+        <h2 class="h4 text-center" i18n>
+          Members from around the globe are using
+          <a href="pricing"><strong>Ghostfolio Premium</strong></a>
+        </h2>
+      </div>
+      <div class="col-md-8 customer-map-container offset-md-2">
+        <gf-world-map-chart
+          format="👻"
+          [countries]="countriesOfSubscribersMap"
+        />
       </div>
     </div>
-  </div>
+  }
+
+  @if (hasPermissionForSubscription) {
+    <div class="row my-3">
+      <div class="col-12">
+        <h2 class="h4 mb-1 text-center" i18n>
+          How does <strong>Ghostfolio</strong> work?
+        </h2>
+        <p class="lead mb-3 text-center" i18n>Get started in only 3 steps</p>
+      </div>
+      <div class="col-md-4 my-2">
+        <mat-card appearance="outlined" class="h-100">
+          <mat-card-content class="d-flex flex-row">
+            <div class="flex-grow-1">
+              <div class="font-weight-bold" i18n>Sign up anonymously*</div>
+              <div class="text-muted" i18n>
+                <small>* no e-mail address nor credit card required</small>
+              </div>
+            </div>
+            <div class="pl-2 text-muted text-right">1</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-4 my-2">
+        <mat-card appearance="outlined" class="h-100">
+          <mat-card-content class="d-flex flex-row">
+            <div class="flex-grow-1">
+              <div class="font-weight-bold" i18n>
+                Add any of your historical transactions
+              </div>
+            </div>
+            <div class="pl-2 text-muted text-right">2</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-4 my-2">
+        <mat-card appearance="outlined" class="h-100">
+          <mat-card-content class="d-flex flex-row">
+            <div class="flex-grow-1">
+              <div class="font-weight-bold" i18n>
+                Get valuable insights of your portfolio composition
+              </div>
+            </div>
+            <div class="pl-2 text-muted text-right">3</div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  }
+
+  @if (hasPermissionToCreateUser) {
+    <div class="row my-5">
+      <div class="col">
+        <h2 class="h4 mb-1 text-center" i18n>
+          Are <strong>you</strong> ready?
+        </h2>
+        <p class="lead mb-3 text-center" i18n>
+          Join now
+          @if (hasPermissionForDemo) {
+            or check out the example account
+          }
+        </p>
+        <div class="align-items-center d-flex justify-content-center py-2">
+          <a
+            color="primary"
+            i18n
+            mat-flat-button
+            [routerLink]="routerLinkRegister"
+          >
+            Get Started
+          </a>
+          @if (hasPermissionForDemo) {
+            <div class="mx-3 text-muted" i18n>or</div>
+            <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+          }
+        </div>
+      </div>
+    </div>
+  }
 </div>
 
 <div class="container">

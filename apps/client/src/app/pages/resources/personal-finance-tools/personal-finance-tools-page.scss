@@ -12,8 +12,14 @@
       }
     }
   }
+
+  .mat-mdc-card {
+    &:hover {
+      border-color: var(--gf-theme-primary-500);
+    }
+  }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   color: rgb(var(--light-primary-text));
 }

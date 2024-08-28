@@ -122,15 +122,16 @@
           >
           community,
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >,
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            ,
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or
           <a
             href="https://github.com/ghostfolio/ghostfolio"
@@ -151,15 +152,16 @@
             >Slack </a
           >community, post to
           <a
-            href="https://twitter.com/ghostfolio_"
+            href="https://x.com/ghostfolio_"
             title="Post to Ghostfolio on X (formerly Twitter)"
             >&#64;ghostfolio_</a
-          ><ng-container *ngIf="user?.subscription?.type === 'Premium'"
-            >, send an e-mail to
+          >
+          @if (user?.subscription?.type === 'Premium') {
+            , send an e-mail to
             <a href="mailto:hi@ghostfol.io" title="Send an e-mail"
               >hi&#64;ghostfol.io</a
-            ></ng-container
-          >
+            >
+          }
           or start a discussion at
           <a
             href="https://github.com/ghostfolio/ghostfolio"

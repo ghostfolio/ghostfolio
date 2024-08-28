@@ -5,8 +5,8 @@
 /tmp
 
 # dependencies
-/.yarn
 /node_modules
+npm-debug.log
 
 # IDEs and editors
 /.idea
@@ -28,15 +28,14 @@
 .env
 .env.prod
 .nx/cache
+.nx/workspace-data
 /.sass-cache
 /connect.lock
 /coverage
 /dist
 /libpeerconnection.log
-npm-debug.log
 testem.log
 /typings
-yarn-error.log
 
 # System Files
 .DS_Store

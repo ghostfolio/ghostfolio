@@ -4,8 +4,11 @@
   (keyup.enter)="tagForm.valid && onSubmit()"
   (ngSubmit)="onSubmit()"
 >
-  <h1 *ngIf="data.tag.id" i18n mat-dialog-title>Update tag</h1>
-  <h1 *ngIf="!data.tag.id" i18n mat-dialog-title>Add tag</h1>
+  @if (data.tag.id) {
+    <h1 i18n mat-dialog-title>Update tag</h1>
+  } @else {
+    <h1 i18n mat-dialog-title>Add tag</h1>
+  }
   <div class="flex-grow-1 py-3" mat-dialog-content>
     <div>
       <mat-form-field appearance="outline" class="w-100">

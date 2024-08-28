@@ -15,7 +15,7 @@
   }
 }
 
-:host-context(.is-dark-theme) {
+:host-context(.theme-dark) {
   .mat-mdc-form-field {
     color: rgba(var(--light-primary-text));
   }

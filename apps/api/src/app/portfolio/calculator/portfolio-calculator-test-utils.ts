@@ -20,6 +20,7 @@ export const symbolProfileDummyData = {
   assetSubClass: undefined,
   countries: [],
   createdAt: undefined,
+  holdings: [],
   id: undefined,
   sectors: [],
   updatedAt: undefined

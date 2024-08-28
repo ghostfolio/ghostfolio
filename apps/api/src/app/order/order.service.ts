@@ -11,7 +11,11 @@ import {
   GATHER_ASSET_PROFILE_PROCESS_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import { Filter, UniqueAsset } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  EnhancedSymbolProfile,
+  Filter
+} from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
@@ -42,6 +46,39 @@ export class OrderService {
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
+
+  public async assignTags({
+    dataSource,
+    symbol,
+    tags,
+    userId
+  }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
+    const orders = await this.prismaService.order.findMany({
+      where: {
+        userId,
+        SymbolProfile: {
+          dataSource,
+          symbol
+        }
+      }
+    });
+
+    return Promise.all(
+      orders.map(({ id }) =>
+        this.prismaService.order.update({
+          data: {
+            tags: {
+              // The set operation replaces all existing connections with the provided ones
+              set: tags.map(({ id }) => {
+                return { id };
+              })
+            }
+          },
+          where: { id }
+        })
+      )
+    );
+  }
 
   public async createOrder(
     data: Prisma.OrderCreateInput & {
@@ -181,7 +218,15 @@ export class OrderService {
       where
     });
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type)) {
+    const [symbolProfile] =
+      await this.symbolProfileService.getSymbolProfilesByIds([
+        order.symbolProfileId
+      ]);
+
+    if (
+      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
+      symbolProfile.activitiesCount === 0
+    ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 
@@ -197,18 +242,16 @@ export class OrderService {
 
   public async deleteOrders({
     filters,
-    userCurrency,
     userId
   }: {
     filters?: Filter[];
-    userCurrency: string;
     userId: string;
   }): Promise<number> {
     const { activities } = await this.getOrders({
       filters,
       userId,
-      userCurrency,
       includeDrafts: true,
+      userCurrency: undefined,
       withExcludedAccounts: true
     });
 
@@ -222,6 +265,19 @@ export class OrderService {
       }
     });
 
+    const symbolProfiles =
+      await this.symbolProfileService.getSymbolProfilesByIds(
+        activities.map(({ symbolProfileId }) => {
+          return symbolProfileId;
+        })
+      );
+
+    for (const { activitiesCount, id } of symbolProfiles) {
+      if (activitiesCount === 0) {
+        await this.symbolProfileService.deleteById(id);
+      }
+    }
+
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({ userId })
@@ -230,7 +286,7 @@ export class OrderService {
     return count;
   }
 
-  public async getLatestOrder({ dataSource, symbol }: UniqueAsset) {
+  public async getLatestOrder({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.order.findFirst({
       orderBy: {
         date: 'desc'
@@ -270,7 +326,8 @@ export class OrderService {
     withExcludedAccounts?: boolean;
   }): Promise<Activities> {
     let orderBy: Prisma.Enumerable<Prisma.OrderOrderByWithRelationInput> = [
-      { date: 'asc' }
+      { date: 'asc' },
+      { id: 'asc' }
     ];
     const where: Prisma.OrderWhereInput = { userId };
 
@@ -290,9 +347,13 @@ export class OrderService {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
       TAG: filtersByTag
-    } = groupBy(filters, (filter) => {
-      return filter.type;
+    } = groupBy(filters, ({ type }) => {
+      return type;
     });
+
+    const searchQuery = filters?.find(({ type }) => {
+      return type === 'SEARCH_QUERY';
+    })?.id;
 
     if (filtersByAccount?.length > 0) {
       where.accountId = {
@@ -335,6 +396,30 @@ export class OrderService {
       };
     }
 
+    if (searchQuery) {
+      const searchQueryWhereInput: Prisma.SymbolProfileWhereInput[] = [
+        { id: { mode: 'insensitive', startsWith: searchQuery } },
+        { isin: { mode: 'insensitive', startsWith: searchQuery } },
+        { name: { mode: 'insensitive', startsWith: searchQuery } },
+        { symbol: { mode: 'insensitive', startsWith: searchQuery } }
+      ];
+
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              OR: searchQueryWhereInput
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          OR: searchQueryWhereInput
+        };
+      }
+    }
+
     if (filtersByTag?.length > 0) {
       where.AND = [
         {
@@ -367,7 +452,7 @@ export class OrderService {
     }
 
     if (sortColumn) {
-      orderBy = [{ [sortColumn]: sortDirection }];
+      orderBy = [{ [sortColumn]: sortDirection }, { id: sortDirection }];
     }
 
     if (types) {
@@ -406,7 +491,7 @@ export class OrderService {
       this.prismaService.order.count({ where })
     ]);
 
-    const uniqueAssets = uniqBy(
+    const assetProfileIdentifiers = uniqBy(
       orders.map(({ SymbolProfile }) => {
         return {
           dataSource: SymbolProfile.dataSource,
@@ -421,39 +506,81 @@ export class OrderService {
       }
     );
 
-    const assetProfiles =
-      await this.symbolProfileService.getSymbolProfiles(uniqueAssets);
+    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
+      assetProfileIdentifiers
+    );
 
-    const activities = orders.map((order) => {
-      const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
-        return (
-          dataSource === order.SymbolProfile.dataSource &&
-          symbol === order.SymbolProfile.symbol
-        );
-      });
+    const activities = await Promise.all(
+      orders.map(async (order) => {
+        const assetProfile = assetProfiles.find(({ dataSource, symbol }) => {
+          return (
+            dataSource === order.SymbolProfile.dataSource &&
+            symbol === order.SymbolProfile.symbol
+          );
+        });
 
-      const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
+        const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
-      return {
-        ...order,
-        value,
-        // TODO: Use exchange rate of date
-        feeInBaseCurrency: this.exchangeRateDataService.toCurrency(
-          order.fee,
-          order.SymbolProfile.currency,
-          userCurrency
-        ),
-        SymbolProfile: assetProfile,
-        // TODO: Use exchange rate of date
-        valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
+        return {
+          ...order,
           value,
-          order.SymbolProfile.currency,
-          userCurrency
-        )
-      };
-    });
+          feeInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              order.fee,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            ),
+          SymbolProfile: assetProfile,
+          valueInBaseCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              value,
+              order.SymbolProfile.currency,
+              userCurrency,
+              order.date
+            )
+        };
+      })
+    );
 
     return { activities, count };
+  }
+
+  public async getOrdersForPortfolioCalculator({
+    filters,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }) {
+    return this.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts: false // TODO
+    });
+  }
+
+  public async getStatisticsByCurrency(
+    currency: EnhancedSymbolProfile['currency']
+  ): Promise<{
+    activitiesCount: EnhancedSymbolProfile['activitiesCount'];
+    dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+  }> {
+    const { _count, _min } = await this.prismaService.order.aggregate({
+      _count: true,
+      _min: {
+        date: true
+      },
+      where: { SymbolProfile: { currency } }
+    });
+
+    return {
+      activitiesCount: _count as number,
+      dateOfFirstActivity: _min.date
+    };
   }
 
   public async order(

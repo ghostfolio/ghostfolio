@@ -81,10 +81,11 @@ export class AdminController {
   @Post('gather/max')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
-    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
-      uniqueAssets.map(({ dataSource, symbol }) => {
+      assetProfileIdentifiers.map(({ dataSource, symbol }) => {
         return {
           data: {
             dataSource,
@@ -107,10 +108,11 @@ export class AdminController {
   @Post('gather/profile-data')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
-    const uniqueAssets = await this.dataGatheringService.getUniqueAssets();
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
-      uniqueAssets.map(({ dataSource, symbol }) => {
+      assetProfileIdentifiers.map(({ dataSource, symbol }) => {
         return {
           data: {
             dataSource,

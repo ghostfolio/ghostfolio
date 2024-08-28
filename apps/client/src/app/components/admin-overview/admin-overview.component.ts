@@ -1,3 +1,5 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
@@ -60,6 +62,7 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
+    private notificationService: NotificationService,
     private userService: UserService
   ) {
     this.info = this.dataService.fetchInfo();
@@ -126,7 +129,9 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
         const currencies = uniq([...this.customCurrencies, currency]);
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
       } else {
-        alert($localize`${currency} is an invalid currency!`);
+        this.notificationService.alert({
+          title: $localize`${currency} is an invalid currency!`
+        });
       }
     }
   }
@@ -136,39 +141,42 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteCoupon(aCouponCode: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this coupon?`
-    );
-
-    if (confirmation === true) {
-      const coupons = this.coupons.filter((coupon) => {
-        return coupon.code !== aCouponCode;
-      });
-      this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        const coupons = this.coupons.filter((coupon) => {
+          return coupon.code !== aCouponCode;
+        });
+        this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this coupon?`
+    });
   }
 
   public onDeleteCurrency(aCurrency: string) {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this currency?`
-    );
-
-    if (confirmation === true) {
-      const currencies = this.customCurrencies.filter((currency) => {
-        return currency !== aCurrency;
-      });
-      this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        const currencies = this.customCurrencies.filter((currency) => {
+          return currency !== aCurrency;
+        });
+        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this currency?`
+    });
   }
 
   public onDeleteSystemMessage() {
-    const confirmation = confirm(
-      $localize`Do you really want to delete this system message?`
-    );
-
-    if (confirmation === true) {
-      this.putAdminSetting({ key: PROPERTY_SYSTEM_MESSAGE, value: undefined });
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.putAdminSetting({
+          key: PROPERTY_SYSTEM_MESSAGE,
+          value: undefined
+        });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to delete this system message?`
+    });
   }
 
   public onEnableDataGatheringChange(aEvent: MatSlideToggleChange) {
@@ -179,20 +187,20 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
   }
 
   public onFlushCache() {
-    const confirmation = confirm(
-      $localize`Do you really want to flush the cache?`
-    );
-
-    if (confirmation === true) {
-      this.cacheService
-        .flush()
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe(() => {
-          setTimeout(() => {
-            window.location.reload();
-          }, 300);
-        });
-    }
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.cacheService
+          .flush()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            setTimeout(() => {
+              window.location.reload();
+            }, 300);
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to flush the cache?`
+    });
   }
 
   public onEnableUserSignupModeChange(aEvent: MatSlideToggleChange) {

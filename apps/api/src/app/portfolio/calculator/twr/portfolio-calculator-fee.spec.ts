@@ -17,6 +17,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
+import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -68,9 +69,7 @@ describe('PortfolioCalculator', () => {
 
   describe('compute portfolio snapshot', () => {
     it.only('with fee activity', async () => {
-      const spy = jest
-        .spyOn(Date, 'now')
-        .mockImplementation(() => parseDate('2021-12-18').getTime());
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
         {
@@ -94,28 +93,15 @@ describe('PortfolioCalculator', () => {
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'USD',
-        hasFilters: false,
         userId: userDummyData.id
       });
 
-      const portfolioSnapshot = await portfolioCalculator.computeSnapshot(
-        parseDate('2021-11-30')
-      );
+      const portfolioSnapshot = await portfolioCalculator.getSnapshot();
 
-      spy.mockRestore();
-
-      expect(portfolioSnapshot).toEqual({
+      expect(portfolioSnapshot).toMatchObject({
         currentValueInBaseCurrency: new Big('0'),
         errors: [],
-        grossPerformance: new Big('0'),
-        grossPerformancePercentage: new Big('0'),
-        grossPerformancePercentageWithCurrencyEffect: new Big('0'),
-        grossPerformanceWithCurrencyEffect: new Big('0'),
         hasErrors: true,
-        netPerformance: new Big('0'),
-        netPerformancePercentage: new Big('0'),
-        netPerformancePercentageWithCurrencyEffect: new Big('0'),
-        netPerformanceWithCurrencyEffect: new Big('0'),
         positions: [
           {
             averagePrice: new Big('0'),
@@ -124,6 +110,7 @@ describe('PortfolioCalculator', () => {
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('49'),
+            feeInBaseCurrency: new Big('49'),
             firstBuyDate: '2021-09-01',
             grossPerformance: null,
             grossPerformancePercentage: null,
@@ -135,8 +122,8 @@ describe('PortfolioCalculator', () => {
             marketPriceInBaseCurrency: 0,
             netPerformance: null,
             netPerformancePercentage: null,
-            netPerformancePercentageWithCurrencyEffect: null,
-            netPerformanceWithCurrencyEffect: null,
+            netPerformancePercentageWithCurrencyEffectMap: null,
+            netPerformanceWithCurrencyEffectMap: null,
             quantity: new Big('0'),
             symbol: '2c463fb3-af07-486e-adb0-8301b3d72141',
             tags: [],
@@ -153,6 +140,16 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
+
+      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestmentValueWithCurrencyEffect: 0
+        })
+      );
     });
   });
 });

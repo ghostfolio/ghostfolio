@@ -1,13 +1,15 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import type {
   ColorScheme,
   DateRange,
-  ViewMode
+  HoldingsViewMode,
+  ViewMode,
+  XRayRulesSettings
 } from '@ghostfolio/common/types';
 
 import {
   IsArray,
   IsBoolean,
-  IsISO4217CurrencyCode,
   IsISO8601,
   IsIn,
   IsNumber,
@@ -21,7 +23,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   annualInterestRate?: number;
 
-  @IsISO4217CurrencyCode()
+  @IsCurrencyCode()
   @IsOptional()
   baseCurrency?: string;
 
@@ -69,6 +71,10 @@ export class UpdateUserSettingDto {
   @IsOptional()
   'filters.tags'?: string[];
 
+  @IsIn(<HoldingsViewMode[]>['CHART', 'TABLE'])
+  @IsOptional()
+  holdingsViewMode?: HoldingsViewMode;
+
   @IsBoolean()
   @IsOptional()
   isExperimentalFeatures?: boolean;
@@ -100,4 +106,7 @@ export class UpdateUserSettingDto {
   @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
   @IsOptional()
   viewMode?: ViewMode;
+
+  @IsOptional()
+  xRayRules?: XRayRulesSettings;
 }

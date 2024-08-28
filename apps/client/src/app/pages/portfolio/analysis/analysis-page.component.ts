@@ -124,10 +124,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .putUserSetting({ benchmark: symbolProfileId })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -329,7 +327,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.isLoadingBenchmarkComparator = true;
 
         this.dataService
-          .fetchBenchmarkBySymbol({
+          .fetchBenchmarkForUser({
             dataSource,
             symbol,
             range: this.user?.settings?.dateRange,

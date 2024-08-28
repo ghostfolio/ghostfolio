@@ -53,10 +53,9 @@
               class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
             >
               <span i18n>Absolute Asset Performance</span>
-              <gf-premium-indicator
-                *ngIf="user?.subscription?.type === 'Basic'"
-                class="ml-1"
-              />
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
             </div>
             <div class="d-flex justify-content-end">
               <gf-value
@@ -97,10 +96,9 @@
               class="align-items-center d-flex flex-grow-1 mr-2 text-truncate"
             >
               <span i18n>Absolute Currency Performance</span>
-              <gf-premium-indicator
-                *ngIf="user?.subscription?.type === 'Basic'"
-                class="ml-1"
-              />
+              @if (user?.subscription?.type === 'Basic') {
+                <gf-premium-indicator class="ml-1" />
+              }
             </div>
             <div class="d-flex justify-content-end">
               <gf-value
@@ -196,39 +194,42 @@
         </mat-card-header>
         <mat-card-content>
           <ol class="mb-0 ml-1 pl-3">
-            <li *ngFor="let holding of top3" class="py-1">
-              <a
-                class="d-flex"
-                [queryParams]="{
-                  dataSource: holding.dataSource,
-                  holdingDetailDialog: true,
-                  symbol: holding.symbol
-                }"
-                [routerLink]="[]"
-              >
-                <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
-                <div class="d-flex justify-content-end">
-                  <gf-value
-                    class="justify-content-end"
-                    position="end"
-                    [colorizeSign]="true"
-                    [isPercent]="true"
-                    [locale]="user?.settings?.locale"
-                    [value]="holding.netPerformancePercentWithCurrencyEffect"
-                  />
-                </div>
-              </a>
-            </li>
+            @for (holding of top3; track holding) {
+              <li class="py-1">
+                <a
+                  class="d-flex"
+                  [queryParams]="{
+                    dataSource: holding.dataSource,
+                    holdingDetailDialog: true,
+                    symbol: holding.symbol
+                  }"
+                  [routerLink]="[]"
+                >
+                  <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
+                  <div class="d-flex justify-content-end">
+                    <gf-value
+                      class="justify-content-end"
+                      position="end"
+                      [colorizeSign]="true"
+                      [isPercent]="true"
+                      [locale]="user?.settings?.locale"
+                      [value]="holding.netPerformancePercentWithCurrencyEffect"
+                    />
+                  </div>
+                </a>
+              </li>
+            }
           </ol>
           <div>
-            <ngx-skeleton-loader
-              *ngIf="!top3"
-              animation="pulse"
-              [theme]="{
-                height: '1.5rem',
-                width: '100%'
-              }"
-            />
+            @if (!top3) {
+              <ngx-skeleton-loader
+                animation="pulse"
+                [theme]="{
+                  height: '1.5rem',
+                  width: '100%'
+                }"
+              />
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -242,39 +243,42 @@
         </mat-card-header>
         <mat-card-content>
           <ol class="mb-0 ml-1 pl-3">
-            <li *ngFor="let holding of bottom3" class="py-1">
-              <a
-                class="d-flex"
-                [queryParams]="{
-                  dataSource: holding.dataSource,
-                  holdingDetailDialog: true,
-                  symbol: holding.symbol
-                }"
-                [routerLink]="[]"
-              >
-                <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
-                <div class="d-flex justify-content-end">
-                  <gf-value
-                    class="justify-content-end"
-                    position="end"
-                    [colorizeSign]="true"
-                    [isPercent]="true"
-                    [locale]="user?.settings?.locale"
-                    [value]="holding.netPerformancePercentWithCurrencyEffect"
-                  />
-                </div>
-              </a>
-            </li>
+            @for (holding of bottom3; track holding) {
+              <li class="py-1">
+                <a
+                  class="d-flex"
+                  [queryParams]="{
+                    dataSource: holding.dataSource,
+                    holdingDetailDialog: true,
+                    symbol: holding.symbol
+                  }"
+                  [routerLink]="[]"
+                >
+                  <div class="flex-grow-1 mr-2">{{ holding.name }}</div>
+                  <div class="d-flex justify-content-end">
+                    <gf-value
+                      class="justify-content-end"
+                      position="end"
+                      [colorizeSign]="true"
+                      [isPercent]="true"
+                      [locale]="user?.settings?.locale"
+                      [value]="holding.netPerformancePercentWithCurrencyEffect"
+                    />
+                  </div>
+                </a>
+              </li>
+            }
           </ol>
           <div>
-            <ngx-skeleton-loader
-              *ngIf="!bottom3"
-              animation="pulse"
-              [theme]="{
-                height: '1.5rem',
-                width: '100%'
-              }"
-            />
+            @if (!bottom3) {
+              <ngx-skeleton-loader
+                animation="pulse"
+                [theme]="{
+                  height: '1.5rem',
+                  width: '100%'
+                }"
+              />
+            }
           </div>
         </mat-card-content>
       </mat-card>
@@ -288,10 +292,9 @@
           class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
         >
           <span i18n>Portfolio Evolution</span>
-          <gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </div>
       </div>
       <div class="chart-container">
@@ -305,7 +308,6 @@
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentChart"
           [locale]="user?.settings?.locale"
-          [range]="user?.settings?.dateRange"
         />
       </div>
     </div>
@@ -318,10 +320,9 @@
           class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
         >
           <span i18n>Investment Timeline</span>
-          <gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </div>
         <gf-toggle
           class="d-none d-lg-block"
@@ -331,26 +332,28 @@
           (change)="onChangeGroupBy($event.value)"
         />
       </div>
-      <div *ngIf="streaks" class="row">
-        <div class="col-md-6 col-xs-12 my-2">
-          <gf-value
-            i18n
-            size="large"
-            [unit]="unitCurrentStreak"
-            [value]="streaks?.currentStreak"
-            >Current Streak</gf-value
-          >
+      @if (streaks) {
+        <div class="row">
+          <div class="col-md-6 col-xs-12 my-2">
+            <gf-value
+              i18n
+              size="large"
+              [unit]="unitCurrentStreak"
+              [value]="streaks?.currentStreak"
+              >Current Streak</gf-value
+            >
+          </div>
+          <div class="col-md-6 col-xs-12 my-2">
+            <gf-value
+              i18n
+              size="large"
+              [unit]="unitLongestStreak"
+              [value]="streaks?.longestStreak"
+              >Longest Streak</gf-value
+            >
+          </div>
         </div>
-        <div class="col-md-6 col-xs-12 my-2">
-          <gf-value
-            i18n
-            size="large"
-            [unit]="unitLongestStreak"
-            [value]="streaks?.longestStreak"
-            >Longest Streak</gf-value
-          >
-        </div>
-      </div>
+      }
       <div class="chart-container">
         <gf-investment-chart
           class="h-100"
@@ -362,7 +365,6 @@
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingInvestmentTimelineChart"
           [locale]="user?.settings?.locale"
-          [range]="user?.settings?.dateRange"
           [savingsRate]="savingsRate"
         />
       </div>
@@ -376,10 +378,9 @@
           class="align-items-center d-flex flex-grow-1 h5 mb-0 text-truncate"
         >
           <span i18n>Dividend Timeline</span>
-          <gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </div>
         <gf-toggle
           class="d-none d-lg-block"
@@ -400,7 +401,6 @@
           [isInPercent]="hasImpersonationId || user.settings.isRestrictedView"
           [isLoading]="isLoadingDividendTimelineChart"
           [locale]="user?.settings?.locale"
-          [range]="user?.settings?.dateRange"
         />
       </div>
     </div>

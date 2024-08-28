@@ -4,7 +4,10 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
-import { Activities } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import {
+  Activities,
+  Activity
+} from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
@@ -19,6 +22,8 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
+  AdminMarketDataDetails,
+  AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
   Export,
@@ -33,7 +38,6 @@ import {
   PortfolioPerformanceResponse,
   PortfolioPublicDetails,
   PortfolioReport,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -46,7 +50,8 @@ import { SortDirection } from '@angular/material/sort';
 import {
   AccountBalance,
   DataSource,
-  Order as OrderModel
+  Order as OrderModel,
+  Tag
 } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
@@ -210,6 +215,17 @@ export class DataService {
     );
   }
 
+  public fetchActivity(aActivityId: string) {
+    return this.http.get<Activity>(`/api/v1/order/${aActivityId}`).pipe(
+      map((activity) => {
+        activity.createdAt = parseISO(<string>(<unknown>activity.createdAt));
+        activity.date = parseISO(<string>(<unknown>activity.date));
+
+        return activity;
+      })
+    );
+  }
+
   public fetchDividends({
     filters,
     groupBy = 'month',
@@ -228,7 +244,7 @@ export class DataService {
     });
   }
 
-  public fetchDividendsImport({ dataSource, symbol }: UniqueAsset) {
+  public fetchDividendsImport({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.get<ImportResponse>(
       `/api/v1/import/dividends/${dataSource}/${symbol}`
     );
@@ -268,7 +284,7 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/order/${aId}`);
   }
 
-  public deleteBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
   }
 
@@ -284,7 +300,21 @@ export class DataService {
     return this.http.get<Access[]>('/api/v1/access');
   }
 
-  public fetchBenchmarkBySymbol({
+  public fetchAsset({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier): Observable<AdminMarketDataDetails> {
+    return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
+      map((data) => {
+        for (const item of data.marketData) {
+          item.date = parseISO(item.date);
+        }
+        return data;
+      })
+    );
+  }
+
+  public fetchBenchmarkForUser({
     dataSource,
     range,
     startDate,
@@ -292,7 +322,7 @@ export class DataService {
   }: {
     range: DateRange;
     startDate: Date;
-  } & UniqueAsset): Observable<BenchmarkMarketDataDetails> {
+  } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
     let params = new HttpParams();
 
     if (range) {
@@ -625,7 +655,7 @@ export class DataService {
     );
   }
 
-  public postBenchmark(benchmark: UniqueAsset) {
+  public postBenchmark(benchmark: AssetProfileIdentifier) {
     return this.http.post(`/api/v1/benchmark`, benchmark);
   }
 
@@ -643,6 +673,17 @@ export class DataService {
 
   public putAdminSetting(key: string, aData: PropertyDto) {
     return this.http.put<void>(`/api/v1/admin/settings/${key}`, aData);
+  }
+
+  public putHoldingTags({
+    dataSource,
+    symbol,
+    tags
+  }: { tags: Tag[] } & AssetProfileIdentifier) {
+    return this.http.put<void>(
+      `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
+      { tags }
+    );
   }
 
   public putOrder(aOrder: UpdateOrderDto) {

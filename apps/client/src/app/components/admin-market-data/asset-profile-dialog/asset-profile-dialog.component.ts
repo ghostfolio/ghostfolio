@@ -1,6 +1,7 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
@@ -8,7 +9,7 @@ import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  UniqueAsset
+  AssetProfileIdentifier
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -97,13 +98,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminMarketDataService: AdminMarketDataService,
+    public adminMarketDataService: AdminMarketDataService,
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
+    private notificationService: NotificationService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -198,20 +200,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.dialogRef.close();
   }
 
-  public onDeleteProfileData({ dataSource, symbol }: UniqueAsset) {
-    this.adminMarketDataService.deleteProfileData({ dataSource, symbol });
+  public onDeleteProfileData({ dataSource, symbol }: AssetProfileIdentifier) {
+    this.adminMarketDataService.deleteAssetProfile({ dataSource, symbol });
 
     this.dialogRef.close();
   }
 
-  public onGatherProfileDataBySymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherProfileDataBySymbol({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {});
   }
 
-  public onGatherSymbol({ dataSource, symbol }: UniqueAsset) {
+  public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -265,7 +270,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
   }
 
-  public onSetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .postBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -350,23 +355,27 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       })
       .pipe(
         catchError(({ error }) => {
-          alert(`Error: ${error?.message}`);
+          this.notificationService.alert({
+            message: error?.message,
+            title: $localize`Error`
+          });
           return EMPTY;
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(({ price }) => {
-        alert(
-          $localize`The current market price is` +
+        this.notificationService.alert({
+          title:
+            $localize`The current market price is` +
             ' ' +
             price +
             ' ' +
             this.assetProfileForm.get('currency').value
-        );
+        });
       });
   }
 
-  public onUnsetBenchmark({ dataSource, symbol }: UniqueAsset) {
+  public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
     this.dataService
       .deleteBenchmark({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))

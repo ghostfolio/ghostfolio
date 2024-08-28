@@ -23,6 +23,7 @@ import {
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
@@ -66,6 +67,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     @Inject(MAT_DIALOG_DATA) public data: AccountDetailDialogParams,
     private dataService: DataService,
     public dialogRef: MatDialogRef<AccountDetailDialog>,
+    private router: Router,
     private userService: UserService
   ) {
     this.userService.stateChanged
@@ -90,6 +92,14 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.fetchActivities();
     this.fetchPortfolioHoldings();
     this.fetchPortfolioPerformance();
+  }
+
+  public onCloneActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, createDialog: true }
+    });
+
+    this.dialogRef.close();
   }
 
   public onClose() {
@@ -145,6 +155,14 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
     this.sortDirection = direction;
 
     this.fetchActivities();
+  }
+
+  public onUpdateActivity(aActivity: Activity) {
+    this.router.navigate(['/portfolio', 'activities'], {
+      queryParams: { activityId: aActivity.id, editDialog: true }
+    });
+
+    this.dialogRef.close();
   }
 
   private fetchAccount() {

@@ -70,7 +70,7 @@ export class TwitterBotService {
           await this.twitterClient.v2.tweet(status);
 
         Logger.log(
-          `Fear & Greed Index has been tweeted: https://twitter.com/ghostfolio_/status/${createdTweet.id}`,
+          `Fear & Greed Index has been posted: https://x.com/ghostfolio_/status/${createdTweet.id}`,
           'TwitterBotService'
         );
       }

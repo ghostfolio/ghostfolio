@@ -3,14 +3,16 @@ import { AccountDetailDialogParams } from '@ghostfolio/client/components/account
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { UNKNOWN_KEY } from '@ghostfolio/common/config';
+import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
+  AssetProfileIdentifier,
+  Holding,
   PortfolioDetails,
   PortfolioPosition,
-  UniqueAsset,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -84,6 +86,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
+  public topHoldings: Holding[];
+  public topHoldingsMap: {
+    [name: string]: { name: string; value: number };
+  };
+  public totalValueInEtf = 0;
   public UNKNOWN_KEY = UNKNOWN_KEY;
   public user: User;
   public worldMapChartFormat: string;
@@ -155,7 +162,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public onAccountChartClicked({ symbol }: UniqueAsset) {
+  public onAccountChartClicked({ symbol }: AssetProfileIdentifier) {
     if (symbol && symbol !== UNKNOWN_KEY) {
       this.router.navigate([], {
         queryParams: { accountId: symbol, accountDetailDialog: true }
@@ -163,7 +170,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onSymbolChartClicked({ dataSource, symbol }: UniqueAsset) {
+  public onSymbolChartClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
@@ -291,6 +298,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
+    this.topHoldingsMap = {};
   }
 
   private initializeAllocationsData() {
@@ -340,7 +348,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
 
       if (position.assetClass !== AssetClass.LIQUIDITY) {
-        // Prepare analysis data by continents, countries and sectors except for liquidity
+        // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
         if (position.countries.length > 0) {
           this.markets.developedMarkets.value +=
@@ -448,6 +456,28 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
 
+        if (position.holdings.length > 0) {
+          for (const holding of position.holdings) {
+            const { allocationInPercentage, name, valueInBaseCurrency } =
+              holding;
+
+            if (this.topHoldingsMap[name]?.value) {
+              this.topHoldingsMap[name].value += isNumber(valueInBaseCurrency)
+                ? valueInBaseCurrency
+                : allocationInPercentage *
+                  this.portfolioDetails.holdings[symbol].valueInPercentage;
+            } else {
+              this.topHoldingsMap[name] = {
+                name,
+                value: isNumber(valueInBaseCurrency)
+                  ? valueInBaseCurrency
+                  : allocationInPercentage *
+                    this.portfolioDetails.holdings[symbol].valueInPercentage
+              };
+            }
+          }
+        }
+
         if (position.sectors.length > 0) {
           for (const sector of position.sectors) {
             const { name, weight } = sector;
@@ -476,6 +506,10 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
         }
+      }
+
+      if (this.positions[symbol].assetSubClass === 'ETF') {
+        this.totalValueInEtf += this.positions[symbol].value;
       }
 
       this.symbols[prettifySymbol(symbol)] = {
@@ -521,6 +555,31 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       this.markets.otherMarkets.value / marketsTotal;
     this.markets[UNKNOWN_KEY].value =
       this.markets[UNKNOWN_KEY].value / marketsTotal;
+
+    this.topHoldings = Object.values(this.topHoldingsMap)
+      .map(({ name, value }) => {
+        if (this.hasImpersonationId || this.user.settings.isRestrictedView) {
+          return {
+            name,
+            allocationInPercentage: value,
+            valueInBaseCurrency: null
+          };
+        }
+
+        return {
+          name,
+          allocationInPercentage:
+            this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+          valueInBaseCurrency: value
+        };
+      })
+      .sort((a, b) => {
+        return b.allocationInPercentage - a.allocationInPercentage;
+      });
+
+    if (this.topHoldings.length > MAX_TOP_HOLDINGS) {
+      this.topHoldings = this.topHoldings.slice(0, MAX_TOP_HOLDINGS);
+    }
   }
 
   private openAccountDetailDialog(aAccountId: string) {
@@ -529,7 +588,11 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       data: <AccountDetailDialogParams>{
         accountId: aAccountId,
         deviceType: this.deviceType,
-        hasImpersonationId: this.hasImpersonationId
+        hasImpersonationId: this.hasImpersonationId,
+        hasPermissionToCreateOrder:
+          !this.hasImpersonationId &&
+          hasPermission(this.user?.permissions, permissions.createOrder) &&
+          !this.user?.settings?.isRestrictedView
       },
       height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'

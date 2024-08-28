@@ -1,7 +1,12 @@
+import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioReport,
+  PortfolioReportRule,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -23,9 +28,10 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
   public hasImpersonationId: boolean;
-  public hasPermissionToCreateOrder: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
+  public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
+  public isLoadingPortfolioReport = false;
   public user: User;
   public withdrawalRatePerMonth: Big;
   public withdrawalRatePerYear: Big;
@@ -50,26 +56,16 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .subscribe(({ summary }) => {
         this.fireWealth = summary.fireWealth
           ? new Big(summary.fireWealth)
-          : new Big(10000);
+          : new Big(0);
+
+        if (this.user.subscription?.type === 'Basic') {
+          this.fireWealth = new Big(10000);
+        }
+
         this.withdrawalRatePerYear = this.fireWealth.mul(4).div(100);
         this.withdrawalRatePerMonth = this.withdrawalRatePerYear.div(12);
 
         this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-
-    this.dataService
-      .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk'] || null;
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk'] || null;
-        this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund'] || null;
-        this.feeRules = portfolioReport.rules['fees'] || null;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -87,11 +83,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOrder = hasPermission(
-            this.user.permissions,
-            permissions.createOrder
-          );
-
           this.hasPermissionToUpdateUserSettings =
             this.user.subscription?.type === 'Basic'
               ? false
@@ -103,6 +94,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    this.initializePortfolioReport();
   }
 
   public onAnnualInterestRateChange(annualInterestRate: number) {
@@ -110,10 +103,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting({ annualInterestRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -131,10 +122,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -144,15 +133,24 @@ export class FirePageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onRulesUpdated(event: UpdateUserSettingDto) {
+    this.isLoading = true;
+
+    this.dataService
+      .putUserSetting(event)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.initializePortfolioReport();
+      });
+  }
+
   public onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -170,10 +168,8 @@ export class FirePageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.userService.remove();
-
         this.userService
-          .get()
+          .get(true)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -186,5 +182,60 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private initializePortfolioReport() {
+    this.isLoadingPortfolioReport = true;
+
+    this.dataService
+      .fetchPortfolioReport()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((portfolioReport) => {
+        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
+
+        this.accountClusterRiskRules =
+          portfolioReport.rules['accountClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.emergencyFundRules =
+          portfolioReport.rules['emergencyFund']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.feeRules =
+          portfolioReport.rules['fees']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.isLoadingPortfolioReport = false;
+
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
+    let inactiveRules: PortfolioReportRule[] = [];
+
+    for (const category in report.rules) {
+      const rulesArray = report.rules[category];
+
+      inactiveRules = inactiveRules.concat(
+        rulesArray.filter(({ isActive }) => {
+          return !isActive;
+        })
+      );
+    }
+
+    return inactiveRules;
   }
 }

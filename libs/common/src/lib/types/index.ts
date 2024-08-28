@@ -8,6 +8,7 @@ import type { DateRange } from './date-range.type';
 import type { Granularity } from './granularity.type';
 import type { GroupBy } from './group-by.type';
 import type { HoldingType } from './holding-type.type';
+import type { HoldingsViewMode } from './holdings-view-mode.type';
 import type { MarketAdvanced } from './market-advanced.type';
 import type { MarketDataPreset } from './market-data-preset.type';
 import type { MarketState } from './market-state.type';
@@ -18,6 +19,7 @@ import type { SubscriptionOffer } from './subscription-offer.type';
 import type { ToggleOption } from './toggle-option.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
+import type { XRayRulesSettings } from './x-ray-rules-settings.type';
 
 export type {
   AccessType,
@@ -30,6 +32,7 @@ export type {
   Granularity,
   GroupBy,
   HoldingType,
+  HoldingsViewMode,
   Market,
   MarketAdvanced,
   MarketDataPreset,
@@ -39,5 +42,6 @@ export type {
   SubscriptionOffer,
   ToggleOption,
   UserWithSettings,
-  ViewMode
+  ViewMode,
+  XRayRulesSettings
 };

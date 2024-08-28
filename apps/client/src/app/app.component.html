@@ -1,33 +1,31 @@
 <header>
-  <div
-    *ngIf="canCreateAccount || user?.systemMessage"
-    class="info-message-container"
-  >
-    <div class="info-message-inner-container position-fixed w-100">
-      <div class="align-items-center d-flex h-100 justify-content-center">
-        <a
-          *ngIf="canCreateAccount"
-          class="text-center"
-          [routerLink]="routerLinkRegister"
-        >
-          <div
-            class="cursor-pointer d-inline-block info-message"
-            (click)="onCreateAccount()"
-          >
-            <span i18n>You are using the Live Demo.</span>
-            <span class="a ml-2" i18n>Create Account</span>
-          </div></a
-        >
-        <div
-          *ngIf="!canCreateAccount && user?.systemMessage"
-          class="cursor-pointer d-inline-block info-message text-truncate"
-          (click)="onClickSystemMessage()"
-        >
-          {{ user.systemMessage.message }}
+  @if (canCreateAccount || user?.systemMessage) {
+    <div class="info-message-container">
+      <div class="info-message-inner-container position-fixed w-100">
+        <div class="align-items-center d-flex h-100 justify-content-center">
+          @if (canCreateAccount) {
+            <a class="text-center" [routerLink]="routerLinkRegister">
+              <div
+                class="cursor-pointer d-inline-block info-message"
+                (click)="onCreateAccount()"
+              >
+                <span i18n>You are using the Live Demo.</span>
+                <span class="a ml-2" i18n>Create Account</span>
+              </div></a
+            >
+          }
+          @if (!canCreateAccount && user?.systemMessage) {
+            <div
+              class="cursor-pointer d-inline-block info-message text-truncate"
+              (click)="onClickSystemMessage()"
+            >
+              {{ user.systemMessage.message }}
+            </div>
+          }
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <gf-header
     class="position-fixed w-100"
@@ -45,144 +43,164 @@
   <router-outlet></router-outlet>
 </main>
 
-<footer *ngIf="showFooter" class="d-flex justify-content-center py-4 w-100">
-  <div class="container">
-    <div class="mb-3 row">
-      <div class="col-sm">
-        <a [routerLink]="['/']"><gf-logo /></a>
-      </div>
-      <div class="col-sm">
-        <div class="h6 mt-2" i18n>Personal Finance</div>
-        <ul class="list-unstyled">
-          <li *ngIf="hasPermissionToAccessFearAndGreedIndex">
-            <a i18n [routerLink]="routerLinkMarkets">Markets</a>
-          </li>
-          <li><a i18n [routerLink]="routerLinkResources">Resources</a></li>
-        </ul>
-      </div>
-      <div class="col-sm">
-        <div class="h6 mt-2">Ghostfolio</div>
-        <ul class="list-unstyled">
-          <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
-          <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="['/blog']">Blog</a>
-          </li>
-          <li>
-            <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
-          </li>
-          <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
-          <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="routerLinkFaq"
-              >Frequently Asked Questions (FAQ)</a
-            >
-          </li>
-          <li>
-            <a i18n [routerLink]="routerLinkAboutLicense">License</a>
-          </li>
-          <li *ngIf="hasPermissionForStatistics">
-            <a [routerLink]="['/open']">Open Startup</a>
-          </li>
-          <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="routerLinkPricing">Pricing</a>
-          </li>
-          <li *ngIf="hasPermissionForSubscription">
-            <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
-              >Privacy Policy</a
-            >
-          </li>
-          <li *ngIf="hasPermissionForSubscription">
-            <a
-              class="align-items-baseline d-flex"
-              href="https://status.ghostfol.io"
-              target="_blank"
-              title="Ghostfolio Status"
-              >Status<ion-icon class="ml-1" name="open-outline"
-            /></a>
-          </li>
-        </ul>
-      </div>
-      <div class="col-sm">
-        <div class="h6 mt-2" i18n>Community</div>
-        <ul class="list-unstyled">
-          <li>
-            <a
-              class="align-items-baseline d-flex"
-              href="https://github.com/ghostfolio/ghostfolio"
-              target="_blank"
-              title="Find Ghostfolio on GitHub"
-              >GitHub<ion-icon class="ml-1" name="open-outline"
-            /></a>
-          </li>
-          <li>
-            <a
-              class="align-items-baseline d-flex"
-              href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
-              target="_blank"
-              title="Join the Ghostfolio Slack community"
-              >Slack<ion-icon class="ml-1" name="open-outline"
-            /></a>
-          </li>
-          <li>
-            <a
-              class="align-items-baseline d-flex"
-              href="https://twitter.com/ghostfolio_"
-              target="_blank"
-              title="Follow Ghostfolio on X (formerly Twitter)"
-              >X (formerly Twitter)<ion-icon class="ml-1" name="open-outline"
-            /></a>
-          </li>
-          <li>&nbsp;</li>
-          <li>
-            <a href="../de" title="Ghostfolio in Deutsch">Deutsch</a>
-          </li>
-          <li>
-            <a href="../en" title="Ghostfolio in English">English</a>
-          </li>
-          <li>
-            <a href="../es" title="Ghostfolio in Español">Español</a>
-          </li>
-          <li>
-            <a href="../fr" title="Ghostfolio en Français">Français</a>
-          </li>
-          <li>
-            <a href="../it" title="Ghostfolio in Italiano">Italiano</a>
-          </li>
-          <li>
-            <a href="../nl" title="Ghostfolio in Nederlands">Nederlands</a>
-          </li>
-          <!--
+@if (showFooter) {
+  <footer class="d-flex justify-content-center py-4 w-100">
+    <div class="container">
+      <div class="mb-3 row">
+        <div class="col-sm">
+          <a [routerLink]="['/']"><gf-logo /></a>
+        </div>
+        <div class="col-sm">
+          <div class="h6 mt-2" i18n>Personal Finance</div>
+          <ul class="list-unstyled">
+            @if (hasPermissionToAccessFearAndGreedIndex) {
+              <li>
+                <a i18n [routerLink]="routerLinkMarkets">Markets</a>
+              </li>
+            }
+            <li><a i18n [routerLink]="routerLinkResources">Resources</a></li>
+          </ul>
+        </div>
+        <div class="col-sm">
+          <div class="h6 mt-2">Ghostfolio</div>
+          <ul class="list-unstyled">
+            <li><a i18n [routerLink]="routerLinkAbout">About</a></li>
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="['/blog']">Blog</a>
+              </li>
+            }
             <li>
-              <a href="../pl" title="Ghostfolio in Polski">Polski</a>
+              <a i18n [routerLink]="routerLinkAboutChangelog">Changelog</a>
             </li>
-          -->
-          <li>
-            <a href="../pt" title="Ghostfolio in Português">Português</a>
-          </li>
-          <li>
-            <a href="../tr" title="Ghostfolio in Türkçe">Türkçe</a>
-          </li>
-          <!--
+            <li><a i18n [routerLink]="routerLinkFeatures">Features</a></li>
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="routerLinkFaq"
+                  >Frequently Asked Questions (FAQ)</a
+                >
+              </li>
+            }
             <li>
-              <a href="../zh" title="Ghostfolio in Chinese">Chinese</a>
+              <a i18n [routerLink]="routerLinkAboutLicense">License</a>
             </li>
-          -->
-        </ul>
+            @if (hasPermissionForStatistics) {
+              <li>
+                <a [routerLink]="['/open']">Open Startup</a>
+              </li>
+            }
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="routerLinkPricing">Pricing</a>
+              </li>
+            }
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
+                  >Privacy Policy</a
+                >
+              </li>
+            }
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a
+                  class="align-items-baseline d-flex"
+                  href="https://status.ghostfol.io"
+                  target="_blank"
+                  title="Ghostfolio Status"
+                  >Status<ion-icon class="ml-1" name="open-outline"
+                /></a>
+              </li>
+            }
+          </ul>
+        </div>
+        <div class="col-sm">
+          <div class="h6 mt-2" i18n>Community</div>
+          <ul class="list-unstyled">
+            <li>
+              <a
+                class="align-items-baseline d-flex"
+                href="https://github.com/ghostfolio/ghostfolio"
+                target="_blank"
+                title="Find Ghostfolio on GitHub"
+                >GitHub<ion-icon class="ml-1" name="open-outline"
+              /></a>
+            </li>
+            <li>
+              <a
+                class="align-items-baseline d-flex"
+                href="https://join.slack.com/t/ghostfolio/shared_invite/zt-vsaan64h-F_I0fEo5M0P88lP9ibCxFg"
+                target="_blank"
+                title="Join the Ghostfolio Slack community"
+                >Slack<ion-icon class="ml-1" name="open-outline"
+              /></a>
+            </li>
+            <li>
+              <a
+                class="align-items-baseline d-flex"
+                href="https://x.com/ghostfolio_"
+                target="_blank"
+                title="Follow Ghostfolio on X (formerly Twitter)"
+                >X (formerly Twitter)<ion-icon class="ml-1" name="open-outline"
+              /></a>
+            </li>
+            <li>&nbsp;</li>
+            <!--
+              <li>
+                <a href="../ca" title="Ghostfolio en català">Català</a>
+              </li>
+            -->
+            <li>
+              <a href="../de" title="Ghostfolio in Deutsch">Deutsch</a>
+            </li>
+            <li>
+              <a href="../en" title="Ghostfolio in English">English</a>
+            </li>
+            <li>
+              <a href="../es" title="Ghostfolio in Español">Español</a>
+            </li>
+            <li>
+              <a href="../fr" title="Ghostfolio en Français">Français</a>
+            </li>
+            <li>
+              <a href="../it" title="Ghostfolio in Italiano">Italiano</a>
+            </li>
+            <li>
+              <a href="../nl" title="Ghostfolio in Nederlands">Nederlands</a>
+            </li>
+            <!--
+              <li>
+                <a href="../pl" title="Ghostfolio in Polski">Polski</a>
+              </li>
+            -->
+            <li>
+              <a href="../pt" title="Ghostfolio in Português">Português</a>
+            </li>
+            <li>
+              <a href="../tr" title="Ghostfolio in Türkçe">Türkçe</a>
+            </li>
+            <!--
+              <li>
+                <a href="../zh" title="Ghostfolio in Chinese">Chinese</a>
+              </li>
+            -->
+          </ul>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          © 2021 - {{ currentYear }}
+          <a href="https://ghostfol.io">Ghostfolio</a>
+        </div>
+      </div>
+      <div class="row text-center text-muted">
+        <div class="col">
+          <small i18n
+            >The risk of loss in trading can be substantial. It is not advisable
+            to invest money you may need in the short term.</small
+          >
+        </div>
       </div>
     </div>
-
-    <div class="row text-center">
-      <div class="col">
-        © 2021 - {{ currentYear }} <a href="https://ghostfol.io">Ghostfolio</a>
-      </div>
-    </div>
-
-    <div class="row text-center text-muted">
-      <div class="col">
-        <small i18n
-          >The risk of loss in trading can be substantial. It is not advisable
-          to invest money you may need in the short term.</small
-        >
-      </div>
-    </div>
-  </div>
-</footer>
+  </footer>
+}

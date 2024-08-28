@@ -1,4 +1,10 @@
-import { ColorScheme, DateRange, ViewMode } from '@ghostfolio/common/types';
+import {
+  ColorScheme,
+  DateRange,
+  HoldingsViewMode,
+  ViewMode,
+  XRayRulesSettings
+} from '@ghostfolio/common/types';
 
 export interface UserSettings {
   annualInterestRate?: number;
@@ -9,6 +15,7 @@ export interface UserSettings {
   emergencyFund?: number;
   'filters.accounts'?: string[];
   'filters.tags'?: string[];
+  holdingsViewMode?: HoldingsViewMode;
   isExperimentalFeatures?: boolean;
   isRestrictedView?: boolean;
   language?: string;
@@ -17,4 +24,5 @@ export interface UserSettings {
   retirementDate?: string;
   savingsRate?: number;
   viewMode?: ViewMode;
+  xRayRules?: XRayRulesSettings;
 }

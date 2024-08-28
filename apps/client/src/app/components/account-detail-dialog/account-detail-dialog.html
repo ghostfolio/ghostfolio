@@ -20,6 +20,7 @@
       </div>
     </div>
 
+    <!-- TODO
     <div class="chart-container mb-3">
       <gf-investment-chart
         class="h-100"
@@ -32,6 +33,7 @@
         [locale]="user?.settings?.locale"
       />
     </div>
+    -->
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">
@@ -101,10 +103,17 @@
           [hasPermissionToFilter]="false"
           [hasPermissionToOpenDetails]="false"
           [locale]="user?.settings?.locale"
-          [showActions]="false"
+          [showActions]="
+            !data.hasImpersonationId &&
+            data.hasPermissionToCreateOrder &&
+            user?.settings?.isExperimentalFeatures &&
+            !user?.settings?.isRestrictedView
+          "
           [sortColumn]="sortColumn"
           [sortDirection]="sortDirection"
           [totalItems]="totalItems"
+          (activityToClone)="onCloneActivity($event)"
+          (activityToUpdate)="onUpdateActivity($event)"
           (export)="onExport()"
           (sortChanged)="onSortChanged($event)"
         />

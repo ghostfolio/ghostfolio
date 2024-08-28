@@ -4,11 +4,10 @@
       <h2 class="d-none d-sm-block h3 mb-3 text-center" i18n>FIRE</h2>
       <div>
         <h4 class="align-items-center d-flex mb-3">
-          <span i18n>Calculator</span
-          ><gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          <span i18n>Calculator</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </h4>
         <gf-fire-calculator
           [annualInterestRate]="user?.settings?.annualInterestRate"
@@ -38,67 +37,68 @@
   </div>
   <div>
     <h4 class="align-items-center d-flex">
-      <span i18n>4% Rule</span
-      ><gf-premium-indicator
-        *ngIf="user?.subscription?.type === 'Basic'"
-        class="ml-1"
-      />
+      <span i18n>4% Rule</span>
+      @if (user?.subscription?.type === 'Basic') {
+        <gf-premium-indicator class="ml-1" />
+      }
     </h4>
-    <div *ngIf="isLoading">
-      <ngx-skeleton-loader
-        animation="pulse"
-        class="my-1"
-        [theme]="{
-          height: '1rem',
-          width: '100%'
-        }"
-      />
-      <ngx-skeleton-loader
-        animation="pulse"
-        [theme]="{
-          height: '1rem',
-          width: '10rem'
-        }"
-      />
-    </div>
-    <div
-      *ngIf="!isLoading"
-      i18n
-      [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }"
-    >
-      If you retire today, you would be able to withdraw
-      <span class="font-weight-bold"
-        ><gf-value
-          class="d-inline-block"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [unit]="user?.settings?.baseCurrency"
-          [value]="withdrawalRatePerYear?.toNumber()"
+    @if (isLoading) {
+      <div>
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="my-1"
+          [theme]="{
+            height: '1rem',
+            width: '100%'
+          }"
         />
-        per year</span
+        <ngx-skeleton-loader
+          animation="pulse"
+          [theme]="{
+            height: '1rem',
+            width: '10rem'
+          }"
+        />
+      </div>
+    } @else {
+      <div
+        i18n
+        [ngClass]="{ 'text-muted': user?.subscription?.type === 'Basic' }"
       >
-      or
-      <span class="font-weight-bold"
-        ><gf-value
-          class="d-inline-block"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [unit]="user?.settings?.baseCurrency"
-          [value]="withdrawalRatePerMonth?.toNumber()"
-        />
-        per month</span
-      >, based on your total assets of
-      <span class="font-weight-bold"
-        ><gf-value
-          class="d-inline-block"
-          [isCurrency]="true"
-          [locale]="user?.settings?.locale"
-          [unit]="user?.settings?.baseCurrency"
-          [value]="fireWealth?.toNumber()"
-        />
-      </span>
-      and a withdrawal rate of 4%.
-    </div>
+        If you retire today, you would be able to withdraw
+        <span class="font-weight-bold"
+          ><gf-value
+            class="d-inline-block"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="withdrawalRatePerYear?.toNumber()"
+          />
+          per year</span
+        >
+        or
+        <span class="font-weight-bold"
+          ><gf-value
+            class="d-inline-block"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="withdrawalRatePerMonth?.toNumber()"
+          />
+          per month</span
+        >, based on your total assets of
+        <span class="font-weight-bold"
+          ><gf-value
+            class="d-inline-block"
+            [isCurrency]="true"
+            [locale]="user?.settings?.locale"
+            [unit]="user?.settings?.baseCurrency"
+            [value]="fireWealth?.toNumber()"
+          />
+        </span>
+        and a withdrawal rate of 4%.
+      </div>
+    }
   </div>
 </div>
 
@@ -119,56 +119,91 @@
       </p>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
-          <span i18n>Emergency Fund</span
-          ><gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          <span i18n>Emergency Fund</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="emergencyFundRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
-          <span i18n>Currency Cluster Risks</span
-          ><gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          <span i18n>Currency Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="currencyClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
-          <span i18n>Account Cluster Risks</span
-          ><gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          <span i18n>Account Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="accountClusterRiskRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div>
+      <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
-          <span i18n>Fees</span
-          ><gf-premium-indicator
-            *ngIf="user?.subscription?.type === 'Basic'"
-            class="ml-1"
-          />
+          <span i18n>Fees</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
         </h4>
         <gf-rules
-          [hasPermissionToCreateOrder]="hasPermissionToCreateOrder"
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
           [rules]="feeRules"
+          (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
+      @if (inactiveRules?.length > 0) {
+        <div>
+          <h4 class="m-0" i18n>Inactive</h4>
+          <gf-rules
+            [hasPermissionToUpdateUserSettings]="
+              !hasImpersonationId &&
+              hasPermissionToUpdateUserSettings &&
+              user?.settings?.isExperimentalFeatures
+            "
+            [isLoading]="isLoadingPortfolioReport"
+            [rules]="inactiveRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        </div>
+      }
     </div>
   </div>
 </div>

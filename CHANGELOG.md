@@ -5,7 +5,306 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.106.0-beta.2 - 2024-08-26
+
+### Changed
+
+- Reworked the portfolio calculator
+- Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
+
+### Fixed
+
+- Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
+
+## 2.105.0 - 2024-08-21
+
+### Added
+
+- Added support to deactivate rules in the _X-ray_ section (experimental)
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the currency conversion for fees and values in the dividend import by applying the correct rate based on the activity date
+- Fixed the currency conversion for fees and values in the activities service by applying the correct rate based on the activity date
+
+## 2.104.1 - 2024-08-17
+
+### Fixed
+
+- Fixed an issue with the clone functionality of an activity caused by a changed date format
+
+## 2.104.0 - 2024-08-17
+
+### Added
+
+- Set up a notification service for alert and confirmation dialogs
+
+### Changed
+
+- Refactored the dark theme CSS selector
+- Improved the language localization for German (`de`)
+- Upgraded `date-fns` from version `2.29.3` to `3.6.0`
+- Upgraded `zone.js` from version `0.14.7` to `0.14.10`
+
+### Fixed
+
+- Removed `read_only: true` from the `docker-compose.yml` file to allow `prisma` to run migrations
+
+## 2.103.0 - 2024-08-10
+
+### Changed
+
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Enabled Catalan (`ca`) as an option in the user settings (experimental)
+- Enabled Polish (`pl`) as an option in the user settings (experimental)
+- Improved the language localization for Portuguese (`pt`)
+- Optimized the docker image layers to reduce the image size
+- Updated the binary targets of `debian-openssl` for `prisma`
+- Upgraded `prisma` from version `5.17.0` to `5.18.0`
+
+## 2.102.0 - 2024-08-07
+
+### Added
+
+- Added support to clone an activity from the account detail dialog (experimental)
+- Added support to edit an activity from the account detail dialog (experimental)
+- Added support to clone an activity from the holding detail dialog (experimental)
+- Added support to edit an activity from the holding detail dialog (experimental)
+
+### Changed
+
+- Improved the caching of the benchmarks in the markets overview by returning cached data and recalculating in the background when it expires
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `Nx` from version `19.5.1` to `19.5.6`
+
+### Fixed
+
+- Fixed the cache flush endpoint response
+
+## 2.101.0 - 2024-08-03
+
+### Changed
+
+- Hardened container security by switching to a non-root user, setting the filesystem to read-only, and dropping unnecessary capabilities
+
+## 2.100.0 - 2024-08-03
+
+### Added
+
+- Added support to manage tags of holdings in the holding detail dialog
+
+### Changed
+
+- Improved the color assignment in the chart of the holdings tab on the home page (experimental)
+- Persisted the view mode of the holdings tab on the home page (experimental)
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Spanish (`es`)
+
+## 2.99.0 - 2024-07-29
+
+### Changed
+
+- Migrated the usage of `yarn` to `npm`
+- Upgraded `storybook` from version `7.0.9` to `8.2.5`
+- Downgraded `marked` from version `13.0.0` to `12.0.2`
+
+## 2.98.0 - 2024-07-27
+
+### Added
+
+- Set up the language localization for Catalan (`ca`)
+
+### Changed
+
+- Improved the account selector of the create or update activity dialog
+- Improved the handling of the numerical precision in the value component
+- Skipped derived currencies in the get quotes functionality of the data provider service
+- Improved the language localization for Spanish (`es`)
+- Upgraded `angular` from version `18.0.4` to `18.1.1`
+- Upgraded `Nx` from version `19.4.3` to `19.5.1`
+- Upgraded `prisma` from version `5.16.1` to `5.17.0`
+
+### Fixed
+
+- Fixed the dividend import from a data provider for holdings without an account
+- Fixed an issue in the public page related to a non-existent access
+
+## 2.97.0 - 2024-07-20
+
+### Added
+
+- Added _selfh.st_ to the _As seen in_ section on the landing page
+
+### Changed
+
+- Improved the numerical precision in the holding detail dialog
+- Improved the handling of the numerical precision in the value component
+- Optimized the 7d data gathering by prioritizing the currencies
+- Improved the language localization for German (`de`)
+- Upgraded `Node.js` from version `18` to `20` (`Dockerfile`)
+- Upgraded `Nx` from version `19.4.0` to `19.4.3`
+- Upgraded `prettier` from version `3.3.1` to `3.3.3`
+
+### Fixed
+
+- Fixed the table sorting of the holdings tab on the home page
+
+## 2.96.0 - 2024-07-13
+
+### Changed
+
+- Improved the chart of the holdings tab on the home page (experimental)
+- Separated the icon purposes in the `site.webmanifest`
+
+### Fixed
+
+- Fixed an issue in the portfolio summary with the currency conversion of fees
+- Fixed an issue in the the search for a holding
+- Removed the show condition of the experimental features setting in the user settings
+
+## 2.95.0 - 2024-07-12
+
+### Added
+
+- Added a chart to the holdings tab of the home page (experimental)
+
+## 2.94.0 - 2024-07-09
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed a pagination issue in the activities endpoint by adding `id` as a secondary sort criterion to `date` to ensure consistent ordering
+
+## 2.93.0 - 2024-07-07
+
+### Added
+
+- Added the _Crypto Coins Heatmap_ to the resources section
+- Added the _Stock Heatmap_ to the resources section
+- Extended the content of the _Self-Hosting_ section by the platforms concept on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Improved the allocations by ETF holding on the allocations page for the impersonation mode (experimental)
+- Improved the detection of REST APIs (`JSON`) used via the scraper configuration
+- Improved the usability to delete an asset profile of type currency in the historical market data table and the asset profile details dialog of the admin control
+- Refreshed the cryptocurrencies list
+- Refactored the thresholds of the rules in the _X-ray_ section
+- Removed the obsolete `version` from the `docker-compose` files
+- Upgraded `Nx` from version `19.2.2` to `19.4.0`
+
+## 2.92.0 - 2024-06-30
+
+### Added
+
+- Added support for bulk deletion of asset profiles from the market data table in the admin control panel
+
+### Changed
+
+- Added support for derived currencies in the currency validation
+- Added support for automatic deletion of unused asset profiles when deleting activities
+- Improved the caching of the benchmarks in the markets overview (only cache if needed)
+- Upgraded `prisma` from version `5.15.0` to `5.16.1`
+
+### Fixed
+
+- Fixed an issue with the all time high in the benchmarks of the markets overview
+
+## 2.91.0 - 2024-06-26
+
+### Added
+
+- Added a benchmarks preset to the historical market data table of the admin control panel
+
+### Changed
+
+- Upgraded `angular` from version `18.0.2` to `18.0.4`
+
+### Fixed
+
+- Fixed the dialog position (center) on mobile
+- Fixed the horizontal overflow in the historical market data table of the admin control panel
+- Changed the mechanism of the `INTRADAY` data gathering to persist data only if the market state is `OPEN`
+- Fixed the creation of activities with `MANUAL` data source (with no historical market data)
+
+## 2.90.0 - 2024-06-22
+
+### Added
+
+- Added a dialog for the benchmarks in the markets overview
+- Extended the asset profile details dialog of the admin control for currencies
+- Extended the content of the _Self-Hosting_ section by the mobile app question on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Moved the indicator for active filters from experimental to general availability
+- Improved the error handling in the biometric authentication registration
+- Improved the language localization for German (`de`)
+- Set up SSL for local development
+- Upgraded the _Stripe_ dependencies
+- Upgraded `marked` from version `9.1.6` to `13.0.0`
+- Upgraded `ngx-device-detector` from version `5.0.1` to `8.0.0`
+- Upgraded `ngx-markdown` from version `17.1.1` to `18.0.0`
+- Upgraded `zone.js` from version `0.14.5` to `0.14.7`
+
+## 2.89.0 - 2024-06-14
+
+### Added
+
+- Extended the historical market data table with currencies preset by date and activities count in the admin control panel
+
+### Changed
+
+- Improved the date validation in the create, import and update activities endpoints
+- Improved the language localization for German (`de`)
+
+## 2.88.0 - 2024-06-11
+
+### Added
+
+- Set the image source label in `Dockerfile`
+
+### Changed
+
+- Improved the style of the blog post list
+- Migrated the `@ghostfolio/client` components to control flow
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `17.3.10` to `18.0.2`
+- Upgraded `Nx` from version `19.0.5` to `19.2.2`
+
+## 2.87.0 - 2024-06-08
+
+### Changed
+
+- Improved the portfolio summary
+- Improved the allocations by ETF holding on the allocations page (experimental)
+- Improved the error handling in the `HttpResponseInterceptor`
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `5.14.0` to `5.15.0`
+
+### Fixed
+
+- Fixed an issue in the _FIRE_ calculator
+
+## 2.86.0 - 2024-06-07
+
+### Added
+
+- Introduced the allocations by ETF holding on the allocations page (experimental)
+
+### Changed
+
+- Upgraded `prettier` from version `3.2.5` to `3.3.1`
+
+## 2.85.0 - 2024-06-06
 
 ### Added
 
@@ -15,6 +314,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for German (`de`)
 - Upgraded `ng-extract-i18n-merge` from version `2.10.0` to `2.12.0`
+
+### Fixed
+
+- Fixed an issue with the default locale in the value component
 
 ## 2.84.0 - 2024-06-01
 
@@ -4656,7 +4959,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the attribute `precision` in the value component
+- Added the attribute `precision` to the value component
 
 ### Fixed
 

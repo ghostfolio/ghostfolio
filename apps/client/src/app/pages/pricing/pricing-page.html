@@ -9,18 +9,20 @@
           for most people. Revenue is used to cover the costs of the hosting
           infrastructure and to fund ongoing development.
         </p>
-        <p *ngIf="user?.subscription?.type === 'Basic'">
-          If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
-          <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
-          <i>VIAC</i>, or <i>Zak</i>, please
-          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
-            >contact us</a
-          >
-          to use our referral link and get a Ghostfolio Premium membership for
-          one year. Looking for a student discount? Request it
-          <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a> with
-          your university e-mail address.
-        </p>
+        @if (user?.subscription?.type === 'Basic') {
+          <p>
+            If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
+            <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
+            <i>VIAC</i>, or <i>Zak</i>, please
+            <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
+              >contact us</a
+            >
+            to use our referral link and get a Ghostfolio Premium membership for
+            one year. Looking for a student discount? Request it
+            <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a>
+            with your university e-mail address.
+          </p>
+        }
         <p i18n>
           If you prefer to run Ghostfolio on your own infrastructure, please
           find the source code and further instructions on
@@ -91,15 +93,14 @@
               </div>
               <p i18n>Self-hosted, update manually.</p>
               <p class="h5 text-right" i18n>Free</p>
-              <div
-                *ngIf="user?.subscription?.type === 'Basic'"
-                class="d-none d-lg-block hidden mt-3 text-center"
-              >
-                <a color="primary" mat-flat-button>&nbsp;</a>
-                <p class="m-0 text-muted">
-                  <small>&nbsp;</small>
-                </p>
-              </div>
+              @if (user?.subscription?.type === 'Basic') {
+                <div class="d-none d-lg-block hidden mt-3 text-center">
+                  <a color="primary" mat-flat-button>&nbsp;</a>
+                  <p class="m-0 text-muted">
+                    <small>&nbsp;</small>
+                  </p>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -113,9 +114,11 @@
               <div class="flex-grow-1">
                 <div class="align-items-center d-flex mb-2">
                   <h4 class="flex-grow-1 m-0">Basic</h4>
-                  <div *ngIf="user?.subscription?.type === 'Basic'">
-                    <ion-icon class="mr-1" name="checkmark-outline" />
-                  </div>
+                  @if (user?.subscription?.type === 'Basic') {
+                    <div>
+                      <ion-icon class="mr-1" name="checkmark-outline" />
+                    </div>
+                  }
                 </div>
                 <p i18n>
                   For new investors who are just getting started with trading.
@@ -148,15 +151,14 @@
               </div>
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
               <p class="h5 text-right" i18n>Free</p>
-              <div
-                *ngIf="user?.subscription?.type === 'Basic'"
-                class="d-none d-lg-block hidden mt-3 text-center"
-              >
-                <a color="primary" mat-flat-button>&nbsp;</a>
-                <p class="m-0 text-muted">
-                  <small>&nbsp;</small>
-                </p>
-              </div>
+              @if (user?.subscription?.type === 'Basic') {
+                <div class="d-none d-lg-block hidden mt-3 text-center">
+                  <a color="primary" mat-flat-button>&nbsp;</a>
+                  <p class="m-0 text-muted">
+                    <small>&nbsp;</small>
+                  </p>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -173,9 +175,11 @@
                     <span>Premium</span>
                     <gf-premium-indicator class="ml-1" [enableLink]="false" />
                   </h4>
-                  <div *ngIf="user?.subscription?.type === 'Premium'">
-                    <ion-icon class="mr-1" name="checkmark-outline" />
-                  </div>
+                  @if (user?.subscription?.type === 'Premium') {
+                    <div>
+                      <ion-icon class="mr-1" name="checkmark-outline" />
+                    </div>
+                  }
                 </div>
                 <p i18n>
                   For ambitious investors who need the full picture of their
@@ -240,58 +244,62 @@
               <p i18n>Fully managed Ghostfolio cloud offering.</p>
               <p class="h5 text-right" [hidden]="!price">
                 <span class="font-weight-normal">
-                  <ng-container *ngIf="coupon"
-                    ><del class="text-muted"
+                  @if (coupon) {
+                    <del class="text-muted"
                       >{{ baseCurrency }}&nbsp;{{ price }}</del
                     >&nbsp;{{ baseCurrency }}&nbsp;<strong>{{
                       price - coupon
                     }}</strong>
-                  </ng-container>
-                  <ng-container *ngIf="!coupon"
-                    >{{ baseCurrency }}&nbsp;<strong>{{
-                      price
-                    }}</strong></ng-container
-                  >&nbsp;<span i18n>per year</span></span
+                  } @else {
+                    {{ baseCurrency }}&nbsp;<strong>{{ price }}</strong>
+                  }
+                  <span>&nbsp;</span>
+                  <span i18n>per year</span></span
                 >
               </p>
-              <div
-                *ngIf="
-                  hasPermissionToUpdateUserSettings &&
-                  user?.subscription?.type === 'Basic'
-                "
-                class="mt-3 text-center"
-              >
-                <button color="primary" mat-flat-button (click)="onCheckout()">
-                  <ng-container
-                    *ngIf="user.subscription.offer === 'default'"
-                    i18n
-                    >Upgrade Plan</ng-container
+              @if (
+                hasPermissionToUpdateUserSettings &&
+                user?.subscription?.type === 'Basic'
+              ) {
+                <div class="mt-3 text-center">
+                  <button
+                    color="primary"
+                    mat-flat-button
+                    (click)="onCheckout()"
                   >
-                  <ng-container
-                    *ngIf="
+                    @if (user.subscription.offer === 'default') {
+                      <ng-container i18n>Upgrade Plan</ng-container>
+                    } @else if (
                       user.subscription.offer === 'renewal' ||
                       user.subscription.offer === 'renewal-early-bird'
-                    "
-                    i18n
-                    >Renew Plan</ng-container
-                  >
-                </button>
-                <p class="m-0 text-muted">
-                  <small i18n>One-time payment, no auto-renewal.</small>
-                </p>
-              </div>
+                    ) {
+                      <ng-container i18n>Renew Plan</ng-container>
+                    }
+                  </button>
+                  <p class="m-0 text-muted">
+                    <small i18n>One-time payment, no auto-renewal.</small>
+                  </p>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
       </div>
     </div>
   </div>
-  <div *ngIf="!user" class="row">
-    <div class="col mt-3 text-center">
-      <a color="primary" i18n mat-flat-button [routerLink]="routerLinkRegister">
-        Get Started
-      </a>
-      <p class="m-0 text-muted"><small i18n>It’s free.</small></p>
+  @if (!user) {
+    <div class="row">
+      <div class="col mt-3 text-center">
+        <a
+          color="primary"
+          i18n
+          mat-flat-button
+          [routerLink]="routerLinkRegister"
+        >
+          Get Started
+        </a>
+        <p class="m-0 text-muted"><small i18n>It’s free.</small></p>
+      </div>
     </div>
-  </div>
+  }
 </div>

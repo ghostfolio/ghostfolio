@@ -21,7 +21,7 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
-import { isToday } from 'date-fns';
+import { isAfter, isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
@@ -51,9 +51,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
   public isToday = isToday;
+  public mode: 'create' | 'update';
   public platforms: { id: string; name: string }[];
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public tags: Tag[] = [];
+  public separatorKeysCodes: number[] = [COMMA, ENTER];
+  public tagsAvailable: Tag[] = [];
   public total = 0;
   public typesTranslationMap = new Map<Type, string>();
   public Validators = Validators;
@@ -71,6 +72,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.mode = this.data.activity.id ? 'update' : 'create';
     this.locale = this.data.user?.settings?.locale;
     this.dateAdapter.setLocale(this.locale);
 
@@ -79,7 +81,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
-    this.tags = tags.map(({ id, name }) => {
+    this.tagsAvailable = tags.map(({ id, name }) => {
       return {
         id,
         name: translate(name)
@@ -92,7 +94,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     this.activityForm = this.formBuilder.group({
       accountId: [
-        this.data.accounts.length === 1 && !this.data.activity?.accountId
+        this.data.accounts.length === 1 &&
+        !this.data.activity?.accountId &&
+        this.mode === 'create'
           ? this.data.accounts[0].id
           : this.data.activity?.accountId,
         Validators.required
@@ -287,7 +291,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     ].valueChanges.pipe(
       startWith(this.activityForm.get('tags').value),
       map((aTags: Tag[] | null) => {
-        return aTags ? this.filterTags(aTags) : this.tags.slice();
+        return aTags ? this.filterTags(aTags) : this.tagsAvailable.slice();
       })
     );
 
@@ -430,13 +434,22 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     });
   }
 
+  public dateFilter(aDate: Date) {
+    if (!aDate) {
+      return true;
+    }
+
+    return isAfter(aDate, new Date(0));
+  }
+
   public onAddTag(event: MatAutocompleteSelectedEvent) {
     this.activityForm.get('tags').setValue([
       ...(this.activityForm.get('tags').value ?? []),
-      this.tags.find(({ id }) => {
+      this.tagsAvailable.find(({ id }) => {
         return id === event.option.value;
       })
     ]);
+
     this.tagInput.nativeElement.value = '';
   }
 
@@ -475,18 +488,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     };
 
     try {
-      if (this.data.activity.id) {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
-
-        await validateObjectForForm({
-          classDto: UpdateOrderDto,
-          form: this.activityForm,
-          ignoreFields: ['dataSource', 'date'],
-          object: activity as UpdateOrderDto
-        });
-
-        this.dialogRef.close(activity as UpdateOrderDto);
-      } else {
+      if (this.mode === 'create') {
         (activity as CreateOrderDto).updateAccountBalance =
           this.activityForm.get('updateAccountBalance').value;
 
@@ -498,6 +500,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         });
 
         this.dialogRef.close(activity as CreateOrderDto);
+      } else {
+        (activity as UpdateOrderDto).id = this.data.activity.id;
+
+        await validateObjectForForm({
+          classDto: UpdateOrderDto,
+          form: this.activityForm,
+          ignoreFields: ['dataSource', 'date'],
+          object: activity as UpdateOrderDto
+        });
+
+        this.dialogRef.close(activity as UpdateOrderDto);
       }
     } catch (error) {
       console.error(error);
@@ -510,12 +523,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   }
 
   private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map((tag) => {
-      return tag.id;
+    const tagIds = aTags.map(({ id }) => {
+      return id;
     });
 
-    return this.tags.filter((tag) => {
-      return !tagIds.includes(tag.id);
+    return this.tagsAvailable.filter(({ id }) => {
+      return !tagIds.includes(id);
     });
   }
 

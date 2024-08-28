@@ -1,3 +1,4 @@
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import {
   getLocale,
   getNumberFormatDecimal,
@@ -14,7 +15,6 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { CountUp } from 'countup.js';
@@ -26,7 +26,7 @@ import { isNumber } from 'lodash';
   templateUrl: './portfolio-performance.component.html',
   styleUrls: ['./portfolio-performance.component.scss']
 })
-export class PortfolioPerformanceComponent implements OnChanges, OnInit {
+export class PortfolioPerformanceComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() errors: ResponseError['errors'];
   @Input() isAllTimeHigh: boolean;
@@ -34,16 +34,17 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performance: PortfolioPerformance;
+  @Input() precision: number;
   @Input() showDetails: boolean;
   @Input() unit: string;
 
   @ViewChild('value') value: ElementRef;
 
-  public constructor() {}
-
-  public ngOnInit() {}
+  public constructor(private notificationService: NotificationService) {}
 
   public ngOnChanges() {
+    this.precision = this.precision >= 0 ? this.precision : 2;
+
     if (this.isLoading) {
       if (this.value?.nativeElement) {
         this.value.nativeElement.innerHTML = '';
@@ -52,11 +53,7 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
       if (isNumber(this.performance?.currentValueInBaseCurrency)) {
         new CountUp('value', this.performance?.currentValueInBaseCurrency, {
           decimal: getNumberFormatDecimal(this.locale),
-          decimalPlaces:
-            this.deviceType === 'mobile' &&
-            this.performance?.currentValueInBaseCurrency >= 100000
-              ? 0
-              : 2,
+          decimalPlaces: this.precision,
           duration: 1,
           separator: getNumberFormatGroup(this.locale)
         }).start();
@@ -78,12 +75,15 @@ export class PortfolioPerformanceComponent implements OnChanges, OnInit {
   }
 
   public onShowErrors() {
-    const errorMessageParts = [$localize`Market data is delayed for`];
+    const errorMessageParts = [];
 
     for (const error of this.errors) {
       errorMessageParts.push(`${error.symbol} (${error.dataSource})`);
     }
 
-    alert(errorMessageParts.join('\n'));
+    this.notificationService.alert({
+      message: errorMessageParts.join('<br />'),
+      title: $localize`Market data is delayed for`
+    });
   }
 }

@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
+import { Holding } from '@ghostfolio/common/interfaces';
 import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
@@ -152,10 +153,29 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     if (
+      !response.holdings ||
+      (response.holdings as unknown as Holding[]).length === 0
+    ) {
+      response.holdings = [];
+
+      for (const { label, weight } of holdings?.topHoldings ?? []) {
+        if (label?.toLowerCase() === 'other') {
+          continue;
+        }
+
+        response.holdings.push({
+          weight,
+          name: label
+        });
+      }
+    }
+
+    if (
       !response.sectors ||
       (response.sectors as unknown as Sector[]).length === 0
     ) {
       response.sectors = [];
+
       for (const [name, value] of Object.entries<any>(
         holdings?.sectors ?? {}
       )) {

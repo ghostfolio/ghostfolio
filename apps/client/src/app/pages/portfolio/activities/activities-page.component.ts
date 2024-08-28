@@ -16,7 +16,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Order as OrderModel } from '@prisma/client';
 import { format, parseISO } from 'date-fns';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
@@ -33,7 +32,6 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   templateUrl: './activities-page.html'
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
-  public activities: Activity[];
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -64,20 +62,24 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((params) => {
         if (params['createDialog']) {
-          this.openCreateActivityDialog();
+          if (params['activityId']) {
+            this.dataService
+              .fetchActivity(params['activityId'])
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((activity) => {
+                this.openCreateActivityDialog(activity);
+              });
+          } else {
+            this.openCreateActivityDialog();
+          }
         } else if (params['editDialog']) {
-          if (this.activities) {
-            const activity = this.activities.find(({ id }) => {
-              return id === params['activityId'];
-            });
-
-            this.openUpdateActivityDialog(activity);
-          } else if (this.dataSource) {
-            const activity = this.dataSource.data.find(({ id }) => {
-              return id === params['activityId'];
-            });
-
-            this.openUpdateActivityDialog(activity);
+          if (params['activityId']) {
+            this.dataService
+              .fetchActivity(params['activityId'])
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe((activity) => {
+                this.openUpdateActivityDialog(activity);
+              });
           } else {
             this.router.navigate(['.'], { relativeTo: this.route });
           }
@@ -249,7 +251,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.fetchActivities();
   }
 
-  public onUpdateActivity(aActivity: OrderModel) {
+  public onUpdateActivity(aActivity: Activity) {
     this.router.navigate([], {
       queryParams: { activityId: aActivity.id, editDialog: true }
     });

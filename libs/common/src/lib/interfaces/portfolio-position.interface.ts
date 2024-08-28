@@ -1,7 +1,9 @@
+import { Market, MarketAdvanced } from '@ghostfolio/common/types';
+
 import { AssetClass, AssetSubClass, DataSource, Tag } from '@prisma/client';
 
-import { Market, MarketAdvanced, MarketState } from '../types';
 import { Country } from './country.interface';
+import { Holding } from './holding.interface';
 import { Sector } from './sector.interface';
 
 export interface PortfolioPosition {
@@ -20,13 +22,13 @@ export interface PortfolioPosition {
   grossPerformancePercent: number;
   grossPerformancePercentWithCurrencyEffect: number;
   grossPerformanceWithCurrencyEffect: number;
+  holdings: Holding[];
   investment: number;
   marketChange?: number;
   marketChangePercent?: number;
   marketPrice: number;
   markets?: { [key in Market]: number };
   marketsAdvanced?: { [key in MarketAdvanced]: number };
-  marketState: MarketState;
   name: string;
   netPerformance: number;
   netPerformancePercent: number;

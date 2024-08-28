@@ -6,64 +6,57 @@
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
           [name]="user?.subscription?.type"
         />
-        <div
-          *ngIf="user?.subscription?.type === 'Basic'"
-          class="d-flex flex-column mt-5"
-        >
-          <ng-container
-            *ngIf="
+        @if (user?.subscription?.type === 'Basic') {
+          <div class="d-flex flex-column mt-5">
+            @if (
               hasPermissionForSubscription && hasPermissionToUpdateUserSettings
-            "
-          >
-            <button color="primary" mat-flat-button (click)="onCheckout()">
-              <ng-container *ngIf="user.subscription.offer === 'default'" i18n
-                >Upgrade Plan</ng-container
-              >
-              <ng-container
-                *ngIf="
+            ) {
+              <button color="primary" mat-flat-button (click)="onCheckout()">
+                @if (user.subscription.offer === 'default') {
+                  <ng-container i18n>Upgrade Plan</ng-container>
+                } @else if (
                   user.subscription.offer === 'renewal' ||
                   user.subscription.offer === 'renewal-early-bird'
-                "
-                i18n
-                >Renew Plan</ng-container
-              >
-            </button>
-            <div *ngIf="price" class="mt-1 text-center">
-              <ng-container *ngIf="coupon"
-                ><del class="text-muted"
-                  >{{ baseCurrency }}&nbsp;{{ price }}</del
-                >&nbsp;{{ baseCurrency }}&nbsp;{{
-                  price - coupon
-                }}</ng-container
-              >
-              <ng-container *ngIf="!coupon"
-                >{{ baseCurrency }}&nbsp;{{ price }}</ng-container
-              >&nbsp;<span i18n>per year</span>
+                ) {
+                  <ng-container i18n>Renew Plan</ng-container>
+                }
+              </button>
+              @if (price) {
+                <div class="mt-1 text-center">
+                  @if (coupon) {
+                    <del class="text-muted"
+                      >{{ baseCurrency }}&nbsp;{{ price }}</del
+                    >&nbsp;{{ baseCurrency }}&nbsp;{{ price - coupon }}
+                  } @else {
+                    {{ baseCurrency }}&nbsp;{{ price }}
+                  }
+                  &nbsp;<span i18n>per year</span>
+                </div>
+              }
+            }
+            <div class="align-items-center d-flex justify-content-center mt-4">
+              @if (!user?.subscription?.expiresAt) {
+                <a class="mx-1" mat-stroked-button [href]="trySubscriptionMail"
+                  ><span i18n>Try Premium</span>
+                  <gf-premium-indicator
+                    class="d-inline-block ml-1"
+                    [enableLink]="false"
+                  />
+                </a>
+              }
+              @if (hasPermissionToUpdateUserSettings) {
+                <a
+                  class="mx-1"
+                  i18n
+                  mat-stroked-button
+                  [routerLink]=""
+                  (click)="onRedeemCoupon()"
+                  >Redeem Coupon</a
+                >
+              }
             </div>
-          </ng-container>
-          <div class="align-items-center d-flex justify-content-center mt-4">
-            <a
-              *ngIf="!user?.subscription?.expiresAt"
-              class="mx-1"
-              mat-stroked-button
-              [href]="trySubscriptionMail"
-              ><span i18n>Try Premium</span>
-              <gf-premium-indicator
-                class="d-inline-block ml-1"
-                [enableLink]="false"
-              />
-            </a>
-            <a
-              *ngIf="hasPermissionToUpdateUserSettings"
-              class="mx-1"
-              i18n
-              mat-stroked-button
-              [routerLink]=""
-              (click)="onRedeemCoupon()"
-              >Redeem Coupon</a
-            >
           </div>
-        </div>
+        }
       </div>
     </div>
   </div>
