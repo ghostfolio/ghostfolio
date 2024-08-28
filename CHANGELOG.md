@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reworked the portfolio calculator
 - Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
+- Improved the language localization for Polish (`pl`)
 
 ### Fixed
 
