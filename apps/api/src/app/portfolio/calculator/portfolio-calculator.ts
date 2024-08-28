@@ -1037,14 +1037,6 @@ export abstract class PortfolioCalculator {
         JSON.stringify(this.snapshot),
         this.configurationService.get('CACHE_QUOTES_TTL')
       );
-
-      Logger.debug(
-        `Computed portfolio snapshot in ${(
-          (performance.now() - startTimeTotal) /
-          1000
-        ).toFixed(3)} seconds`,
-        'PortfolioCalculator'
-      );
     }
   }
 }
