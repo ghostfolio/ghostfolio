@@ -373,38 +373,11 @@
       }"
     >
       <div class="col">
-        <mat-form-field appearance="outline" class="w-100 without-hint">
-          <mat-label i18n>Tags</mat-label>
-          <mat-chip-grid #tagsChipList>
-            @for (tag of activityForm.get('tags')?.value; track tag.id) {
-              <mat-chip-row
-                matChipRemove
-                [removable]="true"
-                (removed)="onRemoveTag(tag)"
-              >
-                {{ tag.name }}
-                <ion-icon class="ml-2" matPrefix name="close-outline" />
-              </mat-chip-row>
-            }
-            <input
-              #tagInput
-              name="close-outline"
-              [matAutocomplete]="autocompleteTags"
-              [matChipInputFor]="tagsChipList"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            />
-          </mat-chip-grid>
-          <mat-autocomplete
-            #autocompleteTags="matAutocomplete"
-            (optionSelected)="onAddTag($event)"
-          >
-            @for (tag of filteredTagsObservable | async; track tag.id) {
-              <mat-option [value]="tag.id">
-                {{ tag.name }}
-              </mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
+        <gf-tags-selector
+          [tags]="activityForm.get('tags')?.value"
+          [tagsAvailable]="tagsAvailable"
+          (tagsChanged)="onAddTag($event)"
+        />
       </div>
     </div>
 

@@ -1,12 +1,6 @@
-// import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   CUSTOM_ELEMENTS_SCHEMA,
@@ -20,36 +14,19 @@ import {
   signal,
   ViewChild
 } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import {
-  MatAutocompleteTrigger,
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
-import {
-  MatChipEditedEvent,
-  MatChipInputEvent,
-  MatChipsModule
-} from '@angular/material/chips';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {
-  MatFormFieldControl,
-  MatFormFieldModule
-} from '@angular/material/form-field';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { Tag } from '@prisma/client';
-import { map, Observable, of, startWith, Subject } from 'rxjs';
-
-import { translate } from '../i18n';
-import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // host: {
-  //   '[attr.aria-describedBy]': 'describedBy',
-  //   '[id]': 'id'
-  // },
   imports: [
     CommonModule,
     FormsModule,
@@ -57,15 +34,8 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
-    MatIconModule,
-    ReactiveFormsModule
+    MatIconModule
   ],
-  // providers: [
-  //   {
-  //     provide: MatFormFieldControl,
-  //     useExisting: GfTagsSelectorComponent
-  //   }
-  // ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
   standalone: true,
@@ -73,9 +43,6 @@ import { AbstractMatFormField } from '../shared/abstract-mat-form-field';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent implements OnInit {
-  public focus(): void {
-    throw new Error('Method not implemented.');
-  }
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
@@ -83,75 +50,57 @@ export class GfTagsSelectorComponent implements OnInit {
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
-  // public activityForm: FormGroup;
-  public filteredTagsObservable: Observable<Tag[]> = of([]);
-  public separatorKeysCodes: number[] = [COMMA, ENTER];
-
-  readonly fruits = signal([{ id: '', name: '' }]);
-
+  readonly tagsSignal = signal([{ id: '', name: '' }]);
   readonly currentFruit = model('');
-
-  readonly filteredFruits = computed(() => {
+  readonly filteredTags = computed(() => {
     const currentFruit = this.currentFruit().toLowerCase();
-    const aTags = this.tagsAvailable
-      ? this.tagsAvailable
-      : [{ id: '', name: '' }];
+    const aTags = this.tagsAvailable ?? [{ id: '', name: '' }];
+    const bTags = this.tagsSignal() ?? [{ id: '', name: '' }];
+    const cTags = aTags.filter((value) => !bTags.includes(value));
+
     return currentFruit
-      ? aTags.filter((tag) => tag.name.toLowerCase().includes(currentFruit))
-      : this.tagsAvailable;
+      ? cTags.filter((tag) => tag.name.toLowerCase().includes(currentFruit))
+      : cTags;
   });
 
   public constructor() {
     effect(() => {
-      if (this.fruits()) {
-        console.log('Emit Fruits: ', this.fruits());
-        this.tagsChanged.emit(this.fruits());
+      if (this.tagsSignal()) {
+        this.tagsChanged.emit(this.tagsSignal());
       }
     });
   }
 
   ngOnInit() {
-    this.fruits.set(this.tags);
-
-    console.log('Tags Available : ', this.tagsAvailable);
-    console.log('Tags : ', this.tags);
+    this.tagsSignal.set(this.tags);
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
-    if (
-      this.fruits() &&
-      this.fruits().some((el) => el.id === event.option.value)
-    ) {
+    const tagId = event.option.value;
+    const newTag = this.tagsAvailable.find(({ id }) => id === tagId);
+
+    if (this.tagsSignal()?.some((el) => el.id === tagId)) {
       this.currentFruit.set('');
       event.option.deselect();
       return;
     }
 
-    this.fruits()
-      ? this.fruits.update((fruits) => [
-          ...fruits,
-          this.tagsAvailable.find(({ id }) => {
-            return id === event.option.value;
-          })
-        ])
-      : this.fruits.update(() => [
-          this.tagsAvailable.find(({ id }) => {
-            return id === event.option.value;
-          })
-        ]);
+    this.tagsSignal()
+      ? this.tagsSignal.update((tags) => [...tags, newTag])
+      : this.tagsSignal.update(() => [newTag]);
     this.currentFruit.set('');
     event.option.deselect();
   }
 
   public onRemoveTag(aTag: Tag) {
-    this.fruits.update((fruits) => {
-      const index = fruits.indexOf(aTag);
+    this.tagsSignal.update((tagsSignal) => {
+      const index = tagsSignal.indexOf(aTag);
       if (index < 0) {
-        return fruits;
+        return tagsSignal;
       }
 
-      fruits.splice(index, 1);
-      return [...fruits];
+      tagsSignal.splice(index, 1);
+      return [...tagsSignal];
     });
   }
 }

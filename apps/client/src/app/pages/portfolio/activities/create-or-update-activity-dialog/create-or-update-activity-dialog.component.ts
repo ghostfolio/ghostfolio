@@ -140,12 +140,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       updateAccountBalance: [false]
     });
 
-    console.log(
-      'Initialized Activity Form: ',
-      this.activityForm.get('tags').value
-    );
-    console.log('Initialized Activity Tags Available: ', this.tagsAvailable);
-
     this.activityForm.valueChanges
       .pipe(
         // Slightly delay until the more specific form control value changes have
