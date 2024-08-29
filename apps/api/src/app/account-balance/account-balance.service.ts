@@ -1,4 +1,5 @@
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -90,6 +91,7 @@ export class AccountBalanceService {
     return accountBalance;
   }
 
+  @LogPerformance
   public async getAccountBalances({
     filters,
     user,

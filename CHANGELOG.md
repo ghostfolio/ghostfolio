@@ -5,13 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.106.0-beta.2 - 2024-08-26
+## 2.106.0-beta.3 - 2024-08-28
+
+### Added
+
+- Set up a performance logging service
 
 ### Changed
 
 - Reworked the portfolio calculator
 - Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
+- Improved the language localization for Polish (`pl`)
 
 ### Fixed
 
