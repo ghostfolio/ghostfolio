@@ -1,5 +1,6 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,7 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
     FormsModule,
     GfAssetProfileIconComponent,
     GfSymbolAutocompleteComponent,
+    GfTagsSelectorComponent,
     GfValueComponent,
     MatAutocompleteModule,
     MatButtonModule,

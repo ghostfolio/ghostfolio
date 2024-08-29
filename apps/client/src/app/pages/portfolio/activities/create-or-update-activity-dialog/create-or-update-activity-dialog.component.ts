@@ -10,20 +10,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Inject,
-  OnDestroy,
-  ViewChild
+  OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isUUID } from 'class-validator';
 import { isAfter, isToday } from 'date-fns';
-import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
-import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject, lastValueFrom, of } from 'rxjs';
+import { catchError, delay, takeUntil } from 'rxjs/operators';
 
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
@@ -35,9 +32,6 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
   templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
-  @ViewChild('symbolAutocomplete') symbolAutocomplete;
-  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-
   public activityForm: FormGroup;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };
@@ -48,7 +42,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currencies: string[] = [];
   public currentMarketPrice = null;
   public defaultDateFormat: string;
-  public filteredTagsObservable: Observable<Tag[]> = of([]);
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
@@ -146,6 +139,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       ],
       updateAccountBalance: [false]
     });
+
+    console.log(
+      'Initialized Activity Form: ',
+      this.activityForm.get('tags').value
+    );
+    console.log('Initialized Activity Tags Available: ', this.tagsAvailable);
 
     this.activityForm.valueChanges
       .pipe(
@@ -281,15 +280,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
       this.changeDetectorRef.markForCheck();
     });
-
-    this.filteredTagsObservable = this.activityForm.controls[
-      'tags'
-    ].valueChanges.pipe(
-      startWith(this.activityForm.get('tags').value),
-      map((aTags: Tag[] | null) => {
-        return aTags ? this.filterTags(aTags) : this.tagsAvailable.slice();
-      })
-    );
 
     this.activityForm
       .get('type')
@@ -438,27 +428,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return isAfter(aDate, new Date(0));
   }
 
-  public onAddTag(event: MatAutocompleteSelectedEvent) {
-    this.activityForm.get('tags').setValue([
-      ...(this.activityForm.get('tags').value ?? []),
-      this.tagsAvailable.find(({ id }) => {
-        return id === event.option.value;
-      })
-    ]);
-
-    this.tagInput.nativeElement.value = '';
-  }
-
   public onCancel() {
     this.dialogRef.close();
   }
 
-  public onRemoveTag(aTag: Tag) {
-    this.activityForm.get('tags').setValue(
-      this.activityForm.get('tags').value.filter(({ id }) => {
-        return id !== aTag.id;
-      })
-    );
+  public onTagsChanged(event: Tag[]) {
+    this.activityForm.get('tags').setValue([...event]);
   }
 
   public async onSubmit() {
@@ -516,16 +491,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map(({ id }) => {
-      return id;
-    });
-
-    return this.tagsAvailable.filter(({ id }) => {
-      return !tagIds.includes(id);
-    });
   }
 
   private updateSymbol() {
