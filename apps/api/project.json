@@ -4,6 +4,7 @@
   "sourceRoot": "apps/api/src",
   "projectType": "application",
   "prefix": "api",
+  "tags": [],
   "generators": {},
   "targets": {
     "build": {
@@ -80,6 +81,5 @@
       },
       "outputs": ["{workspaceRoot}/coverage/apps/api"]
     }
-  },
-  "tags": []
+  }
 }

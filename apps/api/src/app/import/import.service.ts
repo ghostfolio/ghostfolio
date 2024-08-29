@@ -631,12 +631,6 @@ export class ImportService {
               `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`
             );
           }
-
-          if (assetProfile.currency !== currency) {
-            throw new Error(
-              `activities.${index}.currency ("${currency}") does not match with currency of ${assetProfile.symbol} ("${assetProfile.currency}")`
-            );
-          }
         }
 
         assetProfiles[getAssetProfileIdentifier({ dataSource, symbol })] =

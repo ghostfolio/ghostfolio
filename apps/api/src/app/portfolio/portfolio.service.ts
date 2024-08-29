@@ -1225,6 +1225,17 @@ export class PortfolioService {
       };
     }
 
+    portfolioCalculator =
+      portfolioCalculator ??
+      this.calculatorFactory.createCalculator({
+        accountBalanceItems,
+        activities,
+        filters,
+        userId,
+        calculationType: PerformanceCalculationType.TWR,
+        currency: userCurrency
+      });
+
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { chart } = await portfolioCalculator.getPerformance({
@@ -1702,7 +1713,8 @@ export class PortfolioService {
 
     const { performance } = await this.getPerformance({
       impersonationId,
-      userId
+      userId,
+      portfolioCalculator
     });
 
     const {

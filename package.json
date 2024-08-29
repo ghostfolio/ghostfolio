@@ -147,7 +147,7 @@
     "@angular-eslint/eslint-plugin": "18.1.0",
     "@angular-eslint/eslint-plugin-template": "18.1.0",
     "@angular-eslint/template-parser": "18.1.0",
-    "@angular/cli": "18.1.1",
+    "@angular/cli": "18.2.1",
     "@angular/compiler-cli": "18.1.1",
     "@angular/language-service": "18.1.1",
     "@angular/localize": "18.1.1",
