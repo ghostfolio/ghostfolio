@@ -1407,7 +1407,7 @@ export class PortfolioService {
       sectors: symbolProfile.sectors,
       symbol,
       tags: {
-        connectOrCreate: tags.map(({ id,name }) => {
+        connectOrCreate: tags.map(({ id, name }) => {
           return {
             create: {
               id,
@@ -1417,9 +1417,9 @@ export class PortfolioService {
               id
             }
           };
-        }
+        })
       },
-      url: symbolProfile.url   
+      url: symbolProfile.url
     });
   }
 
@@ -1791,7 +1791,9 @@ export class PortfolioService {
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
 
-    const committedFunds = new Big(totalBuy).minus(totalSell).minus(dividendInBaseCurrency);
+    const committedFunds = new Big(totalBuy)
+      .minus(totalSell)
+      .minus(dividendInBaseCurrency);
 
     const totalOfExcludedActivities = this.getSumOfActivityType({
       userCurrency,
