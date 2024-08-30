@@ -641,7 +641,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         // the time weighted investment
         if (
           valueOfInvestmentBeforeTransaction.gt(0) &&
-          ['BUY', 'SELL', 'STAKE'].includes(order.type)
+          ['BUY', 'SELL'].includes(order.type)
         ) {
           // Calculate the number of days since the previous order
           const orderDate = new Date(order.date);
