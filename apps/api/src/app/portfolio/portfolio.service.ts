@@ -1791,7 +1791,7 @@ export class PortfolioService {
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
 
-    const committedFunds = new Big(totalBuy).minus(totalSell);
+    const committedFunds = new Big(totalBuy).minus(totalSell).minus(dividendInBaseCurrency);
 
     const totalOfExcludedActivities = this.getSumOfActivityType({
       userCurrency,
