@@ -350,7 +350,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             }
           }
 
-          if (isToday(parseISO(this.firstBuyDate))) {
+          if (this.firstBuyDate && isToday(parseISO(this.firstBuyDate))) {
             // Add average price
             this.historicalDataItems.push({
               date: this.firstBuyDate,
@@ -390,6 +390,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           if (
             this.benchmarkDataItems[0]?.value === undefined &&
+            this.firstBuyDate &&
             isSameMonth(parseISO(this.firstBuyDate), new Date())
           ) {
             this.benchmarkDataItems[0].value = this.averagePrice;
