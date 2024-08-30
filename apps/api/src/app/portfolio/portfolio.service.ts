@@ -1390,8 +1390,37 @@ export class PortfolioService {
     userId: string;
   }) {
     userId = await this.getUserId(impersonationId, userId);
-
-    await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+    let symbolProfile = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
+      }
+    ])[0];
+    await this.symbolProfileService.updateSymbolProfile({
+      assetClass: symbolProfile.assetClass,
+      assetSubClass: symbolProfile.assetSubClass,
+      countries: symbolProfile.countries,
+      currency: symbolProfile.currency,
+      dataSource,
+      holdings: symbolProfile.holdings,
+      name: symbolProfile.name,
+      sectors: symbolProfile.sectors,
+      symbol,
+      tags: {
+        connectOrCreate: tags.map(({ id,name }) => {
+          return {
+            create: {
+              id,
+              name
+            },
+            where: {
+              id
+            }
+          };
+        }
+      },
+      url: symbolProfile.url   
+    });
   }
 
   @LogPerformance

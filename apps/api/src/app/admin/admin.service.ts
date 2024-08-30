@@ -419,6 +419,7 @@ export class AdminService {
       sectors,
       symbol,
       symbolMapping,
+      tags,
       ...(dataSource === 'MANUAL'
         ? { assetClass, assetSubClass, name, url }
         : {
