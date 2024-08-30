@@ -5,6 +5,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  contentChildren,
   ContentChildren,
   ElementRef,
   HostBinding,
@@ -30,6 +31,7 @@ import { CarouselItem } from './carousel-item.directive';
 })
 export class GfCarouselComponent implements AfterContentInit {
   @ContentChildren(CarouselItem) public items!: QueryList<CarouselItem>;
+  itemsSignal = contentChildren('carouselItem', { read: ElementRef });
 
   @HostBinding('class.animations-disabled')
   public readonly animationsDisabled: boolean;
@@ -56,7 +58,7 @@ export class GfCarouselComponent implements AfterContentInit {
   }
 
   public next() {
-    for (let i = this.index; i < this.items.length; i++) {
+    for (let i = this.index; i < this.itemsSignal().length; i++) {
       if (this.isOutOfView(i)) {
         this.index = i;
         this.scrollToActiveItem();
@@ -101,8 +103,7 @@ export class GfCarouselComponent implements AfterContentInit {
   }
 
   private isOutOfView(index: number, side?: 'start' | 'end') {
-    const { offsetWidth, offsetLeft } =
-      this.items.toArray()[index].element.nativeElement;
+    const { offsetWidth, offsetLeft } = this.itemsSignal()[index].nativeElement;
 
     if ((!side || side === 'start') && offsetLeft - this.position < 0) {
       return true;
@@ -120,7 +121,7 @@ export class GfCarouselComponent implements AfterContentInit {
       return;
     }
 
-    const itemsArray = this.items.toArray();
+    const itemsArray = this.itemsSignal();
     let targetItemIndex = this.index;
 
     if (this.index > 0 && !this.isOutOfView(this.index - 1)) {
@@ -128,8 +129,7 @@ export class GfCarouselComponent implements AfterContentInit {
         itemsArray.findIndex((_, i) => !this.isOutOfView(i)) + 1;
     }
 
-    this.position =
-      itemsArray[targetItemIndex].element.nativeElement.offsetLeft;
+    this.position = itemsArray[targetItemIndex].nativeElement.offsetLeft;
     this.list.nativeElement.style.transform = `translateX(-${this.position}px)`;
     this.showPrevArrow = this.index > 0;
     this.showNextArrow = false;
