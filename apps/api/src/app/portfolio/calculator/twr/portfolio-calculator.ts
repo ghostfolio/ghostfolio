@@ -503,6 +503,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
               .mul(order.quantity)
               .mul(getFactor(order.type));
         }
+      } else if (order.type === 'STAKE') {
+        transactionInvestment = new Big(0);
+
+        transactionInvestmentWithCurrencyEffect = new Big(0);
+
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.plus(order.quantity);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -634,7 +641,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         // the time weighted investment
         if (
           valueOfInvestmentBeforeTransaction.gt(0) &&
-          ['BUY', 'SELL'].includes(order.type)
+          ['BUY', 'SELL', 'STAKE'].includes(order.type)
         ) {
           // Calculate the number of days since the previous order
           const orderDate = new Date(order.date);
