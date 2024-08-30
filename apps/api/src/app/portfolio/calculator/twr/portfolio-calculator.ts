@@ -503,6 +503,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
               .mul(order.quantity)
               .mul(getFactor(order.type));
         }
+      } else if (order.type === 'STAKE') {
+        transactionInvestment = new Big(0);
+
+        transactionInvestmentWithCurrencyEffect = new Big(0);
+
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.plus(order.quantity);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
