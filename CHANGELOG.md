@@ -16,7 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reworked the portfolio calculator
 - Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
+- Changed the data format of the environment variable `CACHE_QUOTES_TTL` from seconds to milliseconds
+- Changed the data format of the environment variable `CACHE_TTL` from seconds to milliseconds
+- Removed the environment variable `MAX_ITEM_IN_CACHE`
 - Improved the language localization for Polish (`pl`)
+- Migrated from `cache-manager-redis-store` to `cache-manager-redis-yet`
+- Upgraded `cache-manager` from version `3.4.3` to `5.7.6`
 
 ### Fixed
 
