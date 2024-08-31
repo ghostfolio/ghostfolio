@@ -72,59 +72,38 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
   }
 
   @LogPerformance
-  public async getChart({
-    dateRange = 'max',
-    withDataDecimation = true,
-    withTimeWeightedReturn = false
+  public async getPerformanceWithTimeWeightedReturn({
+    start,
+    end
   }: {
-    dateRange?: DateRange;
-    withDataDecimation?: boolean;
-    withTimeWeightedReturn?: boolean;
-  }): Promise<HistoricalDataItem[]> {
-    const { endDate, startDate } = getIntervalFromDateRange(
-      dateRange,
-      this.getStartDate()
-    );
-
-    const daysInMarket = differenceInDays(endDate, startDate) + 1;
-    const step = withDataDecimation
-      ? Math.round(
-          daysInMarket /
-            Math.min(
-              daysInMarket,
-              this.configurationService.get('MAX_CHART_ITEMS')
-            )
-        )
-      : 1;
-
+    start: Date;
+    end: Date;
+  }): Promise<{ chart: HistoricalDataItem[] }> {
     let item = await super.getPerformance({
-      end: endDate,
-      start: startDate
+      end,
+      start
     });
 
-    if (!withTimeWeightedReturn) {
-      return item.chart;
-    } else {
-      let itemResult = item.chart;
-      let dates = itemResult.map((item) => parseDate(item.date));
-      let timeWeighted = await this.getTimeWeightedChartData({
-        dates
-      });
+    let itemResult = item.chart;
+    let dates = itemResult.map((item) => parseDate(item.date));
+    let timeWeighted = await this.getTimeWeightedChartData({
+      dates
+    });
 
-      return itemResult.map((item) => {
-        let timeWeightedItem = timeWeighted.find(
-          (timeWeightedItem) => timeWeightedItem.date === item.date
-        );
-        if (timeWeightedItem) {
-          item.timeWeightedPerformance =
-            timeWeightedItem.netPerformanceInPercentage;
-          item.timeWeightedPerformanceWithCurrencyEffect =
-            timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
-        }
+    item.chart = itemResult.map((itemInt) => {
+      let timeWeightedItem = timeWeighted.find(
+        (timeWeightedItem) => timeWeightedItem.date === itemInt.date
+      );
+      if (timeWeightedItem) {
+        itemInt.timeWeightedPerformance =
+          timeWeightedItem.netPerformanceInPercentage;
+        itemInt.timeWeightedPerformanceWithCurrencyEffect =
+          timeWeightedItem.netPerformanceInPercentageWithCurrencyEffect;
+      }
 
-        return item;
-      });
-    }
+      return itemInt;
+    });
+    return item;
   }
 
   @LogPerformance
@@ -314,8 +293,14 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     netPerformanceInPercentageWithCurrencyEffect: Big,
     newTotalInvestment: Big
   ) {
-    const previousPrice = this.marketMap[previousDate][holding];
-    const currentPrice = this.marketMap[date][holding] ?? previousPrice;
+    const previousPrice =
+      Object.keys(this.marketMap).indexOf(previousDate) > 0
+        ? this.marketMap[previousDate][holding]
+        : undefined;
+    const priceDictionary = this.marketMap[date];
+    let currentPrice =
+      priceDictionary !== undefined ? priceDictionary[holding] : previousPrice;
+    currentPrice ??= previousPrice;
     const previousHolding = timelineHoldings[previousDate][holding];
 
     const priceInBaseCurrency = currentPrice

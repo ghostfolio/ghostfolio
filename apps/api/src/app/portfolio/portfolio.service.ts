@@ -1237,11 +1237,13 @@ export class PortfolioService {
       });
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const range = { end: endDate, start: startDate };
 
-    const { chart } = await portfolioCalculator.getPerformance({
-      end: endDate,
-      start: startDate
-    });
+    const { chart } = await (calculateTimeWeightedPerformance
+      ? (
+          portfolioCalculator as CPRPortfolioCalculator
+        ).getPerformanceWithTimeWeightedReturn(range)
+      : portfolioCalculator.getPerformance(range));
 
     const {
       netPerformance,
