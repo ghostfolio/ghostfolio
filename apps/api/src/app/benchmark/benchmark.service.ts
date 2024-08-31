@@ -443,7 +443,7 @@ export class BenchmarkService {
           benchmarks,
           expiration: expiration.getTime()
         }),
-        ms('12 hours') / 1000
+        ms('12 hours')
       );
     }
 
