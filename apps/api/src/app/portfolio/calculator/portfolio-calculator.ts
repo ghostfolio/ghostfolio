@@ -674,6 +674,7 @@ export abstract class PortfolioCalculator {
     return this.snapshot.totalLiabilitiesWithCurrencyEffect;
   }
 
+  @LogPerformance
   public async getPerformance({ end, start }) {
     await this.snapshotPromise;
 
