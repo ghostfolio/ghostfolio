@@ -1,6 +1,7 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
 import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
@@ -32,6 +33,7 @@ import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
+  addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
   endOfDay,
@@ -863,6 +865,29 @@ export abstract class PortfolioCalculator {
     return chartDateMap;
   }
 
+  private async computeAndCacheSnapshot() {
+    const snapshot = await this.computeSnapshot();
+
+    const expiration = addMilliseconds(
+      new Date(),
+      this.configurationService.get('CACHE_QUOTES_TTL')
+    );
+
+    this.redisCacheService.set(
+      this.redisCacheService.getPortfolioSnapshotKey({
+        filters: this.filters,
+        userId: this.userId
+      }),
+      JSON.stringify(<PortfolioSnapshotValue>(<unknown>{
+        expiration: expiration.getTime(),
+        portfolioSnapshot: snapshot
+      })),
+      0
+    );
+
+    return snapshot;
+  }
+
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
@@ -1006,18 +1031,32 @@ export abstract class PortfolioCalculator {
   private async initialize() {
     const startTimeTotal = performance.now();
 
-    const cachedSnapshot = await this.redisCacheService.get(
-      this.redisCacheService.getPortfolioSnapshotKey({
-        filters: this.filters,
-        userId: this.userId
-      })
-    );
+    let cachedPortfolioSnapshot: PortfolioSnapshot;
+    let isCachedPortfolioSnapshotExpired = false;
 
-    if (cachedSnapshot) {
-      this.snapshot = plainToClass(
-        PortfolioSnapshot,
-        JSON.parse(cachedSnapshot)
+    try {
+      const cachedPortfolioSnapshotValue = await this.redisCacheService.get(
+        this.redisCacheService.getPortfolioSnapshotKey({
+          filters: this.filters,
+          userId: this.userId
+        })
       );
+
+      const { expiration, portfolioSnapshot }: PortfolioSnapshotValue =
+        JSON.parse(cachedPortfolioSnapshotValue);
+
+      cachedPortfolioSnapshot = plainToClass(
+        PortfolioSnapshot,
+        portfolioSnapshot
+      );
+
+      if (isAfter(new Date(), new Date(expiration))) {
+        isCachedPortfolioSnapshotExpired = true;
+      }
+    } catch {}
+
+    if (cachedPortfolioSnapshot) {
+      this.snapshot = cachedPortfolioSnapshot;
 
       Logger.debug(
         `Fetched portfolio snapshot from cache in ${(
@@ -1026,17 +1065,14 @@ export abstract class PortfolioCalculator {
         ).toFixed(3)} seconds`,
         'PortfolioCalculator'
       );
-    } else {
-      this.snapshot = await this.computeSnapshot();
 
-      this.redisCacheService.set(
-        this.redisCacheService.getPortfolioSnapshotKey({
-          filters: this.filters,
-          userId: this.userId
-        }),
-        JSON.stringify(this.snapshot),
-        this.configurationService.get('CACHE_QUOTES_TTL')
-      );
+      if (isCachedPortfolioSnapshotExpired) {
+        // Compute in the background
+        this.computeAndCacheSnapshot();
+      }
+    } else {
+      // Wait for computation
+      this.snapshot = await this.computeAndCacheSnapshot();
     }
   }
 }
