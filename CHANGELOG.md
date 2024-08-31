@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Reworked the portfolio calculator
+- Improved the caching of the portfolio snapshot in the portfolio calculator by returning cached data and recalculating in the background when it expires
 - Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
 - Changed the data format of the environment variable `CACHE_QUOTES_TTL` from seconds to milliseconds
