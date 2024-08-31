@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Polish (`pl`)
 - Migrated from `cache-manager-redis-store` to `cache-manager-redis-yet`
 - Upgraded `cache-manager` from version `3.4.3` to `5.7.6`
+- Upgraded `prisma` from version `5.18.0` to `5.19.0`
 
 ### Fixed
 
