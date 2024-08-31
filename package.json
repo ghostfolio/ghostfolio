@@ -95,7 +95,7 @@
     "body-parser": "1.20.2",
     "bootstrap": "4.6.0",
     "bull": "4.10.4",
-    "cache-manager": "3.4.3",
+    "cache-manager": "3.6.3",
     "cache-manager-redis-store": "2.0.0",
     "chart.js": "4.2.0",
     "chartjs-adapter-date-fns": "3.0.0",
