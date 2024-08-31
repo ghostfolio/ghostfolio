@@ -1,4 +1,4 @@
-import { RedisCacheService } from './redis-cache.service';
+import { Milliseconds } from 'cache-manager';
 
 export const RedisCacheServiceMock = {
   get: (key: string): Promise<string> => {
@@ -7,7 +7,7 @@ export const RedisCacheServiceMock = {
   getPortfolioSnapshotKey: (userId: string): string => {
     return `portfolio-snapshot-${userId}`;
   },
-  set: (key: string, value: string, ttlInSeconds?: number): Promise<string> => {
+  set: (key: string, value: string, ttl?: Milliseconds): Promise<string> => {
     return Promise.resolve(value);
   }
 };
