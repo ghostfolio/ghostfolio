@@ -11,6 +11,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import { CACHE_TTL_INFINITE } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getSum,
@@ -882,7 +883,7 @@ export abstract class PortfolioCalculator {
         expiration: expiration.getTime(),
         portfolioSnapshot: snapshot
       })),
-      0
+      CACHE_TTL_INFINITE
     );
 
     return snapshot;
