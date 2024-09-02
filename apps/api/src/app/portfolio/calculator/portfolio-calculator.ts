@@ -10,8 +10,13 @@ import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { CACHE_TTL_INFINITE } from '@ghostfolio/common/config';
+import {
+  PORTFOLIO_PROCESS_JOB_NAME,
+  PORTFOLIO_PROCESS_JOB_OPTIONS
+} from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getSum,
@@ -59,6 +64,7 @@ export abstract class PortfolioCalculator {
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
   private filters: Filter[];
+  private portfolioService: PortfolioSnapshotService;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
@@ -74,6 +80,7 @@ export abstract class PortfolioCalculator {
     currentRateService,
     exchangeRateDataService,
     filters,
+    portfolioService,
     redisCacheService,
     userId
   }: {
@@ -84,6 +91,7 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     exchangeRateDataService: ExchangeRateDataService;
     filters: Filter[];
+    portfolioService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
     userId: string;
   }) {
@@ -132,6 +140,7 @@ export abstract class PortfolioCalculator {
         return a.date?.localeCompare(b.date);
       });
 
+    this.portfolioService = portfolioService;
     this.redisCacheService = redisCacheService;
     this.userId = userId;
 
@@ -1069,10 +1078,36 @@ export abstract class PortfolioCalculator {
 
       if (isCachedPortfolioSnapshotExpired) {
         // Compute in the background
+        this.portfolioService.addJobToQueue({
+          data: {
+            userId: this.userId
+          },
+          name: PORTFOLIO_PROCESS_JOB_NAME,
+          opts: {
+            ...PORTFOLIO_PROCESS_JOB_OPTIONS
+            // jobId
+            // priority
+          }
+        });
         this.computeAndCacheSnapshot();
       }
     } else {
       // Wait for computation
+      // TODO
+      const job = await this.portfolioService.addJobToQueue({
+        data: {
+          userId: this.userId
+        },
+        name: PORTFOLIO_PROCESS_JOB_NAME,
+        opts: {
+          ...PORTFOLIO_PROCESS_JOB_OPTIONS
+          // jobId
+          // priority
+        }
+      });
+
+      await job.finished();
+
       this.snapshot = await this.computeAndCacheSnapshot();
     }
   }

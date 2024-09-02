@@ -15,6 +15,7 @@ import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
+import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
@@ -40,6 +41,7 @@ import { RulesService } from './rules.service';
     MarketDataModule,
     OrderModule,
     PerformanceLoggingModule,
+    PortfolioSnapshotQueueModule,
     PrismaModule,
     RedactValuesInResponseModule,
     RedisCacheModule,
