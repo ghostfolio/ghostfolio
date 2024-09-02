@@ -4,4 +4,5 @@ export interface ScraperConfiguration {
   locale?: string;
   selector: string;
   url: string;
+  mode?: 'instant' | 'lazy';
 }

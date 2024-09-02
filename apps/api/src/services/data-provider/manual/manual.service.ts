@@ -166,11 +166,15 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      for (const { currency, symbol } of symbolProfiles) {
+      for (const { currency, symbol, scraperConfiguration } of symbolProfiles) {
         let marketPrice =
           marketData.find((marketDataItem) => {
             return marketDataItem.symbol === symbol;
           })?.marketPrice ?? 0;
+
+        if (scraperConfiguration.mode === 'instant') {
+          marketPrice = await this.scrape(scraperConfiguration);
+        }
 
         response[symbol] = {
           currency,
