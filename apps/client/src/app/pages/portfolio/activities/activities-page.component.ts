@@ -108,8 +108,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-
-    this.fetchActivities();
   }
 
   public fetchActivities() {
