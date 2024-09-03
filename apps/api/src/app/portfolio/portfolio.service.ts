@@ -602,14 +602,7 @@ export class PortfolioService {
         userId
       });
 
-    const orders = activities.filter(({ SymbolProfile }) => {
-      return (
-        SymbolProfile.dataSource === aDataSource &&
-        SymbolProfile.symbol === aSymbol
-      );
-    });
-
-    if (orders.length <= 0) {
+    if (activities.length === 0) {
       return {
         accounts: [],
         averagePrice: undefined,
@@ -646,10 +639,8 @@ export class PortfolioService {
     ]);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
+      activities,
       userId,
-      activities: orders.filter((order) => {
-        return ['BUY', 'DIVIDEND', 'ITEM', 'SELL'].includes(order.type);
-      }),
       calculationType: PerformanceCalculationType.TWR,
       currency: userCurrency
     });
@@ -659,8 +650,8 @@ export class PortfolioService {
 
     const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = positions.find(({ symbol }) => {
-      return symbol === aSymbol;
+    const position = positions.find(({ dataSource, symbol }) => {
+      return dataSource === aDataSource && symbol === aSymbol;
     });
 
     if (position) {
@@ -673,14 +664,22 @@ export class PortfolioService {
         firstBuyDate,
         marketPrice,
         quantity,
+        symbol,
         tags,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
       } = position;
 
+      const activitiesOfPosition = activities.filter(({ SymbolProfile }) => {
+        return (
+          SymbolProfile.dataSource === dataSource &&
+          SymbolProfile.symbol === symbol
+        );
+      });
+
       const accounts: PortfolioHoldingDetail['accounts'] = uniqBy(
-        orders.filter(({ Account }) => {
+        activitiesOfPosition.filter(({ Account }) => {
           return Account;
         }),
         'Account.id'
@@ -715,8 +714,8 @@ export class PortfolioService {
       );
 
       const historicalDataArray: HistoricalDataItem[] = [];
-      let maxPrice = Math.max(orders[0].unitPrice, marketPrice);
-      let minPrice = Math.min(orders[0].unitPrice, marketPrice);
+      let maxPrice = Math.max(activitiesOfPosition[0].unitPrice, marketPrice);
+      let minPrice = Math.min(activitiesOfPosition[0].unitPrice, marketPrice);
 
       if (historicalData[aSymbol]) {
         let j = -1;
@@ -760,10 +759,10 @@ export class PortfolioService {
       } else {
         // Add historical entry for buy date, if no historical data available
         historicalDataArray.push({
-          averagePrice: orders[0].unitPrice,
+          averagePrice: activitiesOfPosition[0].unitPrice,
           date: firstBuyDate,
-          marketPrice: orders[0].unitPrice,
-          quantity: orders[0].quantity
+          marketPrice: activitiesOfPosition[0].unitPrice,
+          quantity: activitiesOfPosition[0].quantity
         });
       }
 
@@ -773,7 +772,6 @@ export class PortfolioService {
         marketPrice,
         maxPrice,
         minPrice,
-        orders,
         SymbolProfile,
         tags,
         transactionCount,
@@ -805,6 +803,7 @@ export class PortfolioService {
           ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
           position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+        orders: activitiesOfPosition,
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -862,7 +861,6 @@ export class PortfolioService {
         marketPrice,
         maxPrice,
         minPrice,
-        orders,
         SymbolProfile,
         accounts: [],
         averagePrice: 0,
@@ -882,6 +880,7 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
+        orders: [],
         quantity: 0,
         tags: [],
         transactionCount: undefined,
@@ -912,7 +911,7 @@ export class PortfolioService {
         userCurrency: this.getUserCurrency()
       });
 
-    if (activities?.length <= 0) {
+    if (activities.length === 0) {
       return {
         hasErrors: false,
         positions: []
@@ -1037,14 +1036,12 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    portfolioCalculator,
     userId,
     withExcludedAccounts = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
-    portfolioCalculator?: PortfolioCalculator;
     userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
@@ -1089,7 +1086,7 @@ export class PortfolioService {
         userId
       });
 
-    if (accountBalanceItems?.length <= 0 && activities?.length <= 0) {
+    if (accountBalanceItems.length === 0 && activities.length === 0) {
       return {
         chart: [],
         firstOrderDate: undefined,
@@ -1106,16 +1103,14 @@ export class PortfolioService {
       };
     }
 
-    portfolioCalculator =
-      portfolioCalculator ??
-      this.calculatorFactory.createCalculator({
-        accountBalanceItems,
-        activities,
-        filters,
-        userId,
-        calculationType: PerformanceCalculationType.TWR,
-        currency: userCurrency
-      });
+    const portfolioCalculator = this.calculatorFactory.createCalculator({
+      accountBalanceItems,
+      activities,
+      filters,
+      userId,
+      calculationType: PerformanceCalculationType.TWR,
+      currency: userCurrency
+    });
 
     const { errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
