@@ -166,15 +166,39 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
+      const profilesWithScraping = symbolProfiles.filter(
+        ({ scraperConfiguration }) => {
+          return !!scraperConfiguration?.url;
+        }
+      );
+
+      const scrapingPromises = profilesWithScraping.map(
+        ({ symbol, scraperConfiguration }) => {
+          return this.scrape(scraperConfiguration)
+            .then((marketPrice) => ({
+              symbol,
+              marketPrice
+            }))
+            .catch((error) => {
+              Logger.error(`Error scraping ${symbol}:`, error);
+              return { symbol, marketPrice: 0 };
+            });
+        }
+      );
+
+      // Wait for all scraping requests to complete concurrently
+      const scrapedResults = await Promise.all(scrapingPromises);
+
       for (const { currency, symbol, scraperConfiguration } of symbolProfiles) {
+        const scrapedResult = scrapedResults.find(
+          (result) => result.symbol === symbol
+        );
         let marketPrice =
+          scrapedResult?.marketPrice ??
           marketData.find((marketDataItem) => {
             return marketDataItem.symbol === symbol;
-          })?.marketPrice ?? 0;
-
-        if (scraperConfiguration.mode === 'instant') {
-          marketPrice = await this.scrape(scraperConfiguration);
-        }
+          })?.marketPrice ??
+          0;
 
         response[symbol] = {
           currency,
