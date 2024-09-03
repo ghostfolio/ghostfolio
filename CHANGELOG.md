@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.106.0-beta.5 - 2024-08-31
+## Unreleased
 
 ### Added
 
@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
+- Fixed an issue on the portfolio activities page by loading the data only once
 
 ## 2.105.0 - 2024-08-21
 
