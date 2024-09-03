@@ -51,15 +51,15 @@ export class GfTagsSelectorComponent implements OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   readonly tagsSignal = signal([{ id: '', name: '' }]);
-  readonly currentFruit = model('');
+  readonly currentTag = model('');
   readonly filteredTags = computed(() => {
-    const currentFruit = this.currentFruit().toLowerCase();
+    const currentTag = this.currentTag().toLowerCase();
     const aTags = this.tagsAvailable ?? [{ id: '', name: '' }];
     const bTags = this.tagsSignal() ?? [{ id: '', name: '' }];
     const cTags = aTags.filter((value) => !bTags.includes(value));
 
-    return currentFruit
-      ? cTags.filter((tag) => tag.name.toLowerCase().includes(currentFruit))
+    return currentTag
+      ? cTags.filter((tag) => tag.name.toLowerCase().includes(currentTag))
       : cTags;
   });
 
@@ -80,7 +80,7 @@ export class GfTagsSelectorComponent implements OnInit {
     const newTag = this.tagsAvailable.find(({ id }) => id === tagId);
 
     if (this.tagsSignal()?.some((el) => el.id === tagId)) {
-      this.currentFruit.set('');
+      this.currentTag.set('');
       event.option.deselect();
       return;
     }
@@ -88,7 +88,7 @@ export class GfTagsSelectorComponent implements OnInit {
     this.tagsSignal()
       ? this.tagsSignal.update((tags) => [...tags, newTag])
       : this.tagsSignal.update(() => [newTag]);
-    this.currentFruit.set('');
+    this.currentTag.set('');
     event.option.deselect();
   }
 
