@@ -23,8 +23,6 @@ import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
   templateUrl: './carousel.component.html'
 })
 export class GfCarouselComponent {
-  public items = contentChildren('carouselItem', { read: ElementRef });
-
   @HostBinding('class.animations-disabled')
   public readonly animationsDisabled: boolean;
 
@@ -32,6 +30,7 @@ export class GfCarouselComponent {
 
   @ViewChild('list') public list!: ElementRef<HTMLElement>;
 
+  public items = contentChildren('carouselItem', { read: ElementRef });
   public showPrevArrow = false;
   public showNextArrow = true;
 
