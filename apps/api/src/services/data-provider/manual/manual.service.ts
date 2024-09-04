@@ -166,35 +166,39 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      const profilesWithScraping = symbolProfiles.filter(
+      const symbolProfilesWithScraperConfiguration = symbolProfiles.filter(
         ({ scraperConfiguration }) => {
           return !!scraperConfiguration?.url;
         }
       );
 
-      const scrapingPromises = profilesWithScraping.map(
-        ({ symbol, scraperConfiguration }) => {
+      const scraperResultPromises = symbolProfilesWithScraperConfiguration.map(
+        ({ scraperConfiguration, symbol }) => {
           return this.scrape(scraperConfiguration)
-            .then((marketPrice) => ({
-              symbol,
-              marketPrice
-            }))
+            .then((marketPrice) => {
+              return { marketPrice, symbol };
+            })
             .catch((error) => {
-              Logger.error(`Error scraping ${symbol}:`, error);
-              return { symbol, marketPrice: 0 };
+              Logger.error(
+                `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`,
+                'ManualService'
+              );
+              return { symbol, marketPrice: undefined };
             });
         }
       );
 
       // Wait for all scraping requests to complete concurrently
-      const scrapedResults = await Promise.all(scrapingPromises);
+      const scraperResults = await Promise.all(scraperResultPromises);
 
-      for (const { currency, symbol, scraperConfiguration } of symbolProfiles) {
-        const scrapedResult = scrapedResults.find(
-          (result) => result.symbol === symbol
-        );
-        let marketPrice =
-          scrapedResult?.marketPrice ??
+      for (const { currency, symbol } of symbolProfiles) {
+        let { marketPrice } =
+          scraperResults.find((result) => {
+            return result.symbol === symbol;
+          }) ?? {};
+
+        marketPrice =
+          marketPrice ??
           marketData.find((marketDataItem) => {
             return marketDataItem.symbol === symbol;
           })?.marketPrice ??
