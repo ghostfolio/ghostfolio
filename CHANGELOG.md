@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the data format of the environment variable `CACHE_QUOTES_TTL` from seconds to milliseconds
 - Changed the data format of the environment variable `CACHE_TTL` from seconds to milliseconds
 - Removed the environment variable `MAX_ITEM_IN_CACHE`
+- Improved the error logs of the scraper configuration test in the asset profile details dialog of the admin control
 - Improved the language localization for Polish (`pl`)
 - Migrated from `cache-manager-redis-store` to `cache-manager-redis-yet`
 - Upgraded `cache-manager` from version `3.4.3` to `5.7.6`
