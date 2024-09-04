@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
 - Fixed an issue on the portfolio activities page by loading the data only once
+- Fixed an issue in the carousel component for the testimonial section on the landing page
 
 ## 2.105.0 - 2024-08-21
 
