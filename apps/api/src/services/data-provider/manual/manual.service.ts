@@ -166,27 +166,26 @@ export class ManualService implements DataProviderInterface {
         }
       });
 
-      const symbolProfilesWithScraperConfiguration = symbolProfiles.filter(
-        ({ scraperConfiguration }) => {
-          return !!scraperConfiguration?.url;
-        }
-      );
+      const symbolProfilesWithScraperConfigurationAndInstantMode =
+        symbolProfiles.filter(({ scraperConfiguration }) => {
+          return scraperConfiguration?.mode === 'instant';
+        });
 
-      const scraperResultPromises = symbolProfilesWithScraperConfiguration.map(
-        ({ scraperConfiguration, symbol }) => {
-          return this.scrape(scraperConfiguration)
-            .then((marketPrice) => {
+      const scraperResultPromises =
+        symbolProfilesWithScraperConfigurationAndInstantMode.map(
+          async ({ scraperConfiguration, symbol }) => {
+            try {
+              const marketPrice = await this.scrape(scraperConfiguration);
               return { marketPrice, symbol };
-            })
-            .catch((error) => {
+            } catch (error) {
               Logger.error(
                 `Could not get quote for ${symbol} (${this.getName()}): [${error.name}] ${error.message}`,
                 'ManualService'
               );
               return { symbol, marketPrice: undefined };
-            });
-        }
-      );
+            }
+          }
+        );
 
       // Wait for all scraping requests to complete concurrently
       const scraperResults = await Promise.all(scraperResultPromises);
