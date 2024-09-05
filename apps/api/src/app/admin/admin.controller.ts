@@ -239,9 +239,11 @@ export class AdminController {
         return { price };
       }
 
-      throw new Error('Could not parse the current market price');
+      throw new Error(
+        `Could not parse the current market price for ${symbol} (${dataSource})`
+      );
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'AdminController');
 
       throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
     }
