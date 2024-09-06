@@ -404,7 +404,7 @@
       </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
         <source>Asset Profiles</source>
-        <target state="new">Profilo dell’asset</target>
+        <target state="translated">Profilo dell’asset</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">67</context>
@@ -412,7 +412,7 @@
       </trans-unit>
       <trans-unit id="8ea23a2cc3e9549fa71e7724870038a17216b210" datatype="html">
         <source>Historical Market Data</source>
-        <target state="new">Dati storici del mercato</target>
+        <target state="translated">Dati storici del mercato</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">37</context>
@@ -796,7 +796,7 @@
       </trans-unit>
       <trans-unit id="a5e368dd1104a015e020de33a532e53e4d97525f" datatype="html">
         <source> Last Request </source>
-        <target state="new">Ultima richiesta</target>
+        <target state="new"> Ultima richiesta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">181</context>
@@ -1768,7 +1768,7 @@
       </trans-unit>
       <trans-unit id="9ae348ee3a7319c2fc4794fa8bc425999d355f8f" datatype="html">
         <source>Sign in with fingerprint</source>
-        <target state="new"> Accesso con impronta digitale </target>
+        <target state="new">Accesso con impronta digitale</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">191</context>
@@ -3460,7 +3460,7 @@
       </trans-unit>
       <trans-unit id="9f81affcfbf06f94f1dd5219e3388c1b7e196a0b" datatype="html">
         <source> Protection for sensitive information like absolute performances and quantity values </source>
-        <target state="new"> Protezione delle informazioni sensibili come le prestazioni assolute e i valori quantitativi </target>
+        <target state="translated"> Protezione delle informazioni sensibili come le prestazioni assolute e i valori quantitativi </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">8</context>
@@ -3468,7 +3468,7 @@
       </trans-unit>
       <trans-unit id="071f26a758dfeaed37626c8758754707c35e3915" datatype="html">
         <source> Distraction-free experience for turbulent times </source>
-        <target state="new"> Esperienza priva di distrazioni per i periodi più turbolenti </target>
+        <target state="translated"> Esperienza priva di distrazioni per i periodi più turbolenti </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">174</context>
@@ -3476,7 +3476,7 @@
       </trans-unit>
       <trans-unit id="7f44fdbb881db76676fff811a21dc3eadcf11a33" datatype="html">
         <source> Sneak peek at upcoming functionality </source>
-        <target state="new"> Un’anteprima delle funzionalità in arrivo </target>
+        <target state="translated"> Un’anteprima delle funzionalità in arrivo </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">208</context>
@@ -3660,7 +3660,7 @@
       </trans-unit>
       <trans-unit id="e38564a8fa45f69a978945e0ad8014ab26e35afb" datatype="html">
         <source> For new investors who are just getting started with trading. </source>
-        <target state="new"> Per i nuovi investitori che hanno appena iniziato a fare trading. </target>
+        <target state="translated"> Per i nuovi investitori che hanno appena iniziato a fare trading. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">123</context>
@@ -3688,7 +3688,7 @@
       </trans-unit>
       <trans-unit id="a9eaad1a5cb1b7a8d154ecb75fc613e3bd5adbf3" datatype="html">
         <source>One-time payment, no auto-renewal.</source>
-        <target state="new">Pagamento una tantum, senza rinnovo automatico.</target>
+        <target state="translated">Pagamento una tantum, senza rinnovo automatico.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">280</context>
@@ -3864,7 +3864,7 @@
       </trans-unit>
       <trans-unit id="e5580416a35e85e0ce48cf447c45043386d1027f" datatype="html">
         <source>Renew Plan</source>
-        <target state="new">Rinnova il piano</target>
+        <target state="translated">Rinnova il piano</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">183</context>
@@ -3880,7 +3880,7 @@
       </trans-unit>
       <trans-unit id="de0d77a5255f97548d2b579f78c20c911a71820f" datatype="html">
         <source> Our official Ghostfolio Premium cloud offering is the easiest way to get started. Due to the time it saves, this will be the best option for most people. Revenue is used to cover the costs of the hosting infrastructure and to fund ongoing development. </source>
-        <target state="new"> La nostra offerta cloud ufficiale Ghostfolio Premium è il modo più semplice per iniziare. Grazie al risparmio di tempo, questa è l’opzione migliore per la maggior parte delle persone. I ricavi vengono utilizzati per coprire l’infrastruttura di hosting e per finanziare lo sviluppo continuo di Ghostfolio. </target>
+        <target state="translated"> La nostra offerta cloud ufficiale Ghostfolio Premium è il modo più semplice per iniziare. Grazie al risparmio di tempo, questa è l’opzione migliore per la maggior parte delle persone. I ricavi vengono utilizzati per coprire l’infrastruttura di hosting e per finanziare lo sviluppo continuo di Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">6</context>
@@ -3904,7 +3904,7 @@
       </trans-unit>
       <trans-unit id="4239552960465242484" datatype="html">
         <source>Do you really want to delete these activities?</source>
-        <target state="new">Vuoi davvero eliminare tutte le tue attività?</target>
+        <target state="translated">Vuoi davvero eliminare tutte le tue attività?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">225</context>
@@ -4744,7 +4744,7 @@
       </trans-unit>
       <trans-unit id="8c4cfd77b7b3d7917de13bec98a8a74890f95618" datatype="html">
         <source>New Users</source>
-        <target state="new">Nuovi utenti</target>
+        <target state="translated">Nuovi utenti</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">51</context>
@@ -5132,7 +5132,7 @@
       </trans-unit>
       <trans-unit id="80abe38d82bca467f47bbb65f821a115cf9dfdc1" datatype="html">
         <source> Are <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>you<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ready? </source>
-        <target state="new"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Sei<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>pronto?</target>
+        <target state="new"> <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Sei<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>pronto? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">431</context>
@@ -5584,7 +5584,7 @@
       </trans-unit>
       <trans-unit id="6264b47d8cbc74a3a411c1910964285bb0c8cc5e" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </source>
-        <target state="new"> L’alternativa open source a <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
+        <target state="translated"> L’alternativa open source a <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">42</context>
@@ -5624,7 +5624,7 @@
       </trans-unit>
       <trans-unit id="e8c5f8fe4c44fa8c6df595290d1597849a10634f" datatype="html">
         <source> Let’s dive deeper into the detailed Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table below to gain a thorough understanding of how Ghostfolio positions itself relative to <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. We will explore various aspects such as features, data privacy, pricing, and more, allowing you to make a well-informed choice for your personal requirements. </source>
-        <target state="new"> Analizziamo nel dettaglio la tabella di confronto qui sotto per comprendere a fondo come Ghostfolio si posiziona rispetto a <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. Esploreremo vari aspetti come le caratteristiche, la privacy dei dati, il prezzo e altro ancora, permettendoti di fare una scelta ben informata per le tue esigenze personali. </target>
+        <target state="translated"> Analizziamo nel dettaglio la tabella di confronto qui sotto per comprendere a fondo come Ghostfolio si posiziona rispetto a <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>. Esploreremo vari aspetti come le caratteristiche, la privacy dei dati, il prezzo e altro ancora, permettendoti di fare una scelta ben informata per le tue esigenze personali. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">38</context>
@@ -5644,7 +5644,7 @@
       </trans-unit>
       <trans-unit id="986ed5a2e3edee8d10d65a7c087b226879ebaecc" datatype="html">
         <source> Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
-        <target state="new"> Nota bene: le informazioni fornite si basano sulle nostre ricerche e analisi indipendenti. Questo sito web non è affiliato con <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> o a qualsiasi altro prodotto citato nel confronto. Poiché il panorama degli strumenti di finanza personale si evolve, è essenziale verificare qualsiasi dettaglio o modifica specifica direttamente nella pagina del prodotto in questione. I dati hanno bisogno di essere aggiornati? Aiutaci a mantenere i dati accurati su <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </target>
+        <target state="translated"> Nota bene: le informazioni fornite si basano sulle nostre ricerche e analisi indipendenti. Questo sito web non è affiliato con <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> o a qualsiasi altro prodotto citato nel confronto. Poiché il panorama degli strumenti di finanza personale si evolve, è essenziale verificare qualsiasi dettaglio o modifica specifica direttamente nella pagina del prodotto in questione. I dati hanno bisogno di essere aggiornati? Aiutaci a mantenere i dati accurati su <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">226</context>
