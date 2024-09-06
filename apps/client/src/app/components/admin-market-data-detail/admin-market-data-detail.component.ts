@@ -93,52 +93,52 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
       };
     });
 
-    let date = parseISO(this.dateOfFirstActivity);
-
-    const missingMarketData: Partial<MarketData>[] = [];
-
-    if (this.historicalDataItems?.[0]?.date) {
-      while (
-        isBefore(
-          date,
-          parse(this.historicalDataItems[0].date, DATE_FORMAT, new Date())
-        )
-      ) {
-        missingMarketData.push({
-          date,
-          marketPrice: undefined
-        });
-
-        date = addDays(date, 1);
-      }
-    }
-
-    const marketDataItems = [...missingMarketData, ...this.marketData];
-
-    if (!isToday(last(marketDataItems)?.date)) {
-      marketDataItems.push({ date: new Date() });
-    }
-
-    this.marketDataByMonth = {};
-
-    for (const marketDataItem of marketDataItems) {
-      const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
-      const key = format(marketDataItem.date, 'yyyy-MM');
-
-      if (!this.marketDataByMonth[key]) {
-        this.marketDataByMonth[key] = {};
-      }
-
-      this.marketDataByMonth[key][
-        currentDay < 10 ? `0${currentDay}` : currentDay
-      ] = {
-        date: marketDataItem.date,
-        day: currentDay,
-        marketPrice: marketDataItem.marketPrice
-      };
-    }
-
     if (this.dateOfFirstActivity) {
+      let date = parseISO(this.dateOfFirstActivity);
+
+      const missingMarketData: Partial<MarketData>[] = [];
+
+      if (this.historicalDataItems?.[0]?.date) {
+        while (
+          isBefore(
+            date,
+            parse(this.historicalDataItems[0].date, DATE_FORMAT, new Date())
+          )
+        ) {
+          missingMarketData.push({
+            date,
+            marketPrice: undefined
+          });
+
+          date = addDays(date, 1);
+        }
+      }
+
+      const marketDataItems = [...missingMarketData, ...this.marketData];
+
+      if (!isToday(last(marketDataItems)?.date)) {
+        marketDataItems.push({ date: new Date() });
+      }
+
+      this.marketDataByMonth = {};
+
+      for (const marketDataItem of marketDataItems) {
+        const currentDay = parseInt(format(marketDataItem.date, 'd'), 10);
+        const key = format(marketDataItem.date, 'yyyy-MM');
+
+        if (!this.marketDataByMonth[key]) {
+          this.marketDataByMonth[key] = {};
+        }
+
+        this.marketDataByMonth[key][
+          currentDay < 10 ? `0${currentDay}` : currentDay
+        ] = {
+          date: marketDataItem.date,
+          day: currentDay,
+          marketPrice: marketDataItem.marketPrice
+        };
+      }
+
       // Fill up missing months
       const dates = Object.keys(this.marketDataByMonth).sort();
       const startDate = min([
