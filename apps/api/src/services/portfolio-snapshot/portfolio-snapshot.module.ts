@@ -1,3 +1,4 @@
+import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -28,6 +29,7 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
     MarketDataModule,
     PrismaModule,
     PropertyModule,
+    RedisCacheModule,
     SymbolProfileModule
   ],
   providers: [PortfolioSnapshotProcessor, PortfolioSnapshotService],

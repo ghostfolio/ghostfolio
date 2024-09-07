@@ -12,7 +12,6 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { CACHE_TTL_INFINITE } from '@ghostfolio/common/config';
 import {
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
@@ -39,7 +38,6 @@ import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
-  addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
   endOfDay,
@@ -875,29 +873,6 @@ export abstract class PortfolioCalculator {
     return chartDateMap;
   }
 
-  private async computeAndCacheSnapshot() {
-    const snapshot = await this.computeSnapshot();
-
-    const expiration = addMilliseconds(
-      new Date(),
-      this.configurationService.get('CACHE_QUOTES_TTL')
-    );
-
-    this.redisCacheService.set(
-      this.redisCacheService.getPortfolioSnapshotKey({
-        filters: this.filters,
-        userId: this.userId
-      }),
-      JSON.stringify(<PortfolioSnapshotValue>(<unknown>{
-        expiration: expiration.getTime(),
-        portfolioSnapshot: snapshot
-      })),
-      CACHE_TTL_INFINITE
-    );
-
-    return snapshot;
-  }
-
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
@@ -1080,6 +1055,7 @@ export abstract class PortfolioCalculator {
         // Compute in the background
         this.portfolioSnapshotService.addJobToQueue({
           data: {
+            filters: this.filters,
             userId: this.userId
           },
           name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
@@ -1089,13 +1065,13 @@ export abstract class PortfolioCalculator {
             // priority
           }
         });
-        this.computeAndCacheSnapshot();
       }
     } else {
       // Wait for computation
       // TODO
       const job = await this.portfolioSnapshotService.addJobToQueue({
         data: {
+          filters: this.filters,
           userId: this.userId
         },
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
@@ -1108,7 +1084,7 @@ export abstract class PortfolioCalculator {
 
       await job.finished();
 
-      this.snapshot = await this.computeAndCacheSnapshot();
+      await this.initialize();
     }
   }
 }
