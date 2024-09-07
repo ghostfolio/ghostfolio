@@ -152,6 +152,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
         this.dataSource = new MatTableDataSource(users);
 
         this.isLoading = false;
+
         this.changeDetectorRef.markForCheck();
       });
   }

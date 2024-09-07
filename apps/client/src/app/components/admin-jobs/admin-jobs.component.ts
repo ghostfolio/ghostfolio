@@ -148,6 +148,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
         this.dataSource = new MatTableDataSource(jobs);
 
         this.isLoading = false;
+
         this.changeDetectorRef.markForCheck();
       });
   }
