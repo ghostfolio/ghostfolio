@@ -14,8 +14,8 @@ import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-sna
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { CACHE_TTL_INFINITE } from '@ghostfolio/common/config';
 import {
-  PORTFOLIO_PROCESS_JOB_NAME,
-  PORTFOLIO_PROCESS_JOB_OPTIONS
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -1082,9 +1082,9 @@ export abstract class PortfolioCalculator {
           data: {
             userId: this.userId
           },
-          name: PORTFOLIO_PROCESS_JOB_NAME,
+          name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
           opts: {
-            ...PORTFOLIO_PROCESS_JOB_OPTIONS
+            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
             // jobId
             // priority
           }
@@ -1098,9 +1098,9 @@ export abstract class PortfolioCalculator {
         data: {
           userId: this.userId
         },
-        name: PORTFOLIO_PROCESS_JOB_NAME,
+        name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
-          ...PORTFOLIO_PROCESS_JOB_OPTIONS
+          ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
           // jobId
           // priority
         }

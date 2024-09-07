@@ -1,5 +1,5 @@
 import {
-  PORTFOLIO_PROCESS_JOB_NAME,
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_QUEUE
 } from '@ghostfolio/common/config';
 
@@ -16,14 +16,14 @@ import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queu
 export class PortfolioSnapshotProcessor {
   public constructor() {}
 
-  @Process({ concurrency: 1, name: PORTFOLIO_PROCESS_JOB_NAME })
+  @Process({ concurrency: 1, name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME })
   public async calculatePortfolioSnapshot(
     job: Job<IPortfolioSnapshotQueueJob>
   ) {
     try {
       Logger.log(
         `Portfolio snapshot calculation of user ${job.data.userId} has been started`,
-        `PortfolioProcessor (${PORTFOLIO_PROCESS_JOB_NAME})`
+        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
 
       // TODO: Do something
@@ -31,10 +31,13 @@ export class PortfolioSnapshotProcessor {
 
       Logger.log(
         `Portfolio snapshot calculation of user ${job.data.userId} has been completed`,
-        `PortfolioProcessor (${PORTFOLIO_PROCESS_JOB_NAME})`
+        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
     } catch (error) {
-      Logger.error(error, `PortfolioProcessor (${PORTFOLIO_PROCESS_JOB_NAME})`);
+      Logger.error(
+        error,
+        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
+      );
 
       throw new Error(error);
     }
