@@ -33,6 +33,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public user: User;
+  public isLoading = false;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -142,12 +143,14 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   }
 
   private fetchAdminData() {
+    this.isLoading = true;
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
         this.dataSource = new MatTableDataSource(users);
 
+        this.isLoading = false;
         this.changeDetectorRef.markForCheck();
       });
   }
