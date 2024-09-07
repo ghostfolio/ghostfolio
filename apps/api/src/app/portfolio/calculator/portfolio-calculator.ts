@@ -64,7 +64,7 @@ export abstract class PortfolioCalculator {
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
   private filters: Filter[];
-  private portfolioService: PortfolioSnapshotService;
+  private portfolioSnapshotService: PortfolioSnapshotService;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
@@ -80,7 +80,7 @@ export abstract class PortfolioCalculator {
     currentRateService,
     exchangeRateDataService,
     filters,
-    portfolioService,
+    portfolioSnapshotService,
     redisCacheService,
     userId
   }: {
@@ -91,7 +91,7 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     exchangeRateDataService: ExchangeRateDataService;
     filters: Filter[];
-    portfolioService: PortfolioSnapshotService;
+    portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
     userId: string;
   }) {
@@ -140,7 +140,7 @@ export abstract class PortfolioCalculator {
         return a.date?.localeCompare(b.date);
       });
 
-    this.portfolioService = portfolioService;
+    this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
     this.userId = userId;
 
@@ -1078,7 +1078,7 @@ export abstract class PortfolioCalculator {
 
       if (isCachedPortfolioSnapshotExpired) {
         // Compute in the background
-        this.portfolioService.addJobToQueue({
+        this.portfolioSnapshotService.addJobToQueue({
           data: {
             userId: this.userId
           },
@@ -1094,7 +1094,7 @@ export abstract class PortfolioCalculator {
     } else {
       // Wait for computation
       // TODO
-      const job = await this.portfolioService.addJobToQueue({
+      const job = await this.portfolioSnapshotService.addJobToQueue({
         data: {
           userId: this.userId
         },

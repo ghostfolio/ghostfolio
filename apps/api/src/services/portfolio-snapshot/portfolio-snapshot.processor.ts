@@ -23,7 +23,7 @@ export class PortfolioSnapshotProcessor {
     try {
       Logger.log(
         `Portfolio snapshot calculation of user ${job.data.userId} has been started`,
-        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
+        `PortfolioSnapshotProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
 
       // TODO: Do something
@@ -31,12 +31,12 @@ export class PortfolioSnapshotProcessor {
 
       Logger.log(
         `Portfolio snapshot calculation of user ${job.data.userId} has been completed`,
-        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
+        `PortfolioSnapshotProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
     } catch (error) {
       Logger.error(
         error,
-        `PortfolioProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
+        `PortfolioSnapshotProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
 
       throw new Error(error);

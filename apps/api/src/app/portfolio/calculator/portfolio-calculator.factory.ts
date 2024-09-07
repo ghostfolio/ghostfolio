@@ -23,7 +23,7 @@ export class PortfolioCalculatorFactory {
     private readonly configurationService: ConfigurationService,
     private readonly currentRateService: CurrentRateService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly portfolioService: PortfolioSnapshotService,
+    private readonly portfolioSnapshotService: PortfolioSnapshotService,
     private readonly redisCacheService: RedisCacheService
   ) {}
 
@@ -53,7 +53,7 @@ export class PortfolioCalculatorFactory {
           configurationService: this.configurationService,
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
-          portfolioService: this.portfolioService,
+          portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
@@ -66,7 +66,7 @@ export class PortfolioCalculatorFactory {
           userId,
           configurationService: this.configurationService,
           exchangeRateDataService: this.exchangeRateDataService,
-          portfolioService: this.portfolioService,
+          portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService
         });
       default:
