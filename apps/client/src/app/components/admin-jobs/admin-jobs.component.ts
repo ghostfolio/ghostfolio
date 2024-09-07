@@ -51,9 +51,9 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     'status',
     'actions'
   ];
+  public isLoading = false;
   public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
   public user: User;
-  public isLoading = false;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -140,6 +140,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
 
   private fetchJobs(aStatus?: JobStatus[]) {
     this.isLoading = true;
+
     this.adminService
       .fetchJobs({ status: aStatus })
       .pipe(takeUntil(this.unsubscribeSubject))
