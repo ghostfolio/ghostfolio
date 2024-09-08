@@ -21,6 +21,7 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminMarketDataItem,
+  AdminUsers,
   AssetProfileIdentifier,
   EnhancedSymbolProfile,
   Filter
@@ -135,7 +136,6 @@ export class AdminService {
       settings: await this.propertyService.get(),
       transactionCount: await this.prismaService.order.count(),
       userCount: await this.prismaService.user.count(),
-      users: await this.getUsersWithAnalytics(),
       version: environment.version
     };
   }
@@ -377,6 +377,10 @@ export class AdminService {
     };
   }
 
+  public async getUsers(): Promise<AdminUsers> {
+    return { users: await this.getUsersWithAnalytics() };
+  }
+
   public async patchAssetProfileData({
     assetClass,
     assetSubClass,
@@ -546,11 +550,11 @@ export class AdminService {
     return { marketData, count: marketData.length };
   }
 
-  private async getUsersWithAnalytics(): Promise<AdminData['users']> {
+  private async getUsersWithAnalytics(): Promise<AdminUsers['users']> {
     let orderBy: any = {
       createdAt: 'desc'
     };
-    let where;
+    let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       orderBy = {
