@@ -17,6 +17,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  AdminUsers,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -346,5 +347,12 @@ export class AdminController {
     @Body() data: PropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
+  }
+
+  @Get('user')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUsers(): Promise<AdminUsers> {
+    return this.adminService.getUsers();
   }
 }
