@@ -12,6 +12,7 @@ import {
   AdminJobs,
   AdminMarketData,
   AdminMarketDataDetails,
+  AdminUsers,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
@@ -153,6 +154,10 @@ export class AdminService {
 
   public fetchTags() {
     return this.http.get<Tag[]>('/api/v1/tag');
+  }
+
+  public fetchUsers() {
+    return this.http.get<AdminUsers>('/api/v1/admin/user');
   }
 
   public gather7Days() {
