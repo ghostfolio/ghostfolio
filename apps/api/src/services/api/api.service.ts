@@ -10,22 +10,28 @@ export class ApiService {
     filterByAccounts,
     filterByAssetClasses,
     filterByAssetSubClasses,
+    filterByDataSource,
     filterByHoldingType,
     filterBySearchQuery,
+    filterBySymbol,
     filterByTags
   }: {
     filterByAccounts?: string;
     filterByAssetClasses?: string;
     filterByAssetSubClasses?: string;
+    filterByDataSource?: string;
     filterByHoldingType?: string;
     filterBySearchQuery?: string;
+    filterBySymbol?: string;
     filterByTags?: string;
   }): Filter[] {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
+    const dataSource = filterByDataSource?.split(',') ?? [];
     const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
+    const symbols = filterBySymbol?.split(',') ?? [];
     const tagIds = filterByTags?.split(',') ?? [];
 
     const filters = [
@@ -45,6 +51,18 @@ export class ApiService {
         return <Filter>{
           id: assetClass,
           type: 'ASSET_SUB_CLASS'
+        };
+      }),
+      ...dataSource.map((dataSource) => {
+        return <Filter>{
+          id: dataSource,
+          type: 'DATA_SOURCE'
+        };
+      }),
+      ...symbols.map((symbol) => {
+        return <Filter>{
+          id: symbol,
+          type: 'SYMBOL'
         };
       }),
       ...tagIds.map((tagId) => {

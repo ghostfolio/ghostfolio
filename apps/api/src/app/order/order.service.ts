@@ -345,6 +345,8 @@ export class OrderService {
     const {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
+      DATA_SOURCE: filtersByDataSource,
+      SYMBOL: filtersBySymbol,
       TAG: filtersByTag
     } = groupBy(filters, ({ type }) => {
       return type;
@@ -392,6 +394,26 @@ export class OrderService {
             }
           }
         ]
+      };
+    }
+
+    if (filtersByDataSource?.length > 0) {
+      where.SymbolProfile = {
+        dataSource: {
+          in: <DataSource[]>filtersByDataSource.map(({ id }) => {
+            return id;
+          })
+        }
+      };
+    }
+
+    if (filtersBySymbol?.length > 0) {
+      where.SymbolProfile = {
+        symbol: {
+          in: filtersBySymbol.map(({ id }) => {
+            return id;
+          })
+        }
       };
     }
 
