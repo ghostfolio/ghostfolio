@@ -14,8 +14,8 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service';
-import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service.mock';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
@@ -30,7 +30,7 @@ jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
 });
 
 jest.mock(
-  '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service',
+  '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service',
   () => {
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
