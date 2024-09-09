@@ -18,7 +18,7 @@ export const RedisCacheServiceMock = {
   }): string => {
     const filtersHash = filters?.length;
 
-    return `portfolio-snapshot-${userId}-${filtersHash}`;
+    return `portfolio-snapshot-${userId}${filtersHash > 0 ? `-${filtersHash}` : ''}`;
   },
   set: (key: string, value: string, ttl?: Milliseconds): Promise<string> => {
     RedisCacheServiceMock.cache.set(key, value);

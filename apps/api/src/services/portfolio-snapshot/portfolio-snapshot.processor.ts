@@ -34,6 +34,8 @@ export class PortfolioSnapshotProcessor {
     job: Job<IPortfolioSnapshotQueueJob>
   ) {
     try {
+      const startTime = performance.now();
+
       Logger.log(
         `Portfolio snapshot calculation of user ${job.data.userId} has been started`,
         `PortfolioSnapshotProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
@@ -57,7 +59,10 @@ export class PortfolioSnapshotProcessor {
       const snapshot = await portfolioCalculator.computeSnapshot();
 
       Logger.log(
-        `Portfolio snapshot calculation of user ${job.data.userId} has been completed`,
+        `Portfolio snapshot calculation of user ${job.data.userId} has been completed in ${(
+          (performance.now() - startTime) /
+          1000
+        ).toFixed(3)} seconds`,
         `PortfolioSnapshotProcessor (${PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME})`
       );
 

@@ -63,10 +63,8 @@ export class QueueService {
       this.portfolioSnapshotQueue.getJobs(status)
     ]);
 
-    const allJobs = [...dataGatheringJobs, ...portfolioSnapshotJobs];
-
     const jobsWithState = await Promise.all(
-      allJobs
+      [...dataGatheringJobs, ...portfolioSnapshotJobs]
         .filter((job) => {
           return job;
         })
