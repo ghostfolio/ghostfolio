@@ -1,5 +1,5 @@
-import { DataGatheringModule } from '@ghostfolio/api/services/data-gathering/data-gathering.module';
-import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.module';
+import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 
 import { Module } from '@nestjs/common';
 

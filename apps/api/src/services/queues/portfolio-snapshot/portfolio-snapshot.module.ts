@@ -6,7 +6,7 @@ import { ConfigurationModule } from '@ghostfolio/api/services/configuration/conf
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
-import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PORTFOLIO_SNAPSHOT_QUEUE } from '@ghostfolio/common/config';
 
 import { BullModule } from '@nestjs/bull';
