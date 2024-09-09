@@ -20,10 +20,6 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
 @Module({
   imports: [
     BullModule.registerQueue({
-      // limiter: {
-      //   duration: ms('4 seconds'),
-      //   max: 1
-      // },
       name: PORTFOLIO_SNAPSHOT_QUEUE
     }),
     ConfigurationModule,

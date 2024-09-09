@@ -24,10 +24,4 @@ export class PortfolioSnapshotService {
   }) {
     return this.portfolioSnapshotQueue.add(name, data, opts);
   }
-
-  // public async addJobsToQueue(
-  //   jobs: { data: IPortfolioSnapshotQueueJob; name: string; opts?: JobOptions }[]
-  // ) {
-  //   return this.portfolioSnapshotQueue.addBulk(jobs);
-  // }
 }

@@ -14,7 +14,9 @@ import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-sna
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
-  PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH,
+  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -1063,14 +1065,13 @@ export abstract class PortfolioCalculator {
           name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
           opts: {
             ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
-            jobId
-            // priority
+            jobId,
+            priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
           }
         });
       }
     } else {
       // Wait for computation
-      // TODO
       const job = await this.portfolioSnapshotService.addJobToQueue({
         data: {
           filters: this.filters,
@@ -1080,8 +1081,8 @@ export abstract class PortfolioCalculator {
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
           ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
-          jobId
-          // priority
+          jobId,
+          priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH
         }
       });
 
