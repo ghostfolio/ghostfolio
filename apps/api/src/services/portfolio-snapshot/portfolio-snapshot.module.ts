@@ -1,3 +1,6 @@
+import { OrderModule } from '@ghostfolio/api/app/order/order.module';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
@@ -27,12 +30,18 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
     DataProviderModule,
     ExchangeRateDataModule,
     MarketDataModule,
+    OrderModule,
     PrismaModule,
     PropertyModule,
     RedisCacheModule,
     SymbolProfileModule
   ],
-  providers: [PortfolioSnapshotProcessor, PortfolioSnapshotService],
+  providers: [
+    CurrentRateService,
+    PortfolioCalculatorFactory,
+    PortfolioSnapshotProcessor,
+    PortfolioSnapshotService
+  ],
   exports: [BullModule, PortfolioSnapshotService]
 })
 export class PortfolioSnapshotQueueModule {}

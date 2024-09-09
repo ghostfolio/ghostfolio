@@ -160,7 +160,7 @@ export abstract class PortfolioCalculator {
   ): PortfolioSnapshot;
 
   @LogPerformance
-  private async computeSnapshot(): Promise<PortfolioSnapshot> {
+  public async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
@@ -1018,6 +1018,7 @@ export abstract class PortfolioCalculator {
 
     let cachedPortfolioSnapshot: PortfolioSnapshot;
     let isCachedPortfolioSnapshotExpired = false;
+    const jobId = this.userId;
 
     try {
       const cachedPortfolioSnapshotValue = await this.redisCacheService.get(
@@ -1056,12 +1057,13 @@ export abstract class PortfolioCalculator {
         this.portfolioSnapshotService.addJobToQueue({
           data: {
             filters: this.filters,
+            userCurrency: this.currency,
             userId: this.userId
           },
           name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
           opts: {
-            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
-            // jobId
+            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+            jobId
             // priority
           }
         });
@@ -1072,12 +1074,13 @@ export abstract class PortfolioCalculator {
       const job = await this.portfolioSnapshotService.addJobToQueue({
         data: {
           filters: this.filters,
+          userCurrency: this.currency,
           userId: this.userId
         },
         name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
         opts: {
-          ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS
-          // jobId
+          ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+          jobId
           // priority
         }
       });

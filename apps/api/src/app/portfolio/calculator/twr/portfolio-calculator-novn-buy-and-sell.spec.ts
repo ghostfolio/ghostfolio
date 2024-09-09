@@ -14,7 +14,6 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { PortfolioSnapshotProcessor } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.processor';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
@@ -129,13 +128,7 @@ describe('PortfolioCalculator', () => {
         userId: userDummyData.id
       });
 
-      const portfolioSnapshotProcessor = new PortfolioSnapshotProcessor(
-        null,
-        null
-      );
-
-      const portfolioSnapshot =
-        await portfolioSnapshotProcessor.computeSnapshot();
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
       const investments = portfolioCalculator.getInvestments();
 
