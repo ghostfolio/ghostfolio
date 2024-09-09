@@ -459,7 +459,7 @@
       </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
         <source>Asset Profiles</source>
-        <target state="translated">Profil d'Actifs</target>
+        <target state="translated">Profil d’Actifs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">67</context>
@@ -4339,7 +4339,7 @@
       </trans-unit>
       <trans-unit id="1914201149277662818" datatype="html">
         <source>Personal Finance Tools</source>
-        <target state="new">Outils de Gestion de Patrimoine</target>
+        <target state="translated">Outils de Gestion de Patrimoine</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
           <context context-type="linenumber">14</context>
@@ -4455,7 +4455,7 @@
       </trans-unit>
       <trans-unit id="b943377f11c8ddf90cbae5f056ccffb852df426d" datatype="html">
         <source>❌ No </source>
-        <target state="new">❌ Non </target>
+        <target state="translated">❌ Non </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">140</context>
@@ -4495,7 +4495,7 @@
       </trans-unit>
       <trans-unit id="47e58765787443fe08ef8ccc25a1419310e43b2a" datatype="html">
         <source> Effortlessly track, analyze, and visualize your wealth with Ghostfolio. </source>
-        <target state="translated"> Suivez, analysez et visualisez sans effort votre patrimoine avec Ghostfolio.. </target>
+        <target state="translated"> Suivez, analysez et visualisez sans effort votre patrimoine avec Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">243</context>
@@ -4779,7 +4779,7 @@
       </trans-unit>
       <trans-unit id="512b096f732f5e05dc1c451276b7a2b1a2509acd" datatype="html">
         <source>Pulls on Docker Hub</source>
-        <target state="translated">téléchargement depuis Docker Hub</target>
+        <target state="translated">Téléchargement depuis Docker Hub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">106</context>
@@ -5011,7 +5011,7 @@
       </trans-unit>
       <trans-unit id="2e95d2cbc69d45e5ecf3eb92c2972e8cb4ff3ec6" datatype="html">
         <source>interested in getting insights of your portfolio composition</source>
-        <target state="translated">êtes intéressés d'avoir un aperçu de la composition de votre portefeuille.</target>
+        <target state="translated">êtes intéressés d'avoir un aperçu de la composition de votre portefeuille</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">291</context>
@@ -5035,7 +5035,7 @@
       </trans-unit>
       <trans-unit id="18bb2c16577866572e3656986d9660d2db012565" datatype="html">
         <source>caring about diversifying your financial resources</source>
-        <target state="translated">vous souciez de diversifier vos ressources financières.</target>
+        <target state="translated">vous souciez de diversifier vos ressources financières</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">303</context>
@@ -5043,7 +5043,7 @@
       </trans-unit>
       <trans-unit id="0a6c37c2d3a8c41e7e44f020aefb1c667ac150dc" datatype="html">
         <source>interested in financial independence</source>
-        <target state="translated">êtes intéressés d'atteindre l'indépendance financière.</target>
+        <target state="translated">êtes intéressés d'atteindre l'indépendance financière</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">307</context>
@@ -5159,7 +5159,7 @@
       </trans-unit>
       <trans-unit id="9454b3758f67cb4d178570e8bfb3e0d684e2353e" datatype="html">
         <source>Get started in only 3 steps</source>
-        <target state="translated">Démarrer en seulement 3 étapes </target>
+        <target state="translated">Démarrer en seulement 3 étapes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">386</context>
@@ -5867,7 +5867,7 @@
       </trans-unit>
       <trans-unit id="121cc5391cd2a5115bc2b3160379ee5b36cd7716" datatype="html">
         <source>Settings</source>
-        <target state="new">Paramètres</target>
+        <target state="translated">Paramètres</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">2</context>
@@ -6107,7 +6107,7 @@
       </trans-unit>
       <trans-unit id="752daa6baad0f8b4684b5c6775345b02bed6746e" datatype="html">
         <source>year</source>
-        <target state="translated">Années</target>
+        <target state="translated">années</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">205</context>
@@ -6367,7 +6367,7 @@
       </trans-unit>
       <trans-unit id="6479044529603381727" datatype="html">
         <source>year</source>
-        <target state="translated">Année</target>
+        <target state="translated">année</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">229</context>
@@ -6375,7 +6375,7 @@
       </trans-unit>
       <trans-unit id="7658073495909471632" datatype="html">
         <source>years</source>
-        <target state="translated">Années</target>
+        <target state="translated">années</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">250</context>
