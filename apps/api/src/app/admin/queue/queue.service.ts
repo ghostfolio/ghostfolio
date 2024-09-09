@@ -1,5 +1,6 @@
 import {
   DATA_GATHERING_QUEUE,
+  PORTFOLIO_SNAPSHOT_QUEUE,
   QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
@@ -12,11 +13,19 @@ import { JobStatus, Queue } from 'bull';
 export class QueueService {
   public constructor(
     @InjectQueue(DATA_GATHERING_QUEUE)
-    private readonly dataGatheringQueue: Queue
+    private readonly dataGatheringQueue: Queue,
+    @InjectQueue(PORTFOLIO_SNAPSHOT_QUEUE)
+    private readonly portfolioSnapshotQueue: Queue
   ) {}
 
   public async deleteJob(aId: string) {
-    return (await this.dataGatheringQueue.getJob(aId))?.remove();
+    let job = await this.dataGatheringQueue.getJob(aId);
+
+    if (!job) {
+      job = await this.portfolioSnapshotQueue.getJob(aId);
+    }
+
+    return job?.remove();
   }
 
   public async deleteJobs({
@@ -25,15 +34,21 @@ export class QueueService {
     status?: JobStatus[];
   }) {
     for (const statusItem of status) {
-      await this.dataGatheringQueue.clean(
-        300,
-        statusItem === 'waiting' ? 'wait' : statusItem
-      );
+      const queueStatus = statusItem === 'waiting' ? 'wait' : statusItem;
+
+      await this.dataGatheringQueue.clean(300, queueStatus);
+      await this.portfolioSnapshotQueue.clean(300, queueStatus);
     }
   }
 
   public async executeJob(aId: string) {
-    return (await this.dataGatheringQueue.getJob(aId))?.promote();
+    let job = await this.dataGatheringQueue.getJob(aId);
+
+    if (!job) {
+      job = await this.portfolioSnapshotQueue.getJob(aId);
+    }
+
+    return job?.promote();
   }
 
   public async getJobs({
@@ -43,10 +58,15 @@ export class QueueService {
     limit?: number;
     status?: JobStatus[];
   }): Promise<AdminJobs> {
-    const jobs = await this.dataGatheringQueue.getJobs(status);
+    const [dataGatheringJobs, portfolioSnapshotJobs] = await Promise.all([
+      this.dataGatheringQueue.getJobs(status),
+      this.portfolioSnapshotQueue.getJobs(status)
+    ]);
+
+    const allJobs = [...dataGatheringJobs, ...portfolioSnapshotJobs];
 
     const jobsWithState = await Promise.all(
-      jobs
+      allJobs
         .filter((job) => {
           return job;
         })
