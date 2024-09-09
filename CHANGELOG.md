@@ -9,8 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the asynchronous operations using `Promise.all()` in the info service
 - Optimized the asynchronous operations using `Promise.all()` in the admin control panel endpoint
 - Extracted the users from the admin control panel endpoint to a dedicated endpoint
+- Improved the language localization for Italian (`it`)
 
 ## 2.106.0 - 2024-09-07
 
