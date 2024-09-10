@@ -94,6 +94,7 @@ export class OrderController {
   @Get()
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
