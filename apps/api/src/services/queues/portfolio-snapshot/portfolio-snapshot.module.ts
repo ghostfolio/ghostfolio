@@ -15,6 +15,7 @@ import { Module } from '@nestjs/common';
 import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
 
 @Module({
+  exports: [BullModule, PortfolioSnapshotService],
   imports: [
     BullModule.registerQueue({
       name: PORTFOLIO_SNAPSHOT_QUEUE
@@ -31,7 +32,6 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
     PortfolioCalculatorFactory,
     PortfolioSnapshotProcessor,
     PortfolioSnapshotService
-  ],
-  exports: [BullModule, PortfolioSnapshotService]
+  ]
 })
 export class PortfolioSnapshotQueueModule {}
