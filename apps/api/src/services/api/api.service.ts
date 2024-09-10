@@ -61,6 +61,13 @@ export class ApiService {
       })
     ];
 
+    if (dataSource) {
+      filters.push({
+        id: dataSource,
+        type: 'DATA_SOURCE'
+      });
+    }
+
     if (holdingType) {
       filters.push({
         id: holdingType,
@@ -72,13 +79,6 @@ export class ApiService {
       filters.push({
         id: searchQuery,
         type: 'SEARCH_QUERY'
-      });
-    }
-
-    if (dataSource) {
-      filters.push({
-        id: dataSource,
-        type: 'DATA_SOURCE'
       });
     }
 
