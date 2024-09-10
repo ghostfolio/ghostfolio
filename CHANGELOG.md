@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the portfolio snapshot calculation to the queue design pattern
 - Optimized the asynchronous operations using `Promise.all()` in the info service
 - Optimized the asynchronous operations using `Promise.all()` in the admin control panel endpoint
 - Extracted the users from the admin control panel endpoint to a dedicated endpoint

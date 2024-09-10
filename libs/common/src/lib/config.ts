@@ -40,6 +40,10 @@ export const DATA_GATHERING_QUEUE_PRIORITY_MEDIUM = Math.round(
   DATA_GATHERING_QUEUE_PRIORITY_LOW / 2
 );
 
+export const PORTFOLIO_SNAPSHOT_QUEUE = 'PORTFOLIO_SNAPSHOT_QUEUE';
+export const PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH = 1;
+export const PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
+
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
 export const DEFAULT_LANGUAGE_CODE = 'en';
@@ -76,14 +80,20 @@ export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
   },
   removeOnComplete: true
 };
-export const GATHER_HISTORICAL_MARKET_DATA_PROCESS =
+
+export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
   'GATHER_HISTORICAL_MARKET_DATA';
-export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS: JobOptions = {
+export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 12,
   backoff: {
     delay: ms('1 minute'),
     type: 'exponential'
   },
+  removeOnComplete: true
+};
+
+export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
+export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
   removeOnComplete: true
 };
 

@@ -4,7 +4,7 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import {
   DATA_GATHERING_QUEUE,
   GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
@@ -58,7 +58,10 @@ export class DataGatheringProcessor {
     }
   }
 
-  @Process({ concurrency: 1, name: GATHER_HISTORICAL_MARKET_DATA_PROCESS })
+  @Process({
+    concurrency: 1,
+    name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
+  })
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
     try {
       const { dataSource, date, symbol } = job.data;
@@ -69,7 +72,7 @@ export class DataGatheringProcessor {
           currentDate,
           DATE_FORMAT
         )}`,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
       const historicalData = await this.dataProviderService.getHistoricalRaw({
@@ -123,12 +126,12 @@ export class DataGatheringProcessor {
           currentDate,
           DATE_FORMAT
         )}`,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
     } catch (error) {
       Logger.error(
         error,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
       throw new Error(error);

@@ -10,8 +10,14 @@ import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { CACHE_TTL_INFINITE } from '@ghostfolio/common/config';
+import {
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+  PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH,
+  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
+} from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getSum,
@@ -34,7 +40,6 @@ import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
-  addMilliseconds,
   differenceInDays,
   eachDayOfInterval,
   endOfDay,
@@ -59,6 +64,7 @@ export abstract class PortfolioCalculator {
   private endDate: Date;
   private exchangeRateDataService: ExchangeRateDataService;
   private filters: Filter[];
+  private portfolioSnapshotService: PortfolioSnapshotService;
   private redisCacheService: RedisCacheService;
   private snapshot: PortfolioSnapshot;
   private snapshotPromise: Promise<void>;
@@ -74,6 +80,7 @@ export abstract class PortfolioCalculator {
     currentRateService,
     exchangeRateDataService,
     filters,
+    portfolioSnapshotService,
     redisCacheService,
     userId
   }: {
@@ -84,6 +91,7 @@ export abstract class PortfolioCalculator {
     currentRateService: CurrentRateService;
     exchangeRateDataService: ExchangeRateDataService;
     filters: Filter[];
+    portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
     userId: string;
   }) {
@@ -132,6 +140,7 @@ export abstract class PortfolioCalculator {
         return a.date?.localeCompare(b.date);
       });
 
+    this.portfolioSnapshotService = portfolioSnapshotService;
     this.redisCacheService = redisCacheService;
     this.userId = userId;
 
@@ -153,7 +162,7 @@ export abstract class PortfolioCalculator {
   ): PortfolioSnapshot;
 
   @LogPerformance
-  private async computeSnapshot(): Promise<PortfolioSnapshot> {
+  public async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
@@ -866,29 +875,6 @@ export abstract class PortfolioCalculator {
     return chartDateMap;
   }
 
-  private async computeAndCacheSnapshot() {
-    const snapshot = await this.computeSnapshot();
-
-    const expiration = addMilliseconds(
-      new Date(),
-      this.configurationService.get('CACHE_QUOTES_TTL')
-    );
-
-    this.redisCacheService.set(
-      this.redisCacheService.getPortfolioSnapshotKey({
-        filters: this.filters,
-        userId: this.userId
-      }),
-      JSON.stringify(<PortfolioSnapshotValue>(<unknown>{
-        expiration: expiration.getTime(),
-        portfolioSnapshot: snapshot
-      })),
-      CACHE_TTL_INFINITE
-    );
-
-    return snapshot;
-  }
-
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
@@ -1034,6 +1020,7 @@ export abstract class PortfolioCalculator {
 
     let cachedPortfolioSnapshot: PortfolioSnapshot;
     let isCachedPortfolioSnapshotExpired = false;
+    const jobId = this.userId;
 
     try {
       const cachedPortfolioSnapshotValue = await this.redisCacheService.get(
@@ -1069,11 +1056,43 @@ export abstract class PortfolioCalculator {
 
       if (isCachedPortfolioSnapshotExpired) {
         // Compute in the background
-        this.computeAndCacheSnapshot();
+        this.portfolioSnapshotService.addJobToQueue({
+          data: {
+            filters: this.filters,
+            userCurrency: this.currency,
+            userId: this.userId
+          },
+          name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+          opts: {
+            ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+            jobId,
+            priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
+          }
+        });
       }
     } else {
       // Wait for computation
-      this.snapshot = await this.computeAndCacheSnapshot();
+      await this.portfolioSnapshotService.addJobToQueue({
+        data: {
+          filters: this.filters,
+          userCurrency: this.currency,
+          userId: this.userId
+        },
+        name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
+        opts: {
+          ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
+          jobId,
+          priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH
+        }
+      });
+
+      const job = await this.portfolioSnapshotService.getJob(jobId);
+
+      if (job) {
+        await job.finished();
+      }
+
+      await this.initialize();
     }
   }
 }
