@@ -28,10 +28,10 @@ export class ApiService {
     const accountIds = filterByAccounts?.split(',') ?? [];
     const assetClasses = filterByAssetClasses?.split(',') ?? [];
     const assetSubClasses = filterByAssetSubClasses?.split(',') ?? [];
-    const dataSource = filterByDataSource?.split(',') ?? [];
+    const dataSource = filterByDataSource;
     const holdingType = filterByHoldingType;
     const searchQuery = filterBySearchQuery?.toLowerCase();
-    const symbols = filterBySymbol?.split(',') ?? [];
+    const symbol = filterBySymbol;
     const tagIds = filterByTags?.split(',') ?? [];
 
     const filters = [
@@ -53,18 +53,6 @@ export class ApiService {
           type: 'ASSET_SUB_CLASS'
         };
       }),
-      ...dataSource.map((dataSource) => {
-        return <Filter>{
-          id: dataSource,
-          type: 'DATA_SOURCE'
-        };
-      }),
-      ...symbols.map((symbol) => {
-        return <Filter>{
-          id: symbol,
-          type: 'SYMBOL'
-        };
-      }),
       ...tagIds.map((tagId) => {
         return <Filter>{
           id: tagId,
@@ -84,6 +72,20 @@ export class ApiService {
       filters.push({
         id: searchQuery,
         type: 'SEARCH_QUERY'
+      });
+    }
+
+    if (dataSource) {
+      filters.push({
+        id: dataSource,
+        type: 'DATA_SOURCE'
+      });
+    }
+
+    if (symbol) {
+      filters.push({
+        id: symbol,
+        type: 'SYMBOL'
       });
     }
 

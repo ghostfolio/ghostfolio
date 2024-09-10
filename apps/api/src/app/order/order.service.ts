@@ -345,12 +345,18 @@ export class OrderService {
     const {
       ACCOUNT: filtersByAccount,
       ASSET_CLASS: filtersByAssetClass,
-      DATA_SOURCE: filtersByDataSource,
-      SYMBOL: filtersBySymbol,
       TAG: filtersByTag
     } = groupBy(filters, ({ type }) => {
       return type;
     });
+
+    const filterByDataSource = filters?.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    })?.id;
+
+    const filterBySymbol = filters?.find(({ type }) => {
+      return type === 'SYMBOL';
+    })?.id;
 
     const searchQuery = filters?.find(({ type }) => {
       return type === 'SEARCH_QUERY';
@@ -397,24 +403,27 @@ export class OrderService {
       };
     }
 
-    if (filtersByDataSource?.length > 0) {
-      where.SymbolProfile = {
-        dataSource: {
-          in: <DataSource[]>filtersByDataSource.map(({ id }) => {
-            return id;
-          })
-        }
-      };
-    }
-
-    if (filtersBySymbol?.length > 0) {
-      where.SymbolProfile = {
-        symbol: {
-          in: filtersBySymbol.map(({ id }) => {
-            return id;
-          })
-        }
-      };
+    if (filterByDataSource && filterBySymbol) {
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              AND: [
+                { dataSource: <DataSource>filterByDataSource },
+                { symbol: filterBySymbol }
+              ]
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          AND: [
+            { dataSource: <DataSource>filterByDataSource },
+            { symbol: filterBySymbol }
+          ]
+        };
+      }
     }
 
     if (searchQuery) {
