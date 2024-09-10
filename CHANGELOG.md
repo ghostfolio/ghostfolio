@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the filters of the activities endpoint by `dataSource` and `symbol`
+
 ### Changed
 
 - Optimized the asynchronous operations using `Promise.all()` in the info service

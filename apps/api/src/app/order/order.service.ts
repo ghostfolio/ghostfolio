@@ -350,6 +350,14 @@ export class OrderService {
       return type;
     });
 
+    const filterByDataSource = filters?.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    })?.id;
+
+    const filterBySymbol = filters?.find(({ type }) => {
+      return type === 'SYMBOL';
+    })?.id;
+
     const searchQuery = filters?.find(({ type }) => {
       return type === 'SEARCH_QUERY';
     })?.id;
@@ -393,6 +401,29 @@ export class OrderService {
           }
         ]
       };
+    }
+
+    if (filterByDataSource && filterBySymbol) {
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              AND: [
+                { dataSource: <DataSource>filterByDataSource },
+                { symbol: filterBySymbol }
+              ]
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          AND: [
+            { dataSource: <DataSource>filterByDataSource },
+            { symbol: filterBySymbol }
+          ]
+        };
+      }
     }
 
     if (searchQuery) {

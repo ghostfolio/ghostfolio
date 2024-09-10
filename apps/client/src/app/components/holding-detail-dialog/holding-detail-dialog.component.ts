@@ -89,7 +89,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public activityForm: FormGroup;
   public accounts: Account[];
-  public activities: Activity[];
   public assetClass: string;
   public assetSubClass: string;
   public averagePrice: number;
@@ -175,6 +174,22 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
+      .fetchActivities({
+        filters: [
+          { id: this.data.dataSource, type: 'DATA_SOURCE' },
+          { id: this.data.symbol, type: 'SYMBOL' }
+        ],
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities }) => {
+        this.dataSource = new MatTableDataSource(activities);
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
       .fetchHoldingDetail({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
@@ -198,7 +213,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
           netPerformanceWithCurrencyEffect,
-          orders,
           quantity,
           SymbolProfile,
           tags,
@@ -206,12 +220,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           value
         }) => {
           this.accounts = accounts;
-          this.activities = orders;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
-          this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
 
           if (
