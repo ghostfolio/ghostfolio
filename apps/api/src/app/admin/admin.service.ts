@@ -108,34 +108,42 @@ export class AdminService {
   }
 
   public async get(): Promise<AdminData> {
-    return {
-      exchangeRates: this.exchangeRateDataService
-        .getCurrencies()
-        .filter((currency) => {
-          return currency !== DEFAULT_CURRENCY;
-        })
-        .map((currency) => {
-          const label1 = DEFAULT_CURRENCY;
-          const label2 = currency;
+    const exchangeRates = this.exchangeRateDataService
+      .getCurrencies()
+      .filter((currency) => {
+        return currency !== DEFAULT_CURRENCY;
+      })
+      .map((currency) => {
+        const label1 = DEFAULT_CURRENCY;
+        const label2 = currency;
 
-          return {
-            label1,
-            label2,
-            dataSource:
-              DataSource[
-                this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
-              ],
-            symbol: `${label1}${label2}`,
-            value: this.exchangeRateDataService.toCurrency(
-              1,
-              DEFAULT_CURRENCY,
-              currency
-            )
-          };
-        }),
-      settings: await this.propertyService.get(),
-      transactionCount: await this.prismaService.order.count(),
-      userCount: await this.prismaService.user.count(),
+        return {
+          label1,
+          label2,
+          dataSource:
+            DataSource[
+              this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
+            ],
+          symbol: `${label1}${label2}`,
+          value: this.exchangeRateDataService.toCurrency(
+            1,
+            DEFAULT_CURRENCY,
+            currency
+          )
+        };
+      });
+
+    const [settings, transactionCount, userCount] = await Promise.all([
+      this.propertyService.get(),
+      this.prismaService.order.count(),
+      this.prismaService.user.count()
+    ]);
+
+    return {
+      exchangeRates,
+      settings,
+      transactionCount,
+      userCount,
       version: environment.version
     };
   }
