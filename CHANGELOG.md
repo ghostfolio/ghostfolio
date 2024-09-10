@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extracted the users from the admin control panel endpoint to a dedicated endpoint
 - Improved the language localization for French (`fr`)
 - Improved the language localization for Italian (`it`)
+- Upgraded `bull` from version `4.10.4` to `4.16.2`
 
 ## 2.106.0 - 2024-09-07
 
