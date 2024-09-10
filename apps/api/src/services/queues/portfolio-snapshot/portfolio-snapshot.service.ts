@@ -24,4 +24,8 @@ export class PortfolioSnapshotService {
   }) {
     return this.portfolioSnapshotQueue.add(name, data, opts);
   }
+
+  public async getJob(jobId: string) {
+    return this.portfolioSnapshotQueue.getJob(jobId);
+  }
 }

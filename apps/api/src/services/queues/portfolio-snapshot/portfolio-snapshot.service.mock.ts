@@ -13,16 +13,22 @@ export const PortfolioSnapshotServiceMock = {
     name: string;
     opts?: Bull.JobOptions;
   }): Promise<Bull.Job<any>> {
-    // Mock the Job object with a finished method
     const mockJob: Partial<Bull.Job<any>> = {
-      // Mock the finished method to return a resolved promise
       finished: async () => {
         await setTimeout(100);
 
-        return Promise.resolve('Mocked job finished result');
+        return Promise.resolve();
       }
     };
 
+    this.jobsStore.set(opts?.jobId, mockJob);
+
     return Promise.resolve(mockJob as Bull.Job<any>);
-  }
+  },
+  getJob(jobId: string): Promise<Bull.Job<any>> {
+    const job = this.jobsStore.get(jobId);
+
+    return Promise.resolve(job as Bull.Job<any>);
+  },
+  jobsStore: new Map<string, Partial<Bull.Job<any>>>()
 };

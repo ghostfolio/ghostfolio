@@ -1072,7 +1072,7 @@ export abstract class PortfolioCalculator {
       }
     } else {
       // Wait for computation
-      const job = await this.portfolioSnapshotService.addJobToQueue({
+      await this.portfolioSnapshotService.addJobToQueue({
         data: {
           filters: this.filters,
           userCurrency: this.currency,
@@ -1086,7 +1086,11 @@ export abstract class PortfolioCalculator {
         }
       });
 
-      await job.finished();
+      const job = await this.portfolioSnapshotService.getJob(jobId);
+
+      if (job) {
+        await job.finished();
+      }
 
       await this.initialize();
     }
