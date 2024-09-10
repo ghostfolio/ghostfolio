@@ -17,6 +17,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  AdminUsers,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -239,9 +240,11 @@ export class AdminController {
         return { price };
       }
 
-      throw new Error('Could not parse the current market price');
+      throw new Error(
+        `Could not parse the current market price for ${symbol} (${dataSource})`
+      );
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'AdminController');
 
       throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
     }
@@ -344,5 +347,12 @@ export class AdminController {
     @Body() data: PropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
+  }
+
+  @Get('user')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUsers(): Promise<AdminUsers> {
+    return this.adminService.getUsers();
   }
 }

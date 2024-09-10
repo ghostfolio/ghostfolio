@@ -1,5 +1,8 @@
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
-import { DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
+import {
+  CACHE_TTL_NO_CACHE,
+  DEFAULT_ROOT_URL
+} from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -22,7 +25,7 @@ export class ConfigurationService {
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
       CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
-      CACHE_TTL: num({ default: 1 }),
+      CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({

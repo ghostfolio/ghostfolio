@@ -9,13 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the asynchronous operations using `Promise.all()` in the info service
+- Optimized the asynchronous operations using `Promise.all()` in the admin control panel endpoint
+- Extracted the users from the admin control panel endpoint to a dedicated endpoint
 - Improved the language localization for French (`fr`)
+- Improved the language localization for Italian (`it`)
 
-## 2.106.0-beta.5 - 2024-08-31
+## 2.106.0 - 2024-09-07
 
 ### Added
 
 - Set up a performance logging service
+- Added a loading indicator to the queue jobs table in the admin control panel
+- Added a loading indicator to the users table in the admin control panel
+- Added the attribute `mode` to the scraper configuration to get quotes instantly
 
 ### Changed
 
@@ -26,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the data format of the environment variable `CACHE_QUOTES_TTL` from seconds to milliseconds
 - Changed the data format of the environment variable `CACHE_TTL` from seconds to milliseconds
 - Removed the environment variable `MAX_ITEM_IN_CACHE`
+- Improved the error logs of the scraper configuration test in the asset profile details dialog of the admin control
 - Improved the language localization for Polish (`pl`)
 - Migrated from `cache-manager-redis-store` to `cache-manager-redis-yet`
 - Upgraded `cache-manager` from version `3.4.3` to `5.7.6`
@@ -34,6 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
+- Fixed an issue on the portfolio activities page by loading the data only once
+- Fixed an issue in the carousel component for the testimonial section on the landing page
+- Fixed the historical market data gathering in the _Yahoo Finance_ service by switching from `historical()` to `chart()`
+- Handled an exception in the historical market data component of the asset profile details dialog in the admin control panel
 
 ## 2.105.0 - 2024-08-21
 

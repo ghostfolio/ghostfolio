@@ -1,23 +1,17 @@
-import { FocusKeyManager } from '@angular/cdk/a11y';
-import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
-  ContentChildren,
+  contentChildren,
   ElementRef,
   HostBinding,
   Inject,
   Input,
   Optional,
-  QueryList,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
-
-import { CarouselItem } from './carousel-item.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,9 +22,7 @@ import { CarouselItem } from './carousel-item.directive';
   styleUrls: ['./carousel.component.scss'],
   templateUrl: './carousel.component.html'
 })
-export class GfCarouselComponent implements AfterContentInit {
-  @ContentChildren(CarouselItem) public items!: QueryList<CarouselItem>;
-
+export class GfCarouselComponent {
   @HostBinding('class.animations-disabled')
   public readonly animationsDisabled: boolean;
 
@@ -38,11 +30,11 @@ export class GfCarouselComponent implements AfterContentInit {
 
   @ViewChild('list') public list!: ElementRef<HTMLElement>;
 
+  public items = contentChildren('carouselItem', { read: ElementRef });
   public showPrevArrow = false;
   public showNextArrow = true;
 
   private index = 0;
-  private keyManager!: FocusKeyManager<CarouselItem>;
   private position = 0;
 
   public constructor(
@@ -51,41 +43,12 @@ export class GfCarouselComponent implements AfterContentInit {
     this.animationsDisabled = animationsModule === 'NoopAnimations';
   }
 
-  public ngAfterContentInit() {
-    this.keyManager = new FocusKeyManager<CarouselItem>(this.items);
-  }
-
   public next() {
-    for (let i = this.index; i < this.items.length; i++) {
+    for (let i = this.index; i < this.items().length; i++) {
       if (this.isOutOfView(i)) {
         this.index = i;
         this.scrollToActiveItem();
         break;
-      }
-    }
-  }
-
-  public onKeydown({ keyCode }: KeyboardEvent) {
-    const manager = this.keyManager;
-    const previousActiveIndex = manager.activeItemIndex;
-
-    if (keyCode === LEFT_ARROW) {
-      manager.setPreviousItemActive();
-    } else if (keyCode === RIGHT_ARROW) {
-      manager.setNextItemActive();
-    } else if (keyCode === TAB && !manager.activeItem) {
-      manager.setFirstItemActive();
-    }
-
-    if (
-      manager.activeItemIndex != null &&
-      manager.activeItemIndex !== previousActiveIndex
-    ) {
-      this.index = manager.activeItemIndex;
-      this.updateItemTabIndices();
-
-      if (this.isOutOfView(this.index)) {
-        this.scrollToActiveItem();
       }
     }
   }
@@ -101,8 +64,7 @@ export class GfCarouselComponent implements AfterContentInit {
   }
 
   private isOutOfView(index: number, side?: 'start' | 'end') {
-    const { offsetWidth, offsetLeft } =
-      this.items.toArray()[index].element.nativeElement;
+    const { offsetWidth, offsetLeft } = this.items()[index].nativeElement;
 
     if ((!side || side === 'start') && offsetLeft - this.position < 0) {
       return true;
@@ -120,33 +82,23 @@ export class GfCarouselComponent implements AfterContentInit {
       return;
     }
 
-    const itemsArray = this.items.toArray();
     let targetItemIndex = this.index;
 
     if (this.index > 0 && !this.isOutOfView(this.index - 1)) {
       targetItemIndex =
-        itemsArray.findIndex((_, i) => !this.isOutOfView(i)) + 1;
+        this.items().findIndex((_, i) => !this.isOutOfView(i)) + 1;
     }
 
-    this.position =
-      itemsArray[targetItemIndex].element.nativeElement.offsetLeft;
+    this.position = this.items()[targetItemIndex].nativeElement.offsetLeft;
     this.list.nativeElement.style.transform = `translateX(-${this.position}px)`;
     this.showPrevArrow = this.index > 0;
     this.showNextArrow = false;
 
-    for (let i = itemsArray.length - 1; i > -1; i--) {
+    for (let i = this.items().length - 1; i > -1; i--) {
       if (this.isOutOfView(i, 'end')) {
         this.showNextArrow = true;
         break;
       }
     }
-  }
-
-  private updateItemTabIndices() {
-    this.items.forEach((item: CarouselItem) => {
-      if (this.keyManager != null) {
-        item.tabindex = item === this.keyManager.activeItem ? '0' : '-1';
-      }
-    });
   }
 }

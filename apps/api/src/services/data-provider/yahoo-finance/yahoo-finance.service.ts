@@ -20,6 +20,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
 import yahooFinance from 'yahoo-finance2';
+import { ChartResultArray } from 'yahoo-finance2/dist/esm/src/modules/chart';
+import {
+  HistoricalDividendsResult,
+  HistoricalHistoryResult
+} from 'yahoo-finance2/dist/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 
 @Injectable()
@@ -60,18 +65,19 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     try {
-      const historicalResult = await yahooFinance.historical(
-        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-          symbol
-        ),
-        {
-          events: 'dividends',
-          interval: granularity === 'month' ? '1mo' : '1d',
-          period1: format(from, DATE_FORMAT),
-          period2: format(to, DATE_FORMAT)
-        }
+      const historicalResult = this.convertToDividendResult(
+        await yahooFinance.chart(
+          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+            symbol
+          ),
+          {
+            events: 'dividends',
+            interval: granularity === 'month' ? '1mo' : '1d',
+            period1: format(from, DATE_FORMAT),
+            period2: format(to, DATE_FORMAT)
+          }
+        )
       );
-
       const response: {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
@@ -108,15 +114,17 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     try {
-      const historicalResult = await yahooFinance.historical(
-        this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
-          symbol
-        ),
-        {
-          interval: '1d',
-          period1: format(from, DATE_FORMAT),
-          period2: format(to, DATE_FORMAT)
-        }
+      const historicalResult = this.convertToHistoricalResult(
+        await yahooFinance.chart(
+          this.yahooFinanceDataEnhancerService.convertToYahooFinanceSymbol(
+            symbol
+          ),
+          {
+            interval: '1d',
+            period1: format(from, DATE_FORMAT),
+            period2: format(to, DATE_FORMAT)
+          }
+        )
       );
 
       const response: {
@@ -300,6 +308,20 @@ export class YahooFinanceService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private convertToDividendResult(
+    result: ChartResultArray
+  ): HistoricalDividendsResult {
+    return result.events.dividends.map(({ amount: dividends, date }) => {
+      return { date, dividends };
+    });
+  }
+
+  private convertToHistoricalResult(
+    result: ChartResultArray
+  ): HistoricalHistoryResult {
+    return result.quotes;
   }
 
   private async getQuotesWithQuoteSummary(aYahooFinanceSymbols: string[]) {

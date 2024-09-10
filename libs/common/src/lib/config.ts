@@ -30,6 +30,9 @@ export const warnColorRgb = {
   b: 69
 };
 
+export const CACHE_TTL_NO_CACHE = 1;
+export const CACHE_TTL_INFINITE = 0;
+
 export const DATA_GATHERING_QUEUE = 'DATA_GATHERING_QUEUE';
 export const DATA_GATHERING_QUEUE_PRIORITY_HIGH = 1;
 export const DATA_GATHERING_QUEUE_PRIORITY_LOW = Number.MAX_SAFE_INTEGER;
