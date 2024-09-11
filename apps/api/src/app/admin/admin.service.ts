@@ -261,6 +261,26 @@ export class AdminService {
         this.prismaService.symbolProfile.count({ where })
       ]);
 
+      const lastMarketPrices = await this.prismaService.marketData.findMany({
+        select: {
+          symbol: true,
+          dataSource: true,
+          marketPrice: true
+        },
+        where: {
+          symbol: { in: assetProfiles.map(({ symbol }) => symbol) },
+          dataSource: { in: assetProfiles.map(({ dataSource }) => dataSource) }
+        },
+        orderBy: { date: 'desc' },
+        distinct: ['symbol', 'dataSource']
+      });
+
+      const lastMarketPriceMap = new Map<string, number>();
+
+      for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
+        lastMarketPriceMap.set(`${symbol}_${dataSource}`, marketPrice);
+      }
+
       let marketData: AdminMarketDataItem[] = await Promise.all(
         assetProfiles.map(
           async ({
@@ -289,6 +309,9 @@ export class AdminService {
                 );
               })?._count ?? 0;
             const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+            const lastMarketPrice = lastMarketPriceMap.get(
+              `${symbol}_${dataSource}`
+            );
 
             return {
               assetClass,
@@ -304,7 +327,9 @@ export class AdminService {
               sectorsCount,
               activitiesCount: _count.Order,
               date: Order?.[0]?.date,
-              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
+              isUsedByUsersWithSubscription:
+                await isUsedByUsersWithSubscription,
+              lastMarketPrice: lastMarketPrice
             };
           }
         )
@@ -516,43 +541,67 @@ export class AdminService {
       by: ['dataSource', 'symbol']
     });
 
-    const marketDataPromise: Promise<AdminMarketDataItem>[] =
-      this.exchangeRateDataService
-        .getCurrencyPairs()
-        .map(async ({ dataSource, symbol }) => {
-          let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
-          let currency: EnhancedSymbolProfile['currency'] = '-';
-          let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
+    const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
+    // Fetch the last market prices for all currency pairs in one query
+    const lastMarketPrices = await this.prismaService.marketData.findMany({
+      select: {
+        symbol: true,
+        dataSource: true,
+        marketPrice: true
+      },
+      where: {
+        symbol: { in: currencyPairs.map(({ symbol }) => symbol) },
+        dataSource: { in: currencyPairs.map(({ dataSource }) => dataSource) }
+      },
+      orderBy: { date: 'desc' },
+      distinct: ['symbol', 'dataSource']
+    });
 
-          if (isCurrency(getCurrencyFromSymbol(symbol))) {
-            currency = getCurrencyFromSymbol(symbol);
-            ({ activitiesCount, dateOfFirstActivity } =
-              await this.orderService.getStatisticsByCurrency(currency));
-          }
+    const lastMarketPriceMap = new Map<string, number>();
+    for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
+      lastMarketPriceMap.set(`${symbol}_${dataSource}`, marketPrice);
+    }
 
-          const marketDataItemCount =
-            marketDataItems.find((marketDataItem) => {
-              return (
-                marketDataItem.dataSource === dataSource &&
-                marketDataItem.symbol === symbol
-              );
-            })?._count ?? 0;
+    const marketDataPromise: Promise<AdminMarketDataItem>[] = currencyPairs.map(
+      async ({ dataSource, symbol }) => {
+        let activitiesCount: EnhancedSymbolProfile['activitiesCount'] = 0;
+        let currency: EnhancedSymbolProfile['currency'] = '-';
+        let dateOfFirstActivity: EnhancedSymbolProfile['dateOfFirstActivity'];
 
-          return {
-            activitiesCount,
-            currency,
-            dataSource,
-            marketDataItemCount,
-            symbol,
-            assetClass: AssetClass.LIQUIDITY,
-            assetSubClass: AssetSubClass.CASH,
-            countriesCount: 0,
-            date: dateOfFirstActivity,
-            id: undefined,
-            name: symbol,
-            sectorsCount: 0
-          };
-        });
+        if (isCurrency(getCurrencyFromSymbol(symbol))) {
+          currency = getCurrencyFromSymbol(symbol);
+          ({ activitiesCount, dateOfFirstActivity } =
+            await this.orderService.getStatisticsByCurrency(currency));
+        }
+
+        const marketDataItemCount =
+          marketDataItems.find((marketDataItem) => {
+            return (
+              marketDataItem.dataSource === dataSource &&
+              marketDataItem.symbol === symbol
+            );
+          })?._count ?? 0;
+        const lastMarketPrice = lastMarketPriceMap.get(
+          `${symbol}_${dataSource}`
+        );
+
+        return {
+          activitiesCount,
+          currency,
+          dataSource,
+          marketDataItemCount,
+          symbol,
+          assetClass: AssetClass.LIQUIDITY,
+          assetSubClass: AssetSubClass.CASH,
+          countriesCount: 0,
+          date: dateOfFirstActivity,
+          id: undefined,
+          name: symbol,
+          sectorsCount: 0,
+          lastMarketPrice: lastMarketPrice
+        };
+      }
+    );
 
     const marketData = await Promise.all(marketDataPromise);
     return { marketData, count: marketData.length };
