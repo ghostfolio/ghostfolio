@@ -164,6 +164,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Portfolio Tracker Designed by Professional Investors'
   },
   {
+    founded: 2010,
+    hasFreePlan: false,
+    key: 'etops',
+    name: 'etops',
+    origin: 'Switzerland',
+    slogan: 'Your financial superpower'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
