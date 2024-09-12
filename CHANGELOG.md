@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an issue in the activities filters that occured during destructuring
+- Fixed an issue in the activities filters that occurred during destructuring
 
 ## 2.107.0 - 2024-09-10
 
