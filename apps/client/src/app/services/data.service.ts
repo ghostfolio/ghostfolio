@@ -72,11 +72,11 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
-        DATA_SOURCE: [filterByDataSource],
+        DATA_SOURCE: [filterByDataSource] = [],
         HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
-        SYMBOL: [filterBySymbol],
+        SYMBOL: [filterBySymbol] = [],
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
