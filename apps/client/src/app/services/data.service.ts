@@ -36,7 +36,7 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioPublicDetails,
+  PortfolioPublicResponse,
   PortfolioReport,
   User
 } from '@ghostfolio/common/interfaces';
@@ -611,7 +611,7 @@ export class DataService {
 
   public fetchPortfolioPublic(aId: string) {
     return this.http
-      .get<PortfolioPublicDetails>(`/api/v1/portfolio/public/${aId}`)
+      .get<PortfolioPublicResponse>(`/api/v1/portfolio/public/${aId}`)
       .pipe(
         map((response) => {
           if (response.holdings) {

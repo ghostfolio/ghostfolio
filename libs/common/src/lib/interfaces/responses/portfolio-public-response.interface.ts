@@ -1,6 +1,6 @@
-import { PortfolioPosition } from '@ghostfolio/common/interfaces';
+import { PortfolioPosition } from '../portfolio-position.interface';
 
-export interface PortfolioPublicDetails {
+export interface PortfolioPublicResponse extends PortfolioPublicResponseV1 {
   alias?: string;
   hasDetails: boolean;
   holdings: {
@@ -20,5 +20,19 @@ export interface PortfolioPublicDetails {
       | 'valueInBaseCurrency'
       | 'valueInPercentage'
     >;
+  };
+}
+
+export interface PortfolioPublicResponseV1 {
+  performance: {
+    '1d': {
+      relativeChange: number;
+    };
+    max: {
+      relativeChange: number;
+    };
+    ytd: {
+      relativeChange: number;
+    };
   };
 }

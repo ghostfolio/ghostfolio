@@ -26,7 +26,7 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioPublicDetails,
+  PortfolioPublicResponse,
   PortfolioReport
 } from '@ghostfolio/common/interfaces';
 import {
@@ -501,7 +501,7 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getPublic(
     @Param('accessId') accessId
-  ): Promise<PortfolioPublicDetails> {
+  ): Promise<PortfolioPublicResponse> {
     const access = await this.accessService.access({ id: accessId });
 
     if (!access) {
@@ -521,31 +521,59 @@ export class PortfolioController {
       hasDetails = user.subscription.type === 'Premium';
     }
 
-    const { holdings } = await this.portfolioService.getDetails({
-      filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
-      impersonationId: access.userId,
-      userId: user.id,
-      withMarkets: true
-    });
+    const [
+      { holdings },
+      { performance: performance1d },
+      { performance: performanceMax },
+      { performance: performanceYtd }
+    ] = await Promise.all([
+      this.portfolioService.getDetails({
+        filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
+        impersonationId: access.userId,
+        userId: user.id,
+        withMarkets: true
+      }),
+      ...['1d', 'max', 'ytd'].map((dateRange) => {
+        return this.portfolioService.getPerformance({
+          dateRange,
+          impersonationId: undefined,
+          userId: user.id
+        });
+      })
+    ]);
 
-    const portfolioPublicDetails: PortfolioPublicDetails = {
+    const portfolioPublicResponse: PortfolioPublicResponse = {
       hasDetails,
       alias: access.alias,
-      holdings: {}
+      holdings: {},
+      performance: {
+        '1d': {
+          relativeChange:
+            performance1d.netPerformancePercentageWithCurrencyEffect
+        },
+        max: {
+          relativeChange:
+            performanceMax.netPerformancePercentageWithCurrencyEffect
+        },
+        ytd: {
+          relativeChange:
+            performanceYtd.netPerformancePercentageWithCurrencyEffect
+        }
+      }
     };
 
     const totalValue = Object.values(holdings)
-      .map((portfolioPosition) => {
+      .map(({ currency, marketPrice, quantity }) => {
         return this.exchangeRateDataService.toCurrency(
-          portfolioPosition.quantity * portfolioPosition.marketPrice,
-          portfolioPosition.currency,
+          quantity * marketPrice,
+          currency,
           this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
         );
       })
       .reduce((a, b) => a + b, 0);
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      portfolioPublicDetails.holdings[symbol] = {
+      portfolioPublicResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
         countries: hasDetails ? portfolioPosition.countries : [],
@@ -563,7 +591,7 @@ export class PortfolioController {
       };
     }
 
-    return portfolioPublicDetails;
+    return portfolioPublicResponse;
   }
 
   @Get('position/:dataSource/:symbol')

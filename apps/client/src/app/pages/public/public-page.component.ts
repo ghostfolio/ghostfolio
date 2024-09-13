@@ -3,7 +3,7 @@ import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
-  PortfolioPublicDetails
+  PortfolioPublicResponse
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
 
@@ -29,11 +29,11 @@ export class PublicPageComponent implements OnInit {
     [code: string]: { name: string; value: number };
   };
   public deviceType: string;
-  public holdings: PortfolioPublicDetails['holdings'][string][];
+  public holdings: PortfolioPublicResponse['holdings'][string][];
   public markets: {
     [key in Market]: { name: string; value: number };
   };
-  public portfolioPublicDetails: PortfolioPublicDetails;
+  public portfolioPublicDetails: PortfolioPublicResponse;
   public positions: {
     [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;

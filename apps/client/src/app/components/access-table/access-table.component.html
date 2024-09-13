@@ -41,6 +41,15 @@
               >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
             >
           </div>
+          @if (user?.settings?.isExperimentalFeatures) {
+            <div>
+              <code
+                >GET {{ baseUrl }}/api/v1/portfolio/public/{{
+                  element.id
+                }}</code
+              >
+            </div>
+          }
         }
       </td>
     </ng-container>
