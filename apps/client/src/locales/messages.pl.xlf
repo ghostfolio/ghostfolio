@@ -2771,7 +2771,7 @@
       </trans-unit>
       <trans-unit id="a6f322a22d0ae0b95dd9c70d43ba2c92de7ed49b" datatype="html">
         <source>Portfolio Allocations</source>
-        <target state="new">Portfolio Allocations</target>
+        <target state="translated">Alokacja portfela</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">26</context>
@@ -2791,7 +2791,7 @@
       </trans-unit>
       <trans-unit id="7890f6d6655c7c77a038355622d8042f2bc1e5f2" datatype="html">
         <source>Performance Benchmarks</source>
-        <target state="new">Performance Benchmarks</target>
+        <target state="translated">Wskaźniki wydajności</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">30</context>
@@ -2807,7 +2807,7 @@
       </trans-unit>
       <trans-unit id="59ff3fc0819994af3ded42a88914305f1f7ad5ef" datatype="html">
         <source>FIRE Calculator</source>
-        <target state="translated">FIRE Kalkulator</target>
+        <target state="translated">kalkulator FIRE</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">34</context>
@@ -2823,7 +2823,7 @@
       </trans-unit>
       <trans-unit id="67f30752e71d53c03798fbd0ea1dcbc2567795c7" datatype="html">
         <source>Professional Data Provider</source>
-        <target state="new">Professional Data Provider</target>
+        <target state="translated">Profesjonalne źródło danych</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">38</context>
@@ -2867,7 +2867,7 @@
       </trans-unit>
       <trans-unit id="6dcab4069ec74eb21b38bd9f9678dc957c99618c" datatype="html">
         <source>Upgrade Plan</source>
-        <target state="new">Upgrade Plan</target>
+        <target state="translated">Ulepsz Plan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">178</context>
@@ -2887,7 +2887,7 @@
       </trans-unit>
       <trans-unit id="6048892649018070225" datatype="html">
         <source>Today</source>
-        <target state="new">Today</target>
+        <target state="translated">Dziś</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/toggle/toggle.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -2947,7 +2947,7 @@
       </trans-unit>
       <trans-unit id="5e41f1b4c46ad9e0a9bc83fa36445483aa5cc324" datatype="html">
         <source>Grant access</source>
-        <target state="new">Grant access</target>
+        <target state="translated">Przyznaj dostęp</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">7</context>
@@ -2955,7 +2955,7 @@
       </trans-unit>
       <trans-unit id="3c4c080864b313cfdff5fdea6aae5da276246d99" datatype="html">
         <source>Public</source>
-        <target state="new">Public</target>
+        <target state="translated">Publiczny</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">25</context>
@@ -2963,7 +2963,7 @@
       </trans-unit>
       <trans-unit id="9021c579c084e68d9db06a569d76f024111c6c54" datatype="html">
         <source>Granted Access</source>
-        <target state="new">Granted Access</target>
+        <target state="translated">Przyznano dostęp</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
           <context context-type="linenumber">5</context>
@@ -2971,7 +2971,7 @@
       </trans-unit>
       <trans-unit id="5196970976032945030" datatype="html">
         <source>Please enter your coupon code:</source>
-        <target state="new">Please enter your coupon code:</target>
+        <target state="translated">Wpisz kod kuponu:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">118</context>
@@ -2987,7 +2987,7 @@
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
-        <target state="new">Coupon code has been redeemed</target>
+        <target state="translated">Kupon został zrealizowany</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">140</context>
@@ -2995,7 +2995,7 @@
       </trans-unit>
       <trans-unit id="7967484035994732534" datatype="html">
         <source>Reload</source>
-        <target state="new">Reload</target>
+        <target state="translated">Odśwież</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -3003,7 +3003,7 @@
       </trans-unit>
       <trans-unit id="218afa01afa0cfc71b1a6507a3387763ecaa9332" datatype="html">
         <source>per year</source>
-        <target state="new">per year</target>
+        <target state="translated">rocznie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
           <context context-type="linenumber">33</context>
@@ -3015,7 +3015,7 @@
       </trans-unit>
       <trans-unit id="de39d1e0259f376956df2f14bb285f98ad8a1bcc" datatype="html">
         <source>Try Premium</source>
-        <target state="new">Try Premium</target>
+        <target state="translated">Wypróbuj Premium</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
           <context context-type="linenumber">40</context>
@@ -3023,7 +3023,7 @@
       </trans-unit>
       <trans-unit id="e34001a9b79e0e3de1491662187e1d6b29c4c04e" datatype="html">
         <source>Redeem Coupon</source>
-        <target state="new">Redeem Coupon</target>
+        <target state="translated">Wykorzystaj kupon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
           <context context-type="linenumber">54</context>
@@ -3039,7 +3039,7 @@
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
         <source>Do you really want to remove this sign in method?</source>
-        <target state="new">Do you really want to remove this sign in method?</target>
+        <target state="translated">Czy na pewno chcesz usunąć tą metode logowania?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">252</context>
@@ -3063,7 +3063,7 @@
       </trans-unit>
       <trans-unit id="9f81affcfbf06f94f1dd5219e3388c1b7e196a0b" datatype="html">
         <source> Protection for sensitive information like absolute performances and quantity values </source>
-        <target state="new"> Protection for sensitive information like absolute performances and quantity values </target>
+        <target state="translated"> Ochrona dla wrażliwych informacji takich jak wyniki i wartości ilościowe </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">8</context>
@@ -3095,7 +3095,7 @@
       </trans-unit>
       <trans-unit id="4402006eb2c97591dd8c87a5bd8f721fe9e4dc00" datatype="html">
         <source>Date and number format</source>
-        <target state="new">Date and number format</target>
+        <target state="translated">Format daty i liczb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">125</context>
@@ -3243,7 +3243,7 @@
       </trans-unit>
       <trans-unit id="1579692722565712588" datatype="html">
         <source>Okay</source>
-        <target state="new">Okay</target>
+        <target state="translated">Okej</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">81</context>
@@ -3271,7 +3271,7 @@
       </trans-unit>
       <trans-unit id="7136888919962092730" datatype="html">
         <source>Changelog</source>
-        <target state="new">Changelog</target>
+        <target state="translated">Changelog</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">49</context>
@@ -3283,7 +3283,7 @@
       </trans-unit>
       <trans-unit id="6877113876835666202" datatype="html">
         <source>License</source>
-        <target state="new">License</target>
+        <target state="translated">Licencja</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -3307,7 +3307,7 @@
       </trans-unit>
       <trans-unit id="bc5d27ff889e9ac6d1f33ba419ec2d5fe923cfe3" datatype="html">
         <source>Our</source>
-        <target state="new">Our</target>
+        <target state="translated">Nasi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">6</context>
@@ -3315,7 +3315,7 @@
       </trans-unit>
       <trans-unit id="84e1290e06dcaba8e890116cd795d79ef89ccc90" datatype="html">
         <source>Discover other exciting Open Source Software projects</source>
-        <target state="new">Discover other exciting Open Source Software projects</target>
+        <target state="translated">Odkryj inne fascynujące projekty Open Source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">9</context>
@@ -3323,7 +3323,7 @@
       </trans-unit>
       <trans-unit id="6bf6d7aaba2bcbbd200e6869bbfdafc5991d5df8" datatype="html">
         <source>Visit</source>
-        <target state="new">Visit</target>
+        <target state="translated">Odwiedz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">28</context>
