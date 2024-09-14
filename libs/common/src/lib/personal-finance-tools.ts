@@ -687,6 +687,14 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2018,
+    hasFreePlan: true,
+    key: 'wealthposition',
+    name: 'WealthPosition',
+    pricingPerYear: '$60',
+    slogan: 'Personal Finance & Budgeting App'
+  },
+  {
+    founded: 2018,
     hasSelfHostingAbility: false,
     key: 'wealthy-tracker',
     languages: ['English'],
