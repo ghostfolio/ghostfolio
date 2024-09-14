@@ -73,7 +73,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq, uniqBy } from 'lodash';
+import { isEmpty, last, uniq } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -625,7 +625,6 @@ export class PortfolioService {
 
     if (activities.length === 0) {
       return {
-        accounts: [],
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
@@ -697,15 +696,6 @@ export class PortfolioService {
           SymbolProfile.dataSource === dataSource &&
           SymbolProfile.symbol === symbol
         );
-      });
-
-      const accounts: PortfolioHoldingDetail['accounts'] = uniqBy(
-        activitiesOfPosition.filter(({ Account }) => {
-          return Account;
-        }),
-        'Account.id'
-      ).map(({ Account }) => {
-        return Account;
       });
 
       const dividendYieldPercent = getAnnualizedPerformancePercent({
@@ -788,7 +778,6 @@ export class PortfolioService {
       }
 
       return {
-        accounts,
         firstBuyDate,
         marketPrice,
         maxPrice,
@@ -883,7 +872,6 @@ export class PortfolioService {
         maxPrice,
         minPrice,
         SymbolProfile,
-        accounts: [],
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
