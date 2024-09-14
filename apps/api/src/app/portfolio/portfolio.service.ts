@@ -115,33 +115,33 @@ export class PortfolioService {
   }): Promise<AccountWithValue[]> {
     const where: Prisma.AccountWhereInput = { userId };
 
-    const accountFilter = filters?.find(({ type }) => {
+    const filterByAccount = filters?.find(({ type }) => {
       return type === 'ACCOUNT';
-    });
+    })?.id;
 
-    const dataSourceFilter = filters?.find(({ type }) => {
+    const filterByDataSource = filters?.find(({ type }) => {
       return type === 'DATA_SOURCE';
-    });
+    })?.id;
 
-    const symbolFilter = filters?.find(({ type }) => {
+    const filterBySymbol = filters?.find(({ type }) => {
       return type === 'SYMBOL';
-    });
+    })?.id;
 
-    if (dataSourceFilter && symbolFilter) {
+    if (filterByAccount) {
+      where.id = filterByAccount;
+    }
+
+    if (filterByDataSource && filterBySymbol) {
       where.Order = {
         some: {
           SymbolProfile: {
             AND: [
-              { dataSource: <DataSource>dataSourceFilter.id },
-              { symbol: symbolFilter.id }
+              { dataSource: <DataSource>filterByDataSource },
+              { symbol: filterBySymbol }
             ]
           }
         }
       };
-    }
-
-    if (accountFilter) {
-      where.id = accountFilter.id;
     }
 
     const [accounts, details] = await Promise.all([
