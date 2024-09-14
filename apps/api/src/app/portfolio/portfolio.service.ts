@@ -119,6 +119,27 @@ export class PortfolioService {
       return type === 'ACCOUNT';
     });
 
+    const dataSourceFilter = filters?.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    });
+
+    const symbolFilter = filters?.find(({ type }) => {
+      return type === 'SYMBOL';
+    });
+
+    if (dataSourceFilter && symbolFilter) {
+      where.Order = {
+        some: {
+          SymbolProfile: {
+            AND: [
+              { dataSource: <DataSource>dataSourceFilter.id },
+              { symbol: symbolFilter.id }
+            ]
+          }
+        }
+      };
+    }
+
     if (accountFilter) {
       where.id = accountFilter.id;
     }

@@ -3,6 +3,7 @@ import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.servic
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
@@ -26,6 +27,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -44,6 +46,7 @@ export class AccountController {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly apiService: ApiService,
     private readonly impersonationService: ImpersonationService,
     private readonly portfolioService: PortfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
@@ -85,12 +88,20 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAllAccounts(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string
   ): Promise<Accounts> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByDataSource,
+      filterBySymbol
+    });
+
     return this.portfolioService.getAccountsWithAggregations({
+      filters,
       userId: impersonationUserId || this.request.user.id,
       withExcludedAccounts: true
     });
