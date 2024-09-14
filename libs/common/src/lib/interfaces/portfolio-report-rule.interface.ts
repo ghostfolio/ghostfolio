@@ -3,5 +3,9 @@ export interface PortfolioReportRule {
   isActive: boolean;
   key: string;
   name: string;
+  settings?: {
+    thresholdMax?: number;
+    thresholdMin?: number;
+  };
   value?: boolean;
 }
