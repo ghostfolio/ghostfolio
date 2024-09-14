@@ -173,8 +173,10 @@ export class DataService {
     );
   }
 
-  public fetchAccounts() {
-    return this.http.get<Accounts>('/api/v1/account');
+  public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<Accounts>('/api/v1/account', { params });
   }
 
   public fetchActivities({
