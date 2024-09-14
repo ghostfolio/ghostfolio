@@ -1,6 +1,6 @@
 import { PortfolioPosition } from '../portfolio-position.interface';
 
-export interface PortfolioPublicResponse extends PortfolioPublicResponseV1 {
+export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
   hasDetails: boolean;
   holdings: {
@@ -23,7 +23,7 @@ export interface PortfolioPublicResponse extends PortfolioPublicResponseV1 {
   };
 }
 
-export interface PortfolioPublicResponseV1 {
+export interface PublicPortfolioResponseV1 {
   performance: {
     '1d': {
       relativeChange: number;

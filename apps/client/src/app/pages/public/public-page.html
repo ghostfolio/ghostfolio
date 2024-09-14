@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col">
       <h1 class="h4 mb-3 text-center" i18n>
-        Hello, {{ portfolioPublicDetails?.alias ?? 'someone' }} has shared a
+        Hello, {{ publicPortfolioDetails?.alias ?? 'someone' }} has shared a
         <strong>Portfolio</strong> with you!
       </h1>
     </div>
@@ -24,7 +24,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -43,7 +43,7 @@
         </mat-card>
       </div>
     }
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -60,7 +60,7 @@
         </mat-card>
       </div>
     }
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -79,7 +79,7 @@
       </div>
     }
   </div>
-  @if (portfolioPublicDetails?.hasDetails) {
+  @if (publicPortfolioDetails?.hasDetails) {
     <div class="row world-map-chart">
       <div class="col-lg">
         <mat-card appearance="outlined" class="mb-3">

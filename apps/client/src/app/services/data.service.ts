@@ -36,8 +36,8 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioPublicResponse,
   PortfolioReport,
+  PublicPortfolioResponse,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -609,9 +609,13 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioPublic(aId: string) {
+  public fetchPortfolioReport() {
+    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
+  }
+
+  public fetchPublicPortfolio(aAccessId: string) {
     return this.http
-      .get<PortfolioPublicResponse>(`/api/v1/portfolio/public/${aId}`)
+      .get<PublicPortfolioResponse>(`/api/v1/public/${aAccessId}/portfolio`)
       .pipe(
         map((response) => {
           if (response.holdings) {
@@ -627,10 +631,6 @@ export class DataService {
           return response;
         })
       );
-  }
-
-  public fetchPortfolioReport() {
-    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
   public loginAnonymous(accessToken: string) {

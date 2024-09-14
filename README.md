@@ -228,7 +228,7 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 
 #### Request
 
-`GET http://localhost:3333/api/v1/portfolio/public/<INSERT_ACCESS_ID>`
+`GET http://localhost:3333/api/v1/public/<INSERT_ACCESS_ID>/portfolio`
 
 #### Response
 
