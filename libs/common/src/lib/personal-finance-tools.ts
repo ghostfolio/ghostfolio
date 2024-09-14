@@ -45,6 +45,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Analyze and track your portfolio.'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'banktivity',
+    name: 'Banktivity',
+    origin: 'United States',
+    pricingPerYear: '$59.99',
+    slogan: 'Proactive money management app for macOS & iOS'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
