@@ -373,6 +373,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The smartest way to track your crypto'
   },
   {
+    founded: 1991,
+    hasSelfHostingAbility: true,
+    key: 'microsoft-money',
+    name: 'Microsoft Money',
+    note: 'Microsoft Money was discontinued in 2010',
+    origin: 'United States'
+  },
+  {
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
