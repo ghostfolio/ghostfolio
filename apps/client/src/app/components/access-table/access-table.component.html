@@ -58,6 +58,11 @@
           <ion-icon name="ellipsis-horizontal" />
         </button>
         <mat-menu #transactionMenu="matMenu" xPosition="before">
+          @if (element.type === 'PUBLIC') {
+            <button mat-menu-item (click)="copyToClipBoard(element.id)">
+              <ng-container i18n>Copy to clipboard</ng-container>
+            </button>
+          }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
             <ng-container i18n>Revoke</ng-container>
           </button>
