@@ -62,6 +62,11 @@
             <ion-icon name="ellipsis-horizontal" />
           </button>
           <mat-menu #rulesMenu="matMenu" xPosition="before">
+            @if (rule?.isActive && !isEmpty(rule.settings) && false) {
+              <button mat-menu-item (click)="onCustomizeRule(rule)">
+                <ng-container i18n>Customize</ng-container>...
+              </button>
+            }
             <button mat-menu-item (click)="onUpdateRule(rule)">
               @if (rule?.isActive) {
                 <ng-container i18n>Deactivate</ng-container>
