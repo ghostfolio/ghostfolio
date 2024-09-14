@@ -374,6 +374,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The modern way to manage your money'
   },
   {
+    founded: 1999,
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'moneydance',
+    name: 'Moneydance',
+    origin: 'Scotland',
+    pricingPerYear: '$100',
+    slogan: 'Personal Finance Manager for Mac, Windows, and Linux'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: false,
     key: 'monse',
