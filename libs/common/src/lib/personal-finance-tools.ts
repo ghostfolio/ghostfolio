@@ -350,6 +350,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Track your investments'
   },
   {
+    founded: 2010,
+    key: 'masttro',
+    name: 'Masttro',
+    origin: 'United States',
+    slogan: 'Your platform for wealth in full view'
+  },
+  {
     founded: 2021,
     hasSelfHostingAbility: false,
     key: 'maybe-finance',
