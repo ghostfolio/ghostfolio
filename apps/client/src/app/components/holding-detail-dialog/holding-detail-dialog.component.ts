@@ -9,6 +9,7 @@ import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   EnhancedSymbolProfile,
+  Filter,
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
@@ -152,6 +153,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       tags: <string[]>[]
     });
 
+    const filters: Filter[] = [
+      { id: this.data.dataSource, type: 'DATA_SOURCE' },
+      { id: this.data.symbol, type: 'SYMBOL' }
+    ];
+
     this.tagsAvailable = tags.map(({ id, name }) => {
       return {
         id,
@@ -174,11 +180,19 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
+      .fetchAccounts({
+        filters
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ accounts }) => {
+        this.accounts = accounts;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
       .fetchActivities({
-        filters: [
-          { id: this.data.dataSource, type: 'DATA_SOURCE' },
-          { id: this.data.symbol, type: 'SYMBOL' }
-        ],
+        filters,
         sortColumn: this.sortColumn,
         sortDirection: this.sortDirection
       })
@@ -197,7 +211,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
-          accounts,
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
@@ -219,7 +232,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           transactionCount,
           value
         }) => {
-          this.accounts = accounts;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
