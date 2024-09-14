@@ -23,7 +23,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   };
 }
 
-export interface PublicPortfolioResponseV1 {
+interface PublicPortfolioResponseV1 {
   performance: {
     '1d': {
       relativeChange: number;
