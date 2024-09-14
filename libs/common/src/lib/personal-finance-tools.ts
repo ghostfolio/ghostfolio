@@ -63,6 +63,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker for Smart Investors'
   },
   {
+    founded: 2007,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'buxfer',
+    name: 'Buxfer',
+    origin: 'United States',
+    pricingPerYear: '$48',
+    regions: ['Global'],
+    slogan: 'Take control of your financial future'
+  },
+  {
     founded: 2013,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
