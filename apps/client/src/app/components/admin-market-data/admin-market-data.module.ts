@@ -1,6 +1,7 @@
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { GfActivitiesFilterComponent } from '@ghostfolio/ui/activities-filter';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -27,6 +28,7 @@ import { GfCreateAssetProfileDialogModule } from './create-asset-profile-dialog/
     GfCreateAssetProfileDialogModule,
     GfPremiumIndicatorComponent,
     GfSymbolModule,
+    GfValueComponent,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,
