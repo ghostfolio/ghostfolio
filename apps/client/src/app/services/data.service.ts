@@ -72,11 +72,11 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
-        DATA_SOURCE: [filterByDataSource],
+        DATA_SOURCE: [filterByDataSource] = [],
         HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
-        SYMBOL: [filterBySymbol],
+        SYMBOL: [filterBySymbol] = [],
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
@@ -173,8 +173,10 @@ export class DataService {
     );
   }
 
-  public fetchAccounts() {
-    return this.http.get<Accounts>('/api/v1/account');
+  public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<Accounts>('/api/v1/account', { params });
   }
 
   public fetchActivities({
