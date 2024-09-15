@@ -15,7 +15,11 @@ import {
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
-import { isCurrency, getCurrencyFromSymbol, getAssetProfileIdentifier } from '@ghostfolio/common/helper';
+import {
+  isCurrency,
+  getAssetProfileIdentifier,
+  getCurrencyFromSymbol
+} from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
@@ -278,7 +282,10 @@ export class AdminService {
       const lastMarketPriceMap = new Map<string, number>();
 
       for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
-        lastMarketPriceMap.set(getAssetProfileIdentifier({dataSource, symbol}), marketPrice);
+        lastMarketPriceMap.set(
+          getAssetProfileIdentifier({ dataSource, symbol }),
+          marketPrice
+        );
       }
 
       let marketData: AdminMarketDataItem[] = await Promise.all(
@@ -310,7 +317,7 @@ export class AdminService {
               })?._count ?? 0;
             const sectorsCount = sectors ? Object.keys(sectors).length : 0;
             const lastMarketPrice = lastMarketPriceMap.get(
-              getAssetProfileIdentifier({dataSource, symbol})
+              getAssetProfileIdentifier({ dataSource, symbol })
             );
 
             return {
@@ -328,8 +335,7 @@ export class AdminService {
               sectorsCount,
               activitiesCount: _count.Order,
               date: Order?.[0]?.date,
-              isUsedByUsersWithSubscription:
-                await isUsedByUsersWithSubscription
+              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
             };
           }
         )
@@ -560,7 +566,10 @@ export class AdminService {
 
     const lastMarketPriceMap = new Map<string, number>();
     for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
-      lastMarketPriceMap.set(getAssetProfileIdentifier({dataSource, symbol}), marketPrice);
+      lastMarketPriceMap.set(
+        getAssetProfileIdentifier({ dataSource, symbol }),
+        marketPrice
+      );
     }
 
     const marketDataPromise: Promise<AdminMarketDataItem>[] = currencyPairs.map(
@@ -583,7 +592,7 @@ export class AdminService {
             );
           })?._count ?? 0;
         const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({dataSource, symbol})
+          getAssetProfileIdentifier({ dataSource, symbol })
         );
 
         return {
