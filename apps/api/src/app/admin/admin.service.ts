@@ -16,9 +16,9 @@ import {
   PROPERTY_IS_USER_SIGNUP_ENABLED
 } from '@ghostfolio/common/config';
 import {
-  isCurrency,
   getAssetProfileIdentifier,
-  getCurrencyFromSymbol
+  getCurrencyFromSymbol,
+  isCurrency
 } from '@ghostfolio/common/helper';
 import {
   AdminData,
@@ -266,22 +266,30 @@ export class AdminService {
       ]);
 
       const lastMarketPrices = await this.prismaService.marketData.findMany({
+        distinct: ['dataSource', 'symbol'],
+        orderBy: { date: 'desc' },
         select: {
-          symbol: true,
           dataSource: true,
-          marketPrice: true
+          marketPrice: true,
+          symbol: true
         },
         where: {
-          symbol: { in: assetProfiles.map(({ symbol }) => symbol) },
-          dataSource: { in: assetProfiles.map(({ dataSource }) => dataSource) }
-        },
-        orderBy: { date: 'desc' },
-        distinct: ['symbol', 'dataSource']
+          dataSource: {
+            in: assetProfiles.map(({ dataSource }) => {
+              return dataSource;
+            })
+          },
+          symbol: {
+            in: assetProfiles.map(({ symbol }) => {
+              return symbol;
+            })
+          }
+        }
       });
 
       const lastMarketPriceMap = new Map<string, number>();
 
-      for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
+      for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
         lastMarketPriceMap.set(
           getAssetProfileIdentifier({ dataSource, symbol }),
           marketPrice
@@ -308,6 +316,9 @@ export class AdminService {
             const countriesCount = countries
               ? Object.keys(countries).length
               : 0;
+            const lastMarketPrice = lastMarketPriceMap.get(
+              getAssetProfileIdentifier({ dataSource, symbol })
+            );
             const marketDataItemCount =
               marketDataItems.find((marketDataItem) => {
                 return (
@@ -316,9 +327,6 @@ export class AdminService {
                 );
               })?._count ?? 0;
             const sectorsCount = sectors ? Object.keys(sectors).length : 0;
-            const lastMarketPrice = lastMarketPriceMap.get(
-              getAssetProfileIdentifier({ dataSource, symbol })
-            );
 
             return {
               assetClass,
@@ -544,28 +552,36 @@ export class AdminService {
   private async getMarketDataForCurrencies(): Promise<AdminMarketData> {
     const currencyPairs = this.exchangeRateDataService.getCurrencyPairs();
 
-    const [marketDataItems, lastMarketPrices] = await Promise.all([
+    const [lastMarketPrices, marketDataItems] = await Promise.all([
+      this.prismaService.marketData.findMany({
+        distinct: ['dataSource', 'symbol'],
+        orderBy: { date: 'desc' },
+        select: {
+          dataSource: true,
+          marketPrice: true,
+          symbol: true
+        },
+        where: {
+          dataSource: {
+            in: currencyPairs.map(({ dataSource }) => {
+              return dataSource;
+            })
+          },
+          symbol: {
+            in: currencyPairs.map(({ symbol }) => {
+              return symbol;
+            })
+          }
+        }
+      }),
       this.prismaService.marketData.groupBy({
         _count: true,
         by: ['dataSource', 'symbol']
-      }),
-      this.prismaService.marketData.findMany({
-        select: {
-          symbol: true,
-          dataSource: true,
-          marketPrice: true
-        },
-        where: {
-          symbol: { in: currencyPairs.map(({ symbol }) => symbol) },
-          dataSource: { in: currencyPairs.map(({ dataSource }) => dataSource) }
-        },
-        orderBy: { date: 'desc' },
-        distinct: ['symbol', 'dataSource']
       })
     ]);
 
     const lastMarketPriceMap = new Map<string, number>();
-    for (const { symbol, dataSource, marketPrice } of lastMarketPrices) {
+    for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
       lastMarketPriceMap.set(
         getAssetProfileIdentifier({ dataSource, symbol }),
         marketPrice
@@ -584,6 +600,10 @@ export class AdminService {
             await this.orderService.getStatisticsByCurrency(currency));
         }
 
+        const lastMarketPrice = lastMarketPriceMap.get(
+          getAssetProfileIdentifier({ dataSource, symbol })
+        );
+
         const marketDataItemCount =
           marketDataItems.find((marketDataItem) => {
             return (
@@ -591,14 +611,12 @@ export class AdminService {
               marketDataItem.symbol === symbol
             );
           })?._count ?? 0;
-        const lastMarketPrice = lastMarketPriceMap.get(
-          getAssetProfileIdentifier({ dataSource, symbol })
-        );
 
         return {
           activitiesCount,
           currency,
           dataSource,
+          lastMarketPrice,
           marketDataItemCount,
           symbol,
           assetClass: AssetClass.LIQUIDITY,
@@ -606,7 +624,6 @@ export class AdminService {
           countriesCount: 0,
           date: dateOfFirstActivity,
           id: undefined,
-          lastMarketPrice,
           name: symbol,
           sectorsCount: 0
         };
