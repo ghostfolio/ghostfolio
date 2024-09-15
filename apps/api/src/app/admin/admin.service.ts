@@ -316,9 +316,11 @@ export class AdminService {
             const countriesCount = countries
               ? Object.keys(countries).length
               : 0;
+
             const lastMarketPrice = lastMarketPriceMap.get(
               getAssetProfileIdentifier({ dataSource, symbol })
             );
+
             const marketDataItemCount =
               marketDataItems.find((marketDataItem) => {
                 return (
@@ -326,6 +328,7 @@ export class AdminService {
                   marketDataItem.symbol === symbol
                 );
               })?._count ?? 0;
+
             const sectorsCount = sectors ? Object.keys(sectors).length : 0;
 
             return {
@@ -581,6 +584,7 @@ export class AdminService {
     ]);
 
     const lastMarketPriceMap = new Map<string, number>();
+
     for (const { dataSource, marketPrice, symbol } of lastMarketPrices) {
       lastMarketPriceMap.set(
         getAssetProfileIdentifier({ dataSource, symbol }),
