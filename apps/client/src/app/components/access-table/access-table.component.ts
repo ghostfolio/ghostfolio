@@ -51,8 +51,12 @@ export class AccessTableComponent implements OnChanges, OnInit {
     }
   }
 
-  public copyToClipBoard(aId: string): void {
-    this.clipboard.copy(`${this.baseUrl}/${this.defaultLanguageCode}/p/${aId}`);
+  public onCopyToClipboard(aId: string): void {
+    this.clipboard.copy(this.getPublicUrl(aId));
+  }
+
+  public getPublicUrl(aId: string): string {
+    return `${this.baseUrl}/${this.defaultLanguageCode}/p/${aId}`;
   }
 
   public onDeleteAccess(aId: string) {

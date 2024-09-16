@@ -35,9 +35,7 @@
         @if (element.type === 'PUBLIC') {
           <div class="align-items-center d-flex">
             <ion-icon class="mr-1" name="link-outline" />
-            <a
-              href="{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}"
-              target="_blank"
+            <a target="_blank" [href]="getPublicUrl(element.id)"
               >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
             >
           </div>
@@ -59,8 +57,8 @@
         </button>
         <mat-menu #transactionMenu="matMenu" xPosition="before">
           @if (element.type === 'PUBLIC') {
-            <button mat-menu-item (click)="copyToClipBoard(element.id)">
-              <ng-container i18n>Copy to clipboard</ng-container>
+            <button mat-menu-item (click)="onCopyToClipboard(element.id)">
+              <ng-container i18n>Copy link to clipboard</ng-container>
             </button>
           }
           <button mat-menu-item (click)="onDeleteAccess(element.id)">
