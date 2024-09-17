@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the toggle component
 - Switched to the accounts endpoint in the holding detail dialog
+- Added a fallback in the get quotes functionality of the _EOD Historical Data_ service
 
 ## 2.107.1 - 2024-09-12
 
