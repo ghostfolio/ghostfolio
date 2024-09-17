@@ -9,13 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for bonds in the import dividends dialog
 - Extended the _Public API_ with a new endpoint that provides portfolio performance metrics (experimental)
+- Added the current market price column to the historical market data table of the admin control
+- Introduced filters (`dataSource` and `symbol`) in the accounts endpoint
+
+### Changed
+
+- Improved the usability of the toggle component
+- Switched to the accounts endpoint in the holding detail dialog
 
 ## 2.107.1 - 2024-09-12
 
 ### Fixed
 
-- Fixed an issue in the activities filters that occured during destructuring
+- Fixed an issue in the activities filters that occurred during destructuring
 
 ## 2.107.0 - 2024-09-10
 

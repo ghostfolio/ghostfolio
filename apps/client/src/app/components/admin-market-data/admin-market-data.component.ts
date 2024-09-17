@@ -142,6 +142,7 @@ export class AdminMarketDataComponent
       'dataSource',
       'assetClass',
       'assetSubClass',
+      'lastMarketPrice',
       'date',
       'activitiesCount',
       'marketDataItemCount',
