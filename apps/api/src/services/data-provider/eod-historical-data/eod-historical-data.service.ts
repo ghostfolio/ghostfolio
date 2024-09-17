@@ -18,6 +18,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import { MarketState } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -229,7 +230,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
         }
       ).json<any>();
 
-      const quotes =
+      const quotes: {
+        close: number;
+        code: string;
+        previousClose: number;
+        timestamp: number;
+      }[] =
         eodHistoricalDataSymbols.length === 1
           ? [realTimeResponse]
           : realTimeResponse;
@@ -243,7 +249,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         })
       );
 
-      for (const { close, code, timestamp } of quotes) {
+      for (const { close, code, previousClose, timestamp } of quotes) {
         let currency: string;
 
         if (this.isForex(code)) {
@@ -267,15 +273,21 @@ export class EodHistoricalDataService implements DataProviderInterface {
           }
         }
 
-        if (isNumber(close)) {
+        if (isNumber(close) || isNumber(previousClose)) {
+          const marketPrice: number = isNumber(close) ? close : previousClose;
+          let marketState: MarketState = 'closed';
+
+          if (this.isForex(code) || isToday(new Date(timestamp * 1000))) {
+            marketState = 'open';
+          } else if (!isNumber(close)) {
+            marketState = 'delayed';
+          }
+
           response[this.convertFromEodSymbol(code)] = {
             currency,
-            dataSource: this.getName(),
-            marketPrice: close,
-            marketState:
-              this.isForex(code) || isToday(new Date(timestamp * 1000))
-                ? 'open'
-                : 'closed'
+            marketPrice,
+            marketState,
+            dataSource: this.getName()
           };
         } else {
           Logger.error(
