@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a _Copy link to clipboard_ action to the access table to share the portfolio
 - Introduced filters (`dataSource` and `symbol`) in the accounts endpoint
 
 ### Changed
