@@ -35,9 +35,9 @@
         @if (element.type === 'PUBLIC') {
           <div class="align-items-center d-flex">
             <ion-icon class="mr-1" name="link-outline" />
-            <a target="_blank" [href]="getPublicUrl(element.id)"
-              >{{ baseUrl }}/{{ defaultLanguageCode }}/p/{{ element.id }}</a
-            >
+            <a target="_blank" [href]="getPublicUrl(element.id)">{{
+              getPublicUrl(element.id)
+            }}</a>
           </div>
         }
       </td>
