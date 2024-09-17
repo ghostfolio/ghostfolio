@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for bonds in the import dividends dialog
 - Added the current market price column to the historical market data table of the admin control
 - Introduced filters (`dataSource` and `symbol`) in the accounts endpoint
 
