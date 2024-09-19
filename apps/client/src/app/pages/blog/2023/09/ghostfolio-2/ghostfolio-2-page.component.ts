@@ -13,7 +13,7 @@ export class Ghostfolio2PageComponent {
   public routerLinkAbout = ['/' + $localize`:snake-case:about`];
   public routerLinkAboutChangelog = [
     '/' + $localize`:snake-case:about`,
-    ':snake-case:changelog'
+    'changelog'
   ];
   public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
