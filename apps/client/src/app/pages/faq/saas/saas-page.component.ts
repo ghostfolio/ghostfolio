@@ -11,9 +11,9 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './saas-page.html'
 })
 export class SaasPageComponent implements OnDestroy {
-  public routerLinkMarkets = ['/' + $localize`markets`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
-  public routerLinkRegister = ['/' + $localize`register`];
+  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

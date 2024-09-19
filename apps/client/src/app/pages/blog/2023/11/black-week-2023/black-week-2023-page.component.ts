@@ -12,6 +12,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './black-week-2023-page.html'
 })
 export class BlackWeek2023PageComponent {
-  public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
 }

@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './faq-overview-page.html'
 })
 export class FaqOverviewPageComponent implements OnDestroy {
-  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

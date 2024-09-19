@@ -10,5 +10,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './hacktoberfest-2023-page.html'
 })
 export class Hacktoberfest2023PageComponent {
-  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
 }
