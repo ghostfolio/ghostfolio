@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="8379314117913380516" datatype="html">
         <source>about</source>
-        <target state="translated">o Ghostfolio</target>
+        <target state="translated">o-ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="6703761340382395781" datatype="html">
         <source>features</source>
-        <target state="translated">Funkcje</target>
+        <target state="translated">funkcje</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.ts</context>
           <context context-type="linenumber">68</context>
