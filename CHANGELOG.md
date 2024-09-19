@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the loading indicator of the accounts table
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
 
 ## 2.108.0 - 2024-09-17
 
