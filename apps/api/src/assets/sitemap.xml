@@ -446,12 +446,46 @@
     <loc>https://ghostfol.io/nl/veelgestelde-vragen</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
+  <url>
+    <loc>https://ghostfol.io/pl</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/pl/blog</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/pl/cennik</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
   <!--
     <url>
-      <loc>https://ghostfol.io/pl</loc>
+      <loc>https://ghostfol.io/pl/faq</loc>
       <lastmod>${currentDate}T00:00:00+00:00</lastmod>
     </url>
   -->
+  <url>
+    <loc>https://ghostfol.io/pl/funkcje</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/pl/o-ghostfolio</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <!--
+    <url>
+      <loc>https://ghostfol.io/pl/open</loc>
+      <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+    </url>
+  -->
+  <url>
+    <loc>https://ghostfol.io/pl/rynki</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/pl/zarejestruj</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
   <url>
     <loc>https://ghostfol.io/pt</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
