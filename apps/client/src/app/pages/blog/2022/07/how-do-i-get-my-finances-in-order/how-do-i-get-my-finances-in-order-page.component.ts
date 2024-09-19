@@ -10,5 +10,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './how-do-i-get-my-finances-in-order-page.html'
 })
 export class HowDoIGetMyFinancesInOrderPageComponent {
-  public routerLinkResources = ['/' + $localize`resources`];
+  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
 }

@@ -10,6 +10,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './500-stars-on-github-page.html'
 })
 export class FiveHundredStarsOnGitHubPageComponent {
-  public routerLinkMarkets = ['/' + $localize`markets`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
 }

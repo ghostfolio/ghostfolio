@@ -11,7 +11,7 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
   templateUrl: 'subscription-interstitial-dialog.html'
 })
 export class SubscriptionInterstitialDialog {
-  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: SubscriptionInterstitialDialogParams,

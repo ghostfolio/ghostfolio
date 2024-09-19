@@ -36,7 +36,7 @@ export class UserAccountMembershipComponent implements OnDestroy, OnInit {
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
-  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
   public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
   public trySubscriptionMail =
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';

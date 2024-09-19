@@ -10,8 +10,11 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ghostfolio-2-page.html'
 })
 export class Ghostfolio2PageComponent {
-  public routerLinkAbout = ['/' + $localize`about`];
-  public routerLinkAboutChangelog = ['/' + $localize`about`, 'changelog'];
-  public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkMarkets = ['/' + $localize`markets`];
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkAboutChangelog = [
+    '/' + $localize`:snake-case:about`,
+    ':snake-case:changelog'
+  ];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
 }

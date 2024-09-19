@@ -57,19 +57,25 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + $localize`about`];
-  public routerLinkAboutChangelog = ['/' + $localize`about`, 'changelog'];
-  public routerLinkAboutLicense = ['/' + $localize`about`, $localize`license`];
-  public routerLinkAboutPrivacyPolicy = [
-    '/' + $localize`about`,
-    $localize`privacy-policy`
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkAboutChangelog = [
+    '/' + $localize`:snake-case:about`,
+    'changelog'
   ];
-  public routerLinkFaq = ['/' + $localize`faq`];
-  public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkMarkets = ['/' + $localize`markets`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
-  public routerLinkRegister = ['/' + $localize`register`];
-  public routerLinkResources = ['/' + $localize`resources`];
+  public routerLinkAboutLicense = [
+    '/' + $localize`:snake-case:about`,
+    $localize`:snake-case:license`
+  ];
+  public routerLinkAboutPrivacyPolicy = [
+    '/' + $localize`:snake-case:about`,
+    $localize`:snake-case:privacy-policy`
+  ];
+  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
   public showFooter = false;
   public user: User;
 
