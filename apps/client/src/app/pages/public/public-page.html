@@ -7,6 +7,62 @@
       </h1>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['1d']?.relativeChange ??
+              undefined
+            "
+            >Today</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['ytd']?.relativeChange ??
+              undefined
+            "
+            >This year</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['max']?.relativeChange ??
+              undefined
+            "
+            >From the beginning</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
   <div class="proportion-charts row">
     <div class="col-md-12 allocations-by-symbol">
       <mat-card appearance="outlined" class="mb-3">
