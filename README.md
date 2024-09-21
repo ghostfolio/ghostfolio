@@ -238,13 +238,13 @@ Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
 {
   "performance": {
     "1d": {
-      "relativeChange": 0 // normalized (-1 to 1)
+      "relativeChange": 0 // normalized from -1 to 1
     };
     "ytd": {
-      "relativeChange": 0 // normalized (-1 to 1)
+      "relativeChange": 0 // normalized from -1 to 1
     },
     "max": {
-      "relativeChange": 0 // normalized (-1 to 1)
+      "relativeChange": 0 // normalized from -1 to 1
     }
   }
 }
