@@ -15,7 +15,7 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
-  public routerLinkAbout = ['/' + $localize`about`];
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
 
   private unsubscribeSubject = new Subject<void>();
 

@@ -21,10 +21,10 @@ export class GfProductPageComponent implements OnInit {
   public price: number;
   public product1: Product;
   public product2: Product;
-  public routerLinkAbout = ['/' + $localize`about`];
-  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`resources`,
+    '/' + $localize`:snake-case:resources`,
     'personal-finance-tools'
   ];
   public tags: string[];

@@ -3,6 +3,7 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { Access, User } from '@ghostfolio/common/interfaces';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -32,7 +33,10 @@ export class AccessTableComponent implements OnChanges, OnInit {
   public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public displayedColumns = [];
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(
+    private clipboard: Clipboard,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {}
 
@@ -46,6 +50,14 @@ export class AccessTableComponent implements OnChanges, OnInit {
     if (this.accesses) {
       this.dataSource = new MatTableDataSource(this.accesses);
     }
+  }
+
+  public getPublicUrl(aId: string): string {
+    return `${this.baseUrl}/${this.defaultLanguageCode}/p/${aId}`;
+  }
+
+  public onCopyToClipboard(aId: string): void {
+    this.clipboard.copy(this.getPublicUrl(aId));
   }
 
   public onDeleteAccess(aId: string) {

@@ -22,5 +22,5 @@ export class GfMembershipCardComponent {
   @Input() public expiresAt: string;
   @Input() public name: string;
 
-  public routerLinkPricing = ['/' + $localize`pricing`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
 }

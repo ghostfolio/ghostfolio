@@ -23,8 +23,8 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
-  public routerLinkAbout = ['/' + $localize`about`];
-  public routerLinkRegister = ['/' + $localize`register`];
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
   public statistics: Statistics;
   public testimonials = [
     {

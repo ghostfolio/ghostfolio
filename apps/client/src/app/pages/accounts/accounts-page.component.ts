@@ -136,18 +136,18 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   }
 
   public onDeleteAccount(aId: string) {
+    this.reset();
+
     this.dataService
       .deleteAccount(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => {
-          this.userService
-            .get(true)
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe();
+      .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
 
-          this.fetchAccounts();
-        }
+        this.fetchAccounts();
       });
   }
 
@@ -193,19 +193,21 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((account: UpdateAccountDto | null) => {
         if (account) {
+          this.reset();
+
           this.dataService
             .putAccount(account)
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe({
-              next: () => {
-                this.userService
-                  .get(true)
-                  .pipe(takeUntil(this.unsubscribeSubject))
-                  .subscribe();
+            .subscribe(() => {
+              this.userService
+                .get(true)
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe();
 
-                this.fetchAccounts();
-              }
+              this.fetchAccounts();
             });
+
+          this.changeDetectorRef.markForCheck();
         }
 
         this.router.navigate(['.'], { relativeTo: this.route });
@@ -264,19 +266,21 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((account: CreateAccountDto | null) => {
         if (account) {
+          this.reset();
+
           this.dataService
             .postAccount(account)
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe({
-              next: () => {
-                this.userService
-                  .get(true)
-                  .pipe(takeUntil(this.unsubscribeSubject))
-                  .subscribe();
+            .subscribe(() => {
+              this.userService
+                .get(true)
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe();
 
-                this.fetchAccounts();
-              }
+              this.fetchAccounts();
             });
+
+          this.changeDetectorRef.markForCheck();
         }
 
         this.router.navigate(['.'], { relativeTo: this.route });
@@ -296,6 +300,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((data: any) => {
         if (data) {
+          this.reset();
+
           const { accountIdFrom, accountIdTo, balance }: TransferBalanceDto =
             data?.account;
 
@@ -318,9 +324,18 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
             .subscribe(() => {
               this.fetchAccounts();
             });
+
+          this.changeDetectorRef.markForCheck();
         }
 
         this.router.navigate(['.'], { relativeTo: this.route });
       });
+  }
+
+  private reset() {
+    this.accounts = undefined;
+    this.totalBalanceInBaseCurrency = 0;
+    this.totalValueInBaseCurrency = 0;
+    this.transactionCount = 0;
   }
 }
