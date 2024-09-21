@@ -5,6 +5,7 @@ import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interc
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
+import { getSum } from '@ghostfolio/common/helper';
 import { PublicPortfolioResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -17,6 +18,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
+import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Controller('public')
@@ -95,15 +97,18 @@ export class PublicController {
       }
     };
 
-    const totalValue = Object.values(holdings)
-      .map(({ currency, marketPrice, quantity }) => {
-        return this.exchangeRateDataService.toCurrency(
-          quantity * marketPrice,
-          currency,
-          this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
+    const totalValue = getSum(
+      Object.values(holdings).map(({ currency, marketPrice, quantity }) => {
+        return new Big(
+          this.exchangeRateDataService.toCurrency(
+            quantity * marketPrice,
+            currency,
+            this.request.user?.Settings?.settings.baseCurrency ??
+              DEFAULT_CURRENCY
+          )
         );
       })
-      .reduce((a, b) => a + b, 0);
+    ).toNumber();
 
     for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
       publicPortfolioResponse.holdings[symbol] = {
