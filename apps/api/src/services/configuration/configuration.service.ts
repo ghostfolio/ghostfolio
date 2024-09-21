@@ -1,6 +1,7 @@
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
 import {
   CACHE_TTL_NO_CACHE,
+  DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT,
   DEFAULT_ROOT_URL
 } from '@ghostfolio/common/config';
 
@@ -47,6 +48,9 @@ export class ConfigurationService {
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
       PORT: port({ default: 3333 }),
+      PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT: num({
+        default: DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT
+      }),
       REDIS_DB: num({ default: 0 }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
