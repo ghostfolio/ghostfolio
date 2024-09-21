@@ -31,7 +31,6 @@ import type { PortfolioItem } from './portfolio-item.interface';
 import type { PortfolioOverview } from './portfolio-overview.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
-import type { PortfolioPublicDetails } from './portfolio-public-details.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
@@ -44,6 +43,7 @@ import type { ImportResponse } from './responses/import-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
+import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { Subscription } from './subscription.interface';
@@ -91,12 +91,12 @@ export {
   PortfolioPerformance,
   PortfolioPerformanceResponse,
   PortfolioPosition,
-  PortfolioPublicDetails,
   PortfolioReport,
   PortfolioReportRule,
   PortfolioSummary,
   Position,
   Product,
+  PublicPortfolioResponse,
   ResponseError,
   ScraperConfiguration,
   Statistics,

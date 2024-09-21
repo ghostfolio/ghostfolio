@@ -220,6 +220,36 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 }
 ```
 
+### Portfolio (experimental)
+
+#### Prerequisites
+
+Grant access of type _Public_ in the _Access_ tab of _My Ghostfolio_.
+
+#### Request
+
+`GET http://localhost:3333/api/v1/public/<INSERT_ACCESS_ID>/portfolio`
+
+#### Response
+
+##### Success
+
+```
+{
+  "performance": {
+    "1d": {
+      "relativeChange": 0 // normalized from -1 to 1
+    };
+    "ytd": {
+      "relativeChange": 0 // normalized from -1 to 1
+    },
+    "max": {
+      "relativeChange": 0 // normalized from -1 to 1
+    }
+  }
+}
+```
+
 ## Community Projects
 
 Discover a variety of community projects for Ghostfolio: https://github.com/topics/ghostfolio

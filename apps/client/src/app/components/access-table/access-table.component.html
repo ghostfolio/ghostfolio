@@ -39,6 +39,15 @@
               getPublicUrl(element.id)
             }}</a>
           </div>
+          @if (user?.settings?.isExperimentalFeatures) {
+            <div>
+              <code
+                >GET {{ baseUrl }}/api/v1/public/{{
+                  element.id
+                }}/portfolio</code
+              >
+            </div>
+          }
         }
       </td>
     </ng-container>

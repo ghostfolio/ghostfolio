@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the _Public API_ with a new endpoint that provides portfolio performance metrics (experimental)
 - Added a blog post: _Hacktoberfest 2024_
 
 ### Changed

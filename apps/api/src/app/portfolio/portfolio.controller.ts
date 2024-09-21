@@ -1,6 +1,5 @@
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import {
@@ -13,20 +12,15 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import {
-  DEFAULT_CURRENCY,
-  HEADER_KEY_IMPERSONATION
-} from '@ghostfolio/common/config';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioDividends,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioPublicDetails,
   PortfolioReport
 } from '@ghostfolio/common/interfaces';
 import {
@@ -70,12 +64,10 @@ export class PortfolioController {
     private readonly accessService: AccessService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     private readonly portfolioService: PortfolioService,
-    @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly userService: UserService
+    @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
   @Get('details')
@@ -495,75 +487,6 @@ export class PortfolioController {
     }
 
     return performanceInformation;
-  }
-
-  @Get('public/:accessId')
-  @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getPublic(
-    @Param('accessId') accessId
-  ): Promise<PortfolioPublicDetails> {
-    const access = await this.accessService.access({ id: accessId });
-
-    if (!access) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.NOT_FOUND),
-        StatusCodes.NOT_FOUND
-      );
-    }
-
-    let hasDetails = true;
-
-    const user = await this.userService.user({
-      id: access.userId
-    });
-
-    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      hasDetails = user.subscription.type === 'Premium';
-    }
-
-    const { holdings } = await this.portfolioService.getDetails({
-      filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
-      impersonationId: access.userId,
-      userId: user.id,
-      withMarkets: true
-    });
-
-    const portfolioPublicDetails: PortfolioPublicDetails = {
-      hasDetails,
-      alias: access.alias,
-      holdings: {}
-    };
-
-    const totalValue = Object.values(holdings)
-      .map((portfolioPosition) => {
-        return this.exchangeRateDataService.toCurrency(
-          portfolioPosition.quantity * portfolioPosition.marketPrice,
-          portfolioPosition.currency,
-          this.request.user?.Settings?.settings.baseCurrency ?? DEFAULT_CURRENCY
-        );
-      })
-      .reduce((a, b) => a + b, 0);
-
-    for (const [symbol, portfolioPosition] of Object.entries(holdings)) {
-      portfolioPublicDetails.holdings[symbol] = {
-        allocationInPercentage:
-          portfolioPosition.valueInBaseCurrency / totalValue,
-        countries: hasDetails ? portfolioPosition.countries : [],
-        currency: hasDetails ? portfolioPosition.currency : undefined,
-        dataSource: portfolioPosition.dataSource,
-        dateOfFirstActivity: portfolioPosition.dateOfFirstActivity,
-        markets: hasDetails ? portfolioPosition.markets : undefined,
-        name: portfolioPosition.name,
-        netPerformancePercentWithCurrencyEffect:
-          portfolioPosition.netPerformancePercentWithCurrencyEffect,
-        sectors: hasDetails ? portfolioPosition.sectors : [],
-        symbol: portfolioPosition.symbol,
-        url: portfolioPosition.url,
-        valueInPercentage: portfolioPosition.valueInBaseCurrency / totalValue
-      };
-    }
-
-    return portfolioPublicDetails;
   }
 
   @Get('position/:dataSource/:symbol')
