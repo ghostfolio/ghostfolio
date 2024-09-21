@@ -213,6 +213,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Flexible Financial Management'
   },
   {
+    founded: 2023,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'finanzfluss-copilot',
+    name: 'Finanzfluss Copilot',
+    origin: 'Germany',
+    pricingPerYear: '€69.99',
+    slogan: 'Portfolio Tracker für dein Vermögen'
+  },
+  {
     founded: 2020,
     key: 'finary',
     languages: ['Deutsch', 'English', 'Français'],
