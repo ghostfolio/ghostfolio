@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability of the create or update access dialog
 - Improved the loading indicator of the accounts table
+- Exposed the concurrency of the portfolio snapshot calculation as an environment variable (`PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `prisma` from version `5.19.0` to `5.19.1`
