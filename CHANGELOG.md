@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Hacktoberfest 2024_
+
 ### Changed
 
 - Improved the loading indicator of the accounts table
