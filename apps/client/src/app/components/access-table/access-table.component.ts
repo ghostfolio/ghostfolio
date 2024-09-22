@@ -30,7 +30,6 @@ export class AccessTableComponent implements OnChanges, OnInit {
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
-  public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public displayedColumns = [];
 
   public constructor(
@@ -53,7 +52,9 @@ export class AccessTableComponent implements OnChanges, OnInit {
   }
 
   public getPublicUrl(aId: string): string {
-    return `${this.baseUrl}/${this.defaultLanguageCode}/p/${aId}`;
+    const languageCode = this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+
+    return `${this.baseUrl}/${languageCode}/p/${aId}`;
   }
 
   public onCopyToClipboard(aId: string): void {
