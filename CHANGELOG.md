@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of various action menus by introducing horizontal lines to separate the delete action
+- Considered the user’s language in the link of the access table to share the portfolio
 
 ## 2.109.0 - 2024-09-17
 
