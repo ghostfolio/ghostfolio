@@ -1058,35 +1058,12 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const accountBalances = await this.accountBalanceService.getAccountBalances(
-      { filters, user, withExcludedAccounts }
-    );
-
-    let accountBalanceItems: HistoricalDataItem[] = Object.values(
-      // Reduce the array to a map with unique dates as keys
-      accountBalances.balances.reduce(
-        (
-          map: { [date: string]: HistoricalDataItem },
-          { date, valueInBaseCurrency }
-        ) => {
-          const formattedDate = format(date, DATE_FORMAT);
-
-          if (map[formattedDate]) {
-            // If the value exists, add the current value to the existing one
-            map[formattedDate].value += valueInBaseCurrency;
-          } else {
-            // Otherwise, initialize the value for that date
-            map[formattedDate] = {
-              date: formattedDate,
-              value: valueInBaseCurrency
-            };
-          }
-
-          return map;
-        },
-        {}
-      )
-    );
+    const accountBalanceItems =
+      await this.accountBalanceService.getAccountBalanceItems({
+        filters,
+        userId,
+        userCurrency
+      });
 
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({

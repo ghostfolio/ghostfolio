@@ -2,14 +2,18 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { resetHours } from '@ghostfolio/common/helper';
-import { AccountBalancesResponse, Filter } from '@ghostfolio/common/interfaces';
+import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import {
+  AccountBalancesResponse,
+  Filter,
+  HistoricalDataItem
+} from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
 
@@ -91,17 +95,61 @@ export class AccountBalanceService {
     return accountBalance;
   }
 
+  public async getAccountBalanceItems({
+    filters,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    userCurrency: string;
+    userId: string;
+  }): Promise<HistoricalDataItem[]> {
+    const { balances } = await this.getAccountBalances({
+      filters,
+      userCurrency,
+      userId,
+      withExcludedAccounts: false // TODO
+    });
+    const accumulatedBalances: { [date: string]: HistoricalDataItem } = {};
+    const lastBalancesByAccount: { [accountId: string]: number } = {};
+
+    for (const { accountId, date, valueInBaseCurrency } of balances) {
+      const formattedDate = format(date, DATE_FORMAT);
+
+      // Update the balance for the current account
+      lastBalancesByAccount[accountId] = valueInBaseCurrency;
+
+      // Calculate the total balance for all accounts at this date by summing last known balances
+      const totalBalance = Object.values(lastBalancesByAccount).reduce(
+        (sum, balance) => {
+          return sum + balance;
+        },
+        0
+      );
+
+      // Add or update the accumulated balance for this date
+      accumulatedBalances[formattedDate] = {
+        date: formattedDate,
+        value: totalBalance
+      };
+    }
+
+    return Object.values(accumulatedBalances);
+  }
+
   @LogPerformance
   public async getAccountBalances({
     filters,
-    user,
+    userCurrency,
+    userId,
     withExcludedAccounts
   }: {
     filters?: Filter[];
-    user: UserWithSettings;
+    userCurrency: string;
+    userId: string;
     withExcludedAccounts?: boolean;
   }): Promise<AccountBalancesResponse> {
-    const where: Prisma.AccountBalanceWhereInput = { userId: user.id };
+    const where: Prisma.AccountBalanceWhereInput = { userId };
 
     const accountFilter = filters?.find(({ type }) => {
       return type === 'ACCOUNT';
@@ -132,10 +180,11 @@ export class AccountBalanceService {
       balances: balances.map((balance) => {
         return {
           ...balance,
+          accountId: balance.Account.id,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             balance.value,
             balance.Account.currency,
-            user.Settings.settings.baseCurrency
+            userCurrency
           )
         };
       })

@@ -1,3 +1,4 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import {
   PerformanceCalculationType,
@@ -24,6 +25,7 @@ import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queu
 @Processor(PORTFOLIO_SNAPSHOT_QUEUE)
 export class PortfolioSnapshotProcessor {
   public constructor(
+    private readonly accountBalanceService: AccountBalanceService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly configurationService: ConfigurationService,
     private readonly orderService: OrderService,
@@ -56,7 +58,15 @@ export class PortfolioSnapshotProcessor {
           userId: job.data.userId
         });
 
+      const accountBalanceItems =
+        await this.accountBalanceService.getAccountBalanceItems({
+          filters: job.data.filters,
+          userCurrency: job.data.userCurrency,
+          userId: job.data.userId
+        });
+
       const portfolioCalculator = this.calculatorFactory.createCalculator({
+        accountBalanceItems,
         activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: job.data.userCurrency,

@@ -104,6 +104,10 @@ export abstract class PortfolioCalculator {
 
     let dateOfFirstActivity = new Date();
 
+    if (this.accountBalanceItems[0]) {
+      dateOfFirstActivity = parseDate(this.accountBalanceItems[0].date);
+    }
+
     this.activities = activities
       .map(
         ({
@@ -268,6 +272,10 @@ export abstract class PortfolioCalculator {
           )
       )
     });
+
+    for (const accountBalanceItem of this.accountBalanceItems) {
+      chartDateMap[accountBalanceItem.date] = true;
+    }
 
     const chartDates = sortBy(Object.keys(chartDateMap), (chartDate) => {
       return chartDate;
@@ -447,9 +455,28 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    let lastDate = chartDates[0];
+    const accountBalanceItemsMap = this.accountBalanceItems.reduce(
+      (map, { date, value }) => {
+        map[date] = new Big(value);
+
+        return map;
+      },
+      {} as { [date: string]: Big }
+    );
+
+    const accountBalanceMap: { [date: string]: Big } = {};
+
+    let lastKnownBalance = new Big(0);
 
     for (const dateString of chartDates) {
+      if (accountBalanceItemsMap[dateString] !== undefined) {
+        // If there's an exact balance for this date, update lastKnownBalance
+        lastKnownBalance = accountBalanceItemsMap[dateString];
+      }
+
+      // Add the most recent balance to the accountBalanceMap
+      accountBalanceMap[dateString] = lastKnownBalance;
+
       for (const symbol of Object.keys(valuesBySymbol)) {
         const symbolValues = valuesBySymbol[symbol];
 
@@ -492,18 +519,7 @@ export abstract class PortfolioCalculator {
             accumulatedValuesByDate[dateString]
               ?.investmentValueWithCurrencyEffect ?? new Big(0)
           ).add(investmentValueWithCurrencyEffect),
-          totalAccountBalanceWithCurrencyEffect: this.accountBalanceItems.some(
-            ({ date }) => {
-              return date === dateString;
-            }
-          )
-            ? new Big(
-                this.accountBalanceItems.find(({ date }) => {
-                  return date === dateString;
-                }).value
-              )
-            : (accumulatedValuesByDate[lastDate]
-                ?.totalAccountBalanceWithCurrencyEffect ?? new Big(0)),
+          totalAccountBalanceWithCurrencyEffect: accountBalanceMap[dateString],
           totalCurrentValue: (
             accumulatedValuesByDate[dateString]?.totalCurrentValue ?? new Big(0)
           ).add(currentValue),
@@ -537,8 +553,6 @@ export abstract class PortfolioCalculator {
           ).add(timeWeightedInvestmentValueWithCurrencyEffect)
         };
       }
-
-      lastDate = dateString;
     }
 
     const historicalData: HistoricalDataItem[] = Object.entries(
@@ -733,12 +747,12 @@ export abstract class PortfolioCalculator {
             timeWeightedInvestmentValue === 0
               ? 0
               : netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue,
+                timeWeightedInvestmentValue
           // TODO: Add net worth with valuables
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)
           //   .toNumber()
-          netWorth: 0
+          // netWorth: 0
         });
       }
     }
@@ -815,7 +829,7 @@ export abstract class PortfolioCalculator {
     endDate: Date;
     startDate: Date;
     step: number;
-  }) {
+  }): { [date: string]: true } {
     // Create a map of all relevant chart dates:
     // 1. Add transaction point dates
     let chartDateMap = this.transactionPoints.reduce((result, { date }) => {
