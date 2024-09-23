@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Considered the user’s language in the link of the access table to share the portfolio
+- Exposed an option to skip database migrations as an environment variable (`ENABLE_DATABASE_MIGRATIONS`)
 
 ## 2.109.0 - 2024-09-17
 
