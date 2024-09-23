@@ -15,6 +15,7 @@ export interface Environment extends CleanedEnvAccessors {
   DATA_SOURCE_EXCHANGE_RATES: string;
   DATA_SOURCE_IMPORT: string;
   DATA_SOURCES: string[];
+  ENABLE_DATABASE_MIGRATIONS: boolean;
   ENABLE_FEATURE_FEAR_AND_GREED_INDEX: boolean;
   ENABLE_FEATURE_READ_ONLY_MODE: boolean;
   ENABLE_FEATURE_SOCIAL_LOGIN: boolean;
