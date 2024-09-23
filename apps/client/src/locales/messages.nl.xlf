@@ -66,7 +66,7 @@
         <target state="translated">Intrekken</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">74</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8264698726451826067" datatype="html">
@@ -74,7 +74,7 @@
         <target state="translated">Wil je deze verleende toegang echt intrekken?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="dd3b6c367381ddfa8f317b8e9b31c55368c65136" datatype="html">
@@ -1018,7 +1018,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">220</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5207635742003539443" datatype="html">
@@ -1314,7 +1314,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="aee7d0de4e30405c1289745e4264e622b613632a" datatype="html">
@@ -1579,6 +1579,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.html</context>
           <context context-type="linenumber">270</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2024/09/hacktoberfest-2024/hacktoberfest-2024-page.html</context>
+          <context context-type="linenumber">187</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
@@ -2070,7 +2074,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">143</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2948175671993825247" datatype="html">
@@ -2182,7 +2186,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
@@ -2374,7 +2378,7 @@
         <target state="translated">Valuta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3c3163d370916438f3b52ea17720bfb2a68a1709" datatype="html">
@@ -2382,7 +2386,7 @@
         <target state="translated">Continenten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">124</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a3d148b40a389fda0665eb583c9e434ec5ee1ced" datatype="html">
@@ -2390,7 +2394,7 @@
         <target state="translated">Ghostfolio stelt je in staat om je vermogen bij te houden. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">159</context>
+          <context context-type="linenumber">215</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8298333184054476827" datatype="html">
@@ -2646,7 +2650,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">160</context>
         </context-group>
       </trans-unit>
       <trans-unit id="27fe3d097c64eaec7ff564358f80fb7ba795f484" datatype="html">
@@ -2698,7 +2702,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">122</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="81eb53c18dfd116d6e54877444847b3091d92ab0" datatype="html">
@@ -2710,7 +2714,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">169</context>
         </context-group>
       </trans-unit>
       <trans-unit id="936788a5ab949fe0d70098ba051ac7a44999ff08" datatype="html">
@@ -2841,9 +2845,9 @@
           <context context-type="linenumber">329</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3d14940af7de691ac27efb67bef3e974cbe3281c" datatype="html">
-        <source> Hello, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? &apos;someone&apos; }}"/> has shared a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with you! </source>
-        <target state="translated">Hallo, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? &apos;iemand&apos; }}"/> heeft een <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> met je gedeeld! </target>
+      <trans-unit id="82fe55446d3fad9db11eb79caaedf325587b9c0a" datatype="html">
+        <source> Hello, <x id="INTERPOLATION" equiv-text="{{ publicPortfolioDetails?.alias ?? &apos;someone&apos; }}"/> has shared a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with you! </source>
+        <target state="new">Hallo, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? &apos;iemand&apos; }}"/> heeft een <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> met je gedeeld! </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">4</context>
@@ -4682,7 +4686,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">188</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
@@ -5325,6 +5329,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component.ts</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/blog/2024/09/hacktoberfest-2024/hacktoberfest-2024-page.component.ts</context>
           <context context-type="linenumber">13</context>
         </context-group>
         <context-group purpose="location">
@@ -6027,7 +6035,7 @@
         <target state="new">Oops, cash balance transfer has failed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.component.ts</context>
-          <context context-type="linenumber">311</context>
+          <context context-type="linenumber">317</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1189482335778578193" datatype="html">
@@ -6175,7 +6183,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit id="97bad3b5e318e5c7c755cd99062f2973efcf17e5" datatype="html">
@@ -6187,7 +6195,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2570446216260149991" datatype="html">
@@ -6195,7 +6203,7 @@
         <target state="new">Oops! Could not grant access.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ddd8a4986d2d1717a274a5a0fbed04988a819e69" datatype="html">
@@ -6339,7 +6347,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="051f7201e65df238102b8f33aeb2f993bba280bb" datatype="html">
@@ -6687,7 +6695,7 @@
         <target state="new"> Would you like to <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>refine<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">211</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4455104386790567151" datatype="html">
@@ -7007,7 +7015,7 @@
         <target state="new">Copy link to clipboard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit id="306e3758e5303c780f0984c003e6283d49796f79" datatype="html">
@@ -7064,6 +7072,38 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="06296af0cdaf7bed02043379359ed1975fc22077" datatype="html">
+        <source>No auto-renewal.</source>
+        <target state="new">No auto-renewal.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7fb1099e29660162f9154d5b2feee7743a423df6" datatype="html">
+        <source>Today</source>
+        <target state="new">Today</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="65cefcc53d1f6445df7568e8a40c49165f1090ee" datatype="html">
+        <source>This year</source>
+        <target state="new">This year</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5beadaafe995fa04343008b0ab57e579c9fc81b9" datatype="html">
+        <source>From the beginning</source>
+        <target state="new">From the beginning</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
     </body>
