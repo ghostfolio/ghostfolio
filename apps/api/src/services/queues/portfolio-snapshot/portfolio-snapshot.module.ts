@@ -1,3 +1,4 @@
+import { AccountBalanceModule } from '@ghostfolio/api/app/account-balance/account-balance.module';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
@@ -17,6 +18,7 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
 @Module({
   exports: [BullModule, PortfolioSnapshotService],
   imports: [
+    AccountBalanceModule,
     BullModule.registerQueue({
       name: PORTFOLIO_SNAPSHOT_QUEUE
     }),
