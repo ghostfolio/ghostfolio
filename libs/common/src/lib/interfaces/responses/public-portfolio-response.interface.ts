@@ -7,6 +7,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
     [symbol: string]: Pick<
       PortfolioPosition,
       | 'allocationInPercentage'
+      | 'assetClass'
       | 'countries'
       | 'currency'
       | 'dataSource'
