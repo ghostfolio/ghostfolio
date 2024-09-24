@@ -79,6 +79,7 @@
                           </span>
                         </a>
                         @if (customCurrencies.includes(exchangeRate.label2)) {
+                          <hr class="m-0" />
                           <button
                             mat-menu-item
                             (click)="onDeleteCurrency(exchangeRate.label2)"

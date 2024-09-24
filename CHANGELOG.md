@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of various action menus by introducing horizontal lines to separate the delete action
 - Aligned the holdings and regions of the public page with the allocations page
 - Considered the user’s language in the link of the access table to share the portfolio
 - Improved the language localization for German (`de`)
