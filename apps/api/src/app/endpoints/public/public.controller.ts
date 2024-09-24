@@ -63,7 +63,6 @@ export class PublicController {
       { performance: performanceYtd }
     ] = await Promise.all([
       this.portfolioService.getDetails({
-        filters: [{ id: 'EQUITY', type: 'ASSET_CLASS' }],
         impersonationId: access.userId,
         userId: user.id,
         withMarkets: true
@@ -114,6 +113,7 @@ export class PublicController {
       publicPortfolioResponse.holdings[symbol] = {
         allocationInPercentage:
           portfolioPosition.valueInBaseCurrency / totalValue,
+        assetClass: hasDetails ? portfolioPosition.assetClass : undefined,
         countries: hasDetails ? portfolioPosition.countries : [],
         currency: hasDetails ? portfolioPosition.currency : undefined,
         dataSource: portfolioPosition.dataSource,
