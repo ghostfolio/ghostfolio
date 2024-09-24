@@ -2,17 +2,17 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { DATE_FORMAT, resetHours } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, getSum, resetHours } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   Filter,
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
-import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { AccountBalance, Prisma } from '@prisma/client';
+import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 
 import { CreateAccountBalanceDto } from './create-account-balance.dto';
@@ -110,31 +110,25 @@ export class AccountBalanceService {
       userId,
       withExcludedAccounts: false // TODO
     });
-    const accumulatedBalances: { [date: string]: HistoricalDataItem } = {};
-    const lastBalancesByAccount: { [accountId: string]: number } = {};
+    const accumulatedBalancesByDate: { [date: string]: HistoricalDataItem } =
+      {};
+    const lastBalancesByAccount: { [accountId: string]: Big } = {};
 
     for (const { accountId, date, valueInBaseCurrency } of balances) {
       const formattedDate = format(date, DATE_FORMAT);
 
-      // Update the balance for the current account
-      lastBalancesByAccount[accountId] = valueInBaseCurrency;
+      lastBalancesByAccount[accountId] = new Big(valueInBaseCurrency);
 
-      // Calculate the total balance for all accounts at this date by summing last known balances
-      const totalBalance = Object.values(lastBalancesByAccount).reduce(
-        (sum, balance) => {
-          return sum + balance;
-        },
-        0
-      );
+      const totalBalance = getSum(Object.values(lastBalancesByAccount));
 
       // Add or update the accumulated balance for this date
-      accumulatedBalances[formattedDate] = {
+      accumulatedBalancesByDate[formattedDate] = {
         date: formattedDate,
-        value: totalBalance
+        value: totalBalance.toNumber()
       };
     }
 
-    return Object.values(accumulatedBalances);
+    return Object.values(accumulatedBalancesByDate);
   }
 
   @LogPerformance
