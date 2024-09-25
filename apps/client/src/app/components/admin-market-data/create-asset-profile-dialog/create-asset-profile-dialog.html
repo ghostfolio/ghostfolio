@@ -12,11 +12,13 @@
         [value]="mode"
         (change)="onRadioChange($event.value)"
       >
-        <mat-radio-button name="auto" value="auto" />
-        <label class="m-0" for="auto" i18n>Search</label>
+        <mat-radio-button name="auto" value="auto"> Search </mat-radio-button>
         <mat-radio-button class="ml-3" name="manual" value="manual">
+          Add Manually
         </mat-radio-button>
-        <label class="m-0" for="manual" i18n>Add Manually</label>
+        <mat-radio-button class="ml-3" name="currency" value="currency">
+          Add Currency
+        </mat-radio-button>
       </mat-radio-group>
     </div>
 
@@ -35,6 +37,13 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Symbol</mat-label>
           <input formControlName="addSymbol" matInput />
+        </mat-form-field>
+      </div>
+    } @else if (mode === 'currency') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Currency</mat-label>
+          <input formControlName="addCurrency" matInput />
         </mat-form-field>
       </div>
     }

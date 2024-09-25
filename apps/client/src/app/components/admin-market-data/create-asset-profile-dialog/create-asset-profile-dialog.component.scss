@@ -1,3 +1,9 @@
 :host {
   display: block;
 }
+
+.mat-internal-form-field > label {
+  font-size: 16px;
+  margin-bottom: 0 !important;
+  cursor: pointer;
+}
