@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the `typescript-eslint/recommended-type-checked` rule to the `eslint` configuration
 - Added the `typescript-eslint/stylistic-type-checked` rule to the `eslint` configuration
 
+### Added
+
+- Extended the _Public API_ with the health check endpoint (experimental)
+
 ### Changed
 
 - Optimized the portfolio calculations by reusing date intervals
