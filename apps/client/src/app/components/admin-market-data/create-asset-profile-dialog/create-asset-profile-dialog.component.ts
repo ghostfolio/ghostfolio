@@ -84,7 +84,9 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         symbol: this.createAssetProfileForm.get('addSymbol').value
       });
     } else {
-      const currency = this.createAssetProfileForm.get('addCurrency').value;
+      const currency = this.createAssetProfileForm
+        .get('addCurrency')
+        .value.toUpperCase();
       if (currency.length === 3) {
         const currencies = uniq([...this.customCurrencies, currency]);
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
@@ -94,7 +96,8 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         });
       } else {
         this.notificationService.alert({
-          title: $localize`${currency} is an invalid currency!`
+          title: $localize`${currency} is an invalid currency!`,
+          message: $localize`Currency should be 3 characters in length`
         });
       }
     }
@@ -146,6 +149,11 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
       .putAdminSetting(key, {
         value: value || value === false ? JSON.stringify(value) : undefined
       })
-      .pipe(takeUntil(this.unsubscribeSubject));
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
   }
 }
