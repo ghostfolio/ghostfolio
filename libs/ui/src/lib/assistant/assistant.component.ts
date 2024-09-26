@@ -110,6 +110,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   @Input() deviceType: string;
   @Input() hasPermissionToAccessAdminControl: boolean;
+  @Input() hasPermissionToChangeDateRange: boolean;
+  @Input() hasPermissionToChangeFilters: boolean;
   @Input() user: User;
 
   @Output() closed = new EventEmitter<void>();
@@ -254,7 +256,19 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       { label: $localize`Max`, value: 'max' }
     ]);
 
+    this.dateRangeFormControl.disable({ emitEvent: false });
+
+    if (this.hasPermissionToChangeDateRange) {
+      this.dateRangeFormControl.enable({ emitEvent: false });
+    }
+
     this.dateRangeFormControl.setValue(this.user?.settings?.dateRange ?? null);
+
+    this.filterForm.disable({ emitEvent: false });
+
+    if (this.hasPermissionToChangeFilters) {
+      this.filterForm.enable({ emitEvent: false });
+    }
 
     this.filterForm.setValue(
       {

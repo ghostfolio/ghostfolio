@@ -121,7 +121,7 @@
             matBadge="✓"
             matBadgeSize="small"
             [mat-menu-trigger-for]="assistantMenu"
-            [matBadgeHidden]="!hasFilters"
+            [matBadgeHidden]="!hasFilters || !hasPermissionToChangeFilters"
             [matMenuTriggerRestoreFocus]="false"
             (menuOpened)="onOpenAssistant()"
           >
@@ -140,6 +140,8 @@
               [hasPermissionToAccessAdminControl]="
                 hasPermissionToAccessAdminControl
               "
+              [hasPermissionToChangeDateRange]="hasPermissionToChangeDateRange"
+              [hasPermissionToChangeFilters]="hasPermissionToChangeFilters"
               [user]="user"
               (closed)="closeAssistant()"
               (dateRangeChanged)="onDateRangeChange($event)"
