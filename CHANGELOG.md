@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Considered the availability of the date range selector in the assistant per view
+- Considered the availability of the filters in the assistant per view
 - Upgraded `webpack-bundle-analyzer` from version `4.10.1` to `4.10.2`
 
 ## 2.110.0 - 2024-09-24
