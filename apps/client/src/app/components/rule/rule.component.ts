@@ -58,10 +58,12 @@ export class RuleComponent implements OnInit {
       .subscribe(
         ({ settings }: { settings: PortfolioReportRule['settings'] }) => {
           if (settings) {
-            console.log(settings);
-
-            // TODO
-            // this.ruleUpdated.emit(settings);
+            const updatedSettings: UpdateUserSettingDto = {
+              portfolioSettings: {
+                ...settings
+              }
+            };
+            this.ruleUpdated.emit(updatedSettings);
           }
         }
       );

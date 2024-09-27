@@ -1,13 +1,31 @@
 <div mat-dialog-title>{{ data.rule.name }}</div>
 
 <div class="py-3" mat-dialog-content>
-  <mat-form-field appearance="outline" class="w-100">
+  <mat-form-field
+    appearance="outline"
+    class="w-100"
+    [ngClass]="{ 'd-none': settings.thresholdMin === undefined }"
+  >
     <mat-label i18n>Threshold Min</mat-label>
-    <input matInput name="thresholdMin" type="number" />
+    <input
+      matInput
+      name="thresholdMin"
+      type="number"
+      [(ngModel)]="settings.thresholdMin"
+    />
   </mat-form-field>
-  <mat-form-field appearance="outline" class="w-100">
+  <mat-form-field
+    appearance="outline"
+    class="w-100"
+    [ngClass]="{ 'd-none': settings.thresholdMax === undefined }"
+  >
     <mat-label i18n>Threshold Max</mat-label>
-    <input matInput name="thresholdMax" type="number" />
+    <input
+      matInput
+      name="thresholdMax"
+      type="number"
+      [(ngModel)]="settings.thresholdMax"
+    />
   </mat-form-field>
 </div>
 
