@@ -16,13 +16,14 @@ import {
   addDays,
   addMilliseconds,
   differenceInDays,
-  eachDayOfInterval,
   format,
   isBefore
 } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
+  private chartDatesDescending: string[];
+
   protected calculateOverallPerformance(
     positions: TimelinePosition[]
   ): PortfolioSnapshot {
@@ -820,31 +821,35 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         startDate = start;
       }
 
+      const startDateString = format(startDate, DATE_FORMAT);
+      const endDateString = format(endDate, DATE_FORMAT);
+
       const currentValuesAtDateRangeStartWithCurrencyEffect =
-        currentValuesWithCurrencyEffect[format(startDate, DATE_FORMAT)] ??
-        new Big(0);
+        currentValuesWithCurrencyEffect[startDateString] ?? new Big(0);
 
       const investmentValuesAccumulatedAtStartDateWithCurrencyEffect =
-        investmentValuesAccumulatedWithCurrencyEffect[
-          format(startDate, DATE_FORMAT)
-        ] ?? new Big(0);
+        investmentValuesAccumulatedWithCurrencyEffect[startDateString] ??
+        new Big(0);
 
       const grossPerformanceAtDateRangeStartWithCurrencyEffect =
         currentValuesAtDateRangeStartWithCurrencyEffect.minus(
           investmentValuesAccumulatedAtStartDateWithCurrencyEffect
         );
 
-      const dates = eachDayOfInterval({
-        end: endDate,
-        start: startDate
-      }).map((date) => {
-        return format(date, DATE_FORMAT);
-      });
-
       let average = new Big(0);
       let dayCount = 0;
 
-      for (const date of dates) {
+      if (!this.chartDatesDescending) {
+        this.chartDatesDescending = Object.keys(chartDateMap).sort().reverse();
+      }
+
+      for (const date of this.chartDatesDescending) {
+        if (date > endDateString) {
+          continue;
+        } else if (date < startDateString) {
+          break;
+        }
+
         if (
           investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
           investmentValuesAccumulatedWithCurrencyEffect[date].gt(0)
@@ -864,17 +869,14 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
 
       netPerformanceWithCurrencyEffectMap[dateRange] =
-        netPerformanceValuesWithCurrencyEffect[
-          format(endDate, DATE_FORMAT)
-        ]?.minus(
+        netPerformanceValuesWithCurrencyEffect[endDateString]?.minus(
           // If the date range is 'max', take 0 as a start value. Otherwise,
           // the value of the end of the day of the start date is taken which
           // differs from the buying price.
           dateRange === 'max'
             ? new Big(0)
-            : (netPerformanceValuesWithCurrencyEffect[
-                format(startDate, DATE_FORMAT)
-              ] ?? new Big(0))
+            : (netPerformanceValuesWithCurrencyEffect[startDateString] ??
+                new Big(0))
         ) ?? new Big(0);
 
       netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
