@@ -5,7 +5,7 @@
   <ng-template #label><ng-content></ng-content></ng-template>
   <ng-container *ngIf="value || value === 0 || value === null">
     <div
-      class="d-flex"
+      class="align-items-center d-flex"
       [ngClass]="position === 'end' ? 'justify-content-end' : ''"
     >
       <ng-container *ngIf="isNumber || value === null">

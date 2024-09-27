@@ -52,13 +52,12 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
 
       if (accessType === 'PRIVATE') {
         granteeUserIdControl.setValidators(Validators.required);
-        permissionsControl.setValidators(Validators.required);
       } else {
         granteeUserIdControl.clearValidators();
+        permissionsControl.setValue(this.data.access.permissions[0]);
       }
 
       granteeUserIdControl.updateValueAndValidity();
-      permissionsControl.updateValueAndValidity();
 
       this.changeDetectorRef.markForCheck();
     });

@@ -51,6 +51,7 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     'status',
     'actions'
   ];
+  public isLoading = false;
   public statusFilterOptions = QUEUE_JOB_STATUS_LIST;
   public user: User;
 
@@ -138,11 +139,15 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
   }
 
   private fetchJobs(aStatus?: JobStatus[]) {
+    this.isLoading = true;
+
     this.adminService
       .fetchJobs({ status: aStatus })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ jobs }) => {
         this.dataSource = new MatTableDataSource(jobs);
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

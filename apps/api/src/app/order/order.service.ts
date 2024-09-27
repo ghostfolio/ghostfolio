@@ -1,9 +1,10 @@
 import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
@@ -351,6 +352,14 @@ export class OrderService {
       return type;
     });
 
+    const filterByDataSource = filters?.find(({ type }) => {
+      return type === 'DATA_SOURCE';
+    })?.id;
+
+    const filterBySymbol = filters?.find(({ type }) => {
+      return type === 'SYMBOL';
+    })?.id;
+
     const searchQuery = filters?.find(({ type }) => {
       return type === 'SEARCH_QUERY';
     })?.id;
@@ -394,6 +403,29 @@ export class OrderService {
           }
         ]
       };
+    }
+
+    if (filterByDataSource && filterBySymbol) {
+      if (where.SymbolProfile) {
+        where.SymbolProfile = {
+          AND: [
+            where.SymbolProfile,
+            {
+              AND: [
+                { dataSource: <DataSource>filterByDataSource },
+                { symbol: filterBySymbol }
+              ]
+            }
+          ]
+        };
+      } else {
+        where.SymbolProfile = {
+          AND: [
+            { dataSource: <DataSource>filterByDataSource },
+            { symbol: filterBySymbol }
+          ]
+        };
+      }
     }
 
     if (searchQuery) {
@@ -546,6 +578,7 @@ export class OrderService {
     return { activities, count };
   }
 
+  @LogPerformance
   public async getOrdersForPortfolioCalculator({
     filters,
     userCurrency,

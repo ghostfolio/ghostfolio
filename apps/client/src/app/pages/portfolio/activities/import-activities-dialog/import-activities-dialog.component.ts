@@ -93,6 +93,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             {
               id: AssetClass.EQUITY,
               type: 'ASSET_CLASS'
+            },
+            {
+              id: AssetClass.FIXED_INCOME,
+              type: 'ASSET_CLASS'
             }
           ],
           range: 'max'

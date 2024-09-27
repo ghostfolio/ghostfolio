@@ -182,6 +182,15 @@ const routes: Routes = [
         (c) => c.BlackWeek2023PageComponent
       ),
     title: 'Black Week 2023'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2024/09/hacktoberfest-2024',
+    loadComponent: () =>
+      import(
+        './2024/09/hacktoberfest-2024/hacktoberfest-2024-page.component'
+      ).then((c) => c.Hacktoberfest2024PageComponent),
+    title: 'Hacktoberfest 2024'
   }
 ];
 

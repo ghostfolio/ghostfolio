@@ -10,5 +10,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './exploring-the-path-to-fire-page.html'
 })
 export class ExploringThePathToFirePageComponent {
-  public routerLinkFeatures = ['/' + $localize`features`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
 }

@@ -2,9 +2,65 @@
   <div class="row">
     <div class="col">
       <h1 class="h4 mb-3 text-center" i18n>
-        Hello, {{ portfolioPublicDetails?.alias ?? 'someone' }} has shared a
+        Hello, {{ publicPortfolioDetails?.alias ?? 'someone' }} has shared a
         <strong>Portfolio</strong> with you!
       </h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['1d']?.relativeChange ??
+              undefined
+            "
+            >Today</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['ytd']?.relativeChange ??
+              undefined
+            "
+            >This year</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-md-4">
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-content>
+          <gf-value
+            i18n
+            size="large"
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [precision]="2"
+            [value]="
+              publicPortfolioDetails?.performance?.['max']?.relativeChange ??
+              undefined
+            "
+            >From the beginning</gf-value
+          >
+        </mat-card-content>
+      </mat-card>
     </div>
   </div>
   <div class="proportion-charts row">
@@ -24,7 +80,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -43,7 +99,7 @@
         </mat-card>
       </div>
     }
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -60,7 +116,7 @@
         </mat-card>
       </div>
     }
-    @if (portfolioPublicDetails?.hasDetails) {
+    @if (publicPortfolioDetails?.hasDetails) {
       <div class="col-md-4">
         <mat-card appearance="outlined" class="mb-3">
           <mat-card-header class="overflow-hidden w-100">
@@ -79,7 +135,7 @@
       </div>
     }
   </div>
-  @if (portfolioPublicDetails?.hasDetails) {
+  @if (publicPortfolioDetails?.hasDetails) {
     <div class="row world-map-chart">
       <div class="col-lg">
         <mat-card appearance="outlined" class="mb-3">

@@ -5,7 +5,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
-import { AdminData, InfoItem, User } from '@ghostfolio/common/interfaces';
+import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -24,7 +24,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
-  public dataSource: MatTableDataSource<AdminData['users'][0]> =
+  public dataSource: MatTableDataSource<AdminUsers['users'][0]> =
     new MatTableDataSource();
   public defaultDateFormat: string;
   public displayedColumns: string[] = [];
@@ -32,6 +32,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionForSubscription: boolean;
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
+  public isLoading = false;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -93,7 +94,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.fetchAdminData();
+    this.fetchUsers();
   }
 
   public formatDistanceToNow(aDateString: string) {
@@ -118,7 +119,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
           .deleteUser(aId)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(() => {
-            this.fetchAdminData();
+            this.fetchUsers();
           });
       },
       confirmType: ConfirmationDialogType.Warn,
@@ -141,12 +142,16 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchAdminData() {
+  private fetchUsers() {
+    this.isLoading = true;
+
     this.adminService
-      .fetchAdminData()
+      .fetchUsers()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ users }) => {
         this.dataSource = new MatTableDataSource(users);
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

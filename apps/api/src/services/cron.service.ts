@@ -9,9 +9,9 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
-import { DataGatheringService } from './data-gathering/data-gathering.service';
 import { ExchangeRateDataService } from './exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from './property/property.service';
+import { DataGatheringService } from './queues/data-gathering/data-gathering.service';
 import { TwitterBotService } from './twitter-bot/twitter-bot.service';
 
 @Injectable()

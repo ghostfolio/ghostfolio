@@ -5,10 +5,9 @@ import {
   HistoricalDataItem
 } from '@ghostfolio/common/interfaces';
 
-import { Account, Tag } from '@prisma/client';
+import { Tag } from '@prisma/client';
 
 export interface PortfolioHoldingDetail {
-  accounts: Account[];
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;

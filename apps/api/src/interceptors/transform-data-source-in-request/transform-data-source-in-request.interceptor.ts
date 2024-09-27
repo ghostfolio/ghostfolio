@@ -39,12 +39,12 @@ export class TransformDataSourceInRequestInterceptor<T>
         });
       }
 
-      if (request.body.dataSource && !DataSource[request.body.dataSource]) {
-        request.body.dataSource = decodeDataSource(request.body.dataSource);
-      }
+      for (const type of ['body', 'params', 'query']) {
+        const dataSourceValue = request[type]?.dataSource;
 
-      if (request.params.dataSource && !DataSource[request.params.dataSource]) {
-        request.params.dataSource = decodeDataSource(request.params.dataSource);
+        if (dataSourceValue && !DataSource[dataSourceValue]) {
+          request[type].dataSource = decodeDataSource(dataSourceValue);
+        }
       }
     }
 

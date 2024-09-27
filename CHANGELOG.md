@@ -5,16 +5,109 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.106.0-beta.2 - 2024-08-26
+## Unreleased
+
+### Changed
+
+- Upgraded `webpack-bundle-analyzer` from version `4.10.1` to `4.10.2`
+
+## 2.110.0 - 2024-09-24
+
+### Changed
+
+- Improved the usability of various action menus by introducing horizontal lines to separate the delete action
+- Improved the chart in the account detail dialog (experimental)
+- Aligned the holdings and regions of the public page with the allocations page
+- Considered the user’s language in the link of the access table to share the portfolio
+- Improved the language localization for German (`de`)
+
+## 2.109.0 - 2024-09-21
+
+### Added
+
+- Extended the _Public API_ with a new endpoint that provides portfolio performance metrics (experimental)
+- Added the portfolio performance metrics to the public page
+- Added a blog post: _Hacktoberfest 2024_
+
+### Changed
+
+- Improved the usability of the create or update access dialog
+- Improved the loading indicator of the accounts table
+- Exposed the concurrency of the asset profile data gathering as an environment variable (`PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE`)
+- Exposed the concurrency of the historical market data gathering as an environment variable (`PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA`)
+- Exposed the concurrency of the portfolio snapshot calculation as an environment variable (`PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `prisma` from version `5.19.0` to `5.19.1`
+
+## 2.108.0 - 2024-09-17
+
+### Added
+
+- Added support for bonds in the import dividends dialog
+- Added a _Copy link to clipboard_ action to the access table to share the portfolio
+- Added the current market price column to the historical market data table of the admin control
+- Introduced filters (`dataSource` and `symbol`) in the accounts endpoint
+
+### Changed
+
+- Improved the usability of the toggle component
+- Switched to the accounts endpoint in the holding detail dialog
+- Added a fallback in the get quotes functionality of the _EOD Historical Data_ service
+
+## 2.107.1 - 2024-09-12
+
+### Fixed
+
+- Fixed an issue in the activities filters that occurred during destructuring
+
+## 2.107.0 - 2024-09-10
+
+### Added
+
+- Extended the filters of the activities endpoint by `dataSource` and `symbol`
+
+### Changed
+
+- Migrated the portfolio snapshot calculation to the queue design pattern
+- Optimized the asynchronous operations using `Promise.all()` in the info service
+- Optimized the asynchronous operations using `Promise.all()` in the admin control panel endpoint
+- Extracted the users from the admin control panel endpoint to a dedicated endpoint
+- Improved the language localization for French (`fr`)
+- Improved the language localization for Italian (`it`)
+- Upgraded `bull` from version `4.10.4` to `4.16.2`
+
+## 2.106.0 - 2024-09-07
+
+### Added
+
+- Set up a performance logging service
+- Added a loading indicator to the queue jobs table in the admin control panel
+- Added a loading indicator to the users table in the admin control panel
+- Added the attribute `mode` to the scraper configuration to get quotes instantly
 
 ### Changed
 
 - Reworked the portfolio calculator
+- Improved the caching of the portfolio snapshot in the portfolio calculator by returning cached data and recalculating in the background when it expires
+- Exposed the log levels as an environment variable (`LOG_LEVELS`)
 - Exposed the maximum of chart data items as an environment variable (`MAX_CHART_ITEMS`)
+- Changed the data format of the environment variable `CACHE_QUOTES_TTL` from seconds to milliseconds
+- Changed the data format of the environment variable `CACHE_TTL` from seconds to milliseconds
+- Removed the environment variable `MAX_ITEM_IN_CACHE`
+- Improved the error logs of the scraper configuration test in the asset profile details dialog of the admin control
+- Improved the language localization for Polish (`pl`)
+- Migrated from `cache-manager-redis-store` to `cache-manager-redis-yet`
+- Upgraded `cache-manager` from version `3.4.3` to `5.7.6`
+- Upgraded `prisma` from version `5.18.0` to `5.19.0`
 
 ### Fixed
 
 - Fixed an issue in the view mode toggle of the holdings tab on the home page (experimental)
+- Fixed an issue on the portfolio activities page by loading the data only once
+- Fixed an issue in the carousel component for the testimonial section on the landing page
+- Fixed the historical market data gathering in the _Yahoo Finance_ service by switching from `historical()` to `chart()`
+- Handled an exception in the historical market data component of the asset profile details dialog in the admin control panel
 
 ## 2.105.0 - 2024-08-21
 

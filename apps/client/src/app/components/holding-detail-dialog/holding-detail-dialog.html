@@ -316,7 +316,7 @@
       animationDuration="0"
       class="mb-5"
       [mat-stretch-tabs]="false"
-      [ngClass]="{ 'd-none': !activities?.length }"
+      [ngClass]="{ 'd-none': !dataSource?.data.length }"
     >
       <mat-tab>
         <ng-template mat-tab-label>
@@ -427,7 +427,8 @@
     }
 
     @if (
-      activities?.length > 0 && data.hasPermissionToReportDataGlitch === true
+      dataSource?.data.length > 0 &&
+      data.hasPermissionToReportDataGlitch === true
     ) {
       <div class="row">
         <div class="col">

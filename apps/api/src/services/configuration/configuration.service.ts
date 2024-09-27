@@ -1,5 +1,11 @@
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
-import { DEFAULT_ROOT_URL } from '@ghostfolio/common/config';
+import {
+  CACHE_TTL_NO_CACHE,
+  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE,
+  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA,
+  DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT,
+  DEFAULT_ROOT_URL
+} from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -21,9 +27,8 @@ export class ConfigurationService {
       API_KEY_FINANCIAL_MODELING_PREP: str({ default: '' }),
       API_KEY_OPEN_FIGI: str({ default: '' }),
       API_KEY_RAPID_API: str({ default: '' }),
-      CACHE_QUOTES_TTL: num({ default: ms('1 minute') / 1000 }),
-      CACHE_TTL: num({ default: 1 }),
-      LOG_LEVEL: str({ default: '' }),
+      CACHE_QUOTES_TTL: num({ default: ms('1 minute') }),
+      CACHE_TTL: num({ default: CACHE_TTL_NO_CACHE }),
       DATA_SOURCE_EXCHANGE_RATES: str({ default: DataSource.YAHOO }),
       DATA_SOURCE_IMPORT: str({ default: DataSource.YAHOO }),
       DATA_SOURCES: json({
@@ -44,8 +49,16 @@ export class ConfigurationService {
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
-      MAX_ITEM_IN_CACHE: num({ default: 9999 }),
       PORT: port({ default: 3333 }),
+      PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE: num({
+        default: DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE
+      }),
+      PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA: num({
+        default: DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA
+      }),
+      PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT: num({
+        default: DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT
+      }),
       REDIS_DB: num({ default: 0 }),
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),

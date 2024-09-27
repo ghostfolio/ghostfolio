@@ -16,6 +16,7 @@ export interface AdminMarketDataItem {
   id: string;
   isBenchmark?: boolean;
   isUsedByUsersWithSubscription?: boolean;
+  lastMarketPrice: number;
   marketDataItemCount: number;
   name: string;
   sectorsCount: number;

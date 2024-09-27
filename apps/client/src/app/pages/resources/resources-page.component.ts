@@ -14,9 +14,9 @@ import { Subject } from 'rxjs';
 export class ResourcesPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public routerLinkFaq = ['/' + $localize`faq`];
+  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
   public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`resources`,
+    '/' + $localize`:snake-case:resources`,
     'personal-finance-tools'
   ];
 

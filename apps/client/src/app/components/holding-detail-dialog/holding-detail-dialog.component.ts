@@ -9,6 +9,7 @@ import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   EnhancedSymbolProfile,
+  Filter,
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
@@ -89,7 +90,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public activityForm: FormGroup;
   public accounts: Account[];
-  public activities: Activity[];
   public assetClass: string;
   public assetSubClass: string;
   public averagePrice: number;
@@ -155,6 +155,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       tags: <string[]>[]
     });
 
+    const filters: Filter[] = [
+      { id: this.data.dataSource, type: 'DATA_SOURCE' },
+      { id: this.data.symbol, type: 'SYMBOL' }
+    ];
+
     this.tagsAvailable = tags.map(({ id, name }) => {
       return {
         id,
@@ -177,6 +182,30 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
 
     this.dataService
+      .fetchAccounts({
+        filters
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ accounts }) => {
+        this.accounts = accounts;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
+      .fetchActivities({
+        filters,
+        sortColumn: this.sortColumn,
+        sortDirection: this.sortDirection
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ activities }) => {
+        this.dataSource = new MatTableDataSource(activities);
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.dataService
       .fetchHoldingDetail({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
@@ -184,7 +213,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(
         ({
-          accounts,
           averagePrice,
           dataProviderInfo,
           dividendInBaseCurrency,
@@ -197,7 +225,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
           netPerformanceWithCurrencyEffect,
-          orders,
           quantity,
           SymbolProfile,
           tags,
@@ -208,13 +235,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           firstBuyDate,
           historicalData
         }) => {
-          this.accounts = accounts;
-          this.activities = orders;
           this.averagePrice = averagePrice;
           this.benchmarkDataItems = [];
           this.countries = {};
           this.dataProviderInfo = dataProviderInfo;
-          this.dataSource = new MatTableDataSource(orders.reverse());
           this.dividendInBaseCurrency = dividendInBaseCurrency;
           this.stakeRewards = stakeRewards;
 
