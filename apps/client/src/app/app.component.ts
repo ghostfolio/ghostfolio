@@ -5,7 +5,7 @@ import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
 
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, LocationStrategy } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -96,7 +96,8 @@ export class AppComponent implements OnDestroy, OnInit {
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService
+    private userService: UserService,
+    private locationStrategy: LocationStrategy
   ) {
     this.initializeTheme();
     this.user = undefined;
@@ -222,6 +223,16 @@ export class AppComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
         this.user = state.user;
+
+        const setUserLanguage = sessionStorage.getItem('set_user_language');
+        if (setUserLanguage !== 'true' && this.user?.settings) {
+          const userLanguage = this.user.settings.language;
+          const userBasePath = `/${userLanguage}/`;
+          if (!this.locationStrategy.getBaseHref().includes(userBasePath)) {
+            sessionStorage.setItem('set_user_language', 'true');
+            window.location.href = `..${userBasePath}`;
+          }
+        }
 
         this.canCreateAccount = hasPermission(
           this.user?.permissions,
