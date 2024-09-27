@@ -12,13 +12,14 @@
         [value]="mode"
         (change)="onRadioChange($event.value)"
       >
-        <mat-radio-button name="auto" value="auto"> Search </mat-radio-button>
+        <mat-radio-button name="auto" value="auto" />
+        <label class="m-0" for="auto" i18n>Search</label>
         <mat-radio-button class="ml-3" name="manual" value="manual">
-          Add Manually
         </mat-radio-button>
+        <label class="m-0" for="manual" i18n>Add Manually</label>
         <mat-radio-button class="ml-3" name="currency" value="currency">
-          Add Currency
         </mat-radio-button>
+        <label class="m-0" for="currency" i18n>Add Currency</label>
       </mat-radio-group>
     </div>
 
@@ -44,6 +45,18 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Currency</mat-label>
           <input formControlName="addCurrency" matInput />
+          <mat-error
+            *ngIf="
+              createAssetProfileForm.get('addCurrency').hasError('required')
+            "
+            i18n
+          >
+            Currency is required.
+          </mat-error>
+          <mat-error *ngIf="showCurrencyErrorMessage" i18n>
+            {{ createAssetProfileForm.controls['addCurrency'].value }} is an
+            invalid currency! Should be of 3 characters only.
+          </mat-error>
         </mat-form-field>
       </div>
     }

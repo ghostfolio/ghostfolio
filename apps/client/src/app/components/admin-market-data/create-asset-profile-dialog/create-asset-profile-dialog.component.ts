@@ -5,10 +5,10 @@ import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
-  OnInit,
-  ViewEncapsulation
+  OnInit
 } from '@angular/core';
 import {
   AbstractControl,
@@ -28,32 +28,35 @@ import { Subject, takeUntil } from 'rxjs';
   host: { class: 'h-100' },
   selector: 'gf-create-asset-profile-dialog',
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
-  templateUrl: 'create-asset-profile-dialog.html',
-  encapsulation: ViewEncapsulation.None
+  templateUrl: 'create-asset-profile-dialog.html'
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
-  public mode: 'auto' | 'manual' | 'currency';
+  public mode: 'auto' | 'currency' | 'manual';
   public customCurrencies: string[];
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     public readonly adminService: AdminService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private readonly dataService: DataService,
     public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
-    public readonly formBuilder: FormBuilder,
-    private dataService: DataService,
-    private notificationService: NotificationService,
-    private router: Router
+    public readonly formBuilder: FormBuilder
   ) {}
 
   public ngOnInit() {
     this.fetchAdminData();
+
     this.createAssetProfileForm = this.formBuilder.group(
       {
+        addCurrency: new FormControl(null, [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(3)
+        ]),
         addSymbol: new FormControl(null, [Validators.required]),
-        searchSymbol: new FormControl(null, [Validators.required]),
-        addCurrency: new FormControl(null, [Validators.required])
+        searchSymbol: new FormControl(null, [Validators.required])
       },
       {
         validators: this.atLeastOneValid
@@ -67,7 +70,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  public onRadioChange(mode: 'auto' | 'manual' | 'currency') {
+  public onRadioChange(mode: 'auto' | 'currency' | 'manual') {
     this.mode = mode;
   }
 
@@ -87,18 +90,11 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
       const currency = this.createAssetProfileForm
         .get('addCurrency')
         .value.toUpperCase();
+
       if (currency.length === 3) {
         const currencies = uniq([...this.customCurrencies, currency]);
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
         this.dialogRef.close();
-        this.notificationService.alert({
-          title: $localize`Currency added successfully!`
-        });
-      } else {
-        this.notificationService.alert({
-          title: $localize`${currency} is an invalid currency!`,
-          message: $localize`Currency should be 3 characters in length`
-        });
       }
     }
   }
@@ -109,25 +105,25 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   }
 
   private atLeastOneValid(control: AbstractControl): ValidationErrors {
+    const addCurrencyControl = control.get('addCurrency');
     const addSymbolControl = control.get('addSymbol');
     const searchSymbolControl = control.get('searchSymbol');
-    const addCurrencyControl = control.get('addCurrency');
 
     if (
+      addCurrencyControl.valid &&
       addSymbolControl.valid &&
-      searchSymbolControl.valid &&
-      addCurrencyControl.valid
+      searchSymbolControl.valid
     ) {
       return { atLeastOneValid: true };
     }
 
     if (
+      addCurrencyControl.valid ||
+      !addCurrencyControl ||
       addSymbolControl.valid ||
       !addSymbolControl ||
       searchSymbolControl.valid ||
-      !searchSymbolControl ||
-      addCurrencyControl.valid ||
-      !addCurrencyControl
+      !searchSymbolControl
     ) {
       return { atLeastOneValid: false };
     }
@@ -141,6 +137,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -155,5 +152,17 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
           window.location.reload();
         }, 300);
       });
+  }
+
+  get showCurrencyErrorMessage() {
+    const addCurrencyFormControl =
+      this.createAssetProfileForm.get('addCurrency');
+    if (
+      addCurrencyFormControl.hasError('minlength') ||
+      addCurrencyFormControl.hasError('maxlength')
+    ) {
+      return true;
+    }
+    return false;
   }
 }
