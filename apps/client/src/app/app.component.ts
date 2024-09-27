@@ -91,13 +91,13 @@ export class AppComponent implements OnDestroy, OnInit {
     private dialog: MatDialog,
     @Inject(DOCUMENT) private document: Document,
     private impersonationStorageService: ImpersonationStorageService,
+    private locationStrategy: LocationStrategy,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private title: Title,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService,
-    private locationStrategy: LocationStrategy
+    private userService: UserService
   ) {
     this.initializeTheme();
     this.user = undefined;

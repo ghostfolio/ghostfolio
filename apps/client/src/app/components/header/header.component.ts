@@ -97,12 +97,12 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
+    private locationStrategy: LocationStrategy,
     private notificationService: NotificationService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
     private tokenStorageService: TokenStorageService,
-    private userService: UserService,
-    private locationStrategy: LocationStrategy
+    private userService: UserService
   ) {
     this.impersonationStorageService
       .onChangeHasImpersonation()
