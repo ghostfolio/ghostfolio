@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Upgraded `webpack-bundle-analyzer` from version `4.10.1` to `4.10.2`
 
 ## 2.110.0 - 2024-09-24
