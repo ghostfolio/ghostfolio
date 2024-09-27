@@ -1,4 +1,3 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
@@ -7,7 +6,10 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
-import { PerformanceLoggingInterceptor } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import {
+  LogPerformance,
+  PerformanceLoggingInterceptor
+} from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';

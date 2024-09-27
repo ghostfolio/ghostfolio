@@ -1,4 +1,3 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { CashDetails } from '@ghostfolio/api/app/account/interfaces/cash-details.interface';
@@ -6,6 +5,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -801,7 +801,7 @@ export class PortfolioService {
         });
 
       const stakeRewards = getSum(
-        orders
+        activities
           .filter(({ type }) => {
             return type === 'STAKE';
           })
@@ -1725,8 +1725,7 @@ export class PortfolioService {
 
     const { performance } = await this.getPerformance({
       impersonationId,
-      userId,
-      portfolioCalculator
+      userId
     });
 
     const {

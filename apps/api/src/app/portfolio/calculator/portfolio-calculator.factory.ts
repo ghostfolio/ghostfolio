@@ -1,7 +1,7 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
@@ -28,7 +28,8 @@ export class PortfolioCalculatorFactory {
     private readonly currentRateService: CurrentRateService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioSnapshotService: PortfolioSnapshotService,
-    private readonly redisCacheService: RedisCacheService
+    private readonly redisCacheService: RedisCacheService,
+    private readonly orderService: OrderService
   ) {}
 
   @LogPerformance
@@ -62,31 +63,37 @@ export class PortfolioCalculatorFactory {
           redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
-        return new CPRPortfolioCalculator({
-          accountBalanceItems,
-          activities,
-          currency,
-          currentRateService: this.currentRateService,
-          userId,
-          configurationService: this.configurationService,
-          exchangeRateDataService: this.exchangeRateDataService,
-          portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService,
-          filters
-        });
+        return new CPRPortfolioCalculator(
+          {
+            accountBalanceItems,
+            activities,
+            currency,
+            currentRateService: this.currentRateService,
+            userId,
+            configurationService: this.configurationService,
+            exchangeRateDataService: this.exchangeRateDataService,
+            portfolioSnapshotService: this.portfolioSnapshotService,
+            redisCacheService: this.redisCacheService,
+            filters
+          },
+          this.orderService
+        );
       case PerformanceCalculationType.CPR:
-        return new CPRPortfolioCalculator({
-          accountBalanceItems,
-          activities,
-          currency,
-          currentRateService: this.currentRateService,
-          userId,
-          configurationService: this.configurationService,
-          exchangeRateDataService: this.exchangeRateDataService,
-          portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService,
-          filters
-        });
+        return new CPRPortfolioCalculator(
+          {
+            accountBalanceItems,
+            activities,
+            currency,
+            currentRateService: this.currentRateService,
+            userId,
+            configurationService: this.configurationService,
+            exchangeRateDataService: this.exchangeRateDataService,
+            portfolioSnapshotService: this.portfolioSnapshotService,
+            redisCacheService: this.redisCacheService,
+            filters
+          },
+          this.orderService
+        );
       default:
         throw new Error('Invalid calculation type');
     }

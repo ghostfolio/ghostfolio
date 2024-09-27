@@ -1,4 +1,4 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {

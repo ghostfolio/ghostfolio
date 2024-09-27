@@ -1,11 +1,12 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
@@ -41,6 +42,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       currency,
       currentRateService,
       exchangeRateDataService,
+      portfolioSnapshotService,
       redisCacheService,
       userId,
       filters
@@ -51,6 +53,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       currency: string;
       currentRateService: CurrentRateService;
       exchangeRateDataService: ExchangeRateDataService;
+      portfolioSnapshotService: PortfolioSnapshotService;
       redisCacheService: RedisCacheService;
       filters: Filter[];
       userId: string;
@@ -66,6 +69,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       filters,
       currentRateService,
       exchangeRateDataService,
+      portfolioSnapshotService,
       redisCacheService,
       userId
     });

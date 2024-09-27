@@ -1,4 +1,3 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
