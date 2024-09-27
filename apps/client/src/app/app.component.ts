@@ -224,7 +224,7 @@ export class AppComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         this.user = state.user;
 
-        const setUserLanguage = sessionStorage.getItem('set_user_language');
+        /* const setUserLanguage = sessionStorage.getItem('set_user_language');
         if (setUserLanguage !== 'true' && this.user?.settings) {
           const userLanguage = this.user.settings.language;
           const userBasePath = `/${userLanguage}/`;
@@ -232,7 +232,7 @@ export class AppComponent implements OnDestroy, OnInit {
             sessionStorage.setItem('set_user_language', 'true');
             window.location.href = `..${userBasePath}`;
           }
-        }
+        } */
 
         this.canCreateAccount = hasPermission(
           this.user?.permissions,
