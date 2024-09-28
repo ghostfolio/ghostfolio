@@ -431,13 +431,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
-            if (
-              orders
-                .filter((o) => o.type === 'STAKE')
-                .every((o) => Number.isInteger(o.quantity))
-            ) {
-              this.stakeRewards = 0;
-            }
           } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
             if (this.quantity < 1) {
               this.quantityPrecision = 7;
