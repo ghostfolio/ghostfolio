@@ -17,6 +17,9 @@
         <mat-radio-button class="ml-3" name="manual" value="manual">
         </mat-radio-button>
         <label class="m-0" for="manual" i18n>Add Manually</label>
+        <mat-radio-button class="ml-3" name="currency" value="currency">
+        </mat-radio-button>
+        <label class="m-0" for="currency" i18n>Add Currency</label>
       </mat-radio-group>
     </div>
 
@@ -35,6 +38,16 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Symbol</mat-label>
           <input formControlName="addSymbol" matInput />
+        </mat-form-field>
+      </div>
+    } @else if (mode === 'currency') {
+      <div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label i18n>Currency</mat-label>
+          <input formControlName="addCurrency" matInput />
+          @if (showCurrencyErrorMessage) {
+            <mat-error i18n>Oops! Invalid currency.</mat-error>
+          }
         </mat-form-field>
       </div>
     }
