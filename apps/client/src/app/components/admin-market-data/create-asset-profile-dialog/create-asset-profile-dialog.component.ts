@@ -45,6 +45,20 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly formBuilder: FormBuilder
   ) {}
 
+  public get showCurrencyErrorMessage() {
+    const addCurrencyFormControl =
+      this.createAssetProfileForm.get('addCurrency');
+
+    if (
+      addCurrencyFormControl.hasError('minlength') ||
+      addCurrencyFormControl.hasError('maxlength')
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   public ngOnInit() {
     this.fetchAdminData();
 
@@ -152,17 +166,5 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
           window.location.reload();
         }, 300);
       });
-  }
-
-  get showCurrencyErrorMessage() {
-    const addCurrencyFormControl =
-      this.createAssetProfileForm.get('addCurrency');
-    if (
-      addCurrencyFormControl.hasError('minlength') ||
-      addCurrencyFormControl.hasError('maxlength')
-    ) {
-      return true;
-    }
-    return false;
   }
 }

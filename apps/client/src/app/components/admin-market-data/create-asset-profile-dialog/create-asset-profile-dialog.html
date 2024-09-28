@@ -45,18 +45,15 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Currency</mat-label>
           <input formControlName="addCurrency" matInput />
-          <mat-error
-            *ngIf="
-              createAssetProfileForm.get('addCurrency').hasError('required')
-            "
-            i18n
-          >
-            Currency is required.
-          </mat-error>
-          <mat-error *ngIf="showCurrencyErrorMessage" i18n>
-            {{ createAssetProfileForm.controls['addCurrency'].value }} is an
-            invalid currency! Should be of 3 characters only.
-          </mat-error>
+          @if (createAssetProfileForm.get('addCurrency').hasError('required')) {
+            <mat-error i18n>Currency is required.</mat-error>
+          }
+          @if (showCurrencyErrorMessage) {
+            <mat-error i18n>
+              {{ createAssetProfileForm.controls['addCurrency'].value }} is an
+              invalid currency! Should be of 3 characters only.
+            </mat-error>
+          }
         </mat-form-field>
       </div>
     }
