@@ -1,4 +1,3 @@
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { PROPERTY_CURRENCIES } from '@ghostfolio/common/config';
@@ -19,7 +18,6 @@ import {
   Validators
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
 import { uniq } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -39,7 +37,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
 
   public constructor(
     public readonly adminService: AdminService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private readonly changeDetectorRef: ChangeDetectorRef,
     private readonly dataService: DataService,
     public readonly dialogRef: MatDialogRef<CreateAssetProfileDialog>,
     public readonly formBuilder: FormBuilder
@@ -100,7 +98,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         dataSource: 'MANUAL',
         symbol: this.createAssetProfileForm.get('addSymbol').value
       });
-    } else {
+    } else if (this.mode === 'currency') {
       const currency = this.createAssetProfileForm
         .get('addCurrency')
         .value.toUpperCase();
