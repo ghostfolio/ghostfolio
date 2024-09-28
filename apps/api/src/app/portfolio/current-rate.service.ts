@@ -1,4 +1,5 @@
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -27,6 +28,7 @@ export class CurrentRateService {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  @LogPerformance
   // TODO: Pass user instead of using this.request.user
   public async getValues({
     dataGatheringItems,

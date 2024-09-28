@@ -111,7 +111,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
           type: 'PRIVATE'
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

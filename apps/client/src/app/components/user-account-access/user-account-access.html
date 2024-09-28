@@ -10,6 +10,7 @@
   <gf-access-table
     [accesses]="accesses"
     [showActions]="hasPermissionToDeleteAccess"
+    [user]="user"
     (accessDeleted)="onDeleteAccess($event)"
   />
   @if (hasPermissionToCreateAccess) {

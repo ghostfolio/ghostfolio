@@ -1,4 +1,4 @@
-import { LogPerformance } from '@ghostfolio/api/aop/logging.interceptor';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
@@ -288,6 +288,8 @@ export class SymbolProfileService {
         headers:
           scraperConfiguration.headers as ScraperConfiguration['headers'],
         locale: scraperConfiguration.locale as string,
+        mode:
+          (scraperConfiguration.mode as ScraperConfiguration['mode']) ?? 'lazy',
         selector: scraperConfiguration.selector as string,
         url: scraperConfiguration.url as string
       };

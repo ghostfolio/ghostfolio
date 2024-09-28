@@ -2,10 +2,10 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import { DataGatheringService } from '@ghostfolio/api/services/data-gathering/data-gathering.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
@@ -17,6 +17,7 @@ import {
   AdminData,
   AdminMarketData,
   AdminMarketDataDetails,
+  AdminUsers,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
@@ -239,9 +240,11 @@ export class AdminController {
         return { price };
       }
 
-      throw new Error('Could not parse the current market price');
+      throw new Error(
+        `Could not parse the current market price for ${symbol} (${dataSource})`
+      );
     } catch (error) {
-      Logger.error(error);
+      Logger.error(error, 'AdminController');
 
       throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
     }
@@ -349,5 +352,12 @@ export class AdminController {
     @Body() data: PropertyDto
   ) {
     return this.adminService.putSetting(key, data.value);
+  }
+
+  @Get('user')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getUsers(): Promise<AdminUsers> {
+    return this.adminService.getUsers();
   }
 }

@@ -9,6 +9,13 @@ import {
   OnInit,
   Output
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { isEmpty } from 'lodash';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subject, takeUntil } from 'rxjs';
+
+import { IRuleSettingsDialogParams } from './rule-settings-dialog/interfaces/interfaces';
+import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-settings-dialog.component';
 
 @Component({
   selector: 'gf-rule',
@@ -23,9 +30,42 @@ export class RuleComponent implements OnInit {
 
   @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
 
-  public constructor() {}
+  public isEmpty = isEmpty;
 
-  public ngOnInit() {}
+  private deviceType: string;
+  private unsubscribeSubject = new Subject<void>();
+
+  public constructor(
+    private deviceService: DeviceDetectorService,
+    private dialog: MatDialog
+  ) {}
+
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
+
+  public onCustomizeRule(rule: PortfolioReportRule) {
+    const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
+      data: <IRuleSettingsDialogParams>{
+        rule
+      },
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(
+        ({ settings }: { settings: PortfolioReportRule['settings'] }) => {
+          if (settings) {
+            console.log(settings);
+
+            // TODO
+            // this.ruleUpdated.emit(settings);
+          }
+        }
+      );
+  }
 
   public onUpdateRule(rule: PortfolioReportRule) {
     const settings: UpdateUserSettingDto = {
@@ -35,5 +75,10 @@ export class RuleComponent implements OnInit {
     };
 
     this.ruleUpdated.emit(settings);
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

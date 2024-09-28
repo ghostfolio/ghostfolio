@@ -45,6 +45,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Analyze and track your portfolio.'
   },
   {
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'banktivity',
+    name: 'Banktivity',
+    origin: 'United States',
+    pricingPerYear: '$59.99',
+    slogan: 'Proactive money management app for macOS & iOS'
+  },
+  {
     founded: 2022,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -61,6 +70,17 @@ export const personalFinanceTools: Product[] = [
     origin: 'France',
     pricingPerYear: '$100',
     slogan: 'Stock Portfolio Tracker for Smart Investors'
+  },
+  {
+    founded: 2007,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'buxfer',
+    name: 'Buxfer',
+    origin: 'United States',
+    pricingPerYear: '$48',
+    regions: ['Global'],
+    slogan: 'Take control of your financial future'
   },
   {
     founded: 2013,
@@ -164,6 +184,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Portfolio Tracker Designed by Professional Investors'
   },
   {
+    founded: 2010,
+    hasFreePlan: false,
+    key: 'etops',
+    name: 'etops',
+    origin: 'Switzerland',
+    slogan: 'Your financial superpower'
+  },
+  {
     founded: 2020,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -183,6 +211,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$115',
     slogan: 'Flexible Financial Management'
+  },
+  {
+    founded: 2023,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'finanzfluss-copilot',
+    name: 'Finanzfluss Copilot',
+    origin: 'Germany',
+    pricingPerYear: '€69.99',
+    slogan: 'Portfolio Tracker für dein Vermögen'
   },
   {
     founded: 2020,
@@ -322,6 +360,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Track your investments'
   },
   {
+    founded: 2010,
+    key: 'masttro',
+    name: 'Masttro',
+    origin: 'United States',
+    slogan: 'Your platform for wealth in full view'
+  },
+  {
     founded: 2021,
     hasSelfHostingAbility: false,
     key: 'maybe-finance',
@@ -345,6 +390,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The smartest way to track your crypto'
   },
   {
+    founded: 1991,
+    hasSelfHostingAbility: true,
+    key: 'microsoft-money',
+    name: 'Microsoft Money',
+    note: 'Microsoft Money was discontinued in 2010',
+    origin: 'United States'
+  },
+  {
     founded: 2019,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -353,6 +406,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$99.99',
     slogan: 'The modern way to manage your money'
+  },
+  {
+    founded: 1999,
+    hasFreePlan: false,
+    hasSelfHostingAbility: true,
+    key: 'moneydance',
+    name: 'Moneydance',
+    origin: 'Scotland',
+    pricingPerYear: '$100',
+    slogan: 'Personal Finance Manager for Mac, Windows, and Linux'
   },
   {
     hasFreePlan: false,
@@ -631,6 +694,14 @@ export const personalFinanceTools: Product[] = [
     origin: 'Canada',
     pricingPerYear: '$50',
     slogan: 'See all your investments in one place'
+  },
+  {
+    founded: 2018,
+    hasFreePlan: true,
+    key: 'wealthposition',
+    name: 'WealthPosition',
+    pricingPerYear: '$60',
+    slogan: 'Personal Finance & Budgeting App'
   },
   {
     founded: 2018,

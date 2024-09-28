@@ -2,7 +2,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { downloadAsFile } from '@ghostfolio/common/helper';
+import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
   AccountBalancesResponse,
   HistoricalDataItem,
@@ -27,7 +27,7 @@ import { Router } from '@angular/router';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
 import { isNumber } from 'lodash';
-import { Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { AccountDetailDialogParams } from './interfaces/interfaces';
@@ -87,11 +87,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.fetchAccount();
-    this.fetchAccountBalances();
-    this.fetchActivities();
-    this.fetchPortfolioHoldings();
-    this.fetchPortfolioPerformance();
+    this.initialize();
   }
 
   public onCloneActivity(aActivity: Activity) {
@@ -111,9 +107,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .postAccountBalance(accountBalance)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.fetchAccount();
-        this.fetchAccountBalances();
-        this.fetchPortfolioPerformance();
+        this.initialize();
       });
   }
 
@@ -122,9 +116,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       .deleteAccountBalance(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        this.fetchAccount();
-        this.fetchAccountBalances();
-        this.fetchPortfolioPerformance();
+        this.initialize();
       });
   }
 
@@ -198,17 +190,6 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       );
   }
 
-  private fetchAccountBalances() {
-    this.dataService
-      .fetchAccountBalances(this.data.accountId)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ balances }) => {
-        this.accountBalances = balances;
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
   private fetchActivities() {
     this.isLoadingActivities = true;
 
@@ -229,6 +210,58 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
+  private fetchChart() {
+    this.isLoadingChart = true;
+
+    forkJoin({
+      accountBalances: this.dataService
+        .fetchAccountBalances(this.data.accountId)
+        .pipe(takeUntil(this.unsubscribeSubject)),
+      portfolioPerformance: this.dataService
+        .fetchPortfolioPerformance({
+          filters: [
+            {
+              id: this.data.accountId,
+              type: 'ACCOUNT'
+            }
+          ],
+          range: 'max',
+          withExcludedAccounts: true,
+          withItems: true
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+    }).subscribe({
+      error: () => {
+        this.isLoadingChart = false;
+      },
+      next: ({ accountBalances, portfolioPerformance }) => {
+        this.accountBalances = accountBalances.balances;
+
+        if (portfolioPerformance.chart.length > 0) {
+          this.historicalDataItems = portfolioPerformance.chart.map(
+            ({ date, netWorth, netWorthInPercentage }) => ({
+              date,
+              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
+            })
+          );
+        } else {
+          this.historicalDataItems = this.accountBalances.map(
+            ({ date, valueInBaseCurrency }) => {
+              return {
+                date: format(date, DATE_FORMAT),
+                value: valueInBaseCurrency
+              };
+            }
+          );
+        }
+
+        this.isLoadingChart = false;
+
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
   private fetchPortfolioHoldings() {
     this.dataService
       .fetchPortfolioHoldings({
@@ -247,36 +280,11 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
       });
   }
 
-  private fetchPortfolioPerformance() {
-    this.isLoadingChart = true;
-
-    this.dataService
-      .fetchPortfolioPerformance({
-        filters: [
-          {
-            id: this.data.accountId,
-            type: 'ACCOUNT'
-          }
-        ],
-        range: 'max',
-        withExcludedAccounts: true,
-        withItems: true
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ chart }) => {
-        this.historicalDataItems = chart.map(
-          ({ date, netWorth, netWorthInPercentage }) => {
-            return {
-              date,
-              value: isNumber(netWorth) ? netWorth : netWorthInPercentage
-            };
-          }
-        );
-
-        this.isLoadingChart = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
+  private initialize() {
+    this.fetchAccount();
+    this.fetchActivities();
+    this.fetchChart();
+    this.fetchPortfolioHoldings();
   }
 
   public ngOnDestroy() {

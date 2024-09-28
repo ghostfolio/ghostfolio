@@ -218,6 +218,7 @@
                       <span i18n>Impersonate User</span>
                     </span>
                   </button>
+                  <hr class="m-0" />
                 }
                 <button
                   mat-menu-item
@@ -245,6 +246,16 @@
           ></tr>
         </table>
       </div>
+      @if (isLoading) {
+        <ngx-skeleton-loader
+          animation="pulse"
+          class="px-4 py-3"
+          [theme]="{
+            height: '1.5rem',
+            width: '100%'
+          }"
+        />
+      }
     </div>
   </div>
 </div>

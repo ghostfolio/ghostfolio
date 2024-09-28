@@ -371,7 +371,7 @@ export class UserService {
 
       const hashedAccessToken = this.createAccessToken(
         accessToken,
-        process.env.ACCESS_TOKEN_SALT
+        this.configurationService.get('ACCESS_TOKEN_SALT')
       );
 
       user = await this.prismaService.user.update({

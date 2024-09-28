@@ -7,7 +7,10 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { PROPERTY_BENCHMARKS } from '@ghostfolio/common/config';
+import {
+  CACHE_TTL_INFINITE,
+  PROPERTY_BENCHMARKS
+} from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   calculateBenchmarkTrend,
@@ -443,7 +446,7 @@ export class BenchmarkService {
           benchmarks,
           expiration: expiration.getTime()
         }),
-        ms('12 hours') / 1000
+        CACHE_TTL_INFINITE
       );
     }
 

@@ -1,3 +1,4 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +12,7 @@ import { AccessTableComponent } from './access-table.component';
   declarations: [AccessTableComponent],
   exports: [AccessTableComponent],
   imports: [
+    ClipboardModule,
     CommonModule,
     MatButtonModule,
     MatMenuModule,

@@ -20,20 +20,20 @@
       </div>
     </div>
 
-    <!-- TODO
-    <div class="chart-container mb-3">
-      <gf-investment-chart
-        class="h-100"
-        [currency]="user?.settings?.baseCurrency"
-        [historicalDataItems]="historicalDataItems"
-        [isInPercent]="
-          data.hasImpersonationId || user.settings.isRestrictedView
-        "
-        [isLoading]="isLoadingChart"
-        [locale]="user?.settings?.locale"
-      />
-    </div>
-    -->
+    @if (user?.settings?.isExperimentalFeatures) {
+      <div class="chart-container mb-3">
+        <gf-investment-chart
+          class="h-100"
+          [currency]="user?.settings?.baseCurrency"
+          [historicalDataItems]="historicalDataItems"
+          [isInPercent]="
+            data.hasImpersonationId || user.settings.isRestrictedView
+          "
+          [isLoading]="isLoadingChart"
+          [locale]="user?.settings?.locale"
+        />
+      </div>
+    }
 
     <div class="mb-3 row">
       <div class="col-6 mb-3">

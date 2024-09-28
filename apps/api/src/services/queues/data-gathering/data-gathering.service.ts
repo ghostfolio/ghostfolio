@@ -11,8 +11,8 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
   PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
 import {
@@ -282,9 +282,9 @@ export class DataGatheringService {
             date,
             symbol
           },
-          name: GATHER_HISTORICAL_MARKET_DATA_PROCESS,
+          name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
           opts: {
-            ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_OPTIONS,
+            ...GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
             priority,
             jobId: `${getAssetProfileIdentifier({
               dataSource,

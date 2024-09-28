@@ -3,8 +3,10 @@ import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfac
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
   DATA_GATHERING_QUEUE,
+  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE,
+  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA,
   GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_HISTORICAL_MARKET_DATA_PROCESS
+  GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getStartOfUtcDate } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
@@ -34,7 +36,14 @@ export class DataGatheringProcessor {
     private readonly marketDataService: MarketDataService
   ) {}
 
-  @Process({ concurrency: 1, name: GATHER_ASSET_PROFILE_PROCESS })
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE ??
+        DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE.toString(),
+      10
+    ),
+    name: GATHER_ASSET_PROFILE_PROCESS
+  })
   public async gatherAssetProfile(job: Job<AssetProfileIdentifier>) {
     try {
       Logger.log(
@@ -58,7 +67,14 @@ export class DataGatheringProcessor {
     }
   }
 
-  @Process({ concurrency: 1, name: GATHER_HISTORICAL_MARKET_DATA_PROCESS })
+  @Process({
+    concurrency: parseInt(
+      process.env.PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA ??
+        DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA.toString(),
+      10
+    ),
+    name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
+  })
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
     try {
       const { dataSource, date, symbol } = job.data;
@@ -69,7 +85,7 @@ export class DataGatheringProcessor {
           currentDate,
           DATE_FORMAT
         )}`,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
       const historicalData = await this.dataProviderService.getHistoricalRaw({
@@ -123,12 +139,12 @@ export class DataGatheringProcessor {
           currentDate,
           DATE_FORMAT
         )}`,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
     } catch (error) {
       Logger.error(
         error,
-        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS})`
+        `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
       throw new Error(error);

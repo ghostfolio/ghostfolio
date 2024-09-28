@@ -75,17 +75,17 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`about`;
-  public routeFeatures = $localize`features`;
-  public routeMarkets = $localize`markets`;
-  public routePricing = $localize`pricing`;
-  public routeResources = $localize`resources`;
-  public routerLinkAbout = ['/' + $localize`about`];
-  public routerLinkFeatures = ['/' + $localize`features`];
-  public routerLinkMarkets = ['/' + $localize`markets`];
-  public routerLinkPricing = ['/' + $localize`pricing`];
-  public routerLinkRegister = ['/' + $localize`register`];
-  public routerLinkResources = ['/' + $localize`resources`];
+  public routeAbout = $localize`:snake-case:about`;
+  public routeFeatures = $localize`:snake-case:features`;
+  public routeMarkets = $localize`:snake-case:markets`;
+  public routePricing = $localize`:snake-case:pricing`;
+  public routeResources = $localize`:snake-case:resources`;
+  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
 
   private unsubscribeSubject = new Subject<void>();
 

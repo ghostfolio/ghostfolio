@@ -99,6 +99,21 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="lastMarketPrice">
+            <th *matHeaderCellDef class="px-1" mat-header-cell>
+              <ng-container i18n>Market Price</ng-container>
+            </th>
+            <td *matCellDef="let element" class="px-1" mat-cell>
+              <div class="d-flex justify-content-end">
+                <gf-value
+                  [isCurrency]="true"
+                  [locale]="user?.settings?.locale"
+                  [value]="element.lastMarketPrice ?? ''"
+                />
+              </div>
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="date">
             <th *matHeaderCellDef class="px-1" mat-header-cell>
               <ng-container i18n>First Activity</ng-container>
@@ -182,6 +197,7 @@
                 <button mat-menu-item (click)="onGatherProfileData()">
                   <ng-container i18n>Gather Profile Data</ng-container>
                 </button>
+                <hr class="m-0" />
                 <button
                   mat-menu-item
                   [disabled]="!selection.hasValue()"
@@ -215,6 +231,7 @@
                     <span i18n>Edit</span>
                   </span>
                 </a>
+                <hr class="m-0" />
                 <button
                   mat-menu-item
                   [disabled]="

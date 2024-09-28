@@ -92,11 +92,11 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
 
     this.isLoading = true;
 
-    if (this.accounts) {
-      this.dataSource = new MatTableDataSource(this.accounts);
-      this.dataSource.sort = this.sort;
-      this.dataSource.sortingDataAccessor = get;
+    this.dataSource = new MatTableDataSource(this.accounts);
+    this.dataSource.sort = this.sort;
+    this.dataSource.sortingDataAccessor = get;
 
+    if (this.accounts) {
       this.isLoading = false;
     }
   }

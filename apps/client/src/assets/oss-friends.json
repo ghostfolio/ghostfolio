@@ -1,5 +1,5 @@
 {
-  "createdAt": "2024-04-09T00:00:00.000Z",
+  "createdAt": "2024-08-31T00:00:00.000Z",
   "data": [
     {
       "name": "Aptabase",
@@ -47,11 +47,6 @@
       "href": "https://dyrector.io"
     },
     {
-      "name": "Erxes",
-      "description": "The Open-Source HubSpot Alternative. A single XOS enables to create unique and life-changing experiences that work for all types of business.",
-      "href": "https://erxes.io"
-    },
-    {
       "name": "Firecamp",
       "description": "vscode for apis, open-source postman/insomnia alternative",
       "href": "https://firecamp.io"
@@ -87,11 +82,6 @@
       "href": "https://infisical.com"
     },
     {
-      "name": "Keep",
-      "description": "Open source alert management and AIOps platform.",
-      "href": "https://keephq.dev"
-    },
-    {
       "name": "Langfuse",
       "description": "Open source LLM engineering platform. Debug, analyze and iterate together.",
       "href": "https://langfuse.com"
@@ -117,6 +107,11 @@
       "href": "https://www.openstatus.dev"
     },
     {
+      "name": "Portkey AI",
+      "description": "AI Gateway with integrated Guardrails. Route to 250+ LLMs and 50+ Guardrails with 1-fast API. Supports caching, retries, and edge deployment for low latency.",
+      "href": "https://www.portkey.ai"
+    },
+    {
       "name": "Prisma",
       "description": "Simplify working with databases. Build, optimize, and grow your app easily with an intuitive data model, type-safety, automated migrations, connection pooling, caching, and real-time db subscriptions.",
       "href": "https://www.prisma.io"
@@ -125,11 +120,6 @@
       "name": "Requestly",
       "description": "Makes frontend development cycle 10x faster with API Client, Mock Server, Intercept & Modify HTTP Requests and Session Replays.",
       "href": "https://requestly.com"
-    },
-    {
-      "name": "Revert",
-      "description": "The open-source unified API to build B2B integrations remarkably fast",
-      "href": "https://revert.dev"
     },
     {
       "name": "Rivet",

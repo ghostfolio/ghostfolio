@@ -1,8 +1,9 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
-import { Access } from '@ghostfolio/common/interfaces';
+import { Access, User } from '@ghostfolio/common/interfaces';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,15 +24,18 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AccessTableComponent implements OnChanges, OnInit {
   @Input() accesses: Access[];
   @Input() showActions: boolean;
+  @Input() user: User;
 
   @Output() accessDeleted = new EventEmitter<string>();
 
   public baseUrl = window.location.origin;
   public dataSource: MatTableDataSource<Access>;
-  public defaultLanguageCode = DEFAULT_LANGUAGE_CODE;
   public displayedColumns = [];
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(
+    private clipboard: Clipboard,
+    private notificationService: NotificationService
+  ) {}
 
   public ngOnInit() {}
 
@@ -45,6 +49,16 @@ export class AccessTableComponent implements OnChanges, OnInit {
     if (this.accesses) {
       this.dataSource = new MatTableDataSource(this.accesses);
     }
+  }
+
+  public getPublicUrl(aId: string): string {
+    const languageCode = this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+
+    return `${this.baseUrl}/${languageCode}/p/${aId}`;
+  }
+
+  public onCopyToClipboard(aId: string): void {
+    this.clipboard.copy(this.getPublicUrl(aId));
   }
 
   public onDeleteAccess(aId: string) {

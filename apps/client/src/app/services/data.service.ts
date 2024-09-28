@@ -36,8 +36,8 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioPublicDetails,
   PortfolioReport,
+  PublicPortfolioResponse,
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
@@ -72,13 +72,23 @@ export class DataService {
         ACCOUNT: filtersByAccount,
         ASSET_CLASS: filtersByAssetClass,
         ASSET_SUB_CLASS: filtersByAssetSubClass,
+        DATA_SOURCE: [filterByDataSource] = [],
         HOLDING_TYPE: filtersByHoldingType,
         PRESET_ID: filtersByPresetId,
         SEARCH_QUERY: filtersBySearchQuery,
+        SYMBOL: [filterBySymbol] = [],
         TAG: filtersByTag
       } = groupBy(filters, (filter) => {
         return filter.type;
       });
+
+      if (filterByDataSource) {
+        params = params.append('dataSource', filterByDataSource.id);
+      }
+
+      if (filterBySymbol) {
+        params = params.append('symbol', filterBySymbol.id);
+      }
 
       if (filtersByAccount) {
         params = params.append(
@@ -163,8 +173,10 @@ export class DataService {
     );
   }
 
-  public fetchAccounts() {
-    return this.http.get<Accounts>('/api/v1/account');
+  public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<Accounts>('/api/v1/account', { params });
   }
 
   public fetchActivities({
@@ -610,9 +622,13 @@ export class DataService {
       );
   }
 
-  public fetchPortfolioPublic(aId: string) {
+  public fetchPortfolioReport() {
+    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
+  }
+
+  public fetchPublicPortfolio(aAccessId: string) {
     return this.http
-      .get<PortfolioPublicDetails>(`/api/v1/portfolio/public/${aId}`)
+      .get<PublicPortfolioResponse>(`/api/v1/public/${aAccessId}/portfolio`)
       .pipe(
         map((response) => {
           if (response.holdings) {
@@ -628,10 +644,6 @@ export class DataService {
           return response;
         })
       );
-  }
-
-  public fetchPortfolioReport() {
-    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
   }
 
   public loginAnonymous(accessToken: string) {
