@@ -70,7 +70,7 @@ export class UserService {
         },
         where: { userId: id }
       }),
-      this.tagService.getByUser(id)
+      this.tagService.getInUseByUser(id)
     ]);
 
     let systemMessage: SystemMessage;

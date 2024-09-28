@@ -114,7 +114,7 @@ export class InfoService {
       }),
       this.getStatistics(),
       this.getSubscriptions(),
-      this.tagService.get()
+      this.tagService.getPublic()
     ]);
 
     if (isUserSignupEnabled) {

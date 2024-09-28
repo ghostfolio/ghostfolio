@@ -81,10 +81,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
-    this.tagsAvailable = tags.map(({ id, name }) => {
+    this.tagsAvailable = tags.map((tag) => {
       return {
-        id,
-        name: translate(name)
+        ...tag,
+        name: translate(tag.name)
       };
     });
 
