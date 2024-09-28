@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Integrated the add currency functionality into the market data section of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `webpack-bundle-analyzer` from version `4.10.1` to `4.10.2`
 
