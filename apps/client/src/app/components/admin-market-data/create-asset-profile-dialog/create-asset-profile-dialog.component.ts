@@ -21,6 +21,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { uniq } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
+import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
@@ -30,7 +32,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
-  public mode: 'auto' | 'currency' | 'manual';
+  public mode: CreateAssetProfileDialogMode;
   public customCurrencies: string[];
 
   private unsubscribeSubject = new Subject<void>();
@@ -43,29 +45,15 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     public readonly formBuilder: FormBuilder
   ) {}
 
-  public get showCurrencyErrorMessage() {
-    const addCurrencyFormControl =
-      this.createAssetProfileForm.get('addCurrency');
-
-    if (
-      addCurrencyFormControl.hasError('minlength') ||
-      addCurrencyFormControl.hasError('maxlength')
-    ) {
-      return true;
-    }
-
-    return false;
-  }
-
   public ngOnInit() {
-    this.fetchAdminData();
+    this.initializeCustomCurrencies();
 
     this.createAssetProfileForm = this.formBuilder.group(
       {
         addCurrency: new FormControl(null, [
-          Validators.required,
+          Validators.maxLength(3),
           Validators.minLength(3),
-          Validators.maxLength(3)
+          Validators.required
         ]),
         addSymbol: new FormControl(null, [Validators.required]),
         searchSymbol: new FormControl(null, [Validators.required])
@@ -82,7 +70,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     this.dialogRef.close();
   }
 
-  public onRadioChange(mode: 'auto' | 'currency' | 'manual') {
+  public onRadioChange(mode: CreateAssetProfileDialogMode) {
     this.mode = mode;
   }
 
@@ -93,22 +81,43 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
           this.createAssetProfileForm.get('searchSymbol').value.dataSource,
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
-    } else if (this.mode === 'manual') {
-      this.dialogRef.close({
-        dataSource: 'MANUAL',
-        symbol: this.createAssetProfileForm.get('addSymbol').value
-      });
     } else if (this.mode === 'currency') {
       const currency = this.createAssetProfileForm
         .get('addCurrency')
         .value.toUpperCase();
 
-      if (currency.length === 3) {
-        const currencies = uniq([...this.customCurrencies, currency]);
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-        this.dialogRef.close();
-      }
+      const currencies = uniq([...this.customCurrencies, currency]);
+
+      this.dataService
+        .putAdminSetting(PROPERTY_CURRENCIES, {
+          value: JSON.stringify(currencies)
+        })
+        .pipe(takeUntil(this.unsubscribeSubject))
+        .subscribe(() => {
+          this.dialogRef.close();
+
+          window.location.reload();
+        });
+    } else if (this.mode === 'manual') {
+      this.dialogRef.close({
+        dataSource: 'MANUAL',
+        symbol: this.createAssetProfileForm.get('addSymbol').value
+      });
     }
+  }
+
+  public get showCurrencyErrorMessage() {
+    const addCurrencyFormControl =
+      this.createAssetProfileForm.get('addCurrency');
+
+    if (
+      addCurrencyFormControl.hasError('maxlength') ||
+      addCurrencyFormControl.hasError('minlength')
+    ) {
+      return true;
+    }
+
+    return false;
   }
 
   public ngOnDestroy() {
@@ -143,26 +152,14 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     return { atLeastOneValid: true };
   }
 
-  private fetchAdminData() {
+  private initializeCustomCurrencies() {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ settings }) => {
         this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-        this.changeDetectorRef.markForCheck();
-      });
-  }
 
-  private putAdminSetting({ key, value }: { key: string; value: any }) {
-    this.dataService
-      .putAdminSetting(key, {
-        value: value || value === false ? JSON.stringify(value) : undefined
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.location.reload();
-        }, 300);
+        this.changeDetectorRef.markForCheck();
       });
   }
 }
