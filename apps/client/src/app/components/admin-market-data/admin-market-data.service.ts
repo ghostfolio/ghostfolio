@@ -2,7 +2,10 @@ import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/con
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
-import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
+import {
+  getCurrencyFromSymbol,
+  isDerivedCurrency
+} from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   AdminMarketDataItem
@@ -74,7 +77,7 @@ export class AdminMarketDataService {
     return (
       activitiesCount === 0 &&
       !isBenchmark &&
-      !isCurrency(getCurrencyFromSymbol(symbol)) &&
+      !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
       !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
     );
   }
