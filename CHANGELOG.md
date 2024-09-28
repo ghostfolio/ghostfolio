@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the portfolio calculations with smarter cloning of activities
 - Integrated the add currency functionality into the market data section of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `5.19.1` to `5.20.0`
