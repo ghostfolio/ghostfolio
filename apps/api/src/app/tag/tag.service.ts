@@ -56,10 +56,11 @@ export class TagService {
       }
     });
 
-    return tagsWithOrderCount.map(({ _count, id, name }) => {
+    return tagsWithOrderCount.map(({ _count, id, name, userId }) => {
       return {
         id,
         name,
+        userId,
         activityCount: _count.orders
       };
     });

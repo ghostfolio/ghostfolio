@@ -37,6 +37,7 @@
     "ng": "nx",
     "nx": "nx",
     "postinstall": "prisma generate",
+    "prisma": "prisma",
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
     "start:client": "nx run client:copy-assets && nx run client:serve --configuration=development-en --hmr -o",
