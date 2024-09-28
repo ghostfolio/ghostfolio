@@ -47,6 +47,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
   public canCreateAccount: boolean;
   public currentRoute: string;
+  public currentSubRoute: string;
   public currentYear = new Date().getFullYear();
   public deviceType: string;
   public hasImpersonationId: boolean;
@@ -54,6 +55,8 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToAccessFearAndGreedIndex: boolean;
+  public hasPermissionToChangeDateRange: boolean;
+  public hasPermissionToChangeFilters: boolean;
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
@@ -147,6 +150,35 @@ export class AppComponent implements OnDestroy, OnInit {
         const urlSegmentGroup = urlTree.root.children[PRIMARY_OUTLET];
         const urlSegments = urlSegmentGroup.segments;
         this.currentRoute = urlSegments[0].path;
+        this.currentSubRoute = urlSegments[1]?.path;
+
+        if (
+          (this.currentRoute === 'home' && !this.currentSubRoute) ||
+          (this.currentRoute === 'home' &&
+            this.currentSubRoute === 'holdings') ||
+          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
+          (this.currentRoute === 'zen' && !this.currentSubRoute) ||
+          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+        ) {
+          this.hasPermissionToChangeDateRange = true;
+        } else {
+          this.hasPermissionToChangeDateRange = false;
+        }
+
+        if (
+          (this.currentRoute === 'home' &&
+            this.currentSubRoute === 'holdings') ||
+          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
+          (this.currentRoute === 'portfolio' &&
+            this.currentSubRoute === 'activities') ||
+          (this.currentRoute === 'portfolio' &&
+            this.currentSubRoute === 'allocations') ||
+          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+        ) {
+          this.hasPermissionToChangeFilters = true;
+        } else {
+          this.hasPermissionToChangeFilters = false;
+        }
 
         this.hasTabs =
           (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
@@ -182,6 +214,8 @@ export class AppComponent implements OnDestroy, OnInit {
             this.changeDetectorRef.markForCheck();
           });
         }
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.userService.stateChanged
