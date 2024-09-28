@@ -33,8 +33,8 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;
   public mode: CreateAssetProfileDialogMode;
-  public customCurrencies: string[];
 
+  private customCurrencies: string[];
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -95,8 +95,6 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         .pipe(takeUntil(this.unsubscribeSubject))
         .subscribe(() => {
           this.dialogRef.close();
-
-          window.location.reload();
         });
     } else if (this.mode === 'manual') {
       this.dialogRef.close({
