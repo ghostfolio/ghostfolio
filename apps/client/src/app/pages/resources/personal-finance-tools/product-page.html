@@ -9,6 +9,11 @@
             >&nbsp;<strong>{{ product2.name }}</strong>
           </h1>
         </div>
+        @if (product2.isArchived) {
+          <div class="info-container my-4 p-2 rounded text-center text-muted">
+            <ng-container i18n>This page has been archived.</ng-container>
+          </div>
+        }
         <section class="mb-4">
           <p i18n>
             Are you looking for an open source alternative to

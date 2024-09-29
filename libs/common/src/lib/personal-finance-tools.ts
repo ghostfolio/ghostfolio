@@ -369,6 +369,7 @@ export const personalFinanceTools: Product[] = [
   {
     founded: 2021,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'maybe-finance',
     languages: ['English'],
     name: 'Maybe Finance',
@@ -678,10 +679,13 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Make Smarter Investments'
   },
   {
+    founded: 2024,
     hasSelfHostingAbility: true,
+    isArchived: true,
     key: 'wealthfolio',
     languages: ['English'],
     name: 'Wealthfolio',
+    origin: 'Canada',
     slogan: 'Desktop Investment Tracker'
   },
   {

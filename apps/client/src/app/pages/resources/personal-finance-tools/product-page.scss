@@ -11,7 +11,8 @@
     }
   }
 
-  .call-to-action {
+  .call-to-action,
+  .info-container {
     background-color: rgba(var(--palette-foreground-text), 0.02);
   }
 }
@@ -19,7 +20,8 @@
 :host-context(.theme-dark) {
   color: rgb(var(--light-primary-text));
 
-  .call-to-action {
+  .call-to-action,
+  .info-container {
     background-color: rgba(var(--palette-foreground-text-dark), 0.02);
   }
 }
