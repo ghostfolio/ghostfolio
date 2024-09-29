@@ -128,16 +128,36 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product1.isOpenSource) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} is Open Source Software"
+                      >✅ Yes</span
+                    >
                   } @else {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} is not Open Source Software"
+                      >❌ No</span
+                    >
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product2.isOpenSource) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} is Open Source Software"
+                      >✅ Yes</span
+                    >
                   } @else {
-                    <ng-container i18n>❌ No </ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} is not Open Source Software"
+                      >❌ No</span
+                    >
                   }
                 </td>
               </tr>
@@ -147,16 +167,36 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product1.hasSelfHostingAbility === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} can be self-hosted"
+                      >✅ Yes</span
+                    >
                   } @else if (product1.hasSelfHostingAbility === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} cannot be self-hosted"
+                      >❌ No</span
+                    >
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product2.hasSelfHostingAbility === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} can be self-hosted"
+                      >✅ Yes</span
+                    >
                   } @else if (product2.hasSelfHostingAbility === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} cannot be self-hosted"
+                      >❌ No</span
+                    >
                   }
                 </td>
               </tr>
@@ -166,16 +206,36 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product1.useAnonymously === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} can be used anonymously"
+                      >✅ Yes</span
+                    >
                   } @else if (product1.useAnonymously === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} cannot be used anonymously"
+                      >❌ No</span
+                    >
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product2.useAnonymously === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} can be used anonymously"
+                      >✅ Yes</span
+                    >
                   } @else if (product2.useAnonymously === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} cannot be used anonymously"
+                      >❌ No</span
+                    >
                   }
                 </td>
               </tr>
@@ -185,16 +245,36 @@
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product1.hasFreePlan === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} offers a free plan"
+                      >✅ Yes</span
+                    >
                   } @else if (product1.hasFreePlan === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product1.name }} does not offer a free plan"
+                      >❌ No</span
+                    >
                   }
                 </td>
                 <td class="mat-mdc-cell px-1 py-2">
                   @if (product2.hasFreePlan === true) {
-                    <ng-container i18n>✅ Yes</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} offers a free plan"
+                      >✅ Yes</span
+                    >
                   } @else if (product2.hasFreePlan === false) {
-                    <ng-container i18n>❌ No</ng-container>
+                    <span
+                      i18n
+                      i18n-title
+                      title="{{ product2.name }} does not offer a free plan"
+                      >❌ No</span
+                    >
                   }
                 </td>
               </tr>
