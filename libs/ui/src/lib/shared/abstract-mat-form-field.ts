@@ -16,6 +16,7 @@ import { Subject } from 'rxjs';
 @Component({
   template: ''
 })
+// eslint-disable-next-line @angular-eslint/component-class-suffix
 export abstract class AbstractMatFormField<T>
   implements ControlValueAccessor, DoCheck, MatFormFieldControl<T>, OnDestroy
 {

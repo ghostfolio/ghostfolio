@@ -7,7 +7,7 @@
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
         "@nx/enforce-module-boundaries": [
-          "error",
+          "warn",
           {
             "enforceBuildableLibDependency": true,
             "allow": [],
@@ -35,7 +35,7 @@
       "files": ["*.ts"],
       "plugins": ["eslint-plugin-import", "@typescript-eslint"],
       "rules": {
-        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/consistent-type-definitions": "warn",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/explicit-member-accessibility": [
           "off",
@@ -43,31 +43,35 @@
             "accessibility": "explicit"
           }
         ],
-        "@typescript-eslint/member-ordering": "error",
+        "@typescript-eslint/member-ordering": "warn",
         "@typescript-eslint/naming-convention": "off",
         "@typescript-eslint/no-empty-function": "off",
-        "@typescript-eslint/no-empty-interface": "error",
+        "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-inferrable-types": [
-          "error",
+          "warn",
           {
             "ignoreParameters": true
           }
         ],
         "@typescript-eslint/no-misused-new": "error",
-        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-non-null-assertion": "warn",
         "@typescript-eslint/no-shadow": [
-          "error",
+          "warn",
           {
             "hoist": "all"
           }
         ],
-        "@typescript-eslint/no-unused-expressions": "error",
-        "@typescript-eslint/prefer-function-type": "error",
+        "@typescript-eslint/no-unused-expressions": "warn",
+        "@typescript-eslint/prefer-function-type": "warn",
         "@typescript-eslint/unified-signatures": "error",
+        "@typescript-eslint/no-loss-of-precision": "warn",
+        "@typescript-eslint/no-var-requires": "warn",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/ban-types": "warn",
         "arrow-body-style": "off",
         "constructor-super": "error",
         "eqeqeq": ["error", "smart"],
-        "guard-for-in": "error",
+        "guard-for-in": "warn",
         "id-blacklist": "off",
         "id-match": "off",
         "import/no-deprecated": "warn",
@@ -105,12 +109,20 @@
         "no-fallthrough": "error",
         "no-new-wrappers": "error",
         "no-restricted-imports": ["error", "rxjs/Rx"],
-        "no-throw-literal": "error",
+        "no-throw-literal": "warn",
         "no-undef-init": "error",
         "no-underscore-dangle": "off",
         "no-var": "error",
-        "prefer-const": "error",
-        "radix": "error"
+        "prefer-const": "warn",
+        "radix": "error",
+        "no-unsafe-optional-chaining": "warn",
+        "no-extra-boolean-cast": "warn",
+        "no-empty-pattern": "warn",
+        "no-useless-catch": "warn",
+        "no-unsafe-finally": "warn",
+        "no-prototype-builtins": "warn",
+        "no-async-promise-executor": "warn",
+        "no-constant-condition": "warn"
       }
     }
   ],

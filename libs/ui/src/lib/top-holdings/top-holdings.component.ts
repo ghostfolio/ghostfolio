@@ -38,7 +38,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./top-holdings.component.scss'],
   templateUrl: './top-holdings.component.html'
 })
-export class GfTopHoldingsComponent implements OnChanges, OnDestroy, OnInit {
+export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
@@ -56,10 +56,6 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy, OnInit {
   public isLoading = true;
 
   private unsubscribeSubject = new Subject<void>();
-
-  public constructor() {}
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.isLoading = true;
