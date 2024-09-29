@@ -3,6 +3,7 @@ export interface Product {
   founded?: number;
   hasFreePlan?: boolean;
   hasSelfHostingAbility?: boolean;
+  isArchived?: boolean;
   isOpenSource?: boolean;
   key: string;
   languages?: string[];
