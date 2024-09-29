@@ -55,18 +55,17 @@ export class RuleComponent implements OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({ settings }: { settings: PortfolioReportRule['settings'] }) => {
-          if (settings) {
-            const updatedSettings: UpdateUserSettingDto = {
-              portfolioSettings: {
-                ...settings
-              }
-            };
-            this.ruleUpdated.emit(updatedSettings);
-          }
+      .subscribe((settings: PortfolioReportRule['settings']) => {
+        if (settings) {
+          const updatedSettings: UpdateUserSettingDto = {
+            xRayRules: {
+              [rule.key]: settings
+            }
+          };
+
+          this.ruleUpdated.emit(updatedSettings);
         }
-      );
+      });
   }
 
   public onUpdateRule(rule: PortfolioReportRule) {

@@ -89,9 +89,6 @@ export class UpdateUserSettingDto {
   @IsOptional()
   locale?: string;
 
-  @IsOptional()
-  portfolioSettings?: PortfolioReportRule['settings'];
-
   @IsNumber()
   @IsOptional()
   projectedTotalAmount?: number;

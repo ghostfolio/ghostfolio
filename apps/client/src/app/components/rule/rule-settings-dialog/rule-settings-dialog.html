@@ -31,11 +31,7 @@
 
 <div align="end" mat-dialog-actions>
   <button i18n mat-button (click)="dialogRef.close()">Close</button>
-  <button
-    color="primary"
-    mat-flat-button
-    (click)="dialogRef.close({ settings })"
-  >
+  <button color="primary" mat-flat-button (click)="dialogRef.close(settings)">
     <ng-container i18n>Save</ng-container>
   </button>
 </div>
