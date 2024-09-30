@@ -24,6 +24,13 @@ describe('redactAttributes', () => {
 
     expect(
       redactAttributes({
+        object: { data: [{ value: 'a' }, { value: 'b' }] },
+        options: [{ attribute: 'value', valueMap: { a: 1, b: 2 } }]
+      })
+    ).toStrictEqual({ data: [{ value: 1 }, { value: 2 }] });
+
+    expect(
+      redactAttributes({
         object: { value1: 'a', value2: 'b' },
         options: [
           { attribute: 'value1', valueMap: { a: 'x' } },
@@ -32,6 +39,7 @@ describe('redactAttributes', () => {
       })
     ).toStrictEqual({ value1: 'x', value2: 'y' });
 
+    console.time('redactAttributes execution time');
     expect(
       redactAttributes({
         object: {
@@ -3041,5 +3049,6 @@ describe('redactAttributes', () => {
         currentNetWorth: null
       }
     });
+    console.timeEnd('redactAttributes execution time');
   });
 });
