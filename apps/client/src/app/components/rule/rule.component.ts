@@ -57,13 +57,11 @@ export class RuleComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((settings: PortfolioReportRule['settings']) => {
         if (settings) {
-          const updatedSettings: UpdateUserSettingDto = {
+          this.ruleUpdated.emit({
             xRayRules: {
               [rule.key]: settings
             }
-          };
-
-          this.ruleUpdated.emit(updatedSettings);
+          });
         }
       });
   }
