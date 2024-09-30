@@ -18,7 +18,9 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  ViewChild
+  ViewChild,
+  EventEmitter,
+  Output
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -62,6 +64,8 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() holdings: PortfolioPosition[];
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
+
+  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -107,9 +111,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, holdingDetailDialog: true }
-      });
+      this.holdingClicked.emit({ dataSource, symbol });
     }
   }
 
