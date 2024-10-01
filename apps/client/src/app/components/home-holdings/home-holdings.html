@@ -50,6 +50,7 @@
           [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
+          (holdingClicked)="onHoldingClicked($event)"
         />
         @if (hasPermissionToCreateOrder && holdings?.length > 0) {
           <div class="text-center">
