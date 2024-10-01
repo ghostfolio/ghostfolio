@@ -1,4 +1,4 @@
-import { PortfolioReportRule } from '../interfaces';
+import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 
 export type XRayRulesSettings = {
   AccountClusterRiskCurrentInvestment?: RuleSettings;
