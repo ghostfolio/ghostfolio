@@ -1,3 +1,5 @@
+import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
+
 export type XRayRulesSettings = {
   AccountClusterRiskCurrentInvestment?: RuleSettings;
   AccountClusterRiskSingleAccount?: RuleSettings;
@@ -7,6 +9,6 @@ export type XRayRulesSettings = {
   FeeRatioInitialInvestment?: RuleSettings;
 };
 
-interface RuleSettings {
+interface RuleSettings extends Pick<PortfolioReportRule, 'settings'> {
   isActive: boolean;
 }
