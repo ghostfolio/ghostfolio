@@ -134,8 +134,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
   }
 
   public onRulesUpdated(event: UpdateUserSettingDto) {
-    this.isLoading = true;
-
     this.dataService
       .putUserSetting(event)
       .pipe(takeUntil(this.unsubscribeSubject))
