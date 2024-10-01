@@ -77,32 +77,6 @@
         "import/no-deprecated": "warn",
         "no-bitwise": "error",
         "no-caller": "error",
-        "no-console": [
-          "error",
-          {
-            "allow": [
-              "log",
-              "warn",
-              "dir",
-              "timeLog",
-              "assert",
-              "clear",
-              "count",
-              "countReset",
-              "group",
-              "groupEnd",
-              "table",
-              "dirxml",
-              "error",
-              "groupCollapsed",
-              "Console",
-              "profile",
-              "profileEnd",
-              "timeStamp",
-              "context"
-            ]
-          }
-        ],
         "no-debugger": "error",
         "no-empty": "off",
         "no-eval": "error",
