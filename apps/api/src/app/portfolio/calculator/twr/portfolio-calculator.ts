@@ -821,8 +821,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         startDate = start;
       }
 
-      const startDateString = format(startDate, DATE_FORMAT);
       const endDateString = format(endDate, DATE_FORMAT);
+      const startDateString = format(startDate, DATE_FORMAT);
 
       const currentValuesAtDateRangeStartWithCurrencyEffect =
         currentValuesWithCurrencyEffect[startDateString] ?? new Big(0);
