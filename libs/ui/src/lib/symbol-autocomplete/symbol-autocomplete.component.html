@@ -12,7 +12,7 @@
   (optionSelected)="onUpdateSymbol($event)"
 >
   @if (!isLoading) {
-    @if (!empty && !filteredLookupItems.length) {
+    @if (hasNoItemsPostLoading) {
       <mat-option class="line-height-1" disabled="true" i18n
         >Oops! Could not find any assets.
       </mat-option>

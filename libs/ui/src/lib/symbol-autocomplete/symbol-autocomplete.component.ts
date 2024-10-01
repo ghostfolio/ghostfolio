@@ -85,6 +85,7 @@ export class GfSymbolAutocompleteComponent
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
   public control = new FormControl();
+  public hasNoItemsPostLoading = false;
   public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
     [];
 
@@ -144,6 +145,7 @@ export class GfSymbolAutocompleteComponent
         });
 
         this.isLoading = false;
+        this.hasNoItemsPostLoading = !this.filteredLookupItems.length;
 
         this.changeDetectorRef.markForCheck();
       });
