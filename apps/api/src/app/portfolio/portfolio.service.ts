@@ -470,8 +470,7 @@ export class PortfolioService {
 
       if (withMarkets) {
         ({ markets, marketsAdvanced } = this.getMarkets({
-          assetProfile,
-          valueInBaseCurrency
+          assetProfile
         }));
       }
 
@@ -1433,11 +1432,9 @@ export class PortfolioService {
   }
 
   private getMarkets({
-    assetProfile,
-    valueInBaseCurrency
+    assetProfile
   }: {
     assetProfile: EnhancedSymbolProfile;
-    valueInBaseCurrency: Big;
   }) {
     const markets = {
       [UNKNOWN_KEY]: 0,
@@ -1499,15 +1496,22 @@ export class PortfolioService {
             .toNumber();
         }
       }
-    } else {
-      markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
-        .plus(valueInBaseCurrency)
-        .toNumber();
-
-      marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
-        .plus(valueInBaseCurrency)
-        .toNumber();
     }
+
+    markets[UNKNOWN_KEY] = new Big(1)
+      .minus(markets.developedMarkets)
+      .minus(markets.emergingMarkets)
+      .minus(markets.otherMarkets)
+      .toNumber();
+
+    marketsAdvanced[UNKNOWN_KEY] = new Big(1)
+      .minus(marketsAdvanced.asiaPacific)
+      .minus(marketsAdvanced.emergingMarkets)
+      .minus(marketsAdvanced.europe)
+      .minus(marketsAdvanced.japan)
+      .minus(marketsAdvanced.northAmerica)
+      .minus(marketsAdvanced.otherMarkets)
+      .toNumber();
 
     return { markets, marketsAdvanced };
   }
