@@ -122,7 +122,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
-        queryParams: { dataSource: dataSource, symbol: symbol, holdingDetailDialog: true }
+        queryParams: { dataSource, symbol, holdingDetailDialog: true }
       });
     }
   }
