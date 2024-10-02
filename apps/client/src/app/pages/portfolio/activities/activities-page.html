@@ -21,6 +21,7 @@
         [sortDirection]="sortDirection"
         [totalItems]="totalItems"
         (activitiesDeleted)="onDeleteActivities()"
+        (activityClicked)="onClickActivity($event)"
         (activityDeleted)="onDeleteActivity($event)"
         (activityToClone)="onCloneActivity($event)"
         (activityToUpdate)="onUpdateActivity($event)"
