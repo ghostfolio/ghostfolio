@@ -56,6 +56,8 @@ export class HeaderComponent implements OnChanges {
 
   @Input() currentRoute: string;
   @Input() deviceType: string;
+  @Input() hasPermissionToChangeDateRange: boolean;
+  @Input() hasPermissionToChangeFilters: boolean;
   @Input() hasTabs: boolean;
   @Input() info: InfoItem;
   @Input() pageTitle: string;
@@ -203,7 +205,7 @@ export class HeaderComponent implements OnChanges {
   }
 
   public onLogoClick() {
-    if (this.currentRoute === 'home' || this.currentRoute === 'zen') {
+    if (['home', 'zen'].includes(this.currentRoute)) {
       this.layoutService.getShouldReloadSubject().next();
     }
   }

@@ -126,7 +126,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
 
     if (currency) {
       if (currency.length === 3) {
-        const currencies = uniq([...this.customCurrencies, currency]);
+        const currencies = uniq([
+          ...this.customCurrencies,
+          currency.toUpperCase()
+        ]);
         this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
       } else {
         this.notificationService.alert({

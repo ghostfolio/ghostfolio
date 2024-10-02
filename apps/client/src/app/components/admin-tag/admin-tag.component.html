@@ -34,6 +34,20 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="userId">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="userId"
+          >
+            <ng-container i18n>User</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            <span class="text-monospace">{{ element.userId }}</span>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="activities">
           <th
             *matHeaderCellDef

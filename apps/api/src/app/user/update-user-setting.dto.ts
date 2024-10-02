@@ -1,4 +1,5 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
 import type {
   ColorScheme,
   DateRange,

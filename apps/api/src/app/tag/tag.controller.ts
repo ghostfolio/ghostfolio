@@ -26,6 +26,7 @@ export class TagController {
   public constructor(private readonly tagService: TagService) {}
 
   @Get()
+  @HasPermission(permissions.readTags)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getTags() {
     return this.tagService.getTagsWithActivityCount();

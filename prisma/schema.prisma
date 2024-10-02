@@ -214,10 +214,13 @@ model Subscription {
 
 model Tag {
   id     String  @id @default(uuid())
-  name   String  @unique
+  name   String
   orders Order[]
+  userId String?
+  User   User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
   symbolProfile SymbolProfile[]
 
+  @@unique([name, userId])
   @@index([name])
 }
 
@@ -238,6 +241,7 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
+  Tag Tag[]
 
   @@index([accessToken])
   @@index([createdAt])

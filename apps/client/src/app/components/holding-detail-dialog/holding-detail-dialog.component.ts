@@ -160,10 +160,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
 
-    this.tagsAvailable = tags.map(({ id, name }) => {
+    this.tagsAvailable = tags.map((tag) => {
       return {
-        id,
-        name: translate(name)
+        ...tag,
+        name: translate(tag.name)
       };
     });
 
@@ -324,10 +324,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.sectors = {};
           this.SymbolProfile = SymbolProfile;
 
-          this.tags = tags.map(({ id, name }) => {
+          this.tags = tags.map((tag) => {
             return {
-              id,
-              name: translate(name)
+              ...tag,
+              name: translate(tag.name)
             };
           });
 

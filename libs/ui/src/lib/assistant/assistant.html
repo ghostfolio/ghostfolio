@@ -150,7 +150,9 @@
           <button
             i18n
             mat-button
-            [disabled]="!hasFilter(filterForm.value)"
+            [disabled]="
+              !hasFilter(filterForm.value) || !hasPermissionToChangeFilters
+            "
             (click)="onResetFilters()"
           >
             Reset Filters
@@ -160,7 +162,7 @@
             color="primary"
             i18n
             mat-flat-button
-            [disabled]="!filterForm.dirty"
+            [disabled]="!filterForm.dirty || !hasPermissionToChangeFilters"
             (click)="onApplyFilters()"
           >
             Apply Filters
