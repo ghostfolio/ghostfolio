@@ -255,6 +255,16 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     });
   }
 
+  public onClickActivity(aActivity: Activity) {
+    this.router.navigate([], {
+      queryParams: {
+        dataSource: aActivity.SymbolProfile.dataSource,
+        symbol: aActivity.SymbolProfile.symbol,
+        holdingDetailDialog: true
+      }
+    });
+  }
+
   public openUpdateActivityDialog(activity: Activity) {
     const dialogRef = this.dialog.open(CreateOrUpdateActivityDialog, {
       data: {

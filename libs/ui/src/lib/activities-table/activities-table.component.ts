@@ -105,6 +105,7 @@ export class GfActivitiesTableComponent
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
+  @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -269,9 +270,7 @@ export class GfActivitiesTableComponent
   }
 
   public onOpenPositionDialog({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.router.navigate([], {
-      queryParams: { dataSource, symbol, holdingDetailDialog: true }
-    });
+    this.activityClicked.emit({ dataSource, symbol });
   }
 
   public onUpdateActivity(aActivity: OrderWithAccount) {
