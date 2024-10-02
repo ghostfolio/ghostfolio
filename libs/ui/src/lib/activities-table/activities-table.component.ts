@@ -199,7 +199,7 @@ export class GfActivitiesTableComponent
       activity.isDraft === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     ) {
-      this.onOpenPositionDialog({
+      this.activityClicked.emit({
         dataSource: activity.SymbolProfile.dataSource,
         symbol: activity.SymbolProfile.symbol
       });
@@ -262,10 +262,6 @@ export class GfActivitiesTableComponent
     this.notificationService.alert({
       title: aComment
     });
-  }
-
-  public onOpenPositionDialog({ dataSource, symbol }: AssetProfileIdentifier) {
-    this.activityClicked.emit({ dataSource, symbol });
   }
 
   public onUpdateActivity(aActivity: OrderWithAccount) {
