@@ -92,8 +92,8 @@ export class GfActivitiesTableComponent
   @Input() sortDisabled = false;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
-  @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activitiesDeleted = new EventEmitter<void>();
+  @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
   @Output() activityToUpdate = new EventEmitter<OrderWithAccount>();
