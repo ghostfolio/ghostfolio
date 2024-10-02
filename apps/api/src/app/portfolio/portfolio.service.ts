@@ -915,7 +915,7 @@ export class PortfolioService {
         grossPerformanceWithCurrencyEffect:
           position.grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
-        investment: position.investment?.toNumber(),
+        investment: position.investmentWithCurrencyEffect?.toNumber(),
         netPerformance: position.netPerformance?.toNumber(),
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
