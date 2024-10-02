@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the portfolio calculations with smarter date interval selection
 - Improved the language localization for German (`de`)
 
 ## 2.111.0 - 2024-09-28
