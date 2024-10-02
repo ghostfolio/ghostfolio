@@ -174,18 +174,24 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      let filtersType: string;
+      let filtersType = this.getFilterType(filter.type);
 
-      if (filter.type === 'ACCOUNT') {
-        filtersType = 'accounts';
-      } else if (filter.type === 'ASSET_CLASS') {
-        filtersType = 'assetClasses';
-      } else if (filter.type === 'TAG') {
-        filtersType = 'tags';
-      }
+      let userFilters = filters
+        .filter((f) => f.type === filter.type && filter.id)
+        .map((f) => f.id);
 
-      userSetting[`filters.${filtersType}`] = filter.id ? [filter.id] : null;
+      userSetting[`filters.${filtersType}`] = userFilters.length
+        ? userFilters
+        : null;
     }
+    ['ACCOUNT', 'ASSET_CLASS', 'TAG']
+      .filter(
+        (fitlerType) =>
+          !filters.some((f: Filter) => f.type.toString() === fitlerType)
+      )
+      .forEach((filterType) => {
+        userSetting[`filters.${this.getFilterType(filterType)}`] = null;
+      });
 
     this.dataService
       .putUserSetting(userSetting)
@@ -267,5 +273,14 @@ export class HeaderComponent implements OnChanges {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+  private getFilterType(filterType: string) {
+    if (filterType === 'ACCOUNT') {
+      return 'accounts';
+    } else if (filterType === 'ASSET_CLASS') {
+      return 'assetClasses';
+    } else if (filterType === 'TAG') {
+      return 'tags';
+    }
   }
 }

@@ -348,6 +348,8 @@ export class ImportActivitiesService {
             return 'LIABILITY';
           case 'sell':
             return 'SELL';
+          case 'stake':
+            return 'STAKE';
           default:
             break;
         }

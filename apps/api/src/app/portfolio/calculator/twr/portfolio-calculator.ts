@@ -203,6 +203,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformanceValuesPercentage: {},
+        unitPrices: {},
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
@@ -271,7 +273,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalLiabilities: new Big(0),
         totalLiabilitiesInBaseCurrency: new Big(0),
         totalValuables: new Big(0),
-        totalValuablesInBaseCurrency: new Big(0)
+        totalValuablesInBaseCurrency: new Big(0),
+        netPerformanceValuesPercentage: {},
+        unitPrices: {}
       };
     }
 
@@ -499,6 +503,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
               .mul(order.quantity)
               .mul(getFactor(order.type));
         }
+      } else if (order.type === 'STAKE') {
+        transactionInvestment = new Big(0);
+
+        transactionInvestmentWithCurrencyEffect = new Big(0);
+
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.plus(order.quantity);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -958,7 +969,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       timeWeightedInvestment:
         timeWeightedAverageInvestmentBetweenStartAndEndDate,
       timeWeightedInvestmentWithCurrencyEffect:
-        timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+        timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect,
+      netPerformanceValuesPercentage: {},
+      unitPrices: {}
     };
   }
 }

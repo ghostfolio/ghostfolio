@@ -152,30 +152,35 @@
           >Investment</gf-value
         >
       </div>
-      @if (dividendInBaseCurrency && user?.settings?.isExperimentalFeatures) {
-        <div class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [isCurrency]="true"
-            [locale]="data.locale"
-            [precision]="dividendInBaseCurrencyPrecision"
-            [unit]="data.baseCurrency"
-            [value]="dividendInBaseCurrency"
-            >Dividend</gf-value
-          >
-        </div>
-        <div class="col-6 mb-3">
-          <gf-value
-            i18n
-            size="medium"
-            [isPercent]="true"
-            [locale]="data.locale"
-            [value]="dividendYieldPercentWithCurrencyEffect"
-            >Dividend Yield</gf-value
-          >
-        </div>
-      }
+      <div
+        *ngIf="dividendInBaseCurrency > 0 || !stakeRewards"
+        class="col-6 mb-3"
+      >
+        <gf-value
+          i18n
+          size="medium"
+          [isCurrency]="true"
+          [locale]="data.locale"
+          [precision]="dividendInBaseCurrencyPrecision"
+          [unit]="data.baseCurrency"
+          [value]="dividendInBaseCurrency"
+          >Dividend</gf-value
+        >
+      </div>
+
+      <div
+        *ngIf="stakeRewards > 0 && dividendInBaseCurrency == 0"
+        class="col-6 mb-3"
+      >
+        <gf-value
+          i18n
+          size="medium"
+          [locale]="data.locale"
+          [precision]="stakePrecision"
+          [value]="stakeRewards"
+          >Stake Rewards
+        </gf-value>
+      </div>
       <div class="col-6 mb-3">
         <gf-value
           i18n

@@ -224,6 +224,7 @@ export class AdminService {
     sectors,
     symbol,
     symbolMapping,
+    tags,
     url
   }: AssetProfileIdentifier & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
@@ -238,6 +239,7 @@ export class AdminService {
         scraperConfiguration,
         sectors,
         symbolMapping,
+        tags,
         url
       }
     );

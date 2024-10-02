@@ -36,7 +36,13 @@ export class AdminTagComponent implements OnInit, OnDestroy {
 
   public dataSource: MatTableDataSource<Tag> = new MatTableDataSource();
   public deviceType: string;
-  public displayedColumns = ['name', 'userId', 'activities', 'actions'];
+  public displayedColumns = [
+    'name',
+    'userId',
+    'activities',
+    'holdings',
+    'actions'
+  ];
   public tags: Tag[];
 
   private unsubscribeSubject = new Subject<void>();

@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Tag } from '@prisma/client';
 
 export interface AdminMarketData {
   count: number;
@@ -21,4 +21,5 @@ export interface AdminMarketDataItem {
   name: string;
   sectorsCount: number;
   symbol: string;
+  tags: Tag[];
 }

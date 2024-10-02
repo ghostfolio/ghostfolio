@@ -335,7 +335,12 @@ export class AdminController {
     return this.adminService.patchAssetProfileData({
       ...assetProfileData,
       dataSource,
-      symbol
+      symbol,
+      tags: {
+        connect: assetProfileData.tags?.map(({ id }) => {
+          return { id };
+        })
+      }
     });
   }
 

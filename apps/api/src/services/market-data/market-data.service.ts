@@ -1,7 +1,9 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
+import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -12,10 +14,15 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
+import AwaitLock from 'await-lock';
 
 @Injectable()
 export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
+
+  lock = new AwaitLock();
+
+  private dateQueryHelper = new DateQueryHelper();
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.deleteMany({
@@ -117,7 +124,6 @@ export class MarketDataService {
     where: Prisma.MarketDataWhereUniqueInput;
   }): Promise<MarketData> {
     const { data, where } = params;
-
     return this.prismaService.marketData.upsert({
       where,
       create: {
@@ -141,7 +147,7 @@ export class MarketDataService {
     data: Prisma.MarketDataUpdateInput[];
   }): Promise<MarketData[]> {
     const upsertPromises = data.map(
-      ({ dataSource, date, marketPrice, symbol, state }) => {
+      async ({ dataSource, date, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
             dataSource: <DataSource>dataSource,
@@ -164,7 +170,6 @@ export class MarketDataService {
         });
       }
     );
-
-    return this.prismaService.$transaction(upsertPromises);
+    return await Promise.all(upsertPromises);
   }
 }

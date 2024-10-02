@@ -1260,9 +1260,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the lazy-loaded activities table to the position detail dialog (experimental)
 - Improved the font weight in the value component
 - Improved the language localization for Türkçe (`tr`)
-- Upgraded `angular` from version `17.0.4` to `17.0.7`
 - Upgraded to _Inter_ 4 font family
-- Upgraded `Nx` from version `17.0.2` to `17.2.5`
 
 ### Fixed
 

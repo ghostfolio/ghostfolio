@@ -5,6 +5,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -14,6 +15,7 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -75,6 +77,7 @@ import {
 } from 'date-fns';
 import { isEmpty, last, uniq } from 'lodash';
 
+import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
   PerformanceCalculationType,
@@ -104,6 +107,7 @@ export class PortfolioService {
     private readonly userService: UserService
   ) {}
 
+  @LogPerformance
   public async getAccounts({
     filters,
     userId,
@@ -194,6 +198,7 @@ export class PortfolioService {
     });
   }
 
+  @LogPerformance
   public async getAccountsWithAggregations({
     filters,
     userId,
@@ -230,6 +235,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public async getDividends({
     activities,
     groupBy
@@ -251,6 +257,7 @@ export class PortfolioService {
     return dividends;
   }
 
+  @LogPerformance
   public async getInvestments({
     dateRange,
     filters,
@@ -327,6 +334,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public async getDetails({
     dateRange = 'max',
     filters,
@@ -608,6 +616,80 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
+  private calculateMarketsAllocation(
+    symbolProfile: EnhancedSymbolProfile,
+    markets: {
+      developedMarkets: number;
+      emergingMarkets: number;
+      otherMarkets: number;
+    },
+    marketsAdvanced: {
+      asiaPacific: number;
+      emergingMarkets: number;
+      europe: number;
+      japan: number;
+      northAmerica: number;
+      otherMarkets: number;
+    },
+    value: Big
+  ) {
+    if (symbolProfile.countries.length > 0) {
+      for (const country of symbolProfile.countries) {
+        if (developedMarkets.includes(country.code)) {
+          markets.developedMarkets = new Big(markets.developedMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          markets.emergingMarkets = new Big(markets.emergingMarkets)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          markets.otherMarkets = new Big(markets.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
+
+        if (country.code === 'JP') {
+          marketsAdvanced.japan = new Big(marketsAdvanced.japan)
+            .plus(country.weight)
+            .toNumber();
+        } else if (country.code === 'CA' || country.code === 'US') {
+          marketsAdvanced.northAmerica = new Big(marketsAdvanced.northAmerica)
+            .plus(country.weight)
+            .toNumber();
+        } else if (asiaPacificMarkets.includes(country.code)) {
+          marketsAdvanced.asiaPacific = new Big(marketsAdvanced.asiaPacific)
+            .plus(country.weight)
+            .toNumber();
+        } else if (emergingMarkets.includes(country.code)) {
+          marketsAdvanced.emergingMarkets = new Big(
+            marketsAdvanced.emergingMarkets
+          )
+            .plus(country.weight)
+            .toNumber();
+        } else if (europeMarkets.includes(country.code)) {
+          marketsAdvanced.europe = new Big(marketsAdvanced.europe)
+            .plus(country.weight)
+            .toNumber();
+        } else {
+          marketsAdvanced.otherMarkets = new Big(marketsAdvanced.otherMarkets)
+            .plus(country.weight)
+            .toNumber();
+        }
+      }
+    } else {
+      markets[UNKNOWN_KEY] = new Big(markets[UNKNOWN_KEY])
+        .plus(value)
+        .toNumber();
+
+      marketsAdvanced[UNKNOWN_KEY] = new Big(marketsAdvanced[UNKNOWN_KEY])
+        .plus(value)
+        .toNumber();
+    }
+  }
+
+  @LogPerformance
   public async getPosition(
     aDataSource: DataSource,
     aImpersonationId: string,
@@ -627,6 +709,7 @@ export class PortfolioService {
       return {
         averagePrice: undefined,
         dataProviderInfo: undefined,
+        stakeRewards: undefined,
         dividendInBaseCurrency: undefined,
         dividendYieldPercent: undefined,
         dividendYieldPercentWithCurrencyEffect: undefined,
@@ -717,6 +800,33 @@ export class PortfolioService {
               )
         });
 
+      const stakeRewards = getSum(
+        activities
+          .filter(({ type }) => {
+            return type === 'STAKE';
+          })
+          .map(({ quantity }) => {
+            return new Big(quantity);
+          })
+      );
+
+      // Convert investment, gross and net performance to currency of user
+      const investment = this.exchangeRateDataService.toCurrency(
+        position.investment?.toNumber(),
+        currency,
+        userCurrency
+      );
+      const grossPerformance = this.exchangeRateDataService.toCurrency(
+        position.grossPerformance?.toNumber(),
+        currency,
+        userCurrency
+      );
+      const netPerformance = this.exchangeRateDataService.toCurrency(
+        position.netPerformance?.toNumber(),
+        currency,
+        userCurrency
+      );
+
       const historicalData = await this.dataProviderService.getHistorical(
         [{ dataSource, symbol: aSymbol }],
         'day',
@@ -787,6 +897,7 @@ export class PortfolioService {
         transactionCount,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
+        stakeRewards: stakeRewards.toNumber(),
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
         dividendYieldPercent: dividendYieldPercent.toNumber(),
         dividendYieldPercentWithCurrencyEffect:
@@ -874,6 +985,7 @@ export class PortfolioService {
         SymbolProfile,
         averagePrice: 0,
         dataProviderInfo: undefined,
+        stakeRewards: 0,
         dividendInBaseCurrency: 0,
         dividendYieldPercent: 0,
         dividendYieldPercentWithCurrencyEffect: 0,
@@ -898,6 +1010,7 @@ export class PortfolioService {
     }
   }
 
+  @LogPerformance
   public async getPositions({
     dateRange = 'max',
     filters,
@@ -1022,6 +1135,7 @@ export class PortfolioService {
               dataProviderResponses[symbol]?.marketState ?? 'delayed',
             name: symbolProfileMap[symbol].name,
             netPerformance: netPerformance?.toNumber() ?? null,
+            tags: symbolProfileMap[symbol].tags,
             netPerformancePercentage:
               netPerformancePercentage?.toNumber() ?? null,
             netPerformancePercentageWithCurrencyEffect:
@@ -1041,18 +1155,21 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public async getPerformance({
     dateRange = 'max',
     filters,
     impersonationId,
     userId,
-    withExcludedAccounts = false
+    withExcludedAccounts = false,
+    calculateTimeWeightedPerformance = false
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
+    calculateTimeWeightedPerformance?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1098,15 +1215,14 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { errors, hasErrors, historicalData } =
-      await portfolioCalculator.getSnapshot();
-
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
+    const range = { end: endDate, start: startDate };
 
-    const { chart } = await portfolioCalculator.getPerformance({
-      end: endDate,
-      start: startDate
-    });
+    const { chart } = await (calculateTimeWeightedPerformance
+      ? (
+          portfolioCalculator as CPRPortfolioCalculator
+        ).getPerformanceWithTimeWeightedReturn(range)
+      : portfolioCalculator.getPerformance(range));
 
     const {
       netPerformance,
@@ -1131,9 +1247,8 @@ export class PortfolioService {
 
     return {
       chart,
-      errors,
-      hasErrors,
-      firstOrderDate: parseDate(historicalData[0]?.date),
+      hasErrors: false,
+      firstOrderDate: parseDate(chart[0]?.date),
       performance: {
         netPerformance,
         netPerformanceWithCurrencyEffect,
@@ -1147,6 +1262,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
@@ -1240,6 +1356,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   public async updateTags({
     dataSource,
     impersonationId,
@@ -1254,10 +1371,40 @@ export class PortfolioService {
     userId: string;
   }) {
     userId = await this.getUserId(impersonationId, userId);
-
-    await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+    let symbolProfile = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
+      }
+    ])[0];
+    await this.symbolProfileService.updateSymbolProfile({
+      assetClass: symbolProfile.assetClass,
+      assetSubClass: symbolProfile.assetSubClass,
+      countries: symbolProfile.countries,
+      currency: symbolProfile.currency,
+      dataSource,
+      holdings: symbolProfile.holdings,
+      name: symbolProfile.name,
+      sectors: symbolProfile.sectors,
+      symbol,
+      tags: {
+        connectOrCreate: tags.map(({ id, name }) => {
+          return {
+            create: {
+              id,
+              name
+            },
+            where: {
+              id
+            }
+          };
+        })
+      },
+      url: symbolProfile.url
+    });
   }
 
+  @LogPerformance
   private async getCashPositions({
     cashDetails,
     userCurrency,
@@ -1370,6 +1517,7 @@ export class PortfolioService {
     return dividendsByGroup;
   }
 
+  @LogPerformance
   private getEmergencyFundPositionsValueInBaseCurrency({
     holdings
   }: {
@@ -1512,6 +1660,7 @@ export class PortfolioService {
     return { markets, marketsAdvanced };
   }
 
+  @LogPerformance
   private getStreaks({
     investments,
     savingsRate
@@ -1534,6 +1683,7 @@ export class PortfolioService {
     return { currentStreak, longestStreak };
   }
 
+  @LogPerformance
   private async getSummary({
     balanceInBaseCurrency,
     emergencyFundPositionsValueInBaseCurrency,
@@ -1559,7 +1709,6 @@ export class PortfolioService {
       userId,
       withExcludedAccounts: true
     });
-
     const excludedActivities: Activity[] = [];
     const nonExcludedActivities: Activity[] = [];
 
@@ -1624,7 +1773,9 @@ export class PortfolioService {
       .plus(emergencyFundPositionsValueInBaseCurrency)
       .toNumber();
 
-    const committedFunds = new Big(totalBuy).minus(totalSell);
+    const committedFunds = new Big(totalBuy)
+      .minus(totalSell)
+      .minus(dividendInBaseCurrency);
 
     const totalOfExcludedActivities = this.getSumOfActivityType({
       userCurrency,
@@ -1644,21 +1795,25 @@ export class PortfolioService {
         currency: userCurrency,
         withExcludedAccounts: true
       });
-
     const excludedBalanceInBaseCurrency = new Big(
       cashDetailsWithExcludedAccounts.balanceInBaseCurrency
     ).minus(balanceInBaseCurrency);
 
-    const excludedAccountsAndActivities = excludedBalanceInBaseCurrency
+    let excludedAccountsAndActivities = excludedBalanceInBaseCurrency
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth = new Big(balanceInBaseCurrency)
-      .plus(currentValueInBaseCurrency)
-      .plus(valuables)
-      .plus(excludedAccountsAndActivities)
-      .minus(liabilities)
-      .toNumber();
+    const netWorth =
+      portfolioCalculator instanceof CPRPortfolioCalculator
+        ? await (portfolioCalculator as CPRPortfolioCalculator)
+            .getUnfilteredNetWorth(this.getUserCurrency())
+            .then((value) => value.toNumber())
+        : new Big(balanceInBaseCurrency)
+            .plus(currentValueInBaseCurrency)
+            .plus(valuables)
+            .plus(excludedAccountsAndActivities)
+            .minus(liabilities)
+            .toNumber();
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
@@ -1722,6 +1877,7 @@ export class PortfolioService {
     };
   }
 
+  @LogPerformance
   private getSumOfActivityType({
     activities,
     activityType,
@@ -1763,6 +1919,7 @@ export class PortfolioService {
     return impersonationUserId || aUserId;
   }
 
+  @LogPerformance
   private async getValueOfAccountsAndPlatforms({
     activities,
     filters = [],

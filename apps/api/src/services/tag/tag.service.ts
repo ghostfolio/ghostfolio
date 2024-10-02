@@ -23,11 +23,20 @@ export class TagService {
         name: 'asc'
       },
       where: {
-        orders: {
-          some: {
-            userId
+        OR: [
+          {
+            orders: {
+              some: {
+                userId
+              }
+            }
+          },
+          {
+            symbolProfile: {
+              some: {}
+            }
           }
-        }
+        ]
       }
     });
   }

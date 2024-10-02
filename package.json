@@ -51,6 +51,7 @@
     "ts-node": "ts-node",
     "update": "nx migrate latest",
     "watch:server": "nx run api:copy-assets && nx run api:build --watch",
+    "profile:server": "nx run api:profile",
     "watch:test": "nx test --watch",
     "workspace-generator": "nx workspace-generator"
   },
@@ -90,6 +91,7 @@
     "@simplewebauthn/server": "9.0.3",
     "@stripe/stripe-js": "3.5.0",
     "alphavantage": "2.2.0",
+    "await-lock": "^2.2.2",
     "big.js": "6.2.1",
     "body-parser": "1.20.2",
     "bootstrap": "4.6.0",
@@ -140,13 +142,13 @@
     "zone.js": "0.14.10"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "18.1.1",
+    "@angular-devkit/build-angular": "18.2.5",
     "@angular-devkit/core": "18.1.1",
     "@angular-devkit/schematics": "18.1.1",
     "@angular-eslint/eslint-plugin": "18.1.0",
     "@angular-eslint/eslint-plugin-template": "18.1.0",
     "@angular-eslint/template-parser": "18.1.0",
-    "@angular/cli": "18.1.1",
+    "@angular/cli": "18.2.1",
     "@angular/compiler-cli": "18.1.1",
     "@angular/language-service": "18.1.1",
     "@angular/localize": "18.1.1",

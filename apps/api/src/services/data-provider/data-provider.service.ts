@@ -1,5 +1,6 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
@@ -344,6 +345,7 @@ export class DataProviderService {
     return result;
   }
 
+  @LogPerformance
   public async getQuotes({
     items,
     requestTimeout,
@@ -471,6 +473,8 @@ export class DataProviderService {
               }
 
               response[symbol] = dataProviderResponse;
+              let quotesCacheTTL =
+                this.getAppropriateCacheTTL(dataProviderResponse);
 
               this.redisCacheService.set(
                 this.redisCacheService.getQuoteKey({
@@ -478,7 +482,7 @@ export class DataProviderService {
                   dataSource: DataSource[dataSource]
                 }),
                 JSON.stringify(response[symbol]),
-                this.configurationService.get('CACHE_QUOTES_TTL')
+                quotesCacheTTL
               );
 
               for (const {
@@ -559,6 +563,25 @@ export class DataProviderService {
     Logger.debug('========================================================');
 
     return response;
+  }
+
+  private getAppropriateCacheTTL(dataProviderResponse: IDataProviderResponse) {
+    let quotesCacheTTL = this.configurationService.get('CACHE_QUOTES_TTL');
+
+    if (dataProviderResponse.dataSource === 'MANUAL') {
+      quotesCacheTTL = 14400; // 4h Cache for Manual Service
+    } else if (dataProviderResponse.marketState === 'closed') {
+      let date = new Date();
+      let dayOfWeek = date.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        quotesCacheTTL = 14400;
+      } else if (date.getHours() > 16) {
+        quotesCacheTTL = 14400;
+      } else {
+        quotesCacheTTL = 900;
+      }
+    }
+    return quotesCacheTTL;
   }
 
   public async search({
@@ -667,7 +690,9 @@ export class DataProviderService {
 
     for (const date in rootData) {
       data[date] = {
-        marketPrice: new Big(factor).mul(rootData[date].marketPrice).toNumber()
+        marketPrice: rootData[date].marketPrice
+          ? new Big(factor).mul(rootData[date].marketPrice).toNumber()
+          : null
       };
     }
 

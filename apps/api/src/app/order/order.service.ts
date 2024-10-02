@@ -297,6 +297,7 @@ export class OrderService {
     });
   }
 
+  @LogPerformance
   public async getOrders({
     endDate,
     filters,
@@ -451,13 +452,34 @@ export class OrderService {
     }
 
     if (filtersByTag?.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
+      where.AND = [
+        {
+          OR: [
+            {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return {
+                      id: id
+                    };
+                  })
+                }
+              }
+            },
+            {
+              SymbolProfile: {
+                tags: {
+                  some: {
+                    OR: filtersByTag.map(({ id }) => {
+                      return { id };
+                    })
+                  }
+                }
+              }
+            }
+          ]
         }
-      };
+      ];
     }
 
     if (sortColumn) {
@@ -489,7 +511,11 @@ export class OrderService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true,
+          SymbolProfile: {
+            include: {
+              tags: true
+            }
+          },
           tags: true
         }
       }),

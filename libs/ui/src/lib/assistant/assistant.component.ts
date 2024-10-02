@@ -131,9 +131,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public dateRangeFormControl = new FormControl<string>(undefined);
   public dateRangeOptions: IDateRangeOption[] = [];
   public filterForm = this.formBuilder.group({
-    account: new FormControl<string>(undefined),
-    assetClass: new FormControl<string>(undefined),
-    tag: new FormControl<string>(undefined)
+    account: new FormControl<string[]>(undefined),
+    assetClass: new FormControl<string[]>(undefined),
+    tag: new FormControl<string[]>(undefined)
   });
   public isLoading = false;
   public isOpen = false;
@@ -272,9 +272,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filterForm.setValue(
       {
-        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
-        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
-        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
+        account: this.user?.settings?.['filters.accounts'] ?? null,
+        assetClass: this.user?.settings?.['filters.assetClasses'] ?? null,
+        tag: this.user?.settings?.['filters.tags'] ?? null
       },
       {
         emitEvent: false
@@ -282,7 +282,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
-  public hasFilter(aFormValue: { [key: string]: string }) {
+  public hasFilter(aFormValue: { [key: string]: string[] }) {
     return Object.values(aFormValue).some((value) => {
       return !!value;
     });
@@ -312,20 +312,28 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onApplyFilters() {
-    this.filtersChanged.emit([
-      {
-        id: this.filterForm.get('account').value,
-        type: 'ACCOUNT'
-      },
-      {
-        id: this.filterForm.get('assetClass').value,
-        type: 'ASSET_CLASS'
-      },
-      {
-        id: this.filterForm.get('tag').value,
-        type: 'TAG'
-      }
-    ]);
+    let accountFilters =
+      this.filterForm
+        .get('account')
+        .value?.reduce(
+          (arr, val) => [...arr, { id: val, type: 'ACCOUNT' }],
+          []
+        ) ?? [];
+    let assetClassFilters =
+      this.filterForm
+        .get('assetClass')
+        .value?.reduce(
+          (arr, val) => [...arr, { id: val, type: 'ASSET_CLASS' }],
+          []
+        ) ?? [];
+    let tagFilters =
+      this.filterForm
+        .get('tag')
+        .value?.reduce((arr, val) => [...arr, { id: val, type: 'TAG' }], []) ??
+      [];
+    let filters = [...accountFilters, ...assetClassFilters];
+    filters = [...filters, ...tagFilters];
+    this.filtersChanged.emit(filters);
 
     this.onCloseAssistant();
   }
