@@ -89,7 +89,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     [name: string]: { name: string; value: number };
   };
 
-  public HoldingTags: { id: string; name: string }[];
+  public HoldingTags: { id: string; name: string; userId: string }[];
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -123,8 +123,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .fetchTags()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags) => {
-        this.HoldingTags = tags.map(({ id, name }) => {
-          return { id, name };
+        this.HoldingTags = tags.map(({ id, name, userId }) => {
+          return { id, name, userId };
         });
         this.dataService.updateInfo();
 
