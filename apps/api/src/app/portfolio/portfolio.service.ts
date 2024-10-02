@@ -802,6 +802,9 @@ export class PortfolioService {
 
       const stakeRewards = getSum(
         activities
+          .filter(({ SymbolProfile }) => {
+            return symbol === SymbolProfile.symbol;
+          })
           .filter(({ type }) => {
             return type === 'STAKE';
           })
