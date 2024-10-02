@@ -9,7 +9,6 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
-import { TagModule } from '@ghostfolio/api/services/tag/tag.module';
 
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
@@ -33,7 +32,6 @@ import { InfoService } from './info.service';
     PropertyModule,
     RedisCacheModule,
     SymbolProfileModule,
-    TagModule,
     TransformDataSourceInResponseModule,
     UserModule
   ],
