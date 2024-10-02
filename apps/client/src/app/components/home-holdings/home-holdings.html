@@ -40,7 +40,7 @@
           cursor="pointer"
           [dateRange]="user?.settings?.dateRange"
           [holdings]="holdings"
-          (treemapChartClicked)="onSymbolClicked($event)"
+          (treemapChartClicked)="onHoldingClicked($event)"
         />
       }
       <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE' }">

@@ -119,14 +119,6 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     }
   }
 
-  public onSymbolClicked({ dataSource, symbol }: AssetProfileIdentifier) {
-    if (dataSource && symbol) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, holdingDetailDialog: true }
-      });
-    }
-  }
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
