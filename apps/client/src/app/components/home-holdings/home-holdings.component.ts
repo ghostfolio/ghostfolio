@@ -126,7 +126,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
       });
     }
   }
-  
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
