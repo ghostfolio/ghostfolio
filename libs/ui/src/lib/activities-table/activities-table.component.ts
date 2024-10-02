@@ -42,7 +42,6 @@ import {
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterModule } from '@angular/router';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -64,8 +63,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
     MatSortModule,
     MatTableModule,
     MatTooltipModule,
-    NgxSkeletonLoaderModule,
-    RouterModule
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
@@ -94,6 +92,7 @@ export class GfActivitiesTableComponent
   @Input() sortDisabled = false;
   @Input() totalItems = Number.MAX_SAFE_INTEGER;
 
+  @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
   @Output() activitiesDeleted = new EventEmitter<void>();
   @Output() activityDeleted = new EventEmitter<string>();
   @Output() activityToClone = new EventEmitter<OrderWithAccount>();
@@ -105,7 +104,6 @@ export class GfActivitiesTableComponent
   @Output() pageChanged = new EventEmitter<PageEvent>();
   @Output() selectedActivities = new EventEmitter<Activity[]>();
   @Output() sortChanged = new EventEmitter<Sort>();
-  @Output() activityClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -123,10 +121,7 @@ export class GfActivitiesTableComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private notificationService: NotificationService,
-    private router: Router
-  ) {}
+  public constructor(private notificationService: NotificationService) {}
 
   public ngOnInit() {
     if (this.showCheckbox) {

@@ -138,6 +138,16 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
     this.fetchActivities();
   }
 
+  public onClickActivity({ SymbolProfile }: Activity) {
+    this.router.navigate([], {
+      queryParams: {
+        dataSource: SymbolProfile.dataSource,
+        holdingDetailDialog: true,
+        symbol: SymbolProfile.symbol
+      }
+    });
+  }
+
   public onCloneActivity(aActivity: Activity) {
     this.openCreateActivityDialog(aActivity);
   }
@@ -252,16 +262,6 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public onUpdateActivity(aActivity: Activity) {
     this.router.navigate([], {
       queryParams: { activityId: aActivity.id, editDialog: true }
-    });
-  }
-
-  public onClickActivity(aActivity: Activity) {
-    this.router.navigate([], {
-      queryParams: {
-        dataSource: aActivity.SymbolProfile.dataSource,
-        symbol: aActivity.SymbolProfile.symbol,
-        holdingDetailDialog: true
-      }
     });
   }
 
