@@ -427,8 +427,17 @@ export class AdminService {
     };
   }
 
-  public async getUsers(): Promise<AdminUsers> {
-    return { users: await this.getUsersWithAnalytics() };
+  public async getUsers({ skip, take, sortColumn, sortDirection }: {
+    skip?: number;
+    take?: number;
+    sortColumn?: string;
+    sortDirection?: Prisma.SortOrder;
+  }): Promise<AdminUsers> {
+    return this.userRepository.find({
+      skip,
+      take,
+      orderBy: sortColumn ? { [sortColumn]: sortDirection } : undefined,
+    });
   }
 
   public async patchAssetProfileData({
