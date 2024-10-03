@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a message if no results have been found in the create or update activity dialog
+
 ### Changed
 
 - Improved the language localization for German (`de`)
