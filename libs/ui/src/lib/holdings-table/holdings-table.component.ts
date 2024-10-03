@@ -53,7 +53,7 @@ import { Subject, Subscription } from 'rxjs';
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
+export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -78,8 +78,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor() {}
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];

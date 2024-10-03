@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the calculation of allocations by market (_Unknown_)
+- Fixed the `eslint` configuration
 
 ## 2.111.0 - 2024-09-28
 
