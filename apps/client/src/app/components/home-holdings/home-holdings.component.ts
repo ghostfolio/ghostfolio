@@ -111,7 +111,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
-  public onSymbolClicked({ dataSource, symbol }: AssetProfileIdentifier) {
+  public onHoldingClicked({ dataSource, symbol }: AssetProfileIdentifier) {
     if (dataSource && symbol) {
       this.router.navigate([], {
         queryParams: { dataSource, symbol, holdingDetailDialog: true }
