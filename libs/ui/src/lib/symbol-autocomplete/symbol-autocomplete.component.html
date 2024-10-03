@@ -12,11 +12,6 @@
   (optionSelected)="onUpdateSymbol($event)"
 >
   @if (!isLoading) {
-    @if (hasNoItemsPostLoading) {
-      <mat-option class="line-height-1" disabled="true" i18n
-        >Oops! Could not find any assets.
-      </mat-option>
-    }
     @for (lookupItem of filteredLookupItems; track lookupItem) {
       <mat-option
         class="line-height-1"
@@ -36,6 +31,12 @@
           }
         </small>
       </mat-option>
+    } @empty {
+      @if (control.value?.length > 1) {
+        <mat-option class="line-height-1" disabled="true" i18n
+          >Oops! Could not find any assets.
+        </mat-option>
+      }
     }
   }
 </mat-autocomplete>
