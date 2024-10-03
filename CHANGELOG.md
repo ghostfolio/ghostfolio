@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a message to the search asset component if no results have been found in the create or update activity dialog
 - Added support to customize the rule thresholds in the _X-ray_ section (experimental)
 
 ### Changed
