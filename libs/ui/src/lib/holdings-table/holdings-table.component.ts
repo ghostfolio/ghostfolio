@@ -14,10 +14,12 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +27,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router, RouterModule } from '@angular/router';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
@@ -44,8 +45,7 @@ import { Subject, Subscription } from 'rxjs';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    NgxSkeletonLoaderModule,
-    RouterModule
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holdings-table',
@@ -63,6 +63,8 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
 
+  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -75,7 +77,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
+  public constructor() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
@@ -105,9 +107,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, holdingDetailDialog: true }
-      });
+      this.holdingClicked.emit({ dataSource, symbol });
     }
   }
 
