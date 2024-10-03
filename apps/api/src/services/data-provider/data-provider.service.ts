@@ -666,11 +666,12 @@ export class DataProviderService {
     } = {};
 
     for (const date in rootData) {
-      if (rootData[date].marketPrice >= 0) {
-        data[date] = {
-          marketPrice: rootData[date].marketPrice
-        };
+      if (rootData[date].marketPrice === null) {
+        continue;
       }
+      data[date] = {
+        marketPrice: rootData[date].marketPrice
+      };
     }
 
     return data;
