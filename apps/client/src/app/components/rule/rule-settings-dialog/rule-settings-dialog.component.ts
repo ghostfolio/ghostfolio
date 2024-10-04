@@ -35,8 +35,6 @@ export class GfRuleSettingsDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: IRuleSettingsDialogParams,
     public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>
   ) {
-    console.log(this.data.rule);
-
     this.settings = this.data.rule.settings;
   }
 }

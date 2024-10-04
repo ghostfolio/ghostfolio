@@ -1,8 +1,9 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
-import { UserSettings } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
+
+import { Big } from 'big.js';
 
 import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
@@ -33,24 +34,26 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
     return this.name;
   }
 
-  public groupCurrentPositionsByAttribute(
-    positions: TimelinePosition[],
-    attribute: keyof TimelinePosition,
+  public groupCurrentHoldingsByAttribute(
+    holdings: PortfolioPosition[],
+    attribute: keyof PortfolioPosition,
     baseCurrency: string
   ) {
-    return Array.from(groupBy(attribute, positions).entries()).map(
+    return Array.from(groupBy(attribute, holdings).entries()).map(
       ([attributeValue, objs]) => ({
         groupKey: attributeValue,
         investment: objs.reduce(
           (previousValue, currentValue) =>
-            previousValue + currentValue.investment.toNumber(),
+            previousValue + currentValue.investment,
           0
         ),
         value: objs.reduce(
           (previousValue, currentValue) =>
             previousValue +
             this.exchangeRateDataService.toCurrency(
-              currentValue.quantity.mul(currentValue.marketPrice).toNumber(),
+              new Big(currentValue.quantity)
+                .mul(currentValue.marketPrice)
+                .toNumber(),
               currentValue.currency,
               baseCurrency
             ),

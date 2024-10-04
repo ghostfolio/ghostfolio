@@ -1148,74 +1148,49 @@ export class PortfolioService {
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-    const userCurrency = this.getUserCurrency(user);
-
-    const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
-        userCurrency,
-        userId
-      });
-
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
-      userId,
-      calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency
-    });
-
-    let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
-      await portfolioCalculator.getSnapshot();
-
-    positions = positions.filter((item) => !item.quantity.eq(0));
-
-    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-
-    for (const position of positions) {
-      portfolioItemsNow[position.symbol] = position;
-    }
-
-    const { accounts } = await this.getValueOfAccountsAndPlatforms({
-      activities,
-      portfolioItemsNow,
-      userCurrency,
-      userId
-    });
-
     const userSettings = <UserSettings>this.request.user.Settings.settings;
+
+    const { accounts, holdings, summary } = await this.getDetails({
+      impersonationId,
+      userId,
+      withMarkets: true,
+      withSummary: true
+    });
 
     return {
       rules: {
-        accountClusterRisk: isEmpty(activities)
-          ? undefined
-          : await this.rulesService.evaluate(
-              [
-                new AccountClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  accounts
-                ),
-                new AccountClusterRiskSingleAccount(
-                  this.exchangeRateDataService,
-                  accounts
-                )
-              ],
-              userSettings
-            ),
-        currencyClusterRisk: isEmpty(activities)
-          ? undefined
-          : await this.rulesService.evaluate(
-              [
-                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                  this.exchangeRateDataService,
-                  positions
-                ),
-                new CurrencyClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  positions
-                )
-              ],
-              userSettings
-            ),
+        accountClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AccountClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    accounts
+                  ),
+                  new AccountClusterRiskSingleAccount(
+                    this.exchangeRateDataService,
+                    accounts
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
+        currencyClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                    this.exchangeRateDataService,
+                    Object.values(holdings)
+                  ),
+                  new CurrencyClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    Object.values(holdings)
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
         emergencyFund: await this.rulesService.evaluate(
           [
             new EmergencyFundSetup(
@@ -1229,8 +1204,8 @@ export class PortfolioService {
           [
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
-              totalInvestment.toNumber(),
-              totalFeesWithCurrencyEffect.toNumber()
+              summary.committedFunds,
+              summary.fees
             )
           ],
           userSettings
