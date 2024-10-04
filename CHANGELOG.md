@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up a git-hook via `husky` to lint and format the changes before a commit
 
+### Fixed
+
+- Handled an exception in the historical market data gathering of derived currencies
+
 ## 2.112.0 - 2024-10-03
 
 ### Added
