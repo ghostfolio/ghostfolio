@@ -1,0 +1,7 @@
+# Run lint and abort if there are any lint errors
+# --quiet will supress warnings which would cause this check to fail too
+# this is temporary until all warnings are fixed
+npm run lint --quiet || exit 1
+
+# Run format:check on modified and uncommitted files and abort if there are any formatting errors
+npm run format:check --uncommitted || exit 1
