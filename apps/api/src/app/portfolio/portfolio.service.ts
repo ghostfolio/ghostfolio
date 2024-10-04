@@ -74,7 +74,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, isNumber, last, uniq } from 'lodash';
+import { isEmpty, last, uniq } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
