@@ -57,7 +57,7 @@ export class PublicController {
     }
 
     const [
-      { holdings },
+      { holdings, markets },
       { performance: performance1d },
       { performance: performanceMax },
       { performance: performanceYtd }
@@ -80,6 +80,7 @@ export class PublicController {
       hasDetails,
       alias: access.alias,
       holdings: {},
+      markets: hasDetails ? markets : undefined,
       performance: {
         '1d': {
           relativeChange:

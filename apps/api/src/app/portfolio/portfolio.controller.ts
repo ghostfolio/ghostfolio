@@ -1,4 +1,3 @@
-import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
@@ -61,7 +60,6 @@ import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
-    private readonly accessService: AccessService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
@@ -97,7 +95,7 @@ export class PortfolioController {
       filterByTags
     });
 
-    const { accounts, hasErrors, holdings, platforms, summary } =
+    const { accounts, hasErrors, holdings, markets, platforms, summary } =
       await this.portfolioService.getDetails({
         dateRange,
         filters,
@@ -216,7 +214,8 @@ export class PortfolioController {
       hasError,
       holdings,
       platforms,
-      summary: portfolioSummary
+      summary: portfolioSummary,
+      markets: hasDetails ? markets : undefined
     };
   }
 

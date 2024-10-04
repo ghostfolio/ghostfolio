@@ -45,6 +45,7 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
+  Market,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
@@ -73,7 +74,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq } from 'lodash';
+import { isEmpty, isNumber, last, uniq } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -581,6 +582,17 @@ export class PortfolioService {
       };
     }
 
+    let markets: {
+      [key in Market]: {
+        name: string;
+        value: number;
+      };
+    };
+
+    if (withMarkets) {
+      markets = this.getAggregatedMarkets(holdings);
+    }
+
     let summary: PortfolioSummary;
 
     if (withSummary) {
@@ -602,6 +614,7 @@ export class PortfolioService {
       accounts,
       hasErrors,
       holdings,
+      markets,
       platforms,
       summary
     };
@@ -1230,6 +1243,62 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
 
     await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+  }
+
+  private getAggregatedMarkets(holdings: {
+    [symbol: string]: PortfolioPosition;
+  }): {
+    [key in Market]: { name: string; value: number };
+  } {
+    const markets = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      },
+      developedMarkets: {
+        name: 'developedMarkets',
+        value: 0
+      },
+      emergingMarkets: {
+        name: 'emergingMarkets',
+        value: 0
+      },
+      otherMarkets: {
+        name: 'otherMarkets',
+        value: 0
+      }
+    };
+
+    for (const [symbol, position] of Object.entries(holdings)) {
+      const value = position.valueInBaseCurrency;
+
+      if (position.assetClass !== AssetClass.LIQUIDITY) {
+        if (position.countries.length > 0) {
+          markets.developedMarkets.value +=
+            position.markets.developedMarkets * value;
+          markets.emergingMarkets.value +=
+            position.markets.emergingMarkets * value;
+          markets.otherMarkets.value += position.markets.otherMarkets * value;
+        } else {
+          markets[UNKNOWN_KEY].value += value;
+        }
+      }
+    }
+
+    const marketsTotal =
+      markets.developedMarkets.value +
+      markets.emergingMarkets.value +
+      markets.otherMarkets.value +
+      markets[UNKNOWN_KEY].value;
+
+    markets.developedMarkets.value =
+      markets.developedMarkets.value / marketsTotal;
+    markets.emergingMarkets.value =
+      markets.emergingMarkets.value / marketsTotal;
+    markets.otherMarkets.value = markets.otherMarkets.value / marketsTotal;
+    markets[UNKNOWN_KEY].value = markets[UNKNOWN_KEY].value / marketsTotal;
+
+    return markets;
   }
 
   private async getCashPositions({
