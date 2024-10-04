@@ -95,7 +95,7 @@ export class PortfolioController {
       filterByTags
     });
 
-    const { accounts, hasErrors, holdings, markets, platforms, summary } =
+    const { accounts, hasErrors, holdings, platforms, summary } =
       await this.portfolioService.getDetails({
         dateRange,
         filters,
@@ -214,8 +214,7 @@ export class PortfolioController {
       hasError,
       holdings,
       platforms,
-      summary: portfolioSummary,
-      markets: hasDetails ? markets : undefined
+      summary: portfolioSummary
     };
   }
 

@@ -1,5 +1,3 @@
-import { Market } from '@ghostfolio/common/types';
-
 import { PortfolioPosition } from '../portfolio-position.interface';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
@@ -23,12 +21,6 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
       | 'valueInBaseCurrency'
       | 'valueInPercentage'
     >;
-  };
-  markets?: {
-    [key in Market]: {
-      name: string;
-      value: number;
-    };
   };
 }
 
