@@ -4,4 +4,4 @@
 npm run lint --quiet || exit 1
 
 # Run format:check on modified and uncommitted files and abort if there are any formatting errors
-npm run format:check --uncommitted || exit 1
+npm run format:write --uncommitted || exit 1
