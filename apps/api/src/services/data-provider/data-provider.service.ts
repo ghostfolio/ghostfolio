@@ -666,9 +666,13 @@ export class DataProviderService {
     } = {};
 
     for (const date in rootData) {
-      data[date] = {
-        marketPrice: new Big(factor).mul(rootData[date].marketPrice).toNumber()
-      };
+      if (isNumber(rootData[date].marketPrice)) {
+        data[date] = {
+          marketPrice: new Big(factor)
+            .mul(rootData[date].marketPrice)
+            .toNumber()
+        };
+      }
     }
 
     return data;
