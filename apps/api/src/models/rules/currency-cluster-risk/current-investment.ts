@@ -1,35 +1,34 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { UserSettings } from '@ghostfolio/common/interfaces';
-import { TimelinePosition } from '@ghostfolio/common/models';
+import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
-  private positions: TimelinePosition[];
+  private holdings: PortfolioPosition[];
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    positions: TimelinePosition[]
+    holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
       key: CurrencyClusterRiskCurrentInvestment.name,
       name: 'Investment'
     });
 
-    this.positions = positions;
+    this.holdings = holdings;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const positionsGroupedByCurrency = this.groupCurrentPositionsByAttribute(
-      this.positions,
+    const holdingsGroupedByCurrency = this.groupCurrentHoldingsByAttribute(
+      this.holdings,
       'currency',
       ruleSettings.baseCurrency
     );
 
-    let maxItem = positionsGroupedByCurrency[0];
+    let maxItem = holdingsGroupedByCurrency[0];
     let totalValue = 0;
 
-    positionsGroupedByCurrency.forEach((groupItem) => {
+    holdingsGroupedByCurrency.forEach((groupItem) => {
       // Calculate total value
       totalValue += groupItem.value;
 

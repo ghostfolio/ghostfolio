@@ -45,6 +45,7 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
+  Market,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
@@ -581,6 +582,17 @@ export class PortfolioService {
       };
     }
 
+    let markets: {
+      [key in Market]: {
+        name: string;
+        value: number;
+      };
+    };
+
+    if (withMarkets) {
+      markets = this.getAggregatedMarkets(holdings);
+    }
+
     let summary: PortfolioSummary;
 
     if (withSummary) {
@@ -602,6 +614,7 @@ export class PortfolioService {
       accounts,
       hasErrors,
       holdings,
+      markets,
       platforms,
       summary
     };
@@ -1148,74 +1161,49 @@ export class PortfolioService {
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-    const userCurrency = this.getUserCurrency(user);
-
-    const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
-        userCurrency,
-        userId
-      });
-
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
-      userId,
-      calculationType: PerformanceCalculationType.TWR,
-      currency: this.request.user.Settings.settings.baseCurrency
-    });
-
-    let { totalFeesWithCurrencyEffect, positions, totalInvestment } =
-      await portfolioCalculator.getSnapshot();
-
-    positions = positions.filter((item) => !item.quantity.eq(0));
-
-    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
-
-    for (const position of positions) {
-      portfolioItemsNow[position.symbol] = position;
-    }
-
-    const { accounts } = await this.getValueOfAccountsAndPlatforms({
-      activities,
-      portfolioItemsNow,
-      userCurrency,
-      userId
-    });
-
     const userSettings = <UserSettings>this.request.user.Settings.settings;
+
+    const { accounts, holdings, summary } = await this.getDetails({
+      impersonationId,
+      userId,
+      withMarkets: true,
+      withSummary: true
+    });
 
     return {
       rules: {
-        accountClusterRisk: isEmpty(activities)
-          ? undefined
-          : await this.rulesService.evaluate(
-              [
-                new AccountClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  accounts
-                ),
-                new AccountClusterRiskSingleAccount(
-                  this.exchangeRateDataService,
-                  accounts
-                )
-              ],
-              userSettings
-            ),
-        currencyClusterRisk: isEmpty(activities)
-          ? undefined
-          : await this.rulesService.evaluate(
-              [
-                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                  this.exchangeRateDataService,
-                  positions
-                ),
-                new CurrencyClusterRiskCurrentInvestment(
-                  this.exchangeRateDataService,
-                  positions
-                )
-              ],
-              userSettings
-            ),
+        accountClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new AccountClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    accounts
+                  ),
+                  new AccountClusterRiskSingleAccount(
+                    this.exchangeRateDataService,
+                    accounts
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
+        currencyClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                    this.exchangeRateDataService,
+                    Object.values(holdings)
+                  ),
+                  new CurrencyClusterRiskCurrentInvestment(
+                    this.exchangeRateDataService,
+                    Object.values(holdings)
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
         emergencyFund: await this.rulesService.evaluate(
           [
             new EmergencyFundSetup(
@@ -1229,8 +1217,8 @@ export class PortfolioService {
           [
             new FeeRatioInitialInvestment(
               this.exchangeRateDataService,
-              totalInvestment.toNumber(),
-              totalFeesWithCurrencyEffect.toNumber()
+              summary.committedFunds,
+              summary.fees
             )
           ],
           userSettings
@@ -1255,6 +1243,62 @@ export class PortfolioService {
     userId = await this.getUserId(impersonationId, userId);
 
     await this.orderService.assignTags({ dataSource, symbol, tags, userId });
+  }
+
+  private getAggregatedMarkets(holdings: {
+    [symbol: string]: PortfolioPosition;
+  }): {
+    [key in Market]: { name: string; value: number };
+  } {
+    const markets = {
+      [UNKNOWN_KEY]: {
+        name: UNKNOWN_KEY,
+        value: 0
+      },
+      developedMarkets: {
+        name: 'developedMarkets',
+        value: 0
+      },
+      emergingMarkets: {
+        name: 'emergingMarkets',
+        value: 0
+      },
+      otherMarkets: {
+        name: 'otherMarkets',
+        value: 0
+      }
+    };
+
+    for (const [symbol, position] of Object.entries(holdings)) {
+      const value = position.valueInBaseCurrency;
+
+      if (position.assetClass !== AssetClass.LIQUIDITY) {
+        if (position.countries.length > 0) {
+          markets.developedMarkets.value +=
+            position.markets.developedMarkets * value;
+          markets.emergingMarkets.value +=
+            position.markets.emergingMarkets * value;
+          markets.otherMarkets.value += position.markets.otherMarkets * value;
+        } else {
+          markets[UNKNOWN_KEY].value += value;
+        }
+      }
+    }
+
+    const marketsTotal =
+      markets.developedMarkets.value +
+      markets.emergingMarkets.value +
+      markets.otherMarkets.value +
+      markets[UNKNOWN_KEY].value;
+
+    markets.developedMarkets.value =
+      markets.developedMarkets.value / marketsTotal;
+    markets.emergingMarkets.value =
+      markets.emergingMarkets.value / marketsTotal;
+    markets.otherMarkets.value = markets.otherMarkets.value / marketsTotal;
+    markets[UNKNOWN_KEY].value = markets[UNKNOWN_KEY].value / marketsTotal;
+
+    return markets;
   }
 
   private async getCashPositions({
