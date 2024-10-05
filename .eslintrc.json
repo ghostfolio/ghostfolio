@@ -34,9 +34,11 @@
     {
       "files": ["*.ts"],
       "plugins": ["eslint-plugin-import", "@typescript-eslint"],
-      "extends": ["plugin:@typescript-eslint/recommended-type-checked"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked"
+      ],
       "rules": {
-        "@typescript-eslint/consistent-type-definitions": "warn",
         "@typescript-eslint/dot-notation": "off",
         "@typescript-eslint/explicit-member-accessibility": [
           "off",
@@ -46,7 +48,6 @@
         ],
         "@typescript-eslint/member-ordering": "warn",
         "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-inferrable-types": [
           "warn",
@@ -61,7 +62,6 @@
             "hoist": "all"
           }
         ],
-        "@typescript-eslint/prefer-function-type": "warn",
         "@typescript-eslint/unified-signatures": "error",
         "@typescript-eslint/no-loss-of-precision": "warn",
         "@typescript-eslint/no-var-requires": "warn",
@@ -114,7 +114,18 @@
         "@typescript-eslint/require-await": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
         "@typescript-eslint/unbound-method": "warn",
-        "prefer-const": "warn"
+        "prefer-const": "warn",
+
+        // The following rules are part of @typescript-eslint/stylistic-type-checked
+        // and can be remove once solved
+        "@typescript-eslint/consistent-type-definitions": "warn",
+        "@typescript-eslint/prefer-function-type": "warn",
+        "@typescript-eslint/no-empty-function": "warn",
+        "@typescript-eslint/prefer-nullish-coalescing": "warn", // requires strictNullChecks: true
+        "@typescript-eslint/consistent-type-assertions": "warn",
+        "@typescript-eslint/prefer-optional-chain": "warn",
+        "@typescript-eslint/consistent-indexed-object-style": "warn",
+        "@typescript-eslint/consistent-generic-constructors": "warn"
       }
     }
   ],
