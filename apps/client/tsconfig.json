@@ -15,7 +15,8 @@
   ],
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
-    "strictTemplates": false
+    "strictInputAccessModifiers": false, // todo: enable strict input access modifiers
+    "strictTemplates": false // todo: enable strict templates
   },
   "compilerOptions": {
     "target": "es2020"
