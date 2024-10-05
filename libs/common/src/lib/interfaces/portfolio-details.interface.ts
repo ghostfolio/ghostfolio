@@ -2,7 +2,7 @@ import {
   PortfolioPosition,
   PortfolioSummary
 } from '@ghostfolio/common/interfaces';
-import { Market } from '@ghostfolio/common/types';
+import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 
 export interface PortfolioDetails {
   accounts: {
@@ -17,8 +17,16 @@ export interface PortfolioDetails {
   holdings: { [symbol: string]: PortfolioPosition };
   markets?: {
     [key in Market]: {
-      name: string;
-      value: number;
+      id: Market;
+      valueInBaseCurrency: number;
+      valueInPercentage: number;
+    };
+  };
+  marketsAdvanced?: {
+    [key in MarketAdvanced]: {
+      id: MarketAdvanced;
+      valueInBaseCurrency: number;
+      valueInPercentage: number;
     };
   };
   platforms: {
