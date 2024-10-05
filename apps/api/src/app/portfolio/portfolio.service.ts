@@ -45,7 +45,6 @@ import type {
   AccountWithValue,
   DateRange,
   GroupBy,
-  Market,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
@@ -582,15 +581,11 @@ export class PortfolioService {
       };
     }
 
-    let markets: {
-      [key in Market]: {
-        name: string;
-        value: number;
-      };
-    };
+    let markets: PortfolioDetails['markets'];
+    let marketsAdvanced: PortfolioDetails['marketsAdvanced'];
 
     if (withMarkets) {
-      markets = this.getAggregatedMarkets(holdings);
+      ({ markets, marketsAdvanced } = this.getAggregatedMarkets(holdings));
     }
 
     let summary: PortfolioSummary;
@@ -615,6 +610,7 @@ export class PortfolioService {
       hasErrors,
       holdings,
       markets,
+      marketsAdvanced,
       platforms,
       summary
     };
@@ -1248,24 +1244,67 @@ export class PortfolioService {
   private getAggregatedMarkets(holdings: {
     [symbol: string]: PortfolioPosition;
   }): {
-    [key in Market]: { name: string; value: number };
+    markets: PortfolioDetails['markets'];
+    marketsAdvanced: PortfolioDetails['marketsAdvanced'];
   } {
-    const markets = {
+    const markets: PortfolioDetails['markets'] = {
       [UNKNOWN_KEY]: {
-        name: UNKNOWN_KEY,
-        value: 0
+        id: UNKNOWN_KEY,
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
       },
       developedMarkets: {
-        name: 'developedMarkets',
-        value: 0
+        id: 'developedMarkets',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
       },
       emergingMarkets: {
-        name: 'emergingMarkets',
-        value: 0
+        id: 'emergingMarkets',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
       },
       otherMarkets: {
-        name: 'otherMarkets',
-        value: 0
+        id: 'otherMarkets',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      }
+    };
+
+    const marketsAdvanced: PortfolioDetails['marketsAdvanced'] = {
+      [UNKNOWN_KEY]: {
+        id: UNKNOWN_KEY,
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      asiaPacific: {
+        id: 'asiaPacific',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      emergingMarkets: {
+        id: 'emergingMarkets',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      europe: {
+        id: 'europe',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      japan: {
+        id: 'japan',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      northAmerica: {
+        id: 'northAmerica',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
+      },
+      otherMarkets: {
+        id: 'otherMarkets',
+        valueInBaseCurrency: 0,
+        valueInPercentage: 0
       }
     };
 
@@ -1274,31 +1313,73 @@ export class PortfolioService {
 
       if (position.assetClass !== AssetClass.LIQUIDITY) {
         if (position.countries.length > 0) {
-          markets.developedMarkets.value +=
+          markets.developedMarkets.valueInBaseCurrency +=
             position.markets.developedMarkets * value;
-          markets.emergingMarkets.value +=
+          markets.emergingMarkets.valueInBaseCurrency +=
             position.markets.emergingMarkets * value;
-          markets.otherMarkets.value += position.markets.otherMarkets * value;
+          markets.otherMarkets.valueInBaseCurrency +=
+            position.markets.otherMarkets * value;
+
+          marketsAdvanced.asiaPacific.valueInBaseCurrency +=
+            position.marketsAdvanced.asiaPacific * value;
+          marketsAdvanced.emergingMarkets.valueInBaseCurrency +=
+            position.marketsAdvanced.emergingMarkets * value;
+          marketsAdvanced.europe.valueInBaseCurrency +=
+            position.marketsAdvanced.europe * value;
+          marketsAdvanced.japan.valueInBaseCurrency +=
+            position.marketsAdvanced.japan * value;
+          marketsAdvanced.northAmerica.valueInBaseCurrency +=
+            position.marketsAdvanced.northAmerica * value;
+          marketsAdvanced.otherMarkets.valueInBaseCurrency +=
+            position.marketsAdvanced.otherMarkets * value;
         } else {
-          markets[UNKNOWN_KEY].value += value;
+          markets[UNKNOWN_KEY].valueInBaseCurrency += value;
+          marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency += value;
         }
       }
     }
 
     const marketsTotal =
-      markets.developedMarkets.value +
-      markets.emergingMarkets.value +
-      markets.otherMarkets.value +
-      markets[UNKNOWN_KEY].value;
+      markets.developedMarkets.valueInBaseCurrency +
+      markets.emergingMarkets.valueInBaseCurrency +
+      markets.otherMarkets.valueInBaseCurrency +
+      markets[UNKNOWN_KEY].valueInBaseCurrency;
 
-    markets.developedMarkets.value =
-      markets.developedMarkets.value / marketsTotal;
-    markets.emergingMarkets.value =
-      markets.emergingMarkets.value / marketsTotal;
-    markets.otherMarkets.value = markets.otherMarkets.value / marketsTotal;
-    markets[UNKNOWN_KEY].value = markets[UNKNOWN_KEY].value / marketsTotal;
+    markets.developedMarkets.valueInPercentage =
+      markets.developedMarkets.valueInBaseCurrency / marketsTotal;
+    markets.emergingMarkets.valueInPercentage =
+      markets.emergingMarkets.valueInBaseCurrency / marketsTotal;
+    markets.otherMarkets.valueInPercentage =
+      markets.otherMarkets.valueInBaseCurrency / marketsTotal;
+    markets[UNKNOWN_KEY].valueInPercentage =
+      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotal;
 
-    return markets;
+    const marketsAdvancedTotal =
+      marketsAdvanced.asiaPacific.valueInBaseCurrency +
+      marketsAdvanced.emergingMarkets.valueInBaseCurrency +
+      marketsAdvanced.europe.valueInBaseCurrency +
+      marketsAdvanced.japan.valueInBaseCurrency +
+      marketsAdvanced.northAmerica.valueInBaseCurrency +
+      marketsAdvanced.otherMarkets.valueInBaseCurrency +
+      marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency;
+
+    marketsAdvanced.asiaPacific.valueInPercentage =
+      marketsAdvanced.asiaPacific.valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced.emergingMarkets.valueInPercentage =
+      marketsAdvanced.emergingMarkets.valueInBaseCurrency /
+      marketsAdvancedTotal;
+    marketsAdvanced.europe.valueInPercentage =
+      marketsAdvanced.europe.valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced.japan.valueInPercentage =
+      marketsAdvanced.japan.valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced.northAmerica.valueInPercentage =
+      marketsAdvanced.northAmerica.valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced.otherMarkets.valueInPercentage =
+      marketsAdvanced.otherMarkets.valueInBaseCurrency / marketsAdvancedTotal;
+    marketsAdvanced[UNKNOWN_KEY].valueInPercentage =
+      marketsAdvanced[UNKNOWN_KEY].valueInBaseCurrency / marketsAdvancedTotal;
+
+    return { markets, marketsAdvanced };
   }
 
   private async getCashPositions({
