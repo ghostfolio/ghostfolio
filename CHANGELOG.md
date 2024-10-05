@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set up a git-hook via `husky` to lint and format the changes before a commit
 - Added the `typescript-eslint/recommended-type-checked` rule to the `eslint` configuration
 
+### Changed
+
+- Optimized the portfolio calculations by reusing date intervals
+
 ### Fixed
 
 - Handled an exception in the historical market data gathering of derived currencies
