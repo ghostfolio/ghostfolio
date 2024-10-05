@@ -5,7 +5,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "parserOptions": {
-        "project": ["apps/ui-e2e/tsconfig.json"]
+        "project": ["apps/client-e2e/tsconfig.*?.json"]
       },
       "rules": {}
     },
