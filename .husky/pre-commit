@@ -1,7 +1,6 @@
-# Run lint and abort if there are any lint errors
-# --quiet will supress warnings which would cause this check to fail too
-# this is temporary until all warnings are fixed
+# Run linting and stop the commit process if any errors are found
+# --quiet suppresses warnings (temporary until all warnings are fixed)
 npm run lint --quiet || exit 1
 
-# Run format:check on modified and uncommitted files and abort if there are any formatting errors
-npm run format:write --uncommitted || exit 1
+# Check formatting on modified and uncommitted files, stop the commit if issues are found
+npm run format:check --uncommitted || exit 1
