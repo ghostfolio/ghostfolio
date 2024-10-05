@@ -37,6 +37,7 @@
     "ng": "nx",
     "nx": "nx",
     "postinstall": "prisma generate",
+    "prepare": "husky",
     "prisma": "prisma",
     "replace-placeholders-in-build": "node ./replace.build.js",
     "start": "node dist/apps/api/main",
