@@ -269,9 +269,13 @@ export class GfActivitiesTableComponent
   }
 
   public toggleAllRows() {
-    this.areAllRowsSelected()
-      ? this.selectedRows.clear()
-      : this.dataSource.data.forEach((row) => this.selectedRows.select(row));
+    if (this.areAllRowsSelected()) {
+      this.selectedRows.clear();
+    } else {
+      this.dataSource.data.forEach((row) => {
+        this.selectedRows.select(row);
+      });
+    }
 
     this.selectedActivities.emit(this.selectedRows.selected);
   }
