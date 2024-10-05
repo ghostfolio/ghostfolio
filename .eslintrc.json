@@ -47,7 +47,33 @@
           }
         ],
         "@typescript-eslint/member-ordering": "warn",
-        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/naming-convention": [
+          "warn",
+          {
+            "selector": "default",
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": ["variable", "classProperty", "typeProperty"],
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "objectLiteralProperty",
+            "format": null
+          },
+          {
+            "selector": "enumMember",
+            "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          }
+        ],
         "@typescript-eslint/no-empty-interface": "warn",
         "@typescript-eslint/no-inferrable-types": [
           "warn",
