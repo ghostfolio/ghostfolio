@@ -23,7 +23,11 @@ export class TagService {
         name: 'asc'
       },
       include: {
-        orders: true
+        _count: {
+          select: {
+            orders: true
+          }
+        }
       },
       where: {
         OR: [
@@ -39,8 +43,8 @@ export class TagService {
 
     return tags.map((tag) => ({
       ...tag,
-      isUsed: tag.orders.length > 0,
-      orders: undefined
+      isUsed: tag._count.orders > 0,
+      _count: undefined
     }));
   }
 }
