@@ -47,7 +47,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;
   public isLoading = false;
   public markets: {
-    [key in Market]: { name: string; value: number };
+    [key in Market]: { id: Market; valueInPercentage: number };
   };
   public marketsAdvanced: {
     [key in MarketAdvanced]: {
@@ -219,24 +219,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value: 0
       }
     };
-    this.markets = {
-      [UNKNOWN_KEY]: {
-        name: UNKNOWN_KEY,
-        value: 0
-      },
-      developedMarkets: {
-        name: 'developedMarkets',
-        value: 0
-      },
-      emergingMarkets: {
-        name: 'emergingMarkets',
-        value: 0
-      },
-      otherMarkets: {
-        name: 'otherMarkets',
-        value: 0
-      }
-    };
     this.marketsAdvanced = {
       [UNKNOWN_KEY]: {
         id: UNKNOWN_KEY,
@@ -318,6 +300,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       };
     }
 
+    this.markets = this.portfolioDetails.markets;
+
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
@@ -348,22 +332,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
         if (position.countries.length > 0) {
-          this.markets.developedMarkets.value +=
-            position.markets.developedMarkets *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.markets.emergingMarkets.value +=
-            position.markets.emergingMarkets *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.markets.otherMarkets.value +=
-            position.markets.otherMarkets *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-
           this.marketsAdvanced.asiaPacific.value +=
             position.marketsAdvanced.asiaPacific *
             (isNumber(position.valueInBaseCurrency)
@@ -435,12 +403,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
           this.countries[UNKNOWN_KEY].value += isNumber(
-            position.valueInBaseCurrency
-          )
-            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-            : this.portfolioDetails.holdings[symbol].valueInPercentage;
-
-          this.markets[UNKNOWN_KEY].value += isNumber(
             position.valueInBaseCurrency
           )
             ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
@@ -537,21 +499,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         value
       };
     }
-
-    const marketsTotal =
-      this.markets.developedMarkets.value +
-      this.markets.emergingMarkets.value +
-      this.markets.otherMarkets.value +
-      this.markets[UNKNOWN_KEY].value;
-
-    this.markets.developedMarkets.value =
-      this.markets.developedMarkets.value / marketsTotal;
-    this.markets.emergingMarkets.value =
-      this.markets.emergingMarkets.value / marketsTotal;
-    this.markets.otherMarkets.value =
-      this.markets.otherMarkets.value / marketsTotal;
-    this.markets[UNKNOWN_KEY].value =
-      this.markets[UNKNOWN_KEY].value / marketsTotal;
 
     this.topHoldings = Object.values(this.topHoldingsMap)
       .map(({ name, value }) => {

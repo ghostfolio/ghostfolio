@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the portfolio calculations by reusing date intervals
+- Refactored the calculation of the allocations by market on the allocations page
 - Refactored the calculation of the allocations by market on the public page
 
 ### Fixed
