@@ -13,7 +13,10 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_IMPERSONATION,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioDividends,
@@ -95,7 +98,7 @@ export class PortfolioController {
       filterByTags
     });
 
-    const { accounts, hasErrors, holdings, platforms, summary } =
+    const { accounts, hasErrors, holdings, markets, platforms, summary } =
       await this.portfolioService.getDetails({
         dateRange,
         filters,
@@ -162,6 +165,10 @@ export class PortfolioController {
       }) ||
       isRestrictedView(this.request.user)
     ) {
+      Object.values(markets).forEach((market) => {
+        delete market.valueInBaseCurrency;
+      });
+
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
@@ -214,6 +221,26 @@ export class PortfolioController {
       hasError,
       holdings,
       platforms,
+      markets: hasDetails
+        ? markets
+        : {
+            [UNKNOWN_KEY]: {
+              id: UNKNOWN_KEY,
+              valueInPercentage: 1
+            },
+            developedMarkets: {
+              id: 'developedMarkets',
+              valueInPercentage: 0
+            },
+            emergingMarkets: {
+              id: 'emergingMarkets',
+              valueInPercentage: 0
+            },
+            otherMarkets: {
+              id: 'otherMarkets',
+              valueInPercentage: 0
+            }
+          },
       summary: portfolioSummary
     };
   }

@@ -18,7 +18,7 @@ export interface PortfolioDetails {
   markets?: {
     [key in Market]: {
       id: Market;
-      valueInBaseCurrency: number;
+      valueInBaseCurrency?: number;
       valueInPercentage: number;
     };
   };
