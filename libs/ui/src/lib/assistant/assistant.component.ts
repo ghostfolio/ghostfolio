@@ -269,6 +269,16 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.filterForm.enable({ emitEvent: false });
     }
 
+    this.tags = this.user?.tags
+      .filter((tag) => tag.isUsed)
+      .map(({ id, name }) => {
+        return {
+          id,
+          label: translate(name),
+          type: 'TAG'
+        };
+      });
+
     this.filterForm.setValue(
       {
         account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
