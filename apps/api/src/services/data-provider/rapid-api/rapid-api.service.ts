@@ -26,7 +26,7 @@ export class RapidApiService implements DataProviderInterface {
     private readonly configurationService: ConfigurationService
   ) {}
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return !!this.configurationService.get('API_KEY_RAPID_API');
   }
 

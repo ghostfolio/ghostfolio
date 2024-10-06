@@ -83,7 +83,6 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   }
 
   public async enhance({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     response,
     symbol
   }: {

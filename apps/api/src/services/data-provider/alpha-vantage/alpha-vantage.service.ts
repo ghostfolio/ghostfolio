@@ -33,7 +33,7 @@ export class AlphaVantageService implements DataProviderInterface {
     });
   }
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return !!this.configurationService.get('API_KEY_ALPHA_VANTAGE');
   }
 

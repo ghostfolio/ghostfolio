@@ -108,8 +108,7 @@ export class AccountService {
   }
 
   public async deleteAccount(
-    where: Prisma.AccountWhereUniqueInput,
-    aUserId: string
+    where: Prisma.AccountWhereUniqueInput
   ): Promise<Account> {
     const account = await this.prismaService.account.delete({
       where
@@ -170,11 +169,7 @@ export class AccountService {
       where.isExcluded = false;
     }
 
-    const {
-      ACCOUNT: filtersByAccount,
-      ASSET_CLASS: filtersByAssetClass,
-      TAG: filtersByTag
-    } = groupBy(filters, ({ type }) => {
+    const { ACCOUNT: filtersByAccount } = groupBy(filters, ({ type }) => {
       return type;
     });
 

@@ -79,7 +79,7 @@ jest.mock('@ghostfolio/api/services/property/property.service', () => {
   return {
     PropertyService: jest.fn().mockImplementation(() => {
       return {
-        getByKey: (key: string) => Promise.resolve({})
+        getByKey: () => Promise.resolve({})
       };
     })
   };

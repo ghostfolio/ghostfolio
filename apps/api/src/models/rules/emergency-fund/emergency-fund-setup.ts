@@ -18,7 +18,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
     this.emergencyFund = emergencyFund;
   }
 
-  public evaluate(ruleSettings: Settings) {
+  public evaluate() {
     if (!this.emergencyFund) {
       return {
         evaluation: 'No emergency fund has been set up',

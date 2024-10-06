@@ -39,7 +39,7 @@ export class ManualService implements DataProviderInterface {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 
@@ -86,12 +86,8 @@ export class ManualService implements DataProviderInterface {
       const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
         [{ symbol, dataSource: this.getName() }]
       );
-      const {
-        defaultMarketPrice,
-        headers = {},
-        selector,
-        url
-      } = symbolProfile?.scraperConfiguration ?? {};
+      const { defaultMarketPrice, selector, url } =
+        symbolProfile?.scraperConfiguration ?? {};
 
       if (defaultMarketPrice) {
         const historical: {

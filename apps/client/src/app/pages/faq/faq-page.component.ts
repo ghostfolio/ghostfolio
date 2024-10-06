@@ -1,5 +1,5 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';

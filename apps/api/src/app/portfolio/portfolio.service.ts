@@ -1053,8 +1053,7 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    userId,
-    withExcludedAccounts = false
+    userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
@@ -1308,7 +1307,7 @@ export class PortfolioService {
       }
     };
 
-    for (const [symbol, position] of Object.entries(holdings)) {
+    for (const [, position] of Object.entries(holdings)) {
       const value = position.valueInBaseCurrency;
 
       if (position.assetClass !== AssetClass.LIQUIDITY) {
