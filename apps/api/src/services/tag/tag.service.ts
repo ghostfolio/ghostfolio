@@ -22,29 +22,18 @@ export class TagService {
       orderBy: {
         name: 'asc'
       },
+      include: {
+        orders: true
+      },
       where: {
         OR: [
           {
-            orders: {
-              some: {
-                userId
-              }
-            }
+            userId
           },
           {
             userId: null
           }
         ]
-      },
-      include: {
-        orders: {
-          where: {
-            userId
-          },
-          select: {
-            id: true
-          }
-        }
       }
     });
 
