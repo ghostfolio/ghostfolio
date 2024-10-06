@@ -147,7 +147,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { tags } = this.dataService.fetchInfo();
+    const { tags } = this.user;
 
     this.activityForm = this.formBuilder.group({
       tags: <string[]>[]
