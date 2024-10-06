@@ -57,7 +57,7 @@ export class PublicController {
     }
 
     const [
-      { holdings },
+      { holdings, markets },
       { performance: performance1d },
       { performance: performanceMax },
       { performance: performanceYtd }
@@ -76,8 +76,13 @@ export class PublicController {
       })
     ]);
 
+    Object.values(markets).forEach((market) => {
+      delete market.valueInBaseCurrency;
+    });
+
     const publicPortfolioResponse: PublicPortfolioResponse = {
       hasDetails,
+      markets,
       alias: access.alias,
       holdings: {},
       performance: {
