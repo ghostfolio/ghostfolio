@@ -23,7 +23,6 @@
     },
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
-    // set to true to enable stricter type checking for this project
     "strict": false,
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
@@ -34,7 +33,7 @@
     "noPropertyAccessFromIndexSignature": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "allowUnreachableCode": true // set to false for stricter type checking
+    "allowUnreachableCode": true
   },
   "exclude": ["node_modules", "tmp"]
 }
