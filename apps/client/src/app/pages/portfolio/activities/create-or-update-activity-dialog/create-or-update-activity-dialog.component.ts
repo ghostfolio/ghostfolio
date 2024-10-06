@@ -76,11 +76,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.locale = this.data.user?.settings?.locale;
     this.dateAdapter.setLocale(this.locale);
 
-    const { currencies, platforms, tags } = this.dataService.fetchInfo();
+    const { currencies, platforms } = this.dataService.fetchInfo();
 
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
+
+    const tags = this.data.user?.tags ?? [];
     this.tagsAvailable = tags.map((tag) => {
       return {
         ...tag,
