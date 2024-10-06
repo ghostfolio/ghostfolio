@@ -1,6 +1,7 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 
 import { Injectable } from '@nestjs/common';
+import { omit } from 'lodash';
 
 @Injectable()
 export class TagService {
@@ -42,9 +43,8 @@ export class TagService {
     });
 
     return tags.map((tag) => ({
-      ...tag,
-      isUsed: tag._count.orders > 0,
-      _count: undefined
+      ...omit(tag, '_count'),
+      isUsed: tag._count.orders > 0
     }));
   }
 }
