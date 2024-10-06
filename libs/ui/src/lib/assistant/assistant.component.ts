@@ -164,13 +164,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         type: 'ASSET_CLASS'
       };
     });
-    this.tags = this.user?.tags.map(({ id, name }) => {
-      return {
-        id,
-        label: translate(name),
-        type: 'TAG'
-      };
-    });
+    this.tags = this.user?.tags
+      .filter((tag) => tag.isUsed)
+      .map(({ id, name }) => {
+        return {
+          id,
+          label: translate(name),
+          type: 'TAG'
+        };
+      });
 
     this.searchFormControl.valueChanges
       .pipe(
