@@ -302,6 +302,14 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
 
     this.markets = this.portfolioDetails.markets;
 
+    Object.values(this.portfolioDetails.marketsAdvanced).forEach(
+      ({ id, valueInBaseCurrency, valueInPercentage }) => {
+        this.marketsAdvanced[id].value = isNumber(valueInBaseCurrency)
+          ? valueInBaseCurrency
+          : valueInPercentage;
+      }
+    );
+
     for (const [symbol, position] of Object.entries(
       this.portfolioDetails.holdings
     )) {
@@ -332,32 +340,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
         if (position.countries.length > 0) {
-          this.marketsAdvanced.asiaPacific.value +=
-            position.marketsAdvanced.asiaPacific *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.marketsAdvanced.emergingMarkets.value +=
-            position.marketsAdvanced.emergingMarkets *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.marketsAdvanced.europe.value +=
-            position.marketsAdvanced.europe *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.marketsAdvanced.japan.value +=
-            position.marketsAdvanced.japan *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-          this.marketsAdvanced.northAmerica.value +=
-            position.marketsAdvanced.northAmerica *
-            (isNumber(position.valueInBaseCurrency)
-              ? position.valueInBaseCurrency
-              : position.valueInPercentage);
-
           for (const country of position.countries) {
             const { code, continent, name, weight } = country;
 
@@ -403,12 +385,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             : this.portfolioDetails.holdings[symbol].valueInPercentage;
 
           this.countries[UNKNOWN_KEY].value += isNumber(
-            position.valueInBaseCurrency
-          )
-            ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency
-            : this.portfolioDetails.holdings[symbol].valueInPercentage;
-
-          this.marketsAdvanced[UNKNOWN_KEY].value += isNumber(
             position.valueInBaseCurrency
           )
             ? this.portfolioDetails.holdings[symbol].valueInBaseCurrency

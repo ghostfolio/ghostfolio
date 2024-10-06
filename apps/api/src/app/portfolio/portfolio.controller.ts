@@ -98,15 +98,22 @@ export class PortfolioController {
       filterByTags
     });
 
-    const { accounts, hasErrors, holdings, markets, platforms, summary } =
-      await this.portfolioService.getDetails({
-        dateRange,
-        filters,
-        impersonationId,
-        withMarkets,
-        userId: this.request.user.id,
-        withSummary: true
-      });
+    const {
+      accounts,
+      hasErrors,
+      holdings,
+      markets,
+      marketsAdvanced,
+      platforms,
+      summary
+    } = await this.portfolioService.getDetails({
+      dateRange,
+      filters,
+      impersonationId,
+      withMarkets,
+      userId: this.request.user.id,
+      withSummary: true
+    });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -166,6 +173,9 @@ export class PortfolioController {
       isRestrictedView(this.request.user)
     ) {
       Object.values(markets).forEach((market) => {
+        delete market.valueInBaseCurrency;
+      });
+      Object.values(marketsAdvanced).forEach((market) => {
         delete market.valueInBaseCurrency;
       });
 
@@ -234,6 +244,38 @@ export class PortfolioController {
             },
             emergingMarkets: {
               id: 'emergingMarkets',
+              valueInPercentage: 0
+            },
+            otherMarkets: {
+              id: 'otherMarkets',
+              valueInPercentage: 0
+            }
+          },
+      marketsAdvanced: hasDetails
+        ? marketsAdvanced
+        : {
+            [UNKNOWN_KEY]: {
+              id: UNKNOWN_KEY,
+              valueInPercentage: 0
+            },
+            asiaPacific: {
+              id: 'asiaPacific',
+              valueInPercentage: 0
+            },
+            emergingMarkets: {
+              id: 'emergingMarkets',
+              valueInPercentage: 0
+            },
+            europe: {
+              id: 'europe',
+              valueInPercentage: 0
+            },
+            japan: {
+              id: 'japan',
+              valueInPercentage: 0
+            },
+            northAmerica: {
+              id: 'northAmerica',
               valueInPercentage: 0
             },
             otherMarkets: {

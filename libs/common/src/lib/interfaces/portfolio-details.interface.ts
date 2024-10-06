@@ -25,7 +25,7 @@ export interface PortfolioDetails {
   marketsAdvanced?: {
     [key in MarketAdvanced]: {
       id: MarketAdvanced;
-      valueInBaseCurrency: number;
+      valueInBaseCurrency?: number;
       valueInPercentage: number;
     };
   };
