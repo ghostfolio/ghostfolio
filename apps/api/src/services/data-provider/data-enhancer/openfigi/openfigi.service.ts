@@ -43,7 +43,7 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
         this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
-    let abortController = new AbortController();
+    const abortController = new AbortController();
 
     setTimeout(() => {
       abortController.abort();

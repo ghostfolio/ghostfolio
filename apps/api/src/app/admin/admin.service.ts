@@ -233,7 +233,7 @@ export class AdminService {
     const extendedPrismaClient = this.getExtendedPrismaClient();
 
     try {
-      let [assetProfiles, count] = await Promise.all([
+      const symbolProfileResult = await Promise.all([
         extendedPrismaClient.symbolProfile.findMany({
           orderBy,
           skip,
@@ -264,6 +264,8 @@ export class AdminService {
         }),
         this.prismaService.symbolProfile.count({ where })
       ]);
+      const assetProfiles = symbolProfileResult[0];
+      let count = symbolProfileResult[1];
 
       const lastMarketPrices = await this.prismaService.marketData.findMany({
         distinct: ['dataSource', 'symbol'],

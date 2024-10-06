@@ -234,7 +234,7 @@ export class BenchmarkService {
       return { marketData };
     }
 
-    for (let marketDataItem of marketDataItems) {
+    for (const marketDataItem of marketDataItems) {
       const exchangeRate =
         exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
           format(marketDataItem.date, DATE_FORMAT)

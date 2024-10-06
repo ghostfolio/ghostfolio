@@ -266,21 +266,18 @@ export class ImportService {
 
     const activities: Activity[] = [];
 
-    for (let [
-      index,
-      {
-        accountId,
-        comment,
-        currency,
-        date,
-        error,
-        fee,
-        quantity,
-        SymbolProfile,
-        type,
-        unitPrice
-      }
-    ] of activitiesExtendedWithErrors.entries()) {
+    for (const [index, activity] of activitiesExtendedWithErrors.entries()) {
+      const accountId = activity.accountId;
+      const comment = activity.comment;
+      const currency = activity.currency;
+      const date = activity.date;
+      const error = activity.error;
+      const quantity = activity.quantity;
+      const SymbolProfile = activity.SymbolProfile;
+      const type = activity.type;
+      let fee = activity.fee;
+      let unitPrice = activity.unitPrice;
+
       const assetProfile = assetProfiles[
         getAssetProfileIdentifier({
           dataSource: SymbolProfile.dataSource,
@@ -491,12 +488,13 @@ export class ImportService {
     userCurrency: string;
     userId: string;
   }): Promise<Partial<Activity>[]> {
-    let { activities: existingActivities } = await this.orderService.getOrders({
-      userCurrency,
-      userId,
-      includeDrafts: true,
-      withExcludedAccounts: true
-    });
+    const { activities: existingActivities } =
+      await this.orderService.getOrders({
+        userCurrency,
+        userId,
+        includeDrafts: true,
+        withExcludedAccounts: true
+      });
 
     return activitiesDto.map(
       ({
