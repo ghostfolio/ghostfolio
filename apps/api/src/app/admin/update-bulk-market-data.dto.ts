@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, isNotEmptyObject } from 'class-validator';
+import { ArrayNotEmpty, IsArray } from 'class-validator';
 
 import { UpdateMarketDataDto } from './update-market-data.dto';
 

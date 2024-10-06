@@ -74,15 +74,12 @@ export class AccountController {
       );
     }
 
-    return this.accountService.deleteAccount(
-      {
-        id_userId: {
-          id,
-          userId: this.request.user.id
-        }
-      },
-      this.request.user.id
-    );
+    return this.accountService.deleteAccount({
+      id_userId: {
+        id,
+        userId: this.request.user.id
+      }
+    });
   }
 
   @Get()

@@ -48,7 +48,7 @@ export class CoinGeckoService implements DataProviderInterface {
     }
   }
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 

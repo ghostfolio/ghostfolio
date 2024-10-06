@@ -34,7 +34,7 @@ export class YahooFinanceService implements DataProviderInterface {
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {}
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 

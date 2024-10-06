@@ -15,7 +15,7 @@ export class CustomDateAdapter extends NativeDateAdapter {
   /**
    * Formats a date as a string
    */
-  public format(aDate: Date, aParseFormat: string): string {
+  public format(aDate: Date): string {
     return format(aDate, getDateFormatString(this.locale));
   }
 

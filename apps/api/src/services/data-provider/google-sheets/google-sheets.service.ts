@@ -29,7 +29,7 @@ export class GoogleSheetsService implements DataProviderInterface {
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 

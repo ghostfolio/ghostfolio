@@ -12,13 +12,7 @@ import { DateRange } from '@ghostfolio/common/types';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
-import {
-  addDays,
-  addMilliseconds,
-  differenceInDays,
-  format,
-  isBefore
-} from 'date-fns';
+import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {

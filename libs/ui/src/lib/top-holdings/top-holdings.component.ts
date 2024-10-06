@@ -10,7 +10,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';

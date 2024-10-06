@@ -29,8 +29,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     token: string,
     refreshToken: string,
     profile: Profile,
-    done: Function,
-    done2: Function
+    done: Function
   ) {
     try {
       const jwt = await this.authService.validateOAuthLogin({

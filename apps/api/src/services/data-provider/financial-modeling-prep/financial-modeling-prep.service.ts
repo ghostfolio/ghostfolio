@@ -33,7 +33,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     );
   }
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 
