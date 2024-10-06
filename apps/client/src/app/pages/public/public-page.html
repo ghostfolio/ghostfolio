@@ -178,13 +178,13 @@
                   >Other Markets</gf-value
                 >
               </div>
-              @if (markets?.[UNKNOWN_KEY]?.value > 0) {
+              @if (markets?.[UNKNOWN_KEY]?.valueInPercentage > 0) {
                 <div class="col-xs-12 col-md my-2">
                   <gf-value
                     i18n
                     size="large"
                     [isPercent]="true"
-                    [value]="markets?.[UNKNOWN_KEY]?.value"
+                    [value]="markets?.[UNKNOWN_KEY]?.valueInPercentage"
                     >No data available</gf-value
                   >
                 </div>
