@@ -48,7 +48,7 @@
         ],
         "@typescript-eslint/member-ordering": "warn",
         "@typescript-eslint/naming-convention": [
-          "warn",
+          "off",
           {
             "selector": "default",
             "format": ["camelCase"],
