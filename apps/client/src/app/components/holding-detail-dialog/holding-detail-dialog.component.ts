@@ -147,7 +147,15 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { tags } = this.user;
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.changeDetectorRef.markForCheck();
+        }
+      });
 
     this.activityForm = this.formBuilder.group({
       tags: <string[]>[]
@@ -158,6 +166,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
 
+    const { tags } = this.user;
     this.tagsAvailable = tags.map((tag) => {
       return {
         ...tag,
@@ -427,16 +436,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.changeDetectorRef.markForCheck();
-        }
-      });
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
