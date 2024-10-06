@@ -17,18 +17,41 @@ export class TagService {
     });
   }
 
-  public async getInUseByUser(userId: string) {
-    return this.prismaService.tag.findMany({
+  public async getTagsForUser(userId: string) {
+    const tags = await this.prismaService.tag.findMany({
       orderBy: {
         name: 'asc'
       },
       where: {
+        OR: [
+          {
+            orders: {
+              some: {
+                userId
+              }
+            }
+          },
+          {
+            userId: null
+          }
+        ]
+      },
+      include: {
         orders: {
-          some: {
+          where: {
             userId
+          },
+          select: {
+            id: true
           }
         }
       }
     });
+
+    return tags.map((tag) => ({
+      ...tag,
+      isUsed: tag.orders.length > 0,
+      orders: undefined
+    }));
   }
 }

@@ -70,7 +70,7 @@ export class UserService {
         },
         where: { userId: id }
       }),
-      this.tagService.getInUseByUser(id)
+      this.tagService.getTagsForUser(id)
     ]);
     const access = accessesResult[0];
     const firstActivity = accessesResult[1];
