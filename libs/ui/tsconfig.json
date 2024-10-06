@@ -14,11 +14,11 @@
     }
   ],
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
+    "target": "es2020",
+    // TODO: Remove once solved in tsconfig.base.json
     "strict": false,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "target": "es2020"
+    "noFallthroughCasesInSwitch": true
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
