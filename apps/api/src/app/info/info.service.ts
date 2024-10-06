@@ -5,6 +5,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
@@ -46,6 +47,7 @@ export class InfoService {
     private readonly platformService: PlatformService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
+    private readonly tagService: TagService,
     private readonly userService: UserService
   ) {}
 
@@ -101,7 +103,8 @@ export class InfoService {
       isUserSignupEnabled,
       platforms,
       statistics,
-      subscriptions
+      subscriptions,
+      tags
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
@@ -110,7 +113,8 @@ export class InfoService {
         orderBy: { name: 'asc' }
       }),
       this.getStatistics(),
-      this.getSubscriptions()
+      this.getSubscriptions(),
+      this.tagService.getPublic()
     ]);
 
     if (isUserSignupEnabled) {
@@ -126,6 +130,7 @@ export class InfoService {
       platforms,
       statistics,
       subscriptions,
+      tags,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };

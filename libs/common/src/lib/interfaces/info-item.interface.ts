@@ -1,6 +1,6 @@
 import { SubscriptionOffer } from '@ghostfolio/common/types';
 
-import { Platform, SymbolProfile } from '@prisma/client';
+import { Platform, SymbolProfile, Tag } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
 import { Subscription } from './subscription.interface';
@@ -19,4 +19,5 @@ export interface InfoItem {
   statistics: Statistics;
   stripePublicKey?: string;
   subscriptions: { [offer in SubscriptionOffer]: Subscription };
+  tags: Tag[];
 }
