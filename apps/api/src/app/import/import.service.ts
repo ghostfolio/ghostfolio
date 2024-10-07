@@ -272,10 +272,10 @@ export class ImportService {
       const currency = activity.currency;
       const date = activity.date;
       const error = activity.error;
+      let fee = activity.fee;
       const quantity = activity.quantity;
       const SymbolProfile = activity.SymbolProfile;
       const type = activity.type;
-      let fee = activity.fee;
       let unitPrice = activity.unitPrice;
 
       const assetProfile = assetProfiles[
