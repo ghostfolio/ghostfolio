@@ -10,8 +10,10 @@ import {
   DataSource,
   MarketData,
   MarketDataState,
-  Prisma
+  Prisma,
+  PrismaClient
 } from '@prisma/client';
+import { withOptimize } from '@prisma/extension-optimize';
 
 @Injectable()
 export class MarketDataService {
@@ -65,7 +67,13 @@ export class MarketDataService {
     assetProfileIdentifiers: AssetProfileIdentifier[];
     dateQuery: DateQuery;
   }): Promise<MarketData[]> {
-    return this.prismaService.marketData.findMany({
+    const extendedPrismaClient = new PrismaClient().$extends(
+      withOptimize({
+        apiKey: process.env.API_KEY_PRISMA_OPTIMIZE
+      })
+    );
+
+    return extendedPrismaClient.marketData.findMany({
       orderBy: [
         {
           date: 'asc'
