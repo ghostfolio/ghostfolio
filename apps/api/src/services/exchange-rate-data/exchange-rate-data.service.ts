@@ -63,11 +63,11 @@ export class ExchangeRateDataService {
       return {};
     }
 
-    let exchangeRatesByCurrency: {
+    const exchangeRatesByCurrency: {
       [currency: string]: { [dateString: string]: number };
     } = {};
 
-    for (let currency of currencies) {
+    for (const currency of currencies) {
       exchangeRatesByCurrency[`${currency}${targetCurrency}`] =
         await this.getExchangeRates({
           startDate,
@@ -94,7 +94,7 @@ export class ExchangeRateDataService {
         !isBefore(date, startDate);
         date = subDays(resetHours(date), 1)
       ) {
-        let dateString = format(date, DATE_FORMAT);
+        const dateString = format(date, DATE_FORMAT);
 
         // Check if the exchange rate for the current date is missing
         if (
@@ -351,7 +351,7 @@ export class ExchangeRateDataService {
     startDate: Date;
   }) {
     const dates = eachDayOfInterval({ end: endDate, start: startDate });
-    let factors: { [dateString: string]: number } = {};
+    const factors: { [dateString: string]: number } = {};
 
     if (currencyFrom === currencyTo) {
       for (const date of dates) {
@@ -379,10 +379,10 @@ export class ExchangeRateDataService {
       } else {
         // Calculate indirectly via base currency
 
-        let marketPriceBaseCurrencyFromCurrency: {
+        const marketPriceBaseCurrencyFromCurrency: {
           [dateString: string]: number;
         } = {};
-        let marketPriceBaseCurrencyToCurrency: {
+        const marketPriceBaseCurrencyToCurrency: {
           [dateString: string]: number;
         } = {};
 

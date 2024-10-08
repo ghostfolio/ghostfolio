@@ -27,7 +27,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let hasErrors = false;
     let netPerformance = new Big(0);
     let totalFeesWithCurrencyEffect = new Big(0);
-    let totalInterestWithCurrencyEffect = new Big(0);
+    const totalInterestWithCurrencyEffect = new Big(0);
     let totalInvestment = new Big(0);
     let totalInvestmentWithCurrencyEffect = new Big(0);
     let totalTimeWeightedInvestment = new Big(0);
@@ -156,7 +156,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       [date: string]: Big;
     } = {};
 
-    let totalAccountBalanceInBaseCurrency = new Big(0);
+    const totalAccountBalanceInBaseCurrency = new Big(0);
     let totalDividend = new Big(0);
     let totalDividendInBaseCurrency = new Big(0);
     let totalInterest = new Big(0);
@@ -320,7 +320,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       }
 
       if (ordersByDate[dateString]?.length > 0) {
-        for (let order of ordersByDate[dateString]) {
+        for (const order of ordersByDate[dateString]) {
           order.unitPriceFromMarketData =
             marketSymbolMap[dateString]?.[symbol] ?? lastUnitPrice;
         }
@@ -813,8 +813,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       //     return format(date, 'yyyy');
       //   })
     ]) {
-      // TODO: getIntervalFromDateRange(dateRange, start)
-      let { endDate, startDate } = getIntervalFromDateRange(dateRange);
+      const dateInterval = getIntervalFromDateRange(dateRange);
+      const endDate = dateInterval.endDate;
+      let startDate = dateInterval.startDate;
 
       if (isBefore(startDate, start)) {
         startDate = start;

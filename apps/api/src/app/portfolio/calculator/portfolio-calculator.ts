@@ -217,7 +217,7 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    let exchangeRatesByCurrency =
+    const exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
         currencies: uniq(Object.values(currencies)),
         endDate: endOfDay(this.endDate),
@@ -261,7 +261,7 @@ export abstract class PortfolioCalculator {
 
     const daysInMarket = differenceInDays(this.endDate, this.startDate);
 
-    let chartDateMap = this.getChartDateMap({
+    const chartDateMap = this.getChartDateMap({
       endDate: this.endDate,
       startDate: this.startDate,
       step: Math.round(
@@ -701,9 +701,9 @@ export abstract class PortfolioCalculator {
 
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
-    let totalInvestmentValuesWithCurrencyEffect: number[] = [];
+    const totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
-    for (let historicalDataItem of historicalData) {
+    for (const historicalDataItem of historicalData) {
       const date = resetHours(parseDate(historicalDataItem.date));
 
       if (!isBefore(date, start) && !isAfter(date, end)) {
@@ -832,13 +832,13 @@ export abstract class PortfolioCalculator {
   }): { [date: string]: true } {
     // Create a map of all relevant chart dates:
     // 1. Add transaction point dates
-    let chartDateMap = this.transactionPoints.reduce((result, { date }) => {
+    const chartDateMap = this.transactionPoints.reduce((result, { date }) => {
       result[date] = true;
       return result;
     }, {});
 
     // 2. Add dates between transactions respecting the specified step size
-    for (let date of eachDayOfInterval(
+    for (const date of eachDayOfInterval(
       { end: endDate, start: startDate },
       { step }
     )) {
@@ -847,7 +847,7 @@ export abstract class PortfolioCalculator {
 
     if (step > 1) {
       // Reduce the step size of last 90 days
-      for (let date of eachDayOfInterval(
+      for (const date of eachDayOfInterval(
         { end: endDate, start: subDays(endDate, 90) },
         { step: 3 }
       )) {
@@ -855,7 +855,7 @@ export abstract class PortfolioCalculator {
       }
 
       // Reduce the step size of last 30 days
-      for (let date of eachDayOfInterval(
+      for (const date of eachDayOfInterval(
         { end: endDate, start: subDays(endDate, 30) },
         { step: 1 }
       )) {
@@ -867,7 +867,7 @@ export abstract class PortfolioCalculator {
     chartDateMap[format(endDate, DATE_FORMAT)] = true;
 
     // Make sure some key dates are present
-    for (let dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
+    for (const dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
       const { endDate: dateRangeEnd, startDate: dateRangeStart } =
         getIntervalFromDateRange(dateRange);
 

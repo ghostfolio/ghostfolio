@@ -458,7 +458,9 @@ export class DataProviderService {
 
         promises.push(
           promise.then(async (result) => {
-            for (let [symbol, dataProviderResponse] of Object.entries(result)) {
+            for (const [symbol, dataProviderResponse] of Object.entries(
+              result
+            )) {
               if (
                 [
                   ...DERIVED_CURRENCIES.map(({ currency }) => {
@@ -577,7 +579,7 @@ export class DataProviderService {
       return { items: lookupItems };
     }
 
-    let dataProviderServices = this.configurationService
+    const dataProviderServices = this.configurationService
       .get('DATA_SOURCES')
       .map((dataSource) => {
         return this.getDataProvider(DataSource[dataSource]);

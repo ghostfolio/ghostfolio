@@ -139,7 +139,6 @@
         "@typescript-eslint/require-await": "warn",
         "@typescript-eslint/restrict-template-expressions": "warn",
         "@typescript-eslint/unbound-method": "warn",
-        "prefer-const": "warn",
 
         // The following rules are part of @typescript-eslint/stylistic-type-checked
         // and can be remove once solved

@@ -943,7 +943,9 @@ export class PortfolioService {
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
-    let { hasErrors, positions } = await portfolioCalculator.getSnapshot();
+    const portfolioSnapshot = await portfolioCalculator.getSnapshot();
+    const hasErrors = portfolioSnapshot.hasErrors;
+    let positions = portfolioSnapshot.positions;
 
     positions = positions.filter(({ quantity }) => {
       return !quantity.eq(0);
@@ -1984,7 +1986,7 @@ export class PortfolioService {
         SymbolProfile,
         type
       } of ordersByAccount) {
-        let currentValueOfSymbolInBaseCurrency =
+        const currentValueOfSymbolInBaseCurrency =
           getFactor(type) *
           quantity *
           (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
