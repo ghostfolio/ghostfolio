@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   public constructor(
     private readonly authService: AuthService,
+    // @ts-expect-error: Property is being used in the constructor
     private readonly configurationService: ConfigurationService
   ) {
     super({
@@ -24,13 +25,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  public async validate(
-    request: any,
-    token: string,
-    refreshToken: string,
-    profile: Profile,
-    done: Function
-  ) {
+  public async validate(profile: Profile, done: Function) {
     try {
       const jwt = await this.authService.validateOAuthLogin({
         provider: Provider.GOOGLE,
