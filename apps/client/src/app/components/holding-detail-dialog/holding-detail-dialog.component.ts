@@ -147,8 +147,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { tags } = this.dataService.fetchInfo();
-
     this.activityForm = this.formBuilder.group({
       tags: <string[]>[]
     });
@@ -157,13 +155,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       { id: this.data.dataSource, type: 'DATA_SOURCE' },
       { id: this.data.symbol, type: 'SYMBOL' }
     ];
-
-    this.tagsAvailable = tags.map((tag) => {
-      return {
-        ...tag,
-        name: translate(tag.name)
-      };
-    });
 
     this.activityForm
       .get('tags')
@@ -433,6 +424,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.tagsAvailable =
+            this.user?.tags?.map((tag) => {
+              return {
+                ...tag,
+                name: translate(tag.name)
+              };
+            }) ?? [];
 
           this.changeDetectorRef.markForCheck();
         }

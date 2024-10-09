@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the tags from the info to the user service
 - Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
 
 ## 2.113.0 - 2024-10-06

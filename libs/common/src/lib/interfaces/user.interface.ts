@@ -23,5 +23,5 @@ export interface User {
     offer: SubscriptionOffer;
     type: SubscriptionType;
   };
-  tags: Tag[];
+  tags: (Tag & { isUsed: boolean })[];
 }
