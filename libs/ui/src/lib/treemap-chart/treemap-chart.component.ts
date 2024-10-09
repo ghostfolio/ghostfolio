@@ -2,11 +2,13 @@ import {
   getAnnualizedPerformancePercent,
   getIntervalFromDateRange
 } from '@ghostfolio/common/calculation-helper';
+import { getTooltipOptions } from '@ghostfolio/common/chart-helper';
+import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange } from '@ghostfolio/common/types';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -25,7 +27,7 @@ import { DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { ChartConfiguration } from 'chart.js';
 import { LinearScale } from 'chart.js';
-import { Chart } from 'chart.js';
+import { Chart, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
@@ -47,6 +49,9 @@ export class GfTreemapChartComponent
   @Input() cursor: string;
   @Input() dateRange: DateRange;
   @Input() holdings: PortfolioPosition[];
+  @Input() colorScheme: ColorScheme;
+  @Input() baseCurrency: string;
+  @Input() locale = getLocale();
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
@@ -58,7 +63,7 @@ export class GfTreemapChartComponent
   public isLoading = true;
 
   public constructor() {
-    Chart.register(LinearScale, TreemapController, TreemapElement);
+    Chart.register(LinearScale, TreemapController, TreemapElement, Tooltip);
   }
 
   public ngAfterViewInit() {
@@ -164,10 +169,12 @@ export class GfTreemapChartComponent
         }
       ]
     };
-
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration()
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -199,9 +206,7 @@ export class GfTreemapChartComponent
               }
             },
             plugins: {
-              tooltip: {
-                enabled: false
-              }
+              tooltip: this.getTooltipPluginConfiguration()
             }
           },
           type: 'treemap'
@@ -210,5 +215,29 @@ export class GfTreemapChartComponent
     }
 
     this.isLoading = false;
+  }
+  private getTooltipPluginConfiguration() {
+    return {
+      ...getTooltipOptions({
+        colorScheme: this.colorScheme,
+        currency: this.baseCurrency,
+        locale: this.locale
+      }),
+      callbacks: {
+        label: (context) => {
+          const value = <number>context.raw._data.valueInBaseCurrency;
+
+          return `${value.toLocaleString(this.locale, {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          })} ${this.baseCurrency}`;
+        },
+        title: () => {
+          return '';
+        }
+      },
+      xAlign: 'center',
+      yAlign: 'center'
+    };
   }
 }
