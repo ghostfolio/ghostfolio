@@ -270,7 +270,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
 
     this.tags = this.user?.tags
-      .filter((tag) => tag.isUsed)
+      .filter(({ isUsed }) => isUsed)
       .map(({ id, name }) => {
         return {
           id,
