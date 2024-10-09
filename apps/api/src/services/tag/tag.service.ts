@@ -42,9 +42,10 @@ export class TagService {
       }
     });
 
-    return tags.map((tag) => ({
-      ...omit(tag, '_count'),
-      isUsed: tag._count.orders > 0
+    return tags.map(({ _count, id, name }) => ({
+      id,
+      name,
+      isUsed: _count.orders > 0
     }));
   }
 }
