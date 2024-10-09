@@ -46,11 +46,11 @@ const { gray, green, red } = require('open-color');
 export class GfTreemapChartComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
+  @Input() baseCurrency: string;
+  @Input() colorScheme: ColorScheme;
   @Input() cursor: string;
   @Input() dateRange: DateRange;
   @Input() holdings: PortfolioPosition[];
-  @Input() colorScheme: ColorScheme;
-  @Input() baseCurrency: string;
   @Input() locale = getLocale();
 
   @Output() treemapChartClicked = new EventEmitter<AssetProfileIdentifier>();
@@ -63,7 +63,7 @@ export class GfTreemapChartComponent
   public isLoading = true;
 
   public constructor() {
-    Chart.register(LinearScale, TreemapController, TreemapElement, Tooltip);
+    Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
 
   public ngAfterViewInit() {
@@ -169,6 +169,7 @@ export class GfTreemapChartComponent
         }
       ]
     };
+
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
@@ -216,6 +217,7 @@ export class GfTreemapChartComponent
 
     this.isLoading = false;
   }
+
   private getTooltipPluginConfiguration() {
     return {
       ...getTooltipOptions({
