@@ -11,4 +11,6 @@ export type XRayRulesSettings = {
 
 interface RuleSettings extends Pick<PortfolioReportRule, 'settings'> {
   isActive: boolean;
+  thresholdMax?: number;
+  thresholdMin?: number;
 }
