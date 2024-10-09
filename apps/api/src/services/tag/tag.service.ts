@@ -1,7 +1,6 @@
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 
 import { Injectable } from '@nestjs/common';
-import { omit } from 'lodash';
 
 @Injectable()
 export class TagService {
