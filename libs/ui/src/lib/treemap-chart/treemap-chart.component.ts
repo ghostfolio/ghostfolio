@@ -227,12 +227,17 @@ export class GfTreemapChartComponent
       }),
       callbacks: {
         label: (context) => {
-          const value = <number>context.raw._data.valueInBaseCurrency;
-
-          return `${value.toLocaleString(this.locale, {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          })} ${this.baseCurrency}`;
+          if (context.raw._data.valueInBaseCurrency !== null) {
+            const value = <number>context.raw._data.valueInBaseCurrency;
+            return `${value.toLocaleString(this.locale, {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            })} ${this.baseCurrency}`;
+          } else {
+            const percentage =
+              <number>context.raw._data.allocationInPercentage * 100;
+            return `${percentage.toFixed(2)}%`;
+          }
         },
         title: () => {
           return '';
