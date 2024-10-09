@@ -6,6 +6,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { isNumber } from 'lodash';
 
 @Injectable()
 export class RulesService {
@@ -27,10 +28,10 @@ export class RulesService {
           isActive: true,
           key: rule.getKey(),
           name: rule.getName(),
-          settings: <PortfolioReportRule['settings']>{
-            thresholdMax: settings['thresholdMax'],
-            thresholdMin: settings['thresholdMin']
-          }
+          settings: {
+            thresholdMax: isNumber(settings['thresholdMax']) ? true : false,
+            thresholdMin: isNumber(settings['thresholdMin']) ? true : false
+          } as PortfolioReportRule['settings']
         };
       } else {
         return {

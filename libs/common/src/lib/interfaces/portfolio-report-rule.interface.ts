@@ -4,8 +4,8 @@ export interface PortfolioReportRule {
   key: string;
   name: string;
   settings?: {
-    thresholdMax?: number;
-    thresholdMin?: number;
+    thresholdMax: boolean;
+    thresholdMin: boolean;
   };
   value?: boolean;
 }

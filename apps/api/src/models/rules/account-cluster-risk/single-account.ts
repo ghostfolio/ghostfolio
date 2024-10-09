@@ -36,7 +36,7 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
 
   public getSettings({ xRayRules }: UserSettings): RuleSettings {
     return {
-      isActive: xRayRules[this.getKey()].isActive
+      isActive: xRayRules?.[this.getKey()].isActive ?? true
     };
   }
 }
