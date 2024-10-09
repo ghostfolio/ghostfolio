@@ -26,7 +26,11 @@ export class TagService {
       include: {
         _count: {
           select: {
-            orders: true
+            orders: {
+              where: {
+                userId
+              }
+            }
           }
         }
       },
