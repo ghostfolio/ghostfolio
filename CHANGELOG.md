@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the tags from the info to the user service
 - Optimized the portfolio calculations with smarter date interval selection
 - Improved the language localization for German (`de`)
 
