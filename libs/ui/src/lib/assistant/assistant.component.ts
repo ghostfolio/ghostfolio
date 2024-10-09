@@ -156,7 +156,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    this.accounts = this.user?.accounts;
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
       return {
         id: assetClass,
@@ -164,13 +163,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         type: 'ASSET_CLASS'
       };
     });
-    this.tags = this.user?.tags
-      .filter(({ isUsed }) => isUsed)
-      .map(({ id, name }) => ({
-        id,
-        label: translate(name),
-        type: 'TAG'
-      }));
 
     this.searchFormControl.valueChanges
       .pipe(
@@ -212,6 +204,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
+    this.accounts = this.user?.accounts ?? [];
+
     this.dateRangeOptions = [
       { label: $localize`Today`, value: '1d' },
       {
@@ -269,16 +263,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.filterForm.enable({ emitEvent: false });
     }
 
-    this.tags = this.user?.tags
-      .filter(({ isUsed }) => isUsed)
-      .map(({ id, name }) => {
-        return {
-          id,
-          label: translate(name),
-          type: 'TAG'
-        };
-      });
-
     this.filterForm.setValue(
       {
         account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
@@ -289,6 +273,23 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         emitEvent: false
       }
     );
+
+    this.tags =
+      this.user?.tags
+        ?.filter(({ isUsed }) => {
+          return isUsed;
+        })
+        .map(({ id, name }) => {
+          return {
+            id,
+            label: translate(name),
+            type: 'TAG'
+          };
+        }) ?? [];
+
+    if (this.tags.length === 0) {
+      this.filterForm.get('tag').disable({ emitEvent: false });
+    }
   }
 
   public hasFilter(aFormValue: { [key: string]: string }) {

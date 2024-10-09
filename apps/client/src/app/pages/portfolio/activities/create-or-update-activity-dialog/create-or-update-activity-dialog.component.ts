@@ -82,13 +82,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
 
-    const tags = this.data.user?.tags;
-    this.tagsAvailable = tags.map((tag) => {
-      return {
-        ...tag,
-        name: translate(tag.name)
-      };
-    });
+    this.tagsAvailable =
+      this.data.user?.tags?.map((tag) => {
+        return {
+          ...tag,
+          name: translate(tag.name)
+        };
+      }) ?? [];
 
     Object.keys(Type).forEach((type) => {
       this.typesTranslationMap[Type[type]] = translate(Type[type]);
