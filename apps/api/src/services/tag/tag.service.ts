@@ -46,9 +46,10 @@ export class TagService {
       }
     });
 
-    return tags.map(({ _count, id, name }) => ({
+    return tags.map(({ _count, id, name, userId }) => ({
       id,
       name,
+      userId,
       isUsed: _count.orders > 0
     }));
   }
