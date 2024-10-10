@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the tags from the info to the user service
 - Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
 
+### Fixed
+
+- Fixed an exception in the portfolio details endpoint caused by a calculation of the allocations by market
+
 ## 2.113.0 - 2024-10-06
 
 ### Added
