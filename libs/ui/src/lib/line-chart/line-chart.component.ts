@@ -32,7 +32,8 @@ import {
   LinearScale,
   PointElement,
   TimeScale,
-  Tooltip
+  Tooltip,
+  TooltipPosition
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -85,7 +86,7 @@ export class GfLineChartComponent
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (elements, position) =>
+    Tooltip.positioners['top'] = (position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
   }
 

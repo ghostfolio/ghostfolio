@@ -13,16 +13,16 @@ import {
 import { REQUEST } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import {
+  generateAuthenticationOptions,
   GenerateAuthenticationOptionsOpts,
+  generateRegistrationOptions,
   GenerateRegistrationOptionsOpts,
   VerifiedAuthenticationResponse,
   VerifiedRegistrationResponse,
-  VerifyAuthenticationResponseOpts,
-  VerifyRegistrationResponseOpts,
-  generateAuthenticationOptions,
-  generateRegistrationOptions,
   verifyAuthenticationResponse,
-  verifyRegistrationResponse
+  VerifyAuthenticationResponseOpts,
+  verifyRegistrationResponse,
+  VerifyRegistrationResponseOpts
 } from '@simplewebauthn/server';
 
 import {
@@ -80,7 +80,6 @@ export class WebAuthService {
   }
 
   public async verifyAttestation(
-    deviceName: string,
     credential: AttestationCredentialJSON
   ): Promise<AuthDeviceDto> {
     const user = this.request.user;

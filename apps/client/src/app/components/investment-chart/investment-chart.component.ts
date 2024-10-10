@@ -34,7 +34,8 @@ import {
   LinearScale,
   PointElement,
   TimeScale,
-  Tooltip
+  Tooltip,
+  TooltipPosition
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -79,7 +80,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (elements, position) =>
+    Tooltip.positioners['top'] = (position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
   }
 
