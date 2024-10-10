@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a tooltip to the chart of the holdings tab on the home page (experimental)
 - Extended the _Public API_ with the health check endpoint (experimental)
 
 ### Changed
