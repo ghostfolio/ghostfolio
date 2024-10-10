@@ -15,6 +15,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
+import { LocationStrategy } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -96,6 +97,7 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
+    private locationStrategy: LocationStrategy,
     private notificationService: NotificationService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
@@ -260,8 +262,18 @@ export class HeaderComponent implements OnChanges {
       aToken,
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'
     );
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        const userLanguage = user?.settings?.language;
 
-    this.router.navigate(['/']);
+        if (userLanguage && document.documentElement.lang !== userLanguage) {
+          window.location.href = `../${userLanguage}`;
+        } else {
+          this.router.navigate(['/']);
+        }
+      });
   }
 
   public ngOnDestroy() {
