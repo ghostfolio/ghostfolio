@@ -258,19 +258,18 @@ export class HeaderComponent implements OnChanges {
   }
 
   public setToken(aToken: string) {
-    console.log('Set Token called');
     this.tokenStorageService.saveToken(
       aToken,
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'
     );
     this.userService
-      .get(true)
+      .get()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        const userLanguage = data.settings.language;
-        const userBasePath = `/${userLanguage}/`;
-        if (!this.locationStrategy.getBaseHref().includes(userBasePath)) {
-          window.location.href = `..${userBasePath}`;
+      .subscribe((user) => {
+        const userLanguage = user?.settings?.language;
+
+        if (userLanguage && document.documentElement.lang !== userLanguage) {
+          window.location.href = `../${userLanguage}`;
         } else {
           this.router.navigate(['/']);
         }
