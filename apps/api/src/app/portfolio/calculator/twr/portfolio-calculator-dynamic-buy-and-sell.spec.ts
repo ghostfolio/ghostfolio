@@ -1,5 +1,11 @@
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  activityDummyData,
+  loadActivityExportFile,
+  symbolProfileDummyData,
+  userDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
@@ -15,7 +21,6 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
-import { existsSync, readFileSync } from 'fs';
 import { last } from 'lodash';
 import { join } from 'path';
 
@@ -50,12 +55,23 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
+  let activityDtos: CreateOrderDto[];
+
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
+
+  beforeAll(() => {
+    activityDtos = loadActivityExportFile(
+      join(
+        __dirname,
+        '../../../../../../../test/import/ok-novn-buy-and-sell.json'
+      )
+    );
+  });
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -82,40 +98,25 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  //read from activities json
-  let activities: any[];
-
-  beforeAll(() => {
-    const jsonFilePath = join(
-      __dirname,
-      '../../../../../../../test/import/ok-novn-buy-and-sell.json'
-    );
-
-    if (!existsSync(jsonFilePath))
-      throw new Error('JSON file not found at: ' + jsonFilePath);
-
-    const jsonData = readFileSync(jsonFilePath, 'utf8');
-    activities = JSON.parse(jsonData).activities;
-  });
-
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
-      //map activity with json
-      const mappedactivities: Activity[] = activities.map((activity) => ({
+      const activities: Activity[] = activityDtos.map((activity) => ({
+        ...activityDummyData,
         ...activity,
         date: new Date(activity.date),
         SymbolProfile: {
-          currency: activity.currency || 'CHF',
-          dataSource: activity.dataSource || 'YAHOO',
-          name: activity.name || 'Default Name', // provide a default name if missing
-          symbol: activity.symbol || 'UNKNOWN' // provide a default symbol if missing
+          ...symbolProfileDummyData,
+          currency: activity.currency,
+          dataSource: activity.dataSource,
+          name: 'Novartis AG',
+          symbol: activity.symbol
         }
       }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities: mappedactivities,
+        activities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF',
         userId: userDummyData.id
