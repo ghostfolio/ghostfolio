@@ -27,7 +27,8 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as ActivityType
+  Type as ActivityType,
+  SymbolProfile
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
@@ -50,34 +51,40 @@ export class OrderService {
   public async assignTags({
     dataSource,
     symbol,
-    tags,
-    userId
+    tags
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    const orders = await this.prismaService.order.findMany({
-      where: {
-        userId,
-        SymbolProfile: {
+    const symbolProfile: SymbolProfile =
+      await this.symbolProfileService.getSymbolProfiles([
+        {
           dataSource,
           symbol
         }
-      }
-    });
-
-    return Promise.all(
-      orders.map(({ id }) =>
-        this.prismaService.order.update({
-          data: {
-            tags: {
-              // The set operation replaces all existing connections with the provided ones
-              set: tags.map(({ id }) => {
-                return { id };
-              })
+      ])[0];
+    return await this.symbolProfileService.updateSymbolProfile({
+      assetClass: symbolProfile.assetClass,
+      assetSubClass: symbolProfile.assetSubClass,
+      countries: symbolProfile.countries,
+      currency: symbolProfile.currency,
+      dataSource,
+      holdings: symbolProfile.holdings,
+      name: symbolProfile.name,
+      sectors: symbolProfile.sectors,
+      symbol,
+      tags: {
+        connectOrCreate: tags.map(({ id, name }) => {
+          return {
+            create: {
+              id,
+              name
+            },
+            where: {
+              id
             }
-          },
-          where: { id }
+          };
         })
-      )
-    );
+      },
+      url: symbolProfile.url
+    });
   }
 
   public async createOrder(
