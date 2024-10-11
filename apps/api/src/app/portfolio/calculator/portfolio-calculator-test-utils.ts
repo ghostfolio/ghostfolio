@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs';
+
 export const activityDummyData = {
   accountId: undefined,
   accountUserId: undefined,
@@ -29,3 +31,7 @@ export const symbolProfileDummyData = {
 export const userDummyData = {
   id: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 };
+
+export function loadActivityExportFile(filePath: string) {
+  return JSON.parse(readFileSync(filePath, 'utf8')).activities;
+}
