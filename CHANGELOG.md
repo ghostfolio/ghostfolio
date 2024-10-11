@@ -5,16 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.114.0 - 2024-10-10
 
 ### Added
 
+- Added a tooltip to the chart of the holdings tab on the home page (experimental)
 - Extended the _Public API_ with the health check endpoint (experimental)
 
 ### Changed
 
 - Moved the tags from the info to the user service
 - Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
+
+### Fixed
+
+- Fixed an exception in the portfolio details endpoint caused by a calculation of the allocations by market
 
 ## 2.113.0 - 2024-10-06
 

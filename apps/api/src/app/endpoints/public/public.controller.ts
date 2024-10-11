@@ -76,7 +76,7 @@ export class PublicController {
       })
     ]);
 
-    Object.values(markets).forEach((market) => {
+    Object.values(markets ?? {}).forEach((market) => {
       delete market.valueInBaseCurrency;
     });
 
