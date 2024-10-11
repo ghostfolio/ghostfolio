@@ -1327,7 +1327,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
@@ -2135,7 +2135,7 @@
         <target state="translated">İşlemleri Yönet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5486880308148746399" datatype="html">
@@ -3663,7 +3663,7 @@
         <target state="new">Tüm işlemlerinizi silmeyi gerçekten istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
-          <context context-type="linenumber">223</context>
+          <context context-type="linenumber">219</context>
         </context-group>
       </trans-unit>
       <trans-unit id="72ba3bcdd8350cb8bf462e217a28ec7f7a48bb44" datatype="html">
@@ -5207,7 +5207,7 @@
         <target state="translated">TBu işlemi silmeyi gerçekten istiyor musunuz?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
-          <context context-type="linenumber">233</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="170f7de02b14690fb9c1999a16926c0044bfd5c1" datatype="html">
@@ -7055,7 +7055,7 @@
         <target state="new">Threshold Min</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
       <trans-unit id="012b48ee5281a77c66760b2007c3ccd7e34aa340" datatype="html">
@@ -7063,7 +7063,7 @@
         <target state="new">Threshold Max</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f4e529ae5ffd73001d1ff4bbdeeb0a72e342e5c8" datatype="html">
@@ -7071,7 +7071,7 @@
         <target state="new">Close</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule-settings-dialog/rule-settings-dialog.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="072d4d4ec83a5a97345a1c13b90c213b47326d09" datatype="html">
@@ -7256,6 +7256,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">280</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b225488f8b209e9704760dc9f5d99845a5d07bf6" datatype="html">
+        <source>Oops! Could not find any assets.</source>
+        <target state="new">Oops! Could not find any assets.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/symbol-autocomplete/symbol-autocomplete.component.html</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
     </body>

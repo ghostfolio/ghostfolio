@@ -121,7 +121,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onExport() {
-    let activityIds = this.dataSource.data.map(({ id }) => {
+    const activityIds = this.dataSource.data.map(({ id }) => {
       return id;
     });
 

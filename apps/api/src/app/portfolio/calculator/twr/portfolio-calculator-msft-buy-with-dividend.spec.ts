@@ -156,10 +156,27 @@ describe('PortfolioCalculator', () => {
             dividendInBaseCurrency: new Big('0.62'),
             fee: new Big('19'),
             firstBuyDate: '2021-09-16',
+            grossPerformance: new Big('33.25'),
+            grossPerformancePercentage: new Big('0.11136043941322258691'),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '0.11136043941322258691'
+            ),
+            grossPerformanceWithCurrencyEffect: new Big('33.25'),
             investment: new Big('298.58'),
             investmentWithCurrencyEffect: new Big('298.58'),
             marketPrice: 331.83,
             marketPriceInBaseCurrency: 331.83,
+            netPerformance: new Big('14.25'),
+            netPerformancePercentage: new Big('0.04772590260566682296'),
+            netPerformancePercentageWithCurrencyEffectMap: {
+              max: new Big('0.04772590260566682296')
+            },
+            netPerformanceWithCurrencyEffectMap: {
+              '1d': new Big('-5.39'),
+              '5y': new Big('14.25'),
+              max: new Big('14.25'),
+              wtd: new Big('-5.39')
+            },
             quantity: new Big('1'),
             symbol: 'MSFT',
             tags: [],

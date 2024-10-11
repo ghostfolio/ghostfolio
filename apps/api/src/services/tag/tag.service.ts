@@ -6,38 +6,39 @@ import { Injectable } from '@nestjs/common';
 export class TagService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async getPublic() {
-    return this.prismaService.tag.findMany({
-      orderBy: {
-        name: 'asc'
+  public async getTagsForUser(userId: string) {
+    const tags = await this.prismaService.tag.findMany({
+      include: {
+        _count: {
+          select: {
+            orders: {
+              where: {
+                userId
+              }
+            }
+          }
+        }
       },
-      where: {
-        userId: null
-      }
-    });
-  }
-
-  public async getInUseByUser(userId: string) {
-    return this.prismaService.tag.findMany({
       orderBy: {
         name: 'asc'
       },
       where: {
         OR: [
           {
-            orders: {
-              some: {
-                userId
-              }
-            }
+            userId
           },
           {
-            symbolProfile: {
-              some: {}
-            }
+            userId: null
           }
         ]
       }
     });
+
+    return tags.map(({ _count, id, name, userId }) => ({
+      id,
+      name,
+      userId,
+      isUsed: _count.orders > 0
+    }));
   }
 }

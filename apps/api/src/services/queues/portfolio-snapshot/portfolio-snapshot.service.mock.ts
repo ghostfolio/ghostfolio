@@ -5,8 +5,6 @@ import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queu
 
 export const PortfolioSnapshotServiceMock = {
   addJobToQueue({
-    data,
-    name,
     opts
   }: {
     data: IPortfolioSnapshotQueueJob;

@@ -12,7 +12,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@angular/core';
-import { EMPTY, catchError, finalize, forkJoin, takeUntil } from 'rxjs';
+import { EMPTY, catchError, finalize, forkJoin } from 'rxjs';
 
 @Injectable()
 export class AdminMarketDataService {

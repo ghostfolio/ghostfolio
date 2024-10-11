@@ -5,15 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.114.0 - 2024-10-10
 
 ### Added
 
+- Added a tooltip to the chart of the holdings tab on the home page (experimental)
+- Extended the _Public API_ with the health check endpoint (experimental)
+
+### Changed
+
+- Moved the tags from the info to the user service
+- Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
+
+### Fixed
+
+- Fixed an exception in the portfolio details endpoint caused by a calculation of the allocations by market
+
+## 2.113.0 - 2024-10-06
+
+### Added
+
+- Set up a git-hook via `husky` to lint and format the changes before a commit
+- Added the `typescript-eslint/recommended-type-checked` rule to the `eslint` configuration
+- Added the `typescript-eslint/stylistic-type-checked` rule to the `eslint` configuration
+
+### Changed
+
+- Optimized the portfolio calculations by reusing date intervals
+- Refactored the calculation of the allocations by market on the allocations page
+- Refactored the calculation of the allocations by market on the public page
+
+### Fixed
+
+- Handled an exception in the historical market data gathering of derived currencies
+
+## 2.112.0 - 2024-10-03
+
+### Added
+
+- Added a message to the search asset component if no results have been found in the create or update activity dialog
 - Added support to customize the rule thresholds in the _X-ray_ section (experimental)
 
 ### Changed
 
+- Optimized the portfolio calculations with smarter date interval selection
 - Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed an issue in the calculation of allocations by market (_Unknown_)
+- Fixed the `eslint` configuration
 
 ## 2.111.0 - 2024-09-28
 

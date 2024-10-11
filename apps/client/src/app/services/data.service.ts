@@ -287,7 +287,7 @@ export class DataService {
   }
 
   public deleteActivities({ filters }) {
-    let params = this.buildFiltersAsQueryParams({ filters });
+    const params = this.buildFiltersAsQueryParams({ filters });
 
     return this.http.delete<any>(`/api/v1/order`, { params });
   }

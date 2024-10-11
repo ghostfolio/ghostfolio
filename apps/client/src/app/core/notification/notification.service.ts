@@ -33,7 +33,7 @@ export class NotificationService {
       title: aParams.title
     });
 
-    return dialog.afterClosed().subscribe((result) => {
+    return dialog.afterClosed().subscribe(() => {
       if (isFunction(aParams.discardFn)) {
         aParams.discardFn();
       }

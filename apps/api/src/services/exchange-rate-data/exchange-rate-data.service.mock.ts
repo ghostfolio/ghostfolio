@@ -1,10 +1,5 @@
 export const ExchangeRateDataServiceMock = {
-  getExchangeRatesByCurrency: ({
-    currencies,
-    endDate,
-    startDate,
-    targetCurrency
-  }): Promise<any> => {
+  getExchangeRatesByCurrency: ({ targetCurrency }): Promise<any> => {
     if (targetCurrency === 'CHF') {
       return Promise.resolve({
         CHFCHF: {

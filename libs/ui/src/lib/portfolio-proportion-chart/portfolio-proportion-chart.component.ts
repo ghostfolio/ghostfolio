@@ -270,7 +270,7 @@ export class GfPortfolioProportionChartComponent
       }
     ];
 
-    let labels = chartDataSorted.map(([symbol, { name }]) => {
+    let labels = chartDataSorted.map(([, { name }]) => {
       return name;
     });
 

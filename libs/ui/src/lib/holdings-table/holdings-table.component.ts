@@ -14,10 +14,11 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,7 +26,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router, RouterModule } from '@angular/router';
 import { AssetSubClass } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription } from 'rxjs';
@@ -44,8 +44,7 @@ import { Subject, Subscription } from 'rxjs';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    NgxSkeletonLoaderModule,
-    RouterModule
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holdings-table',
@@ -53,7 +52,7 @@ import { Subject, Subscription } from 'rxjs';
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })
-export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
+export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
   @Input() hasPermissionToCreateActivity: boolean;
@@ -62,6 +61,8 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
   @Input() holdings: PortfolioPosition[];
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
+
+  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -75,9 +76,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private router: Router) {}
-
-  public ngOnInit() {}
+  public constructor() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
@@ -107,9 +106,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy, OnInit {
 
   public onOpenHoldingDialog({ dataSource, symbol }: AssetProfileIdentifier) {
     if (this.hasPermissionToOpenDetails) {
-      this.router.navigate([], {
-        queryParams: { dataSource, symbol, holdingDetailDialog: true }
-      });
+      this.holdingClicked.emit({ dataSource, symbol });
     }
   }
 

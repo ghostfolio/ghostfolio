@@ -1,4 +1,3 @@
-import { AccessService } from '@ghostfolio/api/app/access/access.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
@@ -17,7 +16,10 @@ import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_IMPERSONATION,
+  UNKNOWN_KEY
+} from '@ghostfolio/common/config';
 import {
   PortfolioDetails,
   PortfolioDividends,
@@ -64,7 +66,6 @@ import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
-    private readonly accessService: AccessService,
     private readonly apiService: ApiService,
     private readonly configurationService: ConfigurationService,
     private readonly impersonationService: ImpersonationService,
@@ -101,15 +102,22 @@ export class PortfolioController {
       filterByTags
     });
 
-    const { accounts, hasErrors, holdings, platforms, summary } =
-      await this.portfolioService.getDetails({
-        dateRange,
-        filters,
-        impersonationId,
-        withMarkets,
-        userId: this.request.user.id,
-        withSummary: true
-      });
+    const {
+      accounts,
+      hasErrors,
+      holdings,
+      markets,
+      marketsAdvanced,
+      platforms,
+      summary
+    } = await this.portfolioService.getDetails({
+      dateRange,
+      filters,
+      impersonationId,
+      withMarkets,
+      userId: this.request.user.id,
+      withSummary: true
+    });
 
     if (hasErrors || hasNotDefinedValuesInObject(holdings)) {
       hasError = true;
@@ -186,6 +194,13 @@ export class PortfolioController {
       }) ||
       isRestrictedView(this.request.user)
     ) {
+      Object.values(markets ?? {}).forEach((market) => {
+        delete market.valueInBaseCurrency;
+      });
+      Object.values(marketsAdvanced ?? {}).forEach((market) => {
+        delete market.valueInBaseCurrency;
+      });
+
       portfolioSummary = nullifyValuesInObject(summary, [
         'cash',
         'committedFunds',
@@ -238,6 +253,58 @@ export class PortfolioController {
       hasError,
       holdings,
       platforms,
+      markets: hasDetails
+        ? markets
+        : {
+            [UNKNOWN_KEY]: {
+              id: UNKNOWN_KEY,
+              valueInPercentage: 1
+            },
+            developedMarkets: {
+              id: 'developedMarkets',
+              valueInPercentage: 0
+            },
+            emergingMarkets: {
+              id: 'emergingMarkets',
+              valueInPercentage: 0
+            },
+            otherMarkets: {
+              id: 'otherMarkets',
+              valueInPercentage: 0
+            }
+          },
+      marketsAdvanced: hasDetails
+        ? marketsAdvanced
+        : {
+            [UNKNOWN_KEY]: {
+              id: UNKNOWN_KEY,
+              valueInPercentage: 0
+            },
+            asiaPacific: {
+              id: 'asiaPacific',
+              valueInPercentage: 0
+            },
+            emergingMarkets: {
+              id: 'emergingMarkets',
+              valueInPercentage: 0
+            },
+            europe: {
+              id: 'europe',
+              valueInPercentage: 0
+            },
+            japan: {
+              id: 'japan',
+              valueInPercentage: 0
+            },
+            northAmerica: {
+              id: 'northAmerica',
+              valueInPercentage: 0
+            },
+            otherMarkets: {
+              id: 'otherMarkets',
+              valueInPercentage: 0
+            }
+          },
       summary: portfolioSummary
     };
   }

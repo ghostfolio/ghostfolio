@@ -43,7 +43,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     this.apiKey = this.configurationService.get('API_KEY_EOD_HISTORICAL_DATA');
   }
 
-  public canHandle(symbol: string) {
+  public canHandle() {
     return true;
   }
 
@@ -163,7 +163,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       return response.reduce(
-        (result, { close, date }, index, array) => {
+        (result, { close, date }) => {
           if (isNumber(close)) {
             result[this.convertFromEodSymbol(symbol)][date] = {
               marketPrice: close
@@ -203,7 +203,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
   }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    let response: { [symbol: string]: IDataProviderResponse } = {};
+    const response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;

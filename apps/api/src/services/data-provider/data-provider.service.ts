@@ -460,7 +460,9 @@ export class DataProviderService {
 
         promises.push(
           promise.then(async (result) => {
-            for (let [symbol, dataProviderResponse] of Object.entries(result)) {
+            for (const [symbol, dataProviderResponse] of Object.entries(
+              result
+            )) {
               if (
                 [
                   ...DERIVED_CURRENCIES.map(({ currency }) => {
@@ -600,7 +602,7 @@ export class DataProviderService {
       return { items: lookupItems };
     }
 
-    let dataProviderServices = this.configurationService
+    const dataProviderServices = this.configurationService
       .get('DATA_SOURCES')
       .map((dataSource) => {
         return this.getDataProvider(DataSource[dataSource]);
@@ -689,11 +691,13 @@ export class DataProviderService {
     } = {};
 
     for (const date in rootData) {
-      data[date] = {
-        marketPrice: rootData[date].marketPrice
-          ? new Big(factor).mul(rootData[date].marketPrice).toNumber()
-          : null
-      };
+      if (isNumber(rootData[date].marketPrice)) {
+        data[date] = {
+          marketPrice: new Big(factor)
+            .mul(rootData[date].marketPrice)
+            .toNumber()
+        };
+      }
     }
 
     return data;

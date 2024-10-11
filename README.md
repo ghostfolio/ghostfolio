@@ -163,6 +163,20 @@ You can get the _Bearer Token_ via `POST http://localhost:3333/api/v1/auth/anony
 
 Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>` or `curl -s http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TOKEN_OF_ACCOUNT>`.
 
+### Health Check (experimental)
+
+#### Request
+
+`GET http://localhost:3333/api/v1/health`
+
+**Info:** No Bearer Token is required for health check
+
+#### Response
+
+##### Success
+
+`200 OK`
+
 ### Import Activities
 
 #### Prerequisites

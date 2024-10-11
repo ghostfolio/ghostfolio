@@ -20,7 +20,20 @@
       "@ghostfolio/client/*": ["apps/client/src/app/*"],
       "@ghostfolio/common/*": ["libs/common/src/lib/*"],
       "@ghostfolio/ui/*": ["libs/ui/src/lib/*"]
-    }
+    },
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "noImplicitReturns": false,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitOverride": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "allowUnreachableCode": true
   },
   "exclude": ["node_modules", "tmp"]
 }

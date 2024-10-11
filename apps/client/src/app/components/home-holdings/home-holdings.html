@@ -38,9 +38,12 @@
         <gf-treemap-chart
           class="mt-3"
           cursor="pointer"
+          [baseCurrency]="user?.settings?.baseCurrency"
+          [colorScheme]="user?.settings?.colorScheme"
           [dateRange]="user?.settings?.dateRange"
           [holdings]="holdings"
-          (treemapChartClicked)="onSymbolClicked($event)"
+          [locale]="user?.settings?.locale"
+          (treemapChartClicked)="onHoldingClicked($event)"
         />
       }
       <div [ngClass]="{ 'd-none': viewModeFormControl.value !== 'TABLE' }">
@@ -50,6 +53,7 @@
           [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
+          (holdingClicked)="onHoldingClicked($event)"
         />
         @if (hasPermissionToCreateOrder && holdings?.length > 0) {
           <div class="text-center">

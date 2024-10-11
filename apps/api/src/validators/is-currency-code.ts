@@ -4,8 +4,7 @@ import {
   registerDecorator,
   ValidationOptions,
   ValidatorConstraint,
-  ValidatorConstraintInterface,
-  ValidationArguments
+  ValidatorConstraintInterface
 } from 'class-validator';
 import { isISO4217CurrencyCode } from 'class-validator';
 
@@ -25,7 +24,7 @@ export function IsCurrencyCode(validationOptions?: ValidationOptions) {
 export class IsExtendedCurrencyConstraint
   implements ValidatorConstraintInterface
 {
-  public defaultMessage(args: ValidationArguments) {
+  public defaultMessage() {
     return '$value must be a valid ISO4217 currency code';
   }
 

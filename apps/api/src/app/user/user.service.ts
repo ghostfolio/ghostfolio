@@ -56,7 +56,7 @@ export class UserService {
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
-    let [access, firstActivity, tags] = await Promise.all([
+    const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           User: true
@@ -70,8 +70,11 @@ export class UserService {
         },
         where: { userId: id }
       }),
-      this.tagService.getInUseByUser(id)
+      this.tagService.getTagsForUser(id)
     ]);
+    const access = userData[0];
+    const firstActivity = userData[1];
+    let tags = userData[2];
 
     let systemMessage: SystemMessage;
 
