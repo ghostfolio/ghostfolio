@@ -91,7 +91,7 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor(ctx) {
-            const annualizedNetPerformancePercentWithCurrencyEffect =
+            let annualizedNetPerformancePercentWithCurrencyEffect =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
@@ -105,7 +105,15 @@ export class GfTreemapChartComponent
                 )
               }).toNumber();
 
-            if (
+              if (annualizedNetPerformancePercentWithCurrencyEffect === -0) {
+                annualizedNetPerformancePercentWithCurrencyEffect = 0;
+              }
+              
+              if (annualizedNetPerformancePercentWithCurrencyEffect === 0) {
+                return gray[3];
+              }
+
+            else if(
               annualizedNetPerformancePercentWithCurrencyEffect >
               0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
             ) {
