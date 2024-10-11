@@ -232,6 +232,7 @@ export class GfTreemapChartComponent
 
           if (context.raw._data.valueInBaseCurrency !== null) {
             const value = <number>context.raw._data.valueInBaseCurrency;
+
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {
@@ -242,6 +243,7 @@ export class GfTreemapChartComponent
           } else {
             const percentage =
               <number>context.raw._data.allocationInPercentage * 100;
+
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           }
         },
