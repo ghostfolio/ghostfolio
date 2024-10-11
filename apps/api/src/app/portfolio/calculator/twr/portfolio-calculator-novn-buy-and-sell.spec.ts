@@ -1,6 +1,8 @@
+import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
+  loadActivityExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
@@ -20,6 +22,7 @@ import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
 import { last } from 'lodash';
+import { join } from 'path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -52,12 +55,23 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
+  let activityDtos: CreateOrderDto[];
+
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
+
+  beforeAll(() => {
+    activityDtos = loadActivityExportFile(
+      join(
+        __dirname,
+        '../../../../../../../test/import/ok-novn-buy-and-sell.json'
+      )
+    );
+  });
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -88,38 +102,18 @@ describe('PortfolioCalculator', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2022-03-07'),
-          fee: 0,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Novartis AG',
-            symbol: 'NOVN.SW'
-          },
-          type: 'BUY',
-          unitPrice: 75.8
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2022-04-08'),
-          fee: 0,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'CHF',
-            dataSource: 'YAHOO',
-            name: 'Novartis AG',
-            symbol: 'NOVN.SW'
-          },
-          type: 'SELL',
-          unitPrice: 85.73
+      const activities: Activity[] = activityDtos.map((activity) => ({
+        ...activityDummyData,
+        ...activity,
+        date: new Date(activity.date),
+        SymbolProfile: {
+          ...symbolProfileDummyData,
+          currency: activity.currency,
+          dataSource: activity.dataSource,
+          name: 'Novartis AG',
+          symbol: activity.symbol
         }
-      ];
+      }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
