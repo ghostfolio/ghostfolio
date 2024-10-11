@@ -1,9 +1,5 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import {
-  activityDummyData,
-  symbolProfileDummyData,
-  userDummyData
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
   PerformanceCalculationType,
   PortfolioCalculatorFactory
@@ -19,10 +15,9 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
-import * as fs from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { last } from 'lodash';
-
-import path = require('path');
+import { join } from 'path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -88,32 +83,39 @@ describe('PortfolioCalculator', () => {
   });
 
   //read from activities json
-  let parsedData;
+  let activities: any[];
+
   beforeAll(() => {
-    const jsonFilePath = path.join(__dirname, '../../../../../../../test/import/ok-novn-buy-and-sell.json');
-    if (!fs.existsSync(jsonFilePath)) throw new Error('JSON file not found at: ' + jsonFilePath);
-    const jsonData = fs.readFileSync(jsonFilePath, 'utf8');
-    parsedData = JSON.parse(jsonData);
+    const jsonFilePath = join(
+      __dirname,
+      '../../../../../../../test/import/ok-novn-buy-and-sell.json'
+    );
+
+    if (!existsSync(jsonFilePath))
+      throw new Error('JSON file not found at: ' + jsonFilePath);
+
+    const jsonData = readFileSync(jsonFilePath, 'utf8');
+    activities = JSON.parse(jsonData).activities;
   });
+
   describe('get current positions', () => {
     it.only('with NOVN.SW buy and sell', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
-    //passing file json
-      const activities: Activity[] = parsedData.activities.map((activity) => ({
+      //map activity with json
+      const mappedactivities: Activity[] = activities.map((activity) => ({
         ...activity,
         date: new Date(activity.date),
         SymbolProfile: {
-            currency: activity.currency || 'CHF',
-            dataSource: activity.dataSource || 'YAHOO',
-            name: activity.name || 'Default Name', // provide a default name if missing
-            symbol: activity.symbol || 'UNKNOWN' // provide a default symbol if missing
+          currency: activity.currency || 'CHF',
+          dataSource: activity.dataSource || 'YAHOO',
+          name: activity.name || 'Default Name', // provide a default name if missing
+          symbol: activity.symbol || 'UNKNOWN' // provide a default symbol if missing
         }
-    }));
-
+      }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
+        activities: mappedactivities,
         calculationType: PerformanceCalculationType.TWR,
         currency: 'CHF',
         userId: userDummyData.id
