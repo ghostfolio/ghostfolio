@@ -15,7 +15,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
-import { LocationStrategy } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -97,7 +96,6 @@ export class HeaderComponent implements OnChanges {
     private dialog: MatDialog,
     private impersonationStorageService: ImpersonationStorageService,
     private layoutService: LayoutService,
-    private locationStrategy: LocationStrategy,
     private notificationService: NotificationService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
