@@ -260,6 +260,7 @@ export class HeaderComponent implements OnChanges {
       aToken,
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'
     );
+
     this.userService
       .get()
       .pipe(takeUntil(this.unsubscribeSubject))
