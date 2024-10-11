@@ -105,7 +105,7 @@ describe('PortfolioCalculator', () => {
       const activities: Activity[] = activityDtos.map((activity) => ({
         ...activityDummyData,
         ...activity,
-        date: new Date(activity.date),
+        date: parseDate(activity.date),
         SymbolProfile: {
           ...symbolProfileDummyData,
           currency: activity.currency,
