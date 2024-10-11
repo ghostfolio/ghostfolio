@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the name to the tooltip of the chart of the holdings tab on the home page (experimental)
+
 ### Fixed
 
 - Considered the language of the user settings on login with _Security Token_
