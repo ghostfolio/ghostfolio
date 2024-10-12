@@ -64,8 +64,8 @@
           <mat-menu #rulesMenu="matMenu" xPosition="before">
             @if (
               rule?.isActive &&
-              (rule?.settings.thresholdMax >= 0 ||
-                rule?.settings.thresholdMin >= 0)
+              (rule?.configuration?.thresholdMax ||
+                rule?.configuration?.thresholdMin)
             ) {
               <button mat-menu-item (click)="onCustomizeRule(rule)">
                 <ng-container i18n>Customize</ng-container>...

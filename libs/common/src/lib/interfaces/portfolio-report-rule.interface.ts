@@ -1,11 +1,11 @@
 export interface PortfolioReportRule {
+  configuration?: {
+    thresholdMax: boolean;
+    thresholdMin: boolean;
+  };
   evaluation?: string;
   isActive: boolean;
   key: string;
   name: string;
-  settings?: {
-    thresholdMax: boolean;
-    thresholdMin: boolean;
-  };
   value?: boolean;
 }
