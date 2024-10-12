@@ -9,8 +9,8 @@ import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-d
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import {
-  PORTFOLIO_SNAPSHOT_QUEUE,
-  DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT
+  DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT,
+  PORTFOLIO_SNAPSHOT_QUEUE
 } from '@ghostfolio/common/config';
 
 import { BullModule } from '@nestjs/bull';
