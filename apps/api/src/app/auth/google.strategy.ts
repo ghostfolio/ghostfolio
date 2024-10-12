@@ -25,7 +25,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  public async validate(profile: Profile, done: Function) {
+  public async validate(
+    _request: any,
+    _token: string,
+    _refreshToken: string,
+    profile: Profile,
+    done: Function
+  ) {
     try {
       const jwt = await this.authService.validateOAuthLogin({
         provider: Provider.GOOGLE,

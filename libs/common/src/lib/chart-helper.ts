@@ -103,7 +103,7 @@ export function getVerticalHoverLinePlugin(
   colorScheme?: ColorScheme
 ) {
   return {
-    afterDatasetsDraw: (chart, options) => {
+    afterDatasetsDraw: (chart, _, options) => {
       const active = chart.getActiveElements();
 
       if (!active || active.length === 0) {

@@ -29,9 +29,9 @@ import {
   BarElement,
   Chart,
   ChartData,
+  LinearScale,
   LineController,
   LineElement,
-  LinearScale,
   PointElement,
   TimeScale,
   Tooltip,
@@ -80,7 +80,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       Tooltip
     );
 
-    Tooltip.positioners['top'] = (position: TooltipPosition) =>
+    Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
   }
 
