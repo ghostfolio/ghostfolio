@@ -151,16 +151,15 @@ export class GfTreemapChartComponent
             align: 'left',
             color: ['white'],
             display: true,
-            font: [{ size: 14 }, { size: 14 }, { lineHeight: 2, size: 14 }], 
+            font: { size: 14, lineHeight: 2 }, 
             formatter(ctx) {
               const netPerformancePercentWithCurrencyEffect = ctx.raw._data.netPerformancePercentWithCurrencyEffect;
               return [
-                ctx.raw._data.symbol, 
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                `${(netPerformancePercentWithCurrencyEffect > 0 ? '+' : '')}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
             position: 'top'
-          },
+          },          
           spacing: 1,
           tree: this.holdings
         }
