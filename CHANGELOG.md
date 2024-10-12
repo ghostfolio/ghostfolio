@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the labels of the chart of the holdings tab on the home page (experimental)
 - Improved the portfolio unit tests to work with exported activity files
 
 ### Fixed
