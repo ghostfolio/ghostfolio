@@ -174,9 +174,9 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      let filtersType = this.getFilterType(filter.type);
+      const filtersType = this.getFilterType(filter.type);
 
-      let userFilters = filters
+      const userFilters = filters
         .filter((f) => f.type === filter.type && filter.id)
         .map((f) => f.id);
 

@@ -322,21 +322,21 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public onApplyFilters() {
-    let accountFilters =
+    const accountFilters =
       this.filterForm
         .get('account')
         .value?.reduce(
           (arr, val) => [...arr, { id: val, type: 'ACCOUNT' }],
           []
         ) ?? [];
-    let assetClassFilters =
+    const assetClassFilters =
       this.filterForm
         .get('assetClass')
         .value?.reduce(
           (arr, val) => [...arr, { id: val, type: 'ASSET_CLASS' }],
           []
         ) ?? [];
-    let tagFilters =
+    const tagFilters =
       this.filterForm
         .get('tag')
         .value?.reduce((arr, val) => [...arr, { id: val, type: 'TAG' }], []) ??

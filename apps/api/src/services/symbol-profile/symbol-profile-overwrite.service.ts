@@ -47,7 +47,7 @@ export class SymbolProfileOverwriteService {
     Symbol: string,
     datasource: DataSource
   ): Promise<string> {
-    let SymbolProfileId = await this.prismaService.symbolProfile
+    const SymbolProfileId = await this.prismaService.symbolProfile
       .findFirst({
         where: {
           symbol: Symbol,
@@ -56,7 +56,7 @@ export class SymbolProfileOverwriteService {
       })
       .then((s) => s.id);
 
-    let symbolProfileIdSaved = await this.prismaService.symbolProfileOverrides
+    const symbolProfileIdSaved = await this.prismaService.symbolProfileOverrides
       .findFirst({
         where: {
           symbolProfileId: SymbolProfileId

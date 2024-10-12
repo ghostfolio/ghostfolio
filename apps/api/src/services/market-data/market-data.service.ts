@@ -3,7 +3,6 @@ import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.i
 import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 

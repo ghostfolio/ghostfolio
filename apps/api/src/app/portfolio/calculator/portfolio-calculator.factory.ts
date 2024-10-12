@@ -13,7 +13,6 @@ import { OrderService } from '../../order/order.service';
 import { CPRPortfolioCalculator } from './constantPortfolioReturn/portfolio-calculator';
 import { MWRPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
-import { TWRPortfolioCalculator } from './twr/portfolio-calculator';
 
 export enum PerformanceCalculationType {
   MWR = 'MWR', // Money-Weighted Rate of Return

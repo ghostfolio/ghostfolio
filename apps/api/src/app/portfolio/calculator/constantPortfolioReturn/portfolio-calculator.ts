@@ -7,16 +7,13 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
-import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT, parseDate, resetHours } from '@ghostfolio/common/helper';
 import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
-import { DateRange } from '@ghostfolio/common/types';
 
 import { Inject, Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import {
   addDays,
-  differenceInDays,
   eachDayOfInterval,
   endOfDay,
   format,
@@ -83,19 +80,19 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     start: Date;
     end: Date;
   }): Promise<{ chart: HistoricalDataItem[] }> {
-    let item = await super.getPerformance({
+    const item = await super.getPerformance({
       end,
       start
     });
 
-    let itemResult = item.chart;
-    let dates = itemResult.map((item) => parseDate(item.date));
-    let timeWeighted = await this.getTimeWeightedChartData({
+    const itemResult = item.chart;
+    const dates = itemResult.map((item) => parseDate(item.date));
+    const timeWeighted = await this.getTimeWeightedChartData({
       dates
     });
 
     item.chart = itemResult.map((itemInt) => {
-      let timeWeightedItem = timeWeighted.find(
+      const timeWeightedItem = timeWeighted.find(
         (timeWeightedItem) => timeWeightedItem.date === itemInt.date
       );
       if (timeWeightedItem) {
@@ -135,20 +132,20 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       dateQuery: { in: [end] }
     });
     const endString = format(end, DATE_FORMAT);
-    let exchangeRates = await Promise.all(
+    const exchangeRates = await Promise.all(
       Object.keys(holdings[endString]).map(async (holding) => {
-        let symbol = marketMap.values.find((m) => m.symbol === holding);
-        let symbolCurrency = this.getCurrencyFromActivities(orders, holding);
-        let exchangeRate = await this.exchangeRateDataService.toCurrencyAtDate(
-          1,
-          symbolCurrency,
-          this.currency,
-          end
-        );
+        const symbolCurrency = this.getCurrencyFromActivities(orders, holding);
+        const exchangeRate =
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            1,
+            symbolCurrency,
+            this.currency,
+            end
+          );
         return { symbolCurrency, exchangeRate };
       })
     );
-    let currencyRates = exchangeRates.reduce<{ [currency: string]: number }>(
+    const currencyRates = exchangeRates.reduce<{ [currency: string]: number }>(
       (all, currency): { [currency: string]: number } => {
         all[currency.symbolCurrency] ??= currency.exchangeRate;
         return all;
@@ -156,12 +153,12 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       {}
     );
 
-    let totalInvestment = await Object.keys(holdings[endString]).reduce(
+    const totalInvestment = await Object.keys(holdings[endString]).reduce(
       (sum, holding) => {
         if (!holdings[endString][holding].toNumber()) {
           return sum;
         }
-        let symbol = marketMap.values.find((m) => m.symbol === holding);
+        const symbol = marketMap.values.find((m) => m.symbol === holding);
 
         if (symbol?.marketPrice === undefined) {
           Logger.warn(
@@ -170,8 +167,8 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
           );
           return sum;
         } else {
-          let symbolCurrency = this.getCurrency(holding);
-          let price = new Big(currencyRates[symbolCurrency]).mul(
+          const symbolCurrency = this.getCurrency(holding);
+          const price = new Big(currencyRates[symbolCurrency]).mul(
             symbol.marketPrice
           );
           return sum.plus(new Big(price).mul(holdings[endString][holding]));
@@ -191,7 +188,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     dates = dates.sort((a, b) => a.getTime() - b.getTime());
     const start = dates[0];
     const end = dates[dates.length - 1];
-    let marketMapTask = this.computeMarketMap({
+    const marketMapTask = this.computeMarketMap({
       gte: start,
       lt: addDays(end, 1)
     });
@@ -201,7 +198,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       end
     );
 
-    let data: HistoricalDataItem[] = [];
+    const data: HistoricalDataItem[] = [];
     const startString = format(start, DATE_FORMAT);
 
     data.push({
@@ -435,12 +432,12 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
     end: Date
   ) {
     const transactionDates = Object.keys(investmentByDate).sort();
-    let dates = eachDayOfInterval({ start, end }, { step: 1 })
+    const dates = eachDayOfInterval({ start, end }, { step: 1 })
       .map((date) => {
         return resetHours(date);
       })
       .sort((a, b) => a.getTime() - b.getTime());
-    let currentHoldings: { [date: string]: { [symbol: string]: Big } } = {};
+    const currentHoldings: { [date: string]: { [symbol: string]: Big } } = {};
 
     this.calculateInitialHoldings(investmentByDate, start, currentHoldings);
 
@@ -448,7 +445,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
       const dateString = format(dates[i], DATE_FORMAT);
       const previousDateString = format(dates[i - 1], DATE_FORMAT);
       if (transactionDates.some((d) => d === dateString)) {
-        let holdings = { ...currentHoldings[previousDateString] };
+        const holdings = { ...currentHoldings[previousDateString] };
         investmentByDate[dateString].forEach((trade) => {
           holdings[trade.SymbolProfile.symbol] ??= new Big(0);
           holdings[trade.SymbolProfile.symbol] = holdings[
@@ -488,7 +485,7 @@ export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
 
     for (const symbol of Object.keys(preRangeTrades)) {
       const trades: PortfolioOrder[] = preRangeTrades[symbol];
-      let startQuantity = trades.reduce((sum, trade) => {
+      const startQuantity = trades.reduce((sum, trade) => {
         return sum.plus(trade.quantity.mul(getFactor(trade.type)));
       }, new Big(0));
       currentHoldings[format(start, DATE_FORMAT)][symbol] = startQuantity;

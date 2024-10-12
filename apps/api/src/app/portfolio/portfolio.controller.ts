@@ -84,7 +84,6 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
-    @Query('isAllocation') isAllocation: boolean = false,
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     const withMarkets = withMarketsParam === 'true';
@@ -483,8 +482,7 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccounts = false,
-    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false,
-    @Query('withItems') withItems = false
+    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false
   ): Promise<PortfolioPerformanceResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,

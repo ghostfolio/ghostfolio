@@ -41,9 +41,7 @@ import {
   PrismaClient,
   Property,
   SymbolProfile,
-  DataSource,
-  Tag,
-  SymbolProfileOverrides
+  DataSource
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
