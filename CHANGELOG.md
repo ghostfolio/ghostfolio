@@ -15,11 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the labels of the chart of the holdings tab on the home page (experimental)
 - Exposed the timeout of the portfolio snapshot computation as an environment variable (`PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT`)
+- Harmonized the processor concurrency environment variables
 - Improved the portfolio unit tests to work with exported activity files
 
 ### Fixed
 
 - Considered the language of the user settings on login with _Security Token_
+
+### Todo
+
+- Rename the environment variable from `PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE` to `PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY`
+- Rename the environment variable from `PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA` to `PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY`
+- Rename the environment variable from `PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT` to `PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY`
 
 ## 2.114.0 - 2024-10-10
 
