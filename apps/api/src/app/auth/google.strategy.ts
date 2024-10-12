@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
+import { inject } from '@angular/core';
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
@@ -9,11 +10,10 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  public constructor(
-    private readonly authService: AuthService,
-    // @ts-expect-error: Property is being used in the constructor
-    private readonly configurationService: ConfigurationService
-  ) {
+  private readonly authService = inject(AuthService);
+
+  public constructor() {
+    const configurationService = inject(ConfigurationService);
     super({
       callbackURL: `${configurationService.get(
         'ROOT_URL'
