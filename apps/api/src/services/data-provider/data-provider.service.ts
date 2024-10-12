@@ -475,7 +475,7 @@ export class DataProviderService {
               }
 
               response[symbol] = dataProviderResponse;
-              let quotesCacheTTL =
+              const quotesCacheTTL =
                 this.getAppropriateCacheTTL(dataProviderResponse);
 
               this.redisCacheService.set(
@@ -573,8 +573,8 @@ export class DataProviderService {
     if (dataProviderResponse.dataSource === 'MANUAL') {
       quotesCacheTTL = 14400; // 4h Cache for Manual Service
     } else if (dataProviderResponse.marketState === 'closed') {
-      let date = new Date();
-      let dayOfWeek = date.getDay();
+      const date = new Date();
+      const dayOfWeek = date.getDay();
       if (dayOfWeek === 0 || dayOfWeek === 6) {
         quotesCacheTTL = 14400;
       } else if (date.getHours() > 16) {

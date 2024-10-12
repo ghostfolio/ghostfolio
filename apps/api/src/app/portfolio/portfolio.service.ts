@@ -15,7 +15,6 @@ import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { IDataProviderResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -816,23 +815,6 @@ export class PortfolioService {
           .map(({ quantity }) => {
             return new Big(quantity);
           })
-      );
-
-      // Convert investment, gross and net performance to currency of user
-      const investment = this.exchangeRateDataService.toCurrency(
-        position.investment?.toNumber(),
-        currency,
-        userCurrency
-      );
-      const grossPerformance = this.exchangeRateDataService.toCurrency(
-        position.grossPerformance?.toNumber(),
-        currency,
-        userCurrency
-      );
-      const netPerformance = this.exchangeRateDataService.toCurrency(
-        position.netPerformance?.toNumber(),
-        currency,
-        userCurrency
       );
 
       const historicalData = await this.dataProviderService.getHistorical(
@@ -1899,7 +1881,7 @@ export class PortfolioService {
       cashDetailsWithExcludedAccounts.balanceInBaseCurrency
     ).minus(balanceInBaseCurrency);
 
-    let excludedAccountsAndActivities = excludedBalanceInBaseCurrency
+    const excludedAccountsAndActivities = excludedBalanceInBaseCurrency
       .plus(totalOfExcludedActivities)
       .toNumber();
 

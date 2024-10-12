@@ -51,6 +51,7 @@ export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE = 1;
 export const DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA = 1;
 export const DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT = 1;
+export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
 export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
@@ -94,6 +95,18 @@ export const GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions = {
   },
   removeOnComplete: true
 };
+
+export const GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME =
+  'GATHER_MISSING_HISTORICAL_MARKET_DATA';
+export const GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS: JobOptions =
+  {
+    attempts: 12,
+    backoff: {
+      delay: ms('1 minute'),
+      type: 'exponential'
+    },
+    removeOnComplete: true
+  };
 
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME = 'PORTFOLIO';
 export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {

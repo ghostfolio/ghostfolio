@@ -174,9 +174,9 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      let filtersType = this.getFilterType(filter.type);
+      const filtersType = this.getFilterType(filter.type);
 
-      let userFilters = filters
+      const userFilters = filters
         .filter((f) => f.type === filter.type && filter.id)
         .map((f) => f.id);
 
@@ -267,7 +267,18 @@ export class HeaderComponent implements OnChanges {
       this.settingsStorageService.getSetting(KEY_STAY_SIGNED_IN) === 'true'
     );
 
-    this.router.navigate(['/']);
+    this.userService
+      .get()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((user) => {
+        const userLanguage = user?.settings?.language;
+
+        if (userLanguage && document.documentElement.lang !== userLanguage) {
+          window.location.href = `../${userLanguage}`;
+        } else {
+          this.router.navigate(['/']);
+        }
+      });
   }
 
   public ngOnDestroy() {

@@ -13,8 +13,8 @@ export class DateQueryHelper {
     let query = dateQuery;
     if (dateQuery.in?.length > 0) {
       dates = dateQuery.in;
-      let end = Math.max(...dates.map((d) => d.getTime()));
-      let start = Math.min(...dates.map((d) => d.getTime()));
+      const end = Math.max(...dates.map((d) => d.getTime()));
+      const start = Math.min(...dates.map((d) => d.getTime()));
       query = {
         gte: resetHours(new Date(start)),
         lt: resetHours(addDays(end, 1))

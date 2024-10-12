@@ -15,7 +15,6 @@ import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { SymbolProfile } from '@prisma/client';
-import { Big } from 'big.js';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -249,7 +248,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             netPerformanceInPercentageWithCurrencyEffect,
             totalInvestmentValueWithCurrencyEffect,
             valueInPercentage,
-            timeWeightedPerformance,
             valueWithCurrencyEffect
           }
         ] of chart.entries()) {
