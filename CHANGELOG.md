@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added the name to the tooltip of the chart of the holdings tab on the home page (experimental)
+
+### Changed
+
+- Exposed the timeout of the portfolio snapshot computation as an environment variable (`PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT`)
+- Improved the portfolio unit tests to work with exported activity files
+
+### Fixed
+
+- Considered the language of the user settings on login with _Security Token_
+
 ## 2.114.0 - 2024-10-10
 
 ### Added
