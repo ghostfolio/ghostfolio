@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Exposed the timeout of the portfolio snapshot computation as an environment variable (`PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT`)
 - Improved the portfolio unit tests to work with exported activity files
 
 ### Fixed
