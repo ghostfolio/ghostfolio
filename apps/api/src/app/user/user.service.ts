@@ -206,7 +206,6 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
-    // TODO
     (user.Settings.settings as UserSettings).xRayRules = {
       AccountClusterRiskCurrentInvestment:
         new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
