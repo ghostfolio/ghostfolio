@@ -34,7 +34,5 @@ export class GfRuleSettingsDialogComponent {
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: IRuleSettingsDialogParams,
     public dialogRef: MatDialogRef<GfRuleSettingsDialogComponent>
-  ) {
-    this.settings = this.data.settings;
-  }
+  ) {}
 }
