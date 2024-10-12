@@ -62,11 +62,7 @@
             <ion-icon name="ellipsis-horizontal" />
           </button>
           <mat-menu #rulesMenu="matMenu" xPosition="before">
-            @if (
-              rule?.isActive &&
-              (rule?.configuration?.thresholdMax ||
-                rule?.configuration?.thresholdMin)
-            ) {
+            @if (rule?.isActive && rule?.configuration) {
               <button mat-menu-item (click)="onCustomizeRule(rule)">
                 <ng-container i18n>Customize</ng-container>...
               </button>

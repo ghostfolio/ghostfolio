@@ -35,7 +35,7 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   }
 
   public getConfiguration() {
-    return {};
+    return undefined;
   }
 
   public getSettings({ xRayRules }: UserSettings): RuleSettings {
