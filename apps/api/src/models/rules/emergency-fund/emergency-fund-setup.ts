@@ -32,6 +32,10 @@ export class EmergencyFundSetup extends Rule<Settings> {
     };
   }
 
+  public getConfiguration() {
+    return {};
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,

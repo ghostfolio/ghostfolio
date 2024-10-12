@@ -61,6 +61,10 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     };
   }
 
+  public getConfiguration() {
+    return {};
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,

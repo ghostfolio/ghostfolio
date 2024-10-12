@@ -61,6 +61,17 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     };
   }
 
+  public getConfiguration() {
+    return {
+      threshold: {
+        max: 1,
+        min: 0,
+        step: 0.01
+      },
+      thresholdMax: true
+    };
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,

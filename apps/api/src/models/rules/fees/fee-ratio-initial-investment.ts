@@ -43,6 +43,17 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     };
   }
 
+  public getConfiguration() {
+    return {
+      threshold: {
+        max: 0.1,
+        min: 0,
+        step: 0.005
+      },
+      thresholdMax: true
+    };
+  }
+
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,
