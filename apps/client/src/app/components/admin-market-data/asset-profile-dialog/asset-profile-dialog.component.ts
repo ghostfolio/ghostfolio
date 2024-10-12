@@ -223,6 +223,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe(() => {});
   }
 
+  public onGatherSymbolMissingOnly({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.adminService
+      .gatherSymbolMissingOnly({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {});
+  }
+
   public onImportHistoricalData() {
     try {
       const marketData = csvToJson(

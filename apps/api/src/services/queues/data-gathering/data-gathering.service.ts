@@ -13,6 +13,8 @@ import {
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
+  GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
+  GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
   PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
 import {
@@ -28,7 +30,6 @@ import {
 import { InjectQueue } from '@nestjs/bull';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import AwaitLock from 'await-lock';
 import { JobOptions, Queue } from 'bull';
 import { format, min, subDays, subYears } from 'date-fns';
 import { isEmpty } from 'lodash';
@@ -47,8 +48,6 @@ export class DataGatheringService {
     private readonly propertyService: PropertyService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
-
-  lock = new AwaitLock();
 
   public async addJobToQueue({
     data,
@@ -109,6 +108,24 @@ export class DataGatheringService {
       }
     );
     await this.gatherSymbols({
+      dataGatheringItems,
+      priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
+    });
+  }
+
+  public async gatherSymbolMissingOnly({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    const dataGatheringItems = (await this.getSymbolsMax()).filter(
+      (dataGatheringItem) => {
+        return (
+          dataGatheringItem.dataSource === dataSource &&
+          dataGatheringItem.symbol === symbol
+        );
+      }
+    );
+    await this.gatherMissingDataSymbols({
       dataGatheringItems,
       priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
     });
@@ -290,6 +307,35 @@ export class DataGatheringService {
               dataSource,
               symbol
             })}-${format(date, DATE_FORMAT)}`
+          }
+        };
+      })
+    );
+  }
+
+  public async gatherMissingDataSymbols({
+    dataGatheringItems,
+    priority
+  }: {
+    dataGatheringItems: IDataGatheringItem[];
+    priority: number;
+  }) {
+    await this.addJobsToQueue(
+      dataGatheringItems.map(({ dataSource, date, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            date,
+            symbol
+          },
+          name: GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
+          opts: {
+            ...GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
+            priority,
+            jobId: `${getAssetProfileIdentifier({
+              dataSource,
+              symbol
+            })}-missing-${format(date, DATE_FORMAT)}`
           }
         };
       })

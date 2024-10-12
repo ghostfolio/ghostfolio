@@ -36,6 +36,19 @@
         type="button"
         [disabled]="assetProfileForm.dirty"
         (click)="
+          onGatherSymbolMissingOnly({
+            dataSource: data.dataSource,
+            symbol: data.symbol
+          })
+        "
+      >
+      <ng-container i18n>Gather Missing Historical Data</ng-container>
+      </button>
+      <button
+        mat-menu-item
+        type="button"
+        [disabled]="assetProfileForm.dirty"
+        (click)="
           onGatherProfileDataBySymbol({
             dataSource: data.dataSource,
             symbol: data.symbol
