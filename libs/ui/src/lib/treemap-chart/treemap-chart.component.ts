@@ -155,13 +155,13 @@ export class GfTreemapChartComponent
             formatter(ctx) {
               const netPerformancePercentWithCurrencyEffect =
                 ctx.raw._data.netPerformancePercentWithCurrencyEffect;
-
+            
               return [
-                ctx.raw._data.name,
-                ctx.raw._data.symbol,
+                ctx.raw._data.symbol,  // Only show the symbol
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
-            },
+            }
+            ,
             position: 'top'
           },
           spacing: 1,
