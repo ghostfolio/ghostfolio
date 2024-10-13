@@ -91,7 +91,7 @@ export class GfTreemapChartComponent
       datasets: [
         {
           backgroundColor(ctx) {
-            const annualizedNetPerformancePercentWithCurrencyEffect =
+            let annualizedNetPerformancePercentWithCurrencyEffect =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
@@ -104,6 +104,12 @@ export class GfTreemapChartComponent
                   ctx.raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
+
+            // Round to 2 decimal places
+            annualizedNetPerformancePercentWithCurrencyEffect =
+              Math.round(
+                annualizedNetPerformancePercentWithCurrencyEffect * 100
+              ) / 100;
 
             if (
               annualizedNetPerformancePercentWithCurrencyEffect >
@@ -123,8 +129,11 @@ export class GfTreemapChartComponent
             } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
               return green[3];
             } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect === 0
+              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
             ) {
+              annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
+                annualizedNetPerformancePercentWithCurrencyEffect
+              );
               return gray[3];
             } else if (
               annualizedNetPerformancePercentWithCurrencyEffect >

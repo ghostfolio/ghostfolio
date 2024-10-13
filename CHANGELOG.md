@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the backgrounds of the chart of the holdings tab on the home page (experimental)
 - Improved the labels of the chart of the holdings tab on the home page (experimental)
 - Refactored the rule thresholds in the _X-ray_ section (experimental)
 - Exposed the timeout of the portfolio snapshot computation as an environment variable (`PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT`)
