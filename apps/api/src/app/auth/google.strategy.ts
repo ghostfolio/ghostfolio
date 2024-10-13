@@ -1,6 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
-import { inject } from '@angular/core';
 import { Injectable, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Provider } from '@prisma/client';
@@ -10,10 +9,10 @@ import { AuthService } from './auth.service';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  private readonly authService = inject(AuthService);
-
-  public constructor() {
-    const configurationService = inject(ConfigurationService);
+  public constructor(
+    private readonly authService: AuthService,
+    configurationService: ConfigurationService
+  ) {
     super({
       callbackURL: `${configurationService.get(
         'ROOT_URL'
