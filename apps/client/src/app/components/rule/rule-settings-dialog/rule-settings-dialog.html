@@ -4,6 +4,7 @@
   
     <div
     class="w-100"
+
     [ngClass]="{ 'd-none': settings.thresholdMin === undefined }">
     <label i18n>Threshold Min</label>
     <mat-slider
@@ -32,11 +33,15 @@
   ></mat-slider>
 </div>
 
-</div>
+
 
 <div mat-dialog-actions fxLayout="row" fxLayoutAlign="end">
   <button i18n mat-button (click)="dialogRef.close()">Close</button>
-  <button color="primary" mat-flat-button (click)="dialogRef.close(settings)">
+  <button
+    color="primary"
+    mat-flat-button
+    (click)="dialogRef.close(data.settings)"
+  >
     <ng-container i18n>Save</ng-container>
   </button>
 </div>

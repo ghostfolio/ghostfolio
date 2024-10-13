@@ -151,13 +151,12 @@ export class GfTreemapChartComponent
             align: 'left',
             color: ['white'],
             display: true,
-            font: [{ size: 14 }, { size: 11 }, { lineHeight: 2, size: 14 }],
+            font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
             formatter(ctx) {
               const netPerformancePercentWithCurrencyEffect =
                 ctx.raw._data.netPerformancePercentWithCurrencyEffect;
 
               return [
-                ctx.raw._data.name,
                 ctx.raw._data.symbol,
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
@@ -227,16 +226,24 @@ export class GfTreemapChartComponent
       }),
       callbacks: {
         label: (context) => {
+          const name = context.raw._data.name;
+          const symbol = context.raw._data.symbol;
+
           if (context.raw._data.valueInBaseCurrency !== null) {
             const value = <number>context.raw._data.valueInBaseCurrency;
-            return `${value.toLocaleString(this.locale, {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2
-            })} ${this.baseCurrency}`;
+
+            return [
+              `${name ?? symbol}`,
+              `${value.toLocaleString(this.locale, {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+              })} ${this.baseCurrency}`
+            ];
           } else {
             const percentage =
               <number>context.raw._data.allocationInPercentage * 100;
-            return `${percentage.toFixed(2)}%`;
+
+            return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           }
         },
         title: () => {
