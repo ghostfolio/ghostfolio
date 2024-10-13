@@ -105,6 +105,7 @@ export class GfTreemapChartComponent
                 )
               }).toNumber();
 
+            // Round to 2 decimal places
             annualizedNetPerformancePercentWithCurrencyEffect =
               Math.round(
                 annualizedNetPerformancePercentWithCurrencyEffect * 100
@@ -128,7 +129,7 @@ export class GfTreemapChartComponent
             } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
               return green[3];
             } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect === 0
+              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
             ) {
               annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
                 annualizedNetPerformancePercentWithCurrencyEffect
