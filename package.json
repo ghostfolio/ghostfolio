@@ -87,6 +87,7 @@
     "@nestjs/schedule": "3.0.2",
     "@nestjs/serve-static": "4.0.0",
     "@prisma/client": "5.20.0",
+    "@prisma/extension-optimize": "1.0.1",
     "@simplewebauthn/browser": "9.0.1",
     "@simplewebauthn/server": "9.0.3",
     "@stripe/stripe-js": "3.5.0",
