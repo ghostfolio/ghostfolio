@@ -9,7 +9,7 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   CACHE_TTL_INFINITE,
-  DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT,
+  DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_QUEUE
 } from '@ghostfolio/common/config';
@@ -35,7 +35,7 @@ export class PortfolioSnapshotProcessor {
   @Process({
     concurrency: parseInt(
       process.env.PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT ??
-        DEFAULT_PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT.toString(),
+        DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY.toString(),
       10
     ),
     name: PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME

@@ -1,5 +1,7 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
+import { XRayRulesSettings } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -10,7 +12,6 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { isEmpty } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -27,10 +28,9 @@ export class RuleComponent implements OnInit {
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;
+  @Input() settings: XRayRulesSettings['AccountClusterRiskCurrentInvestment'];
 
   @Output() ruleUpdated = new EventEmitter<UpdateUserSettingDto>();
-
-  public isEmpty = isEmpty;
 
   private deviceType: string;
   private unsubscribeSubject = new Subject<void>();
@@ -46,16 +46,17 @@ export class RuleComponent implements OnInit {
 
   public onCustomizeRule(rule: PortfolioReportRule) {
     const dialogRef = this.dialog.open(GfRuleSettingsDialogComponent, {
-      data: <IRuleSettingsDialogParams>{
-        rule
-      },
+      data: {
+        rule,
+        settings: this.settings
+      } as IRuleSettingsDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((settings: PortfolioReportRule['settings']) => {
+      .subscribe((settings: RuleSettings) => {
         if (settings) {
           this.ruleUpdated.emit({
             xRayRules: {

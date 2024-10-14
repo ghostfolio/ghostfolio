@@ -2,6 +2,12 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
+import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
+import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -56,7 +62,7 @@ export class UserService {
     { Account, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
-    const accessesResult = await Promise.all([
+    const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
           User: true
@@ -70,11 +76,11 @@ export class UserService {
         },
         where: { userId: id }
       }),
-      this.tagService.getInUseByUser(id)
+      this.tagService.getTagsForUser(id)
     ]);
-    const access = accessesResult[0];
-    const firstActivity = accessesResult[1];
-    let tags = accessesResult[2];
+    const access = userData[0];
+    const firstActivity = userData[1];
+    let tags = userData[2];
 
     let systemMessage: SystemMessage;
 
@@ -200,17 +206,35 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
-    // Set default values for X-ray rules
-    if (!(user.Settings.settings as UserSettings).xRayRules) {
-      (user.Settings.settings as UserSettings).xRayRules = {
-        AccountClusterRiskCurrentInvestment: { isActive: true },
-        AccountClusterRiskSingleAccount: { isActive: true },
-        CurrencyClusterRiskBaseCurrencyCurrentInvestment: { isActive: true },
-        CurrencyClusterRiskCurrentInvestment: { isActive: true },
-        EmergencyFundSetup: { isActive: true },
-        FeeRatioInitialInvestment: { isActive: true }
-      };
-    }
+    (user.Settings.settings as UserSettings).xRayRules = {
+      AccountClusterRiskCurrentInvestment:
+        new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
+          user.Settings.settings
+        ),
+      AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
+        undefined,
+        {}
+      ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
+        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskCurrentInvestment:
+        new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      EmergencyFundSetup: new EmergencyFundSetup(
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+        undefined,
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings)
+    };
 
     let currentPermissions = getPermissions(user.role);
 

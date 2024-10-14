@@ -156,19 +156,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    this.accounts = this.user?.accounts;
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
       return {
         id: assetClass,
         label: translate(assetClass),
         type: 'ASSET_CLASS'
-      };
-    });
-    this.tags = this.user?.tags.map(({ id, name }) => {
-      return {
-        id,
-        label: translate(name),
-        type: 'TAG'
       };
     });
 
@@ -212,6 +204,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public ngOnChanges() {
+    this.accounts = this.user?.accounts ?? [];
+
     this.dateRangeOptions = [
       { label: $localize`Today`, value: '1d' },
       {
@@ -279,6 +273,23 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         emitEvent: false
       }
     );
+
+    this.tags =
+      this.user?.tags
+        ?.filter(({ isUsed }) => {
+          return isUsed;
+        })
+        .map(({ id, name }) => {
+          return {
+            id,
+            label: translate(name),
+            type: 'TAG'
+          };
+        }) ?? [];
+
+    if (this.tags.length === 0) {
+      this.filterForm.get('tag').disable({ emitEvent: false });
+    }
   }
 
   public hasFilter(aFormValue: { [key: string]: string }) {

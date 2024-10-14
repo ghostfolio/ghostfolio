@@ -172,10 +172,10 @@ export class PortfolioController {
       }) ||
       isRestrictedView(this.request.user)
     ) {
-      Object.values(markets).forEach((market) => {
+      Object.values(markets ?? {}).forEach((market) => {
         delete market.valueInBaseCurrency;
       });
-      Object.values(marketsAdvanced).forEach((market) => {
+      Object.values(marketsAdvanced ?? {}).forEach((market) => {
         delete market.valueInBaseCurrency;
       });
 
