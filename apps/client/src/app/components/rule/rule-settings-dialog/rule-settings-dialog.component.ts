@@ -9,8 +9,6 @@ import {
   MatDialogModule,
   MatDialogRef
 } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
 
 import { IRuleSettingsDialogParams } from './interfaces/interfaces';
@@ -21,8 +19,6 @@ import { IRuleSettingsDialogParams } from './interfaces/interfaces';
     FormsModule,
     MatButtonModule,
     MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatSliderModule
   ],
   selector: 'gf-rule-settings-dialog',

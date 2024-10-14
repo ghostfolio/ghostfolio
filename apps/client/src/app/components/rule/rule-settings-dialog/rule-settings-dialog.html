@@ -2,11 +2,14 @@
 
 <div class="py-3" mat-dialog-content>
   <div
-    appearance="outline"
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMin }"
   >
-    <h5 i18n>Threshold Min ({{ data.settings.thresholdMin }})</h5>
+    <h6 class="mb-0">
+      <ng-container i18n>Threshold Min</ng-container> ({{
+        data.settings.thresholdMin?.toFixed(2)
+      }})
+    </h6>
     <label>{{ data.rule.configuration.threshold.min.toFixed(2) }}</label>
     <mat-slider
       name="thresholdMin"
@@ -19,19 +22,23 @@
     <label>{{ data.rule.configuration.threshold.max.toFixed(2) }}</label>
   </div>
   <div
-    appearance="outline"
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMax }"
   >
-    <h5 i18n>Threshold Max ({{ data.settings.thresholdMax }})</h5>
+    <h6 class="mb-0">
+      <ng-container i18n>Threshold Max</ng-container> ({{
+        data.settings.thresholdMax?.toFixed(2)
+      }})
+    </h6>
     <label>{{ data.rule.configuration.threshold.min.toFixed(2) }}</label>
     <mat-slider
       name="thresholdMax"
       [max]="data.rule.configuration.threshold.max"
       [min]="data.rule.configuration.threshold.min"
       [step]="data.rule.configuration.threshold.step"
-      ><input matSliderThumb [(ngModel)]="data.settings.thresholdMax"
-    /></mat-slider>
+    >
+      <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
+    </mat-slider>
     <label>{{ data.rule.configuration.threshold.max.toFixed(2) }}</label>
   </div>
 </div>
