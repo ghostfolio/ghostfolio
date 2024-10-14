@@ -1,32 +1,46 @@
 <div mat-dialog-title>{{ data.rule.name }}</div>
 
 <div class="py-3" mat-dialog-content>
-  <mat-form-field
-    appearance="outline"
+  <div
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMin }"
   >
-    <mat-label i18n>Threshold Min</mat-label>
-    <input
-      matInput
+    <h6 class="mb-0">
+      <ng-container i18n>Threshold Min</ng-container> ({{
+        data.settings.thresholdMin?.toFixed(2)
+      }})
+    </h6>
+    <label>{{ data.rule.configuration.threshold.min.toFixed(2) }}</label>
+    <mat-slider
       name="thresholdMin"
-      type="number"
-      [(ngModel)]="data.settings.thresholdMin"
-    />
-  </mat-form-field>
-  <mat-form-field
-    appearance="outline"
+      [max]="data.rule.configuration.threshold.max"
+      [min]="data.rule.configuration.threshold.min"
+      [step]="data.rule.configuration.threshold.step"
+    >
+      <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
+    </mat-slider>
+    <label>{{ data.rule.configuration.threshold.max.toFixed(2) }}</label>
+  </div>
+  <div
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMax }"
   >
-    <mat-label i18n>Threshold Max</mat-label>
-    <input
-      matInput
+    <h6 class="mb-0">
+      <ng-container i18n>Threshold Max</ng-container> ({{
+        data.settings.thresholdMax?.toFixed(2)
+      }})
+    </h6>
+    <label>{{ data.rule.configuration.threshold.min.toFixed(2) }}</label>
+    <mat-slider
       name="thresholdMax"
-      type="number"
-      [(ngModel)]="data.settings.thresholdMax"
-    />
-  </mat-form-field>
+      [max]="data.rule.configuration.threshold.max"
+      [min]="data.rule.configuration.threshold.min"
+      [step]="data.rule.configuration.threshold.step"
+    >
+      <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
+    </mat-slider>
+    <label>{{ data.rule.configuration.threshold.max.toFixed(2) }}</label>
+  </div>
 </div>
 
 <div align="end" mat-dialog-actions>
