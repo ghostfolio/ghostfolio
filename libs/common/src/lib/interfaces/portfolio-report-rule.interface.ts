@@ -4,6 +4,7 @@ export interface PortfolioReportRule {
       max: number;
       min: number;
       step: number;
+      unit?: string;
     };
     thresholdMax?: boolean;
     thresholdMin?: boolean;
