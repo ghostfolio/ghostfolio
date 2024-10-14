@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed the timeout of the portfolio snapshot computation as an environment variable (`PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT`)
 - Harmonized the processor concurrency environment variables
 - Improved the portfolio unit tests to work with exported activity files
+- Enabled the `noUnusedLocals` compiler option in the `tsconfig`
+- Enabled the `noUnusedParameters` compiler option in the `tsconfig`
 
 ### Fixed
 
