@@ -6,7 +6,8 @@
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMin }"
   >
-    <label i18n>Threshold Min</label>
+    <h5 i18n>Threshold Min</h5>
+    <label>{{ data.settings.thresholdMin }}</label>
     <mat-slider
       name="thresholdMin"
       [max]="data.rule.configuration.threshold.max"
@@ -15,14 +16,14 @@
     >
       <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
     </mat-slider>
-    <mat-label>{{ data.settings.thresholdMin }}</mat-label>
   </div>
   <div
     appearance="outline"
     class="w-100"
     [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMax }"
   >
-    <mat-label i18n>Threshold Max</mat-label>
+    <h5 i18n>Threshold Max</h5>
+    <label>{{ data.settings.thresholdMax }}</label>
     <mat-slider
       name="thresholdMax"
       [max]="data.rule.configuration.threshold.max"
@@ -30,7 +31,6 @@
       [step]="data.rule.configuration.threshold.step"
       ><input matSliderThumb [(ngModel)]="data.settings.thresholdMax"
     /></mat-slider>
-    <mat-label>{{ data.settings.thresholdMax }}</mat-label>
   </div>
 </div>
 
