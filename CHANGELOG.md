@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Enabled the `noUnusedLocals` compiler option in the `tsconfig`
+- Enabled the `noUnusedParameters` compiler option in the `tsconfig`
 - Switched the `prefer-const` rule from `warn` to `error` in the `eslint` configuration
 
 ## 2.113.0 - 2024-10-06
