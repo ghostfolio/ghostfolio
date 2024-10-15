@@ -14,12 +14,12 @@ import {
   Req,
   Res,
   UseGuards,
-  VERSION_NEUTRAL,
-  Version
+  Version,
+  VERSION_NEUTRAL
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { AuthService } from './auth.service';
 import {
@@ -130,10 +130,7 @@ export class AuthController {
   public async verifyAttestation(
     @Body() body: { deviceName: string; credential: AttestationCredentialJSON }
   ) {
-    return this.webAuthService.verifyAttestation(
-      body.deviceName,
-      body.credential
-    );
+    return this.webAuthService.verifyAttestation(body.credential);
   }
 
   @Post('webauthn/generate-assertion-options')
