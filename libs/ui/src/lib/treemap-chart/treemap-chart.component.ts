@@ -170,8 +170,8 @@ export class GfTreemapChartComponent
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
-            position: 'top',
-            hoverColor: ['white']
+            hoverColor: 'white',
+            position: 'top'
           },
           spacing: 1,
           tree: this.holdings
