@@ -48,7 +48,8 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       threshold: {
         max: 0.1,
         min: 0,
-        step: 0.005
+        step: 0.0025,
+        unit: '%'
       },
       thresholdMax: true
     };

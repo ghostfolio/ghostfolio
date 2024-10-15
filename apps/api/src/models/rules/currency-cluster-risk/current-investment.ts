@@ -66,7 +66,8 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
       threshold: {
         max: 1,
         min: 0,
-        step: 0.01
+        step: 0.01,
+        unit: '%'
       },
       thresholdMax: true
     };
