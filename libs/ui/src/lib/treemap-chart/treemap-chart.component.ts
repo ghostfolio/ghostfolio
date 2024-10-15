@@ -87,7 +87,7 @@ export class GfTreemapChartComponent
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
 
-    const data: ChartConfiguration['data'] = <any>{
+    const data: ChartConfiguration['data'] = {
       datasets: [
         {
           backgroundColor(ctx) {
@@ -170,25 +170,25 @@ export class GfTreemapChartComponent
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
+            hoverColor: 'white',
             position: 'top'
           },
           spacing: 1,
           tree: this.holdings
         }
       ]
-    };
+    } as any;
 
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration()
-        );
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration() as unknown;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
-          options: <unknown>{
+          options: {
             animation: false,
             onClick: (event, activeElements) => {
               try {
@@ -217,7 +217,7 @@ export class GfTreemapChartComponent
             plugins: {
               tooltip: this.getTooltipPluginConfiguration()
             }
-          },
+          } as unknown,
           type: 'treemap'
         });
       }
@@ -239,7 +239,7 @@ export class GfTreemapChartComponent
           const symbol = context.raw._data.symbol;
 
           if (context.raw._data.valueInBaseCurrency !== null) {
-            const value = <number>context.raw._data.valueInBaseCurrency;
+            const value = context.raw._data.valueInBaseCurrency as number;
 
             return [
               `${name ?? symbol}`,
@@ -250,7 +250,7 @@ export class GfTreemapChartComponent
             ];
           } else {
             const percentage =
-              <number>context.raw._data.allocationInPercentage * 100;
+              (context.raw._data.allocationInPercentage as number) * 100;
 
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           }
