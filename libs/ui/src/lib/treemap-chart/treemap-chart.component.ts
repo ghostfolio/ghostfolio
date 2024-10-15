@@ -86,7 +86,32 @@ export class GfTreemapChartComponent
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
+    const netPerformancePercentsWithCurrencyEffect = this.holdings.map((h) =>
+      getAnnualizedPerformancePercent({
+        daysInMarket: differenceInDays(
+          endDate,
+          max([h.dateOfFirstActivity ?? new Date(0), startDate])
+        ),
+        netPerformancePercentage: new Big(
+          h.netPerformancePercentWithCurrencyEffect
+        )
+      }).toNumber()
+    );
 
+    const positiveNetPercents = netPerformancePercentsWithCurrencyEffect.filter(
+      (v) => v > 0
+    );
+    const positiveNetPercentsRange = {
+      max: Math.max(...positiveNetPercents),
+      min: Math.min(...positiveNetPercents)
+    };
+    const negativeNetPercents = netPerformancePercentsWithCurrencyEffect.filter(
+      (v) => v < 0
+    );
+    const negativeNetPercentsRange = {
+      max: Math.max(...negativeNetPercents),
+      min: Math.min(...negativeNetPercents)
+    };
     const data: ChartConfiguration['data'] = {
       datasets: [
         {
@@ -104,7 +129,6 @@ export class GfTreemapChartComponent
                   ctx.raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
-
             // Round to 2 decimal places
             annualizedNetPerformancePercentWithCurrencyEffect =
               Math.round(
@@ -112,47 +136,59 @@ export class GfTreemapChartComponent
               ) / 100;
 
             if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[9];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[7];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[5];
-            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
-              return green[3];
-            } else if (
               Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
             ) {
               annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
                 annualizedNetPerformancePercentWithCurrencyEffect
               );
               return gray[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
+            }
+
+            if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
+              const range =
+                positiveNetPercentsRange.max - positiveNetPercentsRange.min;
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPercentsRange.max - range * 0.25
+              ) {
+                return green[9];
+              }
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPercentsRange.max - range * 0.5
+              ) {
+                return green[7];
+              }
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPercentsRange.max - range * 0.75
+              ) {
+                return green[5];
+              }
+              return green[3];
+            }
+
+            const range =
+              negativeNetPercentsRange.min - negativeNetPercentsRange.max;
+            if (
+              annualizedNetPerformancePercentWithCurrencyEffect <=
+              negativeNetPercentsRange.min + range * 0.25
             ) {
-              return red[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[5];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[7];
-            } else {
               return red[9];
             }
+            if (
+              annualizedNetPerformancePercentWithCurrencyEffect <=
+              negativeNetPercentsRange.min + range * 0.5
+            ) {
+              return red[7];
+            }
+            if (
+              annualizedNetPerformancePercentWithCurrencyEffect <=
+              negativeNetPercentsRange.min + range * 0.75
+            ) {
+              return red[7];
+            }
+            return red[9];
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
