@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set the permissions (`chmod 0700`) on `entrypoint.sh` in the `Dockerfile`
+
 ### Changed
 
 - Disabled the text hover effect in the chart of the holdings tab on the home page (experimental)
