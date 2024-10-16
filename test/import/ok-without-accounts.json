@@ -11,7 +11,7 @@
       "unitPrice": 0,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2050-06-05T22:00:00.000Z",
+      "date": "2050-06-06T00:00:00.000Z",
       "symbol": "MSFT"
     },
     {
@@ -21,7 +21,7 @@
       "unitPrice": 500000,
       "currency": "USD",
       "dataSource": "MANUAL",
-      "date": "2021-12-31T22:00:00.000Z",
+      "date": "2022-01-01T00:00:00.000Z",
       "symbol": "Penthouse Apartment"
     },
     {
@@ -31,7 +31,7 @@
       "unitPrice": 0.62,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2021-11-16T22:00:00.000Z",
+      "date": "2021-11-17T00:00:00.000Z",
       "symbol": "MSFT"
     },
     {
@@ -41,7 +41,7 @@
       "unitPrice": 298.58,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2021-09-15T22:00:00.000Z",
+      "date": "2021-09-16T00:00:00.000Z",
       "symbol": "MSFT"
     }
   ]
