@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disabled the text hover effect in the chart of the holdings tab on the home page (experimental)
 - Improved the usability to customize the rule thresholds in the _X-ray_ section by introducing units (experimental)
+- Switched to adjusted market prices (splits and dividends) in the get historical functionality of the _EOD Historical Data_ service
 - Improved the language localization for German (`de`)
 
 ### Fixed
