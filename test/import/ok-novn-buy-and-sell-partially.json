@@ -5,7 +5,7 @@
   },
   "activities": [
     {
-      "fee": 0,
+      "fee": 1.3,
       "quantity": 1,
       "type": "SELL",
       "unitPrice": 85.73,
@@ -15,7 +15,7 @@
       "symbol": "NOVN.SW"
     },
     {
-      "fee": 0,
+      "fee": 2.95,
       "quantity": 2,
       "type": "BUY",
       "unitPrice": 75.8,
