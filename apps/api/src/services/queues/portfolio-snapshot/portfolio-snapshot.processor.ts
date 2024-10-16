@@ -11,7 +11,7 @@ import {
   CACHE_TTL_INFINITE,
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
-  PORTFOLIO_SNAPSHOT_QUEUE
+  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE
 } from '@ghostfolio/common/config';
 
 import { Process, Processor } from '@nestjs/bull';
@@ -22,7 +22,7 @@ import { addMilliseconds } from 'date-fns';
 import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 @Injectable()
-@Processor(PORTFOLIO_SNAPSHOT_QUEUE)
+@Processor(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
 export class PortfolioSnapshotProcessor {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
@@ -34,7 +34,7 @@ export class PortfolioSnapshotProcessor {
 
   @Process({
     concurrency: parseInt(
-      process.env.PROCESSOR_CONCURRENCY_PORTFOLIO_SNAPSHOT ??
+      process.env.PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY ??
         DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY.toString(),
       10
     ),
