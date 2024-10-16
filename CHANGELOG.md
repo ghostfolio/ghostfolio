@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability to customize the rule thresholds in the _X-ray_ section by introducing units (experimental)
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed the usage of the environment variable `PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY`
+
 ## 2.115.0 - 2024-10-14
 
 ### Added

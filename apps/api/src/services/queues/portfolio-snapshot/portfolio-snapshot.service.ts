@@ -1,4 +1,4 @@
-import { PORTFOLIO_SNAPSHOT_QUEUE } from '@ghostfolio/common/config';
+import { PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE } from '@ghostfolio/common/config';
 
 import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
@@ -9,7 +9,7 @@ import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queu
 @Injectable()
 export class PortfolioSnapshotService {
   public constructor(
-    @InjectQueue(PORTFOLIO_SNAPSHOT_QUEUE)
+    @InjectQueue(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
     private readonly portfolioSnapshotQueue: Queue
   ) {}
 
