@@ -193,9 +193,9 @@ model SymbolProfileOverrides {
   holdings        Json?          @default("[]")
   name            String?
   sectors         Json?          @default("[]")
-  url             String?
   symbolProfileId String         @id
   updatedAt       DateTime       @updatedAt
+  url             String?
   SymbolProfile   SymbolProfile  @relation(fields: [symbolProfileId], onDelete: Cascade, references: [id])
 }
 
@@ -239,7 +239,7 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
-  Tag Tag[]
+  Tag           Tag[]
 
   @@index([accessToken])
   @@index([createdAt])
