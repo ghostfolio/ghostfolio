@@ -36,16 +36,6 @@
         [locale]="user?.settings?.locale || undefined"
         [user]="user"
       />
-      @if (isLoading) {
-        <ngx-skeleton-loader
-          animation="pulse"
-          class="px-2 py-3"
-          [theme]="{
-            height: '1.5rem',
-            width: '100%'
-          }"
-        />
-      }
     </div>
   </div>
 </div>
