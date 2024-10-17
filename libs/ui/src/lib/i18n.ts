@@ -88,6 +88,7 @@ const locales = {
   'South Africa': $localize`South Africa`,
   Switzerland: $localize`Switzerland`,
   Thailand: $localize`Thailand`,
+  Ukraine: $localize`Ukraine`,
   'United States': $localize`United States`,
 
   // Fear and Greed Index

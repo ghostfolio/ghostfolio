@@ -251,6 +251,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Personal finances, simplified'
   },
   {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'firekit',
+    languages: ['English', 'українська мова'],
+    name: 'FIREkit',
+    origin: 'Ukraine',
+    pricingPerYear: '$40',
+    slogan: 'A simple solution to track your wealth online'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'folishare',
@@ -336,6 +347,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$150',
     slogan: 'The Time Machine for your Net Worth'
+  },
+  {
+    founded: 2021,
+    hasFreePlan: false,
+    key: 'leafs',
+    languages: ['Deutsch', 'English'],
+    name: 'Leafs',
+    origin: 'Switzerland',
+    slogan: 'Sustainability insights for wealth managers'
   },
   {
     founded: 2018,
