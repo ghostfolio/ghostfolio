@@ -149,9 +149,7 @@ export class GfTreemapChartComponent
                 annualizedNetPerformancePercentWithCurrencyEffect
               );
               return gray[3];
-            }
-
-            if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
+            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
               const range =
                 positiveNetPerformancePercentsRange.max -
                 positiveNetPerformancePercentsRange.min;
