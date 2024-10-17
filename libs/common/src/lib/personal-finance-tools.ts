@@ -338,6 +338,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The Time Machine for your Net Worth'
   },
   {
+    founded: 2021,
+    hasFreePlan: false,
+    key: 'leafs',
+    languages: ['Deutsch', 'English'],
+    name: 'Leafs',
+    origin: 'Switzerland',
+    slogan: 'Sustainability insights for wealth managers'
+  },
+  {
     founded: 2018,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
