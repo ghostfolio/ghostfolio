@@ -251,6 +251,17 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Personal finances, simplified'
   },
   {
+    founded: 2021,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'firekit',
+    languages: ['English', 'українська мова'],
+    name: 'FIREkit',
+    origin: 'Ukraine',
+    pricingPerYear: '$40',
+    slogan: 'A simple solution to track your wealth online'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'folishare',
