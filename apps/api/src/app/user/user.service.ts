@@ -4,6 +4,7 @@ import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AllocationClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/allocation-cluster-risk/emerging-markets';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
@@ -215,6 +216,10 @@ export class UserService {
         undefined,
         {}
       ).getSettings(user.Settings.settings),
+      AllocationClusterRiskEmergingMarkets:
+        new AllocationClusterRiskEmergingMarkets(undefined, 0, 0).getSettings(
+          user.Settings.settings
+        ),
       CurrencyClusterRiskBaseCurrencyCurrentInvestment:
         new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
           undefined,
