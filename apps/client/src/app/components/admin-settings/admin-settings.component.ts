@@ -3,6 +3,7 @@ import { User } from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit
@@ -27,6 +28,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
   private user: User;
 
   public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
     private deviceService: DeviceDetectorService,
     private matDialog: MatDialog,
     private userService: UserService
@@ -44,6 +46,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           this.pricingUrl =
             `https://ghostfol.io/${this.user.settings.language}/` +
             $localize`:snake-case:pricing`;
+
+          this.changeDetectorRef.markForCheck();
         }
       });
   }
