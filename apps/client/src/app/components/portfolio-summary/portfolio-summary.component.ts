@@ -34,7 +34,7 @@ export class PortfolioSummaryComponent implements OnChanges{
   );
   public timeInMarket: string;
 
-  public constructor() {}
+
 
   public ngOnChanges() {
     if (this.summary) {

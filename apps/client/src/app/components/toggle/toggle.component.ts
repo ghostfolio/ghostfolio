@@ -33,7 +33,7 @@ export class ToggleComponent implements OnChanges{
 
   public optionFormControl = new FormControl<string>(undefined);
 
-  public constructor() {}
+
 
   public ngOnChanges() {
     this.optionFormControl.setValue(this.defaultValue);

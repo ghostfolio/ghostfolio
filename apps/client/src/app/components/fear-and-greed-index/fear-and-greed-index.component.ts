@@ -20,7 +20,7 @@ export class FearAndGreedIndexComponent implements OnChanges{
   public fearAndGreedIndexEmoji: string;
   public fearAndGreedIndexText: string;
 
-  public constructor() {}
+
 
   public ngOnChanges() {
     const { emoji, key } = resolveFearAndGreedIndex(this.fearAndGreedIndex);
