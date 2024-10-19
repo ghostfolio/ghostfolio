@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the logotype to the footer
 
+### Fixed
+
+- Fixed an issue in the carousel component for the testimonial section on the landing page
+
 ## 2.116.0 - 2024-10-17
 
 ### Added
