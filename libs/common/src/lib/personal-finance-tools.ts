@@ -115,6 +115,7 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2022,
+    isArchived: true,
     key: 'capmon',
     name: 'CapMon.org',
     origin: 'Germany',
@@ -303,6 +304,7 @@ export const personalFinanceTools: Product[] = [
   {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'intuit-mint',
     name: 'Intuit Mint',
     note: 'Intuit Mint was discontinued in 2023',
@@ -413,6 +415,7 @@ export const personalFinanceTools: Product[] = [
   {
     founded: 1991,
     hasSelfHostingAbility: true,
+    isArchived: true,
     key: 'microsoft-money',
     name: 'Microsoft Money',
     note: 'Microsoft Money was discontinued in 2010',
@@ -520,6 +523,7 @@ export const personalFinanceTools: Product[] = [
   },
   {
     hasFreePlan: true,
+    isArchived: true,
     key: 'portfoloo',
     name: 'Portfoloo',
     note: 'Portfoloo was discontinued',
@@ -558,6 +562,7 @@ export const personalFinanceTools: Product[] = [
   {
     founded: 2019,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'sarmaaya.pk',
     name: 'Sarmaaya.pk Portfolio Tracking',
     note: 'Sarmaaya.pk Portfolio Tracking was discontinued in 2024',
@@ -594,6 +599,7 @@ export const personalFinanceTools: Product[] = [
   },
   {
     hasFreePlan: true,
+    isArchived: true,
     key: 'sharesmaster',
     name: 'SharesMaster',
     note: 'SharesMaster was discontinued',
@@ -634,6 +640,7 @@ export const personalFinanceTools: Product[] = [
   },
   {
     founded: 2008,
+    isArchived: true,
     key: 'stockmarketeye',
     name: 'StockMarketEye',
     origin: 'France',
@@ -746,6 +753,7 @@ export const personalFinanceTools: Product[] = [
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
+    isArchived: true,
     key: 'yeekatee',
     languages: ['Deutsch', 'English', 'Español', 'Français', 'Italiano'],
     name: 'yeekatee',
