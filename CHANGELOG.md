@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the logotype to the footer
+- Added the data providers management to the admin control panel
 
 ### Changed
 

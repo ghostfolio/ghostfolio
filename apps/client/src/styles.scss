@@ -377,6 +377,10 @@ ngx-skeleton-loader {
   @include gf-table;
 }
 
+.gf-text-wrap-balance {
+  text-wrap: balance;
+}
+
 .has-fab {
   padding-bottom: 3rem !important;
 }

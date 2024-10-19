@@ -1,0 +1,42 @@
+<gf-dialog-header
+  mat-dialog-title
+  position="center"
+  title="Ghostfolio Premium Data Provider"
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onCancel()"
+/>
+
+<div class="text-center" mat-dialog-content>
+  <p class="gf-text-wrap-balance mb-1">
+    The official
+    <a
+      class="align-items-center d-inline-flex"
+      target="_blank"
+      [href]="data.pricingUrl"
+      >Ghostfolio Premium
+      <gf-premium-indicator class="d-inline-block ml-1" [enableLink]="false" />
+    </a>
+    data provider <strong>for self-hosters</strong>, offering
+    <strong>100’000+ tickers</strong> from over <strong>50 exchanges</strong>,
+    is coming soon!
+  </p>
+  <p i18n>
+    Want to stay updated? Click below to get notified as soon as it’s available.
+  </p>
+  <div>
+    <a
+      color="primary"
+      href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello%0D%0DPlease notify me as soon as the Ghostfolio Premium Data Provider is available.%0D%0DKind regards"
+      i18n
+      mat-flat-button
+    >
+      Notify me
+    </a>
+  </div>
+</div>
+
+<gf-dialog-footer
+  mat-dialog-actions
+  [deviceType]="data.deviceType"
+  (closeButtonClicked)="onCancel()"
+/>
