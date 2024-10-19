@@ -17,8 +17,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -34,7 +33,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./user-account-settings.scss'],
   templateUrl: './user-account-settings.html'
 })
-export class UserAccountSettingsComponent implements OnDestroy, OnInit {
+export class UserAccountSettingsComponent implements OnDestroy{
   public appearancePlaceholder = $localize`Auto`;
   public baseCurrency: string;
   public currencies: string[] = [];

@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
 
@@ -14,7 +13,7 @@ import {
   templateUrl: './dialog-header.component.html',
   styleUrls: ['./dialog-header.component.scss']
 })
-export class DialogHeaderComponent implements OnInit {
+export class DialogHeaderComponent {
   @Input() deviceType: string;
   @Input() position: 'center' | 'left' = 'left';
   @Input() title: string;
@@ -23,7 +22,6 @@ export class DialogHeaderComponent implements OnInit {
 
   public constructor() {}
 
-  public ngOnInit() {}
 
   public onClickCloseButton() {
     this.closeButtonClicked.emit();

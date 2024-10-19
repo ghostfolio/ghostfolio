@@ -8,7 +8,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-summary.scss'],
   templateUrl: './home-summary.html'
 })
-export class HomeSummaryComponent implements OnDestroy, OnInit {
+export class HomeSummaryComponent implements OnDestroy{
   public hasImpersonationId: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;

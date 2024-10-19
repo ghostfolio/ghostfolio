@@ -16,7 +16,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Account, AssetClass, DataSource, Platform } from '@prisma/client';
@@ -30,7 +30,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
-export class AllocationsPageComponent implements OnDestroy, OnInit {
+export class AllocationsPageComponent implements OnDestroy{
   public accounts: {
     [id: string]: Pick<Account, 'name'> & {
       id: string;

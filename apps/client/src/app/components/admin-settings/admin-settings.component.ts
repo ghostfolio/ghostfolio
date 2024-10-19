@@ -5,8 +5,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -20,7 +19,7 @@ import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-
   styleUrls: ['./admin-settings.component.scss'],
   templateUrl: './admin-settings.component.html'
 })
-export class AdminSettingsComponent implements OnDestroy, OnInit {
+export class AdminSettingsComponent implements OnDestroy{
   public pricingUrl: string;
 
   private deviceType: string;

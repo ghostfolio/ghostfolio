@@ -14,8 +14,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -29,7 +28,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./admin-jobs.scss'],
   templateUrl: './admin-jobs.html'
 })
-export class AdminJobsComponent implements OnDestroy, OnInit {
+export class AdminJobsComponent implements OnDestroy{
   public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;
   public DATA_GATHERING_QUEUE_PRIORITY_HIGH =
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;

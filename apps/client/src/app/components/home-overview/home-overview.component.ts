@@ -12,7 +12,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -22,7 +22,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-overview.scss'],
   templateUrl: './home-overview.html'
 })
-export class HomeOverviewComponent implements OnDestroy, OnInit {
+export class HomeOverviewComponent implements OnDestroy{
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
   public deviceType: string;
   public errors: AssetProfileIdentifier[];

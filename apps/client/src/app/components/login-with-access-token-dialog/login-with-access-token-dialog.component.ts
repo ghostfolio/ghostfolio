@@ -28,7 +28,6 @@ export class LoginWithAccessTokenDialog {
     private tokenStorageService: TokenStorageService
   ) {}
 
-  ngOnInit() {}
 
   public onChangeStaySignedIn(aValue: MatCheckboxChange) {
     this.settingsStorageService.setSetting(

@@ -30,7 +30,6 @@ import {
   ElementRef,
   Inject,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -85,7 +84,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./holding-detail-dialog.component.scss'],
   templateUrl: 'holding-detail-dialog.html'
 })
-export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
+export class GfHoldingDetailDialogComponent implements OnDestroy{
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   public activityForm: FormGroup;

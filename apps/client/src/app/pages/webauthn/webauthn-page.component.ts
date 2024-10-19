@@ -2,7 +2,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
 })
-export class GfWebauthnPageComponent implements OnDestroy, OnInit {
+export class GfWebauthnPageComponent implements OnDestroy{
   public hasError = false;
 
   private unsubscribeSubject = new Subject<void>();

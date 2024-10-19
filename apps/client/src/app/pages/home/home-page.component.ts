@@ -2,7 +2,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -13,7 +13,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-page.scss'],
   templateUrl: './home-page.html'
 })
-export class HomePageComponent implements OnDestroy, OnInit {
+export class HomePageComponent implements OnDestroy{
   public deviceType: string;
   public hasImpersonationId: boolean;
   public tabs: TabConfiguration[] = [];

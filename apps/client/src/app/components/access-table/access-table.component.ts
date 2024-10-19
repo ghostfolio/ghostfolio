@@ -10,7 +10,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,7 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './access-table.component.html',
   styleUrls: ['./access-table.component.scss']
 })
-export class AccessTableComponent implements OnChanges, OnInit {
+export class AccessTableComponent implements OnChanges {
   @Input() accesses: Access[];
   @Input() showActions: boolean;
   @Input() user: User;
@@ -37,7 +36,6 @@ export class AccessTableComponent implements OnChanges, OnInit {
     private notificationService: NotificationService
   ) {}
 
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['alias', 'grantee', 'type', 'details'];

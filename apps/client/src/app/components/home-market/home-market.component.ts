@@ -10,7 +10,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,7 +20,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-market.scss'],
   templateUrl: './home-market.html'
 })
-export class HomeMarketComponent implements OnDestroy, OnInit {
+export class HomeMarketComponent implements OnDestroy{
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;

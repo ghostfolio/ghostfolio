@@ -13,7 +13,7 @@ import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.in
 import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { SymbolProfile } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
@@ -26,7 +26,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./analysis-page.scss'],
   templateUrl: './analysis-page.html'
 })
-export class AnalysisPageComponent implements OnDestroy, OnInit {
+export class AnalysisPageComponent implements OnDestroy{
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];

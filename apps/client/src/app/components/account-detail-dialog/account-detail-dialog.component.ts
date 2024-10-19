@@ -17,8 +17,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Sort, SortDirection } from '@angular/material/sort';
@@ -39,7 +38,7 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'account-detail-dialog.html',
   styleUrls: ['./account-detail-dialog.component.scss']
 })
-export class AccountDetailDialog implements OnDestroy, OnInit {
+export class AccountDetailDialog implements OnDestroy{
   public accountBalances: AccountBalancesResponse['balances'];
   public activities: OrderWithAccount[];
   public balance: number;

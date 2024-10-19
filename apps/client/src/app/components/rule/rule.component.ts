@@ -8,7 +8,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +23,7 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
   templateUrl: './rule.component.html',
   styleUrls: ['./rule.component.scss']
 })
-export class RuleComponent implements OnInit {
+export class RuleComponent {
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
   @Input() rule: PortfolioReportRule;

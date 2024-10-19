@@ -15,8 +15,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy,
-  OnInit
+  OnDestroy
 } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
@@ -45,7 +44,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   styleUrls: ['./benchmark-detail-dialog.component.scss'],
   templateUrl: 'benchmark-detail-dialog.html'
 })
-export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
+export class GfBenchmarkDetailDialogComponent implements OnDestroy{
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
 

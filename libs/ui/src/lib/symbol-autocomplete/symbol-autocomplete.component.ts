@@ -13,7 +13,6 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -75,7 +74,7 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnInit, OnDestroy
+  implements  OnDestroy
 {
   @Input() private includeIndices = false;
   @Input() public isLoading = false;

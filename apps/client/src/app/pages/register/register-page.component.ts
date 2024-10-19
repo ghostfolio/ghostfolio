@@ -4,7 +4,7 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { InfoItem, LineChartItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Role } from '@prisma/client';
@@ -20,7 +20,7 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-to
   styleUrls: ['./register-page.scss'],
   templateUrl: './register-page.html'
 })
-export class RegisterPageComponent implements OnDestroy, OnInit {
+export class RegisterPageComponent implements OnDestroy{
   public demoAuthToken: string;
   public deviceType: string;
   public hasPermissionForSocialLogin: boolean;

@@ -10,7 +10,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
@@ -27,7 +27,7 @@ import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialo
   styleUrls: ['./accounts-page.scss'],
   templateUrl: './accounts-page.html'
 })
-export class AccountsPageComponent implements OnDestroy, OnInit {
+export class AccountsPageComponent implements OnDestroy{
   public accounts: AccountModel[];
   public deviceType: string;
   public hasImpersonationId: boolean;

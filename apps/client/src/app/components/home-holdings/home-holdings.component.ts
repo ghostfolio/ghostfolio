@@ -13,7 +13,7 @@ import {
   ToggleOption
 } from '@ghostfolio/common/types';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -25,7 +25,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./home-holdings.scss'],
   templateUrl: './home-holdings.html'
 })
-export class HomeHoldingsComponent implements OnDestroy, OnInit {
+export class HomeHoldingsComponent implements OnDestroy{
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';
 
   public deviceType: string;
