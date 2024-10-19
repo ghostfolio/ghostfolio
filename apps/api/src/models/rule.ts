@@ -1,7 +1,11 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { groupBy } from '@ghostfolio/common/helper';
-import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioPosition,
+  PortfolioReportRule,
+  UserSettings
+} from '@ghostfolio/common/interfaces';
 
 import { Big } from 'big.js';
 
@@ -64,6 +68,10 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   }
 
   public abstract evaluate(aRuleSettings: T): EvaluationResult;
+
+  public abstract getConfiguration(): Partial<
+    PortfolioReportRule['configuration']
+  >;
 
   public abstract getSettings(aUserSettings: UserSettings): T;
 }
