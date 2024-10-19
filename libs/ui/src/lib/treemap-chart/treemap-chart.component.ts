@@ -57,8 +57,6 @@ export class GfTreemapChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public static readonly HEAT_MULTIPLIER = 5;
-
   public chart: Chart<'treemap'>;
   public isLoading = true;
 
@@ -87,6 +85,44 @@ export class GfTreemapChartComponent
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
 
+    const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
+      ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {
+        return getAnnualizedPerformancePercent({
+          daysInMarket: differenceInDays(
+            endDate,
+            max([dateOfFirstActivity ?? new Date(0), startDate])
+          ),
+          netPerformancePercentage: new Big(
+            netPerformancePercentWithCurrencyEffect
+          )
+        }).toNumber();
+      }
+    );
+
+    const positiveNetPerformancePercents =
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent > 0;
+        }
+      );
+
+    const positiveNetPerformancePercentsRange = {
+      max: Math.max(...positiveNetPerformancePercents),
+      min: Math.min(...positiveNetPerformancePercents)
+    };
+
+    const negativeNetPerformancePercents =
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent < 0;
+        }
+      );
+
+    const negativeNetPerformancePercentsRange = {
+      max: Math.max(...negativeNetPerformancePercents),
+      min: Math.min(...negativeNetPerformancePercents)
+    };
+
     const data: ChartConfiguration['data'] = {
       datasets: [
         {
@@ -112,46 +148,58 @@ export class GfTreemapChartComponent
               ) / 100;
 
             if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[9];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[7];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return green[5];
-            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
-              return green[3];
-            } else if (
               Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
             ) {
               annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
                 annualizedNetPerformancePercentWithCurrencyEffect
               );
               return gray[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.01 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[3];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.02 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[5];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect >
-              -0.03 * GfTreemapChartComponent.HEAT_MULTIPLIER
-            ) {
-              return red[7];
+            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
+              const range =
+                positiveNetPerformancePercentsRange.max -
+                positiveNetPerformancePercentsRange.min;
+
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPerformancePercentsRange.max - range * 0.25
+              ) {
+                return green[9];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPerformancePercentsRange.max - range * 0.5
+              ) {
+                return green[7];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect >=
+                positiveNetPerformancePercentsRange.max - range * 0.75
+              ) {
+                return green[5];
+              }
+
+              return green[3];
             } else {
-              return red[9];
+              const range =
+                negativeNetPerformancePercentsRange.min -
+                negativeNetPerformancePercentsRange.max;
+
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.25
+              ) {
+                return red[9];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.5
+              ) {
+                return red[7];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.75
+              ) {
+                return red[5];
+              }
+
+              return red[3];
             }
           },
           borderRadius: 4,
