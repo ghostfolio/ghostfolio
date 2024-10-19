@@ -57,8 +57,6 @@ export class GfTreemapChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public static readonly HEAT_MULTIPLIER = 5;
-
   public chart: Chart<'treemap'>;
   public isLoading = true;
 
@@ -86,6 +84,7 @@ export class GfTreemapChartComponent
     this.isLoading = true;
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
+
     const netPerformancePercentsWithCurrencyEffect = this.holdings.map(
       ({ dateOfFirstActivity, netPerformancePercentWithCurrencyEffect }) => {
         return getAnnualizedPerformancePercent({
@@ -101,18 +100,24 @@ export class GfTreemapChartComponent
     );
 
     const positiveNetPerformancePercents =
-      netPerformancePercentsWithCurrencyEffect.filter((v) => {
-        return v > 0;
-      });
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent > 0;
+        }
+      );
+
     const positiveNetPerformancePercentsRange = {
       max: Math.max(...positiveNetPerformancePercents),
       min: Math.min(...positiveNetPerformancePercents)
     };
 
     const negativeNetPerformancePercents =
-      netPerformancePercentsWithCurrencyEffect.filter((v) => {
-        return v < 0;
-      });
+      netPerformancePercentsWithCurrencyEffect.filter(
+        (annualizedNetPerformancePercent) => {
+          return annualizedNetPerformancePercent < 0;
+        }
+      );
+
     const negativeNetPerformancePercentsRange = {
       max: Math.max(...negativeNetPerformancePercents),
       min: Math.min(...negativeNetPerformancePercents)
@@ -172,30 +177,30 @@ export class GfTreemapChartComponent
               }
 
               return green[3];
+            } else {
+              const range =
+                negativeNetPerformancePercentsRange.min -
+                negativeNetPerformancePercentsRange.max;
+
+              if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.25
+              ) {
+                return red[9];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.5
+              ) {
+                return red[7];
+              } else if (
+                annualizedNetPerformancePercentWithCurrencyEffect <=
+                negativeNetPerformancePercentsRange.min + range * 0.75
+              ) {
+                return red[5];
+              }
+
+              return red[3];
             }
-
-            const range =
-              negativeNetPerformancePercentsRange.min -
-              negativeNetPerformancePercentsRange.max;
-
-            if (
-              annualizedNetPerformancePercentWithCurrencyEffect <=
-              negativeNetPerformancePercentsRange.min + range * 0.25
-            ) {
-              return red[9];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect <=
-              negativeNetPerformancePercentsRange.min + range * 0.5
-            ) {
-              return red[7];
-            } else if (
-              annualizedNetPerformancePercentWithCurrencyEffect <=
-              negativeNetPerformancePercentsRange.min + range * 0.75
-            ) {
-              return red[5];
-            }
-
-            return red[3];
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
