@@ -36,6 +36,6 @@ export class CreateAccountDto {
   name: string;
 
   @IsString()
-  @ValidateIf((_object, value) => value !== null)
+  @ValidateIf((object, value) => value !== null)
   platformId: string | null;
 }

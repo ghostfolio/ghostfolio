@@ -21,7 +21,7 @@ export class TransformDataSourceInResponseInterceptor<T>
   ) {}
 
   public intercept(
-    _context: ExecutionContext,
+    context: ExecutionContext,
     next: CallHandler<T>
   ): Observable<any> {
     return next.handle().pipe(

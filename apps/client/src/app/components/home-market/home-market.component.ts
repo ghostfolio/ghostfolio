@@ -29,6 +29,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalDataItems: HistoricalDataItem[];
   public info: InfoItem;
+  public isLoading = true;
   public readonly numberOfDays = 365;
   public user: User;
 
@@ -42,6 +43,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.info = this.dataService.fetchInfo();
+    this.isLoading = true;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -87,6 +89,7 @@ export class HomeMarketComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ benchmarks }) => {
         this.benchmarks = benchmarks;
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });

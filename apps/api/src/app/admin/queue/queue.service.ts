@@ -1,6 +1,6 @@
 import {
   DATA_GATHERING_QUEUE,
-  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
+  PORTFOLIO_SNAPSHOT_QUEUE,
   QUEUE_JOB_STATUS_LIST
 } from '@ghostfolio/common/config';
 import { AdminJobs } from '@ghostfolio/common/interfaces';
@@ -14,7 +14,7 @@ export class QueueService {
   public constructor(
     @InjectQueue(DATA_GATHERING_QUEUE)
     private readonly dataGatheringQueue: Queue,
-    @InjectQueue(PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE)
+    @InjectQueue(PORTFOLIO_SNAPSHOT_QUEUE)
     private readonly portfolioSnapshotQueue: Queue
   ) {}
 

@@ -24,10 +24,13 @@ export class RulesService {
         return {
           evaluation,
           value,
-          configuration: rule.getConfiguration(),
           isActive: true,
           key: rule.getKey(),
-          name: rule.getName()
+          name: rule.getName(),
+          settings: <PortfolioReportRule['settings']>{
+            thresholdMax: settings['thresholdMax'],
+            thresholdMin: settings['thresholdMin']
+          }
         };
       } else {
         return {

@@ -76,7 +76,7 @@ export class GoogleSheetsService implements DataProviderInterface {
       } = {};
 
       rows
-        .filter((_row, index) => {
+        .filter((row, index) => {
           return index >= 1;
         })
         .forEach((row) => {

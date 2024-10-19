@@ -49,7 +49,6 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() user: User;
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];
-  public isLoading = true;
   public resolveMarketCondition = resolveMarketCondition;
   public translate = translate;
 
@@ -77,10 +76,6 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
-    if (this.benchmarks) {
-      this.isLoading = false;
-    }
-
     if (this.user?.settings?.isExperimentalFeatures) {
       this.displayedColumns = [
         'name',

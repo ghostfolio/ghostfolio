@@ -32,14 +32,10 @@ export class EmergencyFundSetup extends Rule<Settings> {
     };
   }
 
-  public getConfiguration() {
-    return undefined;
-  }
-
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()].isActive ?? true
+      isActive: xRayRules[this.getKey()].isActive
     };
   }
 }

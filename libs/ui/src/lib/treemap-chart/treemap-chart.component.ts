@@ -87,11 +87,11 @@ export class GfTreemapChartComponent
 
     const { endDate, startDate } = getIntervalFromDateRange(this.dateRange);
 
-    const data: ChartConfiguration['data'] = {
+    const data: ChartConfiguration['data'] = <any>{
       datasets: [
         {
           backgroundColor(ctx) {
-            let annualizedNetPerformancePercentWithCurrencyEffect =
+            const annualizedNetPerformancePercentWithCurrencyEffect =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
@@ -104,12 +104,6 @@ export class GfTreemapChartComponent
                   ctx.raw._data.netPerformancePercentWithCurrencyEffect
                 )
               }).toNumber();
-
-            // Round to 2 decimal places
-            annualizedNetPerformancePercentWithCurrencyEffect =
-              Math.round(
-                annualizedNetPerformancePercentWithCurrencyEffect * 100
-              ) / 100;
 
             if (
               annualizedNetPerformancePercentWithCurrencyEffect >
@@ -129,11 +123,8 @@ export class GfTreemapChartComponent
             } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
               return green[3];
             } else if (
-              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
+              annualizedNetPerformancePercentWithCurrencyEffect === 0
             ) {
-              annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
-                annualizedNetPerformancePercentWithCurrencyEffect
-              );
               return gray[3];
             } else if (
               annualizedNetPerformancePercentWithCurrencyEffect >
@@ -160,35 +151,36 @@ export class GfTreemapChartComponent
             align: 'left',
             color: ['white'],
             display: true,
-            font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
+            font: [{ size: 14 }, { size: 11 }, { lineHeight: 2, size: 14 }],
             formatter(ctx) {
               const netPerformancePercentWithCurrencyEffect =
                 ctx.raw._data.netPerformancePercentWithCurrencyEffect;
 
               return [
+                ctx.raw._data.name,
                 ctx.raw._data.symbol,
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
-            hoverColor: 'white',
             position: 'top'
           },
           spacing: 1,
           tree: this.holdings
         }
       ]
-    } as any;
+    };
 
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip =
-          this.getTooltipPluginConfiguration() as unknown;
+        this.chart.options.plugins.tooltip = <unknown>(
+          this.getTooltipPluginConfiguration()
+        );
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
-          options: {
+          options: <unknown>{
             animation: false,
             onClick: (event, activeElements) => {
               try {
@@ -217,7 +209,7 @@ export class GfTreemapChartComponent
             plugins: {
               tooltip: this.getTooltipPluginConfiguration()
             }
-          } as unknown,
+          },
           type: 'treemap'
         });
       }
@@ -239,7 +231,7 @@ export class GfTreemapChartComponent
           const symbol = context.raw._data.symbol;
 
           if (context.raw._data.valueInBaseCurrency !== null) {
-            const value = context.raw._data.valueInBaseCurrency as number;
+            const value = <number>context.raw._data.valueInBaseCurrency;
 
             return [
               `${name ?? symbol}`,
@@ -250,7 +242,7 @@ export class GfTreemapChartComponent
             ];
           } else {
             const percentage =
-              (context.raw._data.allocationInPercentage as number) * 100;
+              <number>context.raw._data.allocationInPercentage * 100;
 
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           }

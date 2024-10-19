@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
 import {
@@ -23,6 +24,7 @@ import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-ifa
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
   public constructor(
+    private readonly configurationService: ConfigurationService,
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
 

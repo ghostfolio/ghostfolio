@@ -76,23 +76,11 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     };
   }
 
-  public getConfiguration() {
-    return {
-      threshold: {
-        max: 1,
-        min: 0,
-        step: 0.01,
-        unit: '%'
-      },
-      thresholdMax: true
-    };
-  }
-
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
     return {
       baseCurrency,
-      isActive: xRayRules?.[this.getKey()].isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.5
+      isActive: xRayRules[this.getKey()].isActive,
+      thresholdMax: xRayRules[this.getKey()]?.thresholdMax ?? 0.5
     };
   }
 }

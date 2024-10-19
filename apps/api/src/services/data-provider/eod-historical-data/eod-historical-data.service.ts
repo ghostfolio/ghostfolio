@@ -163,10 +163,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       return response.reduce(
-        (result, { adjusted_close, date }) => {
-          if (isNumber(adjusted_close)) {
+        (result, { close, date }) => {
+          if (isNumber(close)) {
             result[this.convertFromEodSymbol(symbol)][date] = {
-              marketPrice: adjusted_close
+              marketPrice: close
             };
           } else {
             Logger.error(

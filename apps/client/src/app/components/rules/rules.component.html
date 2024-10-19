@@ -12,7 +12,6 @@
               hasPermissionToUpdateUserSettings
             "
             [rule]="rule"
-            [settings]="settings?.[rule.key]"
             (ruleUpdated)="onRuleUpdated($event)"
           />
         }

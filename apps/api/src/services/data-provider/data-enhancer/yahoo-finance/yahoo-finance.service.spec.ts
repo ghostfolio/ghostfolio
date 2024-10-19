@@ -1,3 +1,4 @@
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 
 import { YahooFinanceDataEnhancerService } from './yahoo-finance.service';
@@ -25,13 +26,16 @@ jest.mock(
 );
 
 describe('YahooFinanceDataEnhancerService', () => {
+  let configurationService: ConfigurationService;
   let cryptocurrencyService: CryptocurrencyService;
   let yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService;
 
   beforeAll(async () => {
+    configurationService = new ConfigurationService();
     cryptocurrencyService = new CryptocurrencyService();
 
     yahooFinanceDataEnhancerService = new YahooFinanceDataEnhancerService(
+      configurationService,
       cryptocurrencyService
     );
   });
