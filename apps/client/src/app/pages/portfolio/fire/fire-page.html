@@ -132,6 +132,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="emergencyFundRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -150,6 +151,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="currencyClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -168,6 +170,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="accountClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -186,6 +189,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="feeRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -200,6 +204,7 @@
             "
             [isLoading]="isLoadingPortfolioReport"
             [rules]="inactiveRules"
+            [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"
           />
         </div>

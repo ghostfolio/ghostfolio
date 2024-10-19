@@ -122,3 +122,18 @@
     "
   ></tr>
 </table>
+
+@if (isLoading) {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+} @else if (benchmarks?.length === 0) {
+  <div class="p-3 text-center text-muted">
+    <small i18n>No data available</small>
+  </div>
+}
