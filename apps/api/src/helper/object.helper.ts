@@ -1,35 +1,5 @@
 import { Big } from 'big.js';
-import { cloneDeep, isArray, isObject } from 'lodash';
-
-export function hasNotDefinedValuesInObject(aObject: Object): boolean {
-  for (const key in aObject) {
-    if (aObject[key] === null || aObject[key] === undefined) {
-      return true;
-    } else if (isObject(aObject[key])) {
-      return hasNotDefinedValuesInObject(aObject[key]);
-    }
-  }
-
-  return false;
-}
-
-export function nullifyValuesInObject<T>(aObject: T, keys: string[]): T {
-  const object = cloneDeep(aObject);
-
-  if (object) {
-    keys.forEach((key) => {
-      object[key] = null;
-    });
-  }
-
-  return object;
-}
-
-export function nullifyValuesInObjects<T>(aObjects: T[], keys: string[]): T[] {
-  return aObjects.map((object) => {
-    return nullifyValuesInObject(object, keys);
-  });
-}
+import { isArray, isObject } from 'lodash';
 
 export function redactAttributes({
   isFirstRun = true,
@@ -44,42 +14,38 @@ export function redactAttributes({
     return object;
   }
 
-  // Create deep clone
-  const redactedObject = isFirstRun
-    ? JSON.parse(JSON.stringify(object))
-    : object;
+  const redactedObject = isFirstRun ? { ...object } : object;
 
   for (const option of options) {
-    if (redactedObject.hasOwnProperty(option.attribute)) {
-      if (option.valueMap['*'] || option.valueMap['*'] === null) {
-        redactedObject[option.attribute] = option.valueMap['*'];
-      } else if (option.valueMap[redactedObject[option.attribute]]) {
-        redactedObject[option.attribute] =
-          option.valueMap[redactedObject[option.attribute]];
+    const { attribute, valueMap } = option;
+
+    // Directly check and redact attributes
+    // Directly check and redact attributes
+    if (redactedObject.hasOwnProperty(attribute)) {
+      const value = redactedObject[attribute];
+      // Apply specific value or wildcard ('*')
+      if (valueMap.hasOwnProperty(value)) {
+        redactedObject[attribute] = valueMap[value];
+      } else if (valueMap.hasOwnProperty('*')) {
+        redactedObject[attribute] = valueMap['*'];
       }
     } else {
-      // If the attribute is not present on the current object,
-      // check if it exists on any nested objects
-      for (const property in redactedObject) {
-        if (isArray(redactedObject[property])) {
-          redactedObject[property] = redactedObject[property].map(
-            (currentObject) => {
-              return redactAttributes({
-                options,
-                isFirstRun: false,
-                object: currentObject
-              });
-            }
+      // Iterate over nested objects or arrays
+      for (const key in redactedObject) {
+        const prop = redactedObject[key];
+        if (isArray(prop)) {
+          redactedObject[key] = prop.map((item) =>
+            redactAttributes({
+              object: item,
+              options,
+              isFirstRun: false
+            })
           );
-        } else if (
-          isObject(redactedObject[property]) &&
-          !(redactedObject[property] instanceof Big)
-        ) {
-          // Recursively call the function on the nested object
-          redactedObject[property] = redactAttributes({
+        } else if (isObject(prop) && !(prop instanceof Big)) {
+          redactedObject[key] = redactAttributes({
+            object: prop,
             options,
-            isFirstRun: false,
-            object: redactedObject[property]
+            isFirstRun: false
           });
         }
       }
