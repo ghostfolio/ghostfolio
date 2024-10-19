@@ -138,6 +138,11 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting(event)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.initializePortfolioReport();
       });
   }

@@ -11,7 +11,7 @@
       "unitPrice": 85.73,
       "currency": "CHF",
       "dataSource": "YAHOO",
-      "date": "2022-04-07T22:00:00.000Z",
+      "date": "2022-04-08T00:00:00.000Z",
       "symbol": "NOVN.SW"
     },
     {
@@ -21,7 +21,7 @@
       "unitPrice": 75.8,
       "currency": "CHF",
       "dataSource": "YAHOO",
-      "date": "2022-03-06T23:00:00.000Z",
+      "date": "2022-03-07T00:00:00.000Z",
       "symbol": "NOVN.SW"
     }
   ]
