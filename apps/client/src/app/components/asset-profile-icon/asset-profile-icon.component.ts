@@ -26,8 +26,6 @@ export class GfAssetProfileIconComponent implements OnChanges {
 
   public src: string;
 
-  public constructor() {}
-
   public ngOnChanges() {
     if (this.dataSource && this.symbol) {
       this.src = `../api/v1/logo/${this.dataSource}/${this.symbol}`;

@@ -13,7 +13,6 @@ export class GfI18nPageComponent {
 
   public constructor() {}
 
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

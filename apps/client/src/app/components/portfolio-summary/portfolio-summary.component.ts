@@ -36,7 +36,6 @@ export class PortfolioSummaryComponent implements OnChanges{
 
   public constructor() {}
 
-
   public ngOnChanges() {
     if (this.summary) {
       if (this.summary.firstOrderDate) {

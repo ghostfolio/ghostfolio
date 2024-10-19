@@ -12,7 +12,6 @@ export class SelfHostingPageComponent implements OnDestroy {
 
   public constructor() {}
 
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

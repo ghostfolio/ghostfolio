@@ -20,7 +20,6 @@ export class DialogFooterComponent {
 
   public constructor() {}
 
-
   public onClickCloseButton() {
     this.closeButtonClicked.emit();
   }

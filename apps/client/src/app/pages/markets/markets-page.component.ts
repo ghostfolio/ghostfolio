@@ -12,7 +12,6 @@ export class MarketsPageComponent implements OnDestroy{
 
   public constructor() {}
 
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

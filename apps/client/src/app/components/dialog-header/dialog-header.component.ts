@@ -22,7 +22,6 @@ export class DialogHeaderComponent {
 
   public constructor() {}
 
-
   public onClickCloseButton() {
     this.closeButtonClicked.emit();
   }

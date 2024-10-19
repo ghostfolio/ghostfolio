@@ -24,6 +24,4 @@ export class GfTrendIndicatorComponent {
   @Input() marketState: MarketState = 'open';
   @Input() size: 'large' | 'medium' | 'small' = 'small';
   @Input() value = 0;
-
-  public constructor() {}
 }
