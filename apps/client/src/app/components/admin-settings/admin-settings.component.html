@@ -1,4 +1,37 @@
 <div class="container">
+  <div class="d-md-block d-none mb-5 row">
+    <div class="col">
+      <h2 class="text-center" i18n>Data Providers</h2>
+      <mat-card appearance="outlined">
+        <mat-card-content>
+          <div class="align-items-center d-flex my-3">
+            <div class="w-50">
+              <a
+                class="align-items-center d-inline-flex"
+                target="_blank"
+                [href]="pricingUrl"
+                >Ghostfolio Premium
+                <gf-premium-indicator
+                  class="d-inline-block ml-1"
+                  [enableLink]="false"
+                />
+              </a>
+            </div>
+            <div class="w-50">
+              <button
+                color="accent"
+                mat-flat-button
+                (click)="onSetGhostfolioApiKey()"
+              >
+                <ion-icon class="mr-1" name="key-outline" />
+                <span i18n>Set API Key</span>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
   <div class="mb-5 row">
     <div class="col">
       <h2 class="text-center" i18n>Platforms</h2>

@@ -1,10 +1,17 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { User } from '@ghostfolio/common/interfaces';
+
 import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { Subject, takeUntil } from 'rxjs';
+
+import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,12 +19,46 @@ import { Subject } from 'rxjs';
   styleUrls: ['./admin-settings.component.scss'],
   templateUrl: './admin-settings.component.html'
 })
-export class AdminSettingsComponent implements OnInit, OnDestroy {
+export class AdminSettingsComponent implements OnDestroy, OnInit {
+  public pricingUrl: string;
+
+  private deviceType: string;
   private unsubscribeSubject = new Subject<void>();
+  private user: User;
 
-  public constructor() {}
+  public constructor(
+    private deviceService: DeviceDetectorService,
+    private matDialog: MatDialog,
+    private userService: UserService
+  ) {}
 
-  public ngOnInit() {}
+  public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.pricingUrl =
+            `https://ghostfol.io/${this.user.settings.language}/` +
+            $localize`:snake-case:pricing`;
+        }
+      });
+  }
+
+  public onSetGhostfolioApiKey() {
+    this.matDialog.open(GfGhostfolioPremiumApiDialogComponent, {
+      autoFocus: false,
+      data: {
+        deviceType: this.deviceType,
+        pricingUrl: this.pricingUrl
+      },
+      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+    });
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
