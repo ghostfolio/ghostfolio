@@ -20,6 +20,4 @@ export class GfLogoComponent {
   @HostBinding('class') @Input() size: 'large' | 'medium' = 'medium';
   @Input() label: string;
   @Input() showLabel = true;
-
-  public constructor() {}
 }

@@ -19,8 +19,6 @@ export class DialogFooterComponent implements OnInit {
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public onClickCloseButton() {

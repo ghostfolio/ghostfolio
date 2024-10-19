@@ -15,8 +15,6 @@ import { Subject } from 'rxjs';
 export class AdminSettingsComponent implements OnInit, OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public ngOnDestroy() {

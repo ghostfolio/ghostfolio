@@ -7,8 +7,6 @@ const customCryptocurrencies = require('../../assets/cryptocurrencies/custom.jso
 export class CryptocurrencyService {
   private combinedCryptocurrencies: string[];
 
-  public constructor() {}
-
   public isCryptocurrency(aSymbol = '') {
     const cryptocurrencySymbol = aSymbol.substring(0, aSymbol.length - 3);
     return this.getCryptocurrencies().includes(cryptocurrencySymbol);

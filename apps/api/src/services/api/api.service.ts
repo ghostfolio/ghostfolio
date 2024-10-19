@@ -4,8 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ApiService {
-  public constructor() {}
-
   public buildFiltersFromQueryParams({
     filterByAccounts,
     filterByAssetClasses,

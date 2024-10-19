@@ -21,8 +21,6 @@ export class DialogHeaderComponent implements OnInit {
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public onClickCloseButton() {

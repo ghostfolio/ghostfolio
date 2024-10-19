@@ -10,8 +10,6 @@ import { Subject } from 'rxjs';
 export class MarketsPageComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public ngOnDestroy() {
