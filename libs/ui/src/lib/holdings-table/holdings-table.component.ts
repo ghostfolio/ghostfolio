@@ -76,8 +76,6 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
 

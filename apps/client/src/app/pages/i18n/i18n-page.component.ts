@@ -11,8 +11,6 @@ import { Subject } from 'rxjs';
 export class GfI18nPageComponent implements OnInit {
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public ngOnDestroy() {

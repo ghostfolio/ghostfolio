@@ -19,6 +19,4 @@ import {
 })
 export class GfDataProviderCreditsComponent {
   @Input() dataProviderInfos: DataProviderInfo[];
-
-  public constructor() {}
 }

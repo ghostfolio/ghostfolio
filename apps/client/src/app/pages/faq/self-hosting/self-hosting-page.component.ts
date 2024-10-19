@@ -10,8 +10,6 @@ import { Subject } from 'rxjs';
 export class SelfHostingPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public ngOnDestroy() {

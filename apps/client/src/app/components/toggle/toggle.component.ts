@@ -34,8 +34,6 @@ export class ToggleComponent implements OnChanges, OnInit {
 
   public optionFormControl = new FormControl<string>(undefined);
 
-  public constructor() {}
-
   public ngOnInit() {}
 
   public ngOnChanges() {
