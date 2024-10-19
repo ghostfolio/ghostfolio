@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
   Output
 } from '@angular/core';
 
@@ -14,12 +13,10 @@ import {
   templateUrl: './dialog-footer.component.html',
   styleUrls: ['./dialog-footer.component.scss']
 })
-export class DialogFooterComponent implements OnInit {
+export class DialogFooterComponent {
   @Input() deviceType: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();
-
-  public ngOnInit() {}
 
   public onClickCloseButton() {
     this.closeButtonClicked.emit();

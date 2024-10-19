@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -8,10 +8,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./i18n-page.scss'],
   templateUrl: './i18n-page.html'
 })
-export class GfI18nPageComponent implements OnInit {
+export class GfI18nPageComponent {
   private unsubscribeSubject = new Subject<void>();
-
-  public ngOnInit() {}
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
