@@ -9,6 +9,7 @@ import {
   ElementRef,
   Input,
   OnDestroy,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -58,7 +59,7 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
 })
 export class GfCurrencySelectorComponent
   extends AbstractMatFormField<string>
-  implements  OnDestroy
+  implements OnInit, OnDestroy
 {
   @Input() private currencies: string[] = [];
   @Input() private formControlName: string;

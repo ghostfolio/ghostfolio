@@ -8,7 +8,7 @@ import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   differenceInSeconds,
@@ -23,7 +23,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./admin-users.scss'],
   templateUrl: './admin-users.html'
 })
-export class AdminUsersComponent implements OnDestroy{
+export class AdminUsersComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<AdminUsers['users'][0]> =
     new MatTableDataSource();
   public defaultDateFormat: string;

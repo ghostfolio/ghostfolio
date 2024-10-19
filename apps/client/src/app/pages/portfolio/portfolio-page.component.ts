@@ -1,7 +1,7 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./portfolio-page.scss'],
   templateUrl: './portfolio-page.html'
 })
-export class PortfolioPageComponent implements OnDestroy{
+export class PortfolioPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
   public user: User;

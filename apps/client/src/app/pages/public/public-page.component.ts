@@ -7,7 +7,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { Market } from '@ghostfolio/common/types';
 
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetClass } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
@@ -22,7 +22,7 @@ import { catchError, takeUntil } from 'rxjs/operators';
   styleUrls: ['./public-page.scss'],
   templateUrl: './public-page.html'
 })
-export class PublicPageComponent {
+export class PublicPageComponent implements OnInit {
   public continents: {
     [code: string]: { name: string; value: number };
   };

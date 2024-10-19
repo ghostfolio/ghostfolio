@@ -8,7 +8,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +26,7 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
   styleUrls: ['./user-account-access.scss'],
   templateUrl: './user-account-access.html'
 })
-export class UserAccountAccessComponent implements OnDestroy{
+export class UserAccountAccessComponent implements OnDestroy, OnInit {
   public accesses: Access[];
   public deviceType: string;
   public hasPermissionToCreateAccess: boolean;

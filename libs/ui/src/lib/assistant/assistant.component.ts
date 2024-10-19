@@ -18,6 +18,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   QueryList,
   ViewChild,
@@ -73,7 +74,7 @@ import {
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
-export class GfAssistantComponent implements OnChanges, OnDestroy{
+export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   @HostListener('document:keydown', ['$event']) onKeydown(
     event: KeyboardEvent
   ) {

@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./resources-page.scss'],
   templateUrl: './resources-page.html'
 })
-export class ResourcesPageComponent {
+export class ResourcesPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public routerLinkFaq = ['/' + $localize`:snake-case:faq`];

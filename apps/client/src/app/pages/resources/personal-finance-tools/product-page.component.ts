@@ -4,7 +4,7 @@ import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools'
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
@@ -16,7 +16,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   styleUrls: ['./product-page.scss'],
   templateUrl: './product-page.html'
 })
-export class GfProductPageComponent {
+export class GfProductPageComponent implements OnInit {
   public key: string;
   public price: number;
   public product1: Product;

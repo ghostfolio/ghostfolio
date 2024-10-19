@@ -22,6 +22,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -71,7 +72,8 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   templateUrl: './activities-table.component.html'
 })
 export class GfActivitiesTableComponent
-  implements AfterViewInit, OnChanges, OnDestroy{
+  implements AfterViewInit, OnChanges, OnDestroy, OnInit
+{
   @Input() baseCurrency: string;
   @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;

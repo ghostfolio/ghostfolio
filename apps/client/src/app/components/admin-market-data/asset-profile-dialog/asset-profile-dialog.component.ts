@@ -18,7 +18,8 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -43,7 +44,7 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   templateUrl: 'asset-profile-dialog.html',
   styleUrls: ['./asset-profile-dialog.component.scss']
 })
-export class AssetProfileDialog implements OnDestroy{
+export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfileClass: string;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };

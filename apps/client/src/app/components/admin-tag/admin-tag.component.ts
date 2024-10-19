@@ -11,6 +11,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +31,7 @@ import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or
   styleUrls: ['./admin-tag.component.scss'],
   templateUrl: './admin-tag.component.html'
 })
-export class AdminTagComponent implements  OnDestroy {
+export class AdminTagComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<Tag> = new MatTableDataSource();

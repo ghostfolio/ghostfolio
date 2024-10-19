@@ -10,7 +10,7 @@ import { downloadAsFile } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort, SortDirection } from '@angular/material/sort';
@@ -31,7 +31,7 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   styleUrls: ['./activities-page.scss'],
   templateUrl: './activities-page.html'
 })
-export class ActivitiesPageComponent implements OnDestroy{
+export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Activity>;
   public deviceType: string;
   public hasImpersonationId: boolean;

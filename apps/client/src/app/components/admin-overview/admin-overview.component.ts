@@ -21,7 +21,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import {
   differenceInSeconds,
@@ -38,7 +38,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./admin-overview.scss'],
   templateUrl: './admin-overview.html'
 })
-export class AdminOverviewComponent implements OnDestroy{
+export class AdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
   public customCurrencies: string[];

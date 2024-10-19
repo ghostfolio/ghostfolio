@@ -3,7 +3,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./about-page.scss'],
   templateUrl: './about-page.html'
 })
-export class AboutPageComponent implements OnDestroy{
+export class AboutPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];

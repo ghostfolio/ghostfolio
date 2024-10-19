@@ -11,6 +11,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnDestroy,
+  OnInit,
   ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,7 +31,7 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
   styleUrls: ['./admin-platform.component.scss'],
   templateUrl: './admin-platform.component.html'
 })
-export class AdminPlatformComponent implements  OnDestroy {
+export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
   public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();

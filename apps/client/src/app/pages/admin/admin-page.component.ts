@@ -1,6 +1,6 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./admin-page.scss'],
   templateUrl: './admin-page.html'
 })
-export class AdminPageComponent implements OnDestroy{
+export class AdminPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public tabs: TabConfiguration[] = [];
 

@@ -13,6 +13,7 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -55,7 +56,8 @@ import { GfValueComponent } from '../value';
   templateUrl: './account-balances.component.html'
 })
 export class GfAccountBalancesComponent
-  implements OnChanges, OnDestroy{
+  implements OnChanges, OnDestroy, OnInit
+{
   @Input() accountBalances: AccountBalancesResponse['balances'];
   @Input() accountCurrency: string;
   @Input() accountId: string;

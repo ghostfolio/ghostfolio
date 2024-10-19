@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./faq-page.scss'],
   templateUrl: './faq-page.html'
 })
-export class FaqPageComponent implements OnDestroy{
+export class FaqPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public tabs: TabConfiguration[] = [];
