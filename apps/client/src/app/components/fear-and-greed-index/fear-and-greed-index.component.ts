@@ -14,13 +14,11 @@ import {
   templateUrl: './fear-and-greed-index.component.html',
   styleUrls: ['./fear-and-greed-index.component.scss']
 })
-export class FearAndGreedIndexComponent implements OnChanges{
+export class FearAndGreedIndexComponent implements OnChanges {
   @Input() fearAndGreedIndex: number;
 
   public fearAndGreedIndexEmoji: string;
   public fearAndGreedIndexText: string;
-
-
 
   public ngOnChanges() {
     const { emoji, key } = resolveFearAndGreedIndex(this.fearAndGreedIndex);

@@ -18,8 +18,6 @@ export class DialogFooterComponent {
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
-
-
   public onClickCloseButton() {
     this.closeButtonClicked.emit();
   }

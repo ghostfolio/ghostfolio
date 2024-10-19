@@ -41,7 +41,7 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-
   styleUrls: ['./admin-market-data-detail.component.scss'],
   templateUrl: './admin-market-data-detail.component.html'
 })
-export class AdminMarketDataDetailComponent implements OnChanges{
+export class AdminMarketDataDetailComponent implements OnChanges {
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
@@ -79,7 +79,6 @@ export class AdminMarketDataDetailComponent implements OnChanges{
         }
       });
   }
-
 
   public ngOnChanges() {
     this.defaultDateFormat = getDateFormatString(this.locale);

@@ -28,7 +28,6 @@ export class LoginWithAccessTokenDialog {
     private tokenStorageService: TokenStorageService
   ) {}
 
-
   public onChangeStaySignedIn(aValue: MatCheckboxChange) {
     this.settingsStorageService.setSetting(
       KEY_STAY_SIGNED_IN,

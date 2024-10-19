@@ -20,8 +20,6 @@ export class DialogHeaderComponent {
 
   @Output() closeButtonClicked = new EventEmitter<void>();
 
-
-
   public onClickCloseButton() {
     this.closeButtonClicked.emit();
   }

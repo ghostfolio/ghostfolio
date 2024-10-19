@@ -36,7 +36,6 @@ export class AccessTableComponent implements OnChanges {
     private notificationService: NotificationService
   ) {}
 
-
   public ngOnChanges() {
     this.displayedColumns = ['alias', 'grantee', 'type', 'details'];
 

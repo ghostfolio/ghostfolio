@@ -26,7 +26,7 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
   styleUrls: ['./user-account-membership.scss'],
   templateUrl: './user-account-membership.html'
 })
-export class UserAccountMembershipComponent implements OnDestroy{
+export class UserAccountMembershipComponent implements OnDestroy {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
@@ -86,7 +86,6 @@ export class UserAccountMembershipComponent implements OnDestroy{
         }
       });
   }
-
 
   public onCheckout() {
     this.dataService

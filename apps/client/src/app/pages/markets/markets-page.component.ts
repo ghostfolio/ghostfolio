@@ -7,10 +7,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./markets-page.scss'],
   templateUrl: './markets-page.html'
 })
-export class MarketsPageComponent implements OnDestroy{
+export class MarketsPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
-
-
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

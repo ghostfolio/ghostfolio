@@ -12,7 +12,6 @@ export class ShowAccessTokenDialog {
 
   public constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 
-
   public enableAgreeButton() {
     this.isAgreeButtonDisabled = false;
   }

@@ -11,8 +11,6 @@ import { Subject } from 'rxjs';
 export class GfI18nPageComponent {
   private unsubscribeSubject = new Subject<void>();
 
-
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

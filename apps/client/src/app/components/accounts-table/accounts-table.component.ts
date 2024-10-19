@@ -25,7 +25,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './accounts-table.component.html',
   styleUrls: ['./accounts-table.component.scss']
 })
-export class AccountsTableComponent implements OnChanges, OnDestroy{
+export class AccountsTableComponent implements OnChanges, OnDestroy {
   @Input() accounts: AccountModel[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -59,7 +59,6 @@ export class AccountsTableComponent implements OnChanges, OnDestroy{
     private notificationService: NotificationService,
     private router: Router
   ) {}
-
 
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];

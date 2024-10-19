@@ -16,7 +16,7 @@ import { FormControl } from '@angular/forms';
   templateUrl: './toggle.component.html',
   styleUrls: ['./toggle.component.scss']
 })
-export class ToggleComponent implements OnChanges{
+export class ToggleComponent implements OnChanges {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [
     { label: $localize`Today`, value: '1d' },
     { label: $localize`YTD`, value: 'ytd' },
@@ -32,8 +32,6 @@ export class ToggleComponent implements OnChanges{
   @Output() change = new EventEmitter<Pick<ToggleOption, 'value'>>();
 
   public optionFormControl = new FormControl<string>(undefined);
-
-
 
   public ngOnChanges() {
     this.optionFormControl.setValue(this.defaultValue);
