@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the logotype to the footer
 
+### Changed
+
+- Improved the backgrounds of the chart of the holdings tab on the home page (experimental)
+
 ### Fixed
 
 - Fixed an issue in the carousel component for the testimonial section on the landing page
