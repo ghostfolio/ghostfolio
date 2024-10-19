@@ -35,6 +35,11 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 const { gray, green, red } = require('open-color');
 
+interface ColorConfig {
+  backgroundColor: string;
+  fontColor: string;
+}
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
@@ -64,20 +69,67 @@ export class GfTreemapChartComponent
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
 
-  public ngAfterViewInit() {
-    if (this.holdings) {
-      this.initialize();
+  private getColorConfig(
+    annualizedNetPerformancePercent: number,
+    positiveRange: { max: number; min: number },
+    negativeRange: { max: number; min: number }
+  ): ColorConfig {
+    if (Math.abs(annualizedNetPerformancePercent) === 0) {
+      return {
+        backgroundColor: gray[3],
+        fontColor: gray[9]
+      };
     }
-  }
 
-  public ngOnChanges() {
-    if (this.holdings) {
-      this.initialize();
+    if (annualizedNetPerformancePercent > 0) {
+      const range = positiveRange.max - positiveRange.min;
+      let backgroundIndex: number;
+
+      if (annualizedNetPerformancePercent >= positiveRange.max - range * 0.25) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveRange.max - range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveRange.max - range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: green[backgroundIndex],
+        fontColor: green[backgroundIndex <= 4 ? 9 : 0]
+      };
+    } else {
+      const range = negativeRange.min - negativeRange.max;
+      let backgroundIndex: number;
+
+      if (annualizedNetPerformancePercent <= negativeRange.min + range * 0.25) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeRange.min + range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeRange.min + range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: red[backgroundIndex],
+        fontColor: red[backgroundIndex <= 4 ? 9 : 0]
+      };
     }
-  }
-
-  public ngOnDestroy() {
-    this.chart?.destroy();
   }
 
   private initialize() {
@@ -147,66 +199,47 @@ export class GfTreemapChartComponent
                 annualizedNetPerformancePercentWithCurrencyEffect * 100
               ) / 100;
 
-            if (
-              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
-            ) {
-              annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
-                annualizedNetPerformancePercentWithCurrencyEffect
-              );
-              return gray[3];
-            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
-              const range =
-                positiveNetPerformancePercentsRange.max -
-                positiveNetPerformancePercentsRange.min;
+            const colorConfig = this.getColorConfig(
+              annualizedNetPerformancePercentWithCurrencyEffect,
+              positiveNetPerformancePercentsRange,
+              negativeNetPerformancePercentsRange
+            );
 
-              if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.25
-              ) {
-                return green[9];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.5
-              ) {
-                return green[7];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.75
-              ) {
-                return green[5];
-              }
-
-              return green[3];
-            } else {
-              const range =
-                negativeNetPerformancePercentsRange.min -
-                negativeNetPerformancePercentsRange.max;
-
-              if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.25
-              ) {
-                return red[9];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.5
-              ) {
-                return red[7];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.75
-              ) {
-                return red[5];
-              }
-
-              return red[3];
-            }
+            return colorConfig.backgroundColor;
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: ['white'],
+            color(ctx) {
+              let annualizedNetPerformancePercentWithCurrencyEffect =
+                getAnnualizedPerformancePercent({
+                  daysInMarket: differenceInDays(
+                    endDate,
+                    max([
+                      ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                      startDate
+                    ])
+                  ),
+                  netPerformancePercentage: new Big(
+                    ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                  )
+                }).toNumber();
+
+              // Round to 2 decimal places
+              annualizedNetPerformancePercentWithCurrencyEffect =
+                Math.round(
+                  annualizedNetPerformancePercentWithCurrencyEffect * 100
+                ) / 100;
+
+              const colorConfig = this.getColorConfig(
+                annualizedNetPerformancePercentWithCurrencyEffect,
+                positiveNetPerformancePercentsRange,
+                negativeNetPerformancePercentsRange
+              );
+
+              return colorConfig.fontColor;
+            },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
             formatter(ctx) {
