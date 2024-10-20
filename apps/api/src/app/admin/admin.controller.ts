@@ -352,7 +352,17 @@ export class AdminController {
   @Get('user')
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getUsers(): Promise<AdminUsers> {
-    return this.adminService.getUsers();
+  public async getUsers(
+    @Query('skip') skip?: number,
+    @Query('take') take?: number,
+    @Query('sortColumn') sortColumn?: string,
+    @Query('sortDirection') sortDirection?: Prisma.SortOrder
+  ): Promise<AdminUsers> {
+    return this.adminService.getUsers({
+      skip: isNaN(skip) ? undefined : skip,
+      take: isNaN(take) ? undefined : take,
+      sortColumn,
+      sortDirection,
+    });
   }
 }
