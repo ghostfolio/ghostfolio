@@ -514,7 +514,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
