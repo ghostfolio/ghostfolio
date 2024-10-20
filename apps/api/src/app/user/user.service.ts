@@ -217,9 +217,11 @@ export class UserService {
         {}
       ).getSettings(user.Settings.settings),
       AllocationClusterRiskEmergingMarkets:
-        new AllocationClusterRiskEmergingMarkets(undefined, 0, 0).getSettings(
-          user.Settings.settings
-        ),
+        new AllocationClusterRiskEmergingMarkets(
+          undefined,
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
       CurrencyClusterRiskBaseCurrencyCurrentInvestment:
         new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
           undefined,

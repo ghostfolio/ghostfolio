@@ -1161,7 +1161,7 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const userSettings = <UserSettings>this.request.user.Settings.settings;
 
-    const { accounts, holdings, summary, markets } = await this.getDetails({
+    const { accounts, holdings, markets, summary } = await this.getDetails({
       impersonationId,
       userId,
       withMarkets: true,
@@ -1181,10 +1181,18 @@ export class PortfolioService {
                   new AccountClusterRiskSingleAccount(
                     this.exchangeRateDataService,
                     accounts
-                  ),
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
+        allocationClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
                   new AllocationClusterRiskEmergingMarkets(
                     this.exchangeRateDataService,
-                    summary.committedFunds,
+                    summary.currentValueInBaseCurrency,
                     markets.emergingMarkets.valueInBaseCurrency
                   )
                 ],
@@ -1248,9 +1256,7 @@ export class PortfolioService {
     await this.orderService.assignTags({ dataSource, symbol, tags, userId });
   }
 
-  private getAggregatedMarkets(holdings: {
-    [symbol: string]: PortfolioPosition;
-  }): {
+  private getAggregatedMarkets(holdings: Record<string, PortfolioPosition>): {
     markets: PortfolioDetails['markets'];
     marketsAdvanced: PortfolioDetails['marketsAdvanced'];
   } {
@@ -1909,7 +1915,7 @@ export class PortfolioService {
   }: {
     activities: Activity[];
     filters?: Filter[];
-    portfolioItemsNow: { [p: string]: TimelinePosition };
+    portfolioItemsNow: Record<string, TimelinePosition>;
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;

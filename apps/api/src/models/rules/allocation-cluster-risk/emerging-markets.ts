@@ -4,12 +4,12 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class AllocationClusterRiskEmergingMarkets extends Rule<Settings> {
+  private currentValueInBaseCurrency: number;
   private emergingMarketsValueInBaseCurrency: number;
-  private totalInvestment: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    totalInvestment: number,
+    currentValueInBaseCurrency: number,
     emergingMarketsValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
@@ -19,38 +19,41 @@ export class AllocationClusterRiskEmergingMarkets extends Rule<Settings> {
 
     this.emergingMarketsValueInBaseCurrency =
       emergingMarketsValueInBaseCurrency;
-    this.totalInvestment = totalInvestment;
+    this.currentValueInBaseCurrency = currentValueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const emergingMarketsValueRatio = this.totalInvestment
-      ? this.emergingMarketsValueInBaseCurrency / this.totalInvestment
+    const emergingMarketsValueRatio = this.currentValueInBaseCurrency
+      ? this.emergingMarketsValueInBaseCurrency /
+        this.currentValueInBaseCurrency
       : 0;
 
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The emerging markets contribution exceed ${(
+        evaluation: `The emerging markets contribution exceeds ${(
           ruleSettings.thresholdMax * 100
         ).toPrecision(
           3
-        )}% of your initial investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+        )}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
         value: false
       };
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The emerging markets contribution does not exceed ${(
+        evaluation: `The emerging markets contribution is below ${(
           ruleSettings.thresholdMin * 100
         ).toPrecision(
           3
-        )}% of your initial investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+        )}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
         value: false
       };
     }
 
     return {
-      evaluation: `The emerging markets contribution does not exceed ${
-        ruleSettings.thresholdMax * 100
-      }% of your initial investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+      evaluation: `The emerging markets contribution is within the range of ${(
+        ruleSettings.thresholdMin * 100
+      ).toPrecision(
+        3
+      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
       value: true
     };
   }
@@ -60,10 +63,11 @@ export class AllocationClusterRiskEmergingMarkets extends Rule<Settings> {
       threshold: {
         max: 1,
         min: 0,
-        step: 0.0025,
+        step: 0.01,
         unit: '%'
       },
-      thresholdMax: true
+      thresholdMax: true,
+      thresholdMin: true
     };
   }
 
