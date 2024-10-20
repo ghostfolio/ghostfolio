@@ -59,7 +59,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         deviceType: this.deviceType,
         pricingUrl: this.pricingUrl
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
   }

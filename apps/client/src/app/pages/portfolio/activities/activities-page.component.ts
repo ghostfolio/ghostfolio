@@ -272,7 +272,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         accounts: this.user?.accounts,
         user: this.user
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -321,7 +321,7 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             },
             user: this.user
           },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

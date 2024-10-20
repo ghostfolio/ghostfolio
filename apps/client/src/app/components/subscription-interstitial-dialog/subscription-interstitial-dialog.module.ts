@@ -1,3 +1,4 @@
+import { GfMembershipCardComponent } from '@ghostfolio/ui/membership-card';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ import { SubscriptionInterstitialDialog } from './subscription-interstitial-dial
   declarations: [SubscriptionInterstitialDialog],
   imports: [
     CommonModule,
+    GfMembershipCardComponent,
     GfPremiumIndicatorComponent,
     MatButtonModule,
     MatDialogModule,

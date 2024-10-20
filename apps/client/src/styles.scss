@@ -369,6 +369,10 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-pointer-events-none {
+  pointer-events: none;
+}
+
 .gf-spacer {
   flex: 1 1 auto;
 }

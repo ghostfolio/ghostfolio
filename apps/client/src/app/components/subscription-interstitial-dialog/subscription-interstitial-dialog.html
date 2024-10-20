@@ -1,62 +1,98 @@
-<div class="flex-grow-1 pt-0" mat-dialog-content>
-  <div class="intro-container">
-    <div class="intro-inner-container mx-auto">
-      <div class="h-100 intro w-100"></div>
+@switch (variantIndex) {
+  @case (0) {
+    <div class="flex-grow-1 pt-0" mat-dialog-content>
+      <div class="intro-container">
+        <div class="intro-inner-container mx-auto">
+          <div class="h-100 intro w-100"></div>
+        </div>
+      </div>
+      <div>
+        <h5 class="align-items-center d-flex justify-content-center mb-3">
+          <span>Ghostfolio Premium</span>
+          <gf-premium-indicator class="ml-1" [enableLink]="false" />
+        </h5>
+        <div class="font-weight-normal h5 mb-3 text-center" i18n>
+          Are you an ambitious investor who needs the full picture?
+        </div>
+        <p i18n>
+          Upgrade to Ghostfolio Premium today and gain access to exclusive
+          features to enhance your investment experience:
+        </p>
+        <ul class="list-unstyled mb-3 pl-3">
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>Portfolio Summary</span>
+          </li>
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>Portfolio Allocations</span>
+          </li>
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>Performance Benchmarks</span>
+          </li>
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>FIRE Calculator</span>
+          </li>
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>Professional Data Provider</span>
+          </li>
+          <li class="align-items-center d-flex mb-1">
+            <ion-icon class="mr-1" name="checkmark-circle-outline" />
+            <span i18n>and more Features...</span>
+          </li>
+        </ul>
+        <p class="m-0" i18n>
+          Get the tools to effectively manage your finances and refine your
+          personal investment strategy.
+        </p>
+      </div>
     </div>
-  </div>
-  <div>
-    <h5 class="align-items-center d-flex justify-content-center mb-3">
+    <div class="justify-content-end" mat-dialog-actions>
+      <button i18n mat-button (click)="closeDialog()">Skip</button>
+      <a
+        color="primary"
+        mat-flat-button
+        [routerLink]="routerLinkPricing"
+        (click)="closeDialog()"
+      >
+        <span i18n>Upgrade Plan</span>
+        <ion-icon class="ml-1" name="arrow-forward-outline" />
+      </a>
+    </div>
+  }
+  @case (1) {
+    <h1
+      class="align-items-center d-flex justify-content-center"
+      mat-dialog-title
+    >
       <span>Ghostfolio Premium</span>
       <gf-premium-indicator class="ml-1" [enableLink]="false" />
-    </h5>
-    <div class="font-weight-normal h5 mb-3 text-center" i18n>
-      Are you an ambitious investor who needs the full picture?
+    </h1>
+    <div class="flex-grow-1 pt-0" mat-dialog-content>
+      <div class="align-items-center d-flex h-100 justify-content-center">
+        <gf-membership-card
+          class="gf-pointer-events-none"
+          [name]="data?.user?.subscription?.type"
+        />
+      </div>
     </div>
-    <p i18n>
-      Upgrade to Ghostfolio Premium today and gain access to exclusive features
-      to enhance your investment experience:
-    </p>
-    <ul class="list-unstyled mb-3 pl-3">
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>Portfolio Summary</span>
-      </li>
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>Portfolio Allocations</span>
-      </li>
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>Performance Benchmarks</span>
-      </li>
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>FIRE Calculator</span>
-      </li>
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>Professional Data Provider</span>
-      </li>
-      <li class="align-items-center d-flex mb-1">
-        <ion-icon class="mr-1" name="checkmark-circle-outline" />
-        <span i18n>and more Features...</span>
-      </li>
-    </ul>
-    <p class="m-0" i18n>
-      Get the tools to effectively manage your finances and refine your personal
-      investment strategy.
-    </p>
-  </div>
-</div>
-<div class="justify-content-end" mat-dialog-actions>
-  <button i18n mat-button (click)="closeDialog()">Skip</button>
-  <a
-    color="primary"
-    mat-flat-button
-    [routerLink]="routerLinkPricing"
-    (click)="closeDialog()"
-  >
-    <span i18n>Upgrade Plan</span>
-    <ion-icon class="ml-1" name="arrow-forward-outline" />
-  </a>
-</div>
+    <div class="flex-column" mat-dialog-actions>
+      <button class="mb-2 py-4 w-100" i18n mat-button (click)="closeDialog()">
+        Skip
+      </button>
+      <a
+        class="m-0 py-4 w-100"
+        color="primary"
+        mat-flat-button
+        [routerLink]="routerLinkPricing"
+        (click)="closeDialog()"
+      >
+        <span i18n>Join now</span>
+        <ion-icon class="ml-1" name="arrow-forward-outline" />
+      </a>
+    </div>
+  }
+}

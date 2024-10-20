@@ -313,8 +313,7 @@ export class AppComponent implements OnDestroy, OnInit {
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
           },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          maxWidth: this.deviceType === 'mobile' ? '95vw' : '50rem',
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 
