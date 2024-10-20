@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Optimized the dialog sizes for mobile (full screen)
 
+### Fixed
+
+- Fixed the warning `export was not found` in connection with `GetValuesParams`
+
 ## 2.117.0 - 2024-10-19
 
 ### Added
