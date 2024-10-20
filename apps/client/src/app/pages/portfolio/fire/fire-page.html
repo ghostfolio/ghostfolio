@@ -176,6 +176,25 @@
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
+          <span i18n>Allocation Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="allocationClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
           <span i18n>Fees</span>
           @if (user?.subscription?.type === 'Basic') {
             <gf-premium-indicator class="ml-1" />
