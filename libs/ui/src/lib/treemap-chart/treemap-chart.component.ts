@@ -9,6 +9,7 @@ import {
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
 import { ColorScheme, DateRange } from '@ghostfolio/common/types';
+import { ColorConfig } from './interfaces/interfaces';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -35,10 +36,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 const { gray, green, red } = require('open-color');
 
-interface ColorConfig {
-  backgroundColor: string;
-  fontColor: string;
-}
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,6 +65,22 @@ export class GfTreemapChartComponent
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
+  public ngAfterViewInit() {
+    if (this.holdings) {
+      this.initialize();
+    }
+  }
+
+  public ngOnChanges() {
+    if (this.holdings) {
+      this.initialize();
+    }
+  }
+
+  public ngOnDestroy() {
+    this.chart?.destroy();
+  }
+
 
   private getColorConfig(
     annualizedNetPerformancePercent: number,
@@ -199,13 +212,13 @@ export class GfTreemapChartComponent
                 annualizedNetPerformancePercentWithCurrencyEffect * 100
               ) / 100;
 
-            const colorConfig = this.getColorConfig(
+            const {backgroundColor} = this.getColorConfig(
               annualizedNetPerformancePercentWithCurrencyEffect,
               positiveNetPerformancePercentsRange,
               negativeNetPerformancePercentsRange
             );
 
-            return colorConfig.backgroundColor;
+            return backgroundColor;
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
@@ -232,13 +245,13 @@ export class GfTreemapChartComponent
                   annualizedNetPerformancePercentWithCurrencyEffect * 100
                 ) / 100;
 
-              const colorConfig = this.getColorConfig(
+              const {fontColor} = this.getColorConfig(
                 annualizedNetPerformancePercentWithCurrencyEffect,
                 positiveNetPerformancePercentsRange,
                 negativeNetPerformancePercentsRange
               );
 
-              return colorConfig.fontColor;
+              return fontColor;
             },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
