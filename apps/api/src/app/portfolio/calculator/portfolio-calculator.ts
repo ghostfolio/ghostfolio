@@ -177,6 +177,7 @@ export abstract class PortfolioCalculator {
       return {
         activitiesCount: 0,
         currentValueInBaseCurrency: new Big(0),
+        createdAt: new Date(),
         errors: [],
         hasErrors: false,
         historicalData: [],

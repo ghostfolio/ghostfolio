@@ -1100,6 +1100,7 @@ export class PortfolioService {
         firstOrderDate: undefined,
         hasErrors: false,
         performance: {
+          createdAt: undefined,
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
           netPerformance: 0,
@@ -1120,7 +1121,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { errors, hasErrors, historicalData } =
+    const { createdAt, errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
@@ -1157,6 +1158,7 @@ export class PortfolioService {
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
+        createdAt: createdAt,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
@@ -1809,7 +1811,7 @@ export class PortfolioService {
       }
     }
 
-    const { currentValueInBaseCurrency, totalInvestment } =
+    const { createdAt, currentValueInBaseCurrency, totalInvestment } =
       await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
@@ -1927,6 +1929,7 @@ export class PortfolioService {
       totalSell,
       committedFunds: committedFunds.toNumber(),
       currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
+      createdAt: createdAt,
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
         assets: emergencyFundPositionsValueInBaseCurrency,
