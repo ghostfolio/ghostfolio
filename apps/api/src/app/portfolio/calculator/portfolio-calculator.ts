@@ -176,6 +176,7 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         currentValueInBaseCurrency: new Big(0),
+        createdAt: new Date(),
         hasErrors: false,
         historicalData: [],
         positions: [],
