@@ -22,6 +22,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FirePageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
+  public allocationClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
   public emergencyFundRules: PortfolioReportRule[];
@@ -198,6 +199,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
         this.accountClusterRiskRules =
           portfolioReport.rules['accountClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.allocationClusterRiskRules =
+          portfolioReport.rules['allocationClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }
