@@ -58,7 +58,7 @@ services:
       - ../.env
     command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
     healthcheck:
-      test: ['CMD-SHELL', 'redis-cli --pass $REDIS_PASSWORD ping | grep PONG']
+      test: ['CMD-SHELL', 'redis-cli --pass "$REDIS_PASSWORD" ping | grep PONG']
       interval: 10s
       timeout: 5s
       retries: 5
