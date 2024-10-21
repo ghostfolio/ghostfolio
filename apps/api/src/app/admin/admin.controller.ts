@@ -158,7 +158,22 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+
+    return;
+  }
+
+  @Post('gatherMissing/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.accessAdminControl)
+  public async gatherSymbolMissingOnly(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    await this.dataGatheringService.gatherSymbolMissingOnly({
+      dataSource,
+      symbol
+    });
 
     return;
   }
