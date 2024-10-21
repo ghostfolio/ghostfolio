@@ -137,8 +137,7 @@
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.1",
     "yahoo-finance2": "2.11.3",
-    "zone.js": "0.14.10",
-    "@storybook/addon-interactions": "^8.3.6"
+    "zone.js": "0.14.10"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "18.2.9",
@@ -147,7 +146,7 @@
     "@angular-eslint/eslint-plugin": "18.1.0",
     "@angular-eslint/eslint-plugin-template": "18.1.0",
     "@angular-eslint/template-parser": "18.1.0",
-    "@angular/cli": "~18.2.0",
+    "@angular/cli": "18.2.9",
     "@angular/compiler-cli": "18.2.8",
     "@angular/language-service": "18.2.8",
     "@angular/localize": "18.2.8",
@@ -169,6 +168,7 @@
     "@storybook/addon-essentials": "8.3.6",
     "@storybook/angular": "8.3.6",
     "@storybook/core-server": "8.3.6",
+    "@storybook/addon-interactions": "8.3.6",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/big.js": "6.2.2",
     "@types/body-parser": "1.19.5",
