@@ -39,8 +39,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     if (
       !(
         response.assetClass === 'EQUITY' &&
-        (response.assetSubClass === 'ETF' ||
-          response.assetSubClass === 'MUTUALFUND')
+        ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
       )
     ) {
       return response;
