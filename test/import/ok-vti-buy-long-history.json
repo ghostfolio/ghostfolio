@@ -11,7 +11,7 @@
       "unitPrice": 65.31,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2012-01-02T22:00:00.000Z",
+      "date": "2012-01-03T00:00:00.000Z",
       "symbol": "VTI"
     },
     {
@@ -21,7 +21,7 @@
       "unitPrice": 65.40,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2011-01-02T22:00:00.000Z",
+      "date": "2011-01-03T00:00:00.000Z",
       "symbol": "VTI"
     },
     {
@@ -31,7 +31,7 @@
       "unitPrice": 57.05,
       "currency": "USD",
       "dataSource": "YAHOO",
-      "date": "2010-01-03T22:00:00.000Z",
+      "date": "2010-01-04T00:00:00.000Z",
       "symbol": "VTI"
     }
   ]
