@@ -17,9 +17,9 @@ export class AllocationClusterRiskEmergingMarkets extends Rule<Settings> {
       name: 'Emerging Markets'
     });
 
+    this.currentValueInBaseCurrency = currentValueInBaseCurrency;
     this.emergingMarketsValueInBaseCurrency =
       emergingMarketsValueInBaseCurrency;
-    this.currentValueInBaseCurrency = currentValueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
@@ -30,30 +30,26 @@ export class AllocationClusterRiskEmergingMarkets extends Rule<Settings> {
 
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The emerging markets contribution exceeds ${(
+        evaluation: `The emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) exceeds ${(
           ruleSettings.thresholdMax * 100
-        ).toPrecision(
-          3
-        )}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+        ).toPrecision(3)}%`,
         value: false
       };
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The emerging markets contribution is below ${(
+        evaluation: `The emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is below ${(
           ruleSettings.thresholdMin * 100
-        ).toPrecision(
-          3
-        )}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+        ).toPrecision(3)}%`,
         value: false
       };
     }
 
     return {
-      evaluation: `The emerging markets contribution is within the range of ${(
+      evaluation: `The emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is within the range of ${(
         ruleSettings.thresholdMin * 100
       ).toPrecision(
         3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}% of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%)`,
+      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
       value: true
     };
   }
