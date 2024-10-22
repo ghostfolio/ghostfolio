@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for mutual funds in the _EOD Historical Data_ service
+
 ### Changed
 
 - Optimized the dialog sizes for mobile (full screen)

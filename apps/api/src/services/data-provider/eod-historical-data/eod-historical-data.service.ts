@@ -500,6 +500,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
         break;
+      case 'fund':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
+        break;
     }
 
     return { assetClass, assetSubClass };
