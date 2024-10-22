@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the warning `export was not found` in connection with `GetValuesParams`
+- Quoted the password for the _Redis_ service `healthcheck` in the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
 
 ## 2.117.0 - 2024-10-19
 
