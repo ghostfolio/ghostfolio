@@ -33,7 +33,7 @@ import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { ColorConfig, GetColorConfigParams } from './interfaces/interfaces';
+import { GetColorParams } from './interfaces/interfaces';
 
 const { gray, green, red } = require('open-color');
 
@@ -81,11 +81,11 @@ export class GfTreemapChartComponent
     this.chart?.destroy();
   }
 
-  private getColorConfig({
+  private getColor({
     annualizedNetPerformancePercent,
     negativeNetPerformancePercentsRange,
     positiveNetPerformancePercentsRange
-  }: GetColorConfigParams): ColorConfig {
+  }: GetColorParams) {
     if (Math.abs(annualizedNetPerformancePercent) === 0) {
       return {
         backgroundColor: gray[3],
@@ -219,7 +219,7 @@ export class GfTreemapChartComponent
             annualizedNetPerformancePercent =
               Math.round(annualizedNetPerformancePercent * 100) / 100;
 
-            const { backgroundColor } = this.getColorConfig({
+            const { backgroundColor } = this.getColor({
               annualizedNetPerformancePercent,
               negativeNetPerformancePercentsRange,
               positiveNetPerformancePercentsRange
@@ -250,7 +250,7 @@ export class GfTreemapChartComponent
               annualizedNetPerformancePercent =
                 Math.round(annualizedNetPerformancePercent * 100) / 100;
 
-              const { fontColor } = this.getColorConfig({
+              const { fontColor } = this.getColor({
                 annualizedNetPerformancePercent,
                 negativeNetPerformancePercentsRange,
                 positiveNetPerformancePercentsRange
