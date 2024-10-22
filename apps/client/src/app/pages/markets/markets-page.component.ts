@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -7,12 +7,8 @@ import { Subject } from 'rxjs';
   styleUrls: ['./markets-page.scss'],
   templateUrl: './markets-page.html'
 })
-export class MarketsPageComponent implements OnDestroy, OnInit {
+export class MarketsPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
-
-  public constructor() {}
-
-  public ngOnInit() {}
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

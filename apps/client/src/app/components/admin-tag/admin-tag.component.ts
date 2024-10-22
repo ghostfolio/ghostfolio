@@ -138,7 +138,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
           name: null
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -174,7 +174,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
           name
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

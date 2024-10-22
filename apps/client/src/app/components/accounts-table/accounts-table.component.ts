@@ -9,7 +9,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -26,7 +25,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './accounts-table.component.html',
   styleUrls: ['./accounts-table.component.scss']
 })
-export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
+export class AccountsTableComponent implements OnChanges, OnDestroy {
   @Input() accounts: AccountModel[];
   @Input() baseCurrency: string;
   @Input() deviceType: string;
@@ -60,8 +59,6 @@ export class AccountsTableComponent implements OnChanges, OnDestroy, OnInit {
     private notificationService: NotificationService,
     private router: Router
   ) {}
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];

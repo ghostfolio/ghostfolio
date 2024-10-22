@@ -116,7 +116,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
         deviceType: this.deviceType,
         locale: this.locale
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

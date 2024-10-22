@@ -369,12 +369,20 @@ ngx-skeleton-loader {
   cursor: pointer;
 }
 
+.gf-pointer-events-none {
+  pointer-events: none;
+}
+
 .gf-spacer {
   flex: 1 1 auto;
 }
 
 .gf-table {
   @include gf-table;
+}
+
+.gf-text-wrap-balance {
+  text-wrap: balance;
 }
 
 .has-fab {

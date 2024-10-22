@@ -12,7 +12,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,7 +41,7 @@ import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-
   styleUrls: ['./admin-market-data-detail.component.scss'],
   templateUrl: './admin-market-data-detail.component.html'
 })
-export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
+export class AdminMarketDataDetailComponent implements OnChanges {
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
@@ -80,8 +79,6 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         }
       });
   }
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     this.defaultDateFormat = getDateFormatString(this.locale);
@@ -189,7 +186,7 @@ export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
         symbol: this.symbol,
         user: this.user
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

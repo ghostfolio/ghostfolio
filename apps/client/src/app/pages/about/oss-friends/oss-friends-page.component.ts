@@ -13,8 +13,6 @@ export class OpenSourceSoftwareFriendsPageComponent implements OnDestroy {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor() {}
-
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();

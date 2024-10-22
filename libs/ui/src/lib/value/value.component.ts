@@ -41,8 +41,6 @@ export class GfValueComponent implements OnChanges {
   public isString = false;
   public useAbsoluteValue = false;
 
-  public constructor() {}
-
   public ngOnChanges() {
     this.initializeVariables();
 

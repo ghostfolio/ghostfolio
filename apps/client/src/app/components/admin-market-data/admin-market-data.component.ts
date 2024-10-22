@@ -382,7 +382,7 @@ export class AdminMarketDataComponent
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
           },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

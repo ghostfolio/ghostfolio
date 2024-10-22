@@ -21,6 +21,7 @@ const locales = {
   MONTH: $localize`Month`,
   MONTHS: $localize`Months`,
   OTHER: $localize`Other`,
+  PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM: $localize`Get access to 100’000+ tickers from over 50 exchanges`,
   PRESET_ID: $localize`Preset`,
   RETIREMENT_PROVISION: $localize`Retirement Provision`,
   SATELLITE: $localize`Satellite`,
