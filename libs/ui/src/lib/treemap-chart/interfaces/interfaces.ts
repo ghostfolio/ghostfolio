@@ -1,4 +1,4 @@
 export interface ColorConfig {
-    backgroundColor: string;
-    fontColor: string;
+  backgroundColor: string;
+  fontColor: string;
 }
