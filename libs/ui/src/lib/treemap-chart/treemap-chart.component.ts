@@ -33,7 +33,7 @@ import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { ColorConfig } from './interfaces/interfaces';
+import { ColorConfig, GetColorConfigParams } from './interfaces/interfaces';
 
 const { gray, green, red } = require('open-color');
 
@@ -85,11 +85,7 @@ export class GfTreemapChartComponent
     annualizedNetPerformancePercent,
     negativeNetPerformancePercentsRange,
     positiveNetPerformancePercentsRange
-  }: {
-    annualizedNetPerformancePercent: number;
-    negativeNetPerformancePercentsRange: { max: number; min: number };
-    positiveNetPerformancePercentsRange: { max: number; min: number };
-  }): ColorConfig {
+  }: GetColorConfigParams): ColorConfig {
     if (Math.abs(annualizedNetPerformancePercent) === 0) {
       return {
         backgroundColor: gray[3],
