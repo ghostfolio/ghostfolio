@@ -7,6 +7,7 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AllocationClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/allocation-cluster-risk/developed-markets';
 import { AllocationClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/allocation-cluster-risk/emerging-markets';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
@@ -1190,6 +1191,11 @@ export class PortfolioService {
           summary.ordersCount > 0
             ? await this.rulesService.evaluate(
                 [
+                  new AllocationClusterRiskDevelopedMarkets(
+                    this.exchangeRateDataService,
+                    summary.currentValueInBaseCurrency,
+                    markets.developedMarkets.valueInBaseCurrency
+                  ),
                   new AllocationClusterRiskEmergingMarkets(
                     this.exchangeRateDataService,
                     summary.currentValueInBaseCurrency,
