@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a new static portfolio analysis rule: Allocation Cluster Risk (Developed Markets)
 - Added a new static portfolio analysis rule: Allocation Cluster Risk (Emerging Markets)
 - Added support for mutual funds in the _EOD Historical Data_ service
 
