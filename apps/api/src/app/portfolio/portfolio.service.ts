@@ -1191,15 +1191,15 @@ export class PortfolioService {
           summary.ordersCount > 0
             ? await this.rulesService.evaluate(
                 [
-                  new AllocationClusterRiskEmergingMarkets(
-                    this.exchangeRateDataService,
-                    summary.currentValueInBaseCurrency,
-                    markets.emergingMarkets.valueInBaseCurrency
-                  ),
                   new AllocationClusterRiskDevelopedMarkets(
                     this.exchangeRateDataService,
                     summary.currentValueInBaseCurrency,
                     markets.developedMarkets.valueInBaseCurrency
+                  ),
+                  new AllocationClusterRiskEmergingMarkets(
+                    this.exchangeRateDataService,
+                    summary.currentValueInBaseCurrency,
+                    markets.emergingMarkets.valueInBaseCurrency
                   )
                 ],
                 userSettings
