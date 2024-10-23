@@ -1,6 +1,7 @@
 export type XRayRulesSettings = {
   AccountClusterRiskCurrentInvestment?: RuleSettings;
   AccountClusterRiskSingleAccount?: RuleSettings;
+  AllocationClusterRiskDevelopedMarkets?: RuleSettings;
   AllocationClusterRiskEmergingMarkets?: RuleSettings;
   CurrencyClusterRiskBaseCurrencyCurrentInvestment?: RuleSettings;
   CurrencyClusterRiskCurrentInvestment?: RuleSettings;
