@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Optimized the dialog sizes for mobile (full screen)
+- Optimized the git-hook via `husky` to lint only affected projects before a commit
 - Upgraded `angular` from version `18.1.1` to `18.2.8`
 - Upgraded `Nx` from version `19.5.6` to `20.0.3`
 
