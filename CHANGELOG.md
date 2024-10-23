@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the font colors of the chart of the holdings tab on the home page (experimental)
 - Optimized the dialog sizes for mobile (full screen)
 - Upgraded `angular` from version `18.1.1` to `18.2.8`
 - Upgraded `Nx` from version `19.5.6` to `20.0.3`

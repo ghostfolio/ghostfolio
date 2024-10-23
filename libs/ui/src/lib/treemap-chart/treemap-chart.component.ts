@@ -33,6 +33,8 @@ import { differenceInDays, max } from 'date-fns';
 import { orderBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
+import { GetColorParams } from './interfaces/interfaces';
+
 const { gray, green, red } = require('open-color');
 
 @Component({
@@ -63,7 +65,6 @@ export class GfTreemapChartComponent
   public constructor() {
     Chart.register(LinearScale, Tooltip, TreemapController, TreemapElement);
   }
-
   public ngAfterViewInit() {
     if (this.holdings) {
       this.initialize();
@@ -78,6 +79,79 @@ export class GfTreemapChartComponent
 
   public ngOnDestroy() {
     this.chart?.destroy();
+  }
+
+  private getColor({
+    annualizedNetPerformancePercent,
+    negativeNetPerformancePercentsRange,
+    positiveNetPerformancePercentsRange
+  }: GetColorParams) {
+    if (Math.abs(annualizedNetPerformancePercent) === 0) {
+      return {
+        backgroundColor: gray[3],
+        fontColor: gray[9]
+      };
+    }
+
+    if (annualizedNetPerformancePercent > 0) {
+      let backgroundIndex: number;
+      const range =
+        positiveNetPerformancePercentsRange.max -
+        positiveNetPerformancePercentsRange.min;
+
+      if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.25
+      ) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent >=
+        positiveNetPerformancePercentsRange.max - range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: green[backgroundIndex],
+        fontColor: green[backgroundIndex <= 4 ? 9 : 0]
+      };
+    } else {
+      let backgroundIndex: number;
+      const range =
+        negativeNetPerformancePercentsRange.min -
+        negativeNetPerformancePercentsRange.max;
+
+      if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.25
+      ) {
+        backgroundIndex = 9;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.5
+      ) {
+        backgroundIndex = 7;
+      } else if (
+        annualizedNetPerformancePercent <=
+        negativeNetPerformancePercentsRange.min + range * 0.75
+      ) {
+        backgroundIndex = 5;
+      } else {
+        backgroundIndex = 3;
+      }
+
+      return {
+        backgroundColor: red[backgroundIndex],
+        fontColor: red[backgroundIndex <= 4 ? 9 : 0]
+      };
+    }
   }
 
   private initialize() {
@@ -126,8 +200,8 @@ export class GfTreemapChartComponent
     const data: ChartConfiguration['data'] = {
       datasets: [
         {
-          backgroundColor(ctx) {
-            let annualizedNetPerformancePercentWithCurrencyEffect =
+          backgroundColor: (ctx) => {
+            let annualizedNetPerformancePercent =
               getAnnualizedPerformancePercent({
                 daysInMarket: differenceInDays(
                   endDate,
@@ -142,74 +216,51 @@ export class GfTreemapChartComponent
               }).toNumber();
 
             // Round to 2 decimal places
-            annualizedNetPerformancePercentWithCurrencyEffect =
-              Math.round(
-                annualizedNetPerformancePercentWithCurrencyEffect * 100
-              ) / 100;
+            annualizedNetPerformancePercent =
+              Math.round(annualizedNetPerformancePercent * 100) / 100;
 
-            if (
-              Math.abs(annualizedNetPerformancePercentWithCurrencyEffect) === 0
-            ) {
-              annualizedNetPerformancePercentWithCurrencyEffect = Math.abs(
-                annualizedNetPerformancePercentWithCurrencyEffect
-              );
-              return gray[3];
-            } else if (annualizedNetPerformancePercentWithCurrencyEffect > 0) {
-              const range =
-                positiveNetPerformancePercentsRange.max -
-                positiveNetPerformancePercentsRange.min;
+            const { backgroundColor } = this.getColor({
+              annualizedNetPerformancePercent,
+              negativeNetPerformancePercentsRange,
+              positiveNetPerformancePercentsRange
+            });
 
-              if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.25
-              ) {
-                return green[9];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.5
-              ) {
-                return green[7];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect >=
-                positiveNetPerformancePercentsRange.max - range * 0.75
-              ) {
-                return green[5];
-              }
-
-              return green[3];
-            } else {
-              const range =
-                negativeNetPerformancePercentsRange.min -
-                negativeNetPerformancePercentsRange.max;
-
-              if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.25
-              ) {
-                return red[9];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.5
-              ) {
-                return red[7];
-              } else if (
-                annualizedNetPerformancePercentWithCurrencyEffect <=
-                negativeNetPerformancePercentsRange.min + range * 0.75
-              ) {
-                return red[5];
-              }
-
-              return red[3];
-            }
+            return backgroundColor;
           },
           borderRadius: 4,
           key: 'allocationInPercentage',
           labels: {
             align: 'left',
-            color: ['white'],
+            color: (ctx) => {
+              let annualizedNetPerformancePercent =
+                getAnnualizedPerformancePercent({
+                  daysInMarket: differenceInDays(
+                    endDate,
+                    max([
+                      ctx.raw._data.dateOfFirstActivity ?? new Date(0),
+                      startDate
+                    ])
+                  ),
+                  netPerformancePercentage: new Big(
+                    ctx.raw._data.netPerformancePercentWithCurrencyEffect
+                  )
+                }).toNumber();
+
+              // Round to 2 decimal places
+              annualizedNetPerformancePercent =
+                Math.round(annualizedNetPerformancePercent * 100) / 100;
+
+              const { fontColor } = this.getColor({
+                annualizedNetPerformancePercent,
+                negativeNetPerformancePercentsRange,
+                positiveNetPerformancePercentsRange
+              });
+
+              return fontColor;
+            },
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
-            formatter(ctx) {
+            formatter: (ctx) => {
               const netPerformancePercentWithCurrencyEffect =
                 ctx.raw._data.netPerformancePercentWithCurrencyEffect;
 
@@ -218,7 +269,7 @@ export class GfTreemapChartComponent
                 `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
-            hoverColor: 'white',
+            hoverColor: undefined,
             position: 'top'
           },
           spacing: 1,
