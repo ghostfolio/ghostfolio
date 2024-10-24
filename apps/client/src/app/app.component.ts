@@ -292,7 +292,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
           autoFocus: false,
-          data: <HoldingDetailDialogParams>{
+          data: {
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
@@ -312,7 +312,7 @@ export class AppComponent implements OnDestroy, OnInit {
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
-          },
+          } as HoldingDetailDialogParams,
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });

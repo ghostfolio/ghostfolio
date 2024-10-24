@@ -48,7 +48,7 @@ export class GfValueComponent implements OnChanges {
       if (isNumber(this.value)) {
         this.isNumber = true;
         this.isString = false;
-        this.absoluteValue = Math.abs(<number>this.value);
+        this.absoluteValue = Math.abs(this.value as number);
 
         if (this.colorizeSign) {
           if (this.isCurrency) {
@@ -113,7 +113,7 @@ export class GfValueComponent implements OnChanges {
         this.isString = true;
 
         if (this.isDate) {
-          this.formattedValue = new Date(<string>this.value).toLocaleDateString(
+          this.formattedValue = new Date(this.value).toLocaleDateString(
             this.locale,
             {
               day: '2-digit',

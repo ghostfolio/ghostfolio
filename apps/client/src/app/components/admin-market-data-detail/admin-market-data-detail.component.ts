@@ -178,14 +178,14 @@ export class AdminMarketDataDetailComponent implements OnChanges {
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
     const dialogRef = this.dialog.open(MarketDataDetailDialog, {
-      data: <MarketDataDetailDialogParams>{
+      data: {
         marketPrice,
         currency: this.currency,
         dataSource: this.dataSource,
         dateString: `${yearMonth}-${day}`,
         symbol: this.symbol,
         user: this.user
-      },
+      } as MarketDataDetailDialogParams,
       height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
