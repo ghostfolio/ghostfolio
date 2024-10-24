@@ -114,7 +114,7 @@ export class UserService extends ObservableStore<UserStoreState> {
           dialogRef
             .afterClosed()
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(() => {});
+            .subscribe();
         }
 
         return user;

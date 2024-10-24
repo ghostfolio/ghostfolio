@@ -59,10 +59,9 @@ export class AdminMarketDataService {
             }),
             finalize(() => {
               window.location.reload();
-              setTimeout(() => {}, 300);
             })
           )
-          .subscribe(() => {});
+          .subscribe();
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete these profiles?`
