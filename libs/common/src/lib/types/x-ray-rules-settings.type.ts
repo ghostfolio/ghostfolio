@@ -1,4 +1,4 @@
-export type XRayRulesSettings = {
+export interface XRayRulesSettings {
   AccountClusterRiskCurrentInvestment?: RuleSettings;
   AccountClusterRiskSingleAccount?: RuleSettings;
   AllocationClusterRiskDevelopedMarkets?: RuleSettings;
@@ -7,7 +7,7 @@ export type XRayRulesSettings = {
   CurrencyClusterRiskCurrentInvestment?: RuleSettings;
   EmergencyFundSetup?: RuleSettings;
   FeeRatioInitialInvestment?: RuleSettings;
-};
+}
 
 interface RuleSettings {
   isActive: boolean;

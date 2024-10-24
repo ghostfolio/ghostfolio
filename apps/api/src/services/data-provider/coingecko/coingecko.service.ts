@@ -1,16 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
@@ -24,6 +11,20 @@ import {
 } from '@prisma/client';
 import { format, fromUnixTime, getUnixTime } from 'date-fns';
 import got, { Headers } from 'got';
+
+import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../../interfaces/interfaces';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class CoinGeckoService implements DataProviderInterface {
@@ -111,9 +112,9 @@ export class CoinGeckoService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  > {
     try {
       const abortController = new AbortController();
 
@@ -134,9 +135,10 @@ export class CoinGeckoService implements DataProviderInterface {
         }
       ).json<any>();
 
-      const result: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {
+      const result: Record<
+        string,
+        Record<string, IDataProviderHistoricalResponse>
+      > = {
         [symbol]: {}
       };
 
@@ -168,8 +170,8 @@ export class CoinGeckoService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<Record<string, IDataProviderResponse>> {
+    const response: Record<string, IDataProviderResponse> = {};
 
     if (symbols.length <= 0) {
       return response;

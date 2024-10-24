@@ -23,11 +23,12 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   }
 
   public evaluate(ruleSettings: Settings) {
-    const accounts: {
-      [symbol: string]: Pick<PortfolioPosition, 'name'> & {
+    const accounts: Record<
+      string,
+      Pick<PortfolioPosition, 'name'> & {
         investment: number;
-      };
-    } = {};
+      }
+    > = {};
 
     for (const [accountId, account] of Object.entries(this.accounts)) {
       accounts[accountId] = {

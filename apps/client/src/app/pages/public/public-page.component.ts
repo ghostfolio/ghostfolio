@@ -1,4 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -16,6 +15,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../services/data.service';
+
 @Component({
   host: { class: 'page' },
   selector: 'gf-public-page',
@@ -23,29 +24,25 @@ import { catchError, takeUntil } from 'rxjs/operators';
   templateUrl: './public-page.html'
 })
 export class PublicPageComponent implements OnInit {
-  public continents: {
-    [code: string]: { name: string; value: number };
-  };
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+  public continents: Record<string, { name: string; value: number }>;
+  public countries: Record<string, { name: string; value: number }>;
   public deviceType: string;
   public holdings: PublicPortfolioResponse['holdings'][string][];
   public markets: {
     [key in Market]: { id: Market; valueInPercentage: number };
   };
-  public positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'currency' | 'name'> & {
+  public positions: Record<
+    string,
+    Pick<PortfolioPosition, 'currency' | 'name'> & {
       value: number;
-    };
-  };
+    }
+  >;
   public publicPortfolioDetails: PublicPortfolioResponse;
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
-  public symbols: {
-    [name: string]: { name: string; symbol: string; value: number };
-  };
+  public sectors: Record<string, { name: string; value: number }>;
+  public symbols: Record<
+    string,
+    { name: string; symbol: string; value: number }
+  >;
   public UNKNOWN_KEY = UNKNOWN_KEY;
 
   private accessId: string;

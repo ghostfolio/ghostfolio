@@ -14,9 +14,7 @@ import { Subject } from 'rxjs';
   templateUrl: './landing-page.html'
 })
 export class LandingPageComponent implements OnDestroy, OnInit {
-  public countriesOfSubscribersMap: {
-    [code: string]: { value: number };
-  } = {};
+  public countriesOfSubscribersMap: Record<string, { value: number }> = {};
   public currentYear = format(new Date(), 'yyyy');
   public deviceType: string;
   public hasPermissionForDemo: boolean;

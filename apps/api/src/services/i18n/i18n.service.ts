@@ -7,7 +7,7 @@ import { join } from 'path';
 
 export class I18nService {
   private localesPath = join(__dirname, 'assets', 'locales');
-  private translations: { [locale: string]: cheerio.CheerioAPI } = {};
+  private translations: Record<string, cheerio.CheerioAPI> = {};
 
   public constructor() {
     this.loadFiles();

@@ -27,7 +27,7 @@ export interface EnhancedSymbolProfile {
   scraperConfiguration?: ScraperConfiguration;
   sectors: Sector[];
   symbol: string;
-  symbolMapping?: { [key: string]: string };
+  symbolMapping?: Record<string, string>;
   updatedAt: Date;
   url?: string;
 }

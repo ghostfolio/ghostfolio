@@ -45,9 +45,7 @@ export class UpdateAssetProfileDto {
 
   @IsObject()
   @IsOptional()
-  symbolMapping?: {
-    [dataProvider: string]: string;
-  };
+  symbolMapping?: Record<string, string>;
 
   @IsOptional()
   @IsUrl({

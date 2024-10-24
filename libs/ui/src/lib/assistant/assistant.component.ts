@@ -180,10 +180,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         debounceTime(300),
         distinctUntilChanged(),
         mergeMap(async (searchTerm) => {
-          const result = <ISearchResults>{
+          const result = {
             assetProfiles: [],
             holdings: []
-          };
+          } as ISearchResults;
 
           try {
             if (searchTerm) {
@@ -292,7 +292,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public hasFilter(aFormValue: { [key: string]: string }) {
+  public hasFilter(aFormValue: Record<string, string>) {
     return Object.values(aFormValue).some((value) => {
       return !!value;
     });

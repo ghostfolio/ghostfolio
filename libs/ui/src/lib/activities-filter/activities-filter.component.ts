@@ -157,7 +157,7 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
 
     for (const type of Object.keys(filterGroupsMap)) {
       filterGroups.push({
-        name: <Filter['type']>translate(type),
+        name: translate(type) as Filter['type'],
         filters: filterGroupsMap[type]
       });
     }

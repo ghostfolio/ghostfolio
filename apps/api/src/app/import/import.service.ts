@@ -158,7 +158,7 @@ export class ImportService {
     maxActivitiesToImport: number;
     user: UserWithSettings;
   }): Promise<Activity[]> {
-    const accountIdMapping: { [oldAccountId: string]: string } = {};
+    const accountIdMapping: Record<string, string> = {};
     const userCurrency = user.Settings.settings.baseCurrency;
 
     if (!isDryRun && accountsDto?.length) {
@@ -579,9 +579,7 @@ export class ImportService {
       throw new Error(`Too many activities (${maxActivitiesToImport} at most)`);
     }
 
-    const assetProfiles: {
-      [assetProfileIdentifier: string]: Partial<SymbolProfile>;
-    } = {};
+    const assetProfiles: Record<string, Partial<SymbolProfile>> = {};
 
     for (const [
       index,

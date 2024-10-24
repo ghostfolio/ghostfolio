@@ -66,13 +66,14 @@ export class GfPortfolioProportionChartComponent
   @Input() locale = getLocale();
   @Input() maxItems?: number;
   @Input() showLabels = false;
-  @Input() positions: {
-    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+  @Input() positions: Record<
+    string,
+    Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
       name: string;
       value: number;
-    };
-  } = {};
+    }
+  > = {};
 
   @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
@@ -83,9 +84,7 @@ export class GfPortfolioProportionChartComponent
 
   private readonly OTHER_KEY = 'OTHER';
 
-  private colorMap: {
-    [symbol: string]: string;
-  } = {};
+  private colorMap: Record<string, string> = {};
 
   public constructor() {
     Chart.register(ArcElement, DoughnutController, LinearScale, Tooltip);
@@ -109,14 +108,15 @@ export class GfPortfolioProportionChartComponent
 
   private initialize() {
     this.isLoading = true;
-    const chartData: {
-      [symbol: string]: {
+    const chartData: Record<
+      string,
+      {
         color?: string;
         name: string;
-        subCategory?: { [symbol: string]: { value: Big } };
+        subCategory?: Record<string, { value: Big }>;
         value: Big;
-      };
-    } = {};
+      }
+    > = {};
     this.colorMap = {
       [this.OTHER_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.24)`,
       [UNKNOWN_KEY]: `rgba(${getTextColor(this.colorScheme)}, 0.12)`
@@ -304,14 +304,14 @@ export class GfPortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration(data)
-        );
+        this.chart.options.plugins.tooltip = this.getTooltipPluginConfiguration(
+          data
+        ) as unknown;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
-          options: <unknown>{
+          options: {
             animation: false,
             cutout: '70%',
             layout: {
@@ -358,7 +358,7 @@ export class GfPortfolioProportionChartComponent
               legend: { display: false },
               tooltip: this.getTooltipPluginConfiguration(data)
             }
-          },
+          } as unknown,
           plugins: [ChartDataLabels],
           type: 'doughnut'
         });
@@ -405,7 +405,7 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.positions[<string>symbol]?.name);
+          const name = translate(this.positions[symbol as string]?.name);
 
           let sum = 0;
           for (const item of context.dataset.data) {
@@ -414,12 +414,12 @@ export class GfPortfolioProportionChartComponent
 
           const percentage = (context.parsed * 100) / sum;
 
-          if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
+          if ((context.raw as number) === Number.MAX_SAFE_INTEGER) {
             return $localize`No data available`;
           } else if (this.isInPercent) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
-            const value = <number>context.raw;
+            const value = context.raw as number;
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {

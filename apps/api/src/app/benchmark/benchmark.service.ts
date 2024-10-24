@@ -442,10 +442,10 @@ export class BenchmarkService {
 
       await this.redisCacheService.set(
         this.CACHE_KEY_BENCHMARKS,
-        JSON.stringify(<BenchmarkValue>{
+        JSON.stringify({
           benchmarks,
           expiration: expiration.getTime()
-        }),
+        } as BenchmarkValue),
         CACHE_TTL_INFINITE
       );
     }

@@ -1,4 +1,4 @@
-export type ToggleOption = {
+export interface ToggleOption {
   label: string;
   value: string;
-};
+}

@@ -64,20 +64,20 @@ export class AlphaVantageService implements DataProviderInterface {
     from,
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  > {
     try {
-      const historicalData: {
-        [symbol: string]: IAlphaVantageHistoricalResponse[];
-      } = await this.alphaVantage.crypto.daily(
-        symbol.substring(0, symbol.length - 3).toLowerCase(),
-        'usd'
-      );
+      const historicalData: Record<string, IAlphaVantageHistoricalResponse[]> =
+        await this.alphaVantage.crypto.daily(
+          symbol.substring(0, symbol.length - 3).toLowerCase(),
+          'usd'
+        );
 
-      const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {};
+      const response: Record<
+        string,
+        Record<string, IDataProviderHistoricalResponse>
+      > = {};
 
       response[symbol] = {};
 
@@ -109,9 +109,9 @@ export class AlphaVantageService implements DataProviderInterface {
     return DataSource.ALPHA_VANTAGE;
   }
 
-  public async getQuotes({}: GetQuotesParams): Promise<{
-    [symbol: string]: IDataProviderResponse;
-  }> {
+  public async getQuotes({}: GetQuotesParams): Promise<
+    Record<string, IDataProviderResponse>
+  > {
     return {};
   }
 

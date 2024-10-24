@@ -1,18 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 
@@ -20,6 +5,22 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+
+import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../../interfaces/interfaces';
+import { PrismaService } from '../../prisma/prisma.service';
+import { SymbolProfileService } from '../../symbol-profile/symbol-profile.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class GoogleSheetsService implements DataProviderInterface {
@@ -60,9 +61,9 @@ export class GoogleSheetsService implements DataProviderInterface {
     from,
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  > {
     try {
       const sheet = await this.getSheet({
         symbol,
@@ -71,9 +72,8 @@ export class GoogleSheetsService implements DataProviderInterface {
 
       const rows = await sheet.getRows();
 
-      const historicalData: {
-        [date: string]: IDataProviderHistoricalResponse;
-      } = {};
+      const historicalData: Record<string, IDataProviderHistoricalResponse> =
+        {};
 
       rows
         .filter((_row, index) => {
@@ -105,8 +105,8 @@ export class GoogleSheetsService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<Record<string, IDataProviderResponse>> {
+    const response: Record<string, IDataProviderResponse> = {};
 
     if (symbols.length <= 0) {
       return response;

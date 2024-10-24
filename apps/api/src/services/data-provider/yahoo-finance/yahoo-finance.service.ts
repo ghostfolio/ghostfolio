@@ -1,17 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
-import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
@@ -26,6 +12,21 @@ import {
   HistoricalHistoryResult
 } from 'yahoo-finance2/dist/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
+
+import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
+import { CryptocurrencyService } from '../../cryptocurrency/cryptocurrency.service';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../../interfaces/interfaces';
+import { YahooFinanceDataEnhancerService } from '../data-enhancer/yahoo-finance/yahoo-finance.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
@@ -78,9 +79,7 @@ export class YahooFinanceService implements DataProviderInterface {
           }
         )
       );
-      const response: {
-        [date: string]: IDataProviderHistoricalResponse;
-      } = {};
+      const response: Record<string, IDataProviderHistoricalResponse> = {};
 
       for (const historicalItem of historicalResult) {
         response[format(historicalItem.date, DATE_FORMAT)] = {
@@ -106,9 +105,9 @@ export class YahooFinanceService implements DataProviderInterface {
     from,
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  > {
     if (isSameDay(from, to)) {
       to = addDays(to, 1);
     }
@@ -127,9 +126,10 @@ export class YahooFinanceService implements DataProviderInterface {
         )
       );
 
-      const response: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {};
+      const response: Record<
+        string,
+        Record<string, IDataProviderHistoricalResponse>
+      > = {};
 
       response[symbol] = {};
 
@@ -160,8 +160,8 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getQuotes({
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<Record<string, IDataProviderResponse>> {
+    const response: Record<string, IDataProviderResponse> = {};
 
     if (symbols.length <= 0) {
       return response;

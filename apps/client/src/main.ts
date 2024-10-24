@@ -12,9 +12,9 @@ import { environment } from './environments/environment';
 (async () => {
   const response = await fetch('/api/v1/info');
   const info: InfoItem = await response.json();
-  const utmSource = <'ios' | 'trusted-web-activity'>(
-    window.localStorage.getItem('utm_source')
-  );
+  const utmSource = window.localStorage.getItem('utm_source') as
+    | 'ios'
+    | 'trusted-web-activity';
 
   info.globalPermissions = filterGlobalPermissions(
     info.globalPermissions,

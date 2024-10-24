@@ -12,10 +12,8 @@ export class MWRPortfolioCalculator extends PortfolioCalculator {
 
   protected getSymbolMetrics({}: {
     end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
+    exchangeRates: Record<string, number>;
+    marketSymbolMap: Record<string, Record<string, Big>>;
     start: Date;
     step?: number;
   } & AssetProfileIdentifier): SymbolMetrics {

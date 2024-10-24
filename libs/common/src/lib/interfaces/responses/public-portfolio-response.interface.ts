@@ -4,8 +4,9 @@ import { Market } from '../../types';
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
   hasDetails: boolean;
-  holdings: {
-    [symbol: string]: Pick<
+  holdings: Record<
+    string,
+    Pick<
       PortfolioPosition,
       | 'allocationInPercentage'
       | 'assetClass'
@@ -21,8 +22,8 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
       | 'url'
       | 'valueInBaseCurrency'
       | 'valueInPercentage'
-    >;
-  };
+    >
+  >;
   markets: {
     [key in Market]: Pick<
       PortfolioDetails['markets'][key],

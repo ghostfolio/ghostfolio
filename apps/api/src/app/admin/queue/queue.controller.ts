@@ -26,7 +26,7 @@ export class QueueController {
   public async deleteJobs(
     @Query('status') filterByStatus?: string
   ): Promise<void> {
-    const status = <JobStatus[]>filterByStatus?.split(',') ?? undefined;
+    const status = (filterByStatus?.split(',') as JobStatus[]) ?? undefined;
     return this.queueService.deleteJobs({ status });
   }
 
@@ -36,7 +36,7 @@ export class QueueController {
   public async getJobs(
     @Query('status') filterByStatus?: string
   ): Promise<AdminJobs> {
-    const status = <JobStatus[]>filterByStatus?.split(',') ?? undefined;
+    const status = (filterByStatus?.split(',') as JobStatus[]) ?? undefined;
     return this.queueService.getJobs({ status });
   }
 

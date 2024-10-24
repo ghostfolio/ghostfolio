@@ -17,9 +17,7 @@ export class PropertyService {
   }
 
   public async get() {
-    const response: {
-      [key: string]: boolean | object | string | string[];
-    } = {
+    const response: Record<string, boolean | object | string | string[]> = {
       [PROPERTY_CURRENCIES]: []
     };
 

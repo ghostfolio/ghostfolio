@@ -7,9 +7,7 @@ export interface PortfolioInterface {
 
   getFees(): number;
 
-  getPositions(aDate: Date): {
-    [symbol: string]: Position;
-  };
+  getPositions(aDate: Date): Record<string, Position>;
 
   getSymbols(aDate?: Date): string[];
 

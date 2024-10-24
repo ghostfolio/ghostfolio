@@ -4,6 +4,6 @@ export interface PortfolioItem {
   date: string;
   grossPerformancePercent: number;
   investment: number;
-  positions: { [symbol: string]: Position };
+  positions: Record<string, Position>;
   value: number;
 }

@@ -70,16 +70,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   });
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+  public countries: Record<string, { name: string; value: number }>;
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
+  public sectors: Record<string, { name: string; value: number }>;
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -190,14 +186,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onImportHistoricalData() {

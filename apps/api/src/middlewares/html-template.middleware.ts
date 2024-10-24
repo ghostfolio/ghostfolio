@@ -14,7 +14,7 @@ import { join } from 'path';
 
 const i18nService = new I18nService();
 
-let indexHtmlMap: { [languageCode: string]: string } = {};
+let indexHtmlMap: Record<string, string> = {};
 
 const title = 'Ghostfolio';
 

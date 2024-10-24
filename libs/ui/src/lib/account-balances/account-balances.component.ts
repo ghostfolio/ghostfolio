@@ -74,9 +74,9 @@ export class GfAccountBalancesComponent
     date: new FormControl(new Date(), Validators.required)
   });
 
-  public dataSource: MatTableDataSource<
+  public dataSource = new MatTableDataSource<
     AccountBalancesResponse['balances'][0]
-  > = new MatTableDataSource();
+  >();
 
   public displayedColumns: string[] = ['date', 'value', 'actions'];
   public Validators = Validators;

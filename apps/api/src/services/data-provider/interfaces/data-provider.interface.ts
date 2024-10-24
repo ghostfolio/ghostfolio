@@ -1,12 +1,13 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 
 import { DataSource, SymbolProfile } from '@prisma/client';
+
+import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../../interfaces/interfaces';
 
 export interface DataProviderInterface {
   canHandle(symbol: string): boolean;
@@ -19,9 +20,14 @@ export interface DataProviderInterface {
 
   getDataProviderInfo(): DataProviderInfo;
 
-  getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
-  }>;
+  getDividends({
+    from,
+    granularity,
+    symbol,
+    to
+  }: GetDividendsParams): Promise<
+    Record<string, IDataProviderHistoricalResponse>
+  >;
 
   getHistorical({
     from,
@@ -29,9 +35,9 @@ export interface DataProviderInterface {
     requestTimeout,
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }>; // TODO: Return only one symbol
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  >; // TODO: Return only one symbol
 
   getMaxNumberOfSymbolsPerRequest?(): number;
 
@@ -40,7 +46,7 @@ export interface DataProviderInterface {
   getQuotes({
     requestTimeout,
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }>;
+  }: GetQuotesParams): Promise<Record<string, IDataProviderResponse>>;
 
   getTestSymbol(): string;
 
