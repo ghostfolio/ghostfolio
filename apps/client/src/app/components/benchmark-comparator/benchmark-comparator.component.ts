@@ -98,7 +98,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   }
 
   private initialize() {
-    const benchmarkDataValues: { [date: string]: number } = {};
+    const benchmarkDataValues: Record<string, number> = {};
 
     for (const { date, value } of this.benchmarkDataItems) {
       benchmarkDataValues[date] = value;
@@ -133,9 +133,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration()
-        );
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration() as unknown;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
@@ -154,7 +153,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
             },
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
-            plugins: <unknown>{
+            plugins: {
               annotation: {
                 annotations: {
                   yAxis: {
@@ -173,7 +172,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            },
+            } as unknown,
             responsive: true,
             scales: {
               x: {
@@ -238,7 +237,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
         unit: '%'
       }),
       mode: 'index',
-      position: <unknown>'top',
+      position: 'top' as unknown,
       xAlign: 'center',
       yAlign: 'bottom'
     };

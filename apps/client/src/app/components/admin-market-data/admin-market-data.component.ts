@@ -1,6 +1,3 @@
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
   ghostfolioScraperApiSymbolPrefix
@@ -37,6 +34,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
+import { AdminService } from '../../services/admin.service';
+import { DataService } from '../../services/data.service';
+import { UserService } from '../../services/user/user.service';
 import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
@@ -71,36 +71,35 @@ export class AdminMarketDataComponent
       return {
         id: assetSubClass.toString(),
         label: translate(assetSubClass),
-        type: <Filter['type']>'ASSET_SUB_CLASS'
+        type: 'ASSET_SUB_CLASS' as Filter['type']
       };
     })
     .concat([
       {
         id: 'BENCHMARKS',
         label: $localize`Benchmarks`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'CURRENCIES',
         label: $localize`Currencies`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'ETF_WITHOUT_COUNTRIES',
         label: $localize`ETFs without Countries`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'ETF_WITHOUT_SECTORS',
         label: $localize`ETFs without Sectors`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       }
     ]);
   public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
-  public dataSource: MatTableDataSource<AdminMarketDataItem> =
-    new MatTableDataSource();
+  public dataSource = new MatTableDataSource<AdminMarketDataItem>();
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns: string[] = [];
@@ -375,13 +374,13 @@ export class AdminMarketDataComponent
 
         const dialogRef = this.dialog.open(AssetProfileDialog, {
           autoFocus: false,
-          data: <AssetProfileDialogParams>{
+          data: {
             dataSource,
             symbol,
             colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          },
+          } as AssetProfileDialogParams,
           height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
@@ -404,10 +403,10 @@ export class AdminMarketDataComponent
 
         const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
           autoFocus: false,
-          data: <CreateAssetProfileDialogParams>{
+          data: {
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          },
+          } as CreateAssetProfileDialogParams,
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

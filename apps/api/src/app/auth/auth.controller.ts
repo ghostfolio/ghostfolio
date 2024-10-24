@@ -85,7 +85,7 @@ export class AuthController {
     @Res() response: Response
   ) {
     // Handles the Google OAuth2 callback
-    const jwt: string = (<any>request.user).jwt;
+    const jwt: string = (request.user as any).jwt;
 
     if (jwt) {
       response.redirect(
