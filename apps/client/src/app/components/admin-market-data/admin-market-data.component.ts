@@ -264,7 +264,7 @@ export class AdminMarketDataComponent
     this.adminService
       .gatherProfileData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onGatherProfileDataBySymbol({
@@ -274,14 +274,14 @@ export class AdminMarketDataComponent
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onOpenAssetProfileDialog({

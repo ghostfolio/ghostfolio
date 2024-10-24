@@ -16,9 +16,6 @@ import { HealthService } from './health.service';
 export class HealthController {
   public constructor(private readonly healthService: HealthService) {}
 
-  @Get()
-  public async getHealth() {}
-
   @Get('data-enhancer/:name')
   public async getHealthOfDataEnhancer(@Param('name') name: string) {
     const hasResponse =
