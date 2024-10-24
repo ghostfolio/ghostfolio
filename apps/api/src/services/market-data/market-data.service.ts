@@ -1,7 +1,3 @@
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
-import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -12,6 +8,11 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
+
+import { UpdateMarketDataDto } from '../../app/admin/update-market-data.dto';
+import { DateQuery } from '../../app/portfolio/interfaces/date-query.interface';
+import { IDataGatheringItem } from '../interfaces/interfaces';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class MarketDataService {
@@ -144,21 +145,21 @@ export class MarketDataService {
       ({ dataSource, date, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
-            dataSource: <DataSource>dataSource,
-            date: <Date>date,
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state,
-            symbol: <string>symbol
+            dataSource: dataSource as DataSource,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState,
+            symbol: symbol as string
           },
           update: {
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState
           },
           where: {
             dataSource_date_symbol: {
-              dataSource: <DataSource>dataSource,
-              date: <Date>date,
-              symbol: <string>symbol
+              dataSource: dataSource as DataSource,
+              date: date as Date,
+              symbol: symbol as string
             }
           }
         });
