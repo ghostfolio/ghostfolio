@@ -51,7 +51,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: LineChartItem[] = [];
   @Input() benchmarks: Partial<SymbolProfile>[];
   @Input() colorScheme: ColorScheme;
-  @Input() daysInMarket: number;
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];

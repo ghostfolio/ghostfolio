@@ -15,7 +15,6 @@ import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { SymbolProfile } from '@prisma/client';
-import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -32,7 +31,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
-  public daysInMarket: number;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
@@ -198,7 +196,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate, performance }) => {
         this.firstOrderDate = firstOrderDate ?? new Date();
-        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
         this.investments = [];
         this.performance = performance;
