@@ -39,8 +39,7 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { isAfter, isValid, min, subDays } from 'date-fns';
-import { first } from 'lodash';
+import { isAfter } from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -53,7 +52,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataLabel = '';
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
-  @Input() daysInMarket: number;
   @Input() groupBy: GroupBy;
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
@@ -154,23 +152,11 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     };
 
     if (this.chartCanvas) {
-      let scaleXMin: string;
-
-      if (this.daysInMarket) {
-        const minDate = min([
-          parseDate(first(this.investments)?.date),
-          subDays(new Date().setHours(0, 0, 0, 0), this.daysInMarket)
-        ]);
-
-        scaleXMin = isValid(minDate) ? minDate.toISOString() : undefined;
-      }
-
       if (this.chart) {
         this.chart.data = chartData;
         this.chart.options.plugins.tooltip = <unknown>(
           this.getTooltipPluginConfiguration()
         );
-        this.chart.options.scales.x.min = scaleXMin;
 
         if (
           this.savingsRate &&
@@ -253,7 +239,6 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
                 grid: {
                   display: false
                 },
-                min: scaleXMin,
                 type: 'time',
                 time: {
                   tooltipFormat: getDateFormatString(this.locale),
