@@ -47,8 +47,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<AccountModel> =
-    new MatTableDataSource();
+  public dataSource = new MatTableDataSource<AccountModel>();
   public displayedColumns = [];
   public isLoading = true;
   public routeQueryParams: Subscription;

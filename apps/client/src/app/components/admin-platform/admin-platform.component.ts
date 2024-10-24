@@ -34,7 +34,7 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
+  public dataSource = new MatTableDataSource<Platform>();
   public deviceType: string;
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];

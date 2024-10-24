@@ -34,7 +34,7 @@ import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or
 export class AdminTagComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Tag> = new MatTableDataSource();
+  public dataSource = new MatTableDataSource<Tag>();
   public deviceType: string;
   public displayedColumns = ['name', 'userId', 'activities', 'actions'];
   public tags: Tag[];
