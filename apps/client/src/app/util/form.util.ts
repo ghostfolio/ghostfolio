@@ -8,7 +8,7 @@ export async function validateObjectForForm<T>({
   ignoreFields = [],
   object
 }: {
-  classDto: { new (): T };
+  classDto: new () => T;
   form: FormGroup;
   ignoreFields?: string[];
   object: T;
