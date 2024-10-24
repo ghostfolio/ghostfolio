@@ -1,0 +1,54 @@
+:host {
+  color: rgb(var(--dark-primary-text));
+  display: block;
+
+  .market-resources {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+
+    .mat-mdc-card {
+      height: 100%;
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        border-color: var(--gf-theme-primary-500);
+      }
+
+      .mat-mdc-card-header {
+        .mat-mdc-card-title {
+          font-size: 1.1rem;
+        }
+      }
+
+      .mat-mdc-card-content {
+        font-size: 0.9rem;
+      }
+
+      .mat-mdc-card-actions {
+        padding: 0 1rem 1rem;
+      }
+
+      a {
+        color: rgba(var(--palette-primary-500), 1);
+        font-weight: 500;
+        text-decoration: none;
+
+        &:hover {
+          color: rgba(var(--palette-primary-300), 1);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+:host-context(.theme-dark) {
+  color: rgb(var(--light-primary-text));
+
+  .market-resources {
+    .mat-mdc-card {
+      background-color: rgba(var(--palette-background-card-dark), 1);
+    }
+  }
+}

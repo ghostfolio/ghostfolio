@@ -1,6 +1,13 @@
 :host {
   color: rgb(var(--dark-primary-text));
-  display: block;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  // Add this to ensure proper ordering
+  nav {
+    order: 1; // This will force the nav to be first
+  }
 
   a {
     color: rgba(var(--palette-primary-500), 1);
@@ -14,4 +21,57 @@
 
 :host-context(.theme-dark) {
   color: rgb(var(--light-primary-text));
+}
+
+.mat-tab-nav-bar {
+  border-top: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  flex-direction: column;
+  width: 240px;
+}
+
+.mat-tab-link {
+  flex-direction: row;
+  justify-content: flex-start;
+  height: 48px;
+  padding: 0 16px;
+  min-width: auto;
+
+  ion-icon {
+    font-size: 24px;
+  }
+
+  .d-none {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 599px) {
+  :host {
+    flex-direction: column-reverse;
+  }
+
+  .mat-tab-nav-bar {
+    width: 100%;
+    border-right: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .mat-tab-link {
+    flex-direction: column;
+    height: auto;
+    padding: 8px 16px;
+
+    ion-icon {
+      font-size: 28px;
+    }
+  }
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.overflow-auto {
+  overflow: auto;
 }

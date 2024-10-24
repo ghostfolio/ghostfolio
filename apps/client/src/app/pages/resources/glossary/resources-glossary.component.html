@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="h3 mb-4 text-center" i18n>Glossary</h1>
+      <div class="glossary-list">
+        @for (item of glossaryItems; track item) {
+          <div class="mb-4">
+            <h3 class="h5 mt-0">{{ item.term }}</h3>
+            <p class="mb-1">{{ item.definition }}</p>
+            <a target="_blank" [href]="item.link">Learn more →</a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

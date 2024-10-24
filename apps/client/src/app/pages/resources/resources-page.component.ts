@@ -6,10 +6,10 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
-  host: { class: 'page' },
+  host: { class: 'page has-tabs' },
   selector: 'gf-resources-page',
-  styleUrls: ['./resources-page.scss'],
-  templateUrl: './resources-page.html'
+  templateUrl: './resources-page.html',
+  styleUrls: ['./resources-page.scss']
 })
 export class ResourcesPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
@@ -18,6 +18,20 @@ export class ResourcesPageComponent implements OnInit {
   public routerLinkResourcesPersonalFinanceTools = [
     '/' + $localize`:snake-case:resources`,
     'personal-finance-tools'
+  ];
+  public tabs = [
+    {
+      path: '.',
+      label: $localize`Overview`,
+      iconName: 'information-circle-outline'
+    },
+    { path: 'guides', label: $localize`Guides`, iconName: 'book-outline' },
+    {
+      path: 'markets',
+      label: $localize`Markets`,
+      iconName: 'trending-up-outline'
+    },
+    { path: 'glossary', label: $localize`Glossary`, iconName: 'list-outline' }
   ];
 
   private unsubscribeSubject = new Subject<void>();

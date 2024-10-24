@@ -1,0 +1,16 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h1 class="h3 mb-4 text-center" i18n>Guides</h1>
+      <div class="guides-list">
+        @for (guide of guides; track guide) {
+          <div class="mb-4">
+            <h3 class="h5 mt-0">{{ guide.title }}</h3>
+            <p class="mb-1">{{ guide.description }}</p>
+            <a target="_blank" [href]="guide.link">Read more →</a>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
