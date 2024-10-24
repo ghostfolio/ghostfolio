@@ -423,12 +423,12 @@ export class PortfolioService {
     const symbolProfiles =
       await this.symbolProfileService.getSymbolProfiles(dataGatheringItems);
 
-    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
+    const symbolProfileMap: Record<string, EnhancedSymbolProfile> = {};
     for (const symbolProfile of symbolProfiles) {
       symbolProfileMap[symbolProfile.symbol] = symbolProfile;
     }
 
-    const portfolioItemsNow: { [symbol: string]: TimelinePosition } = {};
+    const portfolioItemsNow: Record<string, TimelinePosition> = {};
     for (const position of positions) {
       portfolioItemsNow[position.symbol] = position;
     }
@@ -969,7 +969,7 @@ export class PortfolioService {
       )
     ]);
 
-    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
+    const symbolProfileMap: Record<string, EnhancedSymbolProfile> = {};
 
     for (const symbolProfile of symbolProfiles) {
       symbolProfileMap[symbolProfile.symbol] = symbolProfile;

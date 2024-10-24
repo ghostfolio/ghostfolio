@@ -38,7 +38,7 @@ export function redactAttributes({
 }: {
   isFirstRun?: boolean;
   object: any;
-  options: { attribute: string; valueMap: { [key: string]: any } }[];
+  options: { attribute: string; valueMap: Record<string, any> }[];
 }): any {
   if (!object || !options?.length) {
     return object;

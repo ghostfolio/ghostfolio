@@ -110,9 +110,8 @@ export class AccountBalanceService {
       userId,
       withExcludedAccounts: false // TODO
     });
-    const accumulatedBalancesByDate: { [date: string]: HistoricalDataItem } =
-      {};
-    const lastBalancesByAccount: { [accountId: string]: Big } = {};
+    const accumulatedBalancesByDate: Record<string, HistoricalDataItem> = {};
+    const lastBalancesByAccount: Record<string, Big> = {};
 
     for (const { accountId, date, valueInBaseCurrency } of balances) {
       const formattedDate = format(date, DATE_FORMAT);

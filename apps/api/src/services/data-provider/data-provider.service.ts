@@ -1,14 +1,3 @@
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
@@ -30,9 +19,21 @@ import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
+import { RedisCacheService } from '../../app/redis-cache/redis-cache.service';
+import { LookupItem } from '../../app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '../configuration/configuration.service';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../interfaces/interfaces';
+import { MarketDataService } from '../market-data/market-data.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { PropertyService } from '../property/property.service';
+import { DataProviderInterface } from './interfaces/data-provider.interface';
+
 @Injectable()
 export class DataProviderService {
-  private dataProviderMapping: { [dataProviderName: string]: string };
+  private dataProviderMapping: Record<string, string>;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -48,9 +49,9 @@ export class DataProviderService {
 
   public async initialize() {
     this.dataProviderMapping =
-      ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
-        [dataProviderName: string]: string;
-      }) ?? {};
+      ((await this.propertyService.getByKey(
+        PROPERTY_DATA_SOURCE_MAPPING
+      )) as Record<string, string>) ?? {};
   }
 
   public async checkQuote(dataSource: DataSource) {
@@ -75,12 +76,10 @@ export class DataProviderService {
     return false;
   }
 
-  public async getAssetProfiles(items: AssetProfileIdentifier[]): Promise<{
-    [symbol: string]: Partial<SymbolProfile>;
-  }> {
-    const response: {
-      [symbol: string]: Partial<SymbolProfile>;
-    } = {};
+  public async getAssetProfiles(
+    items: AssetProfileIdentifier[]
+  ): Promise<Record<string, Partial<SymbolProfile>>> {
+    const response: Record<string, Partial<SymbolProfile>> = {};
 
     const itemsGroupedByDataSource = groupBy(items, ({ dataSource }) => {
       return dataSource;
@@ -177,12 +176,11 @@ export class DataProviderService {
     aGranularity: Granularity = 'month',
     from: Date,
     to: Date
-  ): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
-    let response: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-    } = {};
+  ): Promise<Record<string, Record<string, IDataProviderHistoricalResponse>>> {
+    let response: Record<
+      string,
+      Record<string, IDataProviderHistoricalResponse>
+    > = {};
 
     if (isEmpty(aItems) || !isValid(from) || !isValid(to)) {
       return response;
@@ -246,9 +244,7 @@ export class DataProviderService {
     dataGatheringItems: AssetProfileIdentifier[];
     from: Date;
     to: Date;
-  }): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }): Promise<Record<string, Record<string, IDataProviderHistoricalResponse>>> {
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
         this.hasCurrency({
@@ -272,21 +268,20 @@ export class DataProviderService {
       return obj1.dataSource === obj2.dataSource && obj1.symbol === obj2.symbol;
     });
 
-    const result: {
-      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-    } = {};
+    const result: Record<
+      string,
+      Record<string, IDataProviderHistoricalResponse>
+    > = {};
 
     const promises: Promise<{
-      data: { [date: string]: IDataProviderHistoricalResponse };
+      data: Record<string, IDataProviderHistoricalResponse>;
       symbol: string;
     }>[] = [];
     for (const { dataSource, symbol } of dataGatheringItems) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.canHandle(symbol)) {
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
-          const data: {
-            [date: string]: IDataProviderHistoricalResponse;
-          } = {};
+          const data: Record<string, IDataProviderHistoricalResponse> = {};
 
           for (const date of eachDayOfInterval({ end: to, start: from })) {
             data[format(date, DATE_FORMAT)] = { marketPrice: 100 };
@@ -354,12 +349,8 @@ export class DataProviderService {
     requestTimeout?: number;
     useCache?: boolean;
     user?: UserWithSettings;
-  }): Promise<{
-    [symbol: string]: IDataProviderResponse;
-  }> {
-    const response: {
-      [symbol: string]: IDataProviderResponse;
-    } = {};
+  }): Promise<Record<string, IDataProviderResponse>> {
+    const response: Record<string, IDataProviderResponse> = {};
     const startTimeTotal = performance.now();
 
     if (
@@ -651,9 +642,7 @@ export class DataProviderService {
     factor
   }: {
     allData: {
-      data: {
-        [date: string]: IDataProviderHistoricalResponse;
-      };
+      data: Record<string, IDataProviderHistoricalResponse>;
       symbol: string;
     }[];
     currency: string;
@@ -663,9 +652,7 @@ export class DataProviderService {
       return symbol === currency;
     })?.data;
 
-    const data: {
-      [date: string]: IDataProviderHistoricalResponse;
-    } = {};
+    const data: Record<string, IDataProviderHistoricalResponse> = {};
 
     for (const date in rootData) {
       if (isNumber(rootData[date].marketPrice)) {

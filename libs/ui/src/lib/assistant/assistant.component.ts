@@ -292,7 +292,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  public hasFilter(aFormValue: { [key: string]: string }) {
+  public hasFilter(aFormValue: Record<string, string>) {
     return Object.values(aFormValue).some((value) => {
       return !!value;
     });

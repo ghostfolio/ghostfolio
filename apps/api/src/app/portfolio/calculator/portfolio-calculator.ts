@@ -1,16 +1,3 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
-import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
-import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
-import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
-import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
-import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
-import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
@@ -50,6 +37,20 @@ import {
   subDays
 } from 'date-fns';
 import { first, isNumber, last, sortBy, sum, uniq, uniqBy } from 'lodash';
+
+import { getFactor } from '../../../helper/portfolio.helper';
+import { LogPerformance } from '../../../interceptors/performance-logging/performance-logging.interceptor';
+import { ConfigurationService } from '../../../services/configuration/configuration.service';
+import { ExchangeRateDataService } from '../../../services/exchange-rate-data/exchange-rate-data.service';
+import { IDataGatheringItem } from '../../../services/interfaces/interfaces';
+import { PortfolioSnapshotService } from '../../../services/queues/portfolio-snapshot/portfolio-snapshot.service';
+import { Activity } from '../../order/interfaces/activities.interface';
+import { RedisCacheService } from '../../redis-cache/redis-cache.service';
+import { CurrentRateService } from '../current-rate.service';
+import { PortfolioOrder } from '../interfaces/portfolio-order.interface';
+import { PortfolioSnapshotValue } from '../interfaces/snapshot-value.interface';
+import { TransactionPointSymbol } from '../interfaces/transaction-point-symbol.interface';
+import { TransactionPoint } from '../interfaces/transaction-point.interface';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -188,7 +189,7 @@ export abstract class PortfolioCalculator {
       };
     }
 
-    const currencies: { [symbol: string]: string } = {};
+    const currencies: Record<string, string> = {};
     const dataGatheringItems: IDataGatheringItem[] = [];
     let firstIndex = transactionPoints.length;
     let firstTransactionPoint: TransactionPoint = null;
@@ -239,9 +240,7 @@ export abstract class PortfolioCalculator {
 
     this.dataProviderInfos = dataProviderInfos;
 
-    const marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    } = {};
+    const marketSymbolMap: Record<string, Record<string, Big>> = {};
 
     for (const marketSymbol of marketSymbols) {
       const date = format(marketSymbol.date, DATE_FORMAT);
@@ -290,8 +289,9 @@ export abstract class PortfolioCalculator {
 
     const errors: ResponseError['errors'] = [];
 
-    const accumulatedValuesByDate: {
-      [date: string]: {
+    const accumulatedValuesByDate: Record<
+      string,
+      {
         investmentValueWithCurrencyEffect: Big;
         totalAccountBalanceWithCurrencyEffect: Big;
         totalCurrentValue: Big;
@@ -302,22 +302,23 @@ export abstract class PortfolioCalculator {
         totalNetPerformanceValueWithCurrencyEffect: Big;
         totalTimeWeightedInvestmentValue: Big;
         totalTimeWeightedInvestmentValueWithCurrencyEffect: Big;
-      };
-    } = {};
+      }
+    > = {};
 
-    const valuesBySymbol: {
-      [symbol: string]: {
-        currentValues: { [date: string]: Big };
-        currentValuesWithCurrencyEffect: { [date: string]: Big };
-        investmentValuesAccumulated: { [date: string]: Big };
-        investmentValuesAccumulatedWithCurrencyEffect: { [date: string]: Big };
-        investmentValuesWithCurrencyEffect: { [date: string]: Big };
-        netPerformanceValues: { [date: string]: Big };
-        netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
-        timeWeightedInvestmentValues: { [date: string]: Big };
-        timeWeightedInvestmentValuesWithCurrencyEffect: { [date: string]: Big };
-      };
-    } = {};
+    const valuesBySymbol: Record<
+      string,
+      {
+        currentValues: Record<string, Big>;
+        currentValuesWithCurrencyEffect: Record<string, Big>;
+        investmentValuesAccumulated: Record<string, Big>;
+        investmentValuesAccumulatedWithCurrencyEffect: Record<string, Big>;
+        investmentValuesWithCurrencyEffect: Record<string, Big>;
+        netPerformanceValues: Record<string, Big>;
+        netPerformanceValuesWithCurrencyEffect: Record<string, Big>;
+        timeWeightedInvestmentValues: Record<string, Big>;
+        timeWeightedInvestmentValuesWithCurrencyEffect: Record<string, Big>;
+      }
+    > = {};
 
     for (const item of lastTransactionPoint.items) {
       const feeInBaseCurrency = item.fee.mul(
@@ -461,10 +462,10 @@ export abstract class PortfolioCalculator {
 
         return map;
       },
-      {} as { [date: string]: Big }
+      {} as Record<string, Big>
     );
 
-    const accountBalanceMap: { [date: string]: Big } = {};
+    const accountBalanceMap: Record<string, Big> = {};
 
     let lastKnownBalance = new Big(0);
 
@@ -670,7 +671,7 @@ export abstract class PortfolioCalculator {
     data: HistoricalDataItem[];
     groupBy: GroupBy;
   }): InvestmentItem[] {
-    const groupedData: { [dateGroup: string]: Big } = {};
+    const groupedData: Record<string, Big> = {};
 
     for (const { date, investmentValueWithCurrencyEffect } of data) {
       const dateGroup =
@@ -802,12 +803,10 @@ export abstract class PortfolioCalculator {
     start,
     symbol
   }: {
-    chartDateMap: { [date: string]: boolean };
+    chartDateMap: Record<string, boolean>;
     end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
+    exchangeRates: Record<string, number>;
+    marketSymbolMap: Record<string, Record<string, Big>>;
     start: Date;
   } & AssetProfileIdentifier): SymbolMetrics;
 
@@ -829,7 +828,7 @@ export abstract class PortfolioCalculator {
     endDate: Date;
     startDate: Date;
     step: number;
-  }): { [date: string]: true } {
+  }): Record<string, true> {
     // Create a map of all relevant chart dates:
     // 1. Add transaction point dates
     const chartDateMap = this.transactionPoints.reduce((result, { date }) => {
@@ -892,7 +891,7 @@ export abstract class PortfolioCalculator {
   @LogPerformance
   private computeTransactionPoints() {
     this.transactionPoints = [];
-    const symbols: { [symbol: string]: TransactionPointSymbol } = {};
+    const symbols: Record<string, TransactionPointSymbol> = {};
 
     let lastDate: string = null;
     let lastTransactionPoint: TransactionPoint = null;

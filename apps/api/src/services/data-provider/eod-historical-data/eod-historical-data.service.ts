@@ -1,17 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '@ghostfolio/api/services/interfaces/interfaces';
-import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
   REPLACE_NAME_PARTS
@@ -30,6 +16,21 @@ import {
 import { addDays, format, isSameDay, isToday } from 'date-fns';
 import got from 'got';
 import { isNumber } from 'lodash';
+
+import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '../../configuration/configuration.service';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '../../interfaces/interfaces';
+import { SymbolProfileService } from '../../symbol-profile/symbol-profile.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class EodHistoricalDataService implements DataProviderInterface {
@@ -78,9 +79,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
-  }: GetDividendsParams): Promise<{
-    [date: string]: IDataProviderHistoricalResponse;
-  }> {
+  }: GetDividendsParams): Promise<
+    Record<string, IDataProviderHistoricalResponse>
+  > {
     symbol = this.convertToEodSymbol(symbol);
 
     if (isSameDay(from, to)) {
@@ -90,9 +91,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     try {
       const abortController = new AbortController();
 
-      const response: {
-        [date: string]: IDataProviderHistoricalResponse;
-      } = {};
+      const response: Record<string, IDataProviderHistoricalResponse> = {};
 
       setTimeout(() => {
         abortController.abort();
@@ -137,9 +136,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
-  }: GetHistoricalParams): Promise<{
-    [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-  }> {
+  }: GetHistoricalParams): Promise<
+    Record<string, Record<string, IDataProviderHistoricalResponse>>
+  > {
     symbol = this.convertToEodSymbol(symbol);
 
     try {
@@ -202,8 +201,8 @@ export class EodHistoricalDataService implements DataProviderInterface {
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<Record<string, IDataProviderResponse>> {
+    const response: Record<string, IDataProviderResponse> = {};
 
     if (symbols.length <= 0) {
       return response;

@@ -3,11 +3,9 @@ import { Big } from 'big.js';
 export function transformToMapOfBig({
   value
 }: {
-  value: { [key: string]: string };
-}): {
-  [key: string]: Big;
-} {
-  const mapOfBig: { [key: string]: Big } = {};
+  value: Record<string, string>;
+}): Record<string, Big> {
+  const mapOfBig: Record<string, Big> = {};
 
   for (const key in value) {
     mapOfBig[key] = new Big(value[key]);

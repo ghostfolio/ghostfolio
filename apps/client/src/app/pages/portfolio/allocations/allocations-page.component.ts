@@ -1,8 +1,3 @@
-import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
-import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -25,24 +20,27 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { AccountDetailDialog } from '../../../components/account-detail-dialog/account-detail-dialog.component';
+import { AccountDetailDialogParams } from '../../../components/account-detail-dialog/interfaces/interfaces';
+import { DataService } from '../../../services/data.service';
+import { ImpersonationStorageService } from '../../../services/impersonation-storage.service';
+import { UserService } from '../../../services/user/user.service';
+
 @Component({
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],
   templateUrl: './allocations-page.html'
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
-  public accounts: {
-    [id: string]: Pick<Account, 'name'> & {
+  public accounts: Record<
+    string,
+    Pick<Account, 'name'> & {
       id: string;
       value: number;
-    };
-  };
-  public continents: {
-    [code: string]: { name: string; value: number };
-  };
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+    }
+  >;
+  public continents: Record<string, { name: string; value: number }>;
+  public countries: Record<string, { name: string; value: number }>;
   public deviceType: string;
   public hasImpersonationId: boolean;
   public isLoading = false;
@@ -56,15 +54,17 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public platforms: {
-    [id: string]: Pick<Platform, 'name'> & {
+  public platforms: Record<
+    string,
+    Pick<Platform, 'name'> & {
       id: string;
       value: number;
-    };
-  };
+    }
+  >;
   public portfolioDetails: PortfolioDetails;
-  public positions: {
-    [symbol: string]: Pick<
+  public positions: Record<
+    string,
+    Pick<
       PortfolioPosition,
       | 'assetClass'
       | 'assetClassLabel'
@@ -73,23 +73,20 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       | 'currency'
       | 'exchange'
       | 'name'
-    > & { etfProvider: string; value: number };
-  };
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
-  public symbols: {
-    [name: string]: {
+    > & { etfProvider: string; value: number }
+  >;
+  public sectors: Record<string, { name: string; value: number }>;
+  public symbols: Record<
+    string,
+    {
       dataSource?: DataSource;
       name: string;
       symbol: string;
       value: number;
-    };
-  };
+    }
+  >;
   public topHoldings: Holding[];
-  public topHoldingsMap: {
-    [name: string]: { name: string; value: number };
-  };
+  public topHoldingsMap: Record<string, { name: string; value: number }>;
   public totalValueInEtf = 0;
   public UNKNOWN_KEY = UNKNOWN_KEY;
   public user: User;

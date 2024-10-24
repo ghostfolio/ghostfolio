@@ -299,10 +299,6 @@ export class SymbolProfileService {
   }
 
   private getSymbolMapping(symbolProfile: SymbolProfile) {
-    return (
-      (symbolProfile['symbolMapping'] as {
-        [key: string]: string;
-      }) ?? {}
-    );
+    return (symbolProfile['symbolMapping'] as Record<string, string>) ?? {};
   }
 }

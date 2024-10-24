@@ -94,9 +94,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
-  public countries: {
-    [code: string]: { name: string; value: number };
-  };
+  public countries: Record<string, { name: string; value: number }>;
   public dataProviderInfo: DataProviderInfo;
   public dataSource: MatTableDataSource<Activity>;
   public dividendInBaseCurrency: number;
@@ -120,9 +118,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public quantity: number;
   public quantityPrecision = 2;
   public reportDataGlitchMail: string;
-  public sectors: {
-    [name: string]: { name: string; value: number };
-  };
+  public sectors: Record<string, { name: string; value: number }>;
   public separatorKeysCodes: number[] = [COMMA, ENTER];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';

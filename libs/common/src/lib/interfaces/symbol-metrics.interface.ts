@@ -3,12 +3,8 @@ import { DateRange } from '@ghostfolio/common/types';
 import { Big } from 'big.js';
 
 export interface SymbolMetrics {
-  currentValues: {
-    [date: string]: Big;
-  };
-  currentValuesWithCurrencyEffect: {
-    [date: string]: Big;
-  };
+  currentValues: Record<string, Big>;
+  currentValuesWithCurrencyEffect: Record<string, Big>;
   feesWithCurrencyEffect: Big;
   grossPerformance: Big;
   grossPerformancePercentage: Big;
@@ -17,30 +13,18 @@ export interface SymbolMetrics {
   hasErrors: boolean;
   initialValue: Big;
   initialValueWithCurrencyEffect: Big;
-  investmentValuesAccumulated: {
-    [date: string]: Big;
-  };
-  investmentValuesAccumulatedWithCurrencyEffect: {
-    [date: string]: Big;
-  };
-  investmentValuesWithCurrencyEffect: {
-    [date: string]: Big;
-  };
+  investmentValuesAccumulated: Record<string, Big>;
+  investmentValuesAccumulatedWithCurrencyEffect: Record<string, Big>;
+  investmentValuesWithCurrencyEffect: Record<string, Big>;
   netPerformance: Big;
   netPerformancePercentage: Big;
-  netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
-  netPerformanceValues: {
-    [date: string]: Big;
-  };
-  netPerformanceValuesWithCurrencyEffect: { [date: string]: Big };
-  netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
+  netPerformancePercentageWithCurrencyEffectMap: Record<DateRange, Big>;
+  netPerformanceValues: Record<string, Big>;
+  netPerformanceValuesWithCurrencyEffect: Record<string, Big>;
+  netPerformanceWithCurrencyEffectMap: Record<DateRange, Big>;
   timeWeightedInvestment: Big;
-  timeWeightedInvestmentValues: {
-    [date: string]: Big;
-  };
-  timeWeightedInvestmentValuesWithCurrencyEffect: {
-    [date: string]: Big;
-  };
+  timeWeightedInvestmentValues: Record<string, Big>;
+  timeWeightedInvestmentValuesWithCurrencyEffect: Record<string, Big>;
   timeWeightedInvestmentWithCurrencyEffect: Big;
   totalAccountBalanceInBaseCurrency: Big;
   totalDividend: Big;

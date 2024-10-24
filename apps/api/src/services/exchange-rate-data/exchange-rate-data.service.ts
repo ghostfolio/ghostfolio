@@ -1,9 +1,3 @@
-import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
@@ -26,11 +20,18 @@ import {
 import { isNumber, uniq } from 'lodash';
 import ms from 'ms';
 
+import { LogPerformance } from '../../interceptors/performance-logging/performance-logging.interceptor';
+import { DataProviderService } from '../data-provider/data-provider.service';
+import { IDataGatheringItem } from '../interfaces/interfaces';
+import { MarketDataService } from '../market-data/market-data.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { PropertyService } from '../property/property.service';
+
 @Injectable()
 export class ExchangeRateDataService {
   private currencies: string[] = [];
   private currencyPairs: IDataGatheringItem[] = [];
-  private exchangeRates: { [currencyPair: string]: number } = {};
+  private exchangeRates: Record<string, number> = {};
 
   public constructor(
     private readonly dataProviderService: DataProviderService,
@@ -63,9 +64,7 @@ export class ExchangeRateDataService {
       return {};
     }
 
-    const exchangeRatesByCurrency: {
-      [currency: string]: { [dateString: string]: number };
-    } = {};
+    const exchangeRatesByCurrency: Record<string, Record<string, number>> = {};
 
     for (const currency of currencies) {
       exchangeRatesByCurrency[`${currency}${targetCurrency}`] =
@@ -351,7 +350,7 @@ export class ExchangeRateDataService {
     startDate: Date;
   }) {
     const dates = eachDayOfInterval({ end: endDate, start: startDate });
-    const factors: { [dateString: string]: number } = {};
+    const factors: Record<string, number> = {};
 
     if (currencyFrom === currencyTo) {
       for (const date of dates) {
@@ -379,12 +378,8 @@ export class ExchangeRateDataService {
       } else {
         // Calculate indirectly via base currency
 
-        const marketPriceBaseCurrencyFromCurrency: {
-          [dateString: string]: number;
-        } = {};
-        const marketPriceBaseCurrencyToCurrency: {
-          [dateString: string]: number;
-        } = {};
+        const marketPriceBaseCurrencyFromCurrency: Record<string, number> = {};
+        const marketPriceBaseCurrencyToCurrency: Record<string, number> = {};
 
         try {
           if (currencyFrom === DEFAULT_CURRENCY) {

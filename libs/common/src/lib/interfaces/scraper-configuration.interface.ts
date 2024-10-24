@@ -1,6 +1,6 @@
 export interface ScraperConfiguration {
   defaultMarketPrice?: number;
-  headers?: { [key: string]: string };
+  headers?: Record<string, string>;
   locale?: string;
   mode?: 'instant' | 'lazy';
   selector: string;

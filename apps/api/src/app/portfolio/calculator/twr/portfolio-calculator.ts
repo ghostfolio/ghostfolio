@@ -1,6 +1,3 @@
-import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -14,6 +11,10 @@ import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
+
+import { getFactor } from '../../../../helper/portfolio.helper';
+import { PortfolioOrderItem } from '../../interfaces/portfolio-order-item.interface';
+import { PortfolioCalculator } from '../portfolio-calculator';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
@@ -116,17 +117,15 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     start,
     symbol
   }: {
-    chartDateMap?: { [date: string]: boolean };
+    chartDateMap?: Record<string, boolean>;
     end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
+    exchangeRates: Record<string, number>;
+    marketSymbolMap: Record<string, Record<string, Big>>;
     start: Date;
   } & AssetProfileIdentifier): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
-    const currentValues: { [date: string]: Big } = {};
-    const currentValuesWithCurrencyEffect: { [date: string]: Big } = {};
+    const currentValues: Record<string, Big> = {};
+    const currentValuesWithCurrencyEffect: Record<string, Big> = {};
     let fees = new Big(0);
     let feesAtStartDate = new Big(0);
     let feesAtStartDateWithCurrencyEffect = new Big(0);
@@ -141,20 +140,18 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
     let investmentAtStartDateWithCurrencyEffect: Big;
-    const investmentValuesAccumulated: { [date: string]: Big } = {};
-    const investmentValuesAccumulatedWithCurrencyEffect: {
-      [date: string]: Big;
-    } = {};
-    const investmentValuesWithCurrencyEffect: { [date: string]: Big } = {};
+    const investmentValuesAccumulated: Record<string, Big> = {};
+    const investmentValuesAccumulatedWithCurrencyEffect: Record<string, Big> =
+      {};
+    const investmentValuesWithCurrencyEffect: Record<string, Big> = {};
     let lastAveragePrice = new Big(0);
     let lastAveragePriceWithCurrencyEffect = new Big(0);
-    const netPerformanceValues: { [date: string]: Big } = {};
-    const netPerformanceValuesWithCurrencyEffect: { [date: string]: Big } = {};
-    const timeWeightedInvestmentValues: { [date: string]: Big } = {};
+    const netPerformanceValues: Record<string, Big> = {};
+    const netPerformanceValuesWithCurrencyEffect: Record<string, Big> = {};
+    const timeWeightedInvestmentValues: Record<string, Big> = {};
 
-    const timeWeightedInvestmentValuesWithCurrencyEffect: {
-      [date: string]: Big;
-    } = {};
+    const timeWeightedInvestmentValuesWithCurrencyEffect: Record<string, Big> =
+      {};
 
     const totalAccountBalanceInBaseCurrency = new Big(0);
     let totalDividend = new Big(0);
@@ -301,7 +298,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
 
     let lastUnitPrice: Big;
 
-    const ordersByDate: { [date: string]: PortfolioOrderItem[] } = {};
+    const ordersByDate: Record<string, PortfolioOrderItem[]> = {};
 
     for (const order of orders) {
       ordersByDate[order.date] = ordersByDate[order.date] ?? [];
@@ -788,13 +785,12 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           )
         : new Big(0);
 
-    const netPerformancePercentageWithCurrencyEffectMap: {
-      [key: DateRange]: Big;
-    } = {};
+    const netPerformancePercentageWithCurrencyEffectMap: Record<
+      DateRange,
+      Big
+    > = {};
 
-    const netPerformanceWithCurrencyEffectMap: {
-      [key: DateRange]: Big;
-    } = {};
+    const netPerformanceWithCurrencyEffectMap: Record<DateRange, Big> = {};
 
     for (const dateRange of [
       '1d',

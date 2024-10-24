@@ -5,16 +5,17 @@ import {
 import { Market, MarketAdvanced } from '@ghostfolio/common/types';
 
 export interface PortfolioDetails {
-  accounts: {
-    [id: string]: {
+  accounts: Record<
+    string,
+    {
       balance: number;
       currency: string;
       name: string;
       valueInBaseCurrency: number;
       valueInPercentage?: number;
-    };
-  };
-  holdings: { [symbol: string]: PortfolioPosition };
+    }
+  >;
+  holdings: Record<string, PortfolioPosition>;
   markets?: {
     [key in Market]: {
       id: Market;
@@ -29,14 +30,15 @@ export interface PortfolioDetails {
       valueInPercentage: number;
     };
   };
-  platforms: {
-    [id: string]: {
+  platforms: Record<
+    string,
+    {
       balance: number;
       currency: string;
       name: string;
       valueInBaseCurrency: number;
       valueInPercentage?: number;
-    };
-  };
+    }
+  >;
   summary?: PortfolioSummary;
 }

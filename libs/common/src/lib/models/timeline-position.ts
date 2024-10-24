@@ -70,10 +70,10 @@ export class TimelinePosition {
   netPerformancePercentage: Big;
 
   @Transform(transformToMapOfBig, { toClassOnly: true })
-  netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
+  netPerformancePercentageWithCurrencyEffectMap: Record<DateRange, Big>;
 
   @Transform(transformToMapOfBig, { toClassOnly: true })
-  netPerformanceWithCurrencyEffectMap: { [key: DateRange]: Big };
+  netPerformanceWithCurrencyEffectMap: Record<DateRange, Big>;
 
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)

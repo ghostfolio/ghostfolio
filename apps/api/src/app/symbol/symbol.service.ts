@@ -74,11 +74,10 @@ export class SymbolService {
     date = new Date(),
     symbol
   }: IDataGatheringItem): Promise<IDataProviderHistoricalResponse> {
-    let historicalData: {
-      [symbol: string]: {
-        [date: string]: IDataProviderHistoricalResponse;
-      };
-    } = {
+    let historicalData: Record<
+      string,
+      Record<string, IDataProviderHistoricalResponse>
+    > = {
       [symbol]: {}
     };
 

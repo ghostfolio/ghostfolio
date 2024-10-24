@@ -1,4 +1,3 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATE_FORMAT,
   getDateFormatString,
@@ -32,6 +31,7 @@ import { first, last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
+import { UserService } from '../../services/user/user.service';
 import { MarketDataDetailDialogParams } from './market-data-detail-dialog/interfaces/interfaces';
 import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-detail-dialog.component';
 
@@ -55,11 +55,10 @@ export class AdminMarketDataDetailComponent implements OnChanges {
   public defaultDateFormat: string;
   public deviceType: string;
   public historicalDataItems: LineChartItem[];
-  public marketDataByMonth: {
-    [yearMonth: string]: {
-      [day: string]: Pick<MarketData, 'date' | 'marketPrice'> & { day: number };
-    };
-  } = {};
+  public marketDataByMonth: Record<
+    string,
+    Record<string, Pick<MarketData, 'date' | 'marketPrice'> & { day: number }>
+  > = {};
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
