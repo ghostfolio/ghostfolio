@@ -112,7 +112,7 @@ export abstract class AbstractMatFormField<T>
   public _disabled: boolean = false;
 
   public get disabled() {
-    if (this.ngControl && this.ngControl.disabled !== null) {
+    if (this.ngControl?.disabled !== null) {
       return this.ngControl.disabled;
     }
 

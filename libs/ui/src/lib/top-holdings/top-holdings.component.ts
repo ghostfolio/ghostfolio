@@ -46,7 +46,7 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Holding> = new MatTableDataSource();
+  public dataSource = new MatTableDataSource<Holding>();
   public displayedColumns: string[] = [
     'name',
     'valueInBaseCurrency',
