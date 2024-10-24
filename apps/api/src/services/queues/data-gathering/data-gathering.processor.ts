@@ -1,6 +1,3 @@
-import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
   DATA_GATHERING_QUEUE,
   DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
@@ -25,6 +22,9 @@ import {
   parseISO
 } from 'date-fns';
 
+import { DataProviderService } from '../../data-provider/data-provider.service';
+import { IDataGatheringItem } from '../../interfaces/interfaces';
+import { MarketDataService } from '../../market-data/market-data.service';
 import { DataGatheringService } from './data-gathering.service';
 
 @Injectable()
@@ -78,7 +78,7 @@ export class DataGatheringProcessor {
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
     try {
       const { dataSource, date, symbol } = job.data;
-      let currentDate = parseISO(<string>(<unknown>date));
+      let currentDate = parseISO(date as unknown as string);
 
       Logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(

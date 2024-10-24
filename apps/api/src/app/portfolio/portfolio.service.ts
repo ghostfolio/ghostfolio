@@ -138,7 +138,7 @@ export class PortfolioService {
         some: {
           SymbolProfile: {
             AND: [
-              { dataSource: <DataSource>filterByDataSource },
+              { dataSource: filterByDataSource as DataSource },
               { symbol: filterBySymbol }
             ]
           }
@@ -1160,7 +1160,7 @@ export class PortfolioService {
 
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const userSettings = <UserSettings>this.request.user.Settings.settings;
+    const userSettings = this.request.user.Settings.settings as UserSettings;
 
     const { accounts, holdings, markets, summary } = await this.getDetails({
       impersonationId,

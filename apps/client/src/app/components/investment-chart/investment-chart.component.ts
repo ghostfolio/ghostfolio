@@ -154,9 +154,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = chartData;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration()
-        );
+        this.chart.options.plugins.tooltip =
+          this.getTooltipPluginConfiguration() as unknown;
 
         if (
           this.savingsRate &&
@@ -186,7 +185,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             },
             interaction: { intersect: false, mode: 'index' },
             maintainAspectRatio: true,
-            plugins: <unknown>{
+            plugins: {
               annotation: {
                 annotations: {
                   savingsRate: this.savingsRate
@@ -227,7 +226,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
               verticalHoverLine: {
                 color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`
               }
-            },
+            } as unknown,
             responsive: true,
             scales: {
               x: {
@@ -294,7 +293,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         unit: this.isInPercent ? '%' : undefined
       }),
       mode: 'index',
-      position: <unknown>'top',
+      position: 'top' as unknown,
       xAlign: 'center',
       yAlign: 'bottom'
     };

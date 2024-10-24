@@ -108,7 +108,7 @@ export function downloadAsFile({
     content = JSON.stringify(content, undefined, '  ');
   }
 
-  const file = new Blob([<string>content], {
+  const file = new Blob([content as string], {
     type: contentType
   });
   a.href = URL.createObjectURL(file);

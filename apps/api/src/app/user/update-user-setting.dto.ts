@@ -1,4 +1,3 @@
-import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 import type {
   ColorScheme,
   DateRange,
@@ -18,6 +17,8 @@ import {
 } from 'class-validator';
 import { eachYearOfInterval, format } from 'date-fns';
 
+import { IsCurrencyCode } from '../../validators/is-currency-code';
+
 export class UpdateUserSettingDto {
   @IsNumber()
   @IsOptional()
@@ -31,11 +32,11 @@ export class UpdateUserSettingDto {
   @IsOptional()
   benchmark?: string;
 
-  @IsIn(<ColorScheme[]>['DARK', 'LIGHT'])
+  @IsIn(['DARK', 'LIGHT'] as ColorScheme[])
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>[
+  @IsIn([
     '1d',
     '1y',
     '5y',
@@ -48,7 +49,7 @@ export class UpdateUserSettingDto {
         return format(date, 'yyyy');
       }
     )
-  ])
+  ] as DateRange[])
   @IsOptional()
   dateRange?: DateRange;
 
@@ -68,7 +69,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   'filters.tags'?: string[];
 
-  @IsIn(<HoldingsViewMode[]>['CHART', 'TABLE'])
+  @IsIn(['CHART', 'TABLE'] as HoldingsViewMode[])
   @IsOptional()
   holdingsViewMode?: HoldingsViewMode;
 
@@ -100,7 +101,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   savingsRate?: number;
 
-  @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
+  @IsIn(['DEFAULT', 'ZEN'] as ViewMode[])
   @IsOptional()
   viewMode?: ViewMode;
 

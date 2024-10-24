@@ -225,10 +225,10 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       $localize`Please set your system message:`,
       JSON.stringify(
         this.systemMessage ??
-          <SystemMessage>{
+          ({
             message: '⚒️ Scheduled maintenance in progress...',
             targetGroups: ['Basic', 'Premium']
-          }
+          } as SystemMessage)
       )
     );
 
