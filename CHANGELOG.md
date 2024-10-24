@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
 
 ### Fixed
 
