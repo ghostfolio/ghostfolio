@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
+
 ### Fixed
 
 - Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
