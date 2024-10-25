@@ -1169,6 +1169,12 @@ export class PortfolioService {
       withSummary: true
     });
 
+    const marketsTotalInBaseCurrency = getSum(
+      Object.values(markets).map(({ valueInBaseCurrency }) => {
+        return new Big(valueInBaseCurrency);
+      })
+    ).toNumber();
+
     return {
       rules: {
         accountClusterRisk:
@@ -1193,12 +1199,12 @@ export class PortfolioService {
                 [
                   new AllocationClusterRiskDevelopedMarkets(
                     this.exchangeRateDataService,
-                    summary.currentValueInBaseCurrency,
+                    marketsTotalInBaseCurrency,
                     markets.developedMarkets.valueInBaseCurrency
                   ),
                   new AllocationClusterRiskEmergingMarkets(
                     this.exchangeRateDataService,
-                    summary.currentValueInBaseCurrency,
+                    marketsTotalInBaseCurrency,
                     markets.emergingMarkets.valueInBaseCurrency
                   )
                 ],
@@ -1358,20 +1364,20 @@ export class PortfolioService {
       }
     }
 
-    const marketsTotal =
-      markets.developedMarkets.valueInBaseCurrency +
-      markets.emergingMarkets.valueInBaseCurrency +
-      markets.otherMarkets.valueInBaseCurrency +
-      markets[UNKNOWN_KEY].valueInBaseCurrency;
+    const marketsTotalInBaseCurrency = getSum(
+      Object.values(markets).map(({ valueInBaseCurrency }) => {
+        return new Big(valueInBaseCurrency);
+      })
+    ).toNumber();
 
     markets.developedMarkets.valueInPercentage =
-      markets.developedMarkets.valueInBaseCurrency / marketsTotal;
+      markets.developedMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets.emergingMarkets.valueInPercentage =
-      markets.emergingMarkets.valueInBaseCurrency / marketsTotal;
+      markets.emergingMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets.otherMarkets.valueInPercentage =
-      markets.otherMarkets.valueInBaseCurrency / marketsTotal;
+      markets.otherMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets[UNKNOWN_KEY].valueInPercentage =
-      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotal;
+      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotalInBaseCurrency;
 
     const marketsAdvancedTotal =
       marketsAdvanced.asiaPacific.valueInBaseCurrency +
