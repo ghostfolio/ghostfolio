@@ -3,7 +3,9 @@ import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interce
 import {
   Controller,
   Get,
+  HttpCode,
   HttpException,
+  HttpStatus,
   Param,
   UseInterceptors
 } from '@nestjs/common';
@@ -17,7 +19,10 @@ export class HealthController {
   public constructor(private readonly healthService: HealthService) {}
 
   @Get()
-  public async getHealth() {}
+  @HttpCode(HttpStatus.OK)
+  public getHealth() {
+    return { status: getReasonPhrase(StatusCodes.OK) };
+  }
 
   @Get('data-enhancer/:name')
   public async getHealthOfDataEnhancer(@Param('name') name: string) {
