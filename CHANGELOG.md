@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `prisma` from version `5.20.0` to `5.21.1`
 - Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
 
 ### Fixed
