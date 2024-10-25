@@ -10,8 +10,8 @@ import { ResourcesPageComponent } from './resources-page.component';
   declarations: [ResourcesPageComponent],
   imports: [
     CommonModule,
-    ResourcesPageRoutingModule,
     MatTabsModule,
+    ResourcesPageRoutingModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

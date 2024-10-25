@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'gf-resources-overview',
-  templateUrl: './resources-overview.component.html',
-  styleUrls: ['./resources-overview.component.scss']
+  styleUrls: ['./resources-overview.component.scss'],
+  templateUrl: './resources-overview.component.html'
 })
 export class ResourcesOverviewComponent {
   public overviewItems = [

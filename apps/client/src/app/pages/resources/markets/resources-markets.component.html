@@ -1,16 +1,12 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
-      <h1 class="h3 mb-4 text-center" i18n>Markets</h1>
-      <div class="market-resources-list">
-        @for (resource of marketResources; track resource) {
-          <div class="mb-4">
-            <h3 class="h5 mt-0">{{ resource.title }}</h3>
-            <p class="mb-1">{{ resource.description }}</p>
-            <a target="_blank" [href]="resource.link">View resource →</a>
-          </div>
-        }
+  <h1 class="h3 mb-4 text-center" i18n>Markets</h1>
+  <div class="market-resources">
+    @for (resource of marketResources; track resource) {
+      <div class="mb-4">
+        <h3 class="h5 mt-0">{{ resource.title }}</h3>
+        <p class="mb-1">{{ resource.description }}</p>
+        <a target="_blank" [href]="resource.link">View resource →</a>
       </div>
-    </div>
+    }
   </div>
 </div>

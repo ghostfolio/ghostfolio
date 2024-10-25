@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'gf-resources-guides',
-  templateUrl: './resources-guides.component.html',
-  styleUrls: ['./resources-guides.component.scss']
+  styleUrls: ['./resources-guides.component.scss'],
+  templateUrl: './resources-guides.component.html'
 })
 export class ResourcesGuidesComponent {
   public guides = [

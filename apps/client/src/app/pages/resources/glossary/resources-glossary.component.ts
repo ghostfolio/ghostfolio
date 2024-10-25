@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'gf-resources-glossary',
-  templateUrl: './resources-glossary.component.html',
-  styleUrls: ['./resources-glossary.component.scss']
+  styleUrls: ['./resources-glossary.component.scss'],
+  templateUrl: './resources-glossary.component.html'
 })
 export class ResourcesGlossaryPageComponent {
   public glossaryItems = [

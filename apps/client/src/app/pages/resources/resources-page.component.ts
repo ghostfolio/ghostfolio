@@ -25,13 +25,21 @@ export class ResourcesPageComponent implements OnInit {
       label: $localize`Overview`,
       iconName: 'information-circle-outline'
     },
-    { path: 'guides', label: $localize`Guides`, iconName: 'book-outline' },
+    {
+      path: 'guides',
+      label: $localize`Guides`,
+      iconName: 'book-outline'
+    },
+    {
+      path: 'glossary',
+      label: $localize`Glossary`,
+      iconName: 'list-outline'
+    },
     {
       path: 'markets',
       label: $localize`Markets`,
       iconName: 'trending-up-outline'
-    },
-    { path: 'glossary', label: $localize`Glossary`, iconName: 'list-outline' }
+    }
   ];
 
   private unsubscribeSubject = new Subject<void>();

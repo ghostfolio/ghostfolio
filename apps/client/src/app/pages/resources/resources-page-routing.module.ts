@@ -3,10 +3,6 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-// import { ResourcesGlossaryPageComponent } from './glossary/resources-glossary.component';
-// import { ResourcesGuidesComponent } from './guides/resources-guides.component';
-// import { ResourcesMarketsComponent } from './markets/resources-markets.component';
-// import { ResourcesOverviewComponent } from './overview/resources-overview.component';
 import { ResourcesPageComponent } from './resources-page.component';
 
 const routes: Routes = [
@@ -15,6 +11,13 @@ const routes: Routes = [
     component: ResourcesPageComponent,
     canActivate: [AuthGuard],
     children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./overview/resources-overview.module').then(
+            (m) => m.ResourcesOverviewModule
+          )
+      },
       {
         path: 'guides',
         loadChildren: () =>
@@ -34,13 +37,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('./glossary/resources-glossary.module').then(
             (m) => m.ResourcesGlossaryPageModule
-          )
-      },
-      {
-        path: '',
-        loadChildren: () =>
-          import('./overview/resources-overview.module').then(
-            (m) => m.ResourcesOverviewModule
           )
       }
     ]
