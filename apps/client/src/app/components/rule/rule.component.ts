@@ -1,7 +1,9 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
-import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
-import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
+import {
+  PortfolioReportRule,
+  XRayRulesSettings
+} from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
