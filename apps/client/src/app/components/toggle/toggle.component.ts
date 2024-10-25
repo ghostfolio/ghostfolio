@@ -1,4 +1,4 @@
-import { ToggleOption } from '@ghostfolio/common/types';
+import { ToggleOption } from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,

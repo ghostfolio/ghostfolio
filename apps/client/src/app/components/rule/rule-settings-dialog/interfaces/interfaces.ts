@@ -1,5 +1,5 @@
 import { PortfolioReportRule } from '@ghostfolio/common/interfaces';
-import { XRayRulesSettings } from '@ghostfolio/common/types';
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 
 export interface IRuleSettingsDialogParams {
   rule: PortfolioReportRule;
