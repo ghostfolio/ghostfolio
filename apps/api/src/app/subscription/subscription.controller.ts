@@ -113,7 +113,7 @@ export class SubscriptionController {
   @Post('stripe/checkout-session')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async createCheckoutSession(
-    @Body() { couponId, priceId }: { couponId: string; priceId: string }
+    @Body() { couponId, priceId }: { couponId?: string; priceId: string }
   ) {
     try {
       return this.subscriptionService.createCheckoutSession({

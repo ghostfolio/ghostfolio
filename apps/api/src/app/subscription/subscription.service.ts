@@ -124,7 +124,9 @@ export class SubscriptionService {
       let offer: SubscriptionOffer = price ? 'renewal' : 'default';
 
       if (isBefore(createdAt, parseDate('2023-01-01'))) {
-        offer = 'renewal-early-bird';
+        offer = 'renewal-early-bird-2023';
+      } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
+        offer = 'renewal-early-bird-2024';
       }
 
       return {
