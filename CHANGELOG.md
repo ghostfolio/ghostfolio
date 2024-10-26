@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
+
 ## 2.119.0 - 2024-10-26
 
 ### Changed
@@ -12,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `prefer-function-type` rule from `warn` to `error` in the `eslint` configuration
-- Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
 - Upgraded `prisma` from version `5.20.0` to `5.21.1`
 
 ### Fixed
