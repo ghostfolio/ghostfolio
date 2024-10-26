@@ -1,3 +1,12 @@
+import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import {
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   CACHE_TTL_INFINITE,
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
@@ -10,15 +19,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Job } from 'bull';
 import { addMilliseconds } from 'date-fns';
 
-import { AccountBalanceService } from '../../../app/account-balance/account-balance.service';
-import { OrderService } from '../../../app/order/order.service';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '../../../app/portfolio/calculator/portfolio-calculator.factory';
-import { PortfolioSnapshotValue } from '../../../app/portfolio/interfaces/snapshot-value.interface';
-import { RedisCacheService } from '../../../app/redis-cache/redis-cache.service';
-import { ConfigurationService } from '../../configuration/configuration.service';
 import { IPortfolioSnapshotQueueJob } from './interfaces/portfolio-snapshot-queue-job.interface';
 
 @Injectable()

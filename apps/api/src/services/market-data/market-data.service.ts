@@ -1,3 +1,7 @@
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
@@ -8,11 +12,6 @@ import {
   MarketDataState,
   Prisma
 } from '@prisma/client';
-
-import { UpdateMarketDataDto } from '../../app/admin/update-market-data.dto';
-import { DateQuery } from '../../app/portfolio/interfaces/date-query.interface';
-import { IDataGatheringItem } from '../interfaces/interfaces';
-import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class MarketDataService {
