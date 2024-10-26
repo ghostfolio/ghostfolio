@@ -1,3 +1,9 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
@@ -19,13 +25,6 @@ import {
 } from 'date-fns';
 import { isNumber, uniq } from 'lodash';
 import ms from 'ms';
-
-import { LogPerformance } from '../../interceptors/performance-logging/performance-logging.interceptor';
-import { DataProviderService } from '../data-provider/data-provider.service';
-import { IDataGatheringItem } from '../interfaces/interfaces';
-import { MarketDataService } from '../market-data/market-data.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { PropertyService } from '../property/property.service';
 
 @Injectable()
 export class ExchangeRateDataService {

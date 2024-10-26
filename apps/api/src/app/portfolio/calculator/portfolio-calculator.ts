@@ -1,3 +1,16 @@
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
+import { PortfolioOrder } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order.interface';
+import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
+import { TransactionPointSymbol } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point-symbol.interface';
+import { TransactionPoint } from '@ghostfolio/api/app/portfolio/interfaces/transaction-point.interface';
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
+import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import {
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
@@ -37,20 +50,6 @@ import {
   subDays
 } from 'date-fns';
 import { first, isNumber, last, sortBy, sum, uniq, uniqBy } from 'lodash';
-
-import { getFactor } from '../../../helper/portfolio.helper';
-import { LogPerformance } from '../../../interceptors/performance-logging/performance-logging.interceptor';
-import { ConfigurationService } from '../../../services/configuration/configuration.service';
-import { ExchangeRateDataService } from '../../../services/exchange-rate-data/exchange-rate-data.service';
-import { IDataGatheringItem } from '../../../services/interfaces/interfaces';
-import { PortfolioSnapshotService } from '../../../services/queues/portfolio-snapshot/portfolio-snapshot.service';
-import { Activity } from '../../order/interfaces/activities.interface';
-import { RedisCacheService } from '../../redis-cache/redis-cache.service';
-import { CurrentRateService } from '../current-rate.service';
-import { PortfolioOrder } from '../interfaces/portfolio-order.interface';
-import { PortfolioSnapshotValue } from '../interfaces/snapshot-value.interface';
-import { TransactionPointSymbol } from '../interfaces/transaction-point-symbol.interface';
-import { TransactionPoint } from '../interfaces/transaction-point.interface';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;

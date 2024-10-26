@@ -1,3 +1,17 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
@@ -12,21 +26,6 @@ import {
   HistoricalHistoryResult
 } from 'yahoo-finance2/dist/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
-
-import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
-import { CryptocurrencyService } from '../../cryptocurrency/cryptocurrency.service';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '../../interfaces/interfaces';
-import { YahooFinanceDataEnhancerService } from '../data-enhancer/yahoo-finance/yahoo-finance.service';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {

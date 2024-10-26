@@ -1,3 +1,14 @@
+import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
@@ -18,18 +29,6 @@ import { Big } from 'big.js';
 import { eachDayOfInterval, format, isValid } from 'date-fns';
 import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
-
-import { RedisCacheService } from '../../app/redis-cache/redis-cache.service';
-import { LookupItem } from '../../app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '../configuration/configuration.service';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '../interfaces/interfaces';
-import { MarketDataService } from '../market-data/market-data.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { PropertyService } from '../property/property.service';
-import { DataProviderInterface } from './interfaces/data-provider.interface';
 
 @Injectable()
 export class DataProviderService {

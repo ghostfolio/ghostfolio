@@ -1,3 +1,6 @@
+import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
+import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
@@ -11,10 +14,6 @@ import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
 import { cloneDeep, first, last, sortBy } from 'lodash';
-
-import { getFactor } from '../../../../helper/portfolio.helper';
-import { PortfolioOrderItem } from '../../interfaces/portfolio-order-item.interface';
-import { PortfolioCalculator } from '../portfolio-calculator';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];

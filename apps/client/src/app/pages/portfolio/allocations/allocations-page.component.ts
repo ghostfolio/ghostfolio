@@ -1,3 +1,8 @@
+import { AccountDetailDialog } from '@ghostfolio/client/components/account-detail-dialog/account-detail-dialog.component';
+import { AccountDetailDialogParams } from '@ghostfolio/client/components/account-detail-dialog/interfaces/interfaces';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
@@ -19,12 +24,6 @@ import { isNumber } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { AccountDetailDialog } from '../../../components/account-detail-dialog/account-detail-dialog.component';
-import { AccountDetailDialogParams } from '../../../components/account-detail-dialog/interfaces/interfaces';
-import { DataService } from '../../../services/data.service';
-import { ImpersonationStorageService } from '../../../services/impersonation-storage.service';
-import { UserService } from '../../../services/user/user.service';
 
 @Component({
   selector: 'gf-allocations-page',

@@ -1,3 +1,4 @@
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DATE_FORMAT,
   getDateFormatString,
@@ -31,7 +32,6 @@ import { first, last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
-import { UserService } from '../../services/user/user.service';
 import { MarketDataDetailDialogParams } from './market-data-detail-dialog/interfaces/interfaces';
 import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-detail-dialog.component';
 

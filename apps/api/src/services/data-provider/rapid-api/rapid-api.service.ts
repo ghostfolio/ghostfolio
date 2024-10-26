@@ -1,3 +1,16 @@
+import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import {
+  DataProviderInterface,
+  GetDividendsParams,
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
+import {
+  IDataProviderHistoricalResponse,
+  IDataProviderResponse
+} from '@ghostfolio/api/services/interfaces/interfaces';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
@@ -6,20 +19,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import got from 'got';
-
-import { LookupItem } from '../../../app/symbol/interfaces/lookup-item.interface';
-import { ConfigurationService } from '../../configuration/configuration.service';
-import {
-  IDataProviderHistoricalResponse,
-  IDataProviderResponse
-} from '../../interfaces/interfaces';
-import {
-  DataProviderInterface,
-  GetDividendsParams,
-  GetHistoricalParams,
-  GetQuotesParams,
-  GetSearchParams
-} from '../interfaces/data-provider.interface';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
