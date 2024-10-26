@@ -95,7 +95,7 @@ export class SubscriptionController {
     @Res() response: Response
   ) {
     const userId = await this.subscriptionService.createSubscriptionViaStripe(
-      <string>request.query.checkoutSessionId
+      request.query.checkoutSessionId as string
     );
 
     Logger.log(

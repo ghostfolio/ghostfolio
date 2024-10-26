@@ -94,10 +94,10 @@ export class PortfolioSnapshotProcessor {
           filters: job.data.filters,
           userId: job.data.userId
         }),
-        JSON.stringify(<PortfolioSnapshotValue>(<unknown>{
+        JSON.stringify({
           expiration: expiration.getTime(),
           portfolioSnapshot: snapshot
-        })),
+        } as unknown as PortfolioSnapshotValue),
         CACHE_TTL_INFINITE
       );
 

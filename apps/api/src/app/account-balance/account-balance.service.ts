@@ -88,7 +88,7 @@ export class AccountBalanceService {
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),
       new PortfolioChangedEvent({
-        userId: <string>where.userId
+        userId: where.userId as string
       })
     );
 

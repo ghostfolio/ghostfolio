@@ -796,7 +796,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       [key: DateRange]: Big;
     } = {};
 
-    for (const dateRange of <DateRange[]>[
+    for (const dateRange of [
       '1d',
       '1y',
       '5y',
@@ -812,7 +812,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       //   .map((date) => {
       //     return format(date, 'yyyy');
       //   })
-    ]) {
+    ] as DateRange[]) {
       const dateInterval = getIntervalFromDateRange(dateRange);
       const endDate = dateInterval.endDate;
       let startDate = dateInterval.startDate;

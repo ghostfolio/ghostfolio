@@ -116,8 +116,8 @@ export class UserService {
       accounts: Account,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
-        ...(<UserSettings>Settings.settings),
-        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale
+        ...(Settings.settings as UserSettings),
+        locale: (Settings.settings as UserSettings)?.locale ?? aLocale
       }
     };
   }

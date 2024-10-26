@@ -78,7 +78,7 @@ export class DataGatheringProcessor {
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
     try {
       const { dataSource, date, symbol } = job.data;
-      let currentDate = parseISO(<string>(<unknown>date));
+      let currentDate = parseISO(date as unknown as string);
 
       Logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(

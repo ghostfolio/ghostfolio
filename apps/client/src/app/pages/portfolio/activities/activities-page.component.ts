@@ -218,10 +218,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   public onImport() {
     const dialogRef = this.dialog.open(ImportActivitiesDialog, {
-      data: <ImportActivitiesDialogParams>{
+      data: {
         deviceType: this.deviceType,
         user: this.user
-      },
+      } as ImportActivitiesDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -235,11 +235,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
 
   public onImportDividends() {
     const dialogRef = this.dialog.open(ImportActivitiesDialog, {
-      data: <ImportActivitiesDialogParams>{
+      data: {
         activityTypes: ['DIVIDEND'],
         deviceType: this.deviceType,
         user: this.user
-      },
+      } as ImportActivitiesDialogParams,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

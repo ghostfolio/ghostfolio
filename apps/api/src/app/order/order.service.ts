@@ -410,7 +410,7 @@ export class OrderService {
             where.SymbolProfile,
             {
               AND: [
-                { dataSource: <DataSource>filterByDataSource },
+                { dataSource: filterByDataSource as DataSource },
                 { symbol: filterBySymbol }
               ]
             }
@@ -419,7 +419,7 @@ export class OrderService {
       } else {
         where.SymbolProfile = {
           AND: [
-            { dataSource: <DataSource>filterByDataSource },
+            { dataSource: filterByDataSource as DataSource },
             { symbol: filterBySymbol }
           ]
         };
@@ -638,7 +638,7 @@ export class OrderService {
             {
               dataSource:
                 data.SymbolProfile.connect.dataSource_symbol.dataSource,
-              date: <Date>data.date,
+              date: data.date as Date,
               symbol: data.SymbolProfile.connect.dataSource_symbol.symbol
             }
           ],

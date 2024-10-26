@@ -125,14 +125,14 @@ export const PROPERTY_SLACK_COMMUNITY_USERS = 'SLACK_COMMUNITY_USERS';
 export const PROPERTY_STRIPE_CONFIG = 'STRIPE_CONFIG';
 export const PROPERTY_SYSTEM_MESSAGE = 'SYSTEM_MESSAGE';
 
-export const QUEUE_JOB_STATUS_LIST = <JobStatus[]>[
+export const QUEUE_JOB_STATUS_LIST = [
   'active',
   'completed',
   'delayed',
   'failed',
   'paused',
   'waiting'
-];
+] as JobStatus[];
 
 export const REPLACE_NAME_PARTS = [
   'Amundi Index Solutions -',
