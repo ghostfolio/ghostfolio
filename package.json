@@ -75,7 +75,6 @@
     "@dfinity/principal": "0.15.7",
     "@dinero.js/currencies": "2.0.0-alpha.8",
     "@internationalized/number": "3.5.2",
-    "@ionic/angular": "^8.3.2",
     "@nestjs/bull": "10.0.1",
     "@nestjs/cache-manager": "2.2.2",
     "@nestjs/common": "10.1.3",
