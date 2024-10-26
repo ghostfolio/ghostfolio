@@ -3,6 +3,7 @@ import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { Component, OnInit } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -12,6 +13,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./resources-page.scss']
 })
 export class ResourcesPageComponent implements OnInit {
+  public deviceType: string;
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
@@ -44,11 +46,15 @@ export class ResourcesPageComponent implements OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private dataService: DataService) {
+  public constructor(
+    private dataService: DataService,
+    private deviceService: DeviceDetectorService
+  ) {
     this.info = this.dataService.fetchInfo();
   }
 
   public ngOnInit() {
+    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
     this.hasPermissionForSubscription = hasPermission(
       this.info?.globalPermissions,
       permissions.enableSubscription

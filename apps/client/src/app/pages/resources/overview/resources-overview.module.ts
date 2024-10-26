@@ -7,6 +7,6 @@ import { ResourcesOverviewComponent } from './resources-overview.component';
 
 @NgModule({
   declarations: [ResourcesOverviewComponent],
-  imports: [CommonModule, RouterModule, ResourcesOverviewRoutingModule]
+  imports: [CommonModule, ResourcesOverviewRoutingModule, RouterModule]
 })
 export class ResourcesOverviewModule {}

@@ -1,13 +1,7 @@
-@import './shared/resource-page';
-
 :host {
   display: flex;
   flex-direction: row;
   height: 100%;
-}
-
-::ng-deep .resource-content {
-  @include resource-page;
 }
 
 @media (max-width: 599px) {

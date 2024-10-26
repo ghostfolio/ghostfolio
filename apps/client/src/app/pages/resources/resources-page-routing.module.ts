@@ -19,6 +19,13 @@ const routes: Routes = [
           )
       },
       {
+        path: 'glossary',
+        loadChildren: () =>
+          import('./glossary/resources-glossary.module').then(
+            (m) => m.ResourcesGlossaryPageModule
+          )
+      },
+      {
         path: 'guides',
         loadChildren: () =>
           import('./guides/resources-guides.module').then(
@@ -30,13 +37,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('./markets/resources-markets.module').then(
             (m) => m.ResourcesMarketsModule
-          )
-      },
-      {
-        path: 'glossary',
-        loadChildren: () =>
-          import('./glossary/resources-glossary.module').then(
-            (m) => m.ResourcesGlossaryPageModule
           )
       }
     ]
