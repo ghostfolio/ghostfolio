@@ -16,10 +16,8 @@ import type { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
 import type { SubscriptionOffer } from './subscription-offer.type';
-import type { ToggleOption } from './toggle-option.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
-import type { XRayRulesSettings } from './x-ray-rules-settings.type';
 
 export type {
   AccessType,
@@ -40,8 +38,6 @@ export type {
   OrderWithAccount,
   RequestWithUser,
   SubscriptionOffer,
-  ToggleOption,
   UserWithSettings,
-  ViewMode,
-  XRayRulesSettings
+  ViewMode
 };

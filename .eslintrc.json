@@ -142,8 +142,6 @@
 
         // The following rules are part of @typescript-eslint/stylistic-type-checked
         // and can be remove once solved
-        "@typescript-eslint/consistent-type-definitions": "warn",
-        "@typescript-eslint/prefer-function-type": "warn",
         "@typescript-eslint/prefer-nullish-coalescing": "warn", // TODO: Requires strictNullChecks: true
         "@typescript-eslint/consistent-type-assertions": "warn",
         "@typescript-eslint/prefer-optional-chain": "warn",
