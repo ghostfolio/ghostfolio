@@ -5,8 +5,9 @@ import { ResourcesGuidesComponent } from './resources-guides.component';
 
 const routes: Routes = [
   {
+    component: ResourcesGuidesComponent,
     path: '',
-    component: ResourcesGuidesComponent
+    title: $localize`Guides`
   }
 ];
 

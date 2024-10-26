@@ -5,8 +5,9 @@ import { ResourcesMarketsComponent } from './resources-markets.component';
 
 const routes: Routes = [
   {
+    component: ResourcesMarketsComponent,
     path: '',
-    component: ResourcesMarketsComponent
+    title: $localize`Markets`
   }
 ];
 

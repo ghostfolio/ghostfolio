@@ -46,7 +46,8 @@ const routes: Routes = [
           ).then((m) => m.PersonalFinanceToolsPageModule)
       }))
     ],
-    path: ''
+    path: '',
+    title: $localize`Resources`
   }
 ];
 

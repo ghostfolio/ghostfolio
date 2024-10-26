@@ -5,8 +5,8 @@ import { ResourcesOverviewComponent } from './resources-overview.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: ResourcesOverviewComponent
+    component: ResourcesOverviewComponent,
+    path: ''
   }
 ];
 

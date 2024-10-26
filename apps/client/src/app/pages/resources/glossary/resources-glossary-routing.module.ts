@@ -5,8 +5,9 @@ import { ResourcesGlossaryPageComponent } from './resources-glossary.component';
 
 const routes: Routes = [
   {
+    component: ResourcesGlossaryPageComponent,
     path: '',
-    component: ResourcesGlossaryPageComponent
+    title: $localize`Glossary`
   }
 ];
 
