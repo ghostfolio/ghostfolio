@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `consistent-generic-constructors` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `prefer-optional-chain` rule from `warn` to `error` in the `eslint` configuration
 
 ## 2.119.0 - 2024-10-26
