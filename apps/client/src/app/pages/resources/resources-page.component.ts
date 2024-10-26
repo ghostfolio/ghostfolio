@@ -9,8 +9,8 @@ import { Subject } from 'rxjs';
 @Component({
   host: { class: 'page has-tabs' },
   selector: 'gf-resources-page',
-  templateUrl: './resources-page.html',
-  styleUrls: ['./resources-page.scss']
+  styleUrls: ['./resources-page.scss'],
+  templateUrl: './resources-page.html'
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;
@@ -25,7 +25,7 @@ export class ResourcesPageComponent implements OnInit {
     {
       path: '.',
       label: $localize`Overview`,
-      iconName: 'information-circle-outline'
+      iconName: 'reader-outline'
     },
     {
       path: 'guides',
@@ -33,14 +33,14 @@ export class ResourcesPageComponent implements OnInit {
       iconName: 'book-outline'
     },
     {
-      path: 'glossary',
-      label: $localize`Glossary`,
-      iconName: 'list-outline'
-    },
-    {
       path: 'markets',
       label: $localize`Markets`,
-      iconName: 'trending-up-outline'
+      iconName: 'newspaper-outline'
+    },
+    {
+      path: 'glossary',
+      label: $localize`Glossary`,
+      iconName: 'library-outline'
     }
   ];
 

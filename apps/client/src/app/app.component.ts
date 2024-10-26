@@ -183,6 +183,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.hasTabs =
           (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
             this.currentRoute === this.routerLinkFaq[0].slice(1) ||
+            this.currentRoute === this.routerLinkResources[0].slice(1) ||
             this.currentRoute === 'account' ||
             this.currentRoute === 'admin' ||
             this.currentRoute === 'home' ||
@@ -198,7 +199,6 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === 'p' ||
             this.currentRoute === this.routerLinkPricing[0].slice(1) ||
             this.currentRoute === this.routerLinkRegister[0].slice(1) ||
-            this.currentRoute === this.routerLinkResources[0].slice(1) ||
             this.currentRoute === 'start') &&
           this.deviceType !== 'mobile';
 

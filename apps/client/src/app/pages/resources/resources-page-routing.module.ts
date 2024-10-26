@@ -7,9 +7,8 @@ import { ResourcesPageComponent } from './resources-page.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: ResourcesPageComponent,
     canActivate: [AuthGuard],
+    component: ResourcesPageComponent,
     children: [
       {
         path: '',
@@ -39,7 +38,8 @@ const routes: Routes = [
             (m) => m.ResourcesMarketsModule
           )
       }
-    ]
+    ],
+    path: ''
   }
 ];
 
