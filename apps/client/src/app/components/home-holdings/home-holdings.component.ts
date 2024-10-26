@@ -4,14 +4,11 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
+  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import {
-  HoldingType,
-  HoldingsViewMode,
-  ToggleOption
-} from '@ghostfolio/common/types';
+import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
