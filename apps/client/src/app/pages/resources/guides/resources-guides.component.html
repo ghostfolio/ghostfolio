@@ -2,14 +2,38 @@
   <div class="row">
     <div class="col">
       <h1 class="h3 mb-4 text-center" i18n>Guides</h1>
-      <div class="guides-list">
-        @for (guide of guides; track guide) {
-          <div class="mb-4">
-            <h3 class="h5 mt-0">{{ guide.title }}</h3>
-            <p class="mb-1">{{ guide.description }}</p>
-            <a target="_blank" [href]="guide.link">Read more →</a>
+      <div class="mb-5">
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Boringly Getting Rich</h3>
+            <div class="mb-1">
+              The <i>Boringly Getting Rich</i> guide supports you to get started
+              with investing. It introduces a strategy utilizing a broadly
+              diversified, low-cost portfolio excluding the risks of individual
+              stocks.
+            </div>
+            <div>
+              <a href="https://herget.me/investing-guide" target="_blank"
+                >Boringly Getting Rich →</a
+              >
+            </div>
           </div>
-        }
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">How do I get my finances in order?</h3>
+            <div class="mb-1">
+              Before you can think of long-term investing, you have to get your
+              finances in order. Learn how you can reach your financial goals
+              easier and faster in this guide.
+            </div>
+            <div>
+              <a href="../en/blog/2022/07/how-do-i-get-my-finances-in-order"
+                >How do I get my finances in order? →</a
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

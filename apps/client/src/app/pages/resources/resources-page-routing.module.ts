@@ -18,26 +18,33 @@ const routes: Routes = [
           )
       },
       {
-        path: 'glossary',
+        path: $localize`:snake-case:glossary`,
         loadChildren: () =>
           import('./glossary/resources-glossary.module').then(
             (m) => m.ResourcesGlossaryPageModule
           )
       },
       {
-        path: 'guides',
+        path: $localize`:snake-case:guides`,
         loadChildren: () =>
           import('./guides/resources-guides.module').then(
             (m) => m.ResourcesGuidesModule
           )
       },
       {
-        path: 'markets',
+        path: $localize`:snake-case:markets`,
         loadChildren: () =>
           import('./markets/resources-markets.module').then(
             (m) => m.ResourcesMarketsModule
           )
-      }
+      },
+      ...['personal-finance-tools'].map((path) => ({
+        path,
+        loadChildren: () =>
+          import(
+            './personal-finance-tools/personal-finance-tools-page.module'
+          ).then((m) => m.PersonalFinanceToolsPageModule)
+      }))
     ],
     path: ''
   }

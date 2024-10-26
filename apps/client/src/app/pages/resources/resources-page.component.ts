@@ -1,7 +1,3 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { InfoItem } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-
 import { Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -14,13 +10,6 @@ import { Subject } from 'rxjs';
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;
-  public hasPermissionForSubscription: boolean;
-  public info: InfoItem;
-  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
-  public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`:snake-case:resources`,
-    'personal-finance-tools'
-  ];
   public tabs = [
     {
       path: '.',
@@ -46,19 +35,10 @@ export class ResourcesPageComponent implements OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(
-    private dataService: DataService,
-    private deviceService: DeviceDetectorService
-  ) {
-    this.info = this.dataService.fetchInfo();
-  }
+  public constructor(private deviceService: DeviceDetectorService) {}
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-    this.hasPermissionForSubscription = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableSubscription
-    );
   }
 
   public ngOnDestroy() {

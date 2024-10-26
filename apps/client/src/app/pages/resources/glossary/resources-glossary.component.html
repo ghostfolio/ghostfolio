@@ -2,14 +2,136 @@
   <div class="row">
     <div class="col">
       <h1 class="h3 mb-4 text-center" i18n>Glossary</h1>
-      <div class="glossary-list">
-        @for (item of glossaryItems; track item) {
-          <div class="mb-4">
-            <h3 class="h5 mt-0">{{ item.term }}</h3>
-            <p class="mb-1">{{ item.definition }}</p>
-            <a target="_blank" [href]="item.link">Learn more →</a>
+      <div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Buy and Hold</h3>
+            <div class="mb-1">
+              Buy and hold is a passive investment strategy where you buy assets
+              and hold them for a long period regardless of fluctuations in the
+              market.
+            </div>
+            <div>
+              <a
+                href="https://www.investopedia.com/terms/b/buyandhold.asp"
+                target="_blank"
+                >Buy and Hold →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Deflation</h3>
+            <div class="mb-1">
+              Deflation is a decrease of the general price level for goods and
+              services in an economy over a period of time.
+            </div>
+            <div>
+              <a
+                href="https://www.investopedia.com/terms/d/deflation.asp"
+                target="_blank"
+                >Deflation →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Dollar-Cost Averaging (DCA)</h3>
+            <div class="mb-1">
+              Dollar-cost averaging is an investment strategy where you split
+              the total amount to be invested across periodic purchases of a
+              target asset to reduce the impact of volatility on the overall
+              purchase.
+            </div>
+            <div>
+              <a
+                href="https://www.investopedia.com/terms/d/dollarcostaveraging.asp"
+                target="_blank"
+                >Dollar-Cost Averaging →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Financial Independence</h3>
+            <div class="mb-1">
+              Financial independence is the status of having enough income, for
+              example with a passive income like dividends, to cover your living
+              expenses for the rest of your life.
+            </div>
+            <div>
+              <a
+                href="https://en.wikipedia.org/wiki/Financial_independence"
+                target="_blank"
+                >Financial Independence →</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">FIRE</h3>
+            <div class="mb-1">
+              FIRE is a movement that promotes saving and investing to achieve
+              financial independence and early retirement.
+            </div>
+            <div>
+              <a href="../en/blog/2023/07/exploring-the-path-to-fire">FIRE →</a>
+            </div>
+          </div>
+        </div>
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Inflation</h3>
+            <div class="mb-1">
+              Inflation is an increase of the general price level for goods and
+              services in an economy over a period of time.
+            </div>
+            <div>
+              <a
+                href="https://www.investopedia.com/terms/i/inflation.asp"
+                target="_blank"
+                >Inflation →</a
+              >
+            </div>
+          </div>
+        </div>
+        @if (hasPermissionForSubscription) {
+          <div class="mb-4 media">
+            <div class="media-body">
+              <h3 class="h5 mt-0">Personal Finance Tools</h3>
+              <div class="mb-1">
+                Personal finance tools are software applications that help
+                individuals manage their money, track expenses, set budgets,
+                monitor investments, and make informed financial decisions.
+              </div>
+              <div>
+                <a [routerLink]="routerLinkResourcesPersonalFinanceTools"
+                  >Personal Finance Tools →</a
+                >
+              </div>
+            </div>
           </div>
         }
+        <div class="mb-4 media">
+          <div class="media-body">
+            <h3 class="h5 mt-0">Stagflation</h3>
+            <div class="mb-1">
+              Stagflation describes a situation in which there is a stagnant
+              economy with high unemployment and high inflation.
+            </div>
+            <div>
+              <a
+                href="https://www.investopedia.com/terms/s/stagflation.asp"
+                target="_blank"
+                >Stagflation →</a
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
