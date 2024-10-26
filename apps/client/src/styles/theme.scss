@@ -157,6 +157,8 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   );
 
   @include mat.all-component-themes($gf-theme-default);
+
+  --mdc-outlined-card-container-color: unset;
 }
 
 .theme-dark {
@@ -175,6 +177,8 @@ $_tertiary: map.merge(map.get($_palettes, tertiary), $_rest);
   );
 
   @include mat.all-component-themes($gf-theme-dark);
+
+  --mdc-outlined-card-container-color: unset;
 }
 
 :root {
