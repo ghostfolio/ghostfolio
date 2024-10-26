@@ -1,3 +1,20 @@
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
+import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
+import { environment } from '@ghostfolio/api/environments/environment';
+import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AllocationClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/allocation-cluster-risk/developed-markets';
+import { AllocationClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/allocation-cluster-risk/emerging-markets';
+import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
+import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
+import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LANGUAGE_CODE,
@@ -22,24 +39,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
-
-import { environment } from '../../environments/environment';
-import { PortfolioChangedEvent } from '../../events/portfolio-changed.event';
-import { AccountClusterRiskCurrentInvestment } from '../../models/rules/account-cluster-risk/current-investment';
-import { AccountClusterRiskSingleAccount } from '../../models/rules/account-cluster-risk/single-account';
-import { AllocationClusterRiskDevelopedMarkets } from '../../models/rules/allocation-cluster-risk/developed-markets';
-import { AllocationClusterRiskEmergingMarkets } from '../../models/rules/allocation-cluster-risk/emerging-markets';
-import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '../../models/rules/currency-cluster-risk/base-currency-current-investment';
-import { CurrencyClusterRiskCurrentInvestment } from '../../models/rules/currency-cluster-risk/current-investment';
-import { EmergencyFundSetup } from '../../models/rules/emergency-fund/emergency-fund-setup';
-import { FeeRatioInitialInvestment } from '../../models/rules/fees/fee-ratio-initial-investment';
-import { ConfigurationService } from '../../services/configuration/configuration.service';
-import { I18nService } from '../../services/i18n/i18n.service';
-import { PrismaService } from '../../services/prisma/prisma.service';
-import { PropertyService } from '../../services/property/property.service';
-import { TagService } from '../../services/tag/tag.service';
-import { OrderService } from '../order/order.service';
-import { SubscriptionService } from '../subscription/subscription.service';
 
 const crypto = require('crypto');
 
