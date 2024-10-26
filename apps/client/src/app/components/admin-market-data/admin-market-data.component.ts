@@ -1,3 +1,6 @@
+import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   DEFAULT_PAGE_SIZE,
   ghostfolioScraperApiSymbolPrefix
@@ -34,9 +37,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
-import { AdminService } from '../../services/admin.service';
-import { DataService } from '../../services/data.service';
-import { UserService } from '../../services/user/user.service';
 import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
 import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
