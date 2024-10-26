@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
 - Fixed an issue with the X-axis scale of the investment timeline on the analysis page
 - Fixed an issue with the X-axis scale of the portfolio evolution chart on the analysis page
+- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Developed Markets)
+- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Emerging Markets)
 
 ## 2.118.0 - 2024-10-23
 
