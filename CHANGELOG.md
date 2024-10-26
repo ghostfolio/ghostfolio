@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
-- Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `prefer-function-type` rule from `warn` to `error` in the `eslint` configuration
 
 ### Fixed
