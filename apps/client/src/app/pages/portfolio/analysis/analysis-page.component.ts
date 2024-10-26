@@ -4,13 +4,14 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
+  InvestmentItem,
   PortfolioInvestments,
   PortfolioPerformance,
   PortfolioPosition,
+  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { GroupBy, ToggleOption } from '@ghostfolio/common/types';
+import { GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';

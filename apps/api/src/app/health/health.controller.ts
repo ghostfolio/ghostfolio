@@ -21,7 +21,7 @@ export class HealthController {
   @Get()
   @HttpCode(HttpStatus.OK)
   public getHealth() {
-    return { status: StatusCodes.OK };
+    return { status: getReasonPhrase(StatusCodes.OK) };
   }
 
   @Get('data-enhancer/:name')
