@@ -50,8 +50,10 @@ import type { Subscription } from './subscription.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
+import type { ToggleOption } from './toggle-option.interface';
 import type { UserSettings } from './user-settings.interface';
 import type { User } from './user.interface';
+import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
@@ -104,6 +106,8 @@ export {
   Subscription,
   SymbolMetrics,
   TabConfiguration,
+  ToggleOption,
   User,
-  UserSettings
+  UserSettings,
+  XRayRulesSettings
 };

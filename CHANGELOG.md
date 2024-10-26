@@ -9,18 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
-- Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
-- Switched the `prefer-function-type` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `prefer-optional-chain` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `consistent-generic-constructors` rule from `warn` to `error` in the `eslint` configuration
+
+## 2.119.0 - 2024-10-26
+
+### Changed
+
+- Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `prefer-function-type` rule from `warn` to `error` in the `eslint` configuration
+- Upgraded `prisma` from version `5.20.0` to `5.21.1`
 
 ### Fixed
 
 - Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
 - Fixed an issue with the X-axis scale of the investment timeline on the analysis page
 - Fixed an issue with the X-axis scale of the portfolio evolution chart on the analysis page
+- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Developed Markets)
+- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Emerging Markets)
 
 ## 2.118.0 - 2024-10-23
 

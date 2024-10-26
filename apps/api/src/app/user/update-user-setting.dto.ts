@@ -1,9 +1,10 @@
+import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 import type {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode,
-  XRayRulesSettings
+  ViewMode
 } from '@ghostfolio/common/types';
 
 import {
@@ -16,8 +17,6 @@ import {
   IsString
 } from 'class-validator';
 import { eachYearOfInterval, format } from 'date-fns';
-
-import { IsCurrencyCode } from '../../validators/is-currency-code';
 
 export class UpdateUserSettingDto {
   @IsNumber()

@@ -1,4 +1,4 @@
-import { XRayRulesSettings } from '@ghostfolio/common/types';
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
