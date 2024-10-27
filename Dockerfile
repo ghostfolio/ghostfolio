@@ -60,9 +60,11 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
   && rm -rf /var/lib/apt/lists/*
 
 COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps
-COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
-RUN chmod 0700 /ghostfolio/entrypoint.sh
+COPY --chown=node:node ./docker/entrypoint.sh ./docker/start.sh /ghostfolio
+RUN chmod 0755 /ghostfolio/entrypoint.sh /ghostfolio/start.sh
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
-USER node
-CMD [ "/ghostfolio/entrypoint.sh" ]
+RUN \
+  groupadd -g 1001 ghostfolio && \
+  useradd -u 1001 -g 1001 ghostfolio
+ENTRYPOINT ["/ghostfolio/start.sh"]
