@@ -1,10 +1,10 @@
 export interface XRayRulesSettings {
   AccountClusterRiskCurrentInvestment?: RuleSettings;
   AccountClusterRiskSingleAccount?: RuleSettings;
-  AllocationClusterRiskDevelopedMarkets?: RuleSettings;
-  AllocationClusterRiskEmergingMarkets?: RuleSettings;
   CurrencyClusterRiskBaseCurrencyCurrentInvestment?: RuleSettings;
   CurrencyClusterRiskCurrentInvestment?: RuleSettings;
+  EconomicMarketClusterRiskDevelopedMarkets?: RuleSettings;
+  EconomicMarketClusterRiskEmergingMarkets?: RuleSettings;
   EmergencyFundSetup?: RuleSettings;
   FeeRatioInitialInvestment?: RuleSettings;
 }

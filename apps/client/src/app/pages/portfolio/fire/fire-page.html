@@ -176,7 +176,7 @@
       </div>
       <div class="mb-4">
         <h4 class="align-items-center d-flex m-0">
-          <span i18n>Allocation Cluster Risks</span>
+          <span i18n>Economic Market Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
             <gf-premium-indicator class="ml-1" />
           }
@@ -188,7 +188,7 @@
             user?.settings?.isExperimentalFeatures
           "
           [isLoading]="isLoadingPortfolioReport"
-          [rules]="allocationClusterRiskRules"
+          [rules]="economicMarketClusterRiskRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
