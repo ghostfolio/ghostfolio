@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructured the resources page
+- Renamed the static portfolio analysis rule from Allocation Cluster Risk to Economic Market Cluster Risk (Developed Markets and Emerging Markets)
 - Improved the language localization for German (`de`)
 - Switched the `consistent-generic-constructors` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
