@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Restructured the resources page
-- Renamed the static portfolio analysis rule from Allocation Cluster Risk to Economic Market Cluster Risk (Developed Markets and Emerging Markets)
+- Renamed the static portfolio analysis rule from _Allocation Cluster Risk_ to _Economic Market Cluster Risk_ (Developed Markets and Emerging Markets)
 - Improved the language localization for German (`de`)
 - Switched the `consistent-generic-constructors` rule from `warn` to `error` in the `eslint` configuration
 - Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
@@ -30,15 +30,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
 - Fixed an issue with the X-axis scale of the investment timeline on the analysis page
 - Fixed an issue with the X-axis scale of the portfolio evolution chart on the analysis page
-- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Developed Markets)
-- Fixed an issue in the calculation of the static portfolio analysis rule: Allocation Cluster Risk (Emerging Markets)
+- Fixed an issue in the calculation of the static portfolio analysis rule: _Allocation Cluster Risk_ (Developed Markets)
+- Fixed an issue in the calculation of the static portfolio analysis rule: _Allocation Cluster Risk_ (Emerging Markets)
 
 ## 2.118.0 - 2024-10-23
 
 ### Added
 
-- Added a new static portfolio analysis rule: Allocation Cluster Risk (Developed Markets)
-- Added a new static portfolio analysis rule: Allocation Cluster Risk (Emerging Markets)
+- Added a new static portfolio analysis rule: _Allocation Cluster Risk_ (Developed Markets)
+- Added a new static portfolio analysis rule: _Allocation Cluster Risk_ (Emerging Markets)
 - Added support for mutual funds in the _EOD Historical Data_ service
 
 ### Changed
