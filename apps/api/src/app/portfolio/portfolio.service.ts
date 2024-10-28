@@ -9,7 +9,7 @@ import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rule
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
-import { EconomicMarketRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
+import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
@@ -1197,7 +1197,7 @@ export class PortfolioService {
           summary.ordersCount > 0
             ? await this.rulesService.evaluate(
                 [
-                  new EconomicMarketRiskDevelopedMarkets(
+                  new EconomicMarketClusterRiskDevelopedMarkets(
                     this.exchangeRateDataService,
                     marketsTotalInBaseCurrency,
                     markets.developedMarkets.valueInBaseCurrency

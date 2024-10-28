@@ -3,7 +3,7 @@ import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
-export class EconomicMarketRiskDevelopedMarkets extends Rule<Settings> {
+export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
   private developedMarketsValueInBaseCurrency: number;
 
@@ -13,7 +13,7 @@ export class EconomicMarketRiskDevelopedMarkets extends Rule<Settings> {
     developedMarketsValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: EconomicMarketRiskDevelopedMarkets.name,
+      key: EconomicMarketClusterRiskDevelopedMarkets.name,
       name: 'Developed Markets'
     });
 
