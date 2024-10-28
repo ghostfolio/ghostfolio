@@ -22,9 +22,9 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class FirePageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
-  public allocationClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
+  public economicMarketClusterRiskRules: PortfolioReportRule[];
   public emergencyFundRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
@@ -204,15 +204,15 @@ export class FirePageComponent implements OnDestroy, OnInit {
             }
           ) ?? null;
 
-        this.allocationClusterRiskRules =
-          portfolioReport.rules['allocationClusterRisk']?.filter(
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }
           ) ?? null;
 
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk']?.filter(
+        this.economicMarketClusterRiskRules =
+          portfolioReport.rules['economicMarketClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }
