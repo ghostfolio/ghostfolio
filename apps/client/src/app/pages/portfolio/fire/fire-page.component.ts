@@ -204,15 +204,15 @@ export class FirePageComponent implements OnDestroy, OnInit {
             }
           ) ?? null;
 
-        this.economicMarketClusterRiskRules =
-          portfolioReport.rules['economicMarketClusterRisk']?.filter(
+        this.currencyClusterRiskRules =
+          portfolioReport.rules['currencyClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }
           ) ?? null;
 
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk']?.filter(
+        this.economicMarketClusterRiskRules =
+          portfolioReport.rules['economicMarketClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }
