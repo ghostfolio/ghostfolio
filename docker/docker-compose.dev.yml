@@ -1,7 +1,8 @@
+name: ghostfolio_dev
 services:
   postgres:
     image: docker.io/library/postgres:15
-    container_name: postgres
+    container_name: gf-postgres-dev
     restart: unless-stopped
     env_file:
       - ../.env
@@ -12,7 +13,7 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
-    container_name: redis
+    container_name: gf-redis-dev
     restart: unless-stopped
     env_file:
       - ../.env
