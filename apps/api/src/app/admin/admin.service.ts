@@ -8,7 +8,6 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { SymbolProfileOverwriteService } from '@ghostfolio/api/services/symbol-profile/symbol-profile-overwrite.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DEFAULT_CURRENCY,
@@ -58,8 +57,7 @@ export class AdminService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly symbolProfileService: SymbolProfileService,
-    private readonly symbolProfileOverwriteService: SymbolProfileOverwriteService
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public async addAssetProfile({
