@@ -106,6 +106,23 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
+  @Post('gather/missing')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async gatherMissing(): Promise<void> {
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+
+    const promises = assetProfileIdentifiers.map(({ dataSource, symbol }) => {
+      return this.dataGatheringService.gatherSymbolMissingOnly({
+        dataSource,
+        symbol
+      });
+    });
+
+    await Promise.all(promises);
+  }
+
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {

@@ -168,6 +168,10 @@ export class AdminService {
     return this.http.post<void>('/api/v1/admin/gather/max', {});
   }
 
+  public gatherMissingOnly() {
+    return this.http.post<void>('/api/v1/admin/gather/missing', {});
+  }
+
   public gatherProfileData() {
     return this.http.post<void>('/api/v1/admin/gather/profile-data', {});
   }
