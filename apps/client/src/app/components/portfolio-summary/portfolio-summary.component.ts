@@ -8,7 +8,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output
 } from '@angular/core';
 import { formatDistanceToNow } from 'date-fns';
@@ -19,7 +18,7 @@ import { formatDistanceToNow } from 'date-fns';
   templateUrl: './portfolio-summary.component.html',
   styleUrls: ['./portfolio-summary.component.scss']
 })
-export class PortfolioSummaryComponent implements OnChanges, OnInit {
+export class PortfolioSummaryComponent implements OnChanges {
   @Input() baseCurrency: string;
   @Input() hasPermissionToUpdateUserSettings: boolean;
   @Input() isLoading: boolean;
@@ -34,10 +33,6 @@ export class PortfolioSummaryComponent implements OnChanges, OnInit {
     'BUY_AND_SELL_ACTIVITIES_TOOLTIP'
   );
   public timeInMarket: string;
-
-  public constructor() {}
-
-  public ngOnInit() {}
 
   public ngOnChanges() {
     if (this.summary) {

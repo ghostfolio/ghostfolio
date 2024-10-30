@@ -33,6 +33,9 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public isLoggedIn: boolean;
   public price: number;
   public priceId: string;
+  public professionalDataProviderTooltipPremium = translate(
+    'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
+  );
   public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public routerLinkRegister = ['/' + $localize`:snake-case:register`];
   public user: User;

@@ -35,6 +35,6 @@ export class UpdateAccountDto {
   name: string;
 
   @IsString()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_object, value) => value !== null)
   platformId: string | null;
 }

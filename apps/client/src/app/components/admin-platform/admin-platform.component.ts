@@ -34,7 +34,7 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<Platform> = new MatTableDataSource();
+  public dataSource = new MatTableDataSource<Platform>();
   public deviceType: string;
   public displayedColumns = ['name', 'url', 'accounts', 'actions'];
   public platforms: Platform[];
@@ -139,7 +139,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           url: null
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -176,7 +176,7 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           url
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

@@ -10,7 +10,7 @@ import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-da
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import {
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT,
-  PORTFOLIO_SNAPSHOT_QUEUE
+  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE
 } from '@ghostfolio/common/config';
 
 import { BullModule } from '@nestjs/bull';
@@ -23,7 +23,7 @@ import { PortfolioSnapshotProcessor } from './portfolio-snapshot.processor';
   imports: [
     AccountBalanceModule,
     BullModule.registerQueue({
-      name: PORTFOLIO_SNAPSHOT_QUEUE,
+      name: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE,
       settings: {
         lockDuration: parseInt(
           process.env.PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT ??

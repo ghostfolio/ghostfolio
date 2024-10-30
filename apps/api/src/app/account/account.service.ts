@@ -211,8 +211,8 @@ export class AccountService {
     const { data, where } = params;
 
     await this.accountBalanceService.createOrUpdateAccountBalance({
-      accountId: <string>data.id,
-      balance: <number>data.balance,
+      accountId: data.id as string,
+      balance: data.balance as number,
       date: format(new Date(), DATE_FORMAT),
       userId: aUserId
     });

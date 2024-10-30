@@ -4,18 +4,18 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   HistoricalDataItem,
+  InvestmentItem,
   PortfolioInvestments,
   PortfolioPerformance,
   PortfolioPosition,
+  ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { DateRange, GroupBy, ToggleOption } from '@ghostfolio/common/types';
+import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { SymbolProfile } from '@prisma/client';
-import { differenceInDays } from 'date-fns';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -233,7 +233,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate, performance }) => {
         this.firstOrderDate = firstOrderDate ?? new Date();
-        this.daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
         this.investments = [];
         this.performance = performance;

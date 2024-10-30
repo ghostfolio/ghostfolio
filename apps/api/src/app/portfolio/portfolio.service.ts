@@ -10,6 +10,8 @@ import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rule
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
+import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
@@ -139,7 +141,7 @@ export class PortfolioService {
         some: {
           SymbolProfile: {
             AND: [
-              { dataSource: <DataSource>filterByDataSource },
+              { dataSource: filterByDataSource as DataSource },
               { symbol: filterBySymbol }
             ]
           }
@@ -1256,14 +1258,20 @@ export class PortfolioService {
   @LogPerformance
   public async getReport(impersonationId: string): Promise<PortfolioReport> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const userSettings = <UserSettings>this.request.user.Settings.settings;
+    const userSettings = this.request.user.Settings.settings as UserSettings;
 
-    const { accounts, holdings, summary } = await this.getDetails({
+    const { accounts, holdings, markets, summary } = await this.getDetails({
       impersonationId,
       userId,
       withMarkets: true,
       withSummary: true
     });
+
+    const marketsTotalInBaseCurrency = getSum(
+      Object.values(markets).map(({ valueInBaseCurrency }) => {
+        return new Big(valueInBaseCurrency);
+      })
+    ).toNumber();
 
     return {
       rules: {
@@ -1278,6 +1286,24 @@ export class PortfolioService {
                   new AccountClusterRiskSingleAccount(
                     this.exchangeRateDataService,
                     accounts
+                  )
+                ],
+                userSettings
+              )
+            : undefined,
+        economicMarketClusterRisk:
+          summary.ordersCount > 0
+            ? await this.rulesService.evaluate(
+                [
+                  new EconomicMarketClusterRiskDevelopedMarkets(
+                    this.exchangeRateDataService,
+                    marketsTotalInBaseCurrency,
+                    markets.developedMarkets.valueInBaseCurrency
+                  ),
+                  new EconomicMarketClusterRiskEmergingMarkets(
+                    this.exchangeRateDataService,
+                    marketsTotalInBaseCurrency,
+                    markets.emergingMarkets.valueInBaseCurrency
                   )
                 ],
                 userSettings
@@ -1340,9 +1366,7 @@ export class PortfolioService {
     await this.orderService.assignTags({ dataSource, symbol, tags, userId });
   }
 
-  private getAggregatedMarkets(holdings: {
-    [symbol: string]: PortfolioPosition;
-  }): {
+  private getAggregatedMarkets(holdings: Record<string, PortfolioPosition>): {
     markets: PortfolioDetails['markets'];
     marketsAdvanced: PortfolioDetails['marketsAdvanced'];
   } {
@@ -1438,20 +1462,20 @@ export class PortfolioService {
       }
     }
 
-    const marketsTotal =
-      markets.developedMarkets.valueInBaseCurrency +
-      markets.emergingMarkets.valueInBaseCurrency +
-      markets.otherMarkets.valueInBaseCurrency +
-      markets[UNKNOWN_KEY].valueInBaseCurrency;
+    const marketsTotalInBaseCurrency = getSum(
+      Object.values(markets).map(({ valueInBaseCurrency }) => {
+        return new Big(valueInBaseCurrency);
+      })
+    ).toNumber();
 
     markets.developedMarkets.valueInPercentage =
-      markets.developedMarkets.valueInBaseCurrency / marketsTotal;
+      markets.developedMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets.emergingMarkets.valueInPercentage =
-      markets.emergingMarkets.valueInBaseCurrency / marketsTotal;
+      markets.emergingMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets.otherMarkets.valueInPercentage =
-      markets.otherMarkets.valueInBaseCurrency / marketsTotal;
+      markets.otherMarkets.valueInBaseCurrency / marketsTotalInBaseCurrency;
     markets[UNKNOWN_KEY].valueInPercentage =
-      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotal;
+      markets[UNKNOWN_KEY].valueInBaseCurrency / marketsTotalInBaseCurrency;
 
     const marketsAdvancedTotal =
       marketsAdvanced.asiaPacific.valueInBaseCurrency +
@@ -2012,7 +2036,7 @@ export class PortfolioService {
   }: {
     activities: Activity[];
     filters?: Filter[];
-    portfolioItemsNow: { [p: string]: TimelinePosition };
+    portfolioItemsNow: Record<string, TimelinePosition>;
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;

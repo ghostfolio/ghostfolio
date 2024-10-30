@@ -21,6 +21,4 @@ import { GfLogoComponent } from '../logo';
 })
 export class GfNoTransactionsInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
-
-  public constructor() {}
 }

@@ -15,8 +15,8 @@ import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper'
 import {
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_NAME,
   PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
-  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH,
-  PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
+  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH,
+  PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -1091,7 +1091,7 @@ export abstract class PortfolioCalculator {
           opts: {
             ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
             jobId,
-            priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_LOW
+            priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW
           }
         });
       }
@@ -1107,7 +1107,7 @@ export abstract class PortfolioCalculator {
         opts: {
           ...PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS,
           jobId,
-          priority: PORTFOLIO_SNAPSHOT_QUEUE_PRIORITY_HIGH
+          priority: PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_HIGH
         }
       });
 

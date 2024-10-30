@@ -180,10 +180,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         debounceTime(300),
         distinctUntilChanged(),
         mergeMap(async (searchTerm) => {
-          const result = <ISearchResults>{
+          const result = {
             assetProfiles: [],
             holdings: []
-          };
+          } as ISearchResults;
 
           try {
             if (searchTerm) {

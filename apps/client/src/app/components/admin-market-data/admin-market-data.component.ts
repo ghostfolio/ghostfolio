@@ -71,36 +71,35 @@ export class AdminMarketDataComponent
       return {
         id: assetSubClass.toString(),
         label: translate(assetSubClass),
-        type: <Filter['type']>'ASSET_SUB_CLASS'
+        type: 'ASSET_SUB_CLASS' as Filter['type']
       };
     })
     .concat([
       {
         id: 'BENCHMARKS',
         label: $localize`Benchmarks`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'CURRENCIES',
         label: $localize`Currencies`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'ETF_WITHOUT_COUNTRIES',
         label: $localize`ETFs without Countries`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       },
       {
         id: 'ETF_WITHOUT_SECTORS',
         label: $localize`ETFs without Sectors`,
-        type: <Filter['type']>'PRESET_ID'
+        type: 'PRESET_ID' as Filter['type']
       }
     ]);
   public benchmarks: Partial<SymbolProfile>[];
   public currentDataSource: DataSource;
   public currentSymbol: string;
-  public dataSource: MatTableDataSource<AdminMarketDataItem> =
-    new MatTableDataSource();
+  public dataSource = new MatTableDataSource<AdminMarketDataItem>();
   public defaultDateFormat: string;
   public deviceType: string;
   public displayedColumns: string[] = [];
@@ -275,7 +274,7 @@ export class AdminMarketDataComponent
     this.adminService
       .gatherProfileData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onGatherProfileDataBySymbol({
@@ -285,14 +284,14 @@ export class AdminMarketDataComponent
     this.adminService
       .gatherProfileDataBySymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onGatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     this.adminService
       .gatherSymbol({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   public onOpenAssetProfileDialog({
@@ -386,14 +385,14 @@ export class AdminMarketDataComponent
 
         const dialogRef = this.dialog.open(AssetProfileDialog, {
           autoFocus: false,
-          data: <AssetProfileDialogParams>{
+          data: {
             dataSource,
             symbol,
             colorScheme: this.user?.settings.colorScheme,
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+          } as AssetProfileDialogParams,
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 
@@ -415,10 +414,10 @@ export class AdminMarketDataComponent
 
         const dialogRef = this.dialog.open(CreateAssetProfileDialog, {
           autoFocus: false,
-          data: <CreateAssetProfileDialogParams>{
+          data: {
             deviceType: this.deviceType,
             locale: this.user?.settings?.locale
-          },
+          } as CreateAssetProfileDialogParams,
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

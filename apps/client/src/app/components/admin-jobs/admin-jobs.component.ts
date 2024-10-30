@@ -35,10 +35,10 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
     DATA_GATHERING_QUEUE_PRIORITY_HIGH;
   public DATA_GATHERING_QUEUE_PRIORITY_MEDIUM =
     DATA_GATHERING_QUEUE_PRIORITY_MEDIUM;
+
+  public dataSource = new MatTableDataSource<AdminJobs['jobs'][0]>();
   public defaultDateTimeFormat: string;
   public filterForm: FormGroup;
-  public dataSource: MatTableDataSource<AdminJobs['jobs'][0]> =
-    new MatTableDataSource();
   public displayedColumns = [
     'index',
     'type',

@@ -184,7 +184,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           platformId
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -222,7 +222,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
   private openAccountDetailDialog(aAccountId: string) {
     const dialogRef = this.dialog.open(AccountDetailDialog, {
       autoFocus: false,
-      data: <AccountDetailDialogParams>{
+      data: {
         accountId: aAccountId,
         deviceType: this.deviceType,
         hasImpersonationId: this.hasImpersonationId,
@@ -230,8 +230,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           !this.hasImpersonationId &&
           hasPermission(this.user?.permissions, permissions.createOrder) &&
           !this.user?.settings?.isRestrictedView
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      } as AccountDetailDialogParams,
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 
@@ -257,7 +257,7 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           platformId: null
         }
       },
-      height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

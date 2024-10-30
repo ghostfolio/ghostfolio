@@ -104,15 +104,17 @@ export class UserService extends ObservableStore<UserStoreState> {
         ) {
           const dialogRef = this.dialog.open(SubscriptionInterstitialDialog, {
             autoFocus: false,
-            data: <SubscriptionInterstitialDialogParams>{},
-            height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
+            data: {
+              user
+            } as SubscriptionInterstitialDialogParams,
+            height: this.deviceType === 'mobile' ? '98vh' : '80vh',
             width: this.deviceType === 'mobile' ? '100vw' : '50rem'
           });
 
           dialogRef
             .afterClosed()
             .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(() => {});
+            .subscribe();
         }
 
         return user;
