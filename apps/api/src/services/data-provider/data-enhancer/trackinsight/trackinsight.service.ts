@@ -15,7 +15,6 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   private static countriesMapping = {
     'Russian Federation': 'Russia'
   };
-  private static holdingsWeightTreshold = 0.85;
   private static sectorsMapping = {
     'Consumer Discretionary': 'Consumer Cyclical',
     'Consumer Defensive': 'Consumer Staples',
@@ -36,7 +35,12 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     response: Partial<SymbolProfile>;
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    if (!(response.assetSubClass === 'ETF')) {
+    if (
+      !(
+        response.assetClass === 'EQUITY' &&
+        ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
+      )
+    ) {
       return response;
     }
 

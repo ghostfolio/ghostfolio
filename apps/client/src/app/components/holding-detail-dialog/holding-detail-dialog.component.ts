@@ -150,7 +150,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.activityForm = this.formBuilder.group({
-      tags: <string[]>[]
+      tags: [] as string[]
     });
 
     const filters: Filter[] = [

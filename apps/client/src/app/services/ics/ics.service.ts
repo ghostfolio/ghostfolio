@@ -12,8 +12,6 @@ export class IcsService {
   private readonly ICS_DATE_FORMAT = 'yyyyMMdd';
   private readonly ICS_LINE_BREAK = '\r\n';
 
-  public constructor() {}
-
   public transformActivitiesToIcsContent(
     aActivities: Export['activities']
   ): string {

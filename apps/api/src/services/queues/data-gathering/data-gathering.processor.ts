@@ -6,8 +6,8 @@ import {
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import {
   DATA_GATHERING_QUEUE,
-  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE,
-  DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA,
+  DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
+  DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY,
   GATHER_ASSET_PROFILE_PROCESS,
   GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
   GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
@@ -45,8 +45,8 @@ export class DataGatheringProcessor {
 
   @Process({
     concurrency: parseInt(
-      process.env.PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE ??
-        DEFAULT_PROCESSOR_CONCURRENCY_GATHER_ASSET_PROFILE.toString(),
+      process.env.PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY.toString(),
       10
     ),
     name: GATHER_ASSET_PROFILE_PROCESS
@@ -76,8 +76,8 @@ export class DataGatheringProcessor {
 
   @Process({
     concurrency: parseInt(
-      process.env.PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA ??
-        DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA.toString(),
+      process.env.PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY ??
+        DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY.toString(),
       10
     ),
     name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
@@ -85,7 +85,7 @@ export class DataGatheringProcessor {
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
     try {
       const { dataSource, date, symbol } = job.data;
-      let currentDate = parseISO(<string>(<unknown>date));
+      let currentDate = parseISO(date as unknown as string);
 
       Logger.log(
         `Historical market data gathering has been started for ${symbol} (${dataSource}) at ${format(
@@ -160,7 +160,7 @@ export class DataGatheringProcessor {
   @Process({
     concurrency: parseInt(
       process.env.PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA ??
-        DEFAULT_PROCESSOR_CONCURRENCY_GATHER_HISTORICAL_MARKET_DATA.toString(),
+        DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY.toString(),
       10
     ),
     name: GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME

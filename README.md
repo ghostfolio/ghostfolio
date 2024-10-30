@@ -177,6 +177,12 @@ Deprecated: `GET http://localhost:3333/api/v1/auth/anonymous/<INSERT_SECURITY_TO
 
 `200 OK`
 
+```
+{
+  "status": "OK"
+}
+```
+
 ### Import Activities
 
 #### Prerequisites

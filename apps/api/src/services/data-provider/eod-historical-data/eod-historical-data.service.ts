@@ -163,10 +163,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
       ).json<any>();
 
       return response.reduce(
-        (result, { close, date }) => {
-          if (isNumber(close)) {
+        (result, { adjusted_close, date }) => {
+          if (isNumber(adjusted_close)) {
             result[this.convertFromEodSymbol(symbol)][date] = {
-              marketPrice: close
+              marketPrice: adjusted_close
             };
           } else {
             Logger.error(
@@ -499,6 +499,10 @@ export class EodHistoricalDataService implements DataProviderInterface {
       case 'etf':
         assetClass = AssetClass.EQUITY;
         assetSubClass = AssetSubClass.ETF;
+        break;
+      case 'fund':
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
         break;
     }
 

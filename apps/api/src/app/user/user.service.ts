@@ -2,6 +2,14 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
+import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
+import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
+import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
+import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
+import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
+import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
@@ -108,8 +116,8 @@ export class UserService {
       accounts: Account,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
-        ...(<UserSettings>Settings.settings),
-        locale: (<UserSettings>Settings.settings)?.locale ?? aLocale
+        ...(Settings.settings as UserSettings),
+        locale: (Settings.settings as UserSettings)?.locale ?? aLocale
       }
     };
   }
@@ -200,17 +208,47 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
-    // Set default values for X-ray rules
-    if (!(user.Settings.settings as UserSettings).xRayRules) {
-      (user.Settings.settings as UserSettings).xRayRules = {
-        AccountClusterRiskCurrentInvestment: { isActive: true },
-        AccountClusterRiskSingleAccount: { isActive: true },
-        CurrencyClusterRiskBaseCurrencyCurrentInvestment: { isActive: true },
-        CurrencyClusterRiskCurrentInvestment: { isActive: true },
-        EmergencyFundSetup: { isActive: true },
-        FeeRatioInitialInvestment: { isActive: true }
-      };
-    }
+    (user.Settings.settings as UserSettings).xRayRules = {
+      AccountClusterRiskCurrentInvestment:
+        new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
+          user.Settings.settings
+        ),
+      AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
+        undefined,
+        {}
+      ).getSettings(user.Settings.settings),
+      EconomicMarketClusterRiskDevelopedMarkets:
+        new EconomicMarketClusterRiskDevelopedMarkets(
+          undefined,
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      EconomicMarketClusterRiskEmergingMarkets:
+        new EconomicMarketClusterRiskEmergingMarkets(
+          undefined,
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
+        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskCurrentInvestment:
+        new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      EmergencyFundSetup: new EmergencyFundSetup(
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+        undefined,
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings)
+    };
 
     let currentPermissions = getPermissions(user.role);
 

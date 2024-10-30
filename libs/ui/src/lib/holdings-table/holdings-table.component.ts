@@ -67,16 +67,13 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource: MatTableDataSource<PortfolioPosition> =
-    new MatTableDataSource();
+  public dataSource = new MatTableDataSource<PortfolioPosition>();
   public displayedColumns = [];
   public ignoreAssetSubClasses = [AssetSubClass.CASH];
   public isLoading = true;
   public routeQueryParams: Subscription;
 
   private unsubscribeSubject = new Subject<void>();
-
-  public constructor() {}
 
   public ngOnChanges() {
     this.displayedColumns = ['icon', 'nameWithSymbol', 'dateOfFirstActivity'];
