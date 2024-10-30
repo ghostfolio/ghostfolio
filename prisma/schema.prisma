@@ -65,11 +65,12 @@ model AccountBalance {
 }
 
 model Analytics {
-  activityCount Int      @default(0)
-  country       String?
-  updatedAt     DateTime @updatedAt
-  userId        String   @id
-  User          User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  activityCount                       Int      @default(0)
+  country                             String?
+  dataProviderGhostfolioDailyRequests Int      @default(0)
+  updatedAt                           DateTime @updatedAt
+  userId                              String   @id
+  User                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([updatedAt])
 }

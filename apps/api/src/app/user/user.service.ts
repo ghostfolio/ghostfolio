@@ -37,7 +37,7 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, subDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
 
 const crypto = require('crypto');
@@ -58,6 +58,13 @@ export class UserService {
 
   public async count(args?: Prisma.UserCountArgs) {
     return this.prismaService.user.count(args);
+  }
+
+  public createAccessToken(password: string, salt: string): string {
+    const hash = crypto.createHmac('sha512', salt);
+    hash.update(password);
+
+    return hash.digest('hex');
   }
 
   public async getUser(
@@ -358,13 +365,6 @@ export class UserService {
     });
   }
 
-  public createAccessToken(password: string, salt: string): string {
-    const hash = crypto.createHmac('sha512', salt);
-    hash.update(password);
-
-    return hash.digest('hex');
-  }
-
   public async createUser({
     data
   }: {
@@ -426,17 +426,6 @@ export class UserService {
     return user;
   }
 
-  public async updateUser(params: {
-    where: Prisma.UserWhereUniqueInput;
-    data: Prisma.UserUpdateInput;
-  }): Promise<User> {
-    const { where, data } = params;
-    return this.prismaService.user.update({
-      data,
-      where
-    });
-  }
-
   public async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
     try {
       await this.prismaService.access.deleteMany({
@@ -469,6 +458,32 @@ export class UserService {
     } catch {}
 
     return this.prismaService.user.delete({
+      where
+    });
+  }
+
+  public async resetAnalytics() {
+    return this.prismaService.analytics.updateMany({
+      data: {
+        dataProviderGhostfolioDailyRequests: 0
+      },
+      where: {
+        updatedAt: {
+          gte: subDays(new Date(), 1)
+        }
+      }
+    });
+  }
+
+  public async updateUser({
+    data,
+    where
+  }: {
+    data: Prisma.UserUpdateInput;
+    where: Prisma.UserWhereUniqueInput;
+  }): Promise<User> {
+    return this.prismaService.user.update({
+      data,
       where
     });
   }
