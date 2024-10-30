@@ -46,7 +46,7 @@ export class CronService {
     this.twitterBotService.tweetFearAndGreedIndex();
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   public async runEveryDayAtMidnight() {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       this.userService.resetAnalytics();
