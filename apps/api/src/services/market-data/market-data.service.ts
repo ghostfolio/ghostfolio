@@ -1,6 +1,5 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { DateQuery } from '@ghostfolio/api/app/portfolio/interfaces/date-query.interface';
-import { DateQueryHelper } from '@ghostfolio/api/helper/dateQueryHelper';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { resetHours } from '@ghostfolio/common/helper';
@@ -20,8 +19,6 @@ export class MarketDataService {
   public constructor(private readonly prismaService: PrismaService) {}
 
   lock = new AwaitLock();
-
-  private dateQueryHelper = new DateQueryHelper();
 
   public async deleteMany({ dataSource, symbol }: AssetProfileIdentifier) {
     return this.prismaService.marketData.deleteMany({
