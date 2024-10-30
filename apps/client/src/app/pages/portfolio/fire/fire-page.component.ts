@@ -24,6 +24,7 @@ export class FirePageComponent implements OnDestroy, OnInit {
   public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
+  public economicMarketClusterRiskRules: PortfolioReportRule[];
   public emergencyFundRules: PortfolioReportRule[];
   public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
@@ -138,6 +139,11 @@ export class FirePageComponent implements OnDestroy, OnInit {
       .putUserSetting(event)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.initializePortfolioReport();
       });
   }
@@ -200,6 +206,13 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
         this.currencyClusterRiskRules =
           portfolioReport.rules['currencyClusterRisk']?.filter(
+            ({ isActive }) => {
+              return isActive;
+            }
+          ) ?? null;
+
+        this.economicMarketClusterRiskRules =
+          portfolioReport.rules['economicMarketClusterRisk']?.filter(
             ({ isActive }) => {
               return isActive;
             }

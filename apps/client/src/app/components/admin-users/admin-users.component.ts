@@ -24,8 +24,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
-  public dataSource: MatTableDataSource<AdminUsers['users'][0]> =
-    new MatTableDataSource();
+  public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
   public defaultDateFormat: string;
   public displayedColumns: string[] = [];
   public getEmojiFlag = getEmojiFlag;

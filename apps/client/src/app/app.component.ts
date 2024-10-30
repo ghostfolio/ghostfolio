@@ -183,6 +183,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.hasTabs =
           (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
             this.currentRoute === this.routerLinkFaq[0].slice(1) ||
+            this.currentRoute === this.routerLinkResources[0].slice(1) ||
             this.currentRoute === 'account' ||
             this.currentRoute === 'admin' ||
             this.currentRoute === 'home' ||
@@ -198,7 +199,6 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === 'p' ||
             this.currentRoute === this.routerLinkPricing[0].slice(1) ||
             this.currentRoute === this.routerLinkRegister[0].slice(1) ||
-            this.currentRoute === this.routerLinkResources[0].slice(1) ||
             this.currentRoute === 'start') &&
           this.deviceType !== 'mobile';
 
@@ -292,7 +292,7 @@ export class AppComponent implements OnDestroy, OnInit {
 
         const dialogRef = this.dialog.open(GfHoldingDetailDialogComponent, {
           autoFocus: false,
-          data: <HoldingDetailDialogParams>{
+          data: {
             dataSource,
             symbol,
             baseCurrency: this.user?.settings?.baseCurrency,
@@ -312,9 +312,8 @@ export class AppComponent implements OnDestroy, OnInit {
               hasPermission(this.user?.permissions, permissions.updateOrder) &&
               !this.user?.settings?.isRestrictedView,
             locale: this.user?.settings?.locale
-          },
-          height: this.deviceType === 'mobile' ? '97.5vh' : '80vh',
-          maxWidth: this.deviceType === 'mobile' ? '95vw' : '50rem',
+          } as HoldingDetailDialogParams,
+          height: this.deviceType === 'mobile' ? '98vh' : '80vh',
           width: this.deviceType === 'mobile' ? '100vw' : '50rem'
         });
 

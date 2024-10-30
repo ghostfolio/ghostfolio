@@ -31,8 +31,8 @@
     "noImplicitThis": false,
     "noImplicitOverride": false,
     "noPropertyAccessFromIndexSignature": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "allowUnreachableCode": true
   },
   "exclude": ["node_modules", "tmp"]

@@ -49,6 +49,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() user: User;
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];
+  public isLoading = true;
   public resolveMarketCondition = resolveMarketCondition;
   public translate = translate;
 
@@ -76,6 +77,10 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges() {
+    if (this.benchmarks) {
+      this.isLoading = false;
+    }
+
     if (this.user?.settings?.isExperimentalFeatures) {
       this.displayedColumns = [
         'name',
@@ -104,14 +109,14 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     symbol
   }: AssetProfileIdentifier) {
     const dialogRef = this.dialog.open(GfBenchmarkDetailDialogComponent, {
-      data: <BenchmarkDetailDialogParams>{
+      data: {
         dataSource,
         symbol,
         colorScheme: this.user?.settings?.colorScheme,
         deviceType: this.deviceType,
         locale: this.locale
-      },
-      height: this.deviceType === 'mobile' ? '97.5vh' : undefined,
+      } as BenchmarkDetailDialogParams,
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
       width: this.deviceType === 'mobile' ? '100vw' : '50rem'
     });
 

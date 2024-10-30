@@ -11,12 +11,17 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
   templateUrl: 'subscription-interstitial-dialog.html'
 })
 export class SubscriptionInterstitialDialog {
+  private readonly VARIANTS_COUNT = 2;
+
   public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public variantIndex: number;
 
   public constructor(
     @Inject(MAT_DIALOG_DATA) public data: SubscriptionInterstitialDialogParams,
     public dialogRef: MatDialogRef<SubscriptionInterstitialDialog>
-  ) {}
+  ) {
+    this.variantIndex = Math.floor(Math.random() * this.VARIANTS_COUNT);
+  }
 
   public closeDialog() {
     this.dialogRef.close({});

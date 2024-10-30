@@ -1,10 +1,10 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces';
 import type {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode,
-  XRayRulesSettings
+  ViewMode
 } from '@ghostfolio/common/types';
 
 import {
@@ -31,11 +31,11 @@ export class UpdateUserSettingDto {
   @IsOptional()
   benchmark?: string;
 
-  @IsIn(<ColorScheme[]>['DARK', 'LIGHT'])
+  @IsIn(['DARK', 'LIGHT'] as ColorScheme[])
   @IsOptional()
   colorScheme?: ColorScheme;
 
-  @IsIn(<DateRange[]>[
+  @IsIn([
     '1d',
     '1y',
     '5y',
@@ -48,7 +48,7 @@ export class UpdateUserSettingDto {
         return format(date, 'yyyy');
       }
     )
-  ])
+  ] as DateRange[])
   @IsOptional()
   dateRange?: DateRange;
 
@@ -68,7 +68,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   'filters.tags'?: string[];
 
-  @IsIn(<HoldingsViewMode[]>['CHART', 'TABLE'])
+  @IsIn(['CHART', 'TABLE'] as HoldingsViewMode[])
   @IsOptional()
   holdingsViewMode?: HoldingsViewMode;
 
@@ -100,7 +100,7 @@ export class UpdateUserSettingDto {
   @IsOptional()
   savingsRate?: number;
 
-  @IsIn(<ViewMode[]>['DEFAULT', 'ZEN'])
+  @IsIn(['DEFAULT', 'ZEN'] as ViewMode[])
   @IsOptional()
   viewMode?: ViewMode;
 

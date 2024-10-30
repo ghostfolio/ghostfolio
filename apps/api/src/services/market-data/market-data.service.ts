@@ -144,21 +144,21 @@ export class MarketDataService {
       ({ dataSource, date, marketPrice, symbol, state }) => {
         return this.prismaService.marketData.upsert({
           create: {
-            dataSource: <DataSource>dataSource,
-            date: <Date>date,
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state,
-            symbol: <string>symbol
+            dataSource: dataSource as DataSource,
+            date: date as Date,
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState,
+            symbol: symbol as string
           },
           update: {
-            marketPrice: <number>marketPrice,
-            state: <MarketDataState>state
+            marketPrice: marketPrice as number,
+            state: state as MarketDataState
           },
           where: {
             dataSource_date_symbol: {
-              dataSource: <DataSource>dataSource,
-              date: <Date>date,
-              symbol: <string>symbol
+              dataSource: dataSource as DataSource,
+              date: date as Date,
+              symbol: symbol as string
             }
           }
         });

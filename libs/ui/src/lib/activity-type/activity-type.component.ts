@@ -24,8 +24,6 @@ export class GfActivityTypeComponent implements OnChanges {
 
   public activityTypeLabel: string;
 
-  public constructor() {}
-
   public ngOnChanges() {
     this.activityTypeLabel = translate(this.activityType);
   }

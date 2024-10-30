@@ -1,9 +1,9 @@
+import { XRayRulesSettings } from '@ghostfolio/common/interfaces/x-ray-rules-settings.interface';
 import {
   ColorScheme,
   DateRange,
   HoldingsViewMode,
-  ViewMode,
-  XRayRulesSettings
+  ViewMode
 } from '@ghostfolio/common/types';
 
 export interface UserSettings {

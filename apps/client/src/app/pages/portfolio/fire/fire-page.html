@@ -132,6 +132,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="emergencyFundRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -150,6 +151,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="currencyClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -168,6 +170,26 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="accountClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Economic Market Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="economicMarketClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -186,6 +208,7 @@
           "
           [isLoading]="isLoadingPortfolioReport"
           [rules]="feeRules"
+          [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
@@ -200,6 +223,7 @@
             "
             [isLoading]="isLoadingPortfolioReport"
             [rules]="inactiveRules"
+            [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"
           />
         </div>

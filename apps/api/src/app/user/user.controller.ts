@@ -148,7 +148,7 @@ export class UserController {
 
     const userSettings: UserSettings = merge(
       {},
-      <UserSettings>this.request.user.Settings.settings,
+      this.request.user.Settings.settings as UserSettings,
       data
     );
 

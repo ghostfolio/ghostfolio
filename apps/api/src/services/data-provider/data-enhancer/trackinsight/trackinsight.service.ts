@@ -37,7 +37,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
     if (
-      !(response.assetClass === 'EQUITY' && response.assetSubClass === 'ETF')
+      !(
+        response.assetClass === 'EQUITY' &&
+        ['ETF', 'MUTUALFUND'].includes(response.assetSubClass)
+      )
     ) {
       return response;
     }

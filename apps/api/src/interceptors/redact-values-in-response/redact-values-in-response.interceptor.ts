@@ -19,8 +19,6 @@ import { map } from 'rxjs/operators';
 export class RedactValuesInResponseInterceptor<T>
   implements NestInterceptor<T, any>
 {
-  public constructor() {}
-
   public intercept(
     context: ExecutionContext,
     next: CallHandler<T>

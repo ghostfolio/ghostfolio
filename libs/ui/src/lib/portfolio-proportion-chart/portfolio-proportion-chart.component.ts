@@ -304,14 +304,14 @@ export class GfPortfolioProportionChartComponent
     if (this.chartCanvas) {
       if (this.chart) {
         this.chart.data = data;
-        this.chart.options.plugins.tooltip = <unknown>(
-          this.getTooltipPluginConfiguration(data)
-        );
+        this.chart.options.plugins.tooltip = this.getTooltipPluginConfiguration(
+          data
+        ) as unknown;
         this.chart.update();
       } else {
         this.chart = new Chart(this.chartCanvas.nativeElement, {
           data,
-          options: <unknown>{
+          options: {
             animation: false,
             cutout: '70%',
             layout: {
@@ -358,7 +358,7 @@ export class GfPortfolioProportionChartComponent
               legend: { display: false },
               tooltip: this.getTooltipPluginConfiguration(data)
             }
-          },
+          } as unknown,
           plugins: [ChartDataLabels],
           type: 'doughnut'
         });
@@ -405,7 +405,7 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.positions[<string>symbol]?.name);
+          const name = translate(this.positions[symbol as string]?.name);
 
           let sum = 0;
           for (const item of context.dataset.data) {
@@ -414,12 +414,12 @@ export class GfPortfolioProportionChartComponent
 
           const percentage = (context.parsed * 100) / sum;
 
-          if (<number>context.raw === Number.MAX_SAFE_INTEGER) {
+          if ((context.raw as number) === Number.MAX_SAFE_INTEGER) {
             return $localize`No data available`;
           } else if (this.isInPercent) {
             return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
           } else {
-            const value = <number>context.raw;
+            const value = context.raw as number;
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {

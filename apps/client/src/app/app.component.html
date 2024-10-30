@@ -46,7 +46,7 @@
 </main>
 
 @if (showFooter) {
-  <footer class="d-flex justify-content-center py-4 w-100">
+  <footer class="justify-content-center overflow-hidden py-4 w-100">
     <div class="container">
       <div class="mb-3 row">
         <div class="col-sm">
@@ -187,7 +187,7 @@
           </ul>
         </div>
       </div>
-      <div class="row text-center">
+      <div class="mb-2 row text-center">
         <div class="col">
           © 2021 - {{ currentYear }}
           <a href="https://ghostfol.io">Ghostfolio</a>
@@ -195,11 +195,16 @@
       </div>
       <div class="row text-center text-muted">
         <div class="col">
-          <small i18n
+          <small class="d-block" i18n
             >The risk of loss in trading can be substantial. It is not advisable
             to invest money you may need in the short term.</small
           >
         </div>
+      </div>
+    </div>
+    <div class="container d-none d-md-block mt-5">
+      <div class="row justify-content-center">
+        <div class="font-weight-bold line-height-1 logotype">Ghostfolio</div>
       </div>
     </div>
   </footer>
