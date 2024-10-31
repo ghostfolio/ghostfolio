@@ -2,7 +2,7 @@ name: ghostfolio_build
 services:
   ghostfolio:
     build: ../
-    container_name: gf-application-build
+    container_name: ghostfolio-build
     init: true
     env_file:
       - ../.env
