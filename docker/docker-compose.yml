@@ -2,7 +2,7 @@ name: ghostfolio
 services:
   ghostfolio:
     image: docker.io/ghostfolio/ghostfolio:latest
-    container_name: gf-application
+    container_name: ghostfolio
     init: true
     cap_drop:
       - ALL
