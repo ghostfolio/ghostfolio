@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set the stack and container names in the `docker-compose` files (`docker-compose.yml`, `docker-compose.build.yml` and `docker-compose.dev.yml`)
 
+### Changed
+
+- Upgraded the _Stripe_ dependencies
+
 ## 2.120.0 - 2024-10-30
 
 ### Added
