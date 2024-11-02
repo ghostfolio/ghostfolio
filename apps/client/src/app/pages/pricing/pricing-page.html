@@ -101,6 +101,11 @@
                   </p>
                 </div>
               }
+              @if (durationExtension) {
+                <div class="d-none d-lg-block hidden mt-3">
+                  <div class="badge p-3 w-100">&nbsp;</div>
+                </div>
+              }
             </mat-card-content>
           </mat-card>
         </div>
@@ -157,6 +162,11 @@
                   <p class="m-0 text-muted">
                     <small>&nbsp;</small>
                   </p>
+                </div>
+              }
+              @if (durationExtension) {
+                <div class="d-none d-lg-block hidden mt-3">
+                  <div class="badge p-3 w-100">&nbsp;</div>
                 </div>
               }
             </mat-card-content>
@@ -287,6 +297,14 @@
                   <p class="m-0 text-muted">
                     <small i18n>One-time payment, no auto-renewal.</small>
                   </p>
+                </div>
+              }
+              @if (durationExtension) {
+                <div class="mt-3">
+                  <div class="badge badge-warning font-weight-normal p-3 w-100">
+                    <strong>Limited Offer!</strong> Get
+                    {{ durationExtension }} extra
+                  </div>
                 </div>
               }
             </mat-card-content>

@@ -34,6 +34,16 @@
                   &nbsp;<span i18n>per year</span>
                 </div>
               }
+              @if (durationExtension) {
+                <div class="mt-1 text-center">
+                  <div
+                    class="badge badge-pill badge-warning font-weight-normal px-2 py-1"
+                  >
+                    <strong>Limited Offer!</strong> Get
+                    {{ durationExtension }} extra
+                  </div>
+                </div>
+              }
             }
             <div class="align-items-center d-flex justify-content-center mt-4">
               @if (!user?.subscription?.expiresAt) {

@@ -23,10 +23,10 @@ import {
 import {
   InfoItem,
   Statistics,
-  Subscription
+  SubscriptionOffer
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import { SubscriptionOffer } from '@ghostfolio/common/types';
+import { SubscriptionOfferKey } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -101,7 +101,7 @@ export class InfoService {
       isUserSignupEnabled,
       platforms,
       statistics,
-      subscriptions
+      subscriptionOffers
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
@@ -110,7 +110,7 @@ export class InfoService {
         orderBy: { name: 'asc' }
       }),
       this.getStatistics(),
-      this.getSubscriptions()
+      this.getSubscriptionOffers()
     ]);
 
     if (isUserSignupEnabled) {
@@ -125,7 +125,7 @@ export class InfoService {
       isReadOnlyMode,
       platforms,
       statistics,
-      subscriptions,
+      subscriptionOffers,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };
@@ -314,8 +314,8 @@ export class InfoService {
     return statistics;
   }
 
-  private async getSubscriptions(): Promise<{
-    [offer in SubscriptionOffer]: Subscription;
+  private async getSubscriptionOffers(): Promise<{
+    [offer in SubscriptionOfferKey]: SubscriptionOffer;
   }> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       return undefined;

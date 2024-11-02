@@ -16,6 +16,7 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
+import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
@@ -31,6 +32,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
   public coupon: number;
   public couponId: string;
   public defaultDateFormat: string;
+  public durationExtension: StringValue;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
@@ -51,7 +53,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
     private stripeService: StripeService,
     private userService: UserService
   ) {
-    const { baseCurrency, globalPermissions, subscriptions } =
+    const { baseCurrency, globalPermissions, subscriptionOffers } =
       this.dataService.fetchInfo();
 
     this.baseCurrency = baseCurrency;
@@ -76,11 +78,18 @@ export class UserAccountMembershipComponent implements OnDestroy {
             permissions.updateUserSettings
           );
 
-          this.coupon = subscriptions?.[this.user.subscription.offer]?.coupon;
+          this.coupon =
+            subscriptionOffers?.[this.user.subscription.offer]?.coupon;
           this.couponId =
-            subscriptions?.[this.user.subscription.offer]?.couponId;
-          this.price = subscriptions?.[this.user.subscription.offer]?.price;
-          this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
+            subscriptionOffers?.[this.user.subscription.offer]?.couponId;
+          this.durationExtension =
+            subscriptionOffers?.[
+              this.user.subscription.offer
+            ]?.durationExtension;
+          this.price =
+            subscriptionOffers?.[this.user.subscription.offer]?.price;
+          this.priceId =
+            subscriptionOffers?.[this.user.subscription.offer]?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }
