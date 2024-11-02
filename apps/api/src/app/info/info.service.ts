@@ -101,7 +101,7 @@ export class InfoService {
       isUserSignupEnabled,
       platforms,
       statistics,
-      subscriptions
+      subscriptionOffers
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
@@ -110,7 +110,7 @@ export class InfoService {
         orderBy: { name: 'asc' }
       }),
       this.getStatistics(),
-      this.getSubscriptions()
+      this.getSubscriptionOffers()
     ]);
 
     if (isUserSignupEnabled) {
@@ -125,7 +125,7 @@ export class InfoService {
       isReadOnlyMode,
       platforms,
       statistics,
-      subscriptions,
+      subscriptionOffers,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };
@@ -314,7 +314,7 @@ export class InfoService {
     return statistics;
   }
 
-  private async getSubscriptions(): Promise<{
+  private async getSubscriptionOffers(): Promise<{
     [offer in SubscriptionOfferKey]: SubscriptionOffer;
   }> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {

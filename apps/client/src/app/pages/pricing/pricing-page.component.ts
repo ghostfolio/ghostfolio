@@ -53,12 +53,12 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    const { baseCurrency, subscriptions } = this.dataService.fetchInfo();
+    const { baseCurrency, subscriptionOffers } = this.dataService.fetchInfo();
     this.baseCurrency = baseCurrency;
 
-    this.coupon = subscriptions?.default?.coupon;
-    this.durationExtension = subscriptions?.default?.durationExtension;
-    this.price = subscriptions?.default?.price;
+    this.coupon = subscriptionOffers?.default?.coupon;
+    this.durationExtension = subscriptionOffers?.default?.durationExtension;
+    this.price = subscriptionOffers?.default?.price;
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -71,13 +71,18 @@ export class PricingPageComponent implements OnDestroy, OnInit {
             permissions.updateUserSettings
           );
 
-          this.coupon = subscriptions?.[this.user?.subscription?.offer]?.coupon;
+          this.coupon =
+            subscriptionOffers?.[this.user?.subscription?.offer]?.coupon;
           this.couponId =
-            subscriptions?.[this.user.subscription.offer]?.couponId;
+            subscriptionOffers?.[this.user.subscription.offer]?.couponId;
           this.durationExtension =
-            subscriptions?.[this.user?.subscription?.offer]?.durationExtension;
-          this.price = subscriptions?.[this.user?.subscription?.offer]?.price;
-          this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
+            subscriptionOffers?.[
+              this.user?.subscription?.offer
+            ]?.durationExtension;
+          this.price =
+            subscriptionOffers?.[this.user?.subscription?.offer]?.price;
+          this.priceId =
+            subscriptionOffers?.[this.user.subscription.offer]?.priceId;
 
           this.changeDetectorRef.markForCheck();
         }

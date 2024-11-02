@@ -18,5 +18,5 @@ export interface InfoItem {
   platforms: Platform[];
   statistics: Statistics;
   stripePublicKey?: string;
-  subscriptions: { [offer in SubscriptionOfferKey]: SubscriptionOffer };
+  subscriptionOffers: { [offer in SubscriptionOfferKey]: SubscriptionOffer };
 }

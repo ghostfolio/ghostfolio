@@ -138,8 +138,8 @@ export class AppComponent implements OnDestroy, OnInit {
     );
 
     this.hasPromotion =
-      !!this.info?.subscriptions?.default?.coupon ||
-      !!this.info?.subscriptions?.default?.durationExtension;
+      !!this.info?.subscriptionOffers?.default?.coupon ||
+      !!this.info?.subscriptionOffers?.default?.durationExtension;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -237,10 +237,10 @@ export class AppComponent implements OnDestroy, OnInit {
           this.canCreateAccount || !!this.user?.systemMessage;
 
         this.hasPromotion =
-          !!this.info?.subscriptions?.[
+          !!this.info?.subscriptionOffers?.[
             this.user?.subscription?.offer ?? 'default'
           ]?.coupon ||
-          !!this.info?.subscriptions?.[
+          !!this.info?.subscriptionOffers?.[
             this.user?.subscription?.offer ?? 'default'
           ]?.durationExtension;
 
