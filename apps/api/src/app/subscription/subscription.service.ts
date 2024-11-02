@@ -45,15 +45,15 @@ export class SubscriptionService {
     priceId: string;
     user: UserWithSettings;
   }) {
-    const subscriptions: {
+    const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
       ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
       {};
 
-    const subscriptionOffer = Object.values(subscriptions).find(
-      (subscription) => {
-        return subscription.priceId === priceId;
+    const subscriptionOffer = Object.values(subscriptionOffers).find(
+      (subscriptionOffer) => {
+        return subscriptionOffer.priceId === priceId;
       }
     );
 
