@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Reverted the permissions (`chmod 0700`) on `entrypoint.sh` in the `Dockerfile`
+- Upgraded the _Stripe_ dependencies
 
 ## 2.120.0 - 2024-10-30
 
