@@ -88,15 +88,20 @@
         <li class="list-inline-item">
           <a
             class="d-none d-sm-block"
-            i18n
             mat-flat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
             }"
             [routerLink]="routerLinkPricing"
-            >Pricing</a
           >
+            <span class="align-items-center d-flex">
+              <span i18n>Pricing</span>
+              @if (currentRoute !== routePricing && hasPromotion) {
+                <span class="badge badge-warning ml-1">%</span>
+              }
+            </span>
+          </a>
         </li>
       }
       <li class="list-inline-item">
@@ -290,12 +295,17 @@
           ) {
             <a
               class="d-flex d-sm-none"
-              i18n
               mat-menu-item
               [ngClass]="{ 'font-weight-bold': currentRoute === routePricing }"
               [routerLink]="routerLinkPricing"
-              >Pricing</a
             >
+              <span class="align-items-center d-flex">
+                <span i18n>Pricing</span>
+                @if (currentRoute !== routePricing && hasPromotion) {
+                  <span class="badge badge-warning ml-1">%</span>
+                }
+              </span>
+            </a>
           }
           <a
             class="d-flex d-sm-none"
@@ -358,15 +368,20 @@
         <li class="list-inline-item">
           <a
             class="d-sm-block"
-            i18n
             mat-flat-button
             [ngClass]="{
               'font-weight-bold': currentRoute === routePricing,
               'text-decoration-underline': currentRoute === routePricing
             }"
             [routerLink]="routerLinkPricing"
-            >Pricing</a
           >
+            <span class="align-items-center d-flex">
+              <span i18n>Pricing</span>
+              @if (currentRoute !== routePricing && hasPromotion) {
+                <span class="badge badge-warning ml-1">%</span>
+              }
+            </span>
+          </a>
         </li>
       }
       @if (hasPermissionToAccessFearAndGreedIndex) {

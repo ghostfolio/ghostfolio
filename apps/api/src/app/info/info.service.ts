@@ -23,10 +23,10 @@ import {
 import {
   InfoItem,
   Statistics,
-  Subscription
+  SubscriptionOffer
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import { SubscriptionOffer } from '@ghostfolio/common/types';
+import { SubscriptionOfferKey } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -315,7 +315,7 @@ export class InfoService {
   }
 
   private async getSubscriptions(): Promise<{
-    [offer in SubscriptionOffer]: Subscription;
+    [offer in SubscriptionOfferKey]: SubscriptionOffer;
   }> {
     if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       return undefined;

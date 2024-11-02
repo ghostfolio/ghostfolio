@@ -57,6 +57,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToChangeDateRange: boolean;
   public hasPermissionToChangeFilters: boolean;
+  public hasPromotion = false;
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
@@ -135,6 +136,10 @@ export class AppComponent implements OnDestroy, OnInit {
       this.info?.globalPermissions,
       permissions.enableFearAndGreedIndex
     );
+
+    this.hasPromotion =
+      !!this.info?.subscriptions?.default?.coupon ||
+      !!this.info?.subscriptions?.default?.durationExtension;
 
     this.impersonationStorageService
       .onChangeHasImpersonation()
@@ -230,6 +235,14 @@ export class AppComponent implements OnDestroy, OnInit {
 
         this.hasInfoMessage =
           this.canCreateAccount || !!this.user?.systemMessage;
+
+        this.hasPromotion =
+          !!this.info?.subscriptions?.[
+            this.user?.subscription?.offer ?? 'default'
+          ]?.coupon ||
+          !!this.info?.subscriptions?.[
+            this.user?.subscription?.offer ?? 'default'
+          ]?.durationExtension;
 
         this.initializeTheme(this.user?.settings.colorScheme);
 

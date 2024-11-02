@@ -46,7 +46,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
-import type { Subscription } from './subscription.interface';
+import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
@@ -102,8 +102,8 @@ export {
   ResponseError,
   ScraperConfiguration,
   Statistics,
+  SubscriptionOffer,
   SystemMessage,
-  Subscription,
   SymbolMetrics,
   TabConfiguration,
   ToggleOption,

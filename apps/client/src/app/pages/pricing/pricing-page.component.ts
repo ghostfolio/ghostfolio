@@ -6,6 +6,7 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
@@ -20,6 +21,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
   public coupon: number;
   public couponId: string;
+  public durationExtension: StringValue;
   public hasPermissionToUpdateUserSettings: boolean;
   public importAndExportTooltipBasic = translate(
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_BASIC'
@@ -55,6 +57,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     this.baseCurrency = baseCurrency;
 
     this.coupon = subscriptions?.default?.coupon;
+    this.durationExtension = subscriptions?.default?.durationExtension;
     this.price = subscriptions?.default?.price;
 
     this.userService.stateChanged
@@ -71,6 +74,8 @@ export class PricingPageComponent implements OnDestroy, OnInit {
           this.coupon = subscriptions?.[this.user?.subscription?.offer]?.coupon;
           this.couponId =
             subscriptions?.[this.user.subscription.offer]?.couponId;
+          this.durationExtension =
+            subscriptions?.[this.user?.subscription?.offer]?.durationExtension;
           this.price = subscriptions?.[this.user?.subscription?.offer]?.price;
           this.priceId = subscriptions?.[this.user.subscription.offer]?.priceId;
 

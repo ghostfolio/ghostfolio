@@ -58,6 +58,7 @@ export class HeaderComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() hasPermissionToChangeDateRange: boolean;
   @Input() hasPermissionToChangeFilters: boolean;
+  @Input() hasPromotion: boolean;
   @Input() hasTabs: boolean;
   @Input() info: InfoItem;
   @Input() pageTitle: string;
