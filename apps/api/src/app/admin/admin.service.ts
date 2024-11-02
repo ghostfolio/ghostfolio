@@ -641,7 +641,7 @@ export class AdminService {
   }
 
   private async getUsersWithAnalytics(): Promise<AdminUsers['users']> {
-    let orderBy: any = {
+    let orderBy: Prisma.UserOrderByWithRelationInput = {
       createdAt: 'desc'
     };
     let where: Prisma.UserWhereInput;
@@ -649,7 +649,7 @@ export class AdminService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       orderBy = {
         Analytics: {
-          updatedAt: 'desc'
+          lastRequestAt: 'desc'
         }
       };
       where = {
