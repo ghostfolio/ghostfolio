@@ -28,12 +28,14 @@ export class SubscriptionService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {
-    this.stripe = new Stripe(
-      this.configurationService.get('STRIPE_SECRET_KEY'),
-      {
-        apiVersion: '2024-09-30.acacia'
-      }
-    );
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      this.stripe = new Stripe(
+        this.configurationService.get('STRIPE_SECRET_KEY'),
+        {
+          apiVersion: '2024-09-30.acacia'
+        }
+      );
+    }
   }
 
   public async createCheckoutSession({
