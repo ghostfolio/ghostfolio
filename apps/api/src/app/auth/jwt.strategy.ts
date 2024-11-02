@@ -46,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             update: {
               country,
               activityCount: { increment: 1 },
-              updatedAt: new Date()
+              lastRequestAt: new Date()
             },
             where: { userId: user.id }
           });

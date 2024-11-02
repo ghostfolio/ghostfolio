@@ -142,7 +142,7 @@ export class InfoService {
           },
           {
             Analytics: {
-              updatedAt: {
+              lastRequestAt: {
                 gt: subDays(new Date(), aDays)
               }
             }

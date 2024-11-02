@@ -68,10 +68,12 @@ model Analytics {
   activityCount                       Int      @default(0)
   country                             String?
   dataProviderGhostfolioDailyRequests Int      @default(0)
+  lastRequestAt                       DateTime @default(now())
   updatedAt                           DateTime @updatedAt
   userId                              String   @id
   User                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
+  @@index([lastRequestAt])
   @@index([updatedAt])
 }
 
