@@ -2,6 +2,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import { LookupResponse } from '@ghostfolio/common/interfaces';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
@@ -21,7 +22,6 @@ import { parseISO } from 'date-fns';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { isDate, isEmpty } from 'lodash';
 
-import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 import { SymbolService } from './symbol.service';
 
@@ -41,7 +41,7 @@ export class SymbolController {
   public async lookupSymbol(
     @Query('includeIndices') includeIndicesParam = 'false',
     @Query('query') query = ''
-  ): Promise<{ items: LookupItem[] }> {
+  ): Promise<LookupResponse> {
     const includeIndices = includeIndicesParam === 'true';
 
     try {

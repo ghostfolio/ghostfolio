@@ -20,7 +20,10 @@ import {
   getStartOfUtcDate,
   isDerivedCurrency
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -571,8 +574,8 @@ export class DataProviderService {
     includeIndices?: boolean;
     query: string;
     user: UserWithSettings;
-  }): Promise<{ items: LookupItem[] }> {
-    const promises: Promise<{ items: LookupItem[] }>[] = [];
+  }): Promise<LookupResponse> {
+    const promises: Promise<LookupResponse>[] = [];
     let lookupItems: LookupItem[] = [];
 
     if (query?.length < 2) {

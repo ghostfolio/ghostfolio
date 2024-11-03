@@ -5,13 +5,15 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import {
+  HistoricalDataItem,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { format, subDays } from 'date-fns';
 
-import { LookupItem } from './interfaces/lookup-item.interface';
 import { SymbolItem } from './interfaces/symbol-item.interface';
 
 @Injectable()
@@ -104,8 +106,8 @@ export class SymbolService {
     includeIndices?: boolean;
     query: string;
     user: UserWithSettings;
-  }): Promise<{ items: LookupItem[] }> {
-    const results: { items: LookupItem[] } = { items: [] };
+  }): Promise<LookupResponse> {
+    const results: LookupResponse = { items: [] };
 
     if (!query) {
       return results;

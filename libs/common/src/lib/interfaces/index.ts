@@ -40,6 +40,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
+import type { LookupResponse } from './responses/lookup-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
@@ -82,6 +83,7 @@ export {
   InfoItem,
   InvestmentItem,
   LineChartItem,
+  LookupResponse,
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,

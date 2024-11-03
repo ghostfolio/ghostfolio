@@ -14,7 +14,10 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -224,7 +227,7 @@ export class YahooFinanceService implements DataProviderInterface {
   public async search({
     includeIndices = false,
     query
-  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
+  }: GetSearchParams): Promise<LookupResponse> {
     const items: LookupItem[] = [];
 
     try {
