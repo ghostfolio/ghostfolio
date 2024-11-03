@@ -60,7 +60,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         );
       }
     } catch (error) {
-      if (error?.getStatus() === StatusCodes.TOO_MANY_REQUESTS) {
+      if (error?.getStatus?.() === StatusCodes.TOO_MANY_REQUESTS) {
         throw error;
       } else {
         throw new HttpException(
