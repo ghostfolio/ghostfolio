@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
 
+### Changed
+
+- Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
+
 ## 2.123.0 - 2024-11-16
 
 ### Added
