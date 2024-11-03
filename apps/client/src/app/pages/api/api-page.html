@@ -1,0 +1,10 @@
+<div class="container">
+  <div>
+    <h2 class="text-center">Lookup</h2>
+    <ul *ngIf="symbols$ | async as symbols">
+      @for (item of symbols; track item.symbol) {
+        <li>{{ item.name }} ({{ item.symbol }})</li>
+      }
+    </ul>
+  </div>
+</div>

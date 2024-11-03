@@ -22,6 +22,7 @@ export const permissions = {
   deletePlatform: 'deletePlatform',
   deleteTag: 'deleteTag',
   deleteUser: 'deleteUser',
+  enableDataProviderGhostfolio: 'enableDataProviderGhostfolio',
   enableFearAndGreedIndex: 'enableFearAndGreedIndex',
   enableImport: 'enableImport',
   enableBlog: 'enableBlog',
