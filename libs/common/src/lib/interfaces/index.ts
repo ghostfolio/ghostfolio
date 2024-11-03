@@ -23,6 +23,7 @@ import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
+import type { LookupItem } from './lookup-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioDividends } from './portfolio-dividends.interface';
@@ -40,6 +41,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
+import type { LookupResponse } from './responses/lookup-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
@@ -82,6 +84,8 @@ export {
   InfoItem,
   InvestmentItem,
   LineChartItem,
+  LookupItem,
+  LookupResponse,
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,

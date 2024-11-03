@@ -1,5 +1,4 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import {
@@ -20,7 +19,11 @@ import {
   getStartOfUtcDate,
   isDerivedCurrency
 } from '@ghostfolio/common/helper';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  LookupItem,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -571,8 +574,8 @@ export class DataProviderService {
     includeIndices?: boolean;
     query: string;
     user: UserWithSettings;
-  }): Promise<{ items: LookupItem[] }> {
-    const promises: Promise<{ items: LookupItem[] }>[] = [];
+  }): Promise<LookupResponse> {
+    const promises: Promise<LookupResponse>[] = [];
     let lookupItems: LookupItem[] = [];
 
     if (query?.length < 2) {

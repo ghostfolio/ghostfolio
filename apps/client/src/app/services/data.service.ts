@@ -10,7 +10,6 @@ import {
 } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -30,6 +29,7 @@ import {
   Filter,
   ImportResponse,
   InfoItem,
+  LookupResponse,
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
@@ -464,7 +464,7 @@ export class DataService {
     }
 
     return this.http
-      .get<{ items: LookupItem[] }>('/api/v1/symbol/lookup', { params })
+      .get<LookupResponse>('/api/v1/symbol/lookup', { params })
       .pipe(
         map((respose) => {
           return respose.items;
