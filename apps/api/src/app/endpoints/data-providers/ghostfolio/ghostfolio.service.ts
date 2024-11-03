@@ -77,7 +77,7 @@ export class GhostfolioService {
 
   private getDataProviderInfo(): DataProviderInfo {
     return {
-      isPremium: true,
+      isPremium: false,
       name: 'Ghostfolio Premium',
       url: 'https://ghostfol.io'
     };
