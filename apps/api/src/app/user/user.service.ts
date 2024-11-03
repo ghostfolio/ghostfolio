@@ -183,7 +183,9 @@ export class UserService {
       Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: Analytics?.activityCount
+      activityCount: Analytics?.activityCount,
+      dataProviderGhostfolioDailyRequests:
+        Analytics?.dataProviderGhostfolioDailyRequests
     };
 
     if (user?.Settings) {

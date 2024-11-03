@@ -40,6 +40,7 @@ import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { LookupResponse } from './responses/lookup-response.interface';
@@ -74,6 +75,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  DataProviderGhostfolioStatusResponse,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Export,

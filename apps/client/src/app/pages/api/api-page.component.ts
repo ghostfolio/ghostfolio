@@ -1,4 +1,5 @@
 import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { DataProviderGhostfolioStatusResponse } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -14,6 +15,7 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
+  public status$: Observable<DataProviderGhostfolioStatusResponse>;
   public symbols$: Observable<LookupItem[]>;
 
   private unsubscribeSubject = new Subject<void>();
@@ -21,12 +23,21 @@ export class GfApiPageComponent implements OnInit {
   public constructor(private http: HttpClient) {}
 
   public ngOnInit() {
+    this.status$ = this.fetchStatus();
     this.symbols$ = this.fetchSymbols({ query: 'apple' });
   }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchStatus() {
+    return this.http
+      .get<DataProviderGhostfolioStatusResponse>(
+        '/api/v1/data-providers/ghostfolio/status'
+      )
+      .pipe(takeUntil(this.unsubscribeSubject));
   }
 
   private fetchSymbols({
