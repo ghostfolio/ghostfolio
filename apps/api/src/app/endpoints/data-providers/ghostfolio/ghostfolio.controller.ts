@@ -1,10 +1,12 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
-import { DataProviderGhostfolioStatusResponse } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderGhostfolioStatusResponse,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -37,7 +39,7 @@ export class GhostfolioController {
   public async lookupSymbol(
     @Query('includeIndices') includeIndicesParam = 'false',
     @Query('query') query = ''
-  ): Promise<{ items: LookupItem[] }> {
+  ): Promise<LookupResponse> {
     const includeIndices = includeIndicesParam === 'true';
     const maxDailyRequests = await this.getMaxDailyRequests();
 

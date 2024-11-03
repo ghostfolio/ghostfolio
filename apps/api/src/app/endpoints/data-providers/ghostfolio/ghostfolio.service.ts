@@ -1,7 +1,10 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupItem,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -19,8 +22,8 @@ export class GhostfolioService {
   }: {
     includeIndices?: boolean;
     query: string;
-  }): Promise<{ items: LookupItem[] }> {
-    const results: { items: LookupItem[] } = { items: [] };
+  }): Promise<LookupResponse> {
+    const results: LookupResponse = { items: [] };
 
     if (!query) {
       return results;
