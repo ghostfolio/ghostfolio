@@ -1,4 +1,4 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
+import { LookupItem } from '../lookup-item.interface';
 
 export interface LookupResponse {
   items: LookupItem[];

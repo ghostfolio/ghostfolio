@@ -23,6 +23,7 @@ import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
+import type { LookupItem } from './lookup-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioDividends } from './portfolio-dividends.interface';
@@ -83,6 +84,7 @@ export {
   InfoItem,
   InvestmentItem,
   LineChartItem,
+  LookupItem,
   LookupResponse,
   OAuthResponse,
   PortfolioChart,

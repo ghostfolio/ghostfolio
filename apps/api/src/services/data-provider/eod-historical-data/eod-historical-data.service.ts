@@ -1,4 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -19,6 +18,7 @@ import {
 import { DATE_FORMAT, isCurrency } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
 import { MarketState } from '@ghostfolio/common/types';
