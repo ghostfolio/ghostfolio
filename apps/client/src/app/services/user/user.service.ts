@@ -72,6 +72,20 @@ export class UserService extends ObservableStore<UserStoreState> {
       });
     }
 
+    if (user?.settings['filters.dataSource']) {
+      filters.push({
+        id: user.settings['filters.dataSource'][0],
+        type: 'DATA_SOURCE'
+      });
+    }
+
+    if (user?.settings['filters.symbol']) {
+      filters.push({
+        id: user.settings['filters.symbol'][0],
+        type: 'SYMBOL'
+      });
+    }
+
     return filters;
   }
 

@@ -1,7 +1,8 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { Filter, User } from '@ghostfolio/common/interfaces';
+import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -36,6 +37,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass } from '@prisma/client';
+import { sortBy } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
 import {
@@ -66,7 +68,8 @@ import {
     MatSelectModule,
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    GfSymbolModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
@@ -132,7 +135,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public filterForm = this.formBuilder.group({
     account: new FormControl<string>(undefined),
     assetClass: new FormControl<string>(undefined),
-    tag: new FormControl<string>(undefined)
+    tag: new FormControl<string>(undefined),
+    holdings: new FormControl<PortfolioPosition>(undefined)
   });
   public isLoading = false;
   public isOpen = false;
@@ -143,8 +147,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     holdings: []
   };
   public tags: Filter[] = [];
+  public allPortfolioHoldings: PortfolioPosition[] = [];
 
-  private filterTypes: Filter['type'][] = ['ACCOUNT', 'ASSET_CLASS', 'TAG'];
+  private filterTypes: Filter['type'][] = [
+    'ACCOUNT',
+    'ASSET_CLASS',
+    'TAG',
+    'DATA_SOURCE',
+    'SYMBOL'
+  ];
   private keyManager: FocusKeyManager<GfAssistantListItemComponent>;
   private unsubscribeSubject = new Subject<void>();
 
@@ -156,6 +167,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
+    this.loadPortfolioHoldings();
+
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
       return {
         id: assetClass,
@@ -263,16 +276,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.filterForm.enable({ emitEvent: false });
     }
 
-    this.filterForm.setValue(
-      {
-        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
-        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
-        tag: this.user?.settings?.['filters.tags']?.[0] ?? null
-      },
-      {
-        emitEvent: false
-      }
-    );
+    this.loadPortfolioHoldings();
 
     this.tags =
       this.user?.tags
@@ -334,6 +338,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         id: this.filterForm.get('tag').value,
         type: 'TAG'
+      },
+      {
+        id: this.filterForm.get('holdings').value.dataSource,
+        type: 'DATA_SOURCE'
+      },
+      {
+        id: this.filterForm.get('holdings').value.symbol,
+        type: 'SYMBOL'
       }
     ]);
 
@@ -472,5 +484,49 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         }),
         takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  public holdingComparisonFunction(option, value): boolean {
+    return (
+      option.dataSource === value.dataSource && option.symbol === value.symbol
+    );
+  }
+
+  private loadPortfolioHoldings() {
+    this.dataService
+      .fetchPortfolioHoldings({
+        range: 'max'
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.allPortfolioHoldings = sortBy(holdings, ({ name }) => {
+          return name.toLowerCase();
+        });
+        this.setFormValues();
+
+        //this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  private setFormValues() {
+    const dataSource = this.user?.settings?.['filters.dataSource']?.[0] ?? null;
+    const symbol = this.user?.settings?.['filters.symbol']?.[0] ?? null;
+    const selectedHolding = this.allPortfolioHoldings.filter(
+      (h) => h.dataSource === dataSource && h.symbol === symbol
+    );
+
+    const holding = selectedHolding[0];
+
+    this.filterForm.setValue(
+      {
+        account: this.user?.settings?.['filters.accounts']?.[0] ?? null,
+        assetClass: this.user?.settings?.['filters.assetClasses']?.[0] ?? null,
+        tag: this.user?.settings?.['filters.tags']?.[0] ?? null,
+        holdings: holding
+      },
+      {
+        emitEvent: false
+      }
+    );
   }
 }

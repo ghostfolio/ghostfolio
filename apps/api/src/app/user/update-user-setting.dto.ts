@@ -68,6 +68,14 @@ export class UpdateUserSettingDto {
   @IsOptional()
   'filters.tags'?: string[];
 
+  @IsArray()
+  @IsOptional()
+  'filters.dataSource'?: string[];
+
+  @IsArray()
+  @IsOptional()
+  'filters.symbol'?: string[];
+
   @IsIn(['CHART', 'TABLE'] as HoldingsViewMode[])
   @IsOptional()
   holdingsViewMode?: HoldingsViewMode;

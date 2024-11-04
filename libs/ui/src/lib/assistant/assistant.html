@@ -124,6 +124,32 @@
         </div>
         <div class="mb-3">
           <mat-form-field appearance="outline" class="w-100 without-hint">
+            <mat-label i18n>Holding</mat-label>
+            <mat-select
+              formControlName="holdings"
+              [compareWith]="holdingComparisonFunction"
+            >
+              <mat-select-trigger>{{
+                filterForm.get('holdings')?.value?.name
+              }}</mat-select-trigger>
+              <mat-option [value]="null" />
+              @for (holding of allPortfolioHoldings; track holding.name) {
+                <mat-option class="line-height-1" [value]="holding">
+                  <span
+                    ><b>{{ holding.name }}</b></span
+                  >
+                  <br />
+                  <small class="text-muted"
+                    >{{ holding.symbol | gfSymbol }} ·
+                    {{ holding.currency }}</small
+                  >
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="mb-3">
+          <mat-form-field appearance="outline" class="w-100 without-hint">
             <mat-label i18n>Tags</mat-label>
             <mat-select formControlName="tag">
               <mat-option [value]="null" />

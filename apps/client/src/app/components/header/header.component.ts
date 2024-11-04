@@ -183,6 +183,10 @@ export class HeaderComponent implements OnChanges {
         filtersType = 'assetClasses';
       } else if (filter.type === 'TAG') {
         filtersType = 'tags';
+      } else if (filter.type === 'DATA_SOURCE') {
+        filtersType = 'dataSource';
+      } else if (filter.type === 'SYMBOL') {
+        filtersType = 'symbol';
       }
 
       userSetting[`filters.${filtersType}`] = filter.id ? [filter.id] : null;
