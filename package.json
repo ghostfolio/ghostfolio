@@ -137,7 +137,7 @@
     "twitter-api-v2": "1.14.2",
     "uuid": "9.0.1",
     "yahoo-finance2": "2.11.3",
-    "zone.js": "0.14.10"
+    "zone.js": "0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "18.2.9",
