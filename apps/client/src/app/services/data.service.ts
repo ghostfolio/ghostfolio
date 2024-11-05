@@ -466,8 +466,8 @@ export class DataService {
     return this.http
       .get<LookupResponse>('/api/v1/symbol/lookup', { params })
       .pipe(
-        map((respose) => {
-          return respose.items;
+        map(({ items }) => {
+          return items;
         })
       );
   }

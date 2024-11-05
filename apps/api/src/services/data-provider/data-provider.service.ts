@@ -575,8 +575,8 @@ export class DataProviderService {
     query: string;
     user: UserWithSettings;
   }): Promise<LookupResponse> {
-    const promises: Promise<LookupResponse>[] = [];
     let lookupItems: LookupItem[] = [];
+    const promises: Promise<LookupResponse>[] = [];
 
     if (query?.length < 2) {
       return { items: lookupItems };
@@ -606,9 +606,9 @@ export class DataProviderService {
     });
 
     const filteredItems = lookupItems
-      .filter((lookupItem) => {
+      .filter(({ currency }) => {
         // Only allow symbols with supported currency
-        return lookupItem.currency ? true : false;
+        return currency ? true : false;
       })
       .sort(({ name: name1 }, { name: name2 }) => {
         return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
