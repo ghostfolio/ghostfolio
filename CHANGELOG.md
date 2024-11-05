@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the exception handling in the user authorization service
+- Disabled the caching of the benchmarks in the markets overview if sharing the _Fear & Greed Index_ (market mood) is enabled
 
 ## 2.121.1 - 2024-11-02
 
