@@ -48,6 +48,7 @@ import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
+import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
@@ -107,6 +108,7 @@ export {
   Position,
   Product,
   PublicPortfolioResponse,
+  QuotesResponse,
   ResponseError,
   ScraperConfiguration,
   Statistics,

@@ -1,6 +1,7 @@
 import {
   DataProviderGhostfolioStatusResponse,
-  LookupResponse
+  LookupResponse,
+  QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
@@ -17,6 +18,7 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
+  public quotes$: Observable<QuotesResponse['quotes']>;
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
   public symbols$: Observable<LookupResponse['items']>;
 
@@ -25,6 +27,7 @@ export class GfApiPageComponent implements OnInit {
   public constructor(private http: HttpClient) {}
 
   public ngOnInit() {
+    this.quotes$ = this.fetchQuotes({ symbols: ['AAPL.US', 'VOO.US'] });
     this.status$ = this.fetchStatus();
     this.symbols$ = this.fetchSymbols({ query: 'apple' });
   }
@@ -32,6 +35,21 @@ export class GfApiPageComponent implements OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchQuotes({ symbols }: { symbols: string[] }) {
+    const params = new HttpParams().set('symbols', symbols.join(','));
+
+    return this.http
+      .get<QuotesResponse>('/api/v1/data-providers/ghostfolio/quotes', {
+        params
+      })
+      .pipe(
+        map(({ quotes }) => {
+          return quotes;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      );
   }
 
   private fetchStatus() {

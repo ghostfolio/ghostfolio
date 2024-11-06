@@ -1,13 +1,20 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import {
+  DEFAULT_CURRENCY,
+  DERIVED_CURRENCIES
+} from '@ghostfolio/common/config';
+import {
   DataProviderInfo,
   LookupItem,
-  LookupResponse
+  LookupResponse,
+  QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
+
+import Big = require('big.js');
 
 @Injectable()
 export class GhostfolioService {
@@ -15,6 +22,90 @@ export class GhostfolioService {
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService
   ) {}
+
+  public async getQuotes({
+    requestTimeout,
+    symbols
+  }: {
+    requestTimeout?: number;
+    symbols: string[];
+  }) {
+    const promises: Promise<any>[] = [];
+    const results: QuotesResponse = { quotes: {} };
+
+    try {
+      for (const dataProvider of this.getDataProviderServices()) {
+        const maximumNumberOfSymbolsPerRequest =
+          dataProvider.getMaxNumberOfSymbolsPerRequest?.() ??
+          Number.MAX_SAFE_INTEGER;
+
+        for (
+          let i = 0;
+          i < symbols.length;
+          i += maximumNumberOfSymbolsPerRequest
+        ) {
+          const symbolsChunk = symbols.slice(
+            i,
+            i + maximumNumberOfSymbolsPerRequest
+          );
+
+          const promise = Promise.resolve(
+            dataProvider.getQuotes({ requestTimeout, symbols: symbolsChunk })
+          );
+
+          promises.push(
+            promise.then(async (result) => {
+              for (const [symbol, dataProviderResponse] of Object.entries(
+                result
+              )) {
+                dataProviderResponse.dataSource = 'GHOSTFOLIO';
+
+                if (
+                  [
+                    ...DERIVED_CURRENCIES.map(({ currency }) => {
+                      return `${DEFAULT_CURRENCY}${currency}`;
+                    }),
+                    `${DEFAULT_CURRENCY}USX`
+                  ].includes(symbol)
+                ) {
+                  continue;
+                }
+
+                results.quotes[symbol] = dataProviderResponse;
+
+                for (const {
+                  currency,
+                  factor,
+                  rootCurrency
+                } of DERIVED_CURRENCIES) {
+                  if (symbol === `${DEFAULT_CURRENCY}${rootCurrency}`) {
+                    results.quotes[`${DEFAULT_CURRENCY}${currency}`] = {
+                      ...dataProviderResponse,
+                      currency,
+                      marketPrice: new Big(
+                        result[`${DEFAULT_CURRENCY}${rootCurrency}`].marketPrice
+                      )
+                        .mul(factor)
+                        .toNumber(),
+                      marketState: 'open'
+                    };
+                  }
+                }
+              }
+            })
+          );
+        }
+
+        await Promise.all(promises);
+      }
+
+      return results;
+    } catch (error) {
+      Logger.error(error, 'GhostfolioService');
+
+      throw error;
+    }
+  }
 
   public async lookup({
     includeIndices = false,
