@@ -512,7 +512,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const dataSource = this.user?.settings?.['filters.dataSource']?.[0] ?? null;
     const symbol = this.user?.settings?.['filters.symbol']?.[0] ?? null;
     const selectedHolding = this.allPortfolioHoldings.filter(
-      (h) => h.dataSource === dataSource && h.symbol === symbol
+      (h) =>
+        (h.dataSource ?? null) === dataSource && (h.symbol ?? null) === symbol
     );
 
     const holding = selectedHolding[0] ?? null;
