@@ -437,7 +437,7 @@ export class BenchmarkService {
       };
     });
 
-    if (storeInCache) {
+    if (!enableSharing && storeInCache) {
       const expiration = addHours(new Date(), 2);
 
       await this.redisCacheService.set(
