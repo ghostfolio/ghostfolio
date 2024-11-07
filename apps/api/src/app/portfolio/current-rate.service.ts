@@ -52,27 +52,24 @@ export class CurrentRateService {
           .then((dataResultProvider) => {
             const result: GetValueObject[] = [];
 
-            for (const dataGatheringItem of dataGatheringItems) {
-              if (
-                dataResultProvider?.[dataGatheringItem.symbol]?.dataProviderInfo
-              ) {
+            for (const { dataSource, symbol } of dataGatheringItems) {
+              if (dataResultProvider?.[symbol]?.dataProviderInfo) {
                 dataProviderInfos.push(
-                  dataResultProvider[dataGatheringItem.symbol].dataProviderInfo
+                  dataResultProvider[symbol].dataProviderInfo
                 );
               }
 
-              if (dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice) {
+              if (dataResultProvider?.[symbol]?.marketPrice) {
                 result.push({
-                  dataSource: dataGatheringItem.dataSource,
+                  dataSource,
+                  symbol,
                   date: today,
-                  marketPrice:
-                    dataResultProvider?.[dataGatheringItem.symbol]?.marketPrice,
-                  symbol: dataGatheringItem.symbol
+                  marketPrice: dataResultProvider?.[symbol]?.marketPrice
                 });
               } else {
                 quoteErrors.push({
-                  dataSource: dataGatheringItem.dataSource,
-                  symbol: dataGatheringItem.symbol
+                  dataSource,
+                  symbol
                 });
               }
             }

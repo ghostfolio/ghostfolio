@@ -86,7 +86,7 @@ export class SymbolService {
 
     try {
       historicalData = await this.dataProviderService.getHistoricalRaw({
-        dataGatheringItems: [{ dataSource, symbol }],
+        assetProfileIdentifiers: [{ dataSource, symbol }],
         from: date,
         to: date
       });

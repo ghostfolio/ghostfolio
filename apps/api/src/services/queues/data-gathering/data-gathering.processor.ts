@@ -89,7 +89,7 @@ export class DataGatheringProcessor {
       );
 
       const historicalData = await this.dataProviderService.getHistoricalRaw({
-        dataGatheringItems: [{ dataSource, symbol }],
+        assetProfileIdentifiers: [{ dataSource, symbol }],
         from: currentDate,
         to: new Date()
       });
