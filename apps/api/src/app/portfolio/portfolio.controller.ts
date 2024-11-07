@@ -81,6 +81,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     const withMarkets = withMarketsParam === 'true';
@@ -95,7 +97,9 @@ export class PortfolioController {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags
+      filterByTags,
+      filterByDataSource,
+      filterBySymbol
     });
 
     const {
@@ -295,12 +299,16 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string
   ): Promise<PortfolioDividends> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags
+      filterByTags,
+      filterByDataSource,
+      filterBySymbol
     });
 
     const impersonationUserId =
@@ -364,14 +372,18 @@ export class PortfolioController {
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
       filterByHoldingType,
       filterBySearchQuery,
-      filterByTags
+      filterByTags,
+      filterByDataSource,
+      filterBySymbol
     });
 
     const { holdings } = await this.portfolioService.getDetails({
@@ -392,12 +404,16 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string
+    @Query('tags') filterByTags?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string
   ): Promise<PortfolioInvestments> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags
+      filterByTags,
+      filterByDataSource,
+      filterBySymbol
     });
 
     let { investments, streaks } = await this.portfolioService.getInvestments({
@@ -459,6 +475,8 @@ export class PortfolioController {
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('range') dateRange: DateRange = 'max',
     @Query('tags') filterByTags?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
   ): Promise<PortfolioPerformanceResponse> {
     const withExcludedAccounts = withExcludedAccountsParam === 'true';
@@ -466,7 +484,9 @@ export class PortfolioController {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags
+      filterByTags,
+      filterByDataSource,
+      filterBySymbol
     });
 
     const performanceInformation = await this.portfolioService.getPerformance({
