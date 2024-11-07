@@ -261,12 +261,21 @@ export class GfTreemapChartComponent
             display: true,
             font: [{ size: 16 }, { lineHeight: 1.5, size: 14 }],
             formatter: (ctx) => {
-              const netPerformancePercentWithCurrencyEffect =
-                ctx.raw._data.netPerformancePercentWithCurrencyEffect;
+              // Round to 4 decimal places
+              let netPerformancePercentWithCurrencyEffect =
+                Math.round(
+                  ctx.raw._data.netPerformancePercentWithCurrencyEffect * 10000
+                ) / 10000;
+
+              if (Math.abs(netPerformancePercentWithCurrencyEffect) === 0) {
+                netPerformancePercentWithCurrencyEffect = Math.abs(
+                  netPerformancePercentWithCurrencyEffect
+                );
+              }
 
               return [
                 ctx.raw._data.symbol,
-                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(ctx.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
+                `${netPerformancePercentWithCurrencyEffect > 0 ? '+' : ''}${(netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`
               ];
             },
             hoverColor: undefined,

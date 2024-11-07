@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the algebraic sign in the chart of the holdings tab on the home page (experimental)
 - Improved the exception handling in the user authorization service
 - Disabled the caching of the benchmarks in the markets overview if sharing the _Fear & Greed Index_ (market mood) is enabled
 
