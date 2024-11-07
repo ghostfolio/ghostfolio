@@ -91,11 +91,11 @@ export class DataProviderService {
 
     const promises = [];
 
-    for (const [dataSource, dataGatheringItems] of Object.entries(
+    for (const [dataSource, assetProfileIdentifiers] of Object.entries(
       itemsGroupedByDataSource
     )) {
-      const symbols = dataGatheringItems.map((dataGatheringItem) => {
-        return dataGatheringItem.symbol;
+      const symbols = assetProfileIdentifiers.map(({ symbol }) => {
+        return symbol;
       });
 
       for (const symbol of symbols) {
@@ -242,11 +242,11 @@ export class DataProviderService {
   }
 
   public async getHistoricalRaw({
-    dataGatheringItems,
+    assetProfileIdentifiers,
     from,
     to
   }: {
-    dataGatheringItems: AssetProfileIdentifier[];
+    assetProfileIdentifiers: AssetProfileIdentifier[];
     from: Date;
     to: Date;
   }): Promise<{
@@ -255,25 +255,32 @@ export class DataProviderService {
     for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
       if (
         this.hasCurrency({
-          dataGatheringItems,
+          assetProfileIdentifiers,
           currency: `${DEFAULT_CURRENCY}${currency}`
         })
       ) {
         // Skip derived currency
-        dataGatheringItems = dataGatheringItems.filter(({ symbol }) => {
-          return symbol !== `${DEFAULT_CURRENCY}${currency}`;
-        });
+        assetProfileIdentifiers = assetProfileIdentifiers.filter(
+          ({ symbol }) => {
+            return symbol !== `${DEFAULT_CURRENCY}${currency}`;
+          }
+        );
         // Add root currency
-        dataGatheringItems.push({
+        assetProfileIdentifiers.push({
           dataSource: this.getDataSourceForExchangeRates(),
           symbol: `${DEFAULT_CURRENCY}${rootCurrency}`
         });
       }
     }
 
-    dataGatheringItems = uniqWith(dataGatheringItems, (obj1, obj2) => {
-      return obj1.dataSource === obj2.dataSource && obj1.symbol === obj2.symbol;
-    });
+    assetProfileIdentifiers = uniqWith(
+      assetProfileIdentifiers,
+      (obj1, obj2) => {
+        return (
+          obj1.dataSource === obj2.dataSource && obj1.symbol === obj2.symbol
+        );
+      }
+    );
 
     const result: {
       [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -283,7 +290,7 @@ export class DataProviderService {
       data: { [date: string]: IDataProviderHistoricalResponse };
       symbol: string;
     }>[] = [];
-    for (const { dataSource, symbol } of dataGatheringItems) {
+    for (const { dataSource, symbol } of assetProfileIdentifiers) {
       const dataProvider = this.getDataProvider(dataSource);
       if (dataProvider.canHandle(symbol)) {
         if (symbol === `${DEFAULT_CURRENCY}USX`) {
@@ -418,7 +425,7 @@ export class DataProviderService {
 
     const promises: Promise<any>[] = [];
 
-    for (const [dataSource, dataGatheringItems] of Object.entries(
+    for (const [dataSource, assetProfileIdentifiers] of Object.entries(
       itemsGroupedByDataSource
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
@@ -431,7 +438,7 @@ export class DataProviderService {
         continue;
       }
 
-      const symbols = dataGatheringItems
+      const symbols = assetProfileIdentifiers
         .filter(({ symbol }) => {
           return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
         })
@@ -634,13 +641,13 @@ export class DataProviderService {
   }
 
   private hasCurrency({
-    currency,
-    dataGatheringItems
+    assetProfileIdentifiers,
+    currency
   }: {
+    assetProfileIdentifiers: AssetProfileIdentifier[];
     currency: string;
-    dataGatheringItems: AssetProfileIdentifier[];
   }) {
-    return dataGatheringItems.some(({ dataSource, symbol }) => {
+    return assetProfileIdentifiers.some(({ dataSource, symbol }) => {
       return (
         dataSource === this.getDataSourceForExchangeRates() &&
         symbol === currency

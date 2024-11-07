@@ -413,15 +413,16 @@ export class PortfolioService {
       );
     }
 
-    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
+    const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
       return {
         dataSource,
         symbol
       };
     });
 
-    const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfiles(dataGatheringItems);
+    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+      assetProfileIdentifiers
+    );
 
     const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
     for (const symbolProfile of symbolProfiles) {
@@ -848,7 +849,7 @@ export class PortfolioService {
       if (isEmpty(historicalData)) {
         try {
           historicalData = await this.dataProviderService.getHistoricalRaw({
-            dataGatheringItems: [
+            assetProfileIdentifiers: [
               { dataSource: DataSource.YAHOO, symbol: aSymbol }
             ],
             from: portfolioStart,
@@ -953,7 +954,7 @@ export class PortfolioService {
       return !quantity.eq(0);
     });
 
-    const dataGatheringItems = positions.map(({ dataSource, symbol }) => {
+    const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
       return {
         dataSource,
         symbol
@@ -961,7 +962,10 @@ export class PortfolioService {
     });
 
     const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({ user, items: dataGatheringItems }),
+      this.dataProviderService.getQuotes({
+        user,
+        items: assetProfileIdentifiers
+      }),
       this.symbolProfileService.getSymbolProfiles(
         positions.map(({ dataSource, symbol }) => {
           return { dataSource, symbol };

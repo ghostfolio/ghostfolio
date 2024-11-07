@@ -122,7 +122,7 @@ export class DataGatheringService {
   }) {
     try {
       const historicalData = await this.dataProviderService.getHistoricalRaw({
-        dataGatheringItems: [{ dataSource, symbol }],
+        assetProfileIdentifiers: [{ dataSource, symbol }],
         from: date,
         to: date
       });
