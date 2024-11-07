@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
 - Added pagination response (`count`) to the endpoint `GET api/v1/admin/user`
+- Added `GHOSTFOLIO` as a new data source type
 
 ### Changed
 
@@ -37,10 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ## 2.122.0 - 2024-11-07
-
-### Added
-
-- Added `GHOSTFOLIO` as a new data source type
 
 ### Changed
 
