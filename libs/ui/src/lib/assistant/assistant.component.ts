@@ -503,8 +503,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           return name.toLowerCase();
         });
         this.setFormValues();
-
-        //this.changeDetectorRef.markForCheck();
       });
   }
 
