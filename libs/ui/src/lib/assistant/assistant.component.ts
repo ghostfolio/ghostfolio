@@ -340,11 +340,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         type: 'TAG'
       },
       {
-        id: this.filterForm.get('holdings').value.dataSource,
+        id: this.filterForm.get('holdings').value?.dataSource,
         type: 'DATA_SOURCE'
       },
       {
-        id: this.filterForm.get('holdings').value.symbol,
+        id: this.filterForm.get('holdings').value?.symbol,
         type: 'SYMBOL'
       }
     ]);
@@ -488,7 +488,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   public holdingComparisonFunction(option, value): boolean {
     return (
-      option.dataSource === value.dataSource && option.symbol === value.symbol
+      option.dataSource === value?.dataSource && option.symbol === value?.symbol
     );
   }
 
@@ -515,7 +515,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       (h) => h.dataSource === dataSource && h.symbol === symbol
     );
 
-    const holding = selectedHolding[0];
+    const holding = selectedHolding[0] ?? null;
 
     this.filterForm.setValue(
       {
