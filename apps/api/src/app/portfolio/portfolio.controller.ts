@@ -79,10 +79,10 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string,
     @Query('withMarkets') withMarketsParam = 'false'
   ): Promise<PortfolioDetails & { hasError: boolean }> {
     const withMarkets = withMarketsParam === 'true';
@@ -97,9 +97,9 @@ export class PortfolioController {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags,
       filterByDataSource,
-      filterBySymbol
+      filterBySymbol,
+      filterByTags
     });
 
     const {
@@ -297,18 +297,18 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string
+    @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioDividends> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags,
       filterByDataSource,
-      filterBySymbol
+      filterBySymbol,
+      filterByTags
     });
 
     const impersonationUserId =
@@ -369,21 +369,21 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
     @Query('holdingType') filterByHoldingType?: string,
     @Query('query') filterBySearchQuery?: string,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string
+    @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioHoldingsResponse> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
+      filterByDataSource,
       filterByHoldingType,
       filterBySearchQuery,
-      filterByTags,
-      filterByDataSource,
-      filterBySymbol
+      filterBySymbol,
+      filterByTags
     });
 
     const { holdings } = await this.portfolioService.getDetails({
@@ -402,18 +402,18 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
     @Query('groupBy') groupBy?: GroupBy,
     @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string,
-    @Query('dataSource') filterByDataSource?: string,
-    @Query('symbol') filterBySymbol?: string
+    @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<PortfolioInvestments> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags,
       filterByDataSource,
-      filterBySymbol
+      filterBySymbol,
+      filterByTags
     });
 
     let { investments, streaks } = await this.portfolioService.getInvestments({
@@ -473,10 +473,10 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
-    @Query('range') dateRange: DateRange = 'max',
-    @Query('tags') filterByTags?: string,
     @Query('dataSource') filterByDataSource?: string,
+    @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string,
     @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
   ): Promise<PortfolioPerformanceResponse> {
     const withExcludedAccounts = withExcludedAccountsParam === 'true';
@@ -484,9 +484,9 @@ export class PortfolioController {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
-      filterByTags,
       filterByDataSource,
-      filterBySymbol
+      filterBySymbol,
+      filterByTags
     });
 
     const performanceInformation = await this.portfolioService.getPerformance({

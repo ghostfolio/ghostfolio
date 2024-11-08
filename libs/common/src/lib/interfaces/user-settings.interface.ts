@@ -15,8 +15,8 @@ export interface UserSettings {
   emergencyFund?: number;
   'filters.accounts'?: string[];
   'filters.tags'?: string[];
-  'filters.dataSource'?: string[];
-  'filters.symbol'?: string[];
+  'filters.dataSource'?: string;
+  'filters.symbol'?: string;
   holdingsViewMode?: HoldingsViewMode;
   isExperimentalFeatures?: boolean;
   isRestrictedView?: boolean;

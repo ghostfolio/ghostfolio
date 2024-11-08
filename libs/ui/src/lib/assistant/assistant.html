@@ -133,7 +133,7 @@
                 filterForm.get('holdings')?.value?.name
               }}</mat-select-trigger>
               <mat-option [value]="null" />
-              @for (holding of allPortfolioHoldings; track holding.name) {
+              @for (holding of holdings; track holding.name) {
                 <mat-option class="line-height-1" [value]="holding">
                   <span
                     ><b>{{ holding.name }}</b></span
