@@ -5881,7 +5881,7 @@
       </trans-unit>
       <trans-unit id="50760c2140335b2324deaee120f40d9aa64b3238" datatype="html">
         <source>Currency Cluster Risks</source>
-        <target state="translated">Rischio valutario del cluster</target>
+        <target state="translated">Rischio di Concentrazione Valutario</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">141</context>
@@ -5889,7 +5889,7 @@
       </trans-unit>
       <trans-unit id="c7b797e5df289241021db16010efb6ac3c6cfb86" datatype="html">
         <source>Account Cluster Risks</source>
-        <target state="new">Account Cluster Risks</target>
+        <target state="translated">Rischi di Concentrazione dei Conti</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">160</context>
@@ -6357,7 +6357,7 @@
       </trans-unit>
       <trans-unit id="7451343426685730864" datatype="html">
         <source>WTD</source>
-        <target state="new">WTD</target>
+        <target state="translated">Settimana corrente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">212</context>
@@ -6373,7 +6373,7 @@
       </trans-unit>
       <trans-unit id="399380803601269035" datatype="html">
         <source>MTD</source>
-        <target state="new">MTD</target>
+        <target state="translated">Mese corrente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">216</context>
@@ -7077,7 +7077,7 @@
       </trans-unit>
       <trans-unit id="76897e07c5670ce3b7710cc10c5e1c08b5f6a83a" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Change with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Change <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Change with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Change <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="translated"><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Cambio con effetto valuta <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Cambia <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">50</context>
@@ -7085,7 +7085,7 @@
       </trans-unit>
       <trans-unit id="65ff514a2e167229e1a34b3712f2cf2908576d0f" datatype="html">
         <source><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></source>
-        <target state="new"><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Performance with currency effect <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Performance <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
+        <target state="translated"><x id="START_BLOCK_IF" equiv-text="Currency !== SymbolProfile?.currency ) {"/> Prestazioni con effetto valuta <x id="CLOSE_BLOCK_IF" equiv-text="}"/><x id="START_BLOCK_ELSE" equiv-text="@else {"/> Prestazioni <x id="CLOSE_BLOCK_ELSE" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">69</context>
@@ -7349,7 +7349,7 @@
       </trans-unit>
       <trans-unit id="8908015589937012101" datatype="html">
         <source>Get access to 100’000+ tickers from over 50 exchanges</source>
-        <target state="new">Get access to 100’000+ tickers from over 50 exchanges</target>
+        <target state="translated">Ottieni accesso a oltre 100’000+ titoli da oltre 50 borse</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">24</context>
@@ -7381,7 +7381,7 @@
       </trans-unit>
       <trans-unit id="e8a4d8ee23e2c3f89acf7214598bcc3182c79268" datatype="html">
         <source>Allocation Cluster Risks</source>
-        <target state="new">Allocation Cluster Risks</target>
+        <target state="translated">Rischi di allocazione dei Conti</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">179</context>
