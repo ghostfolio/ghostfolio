@@ -14,9 +14,9 @@ export interface UserSettings {
   dateRange?: DateRange;
   emergencyFund?: number;
   'filters.accounts'?: string[];
-  'filters.tags'?: string[];
   'filters.dataSource'?: string;
   'filters.symbol'?: string;
+  'filters.tags'?: string[];
   holdingsViewMode?: HoldingsViewMode;
   isExperimentalFeatures?: boolean;
   isRestrictedView?: boolean;

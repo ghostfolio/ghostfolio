@@ -126,16 +126,16 @@
           <mat-form-field appearance="outline" class="w-100 without-hint">
             <mat-label i18n>Holding</mat-label>
             <mat-select
-              formControlName="holdings"
+              formControlName="holding"
               [compareWith]="holdingComparisonFunction"
             >
               <mat-select-trigger>{{
-                filterForm.get('holdings')?.value?.name
+                filterForm.get('holding')?.value?.name
               }}</mat-select-trigger>
               <mat-option [value]="null" />
               @for (holding of holdings; track holding.name) {
                 <mat-option class="line-height-1" [value]="holding">
-                  <span
+                  <span class="text-truncate"
                     ><b>{{ holding.name }}</b></span
                   >
                   <br />
