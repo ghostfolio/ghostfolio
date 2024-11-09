@@ -7165,7 +7165,7 @@
       </trans-unit>
       <trans-unit id="f1cc4a59110dd72517210565f76118df74336fec" datatype="html">
         <source>This page has been archived.</source>
-        <target state="translated">Questa pagina &egrave; stata archiviata.</target>
+        <target state="translated">Questa pagina è stata archiviata.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7173,7 +7173,7 @@
       </trans-unit>
       <trans-unit id="ea66ce0bb1cb1dcee2bcb86a8876c5f2c2fa65f6" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> &egrave; un programma Open Source</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> è un programma Open Source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">139</context>
@@ -7181,7 +7181,7 @@
       </trans-unit>
       <trans-unit id="aa945d3772281b66851cc8b86d6de9726e65db70" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> is not Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> non &egrave; un programma Open Source</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product1.name }}"/> non è un programma Open Source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">146</context>
@@ -7189,7 +7189,7 @@
       </trans-unit>
       <trans-unit id="942e46b94b9d9662c3c3b7b5e7f9005c7b9feab7" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> &egrave; un programma Open Source</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> è un programma Open Source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">156</context>
@@ -7197,7 +7197,7 @@
       </trans-unit>
       <trans-unit id="08beed5100360c242c0aec92e8706d92f0cb70f3" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> is not Open Source Software</source>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> non &egrave; un programma Open Source</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> non è un programma Open Source</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">163</context>
@@ -7333,7 +7333,7 @@
       </trans-unit>
       <trans-unit id="2fcf96765ae87821e12fe4f6900ba1a218742cfc" datatype="html">
         <source> Want to stay updated? Click below to get notified as soon as it’s available. </source>
-        <target state="translated"> Vuoi seguire le novit&agrave;? Clicca sotto per essere notificato appena &egrave; disponibile. </target>
+        <target state="translated"> Vuoi seguire le novità? Clicca sotto per essere notificato appena è disponibile. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.html</context>
           <context context-type="linenumber">23</context>
