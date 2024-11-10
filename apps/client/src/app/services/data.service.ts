@@ -532,7 +532,7 @@ export class DataService {
   }: {
     filters?: Filter[];
     range?: DateRange;
-  }) {
+  } = {}) {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (range) {

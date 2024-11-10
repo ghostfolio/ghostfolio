@@ -501,14 +501,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
   private initializeFilterForm() {
     this.dataService
-      .fetchPortfolioHoldings({
-        range: 'max'
-      })
+      .fetchPortfolioHoldings()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ holdings }) => {
         this.holdings = holdings
           .filter(({ assetSubClass }) => {
-            return assetSubClass !== 'CASH';
+            return !['CASH'].includes(assetSubClass);
           })
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
