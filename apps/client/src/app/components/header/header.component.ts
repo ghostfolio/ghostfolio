@@ -175,17 +175,17 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      let filtersType: string;
-
       if (filter.type === 'ACCOUNT') {
-        filtersType = 'accounts';
+        userSetting['filters.accounts'] = filter.id ? [filter.id] : null;
       } else if (filter.type === 'ASSET_CLASS') {
-        filtersType = 'assetClasses';
+        userSetting['filters.assetClasses'] = filter.id ? [filter.id] : null;
+      } else if (filter.type === 'DATA_SOURCE') {
+        userSetting['filters.dataSource'] = filter.id ? filter.id : null;
+      } else if (filter.type === 'SYMBOL') {
+        userSetting['filters.symbol'] = filter.id ? filter.id : null;
       } else if (filter.type === 'TAG') {
-        filtersType = 'tags';
+        userSetting['filters.tags'] = filter.id ? [filter.id] : null;
       }
-
-      userSetting[`filters.${filtersType}`] = filter.id ? [filter.id] : null;
     }
 
     this.dataService
