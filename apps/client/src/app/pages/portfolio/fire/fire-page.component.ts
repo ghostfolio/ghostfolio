@@ -1,12 +1,7 @@
-import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  PortfolioReport,
-  PortfolioReportRule,
-  User
-} from '@ghostfolio/common/interfaces';
+import { PortfolioReportRule, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -21,12 +16,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './fire-page.html'
 })
 export class FirePageComponent implements OnDestroy, OnInit {
-  public accountClusterRiskRules: PortfolioReportRule[];
-  public currencyClusterRiskRules: PortfolioReportRule[];
   public deviceType: string;
   public economicMarketClusterRiskRules: PortfolioReportRule[];
-  public emergencyFundRules: PortfolioReportRule[];
-  public feeRules: PortfolioReportRule[];
   public fireWealth: Big;
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
@@ -133,21 +124,6 @@ export class FirePageComponent implements OnDestroy, OnInit {
           });
       });
   }
-
-  public onRulesUpdated(event: UpdateUserSettingDto) {
-    this.dataService
-      .putUserSetting(event)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.userService
-          .get(true)
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe();
-
-        this.initializePortfolioReport();
-      });
-  }
-
   public onSavingsRateChange(savingsRate: number) {
     this.dataService
       .putUserSetting({ savingsRate })
@@ -190,63 +166,5 @@ export class FirePageComponent implements OnDestroy, OnInit {
 
   private initializePortfolioReport() {
     this.isLoadingPortfolioReport = true;
-
-    this.dataService
-      .fetchPortfolioReport()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
-
-        this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
-
-        this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
-
-        this.economicMarketClusterRiskRules =
-          portfolioReport.rules['economicMarketClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
-
-        this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.feeRules =
-          portfolioReport.rules['fees']?.filter(({ isActive }) => {
-            return isActive;
-          }) ?? null;
-
-        this.isLoadingPortfolioReport = false;
-
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  private mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
-    let inactiveRules: PortfolioReportRule[] = [];
-
-    for (const category in report.rules) {
-      const rulesArray = report.rules[category];
-
-      inactiveRules = inactiveRules.concat(
-        rulesArray.filter(({ isActive }) => {
-          return !isActive;
-        })
-      );
-    }
-
-    return inactiveRules;
   }
 }

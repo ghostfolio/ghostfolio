@@ -13,11 +13,11 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'gf-xray-page',
-  templateUrl: './x-ray.component.html',
-  styleUrl: './x-ray.component.scss'
+  selector: 'gf-x-ray-page',
+  templateUrl: './x-ray-page.component.html',
+  styleUrl: './x-ray-page.component.scss'
 })
-export class XRayComponent {
+export class XRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public economicMarketClusterRiskRules: PortfolioReportRule[];

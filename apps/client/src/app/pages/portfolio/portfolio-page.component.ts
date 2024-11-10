@@ -50,7 +50,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
               path: ['/portfolio', 'fire']
             },
             {
-              iconName: 'calculator-outline',
+              iconName: 'scan-outline',
               label: 'X-ray',
               path: ['/portfolio', 'x-ray']
             }

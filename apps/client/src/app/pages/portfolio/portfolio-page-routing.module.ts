@@ -38,7 +38,7 @@ const routes: Routes = [
       {
         path: 'x-ray',
         loadChildren: () =>
-          import('./x-ray/x-ray.module').then((m) => m.XRayModule)
+          import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
       }
     ],
     component: PortfolioPageComponent,
