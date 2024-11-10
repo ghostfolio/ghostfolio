@@ -74,6 +74,7 @@ export class PortfolioController {
   @Get('details')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getDetails(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
@@ -293,6 +294,7 @@ export class PortfolioController {
 
   @Get('dividends')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getDividends(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
@@ -364,6 +366,7 @@ export class PortfolioController {
   @Get('holdings')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getHoldings(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
@@ -398,6 +401,7 @@ export class PortfolioController {
 
   @Get('investments')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getInvestments(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
@@ -467,6 +471,7 @@ export class PortfolioController {
   @Get('performance')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(PerformanceLoggingInterceptor)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @Version('2')
   public async getPerformanceV2(

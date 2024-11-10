@@ -3,12 +3,7 @@ import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
-import {
-  AssetProfileIdentifier,
-  Filter,
-  PortfolioPosition,
-  User
-} from '@ghostfolio/common/interfaces';
+import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -307,6 +302,19 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
+  public holdingComparisonFunction(
+    option: PortfolioPosition,
+    value: PortfolioPosition
+  ): boolean {
+    if (value === null) {
+      return false;
+    }
+
+    return (
+      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
+    );
+  }
+
   public async initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
@@ -491,18 +499,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       );
   }
 
-  public holdingComparisonFunction(
-    option: AssetProfileIdentifier,
-    value: AssetProfileIdentifier
-  ): boolean {
-    if (value === null) {
-      return false;
-    }
-    return (
-      getAssetProfileIdentifier(option) === getAssetProfileIdentifier(value)
-    );
-  }
-
   private initializeFilterForm() {
     this.dataService
       .fetchPortfolioHoldings({
@@ -528,8 +524,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const symbol = this.user?.settings?.['filters.symbol'];
     const selectedHolding = this.holdings.find((holding) => {
       return (
-        getAssetProfileIdentifier(holding) ===
-        getAssetProfileIdentifier({ dataSource, symbol })
+        getAssetProfileIdentifier({
+          dataSource: holding.dataSource,
+          symbol: holding.symbol
+        }) === getAssetProfileIdentifier({ dataSource, symbol })
       );
     });
 

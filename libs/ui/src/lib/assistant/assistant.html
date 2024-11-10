@@ -134,15 +134,17 @@
               }}</mat-select-trigger>
               <mat-option [value]="null" />
               @for (holding of holdings; track holding.name) {
-                <mat-option class="line-height-1" [value]="holding">
-                  <span class="text-truncate"
-                    ><b>{{ holding.name }}</b></span
-                  >
-                  <br />
-                  <small class="text-muted"
-                    >{{ holding.symbol | gfSymbol }} ·
-                    {{ holding.currency }}</small
-                  >
+                <mat-option [value]="holding">
+                  <div class="line-height-1 text-truncate">
+                    <span
+                      ><b>{{ holding.name }}</b></span
+                    >
+                    <br />
+                    <small class="text-muted"
+                      >{{ holding.symbol | gfSymbol }} ·
+                      {{ holding.currency }}</small
+                    >
+                  </div>
                 </mat-option>
               }
             </mat-select>
