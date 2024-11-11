@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the assistant by a holding selector
+- Separated the _FIRE_ / _X-ray_ page
 - Improved the language localization for Italian (`it`)
 - Upgraded `ngx-skeleton-loader` from version `7.0.0` to `9.0.0`
 
