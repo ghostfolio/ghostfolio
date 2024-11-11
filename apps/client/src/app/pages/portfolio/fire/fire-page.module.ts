@@ -1,4 +1,3 @@
-import { GfRulesModule } from '@ghostfolio/client/components/rules/rules.module';
 import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -17,7 +16,6 @@ import { FirePageComponent } from './fire-page.component';
     FirePageRoutingModule,
     GfFireCalculatorComponent,
     GfPremiumIndicatorComponent,
-    GfRulesModule,
     GfValueComponent,
     NgxSkeletonLoaderModule
   ],

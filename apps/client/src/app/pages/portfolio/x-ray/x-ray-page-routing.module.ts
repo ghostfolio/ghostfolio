@@ -10,7 +10,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: XRayPageComponent,
     path: '',
-    title: $localize`X-ray`
+    title: 'X-ray'
   }
 ];
 
