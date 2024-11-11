@@ -148,7 +148,42 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       ],
       updateAccountBalance: [false]
     });
-
+    this.activityForm.get('quantity').valueChanges.subscribe(async () => {
+      const activity = { quantity: this.activityForm.get('quantity').value };
+      try {
+        const ignoredFields = [
+          'accountId',
+          'assetClass',
+          'assetSubClass',
+          'comment',
+          'currency',
+          'customCurrency',
+          'dataSource',
+          'date',
+          'fee',
+          'symbol',
+          'tags',
+          'type',
+          'unitPrice',
+          'updateAccountBalance'
+        ];
+        if (this.mode === 'create') {
+          await validateObjectForForm({
+            classDto: CreateOrderDto,
+            form: this.activityForm,
+            ignoreFields: ignoredFields,
+            object: activity
+          });
+        } else {
+          await validateObjectForForm({
+            classDto: UpdateOrderDto,
+            form: this.activityForm,
+            ignoreFields: ignoredFields,
+            object: activity
+          });
+        }
+      } catch (error) {}
+    });
     this.activityForm.valueChanges
       .pipe(
         // Slightly delay until the more specific form control value changes have
