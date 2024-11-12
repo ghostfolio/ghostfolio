@@ -13,13 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separated the _FIRE_ / _X-ray_ page
 - Improved the language localization for Italian (`it`)
 - Upgraded `ngx-skeleton-loader` from version `7.0.0` to `9.0.0`
+- Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ## 2.122.0 - 2024-11-07
 
 ### Changed
 
 - Upgraded `countries-list` from version `3.1.0` to `3.1.1`
-- Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ### Fixed
 
