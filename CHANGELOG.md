@@ -9,6 +9,93 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restructured the resources page
+- Renamed the static portfolio analysis rule from _Allocation Cluster Risk_ to _Economic Market Cluster Risk_ (Developed Markets and Emerging Markets)
+- Improved the language localization for German (`de`)
+- Switched the `consistent-generic-constructors` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `consistent-indexed-object-style` rule from `warn` to `off` in the `eslint` configuration
+- Switched the `consistent-type-assertions` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `prefer-optional-chain` rule from `warn` to `error` in the `eslint` configuration
+- Upgraded `Nx` from version `20.0.3` to `20.0.6`
+
+## 2.119.0 - 2024-10-26
+
+### Changed
+
+- Switched the `consistent-type-definitions` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `no-empty-function` rule from `warn` to `error` in the `eslint` configuration
+- Switched the `prefer-function-type` rule from `warn` to `error` in the `eslint` configuration
+- Upgraded `prisma` from version `5.20.0` to `5.21.1`
+
+### Fixed
+
+- Fixed an issue with the X-axis scale of the dividend timeline on the analysis page
+- Fixed an issue with the X-axis scale of the investment timeline on the analysis page
+- Fixed an issue with the X-axis scale of the portfolio evolution chart on the analysis page
+- Fixed an issue in the calculation of the static portfolio analysis rule: _Allocation Cluster Risk_ (Developed Markets)
+- Fixed an issue in the calculation of the static portfolio analysis rule: _Allocation Cluster Risk_ (Emerging Markets)
+
+## 2.118.0 - 2024-10-23
+
+### Added
+
+- Added a new static portfolio analysis rule: _Allocation Cluster Risk_ (Developed Markets)
+- Added a new static portfolio analysis rule: _Allocation Cluster Risk_ (Emerging Markets)
+- Added support for mutual funds in the _EOD Historical Data_ service
+
+### Changed
+
+- Improved the font colors of the chart of the holdings tab on the home page (experimental)
+- Optimized the dialog sizes for mobile (full screen)
+- Optimized the git-hook via `husky` to lint only affected projects before a commit
+- Upgraded `angular` from version `18.1.1` to `18.2.8`
+- Upgraded `Nx` from version `19.5.6` to `20.0.3`
+
+### Fixed
+
+- Fixed the warning `export was not found` in connection with `GetValuesParams`
+- Quoted the password for the _Redis_ service `healthcheck` in the `docker-compose` files (`docker-compose.yml` and `docker-compose.build.yml`)
+
+## 2.117.0 - 2024-10-19
+
+### Added
+
+- Added the logotype to the footer
+- Added the data providers management to the admin control panel
+
+### Changed
+
+- Improved the backgrounds of the chart of the holdings tab on the home page (experimental)
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed an issue in the carousel component for the testimonial section on the landing page
+
+## 2.116.0 - 2024-10-17
+
+### Added
+
+- Extended the content of the _Self-Hosting_ section by the benchmarks concept for _Compare with..._ on the Frequently Asked Questions (FAQ) page
+- Extended the content of the _Self-Hosting_ section by the benchmarks concept for _Markets_ on the Frequently Asked Questions (FAQ) page
+- Set the permissions (`chmod 0700`) on `entrypoint.sh` in the `Dockerfile`
+
+### Changed
+
+- Improved the empty state in the benchmarks of the markets overview
+- Disabled the text hover effect in the chart of the holdings tab on the home page (experimental)
+- Improved the usability to customize the rule thresholds in the _X-ray_ section by introducing units (experimental)
+- Switched to adjusted market prices (splits and dividends) in the get historical functionality of the _EOD Historical Data_ service
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the usage of the environment variable `PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY`
+
+## 2.115.0 - 2024-10-14
+
+### Changed
+
 - Extended the assistant by a holding selector
 - Separated the _FIRE_ / _X-ray_ page
 - Improved the language localization for Italian (`it`)
@@ -1452,9 +1539,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced the lazy-loaded activities table to the position detail dialog (experimental)
 - Improved the font weight in the value component
 - Improved the language localization for Türkçe (`tr`)
-- Upgraded `angular` from version `17.0.4` to `17.0.7`
 - Upgraded to _Inter_ 4 font family
-- Upgraded `Nx` from version `17.0.2` to `17.2.5`
 
 ### Fixed
 

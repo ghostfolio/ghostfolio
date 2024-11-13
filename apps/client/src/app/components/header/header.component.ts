@@ -280,4 +280,13 @@ export class HeaderComponent implements OnChanges {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
+  private getFilterType(filterType: string) {
+    if (filterType === 'ACCOUNT') {
+      return 'accounts';
+    } else if (filterType === 'ASSET_CLASS') {
+      return 'assetClasses';
+    } else if (filterType === 'TAG') {
+      return 'tags';
+    }
+  }
 }

@@ -43,7 +43,7 @@ export function LogPerformance(
 ) {
   const originalMethod = descriptor.value;
 
-  descriptor.value = async function (...args: any[]) {
+  descriptor.value = function (...args: any[]) {
     const startTime = performance.now();
     const performanceLoggingService = new PerformanceLoggingService();
 

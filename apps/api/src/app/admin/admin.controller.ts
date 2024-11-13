@@ -106,6 +106,23 @@ export class AdminController {
   }
 
   @HasPermission(permissions.accessAdminControl)
+  @Post('gather/missing')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async gatherMissing(): Promise<void> {
+    const assetProfileIdentifiers =
+      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+
+    const promises = assetProfileIdentifiers.map(({ dataSource, symbol }) => {
+      return this.dataGatheringService.gatherSymbolMissingOnly({
+        dataSource,
+        symbol
+      });
+    });
+
+    await Promise.all(promises);
+  }
+
+  @HasPermission(permissions.accessAdminControl)
   @Post('gather/profile-data')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
@@ -158,7 +175,22 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+    await this.dataGatheringService.gatherSymbol({ dataSource, symbol });
+
+    return;
+  }
+
+  @Post('gatherMissing/:dataSource/:symbol')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @HasPermission(permissions.accessAdminControl)
+  public async gatherSymbolMissingOnly(
+    @Param('dataSource') dataSource: DataSource,
+    @Param('symbol') symbol: string
+  ): Promise<void> {
+    await this.dataGatheringService.gatherSymbolMissingOnly({
+      dataSource,
+      symbol
+    });
 
     return;
   }
@@ -335,7 +367,12 @@ export class AdminController {
     return this.adminService.patchAssetProfileData({
       ...assetProfileData,
       dataSource,
-      symbol
+      symbol,
+      tags: {
+        connect: assetProfileData.tags?.map(({ id }) => {
+          return { id };
+        })
+      }
     });
   }
 

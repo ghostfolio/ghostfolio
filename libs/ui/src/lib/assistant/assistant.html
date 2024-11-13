@@ -105,7 +105,7 @@
         <div class="mb-3">
           <mat-form-field appearance="outline" class="w-100 without-hint">
             <mat-label i18n>Accounts</mat-label>
-            <mat-select formControlName="account">
+            <mat-select formControlName="account" multiple>
               <mat-option [value]="null" />
               @for (account of accounts; track account.id) {
                 <mat-option [value]="account.id">
@@ -153,7 +153,7 @@
         <div class="mb-3">
           <mat-form-field appearance="outline" class="w-100 without-hint">
             <mat-label i18n>Tags</mat-label>
-            <mat-select formControlName="tag">
+            <mat-select formControlName="tag" multiple>
               <mat-option [value]="null" />
               @for (tag of tags; track tag.id) {
                 <mat-option [value]="tag.id">{{ tag.label }}</mat-option>
@@ -164,7 +164,7 @@
         <div class="mb-3">
           <mat-form-field appearance="outline" class="w-100 without-hint">
             <mat-label i18n>Asset Classes</mat-label>
-            <mat-select formControlName="assetClass">
+            <mat-select formControlName="assetClass" multiple>
               <mat-option [value]="null" />
               @for (assetClass of assetClasses; track assetClass.id) {
                 <mat-option [value]="assetClass.id">{{

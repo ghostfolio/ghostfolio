@@ -32,6 +32,13 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public timeWeightedPerformanceOptions = [
+    { label: $localize`No`, value: 'N' },
+    { label: $localize`Both`, value: 'B' },
+    { label: $localize`Only`, value: 'O' }
+  ];
+  public selectedTimeWeightedPerformanceOption: string;
+  public daysInMarket: number;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
@@ -52,8 +59,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performance: PortfolioPerformance;
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
+  public performanceDataItemsTimeWeightedInPercentage: HistoricalDataItem[] =
+    [];
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public streaks: PortfolioInvestments['streaks'];
+  public timeWeightedPerformance: string = 'N';
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
@@ -124,6 +134,30 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onTimeWeightedPerformanceChanged(timeWeightedPerformance: string) {
+    this.timeWeightedPerformance = timeWeightedPerformance;
+
+    this.update();
+  }
+
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
@@ -192,7 +226,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange
+        range: this.user?.settings?.dateRange,
+        timeWeightedPerformance:
+          this.timeWeightedPerformance === 'N' ? false : true
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate, performance }) => {
@@ -202,6 +238,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.performance = performance;
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
+        this.performanceDataItemsTimeWeightedInPercentage = [];
 
         for (const [
           index,
@@ -230,6 +267,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             date,
             value: netPerformanceInPercentageWithCurrencyEffect
           });
+          if ((this.timeWeightedPerformance ?? 'N') !== 'N') {
+            this.performanceDataItemsTimeWeightedInPercentage.push({
+              date,
+              value: chart[index].timeWeightedPerformance
+            });
+          }
         }
 
         this.isLoadingInvestmentChart = false;

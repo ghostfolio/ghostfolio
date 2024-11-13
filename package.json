@@ -52,6 +52,7 @@
     "ts-node": "ts-node",
     "update": "nx migrate latest",
     "watch:server": "nx run api:copy-assets && nx run api:build --watch",
+    "profile:server": "nx run api:profile",
     "watch:test": "nx test --watch",
     "workspace-generator": "nx workspace-generator"
   },
@@ -91,6 +92,7 @@
     "@simplewebauthn/server": "9.0.3",
     "@stripe/stripe-js": "4.9.0",
     "alphavantage": "2.2.0",
+    "await-lock": "^2.2.2",
     "big.js": "6.2.1",
     "body-parser": "1.20.2",
     "bootstrap": "4.6.0",

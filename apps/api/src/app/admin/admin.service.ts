@@ -36,11 +36,11 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
   Prisma,
   PrismaClient,
   Property,
-  SymbolProfile
+  SymbolProfile,
+  DataSource
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
 import { groupBy } from 'lodash';
@@ -259,7 +259,8 @@ export class AdminService {
             },
             scraperConfiguration: true,
             sectors: true,
-            symbol: true
+            symbol: true,
+            tags: true
           }
         }),
         this.prismaService.symbolProfile.count({ where })
@@ -313,7 +314,8 @@ export class AdminService {
             name,
             Order,
             sectors,
-            symbol
+            symbol,
+            tags
           }) => {
             const countriesCount = countries
               ? Object.keys(countries).length
@@ -348,7 +350,9 @@ export class AdminService {
               sectorsCount,
               activitiesCount: _count.Order,
               date: Order?.[0]?.date,
-              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
+              isUsedByUsersWithSubscription:
+                await isUsedByUsersWithSubscription,
+              tags
             };
           }
         )
@@ -442,6 +446,7 @@ export class AdminService {
     dataSource,
     holdings,
     name,
+    tags,
     scraperConfiguration,
     sectors,
     symbol,
@@ -466,6 +471,7 @@ export class AdminService {
       sectors,
       symbol,
       symbolMapping,
+      tags,
       ...(dataSource === 'MANUAL'
         ? { assetClass, assetSubClass, name, url }
         : {
@@ -631,7 +637,8 @@ export class AdminService {
           date: dateOfFirstActivity,
           id: undefined,
           name: symbol,
-          sectorsCount: 0
+          sectorsCount: 0,
+          tags: []
         };
       }
     );

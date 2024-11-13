@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
@@ -10,7 +11,12 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
+import {
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides,
+  Tag
+} from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
@@ -35,6 +41,7 @@ export class SymbolProfileService {
     });
   }
 
+  @LogPerformance
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedSymbolProfile[]> {
@@ -51,6 +58,7 @@ export class SymbolProfileService {
             select: { date: true },
             take: 1
           },
+          tags: true,
           SymbolProfileOverrides: true
         },
         where: {
@@ -76,7 +84,8 @@ export class SymbolProfileService {
           _count: {
             select: { Order: true }
           },
-          SymbolProfileOverrides: true
+          SymbolProfileOverrides: true,
+          tags: true
         },
         where: {
           id: {
@@ -134,6 +143,7 @@ export class SymbolProfileService {
     dataSource,
     holdings,
     name,
+    tags,
     scraperConfiguration,
     sectors,
     symbol,
@@ -150,6 +160,7 @@ export class SymbolProfileService {
         currency,
         holdings,
         name,
+        tags,
         scraperConfiguration,
         sectors,
         symbolMapping,
@@ -166,6 +177,7 @@ export class SymbolProfileService {
       Order?: {
         date: Date;
       }[];
+      tags?: Tag[];
       SymbolProfileOverrides: SymbolProfileOverrides;
     })[]
   ): EnhancedSymbolProfile[] {
@@ -180,7 +192,8 @@ export class SymbolProfileService {
         holdings: this.getHoldings(symbolProfile),
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
         sectors: this.getSectors(symbolProfile),
-        symbolMapping: this.getSymbolMapping(symbolProfile)
+        symbolMapping: this.getSymbolMapping(symbolProfile),
+        tags: symbolProfile?.tags
       };
 
       item.activitiesCount = symbolProfile._count.Order;

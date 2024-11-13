@@ -93,7 +93,8 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 
@@ -155,25 +156,25 @@ describe('PortfolioCalculator', () => {
             dividendInBaseCurrency: new Big('0.62'),
             fee: new Big('19'),
             firstBuyDate: '2021-09-16',
-            grossPerformance: new Big('33.25'),
-            grossPerformancePercentage: new Big('0.11136043941322258691'),
+            grossPerformance: new Big('33.87'),
+            grossPerformancePercentage: new Big('0.11343693482483756447'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.11136043941322258691'
+              '0.11343693482483756447'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('33.25'),
+            grossPerformanceWithCurrencyEffect: new Big('33.87'),
             investment: new Big('298.58'),
             investmentWithCurrencyEffect: new Big('298.58'),
             marketPrice: 331.83,
             marketPriceInBaseCurrency: 331.83,
-            netPerformance: new Big('14.25'),
-            netPerformancePercentage: new Big('0.04772590260566682296'),
+            netPerformance: new Big('14.87'),
+            netPerformancePercentage: new Big('0.04980239801728180052'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.04772590260566682296')
+              max: new Big('0.04980239801728180052')
             },
             netPerformanceWithCurrencyEffectMap: {
               '1d': new Big('-5.39'),
-              '5y': new Big('14.25'),
-              max: new Big('14.25'),
+              '5y': new Big('14.87'),
+              max: new Big('14.87'),
               wtd: new Big('-5.39')
             },
             quantity: new Big('1'),

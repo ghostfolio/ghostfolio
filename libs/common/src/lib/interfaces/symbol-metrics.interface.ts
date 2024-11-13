@@ -28,6 +28,9 @@ export interface SymbolMetrics {
   };
   netPerformance: Big;
   netPerformancePercentage: Big;
+  netPerformanceValuesPercentage: {
+    [date: string]: Big;
+  };
   netPerformancePercentageWithCurrencyEffectMap: { [key: DateRange]: Big };
   netPerformanceValues: {
     [date: string]: Big;
@@ -49,6 +52,9 @@ export interface SymbolMetrics {
   totalInterestInBaseCurrency: Big;
   totalInvestment: Big;
   totalInvestmentWithCurrencyEffect: Big;
+  unitPrices: {
+    [date: string]: Big;
+  };
   totalLiabilities: Big;
   totalLiabilitiesInBaseCurrency: Big;
   totalValuables: Big;

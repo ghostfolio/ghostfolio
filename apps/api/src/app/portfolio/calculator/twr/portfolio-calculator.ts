@@ -137,6 +137,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
     let grossPerformanceAtStartDateWithCurrencyEffect = new Big(0);
     let grossPerformanceFromSells = new Big(0);
     let grossPerformanceFromSellsWithCurrencyEffect = new Big(0);
+    let grossPerformanceFromDividends = new Big(0);
+    let grossPerformanceFromDividendsWithCurrencyEffect = new Big(0);
     let initialValue: Big;
     let initialValueWithCurrencyEffect: Big;
     let investmentAtStartDate: Big;
@@ -198,6 +200,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         investmentValuesWithCurrencyEffect: {},
         netPerformance: new Big(0),
         netPerformancePercentage: new Big(0),
+        netPerformanceValuesPercentage: {},
+        unitPrices: {},
         netPerformancePercentageWithCurrencyEffectMap: {},
         netPerformanceValues: {},
         netPerformanceValuesWithCurrencyEffect: {},
@@ -266,7 +270,9 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         totalLiabilities: new Big(0),
         totalLiabilitiesInBaseCurrency: new Big(0),
         totalValuables: new Big(0),
-        totalValuablesInBaseCurrency: new Big(0)
+        totalValuablesInBaseCurrency: new Big(0),
+        netPerformanceValuesPercentage: {},
+        unitPrices: {}
       };
     }
 
@@ -499,6 +505,13 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
               .mul(order.quantity)
               .mul(getFactor(order.type));
         }
+      } else if (order.type === 'STAKE') {
+        transactionInvestment = new Big(0);
+
+        transactionInvestmentWithCurrencyEffect = new Big(0);
+
+        totalQuantityFromBuyTransactions =
+          totalQuantityFromBuyTransactions.plus(order.quantity);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
@@ -554,28 +567,27 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         order.unitPriceInBaseCurrencyWithCurrencyEffect
       );
 
-      const grossPerformanceFromSell =
-        order.type === 'SELL'
-          ? order.unitPriceInBaseCurrency
-              .minus(lastAveragePrice)
-              .mul(order.quantity)
-          : new Big(0);
+      ({
+        grossPerformanceFromSells,
+        grossPerformanceFromSellsWithCurrencyEffect
+      } = this.handleSellOrder(
+        order,
+        lastAveragePrice,
+        lastAveragePriceWithCurrencyEffect,
+        grossPerformanceFromSells,
+        grossPerformanceFromSellsWithCurrencyEffect
+      ));
 
-      const grossPerformanceFromSellWithCurrencyEffect =
-        order.type === 'SELL'
-          ? order.unitPriceInBaseCurrencyWithCurrencyEffect
-              .minus(lastAveragePriceWithCurrencyEffect)
-              .mul(order.quantity)
-          : new Big(0);
-
-      grossPerformanceFromSells = grossPerformanceFromSells.plus(
-        grossPerformanceFromSell
-      );
-
-      grossPerformanceFromSellsWithCurrencyEffect =
-        grossPerformanceFromSellsWithCurrencyEffect.plus(
-          grossPerformanceFromSellWithCurrencyEffect
-        );
+      ({
+        grossPerformanceFromDividends,
+        grossPerformanceFromDividendsWithCurrencyEffect
+      } = this.handleDividend(
+        order,
+        grossPerformanceFromDividends,
+        grossPerformanceFromDividendsWithCurrencyEffect,
+        currentExchangeRate,
+        exchangeRateAtOrderDate
+      ));
 
       lastAveragePrice = totalQuantityFromBuyTransactions.eq(0)
         ? new Big(0)
@@ -597,19 +609,21 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
           grossPerformanceFromSells.toNumber()
         );
         console.log(
-          'grossPerformanceFromSellWithCurrencyEffect',
-          grossPerformanceFromSellWithCurrencyEffect.toNumber()
+          'grossPerformanceFromSellsWithCurrencyEffect',
+          grossPerformanceFromSellsWithCurrencyEffect.toNumber()
         );
       }
 
       const newGrossPerformance = valueOfInvestment
         .minus(totalInvestment)
-        .plus(grossPerformanceFromSells);
+        .plus(grossPerformanceFromSells)
+        .plus(grossPerformanceFromDividends);
 
       const newGrossPerformanceWithCurrencyEffect =
         valueOfInvestmentWithCurrencyEffect
           .minus(totalInvestmentWithCurrencyEffect)
-          .plus(grossPerformanceFromSellsWithCurrencyEffect);
+          .plus(grossPerformanceFromSellsWithCurrencyEffect)
+          .plus(grossPerformanceFromDividendsWithCurrencyEffect);
 
       grossPerformance = newGrossPerformance;
 
@@ -958,7 +972,72 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       timeWeightedInvestment:
         timeWeightedAverageInvestmentBetweenStartAndEndDate,
       timeWeightedInvestmentWithCurrencyEffect:
-        timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+        timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect,
+      netPerformanceValuesPercentage: {},
+      unitPrices: {}
+    };
+  }
+
+  private handleSellOrder(
+    order: PortfolioOrderItem,
+    lastAveragePrice,
+    lastAveragePriceWithCurrencyEffect,
+    grossPerformanceFromSells,
+    grossPerformanceFromSellsWithCurrencyEffect
+  ) {
+    if (order.type === 'SELL') {
+      const grossPerformanceFromSell = order.unitPriceInBaseCurrency
+        .minus(lastAveragePrice)
+        .mul(order.quantity);
+
+      const grossPerformanceFromSellWithCurrencyEffect =
+        order.unitPriceInBaseCurrencyWithCurrencyEffect
+          .minus(lastAveragePriceWithCurrencyEffect)
+          .mul(order.quantity);
+
+      grossPerformanceFromSells = grossPerformanceFromSells.plus(
+        grossPerformanceFromSell
+      );
+
+      grossPerformanceFromSellsWithCurrencyEffect =
+        grossPerformanceFromSellsWithCurrencyEffect.plus(
+          grossPerformanceFromSellWithCurrencyEffect
+        );
+    }
+    return {
+      grossPerformanceFromSells,
+      grossPerformanceFromSellsWithCurrencyEffect
+    };
+  }
+
+  private handleDividend(
+    order: PortfolioOrderItem,
+    grossPerformanceFromDividends,
+    grossPerformanceFromDividendsWithCurrencyEffect,
+    currentExchangeRate: number,
+    exchangeRateAtDateOfOrder: number
+  ) {
+    if (order.type === 'DIVIDEND') {
+      const grossPerformanceFromDividend = order.unitPrice
+        .mul(currentExchangeRate)
+        .mul(order.quantity);
+
+      const grossPerformanceFromDividendWithCurrencyEffect = order.unitPrice
+        .mul(exchangeRateAtDateOfOrder)
+        .mul(order.quantity);
+
+      grossPerformanceFromDividends = grossPerformanceFromDividends.plus(
+        grossPerformanceFromDividend
+      );
+
+      grossPerformanceFromDividendsWithCurrencyEffect =
+        grossPerformanceFromDividendsWithCurrencyEffect.plus(
+          grossPerformanceFromDividendWithCurrencyEffect
+        );
+    }
+    return {
+      grossPerformanceFromDividends,
+      grossPerformanceFromDividendsWithCurrencyEffect
     };
   }
 }

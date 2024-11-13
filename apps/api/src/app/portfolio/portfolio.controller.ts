@@ -5,7 +5,10 @@ import {
   hasNotDefinedValuesInObject,
   nullifyValuesInObject
 } from '@ghostfolio/api/helper/object.helper';
-import { PerformanceLoggingInterceptor } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import {
+  LogPerformance,
+  PerformanceLoggingInterceptor
+} from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { RedactValuesInResponseInterceptor } from '@ghostfolio/api/interceptors/redact-values-in-response/redact-values-in-response.interceptor';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
@@ -158,6 +161,24 @@ export class PortfolioController {
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
+        (portfolioPosition.assetClass = hasDetails
+          ? portfolioPosition.assetClass
+          : undefined),
+          (portfolioPosition.assetSubClass = hasDetails
+            ? portfolioPosition.assetSubClass
+            : undefined),
+          (portfolioPosition.countries = hasDetails
+            ? portfolioPosition.countries
+            : []),
+          (portfolioPosition.currency = hasDetails
+            ? portfolioPosition.currency
+            : undefined),
+          (portfolioPosition.markets = hasDetails
+            ? portfolioPosition.markets
+            : undefined),
+          (portfolioPosition.sectors = hasDetails
+            ? portfolioPosition.sectors
+            : []);
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -474,6 +495,7 @@ export class PortfolioController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   @Version('2')
+  @LogPerformance
   public async getPerformanceV2(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
@@ -482,10 +504,9 @@ export class PortfolioController {
     @Query('range') dateRange: DateRange = 'max',
     @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string,
-    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
+    @Query('withExcludedAccounts') withExcludedAccounts = false,
+    @Query('timeWeightedPerformance') calculateTimeWeightedPerformance = false
   ): Promise<PortfolioPerformanceResponse> {
-    const withExcludedAccounts = withExcludedAccountsParam === 'true';
-
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
@@ -499,7 +520,8 @@ export class PortfolioController {
       filters,
       impersonationId,
       withExcludedAccounts,
-      userId: this.request.user.id
+      userId: this.request.user.id,
+      calculateTimeWeightedPerformance
     });
 
     if (

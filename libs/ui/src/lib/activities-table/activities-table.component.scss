@@ -1,3 +1,54 @@
 :host {
   display: block;
+  .activities {
+    overflow-x: auto;
+    .mat-mdc-table {
+      th {
+        ::ng-deep {
+          .mat-sort-header-container {
+            justify-content: inherit;
+          }
+        }
+      }
+      .mat-mdc-row {
+        .type-badge {
+          background-color: rgba(var(--palette-foreground-text), 0.05);
+          border-radius: 1rem;
+          line-height: 1em;
+          ion-icon {
+            font-size: 1rem;
+          }
+          &.buy {
+            color: var(--green);
+          }
+          &.dividend {
+            color: var(--blue);
+          }
+          &.stake {
+            color: var(--blue);
+          }
+          &.item {
+            color: var(--purple);
+          }
+          &.liability {
+            color: var(--red);
+          }
+          &.sell {
+            color: var(--orange);
+          }
+        }
+      }
+    }
+  }
+}
+
+:host-context(.is-dark-theme) {
+  .mat-mdc-table {
+    .type-badge {
+      background-color: rgba(
+        var(--palette-foreground-text-dark),
+        0.1
+      ) !important;
+    }
+  }
 }

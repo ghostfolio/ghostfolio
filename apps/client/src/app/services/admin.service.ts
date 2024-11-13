@@ -168,6 +168,10 @@ export class AdminService {
     return this.http.post<void>('/api/v1/admin/gather/max', {});
   }
 
+  public gatherMissingOnly() {
+    return this.http.post<void>('/api/v1/admin/gather/missing', {});
+  }
+
   public gatherProfileData() {
     return this.http.post<void>('/api/v1/admin/gather/profile-data', {});
   }
@@ -190,6 +194,22 @@ export class AdminService {
     date?: Date;
   }) {
     let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
+
+    if (date) {
+      url = `${url}/${format(date, DATE_FORMAT)}`;
+    }
+
+    return this.http.post<MarketData | void>(url, {});
+  }
+
+  public gatherSymbolMissingOnly({
+    dataSource,
+    date,
+    symbol
+  }: AssetProfileIdentifier & {
+    date?: Date;
+  }) {
+    let url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
 
     if (date) {
       url = `${url}/${format(date, DATE_FORMAT)}`;
@@ -224,6 +244,7 @@ export class AdminService {
     sectors,
     symbol,
     symbolMapping,
+    tags,
     url
   }: AssetProfileIdentifier & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
@@ -238,6 +259,7 @@ export class AdminService {
         scraperConfiguration,
         sectors,
         symbolMapping,
+        tags,
         url
       }
     );
