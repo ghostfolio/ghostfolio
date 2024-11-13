@@ -214,7 +214,7 @@ export class DataGatheringProcessor {
       dates = dates.filter((d) => !marketData.some((md) => isEqual(md, d)));
 
       const historicalData = await this.dataProviderService.getHistoricalRaw({
-        dataGatheringItems: [{ dataSource, symbol }],
+        assetProfileIdentifiers: [{ dataSource, symbol }],
         from: firstEntry.date,
         to: new Date()
       });

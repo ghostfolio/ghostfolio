@@ -11,7 +11,7 @@ import {
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { GroupBy } from '@ghostfolio/common/types';
+import { DateRange, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
