@@ -148,42 +148,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       ],
       updateAccountBalance: [false]
     });
-    this.activityForm.get('quantity').valueChanges.subscribe(async () => {
-      const activity = { quantity: this.activityForm.get('quantity').value };
-      try {
-        const ignoredFields = [
-          'accountId',
-          'assetClass',
-          'assetSubClass',
-          'comment',
-          'currency',
-          'customCurrency',
-          'dataSource',
-          'date',
-          'fee',
-          'symbol',
-          'tags',
-          'type',
-          'unitPrice',
-          'updateAccountBalance'
-        ];
-        if (this.mode === 'create') {
-          await validateObjectForForm({
-            classDto: CreateOrderDto,
-            form: this.activityForm,
-            ignoreFields: ignoredFields,
-            object: activity
-          });
-        } else {
-          await validateObjectForForm({
-            classDto: UpdateOrderDto,
-            form: this.activityForm,
-            ignoreFields: ignoredFields,
-            object: activity
-          });
-        }
-      } catch (error) {}
-    });
     this.activityForm.valueChanges
       .pipe(
         // Slightly delay until the more specific form control value changes have
@@ -192,6 +156,23 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(async () => {
+        const activity = { quantity: this.activityForm.get('quantity').value };
+
+        try {
+          if (this.mode === 'create') {
+            await validateObjectForForm({
+              classDto: CreateOrderDto,
+              form: this.activityForm,
+              object: activity
+            });
+          } else {
+            await validateObjectForForm({
+              classDto: UpdateOrderDto,
+              form: this.activityForm,
+              object: activity
+            });
+          }
+        } catch (error) {}
         let exchangeRateOfUnitPrice = 1;
 
         this.activityForm.get('feeInCustomCurrency').setErrors(null);
