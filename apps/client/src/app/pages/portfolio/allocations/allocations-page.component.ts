@@ -498,7 +498,9 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
                 for (const index in parentHoldings) {
                   if (name === parentHoldings[index].name) {
                     return {
-                      name: holding.name ?? symbol,
+                      name: holding.name
+                        ? holding.name + ' (' + symbol + ')'
+                        : symbol,
                       allocationInPercentage:
                         parentHoldings[index].valueInBaseCurrency / value,
                       valueInBaseCurrency:
