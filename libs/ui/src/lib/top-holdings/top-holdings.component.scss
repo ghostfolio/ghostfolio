@@ -1,6 +1,10 @@
 :host {
   display: block;
 
+  tr.holding-detail {
+    height: 0;
+  }
+
   .gf-table {
     th {
       ::ng-deep {

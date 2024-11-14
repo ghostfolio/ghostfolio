@@ -5,6 +5,7 @@
     matSort
     matSortActive="allocationInPercentage"
     matSortDirection="desc"
+    multiTemplateDataRows
     [dataSource]="dataSource"
   >
     <ng-container matColumnDef="name">
@@ -57,8 +58,50 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="expandedDetail">
+      <td
+        *matCellDef="let element"
+        mat-cell
+        [attr.colspan]="displayedColumns.length"
+      >
+        <div
+          [@detailExpand]="element.expand ? 'expanded' : 'collapsed'"
+          class="allocationByParent"
+        >
+          <div class="holdingParents">
+            <mat-list>
+              @for (parentHolding of element.parents; track parentHolding) {
+                <mat-list-item>
+                  <span matListItemTitle style="font-size: inherit"
+                    >{{ parentHolding.name }}:</span
+                  >
+                  <span matListItemMeta>
+                    {{
+                      parentHolding.allocationInPercentage | number: '1.0-2'
+                    }}%
+                  </span>
+                </mat-list-item>
+              }
+            </mat-list>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
     <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+    <tr
+      *matRowDef="let element; columns: displayedColumns"
+      mat-row
+      [class.example-expanded-row]="element.expand ?? false"
+      (click)="
+        element.expand ? (element.expand = false) : (element.expand = true)
+      "
+    ></tr>
+    <tr
+      *matRowDef="let row; columns: ['expandedDetail']"
+      class="holding-detail"
+      mat-row
+    ></tr>
   </table>
 </div>
 
