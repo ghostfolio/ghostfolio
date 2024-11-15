@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the chart of the holdings tab on the home page from experimental to general availability
 - Extended the assistant by a holding selector
 - Separated the _FIRE_ / _X-ray_ page
 - Improved the language localization for Italian (`it`)
