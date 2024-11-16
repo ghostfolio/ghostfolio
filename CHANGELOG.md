@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability to customize the rule thresholds in the _X-ray_ page by introducing range sliders (experimental)
 - Improved the language localization for Italian (`it`)
 - Upgraded `ngx-skeleton-loader` from version `7.0.0` to `9.0.0`
+- Upgraded `prisma` from version `5.21.1` to `5.22.0`
 - Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ## 2.122.0 - 2024-11-07
