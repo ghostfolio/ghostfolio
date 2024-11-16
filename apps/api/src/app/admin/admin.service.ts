@@ -436,7 +436,7 @@ export class AdminService {
     skip?: number;
     take?: number;
   }): Promise<AdminUsers> {
-    return { users: await this.getUsersWithAnalytics({ take, skip }) };
+    return { users: await this.getUsersWithAnalytics({ skip, take }) };
   }
 
   public async patchAssetProfileData({
@@ -647,11 +647,11 @@ export class AdminService {
   }
 
   private async getUsersWithAnalytics({
-    take,
-    skip
+    skip,
+    take
   }: {
-    take?: number;
     skip?: number;
+    take?: number;
   }): Promise<AdminUsers['users']> {
     let orderBy: Prisma.UserOrderByWithRelationInput = {
       createdAt: 'desc'
@@ -673,9 +673,9 @@ export class AdminService {
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
       orderBy,
-      where,
       skip,
       take,
+      where,
       select: {
         _count: {
           select: { Account: true, Order: true }
