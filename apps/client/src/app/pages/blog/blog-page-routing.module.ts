@@ -167,15 +167,6 @@ const routes: Routes = [
   },
   {
     canActivate: [AuthGuard],
-    path: '2023/11/hacktoberfest-2023-debriefing',
-    loadComponent: () =>
-      import(
-        './2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component'
-      ).then((c) => c.Hacktoberfest2023DebriefingPageComponent),
-    title: 'Hacktoberfest 2023 Debriefing'
-  },
-  {
-    canActivate: [AuthGuard],
     path: '2023/11/black-week-2023',
     loadComponent: () =>
       import('./2023/11/black-week-2023/black-week-2023-page.component').then(
@@ -185,12 +176,30 @@ const routes: Routes = [
   },
   {
     canActivate: [AuthGuard],
+    path: '2023/11/hacktoberfest-2023-debriefing',
+    loadComponent: () =>
+      import(
+        './2023/11/hacktoberfest-2023-debriefing/hacktoberfest-2023-debriefing-page.component'
+      ).then((c) => c.Hacktoberfest2023DebriefingPageComponent),
+    title: 'Hacktoberfest 2023 Debriefing'
+  },
+  {
+    canActivate: [AuthGuard],
     path: '2024/09/hacktoberfest-2024',
     loadComponent: () =>
       import(
         './2024/09/hacktoberfest-2024/hacktoberfest-2024-page.component'
       ).then((c) => c.Hacktoberfest2024PageComponent),
     title: 'Hacktoberfest 2024'
+  },
+  {
+    canActivate: [AuthGuard],
+    path: '2024/11/black-weeks-2024',
+    loadComponent: () =>
+      import('./2024/11/black-weeks-2024/black-weeks-2024-page.component').then(
+        (c) => c.BlackWeeks2024PageComponent
+      ),
+    title: 'Black Weeks 2024'
   }
 ];
 
