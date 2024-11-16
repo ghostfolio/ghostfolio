@@ -162,10 +162,6 @@ export abstract class PortfolioCalculator {
     this.snapshotPromise = this.initialize();
   }
 
-  protected abstract calculateOverallPerformance(
-    positions: TimelinePosition[]
-  ): PortfolioSnapshot;
-
   @LogPerformance
   public async computeSnapshot(): Promise<PortfolioSnapshot> {
     const lastTransactionPoint = last(this.transactionPoints);
@@ -770,134 +766,17 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
-  public async getSnapshot() {
-    await this.snapshotPromise;
-
-    return this.snapshot;
-  }
-
-  public getStartDate() {
-    let firstAccountBalanceDate: Date;
-    let firstActivityDate: Date;
-
-    try {
-      const firstAccountBalanceDateString = first(
-        this.accountBalanceItems
-      )?.date;
-      firstAccountBalanceDate = firstAccountBalanceDateString
-        ? parseDate(firstAccountBalanceDateString)
-        : new Date();
-    } catch (error) {
-      firstAccountBalanceDate = new Date();
-    }
-
-    try {
-      const firstActivityDateString = this.transactionPoints[0].date;
-      firstActivityDate = firstActivityDateString
-        ? parseDate(firstActivityDateString)
-        : new Date();
-    } catch (error) {
-      firstActivityDate = new Date();
-    }
-
-    return min([firstAccountBalanceDate, firstActivityDate]);
-  }
-
-  protected abstract getSymbolMetrics({
-    chartDateMap,
-    dataSource,
-    end,
-    exchangeRates,
-    marketSymbolMap,
-    start,
-    symbol
-  }: {
-    chartDateMap: { [date: string]: boolean };
-    end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
-    start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics;
-
-  public getTransactionPoints() {
-    return this.transactionPoints;
-  }
-
-  @LogPerformance
   public async getValuablesInBaseCurrency() {
     await this.snapshotPromise;
 
     return this.snapshot.totalValuablesWithCurrencyEffect;
   }
 
-  private getChartDateMap({
-    endDate,
-    startDate,
-    step
-  }: {
-    endDate: Date;
-    startDate: Date;
-    step: number;
-  }): { [date: string]: true } {
-    // Create a map of all relevant chart dates:
-    // 1. Add transaction point dates
-    const chartDateMap = this.transactionPoints.reduce((result, { date }) => {
-      result[date] = true;
-      return result;
-    }, {});
+  @LogPerformance
+  public async getSnapshot() {
+    await this.snapshotPromise;
 
-    // 2. Add dates between transactions respecting the specified step size
-    for (const date of eachDayOfInterval(
-      { end: endDate, start: startDate },
-      { step }
-    )) {
-      chartDateMap[format(date, DATE_FORMAT)] = true;
-    }
-
-    if (step > 1) {
-      // Reduce the step size of last 90 days
-      for (const date of eachDayOfInterval(
-        { end: endDate, start: subDays(endDate, 90) },
-        { step: 3 }
-      )) {
-        chartDateMap[format(date, DATE_FORMAT)] = true;
-      }
-
-      // Reduce the step size of last 30 days
-      for (const date of eachDayOfInterval(
-        { end: endDate, start: subDays(endDate, 30) },
-        { step: 1 }
-      )) {
-        chartDateMap[format(date, DATE_FORMAT)] = true;
-      }
-    }
-
-    // Make sure the end date is present
-    chartDateMap[format(endDate, DATE_FORMAT)] = true;
-
-    // Make sure some key dates are present
-    for (const dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
-      const { endDate: dateRangeEnd, startDate: dateRangeStart } =
-        getIntervalFromDateRange(dateRange);
-
-      if (
-        !isBefore(dateRangeStart, startDate) &&
-        !isAfter(dateRangeStart, endDate)
-      ) {
-        chartDateMap[format(dateRangeStart, DATE_FORMAT)] = true;
-      }
-
-      if (
-        !isBefore(dateRangeEnd, startDate) &&
-        !isAfter(dateRangeEnd, endDate)
-      ) {
-        chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
-      }
-    }
-
-    return chartDateMap;
+    return this.snapshot;
   }
 
   @LogPerformance
@@ -1120,4 +999,125 @@ export abstract class PortfolioCalculator {
       await this.initialize();
     }
   }
+
+  public getStartDate() {
+    let firstAccountBalanceDate: Date;
+    let firstActivityDate: Date;
+
+    try {
+      const firstAccountBalanceDateString = first(
+        this.accountBalanceItems
+      )?.date;
+      firstAccountBalanceDate = firstAccountBalanceDateString
+        ? parseDate(firstAccountBalanceDateString)
+        : new Date();
+    } catch (error) {
+      firstAccountBalanceDate = new Date();
+    }
+
+    try {
+      const firstActivityDateString = this.transactionPoints[0].date;
+      firstActivityDate = firstActivityDateString
+        ? parseDate(firstActivityDateString)
+        : new Date();
+    } catch (error) {
+      firstActivityDate = new Date();
+    }
+
+    return min([firstAccountBalanceDate, firstActivityDate]);
+  }
+
+  public getTransactionPoints() {
+    return this.transactionPoints;
+  }
+
+  private getChartDateMap({
+    endDate,
+    startDate,
+    step
+  }: {
+    endDate: Date;
+    startDate: Date;
+    step: number;
+  }): { [date: string]: true } {
+    // Create a map of all relevant chart dates:
+    // 1. Add transaction point dates
+    const chartDateMap = this.transactionPoints.reduce((result, { date }) => {
+      result[date] = true;
+      return result;
+    }, {});
+
+    // 2. Add dates between transactions respecting the specified step size
+    for (const date of eachDayOfInterval(
+      { end: endDate, start: startDate },
+      { step }
+    )) {
+      chartDateMap[format(date, DATE_FORMAT)] = true;
+    }
+
+    if (step > 1) {
+      // Reduce the step size of last 90 days
+      for (const date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 90) },
+        { step: 3 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+
+      // Reduce the step size of last 30 days
+      for (const date of eachDayOfInterval(
+        { end: endDate, start: subDays(endDate, 30) },
+        { step: 1 }
+      )) {
+        chartDateMap[format(date, DATE_FORMAT)] = true;
+      }
+    }
+
+    // Make sure the end date is present
+    chartDateMap[format(endDate, DATE_FORMAT)] = true;
+
+    // Make sure some key dates are present
+    for (const dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
+      const { endDate: dateRangeEnd, startDate: dateRangeStart } =
+        getIntervalFromDateRange(dateRange);
+
+      if (
+        !isBefore(dateRangeStart, startDate) &&
+        !isAfter(dateRangeStart, endDate)
+      ) {
+        chartDateMap[format(dateRangeStart, DATE_FORMAT)] = true;
+      }
+
+      if (
+        !isBefore(dateRangeEnd, startDate) &&
+        !isAfter(dateRangeEnd, endDate)
+      ) {
+        chartDateMap[format(dateRangeEnd, DATE_FORMAT)] = true;
+      }
+    }
+
+    return chartDateMap;
+  }
+
+  protected abstract getSymbolMetrics({
+    chartDateMap,
+    dataSource,
+    end,
+    exchangeRates,
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    chartDateMap: { [date: string]: boolean };
+    end: Date;
+    exchangeRates: { [dateString: string]: number };
+    marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    };
+    start: Date;
+  } & AssetProfileIdentifier): SymbolMetrics;
+
+  protected abstract calculateOverallPerformance(
+    positions: TimelinePosition[]
+  ): PortfolioSnapshot;
 }
