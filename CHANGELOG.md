@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a blog post: _Black Weeks 2024_
+
 ### Changed
 
 - Moved the chart of the holdings tab on the home page from experimental to general availability
