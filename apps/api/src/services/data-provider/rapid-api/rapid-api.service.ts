@@ -1,4 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -13,7 +12,10 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -121,7 +123,7 @@ export class RapidApiService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({}: GetSearchParams): Promise<{ items: LookupItem[] }> {
+  public async search({}: GetSearchParams): Promise<LookupResponse> {
     return { items: [] };
   }
 

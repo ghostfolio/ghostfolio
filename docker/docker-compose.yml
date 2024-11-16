@@ -1,6 +1,8 @@
+name: ghostfolio
 services:
   ghostfolio:
     image: docker.io/ghostfolio/ghostfolio:latest
+    container_name: ghostfolio
     init: true
     cap_drop:
       - ALL
@@ -27,6 +29,7 @@ services:
 
   postgres:
     image: docker.io/library/postgres:15
+    container_name: gf-postgres
     cap_drop:
       - ALL
     cap_add:
@@ -49,6 +52,7 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
+    container_name: gf-redis
     user: '999:1000'
     cap_drop:
       - ALL

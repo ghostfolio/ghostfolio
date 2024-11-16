@@ -23,6 +23,7 @@ import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
 import type { LineChartItem } from './line-chart-item.interface';
+import type { LookupItem } from './lookup-item.interface';
 import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioDividends } from './portfolio-dividends.interface';
@@ -40,13 +41,14 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { ImportResponse } from './responses/import-response.interface';
+import type { LookupResponse } from './responses/lookup-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
-import type { Subscription } from './subscription.interface';
+import type { SubscriptionOffer } from './subscription-offer.interface';
 import type { SymbolMetrics } from './symbol-metrics.interface';
 import type { SystemMessage } from './system-message.interface';
 import type { TabConfiguration } from './tab-configuration.interface';
@@ -82,6 +84,8 @@ export {
   InfoItem,
   InvestmentItem,
   LineChartItem,
+  LookupItem,
+  LookupResponse,
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,
@@ -102,8 +106,8 @@ export {
   ResponseError,
   ScraperConfiguration,
   Statistics,
+  SubscriptionOffer,
   SystemMessage,
-  Subscription,
   SymbolMetrics,
   TabConfiguration,
   ToggleOption,

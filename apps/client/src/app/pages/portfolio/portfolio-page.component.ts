@@ -46,8 +46,13 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             },
             {
               iconName: 'calculator-outline',
-              label: 'FIRE / X-ray',
+              label: 'FIRE ',
               path: ['/portfolio', 'fire']
+            },
+            {
+              iconName: 'scan-outline',
+              label: 'X-ray',
+              path: ['/portfolio', 'x-ray']
             }
           ];
           this.user = state.user;

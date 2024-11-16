@@ -1,4 +1,4 @@
-export type SubscriptionOffer =
+export type SubscriptionOfferKey =
   | 'default'
   | 'renewal'
   | 'renewal-early-bird-2023'

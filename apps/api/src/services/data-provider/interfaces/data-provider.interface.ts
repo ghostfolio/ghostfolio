@@ -1,9 +1,11 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DataProviderInfo } from '@ghostfolio/common/interfaces';
+import {
+  DataProviderInfo,
+  LookupResponse
+} from '@ghostfolio/common/interfaces';
 import { Granularity } from '@ghostfolio/common/types';
 
 import { DataSource, SymbolProfile } from '@prisma/client';
@@ -44,10 +46,7 @@ export interface DataProviderInterface {
 
   getTestSymbol(): string;
 
-  search({
-    includeIndices,
-    query
-  }: GetSearchParams): Promise<{ items: LookupItem[] }>;
+  search({ includeIndices, query }: GetSearchParams): Promise<LookupResponse>;
 }
 
 export interface GetDividendsParams {

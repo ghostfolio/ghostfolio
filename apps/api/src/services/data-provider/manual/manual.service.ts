@@ -1,4 +1,3 @@
-import { LookupItem } from '@ghostfolio/api/app/symbol/interfaces/lookup-item.interface';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -21,6 +20,7 @@ import {
 } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  LookupResponse,
   ScraperConfiguration
 } from '@ghostfolio/common/interfaces';
 
@@ -227,9 +227,7 @@ export class ManualService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({
-    query
-  }: GetSearchParams): Promise<{ items: LookupItem[] }> {
+  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
     let items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,

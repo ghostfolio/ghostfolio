@@ -34,6 +34,11 @@ const routes: Routes = [
         path: 'fire',
         loadChildren: () =>
           import('./fire/fire-page.module').then((m) => m.FirePageModule)
+      },
+      {
+        path: 'x-ray',
+        loadChildren: () =>
+          import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
       }
     ],
     component: PortfolioPageComponent,

@@ -46,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             update: {
               country,
               activityCount: { increment: 1 },
-              updatedAt: new Date()
+              lastRequestAt: new Date()
             },
             where: { userId: user.id }
           });
@@ -60,7 +60,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         );
       }
     } catch (error) {
-      if (error?.getStatus() === StatusCodes.TOO_MANY_REQUESTS) {
+      if (error?.getStatus?.() === StatusCodes.TOO_MANY_REQUESTS) {
         throw error;
       } else {
         throw new HttpException(

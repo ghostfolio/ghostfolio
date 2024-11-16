@@ -58,6 +58,7 @@ export class HeaderComponent implements OnChanges {
   @Input() deviceType: string;
   @Input() hasPermissionToChangeDateRange: boolean;
   @Input() hasPermissionToChangeFilters: boolean;
+  @Input() hasPromotion: boolean;
   @Input() hasTabs: boolean;
   @Input() info: InfoItem;
   @Input() pageTitle: string;
@@ -174,24 +175,18 @@ export class HeaderComponent implements OnChanges {
     const userSetting: UpdateUserSettingDto = {};
 
     for (const filter of filters) {
-      const filtersType = this.getFilterType(filter.type);
-
-      const userFilters = filters
-        .filter((f) => f.type === filter.type && filter.id)
-        .map((f) => f.id);
-
-      userSetting[`filters.${filtersType}`] = userFilters.length
-        ? userFilters
-        : null;
+      if (filter.type === 'ACCOUNT') {
+        userSetting['filters.accounts'] = filter.id ? [filter.id] : null;
+      } else if (filter.type === 'ASSET_CLASS') {
+        userSetting['filters.assetClasses'] = filter.id ? [filter.id] : null;
+      } else if (filter.type === 'DATA_SOURCE') {
+        userSetting['filters.dataSource'] = filter.id ? filter.id : null;
+      } else if (filter.type === 'SYMBOL') {
+        userSetting['filters.symbol'] = filter.id ? filter.id : null;
+      } else if (filter.type === 'TAG') {
+        userSetting['filters.tags'] = filter.id ? [filter.id] : null;
+      }
     }
-    ['ACCOUNT', 'ASSET_CLASS', 'TAG']
-      .filter(
-        (fitlerType) =>
-          !filters.some((f: Filter) => f.type.toString() === fitlerType)
-      )
-      .forEach((filterType) => {
-        userSetting[`filters.${this.getFilterType(filterType)}`] = null;
-      });
 
     this.dataService
       .putUserSetting(userSetting)
@@ -284,14 +279,5 @@ export class HeaderComponent implements OnChanges {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-  private getFilterType(filterType: string) {
-    if (filterType === 'ACCOUNT') {
-      return 'accounts';
-    } else if (filterType === 'ASSET_CLASS') {
-      return 'assetClasses';
-    } else if (filterType === 'TAG') {
-      return 'tags';
-    }
   }
 }

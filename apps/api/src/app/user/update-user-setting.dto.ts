@@ -67,6 +67,14 @@ export class UpdateUserSettingDto {
   @IsOptional()
   'filters.assetClasses'?: string[];
 
+  @IsString()
+  @IsOptional()
+  'filters.dataSource'?: string;
+
+  @IsString()
+  @IsOptional()
+  'filters.symbol'?: string;
+
   @IsArray()
   @IsOptional()
   'filters.tags'?: string[];

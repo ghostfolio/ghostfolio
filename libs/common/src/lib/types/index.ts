@@ -15,7 +15,7 @@ import type { MarketState } from './market-state.type';
 import type { Market } from './market.type';
 import type { OrderWithAccount } from './order-with-account.type';
 import type { RequestWithUser } from './request-with-user.type';
-import type { SubscriptionOffer } from './subscription-offer.type';
+import type { SubscriptionOfferKey } from './subscription-offer-key.type';
 import type { UserWithSettings } from './user-with-settings.type';
 import type { ViewMode } from './view-mode.type';
 
@@ -37,7 +37,7 @@ export type {
   MarketState,
   OrderWithAccount,
   RequestWithUser,
-  SubscriptionOffer,
+  SubscriptionOfferKey,
   UserWithSettings,
   ViewMode
 };

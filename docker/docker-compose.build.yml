@@ -1,6 +1,8 @@
+name: ghostfolio_build
 services:
   ghostfolio:
     build: ../
+    container_name: ghostfolio-build
     init: true
     env_file:
       - ../.env
@@ -23,6 +25,7 @@ services:
 
   postgres:
     image: docker.io/library/postgres:15
+    container_name: gf-postgres-build
     env_file:
       - ../.env
     healthcheck:
@@ -35,6 +38,7 @@ services:
 
   redis:
     image: docker.io/library/redis:alpine
+    container_name: gf-redis-build
     env_file:
       - ../.env
     command: ['redis-server', '--requirepass', $REDIS_PASSWORD]

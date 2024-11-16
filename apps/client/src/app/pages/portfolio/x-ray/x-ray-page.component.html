@@ -1,0 +1,123 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2 class="d-none d-sm-block h3 mb-3 text-center">X-ray</h2>
+      <p class="mb-4" i18n>
+        Ghostfolio X-ray uses static analysis to uncover potential issues and
+        risks in your portfolio. Adjust the rules below and set custom
+        thresholds to align with your personal investment strategy.
+      </p>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Emergency Fund</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="emergencyFundRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Currency Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="currencyClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Account Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="accountClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Economic Market Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="economicMarketClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div class="mb-4">
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Fees</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoadingPortfolioReport"
+          [rules]="feeRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      @if (inactiveRules?.length > 0) {
+        <div>
+          <h4 class="m-0" i18n>Inactive</h4>
+          <gf-rules
+            [hasPermissionToUpdateUserSettings]="
+              !hasImpersonationId &&
+              hasPermissionToUpdateUserSettings &&
+              user?.settings?.isExperimentalFeatures
+            "
+            [isLoading]="isLoadingPortfolioReport"
+            [rules]="inactiveRules"
+            [settings]="user?.settings?.xRayRules"
+            (rulesUpdated)="onRulesUpdated($event)"
+          />
+        </div>
+      }
+    </div>
+  </div>
+</div>
