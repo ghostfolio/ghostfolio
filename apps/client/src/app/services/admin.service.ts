@@ -157,7 +157,11 @@ export class AdminService {
   }
 
   public fetchUsers() {
-    return this.http.get<AdminUsers>('/api/v1/admin/user');
+    let params = new HttpParams();
+
+    params = params.append('take', 100);
+
+    return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }
 
   public gather7Days() {
