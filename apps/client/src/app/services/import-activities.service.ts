@@ -1,14 +1,14 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
 import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
-import { EMPTY } from 'rxjs';
+import { EMPTY, map, firstValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -19,12 +19,13 @@ export class ImportActivitiesService {
   private static COMMENT_KEYS = ['comment', 'note'];
   private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
-  private static DATE_KEYS = ['date', 'tradedate'];
+  private static DATE_KEYS = ['trade date', 'tradedate', 'date'];
   private static FEE_KEYS = ['commission', 'fee', 'ibcommission'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
   private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
   private static TYPE_KEYS = ['action', 'buy/sell', 'type'];
   private static UNIT_PRICE_KEYS = [
+    'purchase price',
     'price',
     'tradeprice',
     'unitprice',
@@ -55,7 +56,7 @@ export class ImportActivitiesService {
       activities.push({
         accountId: this.parseAccount({ item, userAccounts }),
         comment: this.parseComment({ item }),
-        currency: this.parseCurrency({ content, index, item }),
+        currency: await this.parseCurrency({ content, index, item }),
         dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
         fee: this.parseFee({ content, index, item }),
@@ -191,7 +192,7 @@ export class ImportActivitiesService {
     return undefined;
   }
 
-  private parseCurrency({
+  private async parseCurrency({
     content,
     index,
     item
@@ -202,16 +203,39 @@ export class ImportActivitiesService {
   }) {
     item = this.lowercaseKeys(item);
 
+    //Attempt to find currency in the CSV
     for (const key of ImportActivitiesService.CURRENCY_KEYS) {
       if (item[key]) {
         return item[key];
       }
     }
 
-    throw {
-      activities: content,
-      message: `activities.${index}.currency is not valid`
-    };
+    // If no currency in CSV, make an API request to get symbol data
+    const symbol = this.parseSymbol({ content, index, item });
+    const dataSource = this.parseDataSource({ item }) ?? DataSource.YAHOO;
+
+    return firstValueFrom(this.http
+      .get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`)
+      .pipe(
+        map((response) => {
+          if (response?.currency) {
+            console.warn(`activities.${index}.currency was not provided, using ${response.currency} from symbol data`);
+            return response.currency;
+          }
+          throw {
+            activities: content,
+            message: `activities.${index}.currency is not valid`
+          };
+        }),
+        catchError((error) => {
+          console.warn("Failed to fetch currency from symbol service.", error);
+          throw {
+            activities: content,
+            message: `activities.${index}.currency is not valid`
+          };
+        })
+      )
+    );
   }
 
   private parseDataSource({ item }: { item: any }) {
@@ -252,7 +276,7 @@ export class ImportActivitiesService {
   }
 
   private parseFee({
-    content,
+    // content,
     index,
     item
   }: {
@@ -268,10 +292,8 @@ export class ImportActivitiesService {
       }
     }
 
-    throw {
-      activities: content,
-      message: `activities.${index}.fee is not valid`
-    };
+    console.warn(`activities.${index}.fee was not provided, defaulting to 0`);
+    return 0;
   }
 
   private parseQuantity({
@@ -321,7 +343,7 @@ export class ImportActivitiesService {
   }
 
   private parseType({
-    content,
+    //content,
     index,
     item
   }: {
@@ -354,10 +376,8 @@ export class ImportActivitiesService {
       }
     }
 
-    throw {
-      activities: content,
-      message: `activities.${index}.type is not valid`
-    };
+    console.warn(`activities.${index}.type was not provided, defaulting to BUY`);
+    return 'BUY';
   }
 
   private parseUnitPrice({
