@@ -10,6 +10,7 @@ import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY, map, firstValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,12 @@ export class ImportActivitiesService {
     'value'
   ];
 
-  public constructor(private http: HttpClient) {}
+  private warnings: string[] = [];
+
+  public constructor(
+    private http: HttpClient,
+    private notificationService: NotificationService
+  ) {}
 
   public async importCsv({
     fileContent,
@@ -45,6 +51,8 @@ export class ImportActivitiesService {
   }): Promise<{
     activities: Activity[];
   }> {
+    this.warnings = [];
+
     const content = csvToJson(fileContent, {
       dynamicTyping: true,
       header: true,
@@ -65,6 +73,14 @@ export class ImportActivitiesService {
         type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
+      });
+    }
+
+    // Process any possible warnings during import
+    if (this.warnings.length > 0) {
+      this.notificationService.alert({
+        title: 'Import Warnings',
+        message: this.warnings.join('<br/>')
       });
     }
 
@@ -276,7 +292,6 @@ export class ImportActivitiesService {
   }
 
   private parseFee({
-    // content,
     index,
     item
   }: {
@@ -292,7 +307,7 @@ export class ImportActivitiesService {
       }
     }
 
-    console.warn(`activities.${index}.fee was not provided, defaulting to 0`);
+    this.warnings.push(`Activity ${index + 1}: Fee not provided, defaulting to 0`);
     return 0;
   }
 
@@ -343,7 +358,6 @@ export class ImportActivitiesService {
   }
 
   private parseType({
-    //content,
     index,
     item
   }: {
@@ -376,7 +390,7 @@ export class ImportActivitiesService {
       }
     }
 
-    console.warn(`activities.${index}.type was not provided, defaulting to BUY`);
+    this.warnings.push(`Activity ${index + 1}: Type not provided, defaulting to BUY`);
     return 'BUY';
   }
 
