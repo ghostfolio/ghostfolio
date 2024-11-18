@@ -101,6 +101,7 @@
     <tr
       *matRowDef="let element; columns: displayedColumns"
       mat-row
+      [class.cursor-pointer]="element.parents.length > 0"
       [class.expanded]="element.expand ?? false"
       (click)="
         element.expand ? (element.expand = false) : (element.expand = true)
