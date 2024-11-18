@@ -490,24 +490,21 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           name,
           allocationInPercentage:
             this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
-          valueInBaseCurrency: value,
           parents: Object.entries(this.portfolioDetails.holdings)
             .map(([symbol, holding]) => {
-              if (holding.holdings) {
-                const parentHoldings = holding.holdings;
-                for (const index in parentHoldings) {
-                  if (name === parentHoldings[index].name) {
-                    return {
-                      name: holding.name
-                        ? holding.name + ' (' + symbol + ')'
-                        : symbol,
+              if (holding.holdings.length > 0) {
+                const parentHolding = holding.holdings.find((parentHolding) => {
+                  return parentHolding.name === name;
+                });
+                return parentHolding
+                  ? {
                       allocationInPercentage:
-                        parentHoldings[index].valueInBaseCurrency / value,
-                      valueInBaseCurrency:
-                        parentHoldings[index].valueInBaseCurrency
-                    };
-                  }
-                }
+                        parentHolding.valueInBaseCurrency / value,
+                      name: holding.name,
+                      symbol: prettifySymbol(symbol),
+                      valueInBaseCurrency: parentHolding.valueInBaseCurrency
+                    }
+                  : null;
               }
 
               return null;
@@ -515,7 +512,8 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
             .filter((item) => null !== item)
             .sort((a, b) => {
               return b.allocationInPercentage - a.allocationInPercentage;
-            })
+            }),
+          valueInBaseCurrency: value
         };
       })
       .sort((a, b) => {

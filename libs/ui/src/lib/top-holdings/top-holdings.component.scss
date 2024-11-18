@@ -18,4 +18,14 @@
   tr:not(.expanded) + tr.holding-detail td {
     border-bottom: 0;
   }
+
+  .holdingParents {
+    padding: 1em 0;
+
+    table,
+    tr,
+    td {
+      background-color: transparent;
+    }
+  }
 }

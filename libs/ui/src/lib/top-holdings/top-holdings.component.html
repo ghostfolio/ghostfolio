@@ -73,7 +73,9 @@
               @for (parentHolding of element.parents; track parentHolding) {
                 <mat-list-item>
                   <span matListItemTitle style="font-size: inherit"
-                    >{{ parentHolding.name }}:</span
+                    >{{ parentHolding.name }} ({{
+                      parentHolding.symbol
+                    }}):</span
                   >
                   <span matListItemMeta>
                     <gf-value
