@@ -21,6 +21,7 @@
 
   .holdingParents {
     padding: 1em 0;
+    --table-padding: 0.5em;
 
     .holdingParentProportionChart {
       height: 2em;
@@ -28,15 +29,31 @@
       div {
         box-sizing: border-box;
         line-height: 2em;
-        padding: 0 0.5em;
+        padding: 0 var(--table-padding);
         overflow: hidden;
       }
     }
 
+    .colorBadge {
+      width: 0.75em;
+      height: 0.75em;
+      border-radius: 100%;
+      display: inline-block;
+    }
+
     table,
     tr,
+    th,
     td {
       background-color: transparent;
+    }
+
+    tr {
+      height: auto;
+    }
+    th,
+    td {
+      padding: var(--table-padding);
     }
   }
 }

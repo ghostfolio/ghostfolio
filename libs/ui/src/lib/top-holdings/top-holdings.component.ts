@@ -20,7 +20,6 @@ import {
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -60,7 +59,6 @@ const {
     CommonModule,
     GfValueComponent,
     MatButtonModule,
-    MatListModule,
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
@@ -89,6 +87,12 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   public dataSource = new MatTableDataSource<HoldingWithParents>();
   public displayedColumns: string[] = [
     'name',
+    'valueInBaseCurrency',
+    'allocationInPercentage'
+  ];
+  public displayedHoldingParentColumns: string[] = [
+    'name',
+    'symbol',
     'valueInBaseCurrency',
     'allocationInPercentage'
   ];

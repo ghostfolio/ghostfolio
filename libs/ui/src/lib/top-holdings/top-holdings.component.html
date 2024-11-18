@@ -85,31 +85,52 @@
               }
             </div>
 
-            <mat-list>
-              @for (parentHolding of element.parents; track parentHolding) {
-                <mat-list-item>
-                  <span matListItemTitle style="font-size: inherit"
-                    >{{ parentHolding.name }} ({{
-                      parentHolding.symbol
-                    }}):</span
-                  >
-                  <span matListItemMeta>
-                    <gf-value
-                      [isCurrency]="true"
-                      [locale]="locale"
-                      [value]="parentHolding?.valueInBaseCurrency"
-                    />
-                  </span>
-                  <span matListItemMeta>
-                    <gf-value
-                      [isPercent]="true"
-                      [locale]="locale"
-                      [value]="parentHolding?.allocationInPercentage"
-                    />
-                  </span>
-                </mat-list-item>
-              }
-            </mat-list>
+            <table mat-table [dataSource]="element.parents">
+              <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell>Name</th>
+                <td *matCellDef="let parentHolding" mat-cell>
+                  <span
+                    class="colorBadge"
+                    [style.background-color]="getColor(parentHolding?.symbol)"
+                  ></span>
+                  {{ parentHolding?.name }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="symbol">
+                <th *matHeaderCellDef mat-header-cell>Symbol</th>
+                <td *matCellDef="let parentHolding" mat-cell>
+                  {{ parentHolding?.symbol }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="valueInBaseCurrency">
+                <th *matHeaderCellDef mat-header-cell>Value</th>
+                <td *matCellDef="let parentHolding" mat-cell>
+                  <gf-value
+                    [isCurrency]="true"
+                    [locale]="locale"
+                    [value]="parentHolding?.valueInBaseCurrency"
+                  />
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="allocationInPercentage">
+                <th *matHeaderCellDef mat-header-cell>Allocation</th>
+                <td *matCellDef="let parentHolding" mat-cell>
+                  <gf-value
+                    [isPercent]="true"
+                    [locale]="locale"
+                    [value]="parentHolding?.allocationInPercentage"
+                  />
+                </td>
+              </ng-container>
+              <tr
+                *matHeaderRowDef="displayedHoldingParentColumns"
+                mat-header-row
+              ></tr>
+              <tr
+                *matRowDef="let row; columns: displayedHoldingParentColumns"
+                mat-row
+              ></tr>
+            </table>
           </div>
         </div>
       </td>
