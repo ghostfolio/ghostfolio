@@ -149,7 +149,6 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
 
   public onClickOpenPositionModal(holding: AssetProfileIdentifier) {
     try {
-      console.log(holding);
       this.proportionChartClicked.emit(holding);
     } catch {}
   }
