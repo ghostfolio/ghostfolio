@@ -7,12 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
+
 ### Changed
 
+- Upgraded `Nx` from version `20.0.6` to `20.1.2`
+
+## 2.123.0 - 2024-11-16
+
+### Added
+
+- Added a blog post: _Black Weeks 2024_
+
+### Changed
+
+- Moved the chart of the holdings tab on the home page from experimental to general availability
 - Extended the assistant by a holding selector
 - Separated the _FIRE_ / _X-ray_ page
+- Improved the usability to customize the rule thresholds in the _X-ray_ page by introducing range sliders (experimental)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Upgraded `ngx-skeleton-loader` from version `7.0.0` to `9.0.0`
+- Upgraded `prisma` from version `5.21.1` to `5.22.0`
 - Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ## 2.122.0 - 2024-11-07
