@@ -1,5 +1,9 @@
 import { getLocale } from '@ghostfolio/common/helper';
-import { HoldingWithParents } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  HoldingWithParents,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
@@ -14,9 +18,11 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +30,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DataSource } from '@prisma/client';
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
@@ -76,6 +83,15 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
   @Input() topHoldings: HoldingWithParents[];
+  @Input() positions: {
+    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+      dataSource?: DataSource;
+      name: string;
+      value: number;
+    };
+  } = {};
+
+  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -129,6 +145,13 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
       this.colorMap[symbol] = color;
       return color;
     }
+  }
+
+  public onClickOpenPositionModal(holding: AssetProfileIdentifier) {
+    try {
+      console.log(holding);
+      this.proportionChartClicked.emit(holding);
+    } catch {}
   }
 
   public ngOnChanges() {

@@ -501,6 +501,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
                       allocationInPercentage:
                         parentHolding.valueInBaseCurrency / value,
                       name: holding.name,
+                      position: holding,
                       symbol: prettifySymbol(symbol),
                       valueInBaseCurrency: parentHolding.valueInBaseCurrency
                     }

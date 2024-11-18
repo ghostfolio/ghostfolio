@@ -31,6 +31,10 @@
         line-height: 2em;
         padding: 0 var(--table-padding);
         overflow: hidden;
+
+        &:hover {
+          filter: brightness(0.95);
+        }
       }
     }
 
@@ -50,6 +54,9 @@
 
     tr {
       height: auto;
+      &:hover {
+        filter: brightness(0.95);
+      }
     }
     th,
     td {

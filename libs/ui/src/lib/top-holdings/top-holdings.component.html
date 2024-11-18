@@ -76,9 +76,11 @@
                 let i = $index
               ) {
                 <div
+                  [class.cursor-pointer]="parentHolding?.symbol.length > 0"
                   [matTooltip]="parentHolding.name"
                   [style.background-color]="getColor(parentHolding?.symbol)"
                   [style.width.%]="100 * parentHolding?.allocationInPercentage"
+                  (click)="onClickOpenPositionModal(parentHolding.position)"
                 >
                   {{ parentHolding?.symbol }}
                 </div>
@@ -129,6 +131,8 @@
               <tr
                 *matRowDef="let row; columns: displayedHoldingParentColumns"
                 mat-row
+                [class.cursor-pointer]="row.position"
+                (click)="onClickOpenPositionModal(row.position)"
               ></tr>
             </table>
           </div>
