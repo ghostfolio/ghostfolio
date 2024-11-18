@@ -1,7 +1,7 @@
 :host {
   display: block;
 
-  .gf-table {
+  .holdings-table {
     th {
       ::ng-deep {
         .mat-sort-header-container {
@@ -9,58 +9,66 @@
         }
       }
     }
-  }
 
-  tr.holding-detail {
-    height: 0;
-  }
+    tr.holding-detail {
+      height: 0;
+      &:hover {
+        // Disable hover effect.
+        background-color: var(--mat-table-background-color-even) !important;
+      }
+    }
 
-  tr:not(.expanded) + tr.holding-detail td {
-    border-bottom: 0;
-  }
+    tr.expanded {
+      background-color: var(--mat-table-background-color-even);
+    }
 
-  .holdingParents {
-    padding: 1em 0;
-    --table-padding: 0.5em;
+    tr:not(.expanded) + tr.holding-detail td {
+      border-bottom: 0;
+    }
 
-    .holdingParentProportionChart {
-      height: 2em;
+    .holdingParents {
+      padding: 1em 0;
+      --table-padding: 0.5em;
 
-      div {
-        box-sizing: border-box;
-        line-height: 2em;
-        padding: 0 var(--table-padding);
-        overflow: hidden;
+      .holdingParentProportionChart {
+        height: 2em;
 
-        &:hover {
-          filter: brightness(0.95);
+        div {
+          box-sizing: border-box;
+          line-height: 2em;
+          padding: 0 var(--table-padding);
+          overflow: hidden;
+
+          &:hover {
+            filter: brightness(0.95);
+          }
         }
       }
-    }
 
-    .colorBadge {
-      width: 0.75em;
-      height: 0.75em;
-      border-radius: 100%;
-      display: inline-block;
-    }
-
-    table,
-    tr,
-    th,
-    td {
-      background-color: transparent;
-    }
-
-    tr {
-      height: auto;
-      &:hover {
-        filter: brightness(0.95);
+      .colorBadge {
+        width: 0.75em;
+        height: 0.75em;
+        border-radius: 100%;
+        display: inline-block;
       }
-    }
-    th,
-    td {
-      padding: var(--table-padding);
+
+      table,
+      tr,
+      th,
+      td {
+        background-color: transparent;
+      }
+
+      tr {
+        height: auto;
+        &:hover {
+          background-color: var(--mat-table-background-color-hover);
+        }
+      }
+      th,
+      td {
+        padding: var(--table-padding);
+      }
     }
   }
 }
