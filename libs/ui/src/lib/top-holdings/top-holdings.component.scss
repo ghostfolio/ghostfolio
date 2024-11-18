@@ -22,6 +22,17 @@
   .holdingParents {
     padding: 1em 0;
 
+    .holdingParentProportionChart {
+      height: 2em;
+
+      div {
+        box-sizing: border-box;
+        line-height: 2em;
+        padding: 0 0.5em;
+        overflow: hidden;
+      }
+    }
+
     table,
     tr,
     td {

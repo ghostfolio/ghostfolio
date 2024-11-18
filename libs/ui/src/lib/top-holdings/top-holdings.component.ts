@@ -24,9 +24,25 @@ import { MatListModule } from '@angular/material/list';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
+
+const {
+  blue,
+  cyan,
+  grape,
+  green,
+  indigo,
+  lime,
+  orange,
+  pink,
+  red,
+  teal,
+  violet,
+  yellow
+} = require('open-color');
 
 @Component({
   animations: [
@@ -44,10 +60,11 @@ import { Subject } from 'rxjs';
     CommonModule,
     GfValueComponent,
     MatButtonModule,
+    MatListModule,
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    MatListModule,
+    MatTooltipModule,
     NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -65,6 +82,10 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  private colorMap: {
+    [symbol: string]: string;
+  } = {};
+
   public dataSource = new MatTableDataSource<HoldingWithParents>();
   public displayedColumns: string[] = [
     'name',
@@ -74,6 +95,37 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   public isLoading = true;
 
   private unsubscribeSubject = new Subject<void>();
+
+  private colorPaletteIndex = 0;
+  private colorPalette = [
+    blue[5],
+    teal[5],
+    lime[5],
+    orange[5],
+    pink[5],
+    violet[5],
+    indigo[5],
+    cyan[5],
+    green[5],
+    yellow[5],
+    red[5],
+    grape[5]
+  ];
+
+  public getColor(symbol) {
+    if (this.colorMap[symbol]) {
+      // Reuse color
+      return this.colorMap[symbol];
+    } else {
+      const color = this.colorPalette[this.colorPaletteIndex];
+      this.colorPaletteIndex =
+        this.colorPaletteIndex < this.colorPalette.length
+          ? this.colorPaletteIndex + 1
+          : 0;
+      this.colorMap[symbol] = color;
+      return color;
+    }
+  }
 
   public ngOnChanges() {
     this.isLoading = true;

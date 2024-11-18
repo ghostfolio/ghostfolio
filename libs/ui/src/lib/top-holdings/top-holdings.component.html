@@ -69,6 +69,22 @@
           class="allocationByParent"
         >
           <div class="holdingParents">
+            <div class="holdingParentProportionChart d-flex">
+              @for (
+                parentHolding of element.parents.slice(0, 10);
+                track parentHolding;
+                let i = $index
+              ) {
+                <div
+                  [matTooltip]="parentHolding.name"
+                  [style.background-color]="getColor(parentHolding?.symbol)"
+                  [style.width.%]="100 * parentHolding?.allocationInPercentage"
+                >
+                  {{ parentHolding?.symbol }}
+                </div>
+              }
+            </div>
+
             <mat-list>
               @for (parentHolding of element.parents; track parentHolding) {
                 <mat-list-item>
