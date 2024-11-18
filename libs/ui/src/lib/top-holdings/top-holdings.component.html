@@ -71,7 +71,7 @@
           <div class="holdingParents">
             <div class="holdingParentProportionChart d-flex">
               @for (
-                parentHolding of element.parents.slice(0, 10);
+                parentHolding of element.parents?.slice(0, 10);
                 track parentHolding;
                 let i = $index
               ) {
@@ -119,7 +119,7 @@
     <tr
       *matRowDef="let element; columns: displayedColumns"
       mat-row
-      [class.cursor-pointer]="element.parents.length > 0"
+      [class.cursor-pointer]="element.parents?.length > 0"
       [class.expanded]="element.expand ?? false"
       (click)="
         element.expand ? (element.expand = false) : (element.expand = true)
@@ -129,6 +129,7 @@
       *matRowDef="let row; columns: ['expandedDetail']"
       class="holding-detail"
       mat-row
+      [class.d-none]="!row.parents?.length"
     ></tr>
   </table>
 </div>
