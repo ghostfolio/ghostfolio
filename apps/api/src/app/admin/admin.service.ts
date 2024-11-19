@@ -140,7 +140,7 @@ export class AdminService {
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
-      this.prismaService.user.count()
+      this.countUsersWithAnalytics()
     ]);
 
     return {
@@ -436,10 +436,11 @@ export class AdminService {
     skip?: number;
     take?: number;
   }): Promise<AdminUsers> {
-    return {
-      users: await this.getUsersWithAnalytics({ skip, take }),
-      count: await this.countUsersWithAnalytics()
-    };
+    const [count, users] = await Promise.all([
+      this.countUsersWithAnalytics(),
+      await this.getUsersWithAnalytics({ skip, take })
+    ]);
+    return { count, users };
   }
 
   public async patchAssetProfileData({
