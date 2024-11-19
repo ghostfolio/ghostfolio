@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
+- Upgraded `Nx` from version `20.0.6` to `20.1.2`
 
 ## 2.123.0 - 2024-11-16
 
