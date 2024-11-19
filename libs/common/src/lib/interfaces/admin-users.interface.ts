@@ -11,4 +11,5 @@ export interface AdminUsers {
     role: Role;
     transactionCount: number;
   }[];
+  count: number;
 }
