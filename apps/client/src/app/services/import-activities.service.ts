@@ -2,7 +2,9 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Account, DataSource, Type as ActivityType } from '@prisma/client';
@@ -10,7 +12,6 @@ import { isFinite } from 'lodash';
 import { parse as csvToJson } from 'papaparse';
 import { EMPTY, map, firstValueFrom } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -230,12 +231,13 @@ export class ImportActivitiesService {
     const symbol = this.parseSymbol({ content, index, item });
     const dataSource = this.parseDataSource({ item }) ?? DataSource.YAHOO;
 
-    return firstValueFrom(this.http
-      .get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`)
-      .pipe(
+    return firstValueFrom(
+      this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`).pipe(
         map((response) => {
           if (response?.currency) {
-            console.warn(`activities.${index}.currency was not provided, using ${response.currency} from symbol data`);
+            console.warn(
+              `activities.${index}.currency was not provided, using ${response.currency} from symbol data`
+            );
             return response.currency;
           }
           throw {
@@ -244,7 +246,7 @@ export class ImportActivitiesService {
           };
         }),
         catchError((error) => {
-          console.warn("Failed to fetch currency from symbol service.", error);
+          console.warn('Failed to fetch currency from symbol service.', error);
           throw {
             activities: content,
             message: `activities.${index}.currency is not valid`
@@ -307,7 +309,9 @@ export class ImportActivitiesService {
       }
     }
 
-    this.warnings.push(`Activity ${index + 1}: Fee not provided, defaulting to 0`);
+    this.warnings.push(
+      `Activity ${index + 1}: Fee not provided, defaulting to 0`
+    );
     return 0;
   }
 
@@ -390,7 +394,9 @@ export class ImportActivitiesService {
       }
     }
 
-    this.warnings.push(`Activity ${index + 1}: Type not provided, defaulting to BUY`);
+    this.warnings.push(
+      `Activity ${index + 1}: Type not provided, defaulting to BUY`
+    );
     return 'BUY';
   }
 
