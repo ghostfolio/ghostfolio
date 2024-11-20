@@ -519,7 +519,7 @@ export class AdminService {
     return response;
   }
 
-  private async countUsersWithAnalytics(): Promise<number> {
+  private async countUsersWithAnalytics() {
     let where: Prisma.UserWhereInput;
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
@@ -530,7 +530,7 @@ export class AdminService {
       };
     }
 
-    return await this.prismaService.user.count({
+    return this.prismaService.user.count({
       where
     });
   }
