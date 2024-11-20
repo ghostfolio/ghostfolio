@@ -159,7 +159,7 @@ export class AdminService {
   public fetchUsers() {
     let params = new HttpParams();
 
-    params = params.append('take', 100);
+    params = params.append('take', 30);
 
     return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }

@@ -140,7 +140,7 @@ export class AdminService {
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
-      this.prismaService.user.count()
+      this.countUsersWithAnalytics()
     ]);
 
     return {
@@ -436,7 +436,12 @@ export class AdminService {
     skip?: number;
     take?: number;
   }): Promise<AdminUsers> {
-    return { users: await this.getUsersWithAnalytics({ skip, take }) };
+    const [count, users] = await Promise.all([
+      this.countUsersWithAnalytics(),
+      this.getUsersWithAnalytics({ skip, take })
+    ]);
+
+    return { count, users };
   }
 
   public async patchAssetProfileData({
@@ -512,6 +517,22 @@ export class AdminService {
     }
 
     return response;
+  }
+
+  private async countUsersWithAnalytics() {
+    let where: Prisma.UserWhereInput;
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      where = {
+        NOT: {
+          Analytics: null
+        }
+      };
+    }
+
+    return this.prismaService.user.count({
+      where
+    });
   }
 
   private getExtendedPrismaClient() {
