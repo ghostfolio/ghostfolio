@@ -30,7 +30,7 @@ import * as cheerio from 'cheerio';
 import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
-import jsonpath from 'jsonpath';
+import * as jsonpath from 'jsonpath';
 
 @Injectable()
 export class ManualService implements DataProviderInterface {
@@ -292,6 +292,9 @@ export class ManualService implements DataProviderInterface {
 
       if (headers['content-type'].includes('application/json')) {
         const data = JSON.parse(body);
+        Logger.log(data);
+        Logger.log(scraperConfiguration.selector);
+        Logger.log(jsonpath.query(data, scraperConfiguration.selector)[0]);
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
