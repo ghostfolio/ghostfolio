@@ -292,9 +292,6 @@ export class ManualService implements DataProviderInterface {
 
       if (headers['content-type'].includes('application/json')) {
         const data = JSON.parse(body);
-        Logger.log(data);
-        Logger.log(scraperConfiguration.selector);
-        Logger.log(jsonpath.query(data, scraperConfiguration.selector)[0]);
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
