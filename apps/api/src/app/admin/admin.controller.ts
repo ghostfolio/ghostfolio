@@ -371,7 +371,8 @@ export class AdminController {
       tags: {
         connect: assetProfileData.tags?.map(({ id }) => {
           return { id };
-        })
+        }),
+        disconnect: assetProfileData.tagsDisconnected?.map(({ id }) => ({ id }))
       }
     });
   }

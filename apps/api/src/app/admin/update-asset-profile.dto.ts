@@ -39,6 +39,10 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   tags?: Tag[];
 
+  @IsArray()
+  @IsOptional()
+  tagsDisconnected?: Tag[];
+
   @IsObject()
   @IsOptional()
   scraperConfiguration?: Prisma.InputJsonObject;
