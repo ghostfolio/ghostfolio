@@ -518,7 +518,6 @@ export class AdminService {
     return response;
   }
 
-
   private async countUsersWithAnalytics(): Promise<number> {
     let where: Prisma.UserWhereInput;
 
