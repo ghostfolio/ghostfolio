@@ -438,7 +438,7 @@ export class AdminService {
   }): Promise<AdminUsers> {
     const [count, users] = await Promise.all([
       this.countUsersWithAnalytics(),
-      await this.getUsersWithAnalytics({ skip, take })
+      this.getUsersWithAnalytics({ skip, take })
     ]);
     return { count, users };
   }
