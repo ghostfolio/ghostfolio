@@ -440,6 +440,7 @@ export class AdminService {
       this.countUsersWithAnalytics(),
       this.getUsersWithAnalytics({ skip, take })
     ]);
+
     return { count, users };
   }
 
