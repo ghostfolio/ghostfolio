@@ -245,6 +245,7 @@ export class AdminService {
     symbol,
     symbolMapping,
     tags,
+    tagsDisconnected,
     url
   }: AssetProfileIdentifier & UpdateAssetProfileDto) {
     return this.http.patch<EnhancedSymbolProfile>(
@@ -260,6 +261,7 @@ export class AdminService {
         sectors,
         symbolMapping,
         tags,
+        tagsDisconnected,
         url
       }
     );

@@ -71,6 +71,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }),
     name: ['', Validators.required],
     tags: new FormControl<Tag[]>(undefined),
+    tagsDisconnected: new FormControl<Tag[]>(undefined),
     scraperConfiguration: '',
     sectors: '',
     symbolMapping: '',
@@ -172,6 +173,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           assetSubClass: this.assetProfile.assetSubClass ?? null,
           comment: this.assetProfile?.comment ?? '',
           tags: this.assetProfile?.tags ?? [],
+          tagsDisconnected: [],
           countries: JSON.stringify(
             this.assetProfile?.countries?.map(({ code, weight }) => {
               return { code, weight };
@@ -328,6 +330,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
       comment: this.assetProfileForm.get('comment').value || null,
       tags: this.assetProfileForm.get('tags').value,
+      tagsDisconnected: this.assetProfileForm.get('tagsDisconnected').value,
       currency: this.assetProfileForm.get('currency').value,
       name: this.assetProfileForm.get('name').value,
       url: this.assetProfileForm.get('url').value
@@ -404,6 +407,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         return id !== aTag.id;
       })
     );
+    this.assetProfileForm.controls['tagsDisconnected'].setValue([
+      ...(this.assetProfileForm.controls['tagsDisconnected'].value ?? []),
+      aTag
+    ]);
     this.assetProfileForm.markAsDirty();
   }
 
