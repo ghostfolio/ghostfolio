@@ -518,6 +518,25 @@ export class AdminService {
     return response;
   }
 
+
+  private async countUsersWithAnalytics(): Promise<number> {
+    let where: Prisma.UserWhereInput;
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      where = {
+        NOT: {
+          Analytics: null
+        }
+      };
+    }
+
+    const usersCountWithAnalytics = await this.prismaService.user.count({
+      where
+    });
+
+    return usersCountWithAnalytics;
+  }
+
   private getExtendedPrismaClient() {
     Logger.debug('Connect extended prisma client', 'AdminService');
 
@@ -648,24 +667,6 @@ export class AdminService {
 
     const marketData = await Promise.all(marketDataPromise);
     return { marketData, count: marketData.length };
-  }
-
-  private async countUsersWithAnalytics(): Promise<number> {
-    let where: Prisma.UserWhereInput;
-
-    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      where = {
-        NOT: {
-          Analytics: null
-        }
-      };
-    }
-
-    const usersCountWithAnalytics = await this.prismaService.user.count({
-      where
-    });
-
-    return usersCountWithAnalytics;
   }
 
   private async getUsersWithAnalytics({
