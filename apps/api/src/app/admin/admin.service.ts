@@ -530,11 +530,9 @@ export class AdminService {
       };
     }
 
-    const usersCountWithAnalytics = await this.prismaService.user.count({
+    return await this.prismaService.user.count({
       where
     });
-
-    return usersCountWithAnalytics;
   }
 
   private getExtendedPrismaClient() {
