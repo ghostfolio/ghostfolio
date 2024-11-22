@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
 - Upgraded `Nx` from version `20.0.6` to `20.1.2`
 
 ## 2.123.0 - 2024-11-16
