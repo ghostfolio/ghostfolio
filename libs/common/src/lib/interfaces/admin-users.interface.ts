@@ -1,6 +1,7 @@
 import { Role } from '@prisma/client';
 
 export interface AdminUsers {
+  count: number;
   users: {
     accountCount: number;
     country: string;
