@@ -2,6 +2,8 @@
   display: block;
 
   .holdings-table {
+    table-layout: auto;
+
     tr {
       &:not(.expanded) + tr.holding-detail td {
         border-bottom: 0;

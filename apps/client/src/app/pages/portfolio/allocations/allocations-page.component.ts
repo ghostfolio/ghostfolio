@@ -493,24 +493,30 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           parents: Object.entries(this.portfolioDetails.holdings)
             .map(([symbol, holding]) => {
               if (holding.holdings.length > 0) {
-                const parentHolding = holding.holdings.find((parentHolding) => {
-                  return parentHolding.name === name;
-                });
-                return parentHolding
+                const currentParentHolding = holding.holdings.find(
+                  (parentHolding) => {
+                    return parentHolding.name === name;
+                  }
+                );
+
+                return currentParentHolding
                   ? {
                       allocationInPercentage:
-                        parentHolding.valueInBaseCurrency / value,
+                        currentParentHolding.valueInBaseCurrency / value,
                       name: holding.name,
                       position: holding,
                       symbol: prettifySymbol(symbol),
-                      valueInBaseCurrency: parentHolding.valueInBaseCurrency
+                      valueInBaseCurrency:
+                        currentParentHolding.valueInBaseCurrency
                     }
                   : null;
               }
 
               return null;
             })
-            .filter((item) => null !== item)
+            .filter((item) => {
+              return item !== null;
+            })
             .sort((a, b) => {
               return b.allocationInPercentage - a.allocationInPercentage;
             }),

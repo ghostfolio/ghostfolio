@@ -3,7 +3,6 @@
     class="gf-table holdings-table w-100"
     mat-table
     multiTemplateDataRows
-    style="table-layout: auto"
     [dataSource]="dataSource"
   >
     <colgroup>
@@ -116,8 +115,8 @@
               ></tr>
               <tr
                 *matFooterRowDef="displayedColumns"
+                class="hidden"
                 mat-footer-row
-                style="visibility: hidden"
               ></tr>
             </table>
           </div>
