@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
+- Added pagination response (`count`) to the endpoint `GET api/v1/admin/user`
 
 ### Changed
 
 - Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
+- Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
 - Upgraded `Nx` from version `20.0.6` to `20.1.2`
 
 ## 2.123.0 - 2024-11-16
