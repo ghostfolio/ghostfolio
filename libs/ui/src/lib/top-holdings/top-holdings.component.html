@@ -2,14 +2,18 @@
   <table
     class="gf-table holdings-table w-100"
     mat-table
-    matSort
-    matSortActive="allocationInPercentage"
-    matSortDirection="desc"
     multiTemplateDataRows
+    style="table-layout: auto"
     [dataSource]="dataSource"
   >
+    <colgroup>
+      <col class="w-100" />
+      <col />
+      <col />
+    </colgroup>
+
     <ng-container matColumnDef="name">
-      <th *matHeaderCellDef class="px-2" mat-header-cell mat-sort-header>
+      <th *matHeaderCellDef class="px-2" mat-header-cell>
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
@@ -18,12 +22,7 @@
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
-      <th
-        *matHeaderCellDef
-        class="justify-content-end px-2"
-        mat-header-cell
-        mat-sort-header
-      >
+      <th *matHeaderCellDef class="px-2 text-right" mat-header-cell>
         <ng-container i18n>Value</ng-container>
       </th>
       <td *matCellDef="let element" class="px-2" mat-cell>
@@ -38,12 +37,7 @@
     </ng-container>
 
     <ng-container matColumnDef="allocationInPercentage" stickyEnd>
-      <th
-        *matHeaderCellDef
-        class="justify-content-end px-2"
-        mat-header-cell
-        mat-sort-header
-      >
+      <th *matHeaderCellDef class="justify-content-end px-2" mat-header-cell>
         <span class="d-none d-sm-block" i18n>Allocation</span>
         <span class="d-block d-sm-none" title="Allocation">%</span>
       </th>
@@ -61,6 +55,7 @@
     <ng-container matColumnDef="expandedDetail">
       <td
         *matCellDef="let element"
+        class="p-0"
         mat-cell
         [attr.colspan]="displayedColumns.length"
       >
@@ -68,71 +63,61 @@
           [@detailExpand]="element.expand ? 'expanded' : 'collapsed'"
           class="allocationByParent"
         >
-          <div class="holdingParents">
-            <div class="holdingParentProportionChart d-flex">
-              @for (
-                parentHolding of element.parents?.slice(0, 10);
-                track parentHolding;
-                let i = $index
-              ) {
-                <div
-                  [class.cursor-pointer]="parentHolding?.symbol.length > 0"
-                  [matTooltip]="parentHolding.name"
-                  [style.background-color]="getColor(parentHolding?.symbol)"
-                  [style.width.%]="100 * parentHolding?.allocationInPercentage"
-                  (click)="onClickOpenPositionModal(parentHolding.position)"
-                >
-                  {{ parentHolding?.symbol }}
-                </div>
-              }
-            </div>
-
+          <div class="holding-parents-table">
             <table mat-table [dataSource]="element.parents">
+              <colgroup>
+                <col class="w-100" />
+                <col />
+                <col />
+              </colgroup>
+
               <ng-container matColumnDef="name">
-                <th *matHeaderCellDef mat-header-cell>Name</th>
                 <td *matCellDef="let parentHolding" mat-cell>
-                  <span
-                    class="colorBadge"
-                    [style.background-color]="getColor(parentHolding?.symbol)"
-                  ></span>
                   {{ parentHolding?.name }}
                 </td>
-              </ng-container>
-              <ng-container matColumnDef="symbol">
-                <th *matHeaderCellDef mat-header-cell>Symbol</th>
-                <td *matCellDef="let parentHolding" mat-cell>
-                  {{ parentHolding?.symbol }}
+                <td *matFooterCellDef class="px-2" mat-footer-cell>
+                  <ng-container i18n>Name</ng-container>
                 </td>
               </ng-container>
               <ng-container matColumnDef="valueInBaseCurrency">
-                <th *matHeaderCellDef mat-header-cell>Value</th>
                 <td *matCellDef="let parentHolding" mat-cell>
-                  <gf-value
-                    [isCurrency]="true"
-                    [locale]="locale"
-                    [value]="parentHolding?.valueInBaseCurrency"
-                  />
+                  <div class="d-flex justify-content-end">
+                    <gf-value
+                      [isCurrency]="true"
+                      [locale]="locale"
+                      [value]="parentHolding?.valueInBaseCurrency"
+                    />
+                  </div>
+                </td>
+                <td *matFooterCellDef class="px-2" mat-footer-cell>
+                  <ng-container i18n>Value</ng-container>
                 </td>
               </ng-container>
               <ng-container matColumnDef="allocationInPercentage">
-                <th *matHeaderCellDef mat-header-cell>Allocation</th>
                 <td *matCellDef="let parentHolding" mat-cell>
-                  <gf-value
-                    [isPercent]="true"
-                    [locale]="locale"
-                    [value]="parentHolding?.allocationInPercentage"
-                  />
+                  <div class="d-flex justify-content-end">
+                    <gf-value
+                      [isPercent]="true"
+                      [locale]="locale"
+                      [value]="parentHolding?.allocationInPercentage"
+                    />
+                  </div>
+                </td>
+                <td *matFooterCellDef class="px-2" mat-footer-cell>
+                  <span class="d-none d-sm-block" i18n>Allocation</span>
+                  <span class="d-block d-sm-none">%</span>
                 </td>
               </ng-container>
               <tr
-                *matHeaderRowDef="displayedHoldingParentColumns"
-                mat-header-row
+                *matRowDef="let row; columns: displayedColumns"
+                mat-row
+                [ngClass]="{ 'cursor-pointer': row.position }"
+                (click)="onClickHolding(row.position)"
               ></tr>
               <tr
-                *matRowDef="let row; columns: displayedHoldingParentColumns"
-                mat-row
-                [class.cursor-pointer]="row.position"
-                (click)="onClickOpenPositionModal(row.position)"
+                *matFooterRowDef="displayedColumns"
+                mat-footer-row
+                style="visibility: hidden"
               ></tr>
             </table>
           </div>
@@ -144,8 +129,10 @@
     <tr
       *matRowDef="let element; columns: displayedColumns"
       mat-row
-      [class.cursor-pointer]="element.parents?.length > 0"
-      [class.expanded]="element.expand ?? false"
+      [ngClass]="{
+        'cursor-pointer': element.parents?.length > 0,
+        expanded: element.expand ?? false
+      }"
       (click)="
         element.expand ? (element.expand = false) : (element.expand = true)
       "

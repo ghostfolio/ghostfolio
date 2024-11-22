@@ -27,28 +27,10 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataSource } from '@prisma/client';
-import { get } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
-
-const {
-  blue,
-  cyan,
-  grape,
-  green,
-  indigo,
-  lime,
-  orange,
-  pink,
-  red,
-  teal,
-  violet,
-  yellow
-} = require('open-color');
 
 @Component({
   animations: [
@@ -67,9 +49,7 @@ const {
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
-    MatSortModule,
     MatTableModule,
-    MatTooltipModule,
     NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -91,14 +71,9 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
     };
   } = {};
 
-  @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
+  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  private colorMap: {
-    [symbol: string]: string;
-  } = {};
 
   public dataSource = new MatTableDataSource<HoldingWithParents>();
   public displayedColumns: string[] = [
@@ -106,64 +81,23 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
     'valueInBaseCurrency',
     'allocationInPercentage'
   ];
-  public displayedHoldingParentColumns: string[] = [
-    'name',
-    'symbol',
-    'valueInBaseCurrency',
-    'allocationInPercentage'
-  ];
   public isLoading = true;
 
   private unsubscribeSubject = new Subject<void>();
-
-  private colorPaletteIndex = 0;
-  private colorPalette = [
-    blue[5],
-    teal[5],
-    lime[5],
-    orange[5],
-    pink[5],
-    violet[5],
-    indigo[5],
-    cyan[5],
-    green[5],
-    yellow[5],
-    red[5],
-    grape[5]
-  ];
-
-  public getColor(symbol) {
-    if (this.colorMap[symbol]) {
-      // Reuse color
-      return this.colorMap[symbol];
-    } else {
-      const color = this.colorPalette[this.colorPaletteIndex];
-      this.colorPaletteIndex =
-        this.colorPaletteIndex < this.colorPalette.length
-          ? this.colorPaletteIndex + 1
-          : 0;
-      this.colorMap[symbol] = color;
-      return color;
-    }
-  }
-
-  public onClickOpenPositionModal(holding: AssetProfileIdentifier) {
-    try {
-      this.proportionChartClicked.emit(holding);
-    } catch {}
-  }
 
   public ngOnChanges() {
     this.isLoading = true;
 
     this.dataSource = new MatTableDataSource(this.topHoldings);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = get;
 
     if (this.topHoldings) {
       this.isLoading = false;
     }
+  }
+
+  public onClickHolding(assetProfileIdentifier: AssetProfileIdentifier) {
+    this.holdingClicked.emit(assetProfileIdentifier);
   }
 
   public onShowAllHoldings() {

@@ -2,72 +2,31 @@
   display: block;
 
   .holdings-table {
-    th {
-      ::ng-deep {
-        .mat-sort-header-container {
-          justify-content: inherit;
+    tr {
+      &:not(.expanded) + tr.holding-detail td {
+        border-bottom: 0;
+      }
+
+      &.expanded {
+        > td {
+          font-weight: bold;
         }
       }
-    }
 
-    tr.holding-detail {
-      height: 0;
-      &:hover {
-        // Disable hover effect.
-        background-color: var(--mat-table-background-color-even) !important;
+      &.holding-detail {
+        height: 0;
       }
-    }
 
-    tr.expanded {
-      background-color: var(--mat-table-background-color-even);
-    }
+      .holding-parents-table {
+        --table-padding: 0.5em;
 
-    tr:not(.expanded) + tr.holding-detail td {
-      border-bottom: 0;
-    }
+        tr {
+          height: auto;
 
-    .holdingParents {
-      padding: 1em 0;
-      --table-padding: 0.5em;
-
-      .holdingParentProportionChart {
-        height: 2em;
-
-        div {
-          box-sizing: border-box;
-          line-height: 2em;
-          padding: 0 var(--table-padding);
-          overflow: hidden;
-
-          &:hover {
-            filter: brightness(0.95);
+          td {
+            padding: var(--table-padding);
           }
         }
-      }
-
-      .colorBadge {
-        width: 0.75em;
-        height: 0.75em;
-        border-radius: 100%;
-        display: inline-block;
-      }
-
-      table,
-      tr,
-      th,
-      td {
-        background-color: transparent;
-      }
-
-      tr {
-        height: auto;
-        &:hover {
-          background-color: var(--mat-table-background-color-hover);
-        }
-      }
-      th,
-      td {
-        padding: var(--table-padding);
       }
     }
   }
