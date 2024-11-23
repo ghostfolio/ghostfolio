@@ -1,33 +1,56 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
-import { Holding } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  HoldingWithParents,
+  PortfolioPosition
+} from '@ghostfolio/common/interfaces';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { get } from 'lodash';
+import { DataSource } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 
 @Component({
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed,void', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      )
+    ])
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    GfSymbolModule,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
-    MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule
   ],
@@ -41,12 +64,20 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
-  @Input() topHoldings: Holding[];
+  @Input() topHoldings: HoldingWithParents[];
+  @Input() positions: {
+    [symbol: string]: Pick<PortfolioPosition, 'type'> & {
+      dataSource?: DataSource;
+      name: string;
+      value: number;
+    };
+  } = {};
+
+  @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
-  public dataSource = new MatTableDataSource<Holding>();
+  public dataSource = new MatTableDataSource<HoldingWithParents>();
   public displayedColumns: string[] = [
     'name',
     'valueInBaseCurrency',
@@ -61,12 +92,14 @@ export class GfTopHoldingsComponent implements OnChanges, OnDestroy {
 
     this.dataSource = new MatTableDataSource(this.topHoldings);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.sortingDataAccessor = get;
 
     if (this.topHoldings) {
       this.isLoading = false;
     }
+  }
+
+  public onClickHolding(assetProfileIdentifier: AssetProfileIdentifier) {
+    this.holdingClicked.emit(assetProfileIdentifier);
   }
 
   public onShowAllHoldings() {
