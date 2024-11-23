@@ -410,14 +410,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return name;
   }
 
-  private async getSearchResult(aQuery: string): Promise<
-    (LookupItem & {
+  private async getSearchResult(aQuery: string) {
+    let searchResult: (LookupItem & {
       assetClass: AssetClass;
       assetSubClass: AssetSubClass;
       isin: string;
-    })[]
-  > {
-    let searchResult = [];
+    })[] = [];
 
     try {
       const abortController = new AbortController();
