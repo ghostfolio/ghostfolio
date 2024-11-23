@@ -58,10 +58,7 @@
         mat-cell
         [attr.colspan]="displayedColumns.length"
       >
-        <div
-          [@detailExpand]="element.expand ? 'expanded' : 'collapsed'"
-          class="allocationByParent"
-        >
+        <div [@detailExpand]="element.expand ? 'expanded' : 'collapsed'">
           <div class="holding-parents-table">
             <table class="gf-table" mat-table [dataSource]="element.parents">
               <colgroup>
@@ -71,8 +68,10 @@
               </colgroup>
 
               <ng-container matColumnDef="name">
-                <td *matCellDef="let parentHolding" mat-cell>
-                  {{ parentHolding?.name }}
+                <td *matCellDef="let parentHolding" class="px-2" mat-cell>
+                  <div class="text-truncate">
+                    {{ parentHolding?.name }}
+                  </div>
                 </td>
                 <td *matFooterCellDef class="px-2" mat-footer-cell>
                   <ng-container i18n>Name</ng-container>
@@ -140,7 +139,7 @@
       *matRowDef="let row; columns: ['expandedDetail']"
       class="holding-detail"
       mat-row
-      [class.d-none]="!row.parents?.length"
+      [ngClass]="{ 'd-none': !row.parents?.length }"
     ></tr>
   </table>
 </div>
