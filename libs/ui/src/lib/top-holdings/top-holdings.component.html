@@ -60,7 +60,11 @@
       >
         <div [@detailExpand]="element.expand ? 'expanded' : 'collapsed'">
           <div class="holding-parents-table">
-            <table class="gf-table" mat-table [dataSource]="element.parents">
+            <table
+              class="gf-table w-100"
+              mat-table
+              [dataSource]="element.parents"
+            >
               <colgroup>
                 <col class="w-100" />
                 <col />
@@ -69,8 +73,15 @@
 
               <ng-container matColumnDef="name">
                 <td *matCellDef="let parentHolding" class="px-2" mat-cell>
-                  <div class="text-truncate">
-                    {{ parentHolding?.name }}
+                  <div
+                    class="align-items-center d-flex line-height-1 text-nowrap"
+                  >
+                    <div>{{ parentHolding?.name }}</div>
+                  </div>
+                  <div>
+                    <small class="text-muted">{{
+                      parentHolding?.symbol | gfSymbol
+                    }}</small>
                   </div>
                 </td>
                 <td *matFooterCellDef class="px-2" mat-footer-cell>
@@ -91,7 +102,7 @@
                   <ng-container i18n>Value</ng-container>
                 </td>
               </ng-container>
-              <ng-container matColumnDef="allocationInPercentage">
+              <ng-container matColumnDef="allocationInPercentage" stickyEnd>
                 <td *matCellDef="let parentHolding" mat-cell>
                   <div class="d-flex justify-content-end">
                     <gf-value

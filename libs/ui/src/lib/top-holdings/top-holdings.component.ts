@@ -1,3 +1,4 @@
+import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -46,6 +47,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
+    GfSymbolModule,
     GfValueComponent,
     MatButtonModule,
     MatPaginatorModule,
