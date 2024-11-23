@@ -1,11 +1,33 @@
 :host {
   display: block;
 
-  .gf-table {
-    th {
-      ::ng-deep {
-        .mat-sort-header-container {
-          justify-content: inherit;
+  .holdings-table {
+    table-layout: auto;
+
+    tr {
+      &:not(.expanded) + tr.holding-detail td {
+        border-bottom: 0;
+      }
+
+      &.expanded {
+        > td {
+          font-weight: bold;
+        }
+      }
+
+      &.holding-detail {
+        height: 0;
+      }
+
+      .holding-parents-table {
+        --table-padding: 0.5em;
+
+        tr {
+          height: auto;
+
+          td {
+            padding: var(--table-padding);
+          }
         }
       }
     }
