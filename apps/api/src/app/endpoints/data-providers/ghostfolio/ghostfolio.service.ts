@@ -1,9 +1,12 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES
 } from '@ghostfolio/common/config';
+import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderInfo,
   LookupItem,
@@ -13,15 +16,25 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-
-import Big = require('big.js');
+import { Big } from 'big.js';
 
 @Injectable()
 export class GhostfolioService {
   public constructor(
     private readonly configurationService: ConfigurationService,
-    private readonly dataProviderService: DataProviderService
+    private readonly dataProviderService: DataProviderService,
+    private readonly prismaService: PrismaService,
+    private readonly propertyService: PropertyService
   ) {}
+
+  public async getMaxDailyRequests() {
+    return parseInt(
+      ((await this.propertyService.getByKey(
+        PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
+      )) as string) || '0',
+      10
+    );
+  }
 
   public async getQuotes({
     requestTimeout,
@@ -105,6 +118,16 @@ export class GhostfolioService {
 
       throw error;
     }
+  }
+
+  public async incrementDailyRequests({ userId }: { userId: string }) {
+    await this.prismaService.analytics.update({
+      data: {
+        dataProviderGhostfolioDailyRequests: { increment: 1 },
+        lastRequestAt: new Date()
+      },
+      where: { userId }
+    });
   }
 
   public async lookup({

@@ -1,8 +1,5 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderGhostfolioStatusResponse,
   LookupResponse,
@@ -30,8 +27,6 @@ import { GhostfolioService } from './ghostfolio.service';
 export class GhostfolioController {
   public constructor(
     private readonly ghostfolioService: GhostfolioService,
-    private readonly prismaService: PrismaService,
-    private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -45,7 +40,7 @@ export class GhostfolioController {
     @Query('query') query = ''
   ): Promise<LookupResponse> {
     const includeIndices = includeIndicesParam === 'true';
-    const maxDailyRequests = await this.getMaxDailyRequests();
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
       this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
@@ -62,7 +57,7 @@ export class GhostfolioController {
         query: query.toLowerCase()
       });
 
-      await this.incrementDailyRequests({
+      await this.ghostfolioService.incrementDailyRequests({
         userId: this.request.user.id
       });
 
@@ -81,7 +76,7 @@ export class GhostfolioController {
   public async getQuotes(
     @Query() query: GetQuotesDto
   ): Promise<QuotesResponse> {
-    const maxDailyRequests = await this.getMaxDailyRequests();
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
 
     if (
       this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
@@ -97,7 +92,7 @@ export class GhostfolioController {
         symbols: query.symbols
       });
 
-      await this.incrementDailyRequests({
+      await this.ghostfolioService.incrementDailyRequests({
         userId: this.request.user.id
       });
 
@@ -116,26 +111,7 @@ export class GhostfolioController {
   public async getStatus(): Promise<DataProviderGhostfolioStatusResponse> {
     return {
       dailyRequests: this.request.user.dataProviderGhostfolioDailyRequests,
-      dailyRequestsMax: await this.getMaxDailyRequests()
+      dailyRequestsMax: await this.ghostfolioService.getMaxDailyRequests()
     };
-  }
-
-  private async getMaxDailyRequests() {
-    return parseInt(
-      ((await this.propertyService.getByKey(
-        PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
-      )) as string) || '0',
-      10
-    );
-  }
-
-  private async incrementDailyRequests({ userId }: { userId: string }) {
-    await this.prismaService.analytics.update({
-      data: {
-        dataProviderGhostfolioDailyRequests: { increment: 1 },
-        lastRequestAt: new Date()
-      },
-      where: { userId }
-    });
   }
 }
