@@ -15,7 +15,8 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import {
   DataProviderInfo,
-  LookupResponse
+  LookupResponse,
+  QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -84,11 +85,48 @@ export class GhostfolioService implements DataProviderInterface {
     return DataSource.GHOSTFOLIO;
   }
 
-  public async getQuotes({}: GetQuotesParams): Promise<{
+  public async getQuotes({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbols
+  }: GetQuotesParams): Promise<{
     [symbol: string]: IDataProviderResponse;
   }> {
-    // TODO
-    return {};
+    let response: { [symbol: string]: IDataProviderResponse } = {};
+
+    if (symbols.length <= 0) {
+      return response;
+    }
+
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, requestTimeout);
+
+      const { quotes } = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
+        {
+          headers: this.getRequestHeaders(),
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<QuotesResponse>();
+
+      response = quotes;
+    } catch (error) {
+      let message = error;
+
+      if (error?.code === 'ABORT_ERR') {
+        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
+      }
+
+      Logger.error(message, 'GhostfolioService');
+    }
+
+    return response;
   }
 
   public getTestSymbol() {
@@ -108,25 +146,29 @@ export class GhostfolioService implements DataProviderInterface {
       searchResult = await got(
         `${this.URL}/v1/data-providers/ghostfolio/lookup?query=${query}`,
         {
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`
-          },
+          headers: this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
-      ).json<any>();
+      ).json<LookupResponse>();
     } catch (error) {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${this.configurationService.get(
-          'REQUEST_TIMEOUT'
-        )}ms`;
+        message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
       }
 
       Logger.error(message, 'GhostfolioService');
     }
 
     return searchResult;
+  }
+
+  private getRequestHeaders() {
+    return {
+      Authorization: `Bearer ${this.apiKey}`
+    };
   }
 }
