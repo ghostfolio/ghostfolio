@@ -183,9 +183,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         let exchangeRateOfUnitPrice = 1;
 
-        this.activityForm.get('feeInCustomCurrency').setErrors(null);
-        this.activityForm.get('unitPriceInCustomCurrency').setErrors(null);
-
         const currency = this.activityForm.get('currency').value;
         const currencyOfUnitPrice = this.activityForm.get(
           'currencyOfUnitPrice'
