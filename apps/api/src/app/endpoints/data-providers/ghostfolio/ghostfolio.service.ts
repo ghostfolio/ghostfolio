@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
@@ -9,6 +10,7 @@ import {
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderInfo,
+  HistoricalResponse,
   LookupItem,
   LookupResponse,
   QuotesResponse
@@ -26,6 +28,51 @@ export class GhostfolioService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
+
+  public async getHistorical({
+    from,
+    requestTimeout,
+    to,
+    symbol
+  }: {
+    from: Date;
+    requestTimeout?: number;
+    symbol: string;
+    to: Date;
+  }) {
+    const result: HistoricalResponse = { historicalData: {} };
+
+    try {
+      const promises: Promise<{
+        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+      }>[] = [];
+
+      for (const dataProviderService of this.getDataProviderServices()) {
+        promises.push(
+          dataProviderService
+            .getHistorical({
+              from,
+              requestTimeout,
+              symbol,
+              to
+            })
+            .then((historicalData) => {
+              result.historicalData = historicalData[symbol];
+
+              return historicalData;
+            })
+        );
+      }
+
+      await Promise.all(promises);
+
+      return result;
+    } catch (error) {
+      Logger.error(error, 'GhostfolioService');
+
+      throw error;
+    }
+  }
 
   public async getMaxDailyRequests() {
     return parseInt(

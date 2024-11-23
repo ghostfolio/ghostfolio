@@ -1,7 +1,9 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
+  HistoricalResponse,
   LookupResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
@@ -13,6 +15,7 @@ import {
   Get,
   HttpException,
   Inject,
+  Param,
   Query,
   UseGuards
 } from '@nestjs/common';
@@ -20,6 +23,7 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+import { GetHistoricalDto } from './get-historical.dto';
 import { GetQuotesDto } from './get-quotes.dto';
 import { GhostfolioService } from './ghostfolio.service';
 
@@ -30,7 +34,43 @@ export class GhostfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  // TODO: Get historical
+  @Get('historical/:symbol')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getHistorical(
+    @Param('symbol') symbol: string,
+    @Query() query: GetHistoricalDto
+  ): Promise<HistoricalResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const historicalData = await this.ghostfolioService.getHistorical({
+        symbol,
+        from: parseDate(query.from),
+        to: parseDate(query.to)
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return historicalData;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
   @Get('lookup')
   @HasPermission(permissions.enableDataProviderGhostfolio)

@@ -42,6 +42,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { LookupResponse } from './responses/lookup-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
@@ -83,6 +84,7 @@ export {
   Filter,
   FilterGroup,
   HistoricalDataItem,
+  HistoricalResponse,
   Holding,
   HoldingWithParents,
   ImportResponse,

@@ -28,4 +28,21 @@
       </ul>
     }
   </div>
+  <div>
+    <h2 class="text-center">Historical</h2>
+    @if (historicalData$) {
+      @let historicalData = historicalData$ | async;
+      <ul>
+        @for (
+          historicalDataItem of historicalData | keyvalue;
+          track historicalDataItem
+        ) {
+          <li>
+            {{ historicalDataItem.key }}:
+            {{ historicalDataItem.value.marketPrice }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
 </div>
