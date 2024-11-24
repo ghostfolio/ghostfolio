@@ -106,6 +106,7 @@ export const PORTFOLIO_SNAPSHOT_PROCESS_JOB_OPTIONS: JobOptions = {
 export const HEADER_KEY_IMPERSONATION = 'Impersonation-Id';
 export const HEADER_KEY_TIMEZONE = 'Timezone';
 export const HEADER_KEY_TOKEN = 'Authorization';
+export const HEADER_KEY_SKIP_INTERCEPTOR = 'X-Skip-Interceptor';
 
 export const MAX_TOP_HOLDINGS = 50;
 

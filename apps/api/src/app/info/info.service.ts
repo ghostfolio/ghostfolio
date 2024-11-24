@@ -7,6 +7,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  HEADER_KEY_TOKEN,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -347,7 +348,7 @@ export class InfoService {
           )}&to${format(new Date(), DATE_FORMAT)}`,
           {
             headers: {
-              Authorization: `Bearer ${this.configurationService.get(
+              [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
                 'API_KEY_BETTER_UPTIME'
               )}`
             },

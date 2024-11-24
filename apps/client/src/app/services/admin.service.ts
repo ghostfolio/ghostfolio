@@ -5,6 +5,11 @@ import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  HEADER_KEY_SKIP_INTERCEPTOR,
+  HEADER_KEY_TOKEN,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -14,7 +19,8 @@ import {
   AdminMarketDataDetails,
   AdminUsers,
   EnhancedSymbolProfile,
-  Filter
+  Filter,
+  DataProviderGhostfolioStatusResponse
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -23,8 +29,9 @@ import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format, parseISO } from 'date-fns';
-import { Observable, map } from 'rxjs';
+import { Observable, map, switchMap } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { DataService } from './data.service';
 
 @Injectable({
@@ -134,6 +141,22 @@ export class AdminService {
           return data;
         })
       );
+  }
+
+  public fetchGhostfolioDataProviderStatus() {
+    return this.fetchAdminData().pipe(
+      switchMap(({ settings }) => {
+        return this.http.get<DataProviderGhostfolioStatusResponse>(
+          `${environment.production ? 'https://ghostfol.io' : ''}/api/v1/data-providers/ghostfolio/status`,
+          {
+            headers: {
+              [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+              [HEADER_KEY_TOKEN]: `Bearer ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
+            }
+          }
+        );
+      })
+    );
   }
 
   public fetchJobs({ status }: { status?: JobStatus[] }) {

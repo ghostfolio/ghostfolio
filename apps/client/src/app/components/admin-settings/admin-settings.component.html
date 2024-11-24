@@ -11,7 +11,9 @@
                 target="_blank"
                 [href]="pricingUrl"
               >
-                <span class="badge badge-warning mr-1" i18n>NEW</span>
+                @if (hasGhostfolioApiKey === false) {
+                  <span class="badge badge-warning mr-1" i18n>NEW</span>
+                }
                 Ghostfolio Premium
                 <gf-premium-indicator
                   class="d-inline-block ml-1"
@@ -20,14 +22,32 @@
               </a>
             </div>
             <div class="w-50">
-              <button
-                color="accent"
-                mat-flat-button
-                (click)="onSetGhostfolioApiKey()"
-              >
-                <ion-icon class="mr-1" name="key-outline" />
-                <span i18n>Set API Key</span>
-              </button>
+              @if (hasGhostfolioApiKey === true) {
+                <div class="align-items-center d-flex flex-wrap">
+                  <div class="mr-3">
+                    {{ ghostfolioApiStatus.dailyRequests }}
+                    <ng-container i18n>of</ng-container>
+                    {{ ghostfolioApiStatus.dailyRequestsMax }}
+                    <ng-container i18n>daily requests</ng-container>
+                  </div>
+                  <button
+                    color="warn"
+                    mat-flat-button
+                    (click)="onRemoveGhostfolioApiKey()"
+                  >
+                    <span i18n>Remove API key</span>
+                  </button>
+                </div>
+              } @else if (hasGhostfolioApiKey === false) {
+                <button
+                  color="accent"
+                  mat-flat-button
+                  (click)="onSetGhostfolioApiKey()"
+                >
+                  <ion-icon class="mr-1" name="key-outline" />
+                  <span i18n>Set API key</span>
+                </button>
+              }
             </div>
           </div>
         </mat-card-content>

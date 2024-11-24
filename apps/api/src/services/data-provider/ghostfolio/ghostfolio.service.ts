@@ -12,7 +12,10 @@ import {
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
+import {
+  HEADER_KEY_TOKEN,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -212,7 +215,7 @@ export class GhostfolioService implements DataProviderInterface {
 
   private getRequestHeaders() {
     return {
-      Authorization: `Bearer ${this.apiKey}`
+      [HEADER_KEY_TOKEN]: `Bearer ${this.apiKey}`
     };
   }
 }
