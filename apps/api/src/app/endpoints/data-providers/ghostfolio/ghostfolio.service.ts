@@ -202,11 +202,11 @@ export class GhostfolioService {
 
       const searchResults = await Promise.all(promises);
 
-      searchResults.forEach(({ items }) => {
+      for (const { items } of searchResults) {
         if (items?.length > 0) {
           lookupItems = lookupItems.concat(items);
         }
-      });
+      }
 
       const filteredItems = lookupItems
         .filter(({ currency }) => {

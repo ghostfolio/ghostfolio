@@ -1,7 +1,5 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
@@ -33,7 +31,6 @@ import { GhostfolioService } from './ghostfolio.service';
 export class GhostfolioController {
   public constructor(
     private readonly ghostfolioService: GhostfolioService,
-    private readonly propertyService: PropertyService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -153,17 +150,6 @@ export class GhostfolioController {
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getStatus(): Promise<DataProviderGhostfolioStatusResponse> {
-    const ghostfolioApiKey = (await this.propertyService.getByKey(
-      PROPERTY_API_KEY_GHOSTFOLIO
-    )) as string;
-
-    if (!ghostfolioApiKey) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.SERVICE_UNAVAILABLE),
-        StatusCodes.SERVICE_UNAVAILABLE
-      );
-    }
-
     return {
       dailyRequests: this.request.user.dataProviderGhostfolioDailyRequests,
       dailyRequestsMax: await this.ghostfolioService.getMaxDailyRequests()

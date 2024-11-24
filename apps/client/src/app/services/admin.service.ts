@@ -18,9 +18,9 @@ import {
   AdminMarketData,
   AdminMarketDataDetails,
   AdminUsers,
+  DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
-  Filter,
-  DataProviderGhostfolioStatusResponse
+  Filter
 } from '@ghostfolio/common/interfaces';
 
 import { HttpClient, HttpParams } from '@angular/common/http';

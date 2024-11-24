@@ -11,7 +11,7 @@
                 target="_blank"
                 [href]="pricingUrl"
               >
-                @if (hasGhostfolioApiKey === false) {
+                @if (isGhostfolioApiKeyValid === false) {
                   <span class="badge badge-warning mr-1" i18n>NEW</span>
                 }
                 Ghostfolio Premium
@@ -22,7 +22,7 @@
               </a>
             </div>
             <div class="w-50">
-              @if (hasGhostfolioApiKey === true) {
+              @if (isGhostfolioApiKeyValid === true) {
                 <div class="align-items-center d-flex flex-wrap">
                   <div class="mr-3">
                     {{ ghostfolioApiStatus.dailyRequests }}
@@ -38,7 +38,7 @@
                     <span i18n>Remove API key</span>
                   </button>
                 </div>
-              } @else if (hasGhostfolioApiKey === false) {
+              } @else if (isGhostfolioApiKeyValid === false) {
                 <button
                   color="accent"
                   mat-flat-button

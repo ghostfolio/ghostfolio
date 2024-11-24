@@ -30,7 +30,7 @@ import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-
 })
 export class AdminSettingsComponent implements OnDestroy, OnInit {
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
-  public hasGhostfolioApiKey: boolean;
+  public isGhostfolioApiKeyValid: boolean;
   public pricingUrl: string;
 
   private deviceType: string;
@@ -113,7 +113,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       .fetchGhostfolioDataProviderStatus()
       .pipe(
         catchError(() => {
-          this.hasGhostfolioApiKey = false;
+          this.isGhostfolioApiKeyValid = false;
 
           this.changeDetectorRef.markForCheck();
 
@@ -126,7 +126,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       )
       .subscribe((status) => {
         this.ghostfolioApiStatus = status;
-        this.hasGhostfolioApiKey = true;
+        this.isGhostfolioApiKeyValid = true;
 
         this.changeDetectorRef.markForCheck();
       });
