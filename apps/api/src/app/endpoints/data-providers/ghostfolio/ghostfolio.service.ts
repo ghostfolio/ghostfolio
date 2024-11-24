@@ -1,5 +1,10 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import {
+  GetHistoricalParams,
+  GetQuotesParams,
+  GetSearchParams
+} from '@ghostfolio/api/services/data-provider/interfaces/data-provider.interface';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -31,15 +36,11 @@ export class GhostfolioService {
 
   public async getHistorical({
     from,
+    granularity,
     requestTimeout,
     to,
     symbol
-  }: {
-    from: Date;
-    requestTimeout?: number;
-    symbol: string;
-    to: Date;
-  }) {
+  }: GetHistoricalParams) {
     const result: HistoricalResponse = { historicalData: {} };
 
     try {
@@ -52,6 +53,7 @@ export class GhostfolioService {
           dataProviderService
             .getHistorical({
               from,
+              granularity,
               requestTimeout,
               symbol,
               to
@@ -83,13 +85,7 @@ export class GhostfolioService {
     );
   }
 
-  public async getQuotes({
-    requestTimeout,
-    symbols
-  }: {
-    requestTimeout?: number;
-    symbols: string[];
-  }) {
+  public async getQuotes({ requestTimeout, symbols }: GetQuotesParams) {
     const promises: Promise<any>[] = [];
     const results: QuotesResponse = { quotes: {} };
 
@@ -180,10 +176,7 @@ export class GhostfolioService {
   public async lookup({
     includeIndices = false,
     query
-  }: {
-    includeIndices?: boolean;
-    query: string;
-  }): Promise<LookupResponse> {
+  }: GetSearchParams): Promise<LookupResponse> {
     const results: LookupResponse = { items: [] };
 
     if (!query) {

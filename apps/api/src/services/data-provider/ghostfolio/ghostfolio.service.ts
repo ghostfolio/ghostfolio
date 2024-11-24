@@ -13,14 +13,17 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  HistoricalResponse,
   LookupResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import { format } from 'date-fns';
 import got from 'got';
 
 @Injectable()
@@ -52,9 +55,16 @@ export class GhostfolioService implements DataProviderInterface {
   }: {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
+    const { items } = await this.search({ query: symbol });
+    const searchResult = items?.[0];
+
     return {
       symbol,
-      dataSource: this.getName()
+      assetClass: searchResult?.assetClass,
+      assetSubClass: searchResult?.assetSubClass,
+      currency: searchResult?.currency,
+      dataSource: this.getName(),
+      name: searchResult?.name
     };
   }
 
@@ -70,11 +80,45 @@ export class GhostfolioService implements DataProviderInterface {
     return {};
   }
 
-  public async getHistorical({}: GetHistoricalParams): Promise<{
+  public async getHistorical({
+    from,
+    granularity = 'day',
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
-    // TODO
-    return {};
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, requestTimeout);
+
+      const { historicalData } = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
+          to,
+          DATE_FORMAT
+        )}`,
+        {
+          headers: this.getRequestHeaders(),
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<HistoricalResponse>();
+
+      return {
+        [symbol]: historicalData
+      };
+    } catch (error) {
+      throw new Error(
+        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+      );
+    }
   }
 
   public getMaxNumberOfSymbolsPerRequest() {

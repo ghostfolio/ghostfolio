@@ -56,6 +56,7 @@ export class GhostfolioController {
       const historicalData = await this.ghostfolioService.getHistorical({
         symbol,
         from: parseDate(query.from),
+        granularity: query.granularity,
         to: parseDate(query.to)
       });
 
