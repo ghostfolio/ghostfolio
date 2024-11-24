@@ -75,7 +75,13 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { name } = await got(`${this.apiUrl}/coins/${symbol}`, {
+      let url = `${this.apiUrl}/coins/${symbol}`;
+      if (symbol.startsWith('nft:')) {
+        response.assetSubClass = AssetSubClass.NFT;
+        url = `${this.apiUrl}/nfts/${symbol.replace('nft:', '')}`;
+      }
+
+      const { name } = await got(url, {
         headers: this.headers,
         // @ts-ignore
         signal: abortController.signal
@@ -124,18 +130,26 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
-      const { prices } = await got(
-        `${
+      let url = `${this.apiUrl}/coins/${symbol}/market_chart/range
+      ?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}
+      &from=${getUnixTime(from)}&to=${getUnixTime(to)}`;
+      let field = 'prices';
+
+      if (symbol.startsWith('nft:')) {
+        // note: pro only
+        url = `${
           this.apiUrl
-        }/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
-          from
-        )}&to=${getUnixTime(to)}`,
-        {
-          headers: this.headers,
-          // @ts-ignore
-          signal: abortController.signal
-        }
-      ).json<any>();
+        }/nfts/${symbol.replace('nft:', '')}/market_chart?days=max`;
+        field = 'floor_prices_usd';
+      }
+      console.log(url);
+
+      const res = await got(url, {
+        headers: this.headers,
+        // @ts-ignore
+        signal: abortController.signal
+      }).json<any>();
+      const prices = res[field];
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -185,10 +199,12 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
+      // note: simple price endpoint currently does not support list of nfts
+      // (submitted a ticket with this request)
       const quotes = await got(
-        `${this.apiUrl}/simple/price?ids=${symbols.join(
-          ','
-        )}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
+        `${this.apiUrl}/simple/price?ids=${symbols
+          .filter((s) => !s.startsWith('nft:'))
+          .join(',')}&vs_currencies=${DEFAULT_CURRENCY.toLowerCase()}`,
         {
           headers: this.headers,
           // @ts-ignore
@@ -205,6 +221,24 @@ export class CoinGeckoService implements DataProviderInterface {
           marketState: 'open'
         };
       }
+
+      // nfts
+      for (const symbol of symbols.filter((s) => s.startsWith('nft:'))) {
+        const s = symbol.replace('nft:', '');
+        const { floor_price } = await got(`${this.apiUrl}/nfts/${s}`, {
+          headers: this.headers,
+          // @ts-ignore
+          signal: abortController.signal
+        }).json<any>();
+        console.log(floor_price);
+        response[symbol] = {
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: DataSource.COINGECKO,
+          marketPrice: floor_price[DEFAULT_CURRENCY.toLowerCase()],
+          marketState: 'open'
+        };
+      }
     } catch (error) {
       let message = error;
 
@@ -216,7 +250,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
       Logger.error(message, 'CoinGeckoService');
     }
-
+    console.log(response);
     return response;
   }
 
@@ -234,13 +268,17 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const { coins } = await got(`${this.apiUrl}/search?query=${query}`, {
-        headers: this.headers,
-        // @ts-ignore
-        signal: abortController.signal
-      }).json<any>();
+      // note: this search does return nfts in a separate array
+      const { coins, nfts } = await got(
+        `${this.apiUrl}/search?query=${query}`,
+        {
+          headers: this.headers,
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<any>();
 
-      items = coins.map(({ id: symbol, name }) => {
+      let itemsCoins = coins.map(({ id: symbol, name }) => {
         return {
           name,
           symbol,
@@ -251,6 +289,18 @@ export class CoinGeckoService implements DataProviderInterface {
           dataSource: this.getName()
         };
       });
+      let itemsNfts = nfts.map(({ id: symbol, name }) => {
+        return {
+          name,
+          symbol: `nft:${symbol}`,
+          assetClass: AssetClass.LIQUIDITY,
+          assetSubClass: AssetSubClass.NFT,
+          currency: DEFAULT_CURRENCY,
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: this.getName()
+        };
+      });
+      items = itemsCoins.concat(itemsNfts);
     } catch (error) {
       let message = error;
 
