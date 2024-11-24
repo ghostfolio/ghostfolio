@@ -9,6 +9,7 @@ export type UserWithSettings = User & {
   Access: Access[];
   Account: Account[];
   activityCount: number;
+  dataProviderGhostfolioDailyRequests: number;
   permissions?: string[];
   Settings: Settings & { settings: UserSettings };
   subscription?: {

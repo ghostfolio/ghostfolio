@@ -31,6 +31,7 @@ import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
+import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
@@ -76,6 +77,7 @@ import { UserModule } from './user/user.module';
     ExchangeRateModule,
     ExchangeRateDataModule,
     ExportModule,
+    GhostfolioModule,
     HealthModule,
     ImportModule,
     InfoModule,

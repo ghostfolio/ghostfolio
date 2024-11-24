@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
 - Added pagination response (`count`) to the endpoint `GET api/v1/admin/user`
+- Added `GHOSTFOLIO` as a new data source type
 
 ### Changed
 
 - Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
+- Improved the language localization for German (`de`)
 - Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
 - Upgraded `Nx` from version `20.0.6` to `20.1.2`
 

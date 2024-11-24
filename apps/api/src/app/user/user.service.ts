@@ -183,7 +183,9 @@ export class UserService {
       Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: Analytics?.activityCount
+      activityCount: Analytics?.activityCount,
+      dataProviderGhostfolioDailyRequests:
+        Analytics?.dataProviderGhostfolioDailyRequests
     };
 
     if (user?.Settings) {
@@ -307,6 +309,7 @@ export class UserService {
         // Reset holdings view mode
         user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.enableDataProviderGhostfolio);
         currentPermissions.push(permissions.reportDataGlitch);
 
         currentPermissions = without(

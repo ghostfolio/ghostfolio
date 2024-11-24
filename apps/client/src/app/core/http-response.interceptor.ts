@@ -103,7 +103,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           if (this.webAuthnService.isEnabled()) {
             this.router.navigate(['/webauthn']);
-          } else {
+          } else if (!error.url.includes('/data-providers/ghostfolio/status')) {
             this.tokenStorageService.signOut();
           }
         }
