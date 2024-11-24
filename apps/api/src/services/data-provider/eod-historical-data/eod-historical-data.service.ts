@@ -454,9 +454,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${this.configurationService.get(
-          'REQUEST_TIMEOUT'
-        )}ms`;
+        message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
       }
 
       Logger.error(message, 'EodHistoricalDataService');
