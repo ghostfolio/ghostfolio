@@ -3,7 +3,10 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
+import {
+  DEFAULT_LANGUAGE_CODE,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
 import {
   DataProviderGhostfolioStatusResponse,
   User
@@ -56,8 +59,11 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
+          const languageCode =
+            this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+
           this.pricingUrl =
-            `https://ghostfol.io/${this.user.settings.language}/` +
+            `https://ghostfol.io/${languageCode}/` +
             $localize`:snake-case:pricing`;
 
           this.changeDetectorRef.markForCheck();
