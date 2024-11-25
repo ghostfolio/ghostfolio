@@ -1,10 +1,5 @@
 @mixin gf-table($darkTheme: false) {
   --mat-table-background-color: var(--light-background);
-  --mat-table-background-color-even: rgba(var(--palette-foreground-base), 0.02);
-  --mat-table-background-color-hover: rgba(
-    var(--palette-foreground-base),
-    0.04
-  );
 
   .mat-footer-row,
   .mat-row {
@@ -26,24 +21,16 @@
 
   .mat-mdc-row {
     &:nth-child(even) {
-      background-color: var(--mat-table-background-color-even);
+      background-color: whitesmoke;
     }
 
     &:hover {
-      background-color: var(--mat-table-background-color-hover) !important;
+      background-color: #e6e6e6 !important;
     }
   }
 
   @if $darkTheme {
     --mat-table-background-color: var(--dark-background);
-    --mat-table-background-color-even: rgba(
-      var(--palette-foreground-base-dark),
-      0.02
-    );
-    --mat-table-background-color-hover: rgba(
-      var(--palette-foreground-base-dark),
-      0.04
-    );
 
     .mat-mdc-footer-row {
       .mat-mdc-footer-cell {
@@ -51,6 +38,16 @@
           var(--palette-foreground-divider-dark),
           var(--palette-foreground-divider-dark-alpha)
         );
+      }
+    }
+
+    .mat-mdc-row {
+      &:nth-child(even) {
+        background-color: #222222;
+      }
+
+      &:hover {
+        background-color: #303030 !important;
       }
     }
   }
