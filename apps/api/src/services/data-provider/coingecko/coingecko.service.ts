@@ -130,16 +130,12 @@ export class CoinGeckoService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
-      let url = `${this.apiUrl}/coins/${symbol}/market_chart/range
-      ?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}
-      &from=${getUnixTime(from)}&to=${getUnixTime(to)}`;
+      let url = `${this.apiUrl}/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(from)}&to=${getUnixTime(to)}`;
       let field = 'prices';
 
       if (symbol.startsWith('nft:')) {
         // note: pro only
-        url = `${
-          this.apiUrl
-        }/nfts/${symbol.replace('nft:', '')}/market_chart?days=max`;
+        url = `${this.apiUrl}/nfts/${symbol.replace('nft:', '')}/market_chart?days=max`;
         field = 'floor_prices_usd';
       }
       console.log(url);
