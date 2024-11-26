@@ -27,8 +27,8 @@ export class ImportActivitiesService {
   private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
   private static TYPE_KEYS = ['action', 'buy/sell', 'type'];
   private static UNIT_PRICE_KEYS = [
-    'purchase price',
     'price',
+    'purchase price',
     'tradeprice',
     'unitprice',
     'value'
@@ -68,10 +68,10 @@ export class ImportActivitiesService {
         currency: await this.parseCurrency({ content, index, item }),
         dataSource: this.parseDataSource({ item }),
         date: this.parseDate({ content, index, item }),
-        fee: this.parseFee({ content, index, item }),
+        fee: this.parseFee({ index, item }),
         quantity: this.parseQuantity({ content, index, item }),
         symbol: this.parseSymbol({ content, index, item }),
-        type: this.parseType({ content, index, item }),
+        type: this.parseType({ index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
       });
@@ -220,7 +220,7 @@ export class ImportActivitiesService {
   }) {
     item = this.lowercaseKeys(item);
 
-    //Attempt to find currency in the CSV
+    // Attempt to find currency in the CSV
     for (const key of ImportActivitiesService.CURRENCY_KEYS) {
       if (item[key]) {
         return item[key];
@@ -233,13 +233,14 @@ export class ImportActivitiesService {
 
     return firstValueFrom(
       this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`).pipe(
-        map((response) => {
-          if (response?.currency) {
+        map(({ currency }) => {
+          if (currency) {
             console.warn(
-              `activities.${index}.currency was not provided, using ${response.currency} from symbol data`
+              `activities.${index}.currency was not provided, using ${currency} from symbol data`
             );
-            return response.currency;
+            return currency;
           }
+
           throw {
             activities: content,
             message: `activities.${index}.currency is not valid`
@@ -293,14 +294,7 @@ export class ImportActivitiesService {
     };
   }
 
-  private parseFee({
-    index,
-    item
-  }: {
-    content: any[];
-    index: number;
-    item: any;
-  }) {
+  private parseFee({ index, item }: { index: number; item: any }) {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.FEE_KEYS) {
@@ -309,9 +303,7 @@ export class ImportActivitiesService {
       }
     }
 
-    this.warnings.push(
-      `Activity ${index + 1}: Fee not provided, defaulting to 0`
-    );
+    this.warnings.push(`activities.${index}.fee is missing, defaulting to 0`);
     return 0;
   }
 
@@ -365,7 +357,6 @@ export class ImportActivitiesService {
     index,
     item
   }: {
-    content: any[];
     index: number;
     item: any;
   }): ActivityType {
@@ -395,7 +386,7 @@ export class ImportActivitiesService {
     }
 
     this.warnings.push(
-      `Activity ${index + 1}: Type not provided, defaulting to BUY`
+      `activities.${index}.type is missing, defaulting to BUY`
     );
     return 'BUY';
   }
