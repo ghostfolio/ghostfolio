@@ -31,7 +31,6 @@ import got from 'got';
 
 @Injectable()
 export class GhostfolioService implements DataProviderInterface {
-  private apiKey: string;
   private readonly URL = environment.production
     ? 'https://ghostfol.io/api'
     : `${this.configurationService.get('ROOT_URL')}/api`;
@@ -39,15 +38,7 @@ export class GhostfolioService implements DataProviderInterface {
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly propertyService: PropertyService
-  ) {
-    void this.initialize();
-  }
-
-  public async initialize() {
-    this.apiKey = (await this.propertyService.getByKey(
-      PROPERTY_API_KEY_GHOSTFOLIO
-    )) as string;
-  }
+  ) {}
 
   public canHandle() {
     return true;
@@ -105,7 +96,7 @@ export class GhostfolioService implements DataProviderInterface {
           DATE_FORMAT
         )}`,
         {
-          headers: this.getRequestHeaders(),
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
@@ -154,7 +145,7 @@ export class GhostfolioService implements DataProviderInterface {
       const { quotes } = await got(
         `${this.URL}/v1/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
-          headers: this.getRequestHeaders(),
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
@@ -193,7 +184,7 @@ export class GhostfolioService implements DataProviderInterface {
       searchResult = await got(
         `${this.URL}/v1/data-providers/ghostfolio/lookup?query=${query}`,
         {
-          headers: this.getRequestHeaders(),
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
@@ -213,9 +204,13 @@ export class GhostfolioService implements DataProviderInterface {
     return searchResult;
   }
 
-  private getRequestHeaders() {
+  private async getRequestHeaders() {
+    const apiKey = (await this.propertyService.getByKey(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    )) as string;
+
     return {
-      [HEADER_KEY_TOKEN]: `Bearer ${this.apiKey}`
+      [HEADER_KEY_TOKEN]: `Bearer ${apiKey}`
     };
   }
 }
