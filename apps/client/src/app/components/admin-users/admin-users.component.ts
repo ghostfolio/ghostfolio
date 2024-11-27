@@ -60,6 +60,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
         'accounts',
         'activities',
         'engagementPerDay',
+        'dailyApiRequests',
         'lastRequest',
         'actions'
       ];
