@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the users table in the admin control panel
+- Refreshed the cryptocurrencies list
 
 ## 2.124.1 - 2024-11-25
 
