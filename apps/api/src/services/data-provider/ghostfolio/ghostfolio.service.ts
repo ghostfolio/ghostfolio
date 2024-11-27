@@ -1,3 +1,4 @@
+import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
@@ -10,31 +11,34 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import {
+  HEADER_KEY_TOKEN,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
-  LookupItem,
-  LookupResponse
+  HistoricalResponse,
+  LookupResponse,
+  QuotesResponse
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
-import { format, isAfter, isBefore, isSameDay } from 'date-fns';
+import { format } from 'date-fns';
 import got from 'got';
 
 @Injectable()
-export class FinancialModelingPrepService implements DataProviderInterface {
-  private apiKey: string;
-  private readonly URL = 'https://financialmodelingprep.com/api/v3';
+export class GhostfolioService implements DataProviderInterface {
+  private readonly URL = environment.production
+    ? 'https://ghostfol.io/api'
+    : `${this.configurationService.get('ROOT_URL')}/api`;
 
   public constructor(
-    private readonly configurationService: ConfigurationService
-  ) {
-    this.apiKey = this.configurationService.get(
-      'API_KEY_FINANCIAL_MODELING_PREP'
-    );
-  }
+    private readonly configurationService: ConfigurationService,
+    private readonly propertyService: PropertyService
+  ) {}
 
   public canHandle() {
     return true;
@@ -45,17 +49,24 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }: {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
+    const { items } = await this.search({ query: symbol });
+    const searchResult = items?.[0];
+
     return {
       symbol,
-      dataSource: this.getName()
+      assetClass: searchResult?.assetClass,
+      assetSubClass: searchResult?.assetSubClass,
+      currency: searchResult?.currency,
+      dataSource: this.getName(),
+      name: searchResult?.name
     };
   }
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
       isPremium: true,
-      name: 'Financial Modeling Prep',
-      url: 'https://financialmodelingprep.com/developer/docs'
+      name: 'Ghostfolio',
+      url: 'https://ghostfo.io'
     };
   }
 
@@ -65,6 +76,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
   public async getHistorical({
     from,
+    granularity = 'day',
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol,
     to
@@ -78,33 +90,21 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
-      const { historical } = await got(
-        `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}`,
+      const { historicalData } = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
+          to,
+          DATE_FORMAT
+        )}`,
         {
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
-      ).json<any>();
+      ).json<HistoricalResponse>();
 
-      const result: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {
-        [symbol]: {}
+      return {
+        [symbol]: historicalData
       };
-
-      for (const { close, date } of historical) {
-        if (
-          (isSameDay(parseDate(date), from) ||
-            isAfter(parseDate(date), from)) &&
-          isBefore(parseDate(date), to)
-        ) {
-          result[symbol][date] = {
-            marketPrice: close
-          };
-        }
-      }
-
-      return result;
     } catch (error) {
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
@@ -115,15 +115,21 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
   }
 
+  public getMaxNumberOfSymbolsPerRequest() {
+    return 20;
+  }
+
   public getName(): DataSource {
-    return DataSource.FINANCIAL_MODELING_PREP;
+    return DataSource.GHOSTFOLIO;
   }
 
   public async getQuotes({
     requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbols
-  }: GetQuotesParams): Promise<{ [symbol: string]: IDataProviderResponse }> {
-    const response: { [symbol: string]: IDataProviderResponse } = {};
+  }: GetQuotesParams): Promise<{
+    [symbol: string]: IDataProviderResponse;
+  }> {
+    let response: { [symbol: string]: IDataProviderResponse } = {};
 
     if (symbols.length <= 0) {
       return response;
@@ -136,23 +142,16 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         abortController.abort();
       }, requestTimeout);
 
-      const quotes = await got(
-        `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
+      const { quotes } = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
-      ).json<any>();
+      ).json<QuotesResponse>();
 
-      for (const { price, symbol } of quotes) {
-        response[symbol] = {
-          currency: DEFAULT_CURRENCY,
-          dataProviderInfo: this.getDataProviderInfo(),
-          dataSource: DataSource.FINANCIAL_MODELING_PREP,
-          marketPrice: price,
-          marketState: 'delayed'
-        };
-      }
+      response = quotes;
     } catch (error) {
       let message = error;
 
@@ -162,18 +161,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      Logger.error(message, 'GhostfolioService');
     }
 
     return response;
   }
 
   public getTestSymbol() {
-    return 'AAPL';
+    return 'AAPL.US';
   }
 
   public async search({ query }: GetSearchParams): Promise<LookupResponse> {
-    let items: LookupItem[] = [];
+    let searchResult: LookupResponse = { items: [] };
 
     try {
       const abortController = new AbortController();
@@ -182,24 +181,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         abortController.abort();
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
-      const result = await got(
-        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
+      searchResult = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/lookup?query=${query}`,
         {
+          headers: await this.getRequestHeaders(),
           // @ts-ignore
           signal: abortController.signal
         }
-      ).json<any>();
-
-      items = result.map(({ currency, name, symbol }) => {
-        return {
-          // TODO: Add assetClass
-          // TODO: Add assetSubClass
-          currency,
-          name,
-          symbol,
-          dataSource: this.getName()
-        };
-      });
+      ).json<LookupResponse>();
     } catch (error) {
       let message = error;
 
@@ -209,9 +198,19 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         ).toFixed(3)} seconds`;
       }
 
-      Logger.error(message, 'FinancialModelingPrepService');
+      Logger.error(message, 'GhostfolioService');
     }
 
-    return { items };
+    return searchResult;
+  }
+
+  private async getRequestHeaders() {
+    const apiKey = (await this.propertyService.getByKey(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    )) as string;
+
+    return {
+      [HEADER_KEY_TOKEN]: `Bearer ${apiKey}`
+    };
   }
 }

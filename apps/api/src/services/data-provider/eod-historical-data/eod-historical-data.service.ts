@@ -410,14 +410,12 @@ export class EodHistoricalDataService implements DataProviderInterface {
     return name;
   }
 
-  private async getSearchResult(aQuery: string): Promise<
-    (LookupItem & {
+  private async getSearchResult(aQuery: string) {
+    let searchResult: (LookupItem & {
       assetClass: AssetClass;
       assetSubClass: AssetSubClass;
       isin: string;
-    })[]
-  > {
-    let searchResult = [];
+    })[] = [];
 
     try {
       const abortController = new AbortController();
@@ -456,9 +454,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
       let message = error;
 
       if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${this.configurationService.get(
-          'REQUEST_TIMEOUT'
-        )}ms`;
+        message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
       }
 
       Logger.error(message, 'EodHistoricalDataService');

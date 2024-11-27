@@ -29,6 +29,9 @@
           @if (lookupItem.assetSubClass) {
             · {{ lookupItem.assetSubClassString }}
           }
+          @if (lookupItem.dataProviderInfo.name) {
+            · {{ lookupItem.dataProviderInfo.name }}
+          }
         </small>
       </mat-option>
     } @empty {

@@ -582,12 +582,13 @@ export class ImportService {
     const assetProfiles: {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
     } = {};
+    const dataSources = await this.dataProviderService.getDataSources();
 
     for (const [
       index,
       { currency, dataSource, symbol, type }
     ] of activitiesDto.entries()) {
-      if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
+      if (!dataSources.includes(dataSource)) {
         throw new Error(
           `activities.${index}.dataSource ("${dataSource}") is not valid`
         );

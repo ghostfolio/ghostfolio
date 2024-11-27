@@ -705,6 +705,7 @@ export class AdminService {
           select: {
             activityCount: true,
             country: true,
+            dataProviderGhostfolioDailyRequests: true,
             updatedAt: true
           }
         },
@@ -740,6 +741,7 @@ export class AdminService {
           subscription,
           accountCount: _count.Account || 0,
           country: Analytics?.country,
+          dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
           lastActivity: Analytics?.updatedAt,
           transactionCount: _count.Order || 0
         };

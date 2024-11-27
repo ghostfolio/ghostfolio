@@ -7,15 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Extended the users table in the admin control panel
+- Upgraded `cheerio` from version `1.0.0-rc.12` to `1.0.0`
+
+## 2.124.1 - 2024-11-25
+
+### Fixed
+
+- Fixed the tables style related to sticky columns
+
+## 2.124.0 - 2024-11-24
+
 ### Added
 
 - Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
 - Added pagination response (`count`) to the endpoint `GET api/v1/admin/user`
+- Added `GHOSTFOLIO` as a new data source type
 
 ### Changed
 
 - Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
-- Upgraded `cheerio` from version `1.0.0-rc.12` to `1.0.0`
+- Improved the language localization for German (`de`)
 - Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
 - Upgraded `Nx` from version `20.0.6` to `20.1.2`
 
