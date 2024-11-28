@@ -70,7 +70,7 @@ export class ConfigurationService {
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
-      REQUEST_TIMEOUT: num({ default: 2000 }),
+      REQUEST_TIMEOUT: num({ default: ms('3 seconds') }),
       ROOT_URL: url({ default: DEFAULT_ROOT_URL }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),

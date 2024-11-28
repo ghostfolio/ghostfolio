@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the symbol search component
 - Extended the users table in the admin control panel
+- Increased the default request timeout (`REQUEST_TIMEOUT`)
 
 ## 2.124.1 - 2024-11-25
 
