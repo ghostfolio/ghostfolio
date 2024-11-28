@@ -102,7 +102,7 @@
     "chartjs-chart-treemap": "2.3.1",
     "chartjs-plugin-annotation": "2.1.2",
     "chartjs-plugin-datalabels": "2.2.0",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
     "color": "4.2.3",
