@@ -1,20 +1,29 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import {
   DATE_FORMAT,
   getDateFormatString,
   getLocale
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { AssetProfileDialogParams } from '@ghostfolio/ui/admin-market-data-detail/interfaces/interfaces';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnChanges,
+  OnInit,
   Output
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DataSource, MarketData } from '@prisma/client';
 import {
   addDays,
@@ -30,26 +39,32 @@ import {
 } from 'date-fns';
 import { first, last } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject, takeUntil } from 'rxjs';
+import { parse as csvToJson } from 'papaparse';
+import { EMPTY, Subject, takeUntil } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { MarketDataDetailDialogParams } from './market-data-detail-dialog/interfaces/interfaces';
-import { MarketDataDetailDialog } from './market-data-detail-dialog/market-data-detail-dialog.component';
+import { MarketDataDetailDialogComponent } from './market-data-detail-dialog/market-data-detail-dialog.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatInputModule],
   selector: 'gf-admin-market-data-detail',
+  standalone: true,
   styleUrls: ['./admin-market-data-detail.component.scss'],
   templateUrl: './admin-market-data-detail.component.html'
 })
-export class AdminMarketDataDetailComponent implements OnChanges {
+export class AdminMarketDataDetailComponent implements OnChanges, OnInit {
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
   @Input() locale = getLocale();
   @Input() marketData: MarketData[];
   @Input() symbol: string;
+  @Input() user: User;
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
+  @Output() updateHistoricalData = new EventEmitter();
 
   public days = Array(31);
   public defaultDateFormat: string;
@@ -60,24 +75,33 @@ export class AdminMarketDataDetailComponent implements OnChanges {
       [day: string]: Pick<MarketData, 'date' | 'marketPrice'> & { day: number };
     };
   } = {};
-  public user: User;
+
+  public historicalDataForm = this.formBuilder.group({
+    historicalData: this.formBuilder.group({
+      csvString: ''
+    })
+  });
+
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
+    @Inject(MAT_DIALOG_DATA) public data: AssetProfileDialogParams,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
-    private userService: UserService
+    private snackBar: MatSnackBar,
+    private formBuilder: FormBuilder
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
+  }
 
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-        }
-      });
+  public ngOnInit() {
+    this.initializeHistoricalDataForm();
   }
 
   public ngOnChanges() {
@@ -177,7 +201,7 @@ export class AdminMarketDataDetailComponent implements OnChanges {
   }) {
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
-    const dialogRef = this.dialog.open(MarketDataDetailDialog, {
+    const dialogRef = this.dialog.open(MarketDataDetailDialogComponent, {
       data: {
         marketPrice,
         currency: this.currency,
@@ -196,6 +220,56 @@ export class AdminMarketDataDetailComponent implements OnChanges {
       .subscribe(({ withRefresh } = { withRefresh: false }) => {
         this.marketDataChanged.next(withRefresh);
       });
+  }
+
+  public onImportHistoricalData() {
+    try {
+      const marketData = csvToJson(
+        this.historicalDataForm.controls['historicalData'].controls['csvString']
+          .value,
+        {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true
+        }
+      ).data as UpdateMarketDataDto[];
+
+      this.adminService
+        .postMarketData({
+          dataSource: this.data.dataSource,
+          marketData: {
+            marketData
+          },
+          symbol: this.data.symbol
+        })
+        .pipe(
+          catchError(({ error, message }) => {
+            this.snackBar.open(`${error}: ${message[0]}`, undefined, {
+              duration: 3000
+            });
+            return EMPTY;
+          }),
+          takeUntil(this.unsubscribeSubject)
+        )
+        .subscribe(() => {
+          this.updateHistoricalData.emit();
+          this.initializeHistoricalDataForm();
+        });
+    } catch {
+      this.snackBar.open(
+        $localize`Oops! Could not parse historical data.`,
+        undefined,
+        { duration: 3000 }
+      );
+    }
+  }
+
+  public initializeHistoricalDataForm() {
+    this.historicalDataForm.setValue({
+      historicalData: {
+        csvString: AdminMarketDataDetailComponent.HISTORICAL_DATA_TEMPLATE
+      }
+    });
   }
 
   public ngOnDestroy() {

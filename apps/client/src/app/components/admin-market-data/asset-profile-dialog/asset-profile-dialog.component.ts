@@ -1,16 +1,19 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  AssetProfileIdentifier
+  AssetProfileIdentifier,
+  User,
+  LineChartItem
 } from '@ghostfolio/common/interfaces';
+import { AssetProfileDialogParams } from '@ghostfolio/ui/admin-market-data-detail/interfaces/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import {
@@ -23,7 +26,6 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   AssetClass,
   AssetSubClass,
@@ -31,11 +33,8 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { format } from 'date-fns';
-import { parse as csvToJson } from 'papaparse';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
-
-import { AssetProfileDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -75,11 +74,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   };
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
+  public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
   public marketDataDetails: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+  public user: User;
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -96,7 +97,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
-    private snackBar: MatSnackBar
+    private userService: UserService
   ) {}
 
   public ngOnInit() {
@@ -109,6 +110,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+        }
+      });
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -125,6 +133,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           return id === this.assetProfile.id;
         });
         this.marketDataDetails = marketData;
+
+        this.historicalDataItems = this.marketDataDetails.map(
+          ({ date, marketPrice }) => {
+            return {
+              date: format(date, DATE_FORMAT),
+              value: marketPrice
+            };
+          }
+        );
+
         this.sectors = {};
 
         if (this.assetProfile?.countries?.length > 0) {
@@ -200,51 +218,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .subscribe();
   }
 
-  public onImportHistoricalData() {
-    try {
-      const marketData = csvToJson(
-        this.assetProfileForm.controls['historicalData'].controls['csvString']
-          .value,
-        {
-          dynamicTyping: true,
-          header: true,
-          skipEmptyLines: true
-        }
-      ).data as UpdateMarketDataDto[];
-
-      this.adminService
-        .postMarketData({
-          dataSource: this.data.dataSource,
-          marketData: {
-            marketData
-          },
-          symbol: this.data.symbol
-        })
-        .pipe(
-          catchError(({ error, message }) => {
-            this.snackBar.open(`${error}: ${message[0]}`, undefined, {
-              duration: 3000
-            });
-            return EMPTY;
-          }),
-          takeUntil(this.unsubscribeSubject)
-        )
-        .subscribe(() => {
-          this.initialize();
-        });
-    } catch {
-      this.snackBar.open(
-        $localize`Oops! Could not parse historical data.`,
-        undefined,
-        { duration: 3000 }
-      );
-    }
-  }
-
   public onMarketDataChanged(withRefresh: boolean = false) {
     if (withRefresh) {
       this.initialize();
     }
+  }
+
+  public onImportHistoricalDataChanged() {
+    this.initialize();
   }
 
   public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {

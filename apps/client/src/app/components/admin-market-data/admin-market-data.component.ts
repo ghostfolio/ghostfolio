@@ -14,6 +14,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { AdminMarketDataItem } from '@ghostfolio/common/interfaces/admin-market-data.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { AssetProfileDialogParams } from '@ghostfolio/ui/admin-market-data-detail/interfaces/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { SelectionModel } from '@angular/cdk/collections';
@@ -39,7 +40,6 @@ import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
-import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
 
