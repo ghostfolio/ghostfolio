@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the symbol search component
 - Extended the users table in the admin control panel
+- Refreshed the cryptocurrencies list
 - Increased the default request timeout (`REQUEST_TIMEOUT`)
 - Upgraded `cheerio` from version `1.0.0-rc.12` to `1.0.0`
 
