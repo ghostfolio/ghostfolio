@@ -28,6 +28,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
 import got from 'got';
+import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
 export class GhostfolioService implements DataProviderInterface {
@@ -106,6 +107,17 @@ export class GhostfolioService implements DataProviderInterface {
         [symbol]: historicalData
       };
     } catch (error) {
+      let message = error;
+
+      if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        message =
+          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+      }
+
+      Logger.error(message, 'GhostfolioService');
+
       throw new Error(
         `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
           from,
@@ -159,6 +171,11 @@ export class GhostfolioService implements DataProviderInterface {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
+      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        message =
+          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -196,6 +213,11 @@ export class GhostfolioService implements DataProviderInterface {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
+      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        message =
+          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
       }
 
       Logger.error(message, 'GhostfolioService');
