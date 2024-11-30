@@ -191,9 +191,6 @@ export class GhostfolioController {
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getStatus(): Promise<DataProviderGhostfolioStatusResponse> {
-    return {
-      dailyRequests: this.request.user.dataProviderGhostfolioDailyRequests,
-      dailyRequestsMax: await this.ghostfolioService.getMaxDailyRequests()
-    };
+    return this.ghostfolioService.getStatus({ user: this.request.user });
   }
 }
