@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
+  DividendsResponse,
   HistoricalResponse,
   LookupResponse,
   QuotesResponse
@@ -23,6 +24,7 @@ import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
+import { GetDividendsDto } from './get-dividends.dto';
 import { GetHistoricalDto } from './get-historical.dto';
 import { GetQuotesDto } from './get-quotes.dto';
 import { GhostfolioService } from './ghostfolio.service';
@@ -33,6 +35,45 @@ export class GhostfolioController {
     private readonly ghostfolioService: GhostfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
+
+  @Get('dividends/:symbol')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getDividends(
+    @Param('symbol') symbol: string,
+    @Query() query: GetDividendsDto
+  ): Promise<DividendsResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const dividends = await this.ghostfolioService.getDividends({
+        symbol,
+        from: parseDate(query.from),
+        granularity: query.granularity,
+        to: parseDate(query.to)
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return dividends;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
   @Get('historical/:symbol')
   @HasPermission(permissions.enableDataProviderGhostfolio)

@@ -19,6 +19,7 @@ import {
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
+  DividendsResponse,
   HistoricalResponse,
   LookupResponse,
   QuotesResponse
@@ -71,8 +72,53 @@ export class GhostfolioService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({}: GetDividendsParams) {
-    return {};
+  public async getDividends({
+    from,
+    granularity = 'day',
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetDividendsParams): Promise<{
+    [date: string]: IDataProviderHistoricalResponse;
+  }> {
+    let response: {
+      [date: string]: IDataProviderHistoricalResponse;
+    } = {};
+
+    try {
+      const abortController = new AbortController();
+
+      setTimeout(() => {
+        abortController.abort();
+      }, requestTimeout);
+
+      const { dividends } = await got(
+        `${this.URL}/v1/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
+          to,
+          DATE_FORMAT
+        )}`,
+        {
+          headers: await this.getRequestHeaders(),
+          // @ts-ignore
+          signal: abortController.signal
+        }
+      ).json<DividendsResponse>();
+
+      response = dividends;
+    } catch (error) {
+      let message = error;
+
+      if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        message =
+          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+      }
+
+      Logger.error(message, 'GhostfolioService');
+    }
+
+    return response;
   }
 
   public async getHistorical({

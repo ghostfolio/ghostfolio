@@ -1,6 +1,7 @@
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
+  DividendsResponse,
   HistoricalResponse,
   LookupResponse,
   QuotesResponse
@@ -21,6 +22,7 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
   templateUrl: './api-page.html'
 })
 export class GfApiPageComponent implements OnInit {
+  public dividends$: Observable<DividendsResponse['dividends']>;
   public historicalData$: Observable<HistoricalResponse['historicalData']>;
   public quotes$: Observable<QuotesResponse['quotes']>;
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
@@ -31,6 +33,7 @@ export class GfApiPageComponent implements OnInit {
   public constructor(private http: HttpClient) {}
 
   public ngOnInit() {
+    this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL.US' });
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL.US', 'VOO.US'] });
     this.status$ = this.fetchStatus();
@@ -40,6 +43,24 @@ export class GfApiPageComponent implements OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchDividends({ symbol }: { symbol: string }) {
+    const params = new HttpParams()
+      .set('from', format(startOfYear(new Date()), DATE_FORMAT))
+      .set('to', format(new Date(), DATE_FORMAT));
+
+    return this.http
+      .get<DividendsResponse>(
+        `/api/v1/data-providers/ghostfolio/dividends/${symbol}`,
+        { params }
+      )
+      .pipe(
+        map(({ dividends }) => {
+          return dividends;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      );
   }
 
   private fetchHistoricalData({ symbol }: { symbol: string }) {
