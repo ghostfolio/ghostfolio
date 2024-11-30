@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import {
+  GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
   GetSearchParams
@@ -15,6 +16,7 @@ import {
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
   DataProviderInfo,
+  DividendsResponse,
   HistoricalResponse,
   LookupItem,
   LookupResponse,
@@ -33,6 +35,48 @@ export class GhostfolioService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
+
+  public async getDividends({
+    from,
+    granularity,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetDividendsParams) {
+    const result: DividendsResponse = { dividends: {} };
+
+    try {
+      const promises: Promise<{
+        [date: string]: IDataProviderHistoricalResponse;
+      }>[] = [];
+
+      for (const dataProviderService of this.getDataProviderServices()) {
+        promises.push(
+          dataProviderService
+            .getDividends({
+              from,
+              granularity,
+              requestTimeout,
+              symbol,
+              to
+            })
+            .then((dividends) => {
+              result.dividends = dividends;
+
+              return dividends;
+            })
+        );
+      }
+
+      await Promise.all(promises);
+
+      return result;
+    } catch (error) {
+      Logger.error(error, 'GhostfolioService');
+
+      throw error;
+    }
+  }
 
   public async getHistorical({
     from,
@@ -86,10 +130,11 @@ export class GhostfolioService {
   }
 
   public async getQuotes({ requestTimeout, symbols }: GetQuotesParams) {
-    const promises: Promise<any>[] = [];
     const results: QuotesResponse = { quotes: {} };
 
     try {
+      const promises: Promise<any>[] = [];
+
       for (const dataProvider of this.getDataProviderServices()) {
         const maximumNumberOfSymbolsPerRequest =
           dataProvider.getMaxNumberOfSymbolsPerRequest?.() ??

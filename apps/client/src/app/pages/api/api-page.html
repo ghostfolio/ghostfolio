@@ -45,4 +45,18 @@
       </ul>
     }
   </div>
+  <div>
+    <h2 class="text-center">Dividends</h2>
+    @if (dividends$) {
+      @let dividends = dividends$ | async;
+      <ul>
+        @for (dividend of dividends | keyvalue; track dividend) {
+          <li>
+            {{ dividend.key }}:
+            {{ dividend.value.marketPrice }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
 </div>
