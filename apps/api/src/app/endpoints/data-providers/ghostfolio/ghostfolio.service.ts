@@ -22,6 +22,7 @@ import {
   LookupResponse,
   QuotesResponse
 } from '@ghostfolio/common/interfaces';
+import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
@@ -206,6 +207,14 @@ export class GhostfolioService {
 
       throw error;
     }
+  }
+
+  public async getStatus({ user }: { user: UserWithSettings }) {
+    return {
+      dailyRequests: user.dataProviderGhostfolioDailyRequests,
+      dailyRequestsMax: await this.getMaxDailyRequests(),
+      subscription: user.subscription
+    };
   }
 
   public async incrementDailyRequests({ userId }: { userId: string }) {

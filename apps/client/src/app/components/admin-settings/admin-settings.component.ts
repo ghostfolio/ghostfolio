@@ -7,6 +7,7 @@ import {
   DEFAULT_LANGUAGE_CODE,
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
+import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
   User
@@ -32,6 +33,7 @@ import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-
   templateUrl: './admin-settings.component.html'
 })
 export class AdminSettingsComponent implements OnDestroy, OnInit {
+  public defaultDateFormat: string;
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
   public pricingUrl: string;
@@ -58,6 +60,10 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.defaultDateFormat = getDateFormatString(
+            this.user?.settings?.locale
+          );
 
           const languageCode =
             this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
