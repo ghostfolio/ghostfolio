@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refreshed the cryptocurrencies list
 - Increased the default request timeout (`REQUEST_TIMEOUT`)
 - Upgraded `cheerio` from version `1.0.0-rc.12` to `1.0.0`
+- Upgraded `prisma` from version `5.22.0` to `6.0.0`
 
 ## 2.124.1 - 2024-11-25
 
