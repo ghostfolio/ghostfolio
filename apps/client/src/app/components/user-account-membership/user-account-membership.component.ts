@@ -1,3 +1,4 @@
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -16,7 +17,7 @@ import {
   MatSnackBarRef,
   TextOnlySnackBar
 } from '@angular/material/snack-bar';
-import { StringValue } from 'ms';
+import ms, { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, switchMap, takeUntil } from 'rxjs/operators';
@@ -34,6 +35,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
   public defaultDateFormat: string;
   public durationExtension: StringValue;
   public hasPermissionForSubscription: boolean;
+  public hasPermissionToCreateApiKey: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
@@ -71,6 +73,11 @@ export class UserAccountMembershipComponent implements OnDestroy {
 
           this.defaultDateFormat = getDateFormatString(
             this.user.settings.locale
+          );
+
+          this.hasPermissionToCreateApiKey = hasPermission(
+            this.user.permissions,
+            permissions.createApiKey
           );
 
           this.hasPermissionToUpdateUserSettings = hasPermission(
@@ -120,6 +127,41 @@ export class UserAccountMembershipComponent implements OnDestroy {
       });
   }
 
+  public onGenerateApiKey() {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .postApiKey()
+          .pipe(
+            takeUntil(this.unsubscribeSubject),
+            catchError(() => {
+              this.snackBar.open(
+                '😞 ' + $localize`Could not generate an API key`,
+                undefined,
+                {
+                  duration: ms('3 seconds')
+                }
+              );
+
+              return EMPTY;
+            })
+          )
+          .subscribe(({ apiKey }) => {
+            this.notificationService.alert({
+              discardLabel: $localize`Okay`,
+              message:
+                $localize`Set this API key in your self-hosted environment:` +
+                '<br />' +
+                apiKey,
+              title: $localize`Ghostfolio Premium Data Provider API Key`
+            });
+          });
+      },
+      confirmType: ConfirmationDialogType.Primary,
+      title: $localize`Do you really want to generate a new API key?`
+    });
+  }
+
   public onRedeemCoupon() {
     let couponCode = prompt($localize`Please enter your coupon code:`);
     couponCode = couponCode?.trim();
@@ -134,7 +176,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
               '😞 ' + $localize`Could not redeem coupon code`,
               undefined,
               {
-                duration: 3000
+                duration: ms('3 seconds')
               }
             );
 

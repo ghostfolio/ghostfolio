@@ -13,6 +13,25 @@
         [showLabel]="false"
       />
     </div>
+    @if (hasPermissionToCreateApiKey) {
+      <div class="mt-5">
+        <div class="heading text-muted" i18n>API Key</div>
+        <div class="align-items-center d-flex">
+          <div class="text-monospace value">* * * * * * * * *</div>
+          <div class="ml-1">
+            <button
+              class="no-min-width"
+              i18n-title
+              mat-button
+              title="Generate Ghostfolio Premium Data Provider API key for self-hosted environments..."
+              (click)="onGenerateApiKey($event)"
+            >
+              <ion-icon name="refresh-outline" />
+            </button>
+          </div>
+        </div>
+      </div>
+    }
     <div class="d-flex justify-content-between">
       <div>
         <div class="heading text-muted" i18n>Membership</div>

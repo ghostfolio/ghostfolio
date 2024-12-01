@@ -2,6 +2,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { getRandomString } from '@ghostfolio/api/helper/string.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
@@ -309,6 +310,8 @@ export class UserService {
         // Reset holdings view mode
         user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
+        // TODO
+        // currentPermissions.push(permissions.createApiKey);
         currentPermissions.push(permissions.enableDataProviderGhostfolio);
         currentPermissions.push(permissions.reportDataGlitch);
 
@@ -408,10 +411,7 @@ export class UserService {
     }
 
     if (data.provider === 'ANONYMOUS') {
-      const accessToken = this.createAccessToken(
-        user.id,
-        this.getRandomString(10)
-      );
+      const accessToken = this.createAccessToken(user.id, getRandomString(10));
 
       const hashedAccessToken = this.createAccessToken(
         accessToken,
@@ -527,18 +527,5 @@ export class UserService {
     }
 
     return settings;
-  }
-
-  private getRandomString(length: number) {
-    const bytes = crypto.randomBytes(length);
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const result = [];
-
-    for (let i = 0; i < length; i++) {
-      const randomByte = bytes[i];
-      result.push(characters[randomByte % characters.length]);
-    }
-
-    return result.join('');
   }
 }

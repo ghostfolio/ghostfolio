@@ -22,6 +22,7 @@ import {
   AccountBalancesResponse,
   Accounts,
   AdminMarketDataDetails,
+  ApiKeyResponse,
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
@@ -289,7 +290,7 @@ export class DataService {
   public deleteActivities({ filters }) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.delete<any>(`/api/v1/order`, { params });
+    return this.http.delete<any>('/api/v1/order', { params });
   }
 
   public deleteActivity(aId: string) {
@@ -636,36 +637,40 @@ export class DataService {
   }
 
   public loginAnonymous(accessToken: string) {
-    return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
+    return this.http.post<OAuthResponse>('/api/v1/auth/anonymous', {
       accessToken
     });
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<OrderModel>(`/api/v1/access`, aAccess);
+    return this.http.post<OrderModel>('/api/v1/access', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
+    return this.http.post<OrderModel>('/api/v1/account', aAccount);
   }
 
   public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
     return this.http.post<AccountBalance>(
-      `/api/v1/account-balance`,
+      '/api/v1/account-balance',
       aAccountBalance
     );
   }
 
+  public postApiKey() {
+    return this.http.post<ApiKeyResponse>('/api/v1/api-keys', {});
+  }
+
   public postBenchmark(benchmark: AssetProfileIdentifier) {
-    return this.http.post(`/api/v1/benchmark`, benchmark);
+    return this.http.post('/api/v1/benchmark', benchmark);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
-    return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
+    return this.http.post<OrderModel>('/api/v1/order', aOrder);
   }
 
   public postUser() {
-    return this.http.post<UserItem>(`/api/v1/user`, {});
+    return this.http.post<UserItem>('/api/v1/user', {});
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
@@ -692,7 +697,7 @@ export class DataService {
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {
-    return this.http.put<User>(`/api/v1/user/setting`, aData);
+    return this.http.put<User>('/api/v1/user/setting', aData);
   }
 
   public redeemCoupon(couponCode: string) {
