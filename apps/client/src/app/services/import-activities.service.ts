@@ -241,6 +241,7 @@ export class ImportActivitiesService {
         }),
         catchError((error) => {
           console.warn('Failed to fetch currency from symbol service.', error);
+
           throw {
             activities: content,
             message: `activities.${index}.currency is not valid`
