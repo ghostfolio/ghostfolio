@@ -21,8 +21,8 @@ import { AdminUsersComponent } from './admin-users.component';
     MatButtonModule,
     MatMenuModule,
     MatTableModule,
-    NgxSkeletonLoaderModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

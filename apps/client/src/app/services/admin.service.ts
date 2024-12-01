@@ -10,6 +10,7 @@ import {
   HEADER_KEY_TOKEN,
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -179,11 +180,17 @@ export class AdminService {
     return this.http.get<Tag[]>('/api/v1/tag');
   }
 
-  public fetchUsers(skip: number, take: number) {
+  public fetchUsers({
+    skip,
+    take = DEFAULT_PAGE_SIZE
+  }: {
+    skip?: number;
+    take?: number;
+  }) {
     let params = new HttpParams();
 
-    params = params.append('take', take);
     params = params.append('skip', skip);
+    params = params.append('take', take);
 
     return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }

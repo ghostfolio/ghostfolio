@@ -267,6 +267,7 @@
           ></tr>
         </table>
       </div>
+
       <mat-paginator
         [length]="totalItems"
         [ngClass]="{
@@ -276,6 +277,7 @@
         [showFirstLastButtons]="true"
         (page)="onChangePage($event)"
       />
+
       @if (isLoading) {
         <ngx-skeleton-loader
           animation="pulse"

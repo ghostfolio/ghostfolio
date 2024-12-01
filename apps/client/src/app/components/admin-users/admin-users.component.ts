@@ -42,10 +42,10 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public isLoading = false;
-  public user: User;
-
   public pageSize = DEFAULT_PAGE_SIZE;
   public totalItems = 0;
+  public user: User;
+
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -167,12 +167,16 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     }
 
     this.adminService
-      .fetchUsers(pageIndex * this.pageSize, this.pageSize)
+      .fetchUsers({
+        skip: pageIndex * this.pageSize,
+        take: this.pageSize
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ count, users }) => {
         this.totalItems = count;
 
         this.dataSource = new MatTableDataSource(users);
+
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
