@@ -1,5 +1,6 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImportActivitiesService } from '@ghostfolio/client/services/import-activities.service';
 import { PortfolioPosition } from '@ghostfolio/common/interfaces';
@@ -65,7 +66,8 @@ export class ImportActivitiesDialog implements OnDestroy {
     private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ImportActivitiesDialog>,
     private importActivitiesService: ImportActivitiesService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private notificationService: NotificationService
   ) {}
 
   public ngOnInit() {
@@ -294,14 +296,21 @@ export class ImportActivitiesDialog implements OnDestroy {
           const content = fileContent.split('\n').slice(1);
 
           try {
-            const data = await this.importActivitiesService.importCsv({
-              fileContent,
-              isDryRun: true,
-              userAccounts: this.data.user.accounts
-            });
-            this.activities = data.activities;
-            this.dataSource = new MatTableDataSource(data.activities.reverse());
-            this.totalItems = data.activities.length;
+            const { activities, warnings } =
+              await this.importActivitiesService.importCsv({
+                fileContent,
+                isDryRun: true,
+                userAccounts: this.data.user.accounts
+              });
+            if (warnings.length > 0) {
+              this.notificationService.alert({
+                title: 'Import Warnings',
+                message: warnings.join('<br/>')
+              });
+            }
+            this.activities = activities;
+            this.dataSource = new MatTableDataSource(activities.reverse());
+            this.totalItems = activities.length;
           } catch (error) {
             console.error(error);
             this.handleImportError({

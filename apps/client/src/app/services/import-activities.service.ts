@@ -2,7 +2,6 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 
 import { HttpClient } from '@angular/common/http';
@@ -21,6 +20,7 @@ export class ImportActivitiesService {
   private static COMMENT_KEYS = ['comment', 'note'];
   private static CURRENCY_KEYS = ['ccy', 'currency', 'currencyprimary'];
   private static DATA_SOURCE_KEYS = ['datasource'];
+  // Trade Date takes precedence over Date
   private static DATE_KEYS = ['trade date', 'tradedate', 'date'];
   private static FEE_KEYS = ['commission', 'fee', 'ibcommission'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
@@ -36,10 +36,7 @@ export class ImportActivitiesService {
 
   private warnings: string[] = [];
 
-  public constructor(
-    private http: HttpClient,
-    private notificationService: NotificationService
-  ) {}
+  public constructor(private http: HttpClient) {}
 
   public async importCsv({
     fileContent,
@@ -51,6 +48,7 @@ export class ImportActivitiesService {
     userAccounts: Account[];
   }): Promise<{
     activities: Activity[];
+    warnings: string[];
   }> {
     this.warnings = [];
 
@@ -77,15 +75,10 @@ export class ImportActivitiesService {
       });
     }
 
-    // Process any possible warnings during import
-    if (this.warnings.length > 0) {
-      this.notificationService.alert({
-        title: 'Import Warnings',
-        message: this.warnings.join('<br/>')
-      });
-    }
-
-    return await this.importJson({ activities, isDryRun });
+    return {
+      activities: (await this.importJson({ activities, isDryRun })).activities,
+      warnings: this.warnings
+    };
   }
 
   public importJson({
