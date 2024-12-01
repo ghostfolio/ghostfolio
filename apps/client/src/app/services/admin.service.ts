@@ -179,10 +179,11 @@ export class AdminService {
     return this.http.get<Tag[]>('/api/v1/tag');
   }
 
-  public fetchUsers() {
+  public fetchUsers(skip: number, take: number) {
     let params = new HttpParams();
 
-    params = params.append('take', 30);
+    params = params.append('take', take);
+    params = params.append('skip', skip);
 
     return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }

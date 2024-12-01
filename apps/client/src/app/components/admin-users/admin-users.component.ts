@@ -4,11 +4,19 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   differenceInSeconds,
@@ -24,6 +32,8 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './admin-users.html'
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
   public defaultDateFormat: string;
   public displayedColumns: string[] = [];
@@ -34,6 +44,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public isLoading = false;
   public user: User;
 
+  public pageSize = DEFAULT_PAGE_SIZE;
+  public totalItems = 0;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -142,15 +154,25 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private fetchUsers() {
+  public onChangePage(page: PageEvent) {
+    this.fetchUsers({
+      pageIndex: page.pageIndex
+    });
+  }
+  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
-    this.adminService
-      .fetchUsers()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ users }) => {
-        this.dataSource = new MatTableDataSource(users);
+    if (pageIndex === 0 && this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
 
+    this.adminService
+      .fetchUsers(pageIndex * this.pageSize, this.pageSize)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ count, users }) => {
+        this.totalItems = count;
+
+        this.dataSource = new MatTableDataSource(users);
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();

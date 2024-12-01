@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
@@ -20,7 +21,8 @@ import { AdminUsersComponent } from './admin-users.component';
     MatButtonModule,
     MatMenuModule,
     MatTableModule,
-    NgxSkeletonLoaderModule
+    NgxSkeletonLoaderModule,
+    MatPaginatorModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
