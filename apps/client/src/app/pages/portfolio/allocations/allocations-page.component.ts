@@ -7,7 +7,7 @@ import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  Holding,
+  HoldingWithParents,
   PortfolioDetails,
   PortfolioPosition,
   User
@@ -86,7 +86,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
       value: number;
     };
   };
-  public topHoldings: Holding[];
+  public topHoldings: HoldingWithParents[];
   public topHoldingsMap: {
     [name: string]: { name: string; value: number };
   };
@@ -490,6 +490,36 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
           name,
           allocationInPercentage:
             this.totalValueInEtf > 0 ? value / this.totalValueInEtf : 0,
+          parents: Object.entries(this.portfolioDetails.holdings)
+            .map(([symbol, holding]) => {
+              if (holding.holdings.length > 0) {
+                const currentParentHolding = holding.holdings.find(
+                  (parentHolding) => {
+                    return parentHolding.name === name;
+                  }
+                );
+
+                return currentParentHolding
+                  ? {
+                      allocationInPercentage:
+                        currentParentHolding.valueInBaseCurrency / value,
+                      name: holding.name,
+                      position: holding,
+                      symbol: prettifySymbol(symbol),
+                      valueInBaseCurrency:
+                        currentParentHolding.valueInBaseCurrency
+                    }
+                  : null;
+              }
+
+              return null;
+            })
+            .filter((item) => {
+              return item !== null;
+            })
+            .sort((a, b) => {
+              return b.allocationInPercentage - a.allocationInPercentage;
+            }),
           valueInBaseCurrency: value
         };
       })

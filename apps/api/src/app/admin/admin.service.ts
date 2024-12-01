@@ -140,7 +140,7 @@ export class AdminService {
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
-      this.prismaService.user.count()
+      this.countUsersWithAnalytics()
     ]);
 
     return {
@@ -429,8 +429,19 @@ export class AdminService {
     };
   }
 
-  public async getUsers(): Promise<AdminUsers> {
-    return { users: await this.getUsersWithAnalytics() };
+  public async getUsers({
+    skip,
+    take = Number.MAX_SAFE_INTEGER
+  }: {
+    skip?: number;
+    take?: number;
+  }): Promise<AdminUsers> {
+    const [count, users] = await Promise.all([
+      this.countUsersWithAnalytics(),
+      this.getUsersWithAnalytics({ skip, take })
+    ]);
+
+    return { count, users };
   }
 
   public async patchAssetProfileData({
@@ -506,6 +517,22 @@ export class AdminService {
     }
 
     return response;
+  }
+
+  private async countUsersWithAnalytics() {
+    let where: Prisma.UserWhereInput;
+
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      where = {
+        NOT: {
+          Analytics: null
+        }
+      };
+    }
+
+    return this.prismaService.user.count({
+      where
+    });
   }
 
   private getExtendedPrismaClient() {
@@ -640,7 +667,13 @@ export class AdminService {
     return { marketData, count: marketData.length };
   }
 
-  private async getUsersWithAnalytics(): Promise<AdminUsers['users']> {
+  private async getUsersWithAnalytics({
+    skip,
+    take
+  }: {
+    skip?: number;
+    take?: number;
+  }): Promise<AdminUsers['users']> {
     let orderBy: Prisma.UserOrderByWithRelationInput = {
       createdAt: 'desc'
     };
@@ -661,6 +694,8 @@ export class AdminService {
 
     const usersWithAnalytics = await this.prismaService.user.findMany({
       orderBy,
+      skip,
+      take,
       where,
       select: {
         _count: {
@@ -670,6 +705,7 @@ export class AdminService {
           select: {
             activityCount: true,
             country: true,
+            dataProviderGhostfolioDailyRequests: true,
             updatedAt: true
           }
         },
@@ -677,8 +713,7 @@ export class AdminService {
         id: true,
         role: true,
         Subscription: true
-      },
-      take: 30
+      }
     });
 
     return usersWithAnalytics.map(
@@ -706,6 +741,7 @@ export class AdminService {
           subscription,
           accountCount: _count.Account || 0,
           country: Analytics?.country,
+          dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
           lastActivity: Analytics?.updatedAt,
           transactionCount: _count.Order || 0
         };

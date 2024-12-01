@@ -77,6 +77,18 @@ model Analytics {
   @@index([updatedAt])
 }
 
+model ApiKey {
+  createdAt DateTime @default(now())
+  hashedKey String
+  id        String   @id @default(uuid())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+
+  @@index([hashedKey])
+  @@index([userId])
+}
+
 model AuthDevice {
   createdAt           DateTime @default(now())
   credentialId        Bytes
@@ -238,6 +250,7 @@ model User {
   AccessGive    Access[]       @relation("accessGive")
   Account       Account[]
   Analytics     Analytics?
+  ApiKey        ApiKey[]
   AuthDevice    AuthDevice[]
   Order         Order[]
   Settings      Settings?
@@ -281,6 +294,7 @@ enum DataSource {
   COINGECKO
   EOD_HISTORICAL_DATA
   FINANCIAL_MODELING_PREP
+  GHOSTFOLIO
   GOOGLE_SHEETS
   MANUAL
   RAPID_API

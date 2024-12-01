@@ -19,7 +19,7 @@
         [value]="lookupItem"
       >
         <span class="align-items-center d-flex line-height-1"
-          ><b>{{ lookupItem.name }}</b>
+          ><span>{{ lookupItem.name }}</span>
           @if (lookupItem.dataProviderInfo.isPremium) {
             <gf-premium-indicator class="ml-1" [enableLink]="false" />
           }
@@ -28,6 +28,9 @@
           >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency }}
           @if (lookupItem.assetSubClass) {
             · {{ lookupItem.assetSubClassString }}
+          }
+          @if (lookupItem.dataProviderInfo.name) {
+            · {{ lookupItem.dataProviderInfo.name }}
           }
         </small>
       </mat-option>

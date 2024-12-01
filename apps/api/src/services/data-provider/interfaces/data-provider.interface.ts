@@ -21,7 +21,13 @@ export interface DataProviderInterface {
 
   getDataProviderInfo(): DataProviderInfo;
 
-  getDividends({ from, granularity, symbol, to }: GetDividendsParams): Promise<{
+  getDividends({
+    from,
+    granularity,
+    requestTimeout,
+    symbol,
+    to
+  }: GetDividendsParams): Promise<{
     [date: string]: IDataProviderHistoricalResponse;
   }>;
 

@@ -35,6 +35,9 @@ export class ConfigurationService {
       DATA_SOURCES: json({
         default: [DataSource.COINGECKO, DataSource.MANUAL, DataSource.YAHOO]
       }),
+      DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: json({
+        default: []
+      }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
@@ -67,7 +70,7 @@ export class ConfigurationService {
       REDIS_HOST: str({ default: 'localhost' }),
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
-      REQUEST_TIMEOUT: num({ default: 2000 }),
+      REQUEST_TIMEOUT: num({ default: ms('3 seconds') }),
       ROOT_URL: url({ default: DEFAULT_ROOT_URL }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),

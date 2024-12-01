@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="mb-3">
+    <h2 class="text-center">Status</h2>
+    <div>{{ status$ | async | json }}</div>
+  </div>
+  <div class="mb-3">
+    <h2 class="text-center">Lookup</h2>
+    @if (symbols$) {
+      @let symbols = symbols$ | async;
+      <ul>
+        @for (item of symbols; track item.symbol) {
+          <li>{{ item.name }} ({{ item.symbol }})</li>
+        }
+      </ul>
+    }
+  </div>
+  <div>
+    <h2 class="text-center">Quotes</h2>
+    @if (quotes$) {
+      @let quotes = quotes$ | async;
+      <ul>
+        @for (quote of quotes | keyvalue; track quote) {
+          <li>
+            {{ quote.key }}: {{ quote.value.marketPrice }}
+            {{ quote.value.currency }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+  <div>
+    <h2 class="text-center">Historical</h2>
+    @if (historicalData$) {
+      @let historicalData = historicalData$ | async;
+      <ul>
+        @for (
+          historicalDataItem of historicalData | keyvalue;
+          track historicalDataItem
+        ) {
+          <li>
+            {{ historicalDataItem.key }}:
+            {{ historicalDataItem.value.marketPrice }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+  <div>
+    <h2 class="text-center">Dividends</h2>
+    @if (dividends$) {
+      @let dividends = dividends$ | async;
+      <ul>
+        @for (dividend of dividends | keyvalue; track dividend) {
+          <li>
+            {{ dividend.key }}:
+            {{ dividend.value.marketPrice }}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>
