@@ -149,16 +149,17 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     window.location.reload();
   }
 
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
-  }
-
   public onChangePage(page: PageEvent) {
     this.fetchUsers({
       pageIndex: page.pageIndex
     });
   }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
@@ -173,9 +174,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ count, users }) => {
-        this.totalItems = count;
-
         this.dataSource = new MatTableDataSource(users);
+        this.totalItems = count;
 
         this.isLoading = false;
 

@@ -20,8 +20,8 @@ import { AdminUsersComponent } from './admin-users.component';
     GfValueComponent,
     MatButtonModule,
     MatMenuModule,
-    MatTableModule,
     MatPaginatorModule,
+    MatTableModule,
     NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
