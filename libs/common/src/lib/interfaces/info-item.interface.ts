@@ -1,6 +1,6 @@
 import { SubscriptionOfferKey } from '@ghostfolio/common/types';
 
-import { Platform, SymbolProfile } from '@prisma/client';
+import { DataSource, Platform, SymbolProfile } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
 import { SubscriptionOffer } from './subscription-offer.interface';
@@ -10,6 +10,7 @@ export interface InfoItem {
   benchmarks: Partial<SymbolProfile>[];
   countriesOfSubscribers?: string[];
   currencies: string[];
+  defaultDataSource: DataSource;
   demoAuthToken: string;
   fearAndGreedDataSource?: string;
   globalPermissions: string[];
