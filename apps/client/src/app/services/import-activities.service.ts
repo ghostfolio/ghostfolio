@@ -1,7 +1,7 @@
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { parseDate as parseDateHelper } from '@ghostfolio/common/helper';
 
 import { HttpClient } from '@angular/common/http';
@@ -36,7 +36,10 @@ export class ImportActivitiesService {
 
   private warnings: string[] = [];
 
-  public constructor(private http: HttpClient) {}
+  public constructor(
+    private dataService: DataService,
+    private http: HttpClient
+  ) {}
 
   public async importCsv({
     fileContent,
@@ -222,10 +225,10 @@ export class ImportActivitiesService {
 
     // If no currency in CSV, make an API request to get symbol data
     const symbol = this.parseSymbol({ content, index, item });
-    const dataSource = this.parseDataSource({ item }) ?? DataSource.YAHOO;
+    const dataSource = this.parseDataSource({ item });
 
     return firstValueFrom(
-      this.http.get<SymbolItem>(`/api/v1/symbol/${dataSource}/${symbol}`).pipe(
+      this.dataService.fetchSymbolItem({ dataSource, symbol }).pipe(
         map(({ currency }) => {
           if (currency) {
             console.warn(
@@ -260,7 +263,15 @@ export class ImportActivitiesService {
       }
     }
 
-    return undefined;
+    // If no data source specified, check the type
+    const type = this.parseType({ index: 0, item });
+    if (type === 'ITEM' || type === 'LIABILITY') {
+      return DataSource.MANUAL;
+    }
+
+    // Use default data source from info
+    const info = this.dataService.fetchInfo();
+    return info.defaultDataSource;
   }
 
   private parseDate({
