@@ -117,7 +117,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   }
 
   public isCommunityLanguage() {
-    return !(this.language === 'de' || this.language === 'en');
+    return !['de', 'en'].includes(this.language);
   }
 
   public onChangeUserSetting(aKey: string, aValue: string) {
