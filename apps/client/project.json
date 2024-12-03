@@ -11,7 +11,7 @@
   "prefix": "gf",
   "targets": {
     "build": {
-      "executor": "@nx/angular:webpack-browser",
+      "executor": "@nx/angular:browser-esbuild",
       "options": {
         "deleteOutputPath": false,
         "localize": true,
