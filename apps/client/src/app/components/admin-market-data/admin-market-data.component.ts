@@ -39,9 +39,9 @@ import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AdminMarketDataService } from './admin-market-data.service';
 import { AssetProfileDialog } from './asset-profile-dialog/asset-profile-dialog.component';
+import { AssetProfileDialogParams } from './asset-profile-dialog/interfaces/interfaces';
 import { CreateAssetProfileDialog } from './create-asset-profile-dialog/create-asset-profile-dialog.component';
 import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/interfaces/interfaces';
-import { AssetProfileDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

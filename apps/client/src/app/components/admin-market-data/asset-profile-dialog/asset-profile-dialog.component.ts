@@ -10,8 +10,8 @@ import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
   AssetProfileIdentifier,
-  User,
-  LineChartItem
+  LineChartItem,
+  User
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -35,7 +35,7 @@ import { format } from 'date-fns';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { AssetProfileDialogParams } from '../interfaces/interfaces';
+import { AssetProfileDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
@@ -118,6 +118,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           this.user = state.user;
         }
       });
+
     this.adminService
       .fetchAdminMarketDataBySymbol({
         dataSource: this.data.dataSource,
@@ -130,10 +131,10 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.assetProfileClass = translate(this.assetProfile?.assetClass);
         this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
+
         this.isBenchmark = this.benchmarks.some(({ id }) => {
           return id === this.assetProfile.id;
         });
-        this.marketDataDetails = marketData;
 
         this.historicalDataItems = this.marketDataDetails.map(
           ({ date, marketPrice }) => {
@@ -144,6 +145,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           }
         );
 
+        this.marketDataDetails = marketData;
         this.sectors = {};
 
         if (this.assetProfile?.countries?.length > 0) {
@@ -223,10 +225,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     if (withRefresh) {
       this.initialize();
     }
-  }
-
-  public onImportHistoricalDataChanged() {
-    this.initialize();
   }
 
   public onSetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {

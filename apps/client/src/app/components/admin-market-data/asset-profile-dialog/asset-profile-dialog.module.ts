@@ -23,12 +23,12 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
 @NgModule({
   declarations: [AssetProfileDialog],
   imports: [
-    GfMarketDataDetailComponent,
     CommonModule,
     FormsModule,
     GfAssetProfileIconComponent,
     GfCurrencySelectorComponent,
     GfLineChartComponent,
+    GfMarketDataDetailComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
     MatButtonModule,

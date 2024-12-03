@@ -14,6 +14,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output
 } from '@angular/core';
@@ -53,7 +54,9 @@ import { MarketDataDetailDialogComponent } from './market-data-detail-dialog/mar
   styleUrls: ['./market-data-detail.component.scss'],
   templateUrl: './market-data-detail.component.html'
 })
-export class GfMarketDataDetailComponent implements OnChanges, OnInit {
+export class GfMarketDataDetailComponent
+  implements OnChanges, OnDestroy, OnInit
+{
   @Input() currency: string;
   @Input() dataSource: DataSource;
   @Input() dateOfFirstActivity: string;
@@ -63,7 +66,6 @@ export class GfMarketDataDetailComponent implements OnChanges, OnInit {
   @Input() user: User;
 
   @Output() marketDataChanged = new EventEmitter<boolean>();
-  @Output() historicalDataUpdated = new EventEmitter();
 
   public days = Array(31);
   public defaultDateFormat: string;
@@ -90,8 +92,8 @@ export class GfMarketDataDetailComponent implements OnChanges, OnInit {
   public constructor(
     private adminService: AdminService,
     private deviceService: DeviceDetectorService,
-    private formBuilder: FormBuilder,
     private dialog: MatDialog,
+    private formBuilder: FormBuilder,
     private snackBar: MatSnackBar
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
@@ -215,7 +217,7 @@ export class GfMarketDataDetailComponent implements OnChanges, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ withRefresh } = { withRefresh: false }) => {
-        this.marketDataChanged.next(withRefresh);
+        this.marketDataChanged.emit(withRefresh);
       });
   }
 
@@ -249,8 +251,9 @@ export class GfMarketDataDetailComponent implements OnChanges, OnInit {
           takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
-          this.historicalDataUpdated.emit();
           this.initializeHistoricalDataForm();
+
+          this.marketDataChanged.emit(true);
         });
     } catch {
       this.snackBar.open(
@@ -261,16 +264,16 @@ export class GfMarketDataDetailComponent implements OnChanges, OnInit {
     }
   }
 
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
+  }
+
   private initializeHistoricalDataForm() {
     this.historicalDataForm.setValue({
       historicalData: {
         csvString: GfMarketDataDetailComponent.HISTORICAL_DATA_TEMPLATE
       }
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

@@ -25,6 +25,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MarketDataDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
     CommonModule,
@@ -37,7 +38,6 @@ import { MarketDataDetailDialogParams } from './interfaces/interfaces';
     ReactiveFormsModule
   ],
   selector: 'gf-market-data-detail-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   standalone: true,
   styleUrls: ['./market-data-detail-dialog.scss'],
