@@ -84,6 +84,7 @@ export class PublicController {
       hasDetails,
       markets,
       alias: access.alias,
+      createdAt: performance1d.createdAt,
       holdings: {},
       performance: {
         '1d': {
