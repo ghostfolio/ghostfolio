@@ -77,7 +77,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
-  public marketDataDetails: MarketData[] = [];
+  public marketDataItems: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -111,6 +111,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
+    this.historicalDataItems = undefined;
+
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -136,16 +138,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           return id === this.assetProfile.id;
         });
 
-        this.historicalDataItems = this.marketDataDetails.map(
-          ({ date, marketPrice }) => {
-            return {
-              date: format(date, DATE_FORMAT),
-              value: marketPrice
-            };
-          }
-        );
+        this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
+          return {
+            date: format(date, DATE_FORMAT),
+            value: marketPrice
+          };
+        });
 
-        this.marketDataDetails = marketData;
+        this.marketDataItems = marketData;
         this.sectors = {};
 
         if (this.assetProfile?.countries?.length > 0) {

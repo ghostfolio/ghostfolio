@@ -22,7 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Subject, takeUntil } from 'rxjs';
 
-import { MarketDataDetailDialogParams } from './interfaces/interfaces';
+import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,21 +37,22 @@ import { MarketDataDetailDialogParams } from './interfaces/interfaces';
     MatInputModule,
     ReactiveFormsModule
   ],
-  selector: 'gf-market-data-detail-dialog',
+  selector: 'gf-historical-market-data-editor-dialog',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   standalone: true,
-  styleUrls: ['./market-data-detail-dialog.scss'],
-  templateUrl: 'market-data-detail-dialog.html'
+  styleUrls: ['./historical-market-data-editor-dialog.scss'],
+  templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class MarketDataDetailDialogComponent implements OnDestroy {
+export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: MarketDataDetailDialogParams,
+    @Inject(MAT_DIALOG_DATA)
+    public data: HistoricalMarketDataEditorDialogParams,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<MarketDataDetailDialogComponent>,
+    public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
     @Inject(MAT_DATE_LOCALE) private locale: string
   ) {}
 

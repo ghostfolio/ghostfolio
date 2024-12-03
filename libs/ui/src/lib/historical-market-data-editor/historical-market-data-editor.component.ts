@@ -43,8 +43,8 @@ import { parse as csvToJson } from 'papaparse';
 import { EMPTY, Subject, takeUntil } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { MarketDataDetailDialogParams } from './market-data-detail-dialog/interfaces/interfaces';
-import { MarketDataDetailDialogComponent } from './market-data-detail-dialog/market-data-detail-dialog.component';
+import { GfHistoricalMarketDataEditorDialogComponent } from './historical-market-data-editor-dialog/historical-market-data-editor-dialog.component';
+import { HistoricalMarketDataEditorDialogParams } from './historical-market-data-editor-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -200,18 +200,21 @@ export class GfHistoricalMarketDataEditorComponent
   }) {
     const marketPrice = this.marketDataByMonth[yearMonth]?.[day]?.marketPrice;
 
-    const dialogRef = this.dialog.open(MarketDataDetailDialogComponent, {
-      data: {
-        marketPrice,
-        currency: this.currency,
-        dataSource: this.dataSource,
-        dateString: `${yearMonth}-${day}`,
-        symbol: this.symbol,
-        user: this.user
-      } as MarketDataDetailDialogParams,
-      height: this.deviceType === 'mobile' ? '98vh' : '80vh',
-      width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-    });
+    const dialogRef = this.dialog.open(
+      GfHistoricalMarketDataEditorDialogComponent,
+      {
+        data: {
+          marketPrice,
+          currency: this.currency,
+          dataSource: this.dataSource,
+          dateString: `${yearMonth}-${day}`,
+          symbol: this.symbol,
+          user: this.user
+        } as HistoricalMarketDataEditorDialogParams,
+        height: this.deviceType === 'mobile' ? '98vh' : '80vh',
+        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
+      }
+    );
 
     dialogRef
       .afterClosed()
