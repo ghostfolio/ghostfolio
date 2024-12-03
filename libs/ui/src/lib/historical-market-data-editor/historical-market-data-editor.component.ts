@@ -49,12 +49,12 @@ import { MarketDataDetailDialogComponent } from './market-data-detail-dialog/mar
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatButtonModule, MatInputModule, ReactiveFormsModule],
-  selector: 'gf-market-data-details',
+  selector: 'gf-historical-market-data-editor',
   standalone: true,
-  styleUrls: ['./market-data-detail.component.scss'],
-  templateUrl: './market-data-detail.component.html'
+  styleUrls: ['./historical-market-data-editor.component.scss'],
+  templateUrl: './historical-market-data-editor.component.html'
 })
-export class GfMarketDataDetailComponent
+export class GfHistoricalMarketDataEditorComponent
   implements OnChanges, OnDestroy, OnInit
 {
   @Input() currency: string;
@@ -272,7 +272,8 @@ export class GfMarketDataDetailComponent
   private initializeHistoricalDataForm() {
     this.historicalDataForm.setValue({
       historicalData: {
-        csvString: GfMarketDataDetailComponent.HISTORICAL_DATA_TEMPLATE
+        csvString:
+          GfHistoricalMarketDataEditorComponent.HISTORICAL_DATA_TEMPLATE
       }
     });
   }
