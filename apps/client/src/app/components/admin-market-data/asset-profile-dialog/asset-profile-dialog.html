@@ -68,7 +68,6 @@
   </div>
 
   <div class="flex-grow-1" mat-dialog-content>
-    <p>Line</p>
     <gf-line-chart
       class="mb-4"
       [colorScheme]="user?.settings?.colorScheme"
@@ -79,7 +78,7 @@
       [showYAxis]="true"
       [symbol]="data.symbol"
     />
-    <gf-admin-market-data-detail
+    <gf-market-data-details
       class="mb-3"
       [currency]="assetProfile?.currency"
       [dataSource]="data.dataSource"
@@ -88,8 +87,8 @@
       [marketData]="marketDataDetails"
       [symbol]="data.symbol"
       [user]="user"
+      (historicalDataUpdated)="onImportHistoricalDataChanged()"
       (marketDataChanged)="onMarketDataChanged($event)"
-      (updateHistoricalData)="onImportHistoricalDataChanged()"
     />
 
     <div class="row">

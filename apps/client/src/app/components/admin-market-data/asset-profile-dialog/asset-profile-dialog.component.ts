@@ -13,7 +13,6 @@ import {
   User,
   LineChartItem
 } from '@ghostfolio/common/interfaces';
-import { AssetProfileDialogParams } from '@ghostfolio/ui/admin-market-data-detail/interfaces/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import {
@@ -35,6 +34,8 @@ import {
 import { format } from 'date-fns';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
+
+import { AssetProfileDialogParams } from '../interfaces/interfaces';
 
 @Component({
   host: { class: 'd-flex flex-column h-100' },
