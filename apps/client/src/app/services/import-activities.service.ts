@@ -261,7 +261,7 @@ export class ImportActivitiesService {
     }
 
     // If no data source specified, check the type
-    const type = this.parseType({ index: 0, item });
+    const type = this.getRawType({ item });
     if (type === 'ITEM' || type === 'LIABILITY') {
       return DataSource.MANUAL;
     }
@@ -355,13 +355,7 @@ export class ImportActivitiesService {
     };
   }
 
-  private parseType({
-    index,
-    item
-  }: {
-    index: number;
-    item: any;
-  }): ActivityType {
+  private getRawType({ item }: { item: any }): ActivityType {
     item = this.lowercaseKeys(item);
 
     for (const key of ImportActivitiesService.TYPE_KEYS) {
@@ -385,6 +379,21 @@ export class ImportActivitiesService {
             break;
         }
       }
+    }
+    return undefined;
+  }
+
+  private parseType({
+    index,
+    item
+  }: {
+    index: number;
+    item: any;
+  }): ActivityType {
+    item = this.lowercaseKeys(item);
+    const type = this.getRawType({ item });
+    if (type) {
+      return type;
     }
 
     this.warnings.push(
