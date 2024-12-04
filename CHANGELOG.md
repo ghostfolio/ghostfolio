@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added pagination to the users table of the admin control panel
+
 ### Changed
 
 - Improved the labels of the assistant
+- Extracted the historical market data editor to a reusable component
 
 ## 2.125.0 - 2024-11-30
 
