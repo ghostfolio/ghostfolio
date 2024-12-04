@@ -63,11 +63,11 @@ export class ImportActivitiesDialog implements OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: ImportActivitiesDialogParams,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
-    private formBuilder: FormBuilder,
     public dialogRef: MatDialogRef<ImportActivitiesDialog>,
+    private formBuilder: FormBuilder,
     private importActivitiesService: ImportActivitiesService,
-    private snackBar: MatSnackBar,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnInit() {
@@ -302,12 +302,14 @@ export class ImportActivitiesDialog implements OnDestroy {
                 isDryRun: true,
                 userAccounts: this.data.user.accounts
               });
+
             if (warnings.length > 0) {
               this.notificationService.alert({
-                title: 'Import Warnings',
+                title: $localize`Import Warnings`,
                 message: warnings.join('<br/>')
               });
             }
+
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
             this.totalItems = activities.length;
