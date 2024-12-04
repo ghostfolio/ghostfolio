@@ -231,9 +231,6 @@ export class ImportActivitiesService {
       this.dataService.fetchSymbolItem({ dataSource, symbol }).pipe(
         map(({ currency }) => {
           if (currency) {
-            console.warn(
-              `activities.${index}.currency was not provided, using ${currency} from symbol data`
-            );
             return currency;
           }
 
