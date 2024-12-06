@@ -93,7 +93,7 @@ export class GhostfolioService implements DataProviderInterface {
       }, requestTimeout);
 
       const { dividends } = await got(
-        `${this.URL}/v1/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
+        `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
         )}`,
@@ -138,7 +138,7 @@ export class GhostfolioService implements DataProviderInterface {
       }, requestTimeout);
 
       const { historicalData } = await got(
-        `${this.URL}/v1/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
+        `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
         )}`,
@@ -201,7 +201,7 @@ export class GhostfolioService implements DataProviderInterface {
       }, requestTimeout);
 
       const { quotes } = await got(
-        `${this.URL}/v1/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
+        `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore
@@ -245,7 +245,7 @@ export class GhostfolioService implements DataProviderInterface {
       }, this.configurationService.get('REQUEST_TIMEOUT'));
 
       searchResult = await got(
-        `${this.URL}/v1/data-providers/ghostfolio/lookup?query=${query}`,
+        `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore

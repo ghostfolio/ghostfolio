@@ -3,31 +3,19 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { ApiKeyResponse } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
-
-const crypto = require('crypto');
+import * as crypto from 'crypto';
 
 @Injectable()
 export class ApiKeyService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  private readonly algorithm = 'sha256';
+  private readonly iterations = 100000;
+  private readonly keyLength = 64;
+
+  constructor(private readonly prismaService: PrismaService) {}
 
   public async create({ userId }: { userId: string }): Promise<ApiKeyResponse> {
-    let apiKey = getRandomString(32);
-    apiKey = apiKey
-      .split('')
-      .reduce((acc, char, index) => {
-        const chunkIndex = Math.floor(index / 4);
-        acc[chunkIndex] = (acc[chunkIndex] || '') + char;
-
-        return acc;
-      }, [])
-      .join('-');
-
-    const iterations = 100000;
-    const keyLength = 64;
-
-    const hashedKey = crypto
-      .pbkdf2Sync(apiKey, '', iterations, keyLength, 'sha256')
-      .toString('hex');
+    const apiKey = this.generateApiKey();
+    const hashedKey = this.hashApiKey(apiKey);
 
     await this.prismaService.apiKey.deleteMany({ where: { userId } });
 
@@ -39,5 +27,33 @@ export class ApiKeyService {
     });
 
     return { apiKey };
+  }
+
+  public async getUserByApiKey(apiKey: string) {
+    const hashedKey = this.hashApiKey(apiKey);
+
+    const { user } = await this.prismaService.apiKey.findFirst({
+      include: { user: true },
+      where: { hashedKey }
+    });
+
+    return user;
+  }
+
+  public hashApiKey(apiKey: string): string {
+    return crypto
+      .pbkdf2Sync(apiKey, '', this.iterations, this.keyLength, this.algorithm)
+      .toString('hex');
+  }
+
+  private generateApiKey(): string {
+    return getRandomString(32)
+      .split('')
+      .reduce((acc, char, index) => {
+        const chunkIndex = Math.floor(index / 4);
+        acc[chunkIndex] = (acc[chunkIndex] || '') + char;
+        return acc;
+      }, [])
+      .join('-');
   }
 }

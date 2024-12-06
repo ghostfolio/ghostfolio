@@ -1,3 +1,7 @@
+import {
+  HEADER_KEY_SKIP_INTERCEPTOR,
+  HEADER_KEY_TOKEN
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
@@ -8,7 +12,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { format, startOfYear } from 'date-fns';
 import { map, Observable, Subject, takeUntil } from 'rxjs';
@@ -28,11 +32,14 @@ export class GfApiPageComponent implements OnInit {
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
   public symbols$: Observable<LookupResponse['items']>;
 
+  private apiKey: string;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(private http: HttpClient) {}
 
   public ngOnInit() {
+    this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
+
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL.US' });
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL.US', 'VOO.US'] });
@@ -52,8 +59,11 @@ export class GfApiPageComponent implements OnInit {
 
     return this.http
       .get<DividendsResponse>(
-        `/api/v1/data-providers/ghostfolio/dividends/${symbol}`,
-        { params }
+        `/api/v2/data-providers/ghostfolio/dividends/${symbol}`,
+        {
+          params,
+          headers: this.getHeaders()
+        }
       )
       .pipe(
         map(({ dividends }) => {
@@ -70,8 +80,11 @@ export class GfApiPageComponent implements OnInit {
 
     return this.http
       .get<HistoricalResponse>(
-        `/api/v1/data-providers/ghostfolio/historical/${symbol}`,
-        { params }
+        `/api/v2/data-providers/ghostfolio/historical/${symbol}`,
+        {
+          params,
+          headers: this.getHeaders()
+        }
       )
       .pipe(
         map(({ historicalData }) => {
@@ -85,8 +98,9 @@ export class GfApiPageComponent implements OnInit {
     const params = new HttpParams().set('symbols', symbols.join(','));
 
     return this.http
-      .get<QuotesResponse>('/api/v1/data-providers/ghostfolio/quotes', {
-        params
+      .get<QuotesResponse>('/api/v2/data-providers/ghostfolio/quotes', {
+        params,
+        headers: this.getHeaders()
       })
       .pipe(
         map(({ quotes }) => {
@@ -99,7 +113,8 @@ export class GfApiPageComponent implements OnInit {
   private fetchStatus() {
     return this.http
       .get<DataProviderGhostfolioStatusResponse>(
-        '/api/v1/data-providers/ghostfolio/status'
+        '/api/v2/data-providers/ghostfolio/status',
+        { headers: this.getHeaders() }
       )
       .pipe(takeUntil(this.unsubscribeSubject));
   }
@@ -118,7 +133,7 @@ export class GfApiPageComponent implements OnInit {
     }
 
     return this.http
-      .get<LookupResponse>('/api/v1/data-providers/ghostfolio/lookup', {
+      .get<LookupResponse>('/api/v2/data-providers/ghostfolio/lookup', {
         params
       })
       .pipe(
@@ -127,5 +142,12 @@ export class GfApiPageComponent implements OnInit {
         }),
         takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  private getHeaders() {
+    return new HttpHeaders({
+      [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+      [HEADER_KEY_TOKEN]: `Api-Key ${this.apiKey}`
+    });
   }
 }

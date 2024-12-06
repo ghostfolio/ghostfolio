@@ -18,7 +18,8 @@ import {
   Inject,
   Param,
   Query,
-  UseGuards
+  UseGuards,
+  Version
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
@@ -36,6 +37,7 @@ export class GhostfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
+  // TODO: v2
   @Get('dividends/:symbol')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -75,6 +77,7 @@ export class GhostfolioController {
     }
   }
 
+  // TODO: v2
   @Get('historical/:symbol')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -114,6 +117,7 @@ export class GhostfolioController {
     }
   }
 
+  // TODO: v2
   @Get('lookup')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -152,6 +156,7 @@ export class GhostfolioController {
     }
   }
 
+  // TODO: v2
   @Get('quotes')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -187,9 +192,20 @@ export class GhostfolioController {
     }
   }
 
+  /**
+   * @deprecated
+   */
   @Get('status')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getStatusV1(): Promise<DataProviderGhostfolioStatusResponse> {
+    return this.ghostfolioService.getStatus({ user: this.request.user });
+  }
+
+  @Get('status')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  @Version('2')
   public async getStatus(): Promise<DataProviderGhostfolioStatusResponse> {
     return this.ghostfolioService.getStatus({ user: this.request.user });
   }
