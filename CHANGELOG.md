@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the labels of the assistant
 - Extracted the historical market data editor to a reusable component
 
 ## 2.125.0 - 2024-11-30
