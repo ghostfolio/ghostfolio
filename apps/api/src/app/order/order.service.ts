@@ -123,10 +123,29 @@ export class OrderService {
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
-      data.SymbolProfile.connectOrCreate.create.symbol = id;
+
+      let symbolProfileSymbol = id;
+
+      if (data.type === 'INTEREST') {
+        const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+          orderBy: {
+            createdAt: 'desc'
+          },
+          where: {
+            dataSource: dataSource,
+            name: name
+          }
+        });
+
+        if (symbolProfile) {
+          symbolProfileSymbol = symbolProfile.symbol;
+        }
+      }
+
+      data.SymbolProfile.connectOrCreate.create.symbol = symbolProfileSymbol;
       data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
         dataSource,
-        symbol: id
+        symbol: symbolProfileSymbol
       };
     }
 
@@ -224,7 +243,7 @@ export class OrderService {
       ]);
 
     if (
-      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
+      ['FEE', 'ITEM', 'LIABILITY'].includes(order.type) ||
       symbolProfile.activitiesCount === 0
     ) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
@@ -620,12 +639,52 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
+    if (['FEE', 'ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
 
       if (data.Account?.connect?.id_userId?.id === null) {
         data.Account = { disconnect: true };
       }
+    } else if (data.type === 'INTEREST') {
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
+
+      const symbolProfileDataSource =
+        data.SymbolProfile.connect.dataSource_symbol.dataSource;
+      const symbolProfileName =
+        data.SymbolProfile.connect.dataSource_symbol.symbol;
+
+      delete data.SymbolProfile.update;
+      delete data.SymbolProfile.connect;
+
+      const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+        orderBy: {
+          createdAt: 'desc'
+        },
+        where: {
+          currency: data.currency,
+          dataSource: symbolProfileDataSource,
+          name: symbolProfileName
+        }
+      });
+
+      const symbolProfileSymbol = symbolProfile?.symbol ?? uuidv4();
+
+      data.SymbolProfile.connectOrCreate = {
+        create: {
+          currency: data.currency,
+          dataSource: symbolProfileDataSource,
+          name: symbolProfileName,
+          symbol: symbolProfileSymbol
+        },
+        where: {
+          dataSource_symbol: {
+            dataSource: symbolProfileDataSource,
+            symbol: symbolProfileSymbol
+          }
+        }
+      };
     } else {
       delete data.SymbolProfile.update;
 
