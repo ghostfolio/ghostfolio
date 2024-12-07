@@ -149,7 +149,7 @@ export class AdminService {
       switchMap(({ settings }) => {
         const headers = new HttpHeaders({
           [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
-          [HEADER_KEY_TOKEN]: `Bearer ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
+          [HEADER_KEY_TOKEN]: `Api-Key ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
         });
 
         return this.http.get<DataProviderGhostfolioStatusResponse>(

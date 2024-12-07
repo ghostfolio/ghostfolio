@@ -111,8 +111,13 @@ export class GhostfolioService implements DataProviderInterface {
       if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
       } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        message =
-          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+          message =
+            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        } else {
+          message =
+            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
+        }
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -158,8 +163,13 @@ export class GhostfolioService implements DataProviderInterface {
       if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
       } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        message =
-          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+          message =
+            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        } else {
+          message =
+            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
+        }
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -213,15 +223,20 @@ export class GhostfolioService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error.code === 'ABORT_ERR') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
       } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
       } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        message =
-          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+          message =
+            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        } else {
+          message =
+            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
+        }
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -255,15 +270,20 @@ export class GhostfolioService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error.code === 'ABORT_ERR') {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
       } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
       } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
-        message =
-          'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+          message =
+            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        } else {
+          message =
+            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
+        }
       }
 
       Logger.error(message, 'GhostfolioService');
@@ -278,7 +298,7 @@ export class GhostfolioService implements DataProviderInterface {
     )) as string;
 
     return {
-      [HEADER_KEY_TOKEN]: `Bearer ${apiKey}`
+      [HEADER_KEY_TOKEN]: `Api-Key ${apiKey}`
     };
   }
 }
