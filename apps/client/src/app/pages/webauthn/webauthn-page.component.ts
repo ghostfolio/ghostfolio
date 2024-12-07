@@ -22,7 +22,7 @@ export class GfWebauthnPageComponent implements OnDestroy, OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  constructor(
+  public constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private tokenStorageService: TokenStorageService,
