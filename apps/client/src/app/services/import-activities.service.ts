@@ -224,8 +224,8 @@ export class ImportActivitiesService {
     }
 
     // If no currency in CSV, make an API request to get symbol data
-    const symbol = this.parseSymbol({ content, index, item });
     const dataSource = this.parseDataSource({ item });
+    const symbol = this.parseSymbol({ content, index, item });
 
     return firstValueFrom(
       this.dataService.fetchSymbolItem({ dataSource, symbol }).pipe(
