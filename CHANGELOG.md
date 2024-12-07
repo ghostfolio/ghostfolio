@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries immediately in case of errors
 - Extracted the historical market data editor to a reusable component
 - Upgraded `prettier` from version `3.3.3` to `3.4.2`
+- Upgraded `prisma` from version `6.0.0` to `6.0.1`
 
 ## 2.125.0 - 2024-11-30
 
