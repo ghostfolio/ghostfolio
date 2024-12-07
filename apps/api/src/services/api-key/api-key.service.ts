@@ -11,7 +11,7 @@ export class ApiKeyService {
   private readonly iterations = 100000;
   private readonly keyLength = 64;
 
-  constructor(private readonly prismaService: PrismaService) {}
+  public constructor(private readonly prismaService: PrismaService) {}
 
   public async create({ userId }: { userId: string }): Promise<ApiKeyResponse> {
     const apiKey = this.generateApiKey();

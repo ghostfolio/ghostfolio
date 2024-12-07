@@ -15,7 +15,7 @@ export class ApiKeyStrategy extends PassportStrategy(
   HeaderAPIKeyStrategy,
   'api-key'
 ) {
-  constructor(
+  public constructor(
     private readonly apiKeyService: ApiKeyService,
     private readonly configurationService: ConfigurationService,
     private readonly prismaService: PrismaService,
