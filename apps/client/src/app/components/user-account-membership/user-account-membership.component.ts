@@ -107,15 +107,15 @@ export class UserAccountMembershipComponent implements OnDestroy {
     this.dataService
       .createCheckoutSession({ couponId: this.couponId, priceId: this.priceId })
       .pipe(
-        switchMap(({ sessionId }: { sessionId: string }) => {
-          return this.stripeService.redirectToCheckout({ sessionId });
-        }),
         catchError((error) => {
           this.notificationService.alert({
             title: error.message
           });
 
           throw error;
+        }),
+        switchMap(({ sessionId }: { sessionId: string }) => {
+          return this.stripeService.redirectToCheckout({ sessionId });
         })
       )
       .subscribe((result) => {
@@ -133,7 +133,6 @@ export class UserAccountMembershipComponent implements OnDestroy {
         this.dataService
           .postApiKey()
           .pipe(
-            takeUntil(this.unsubscribeSubject),
             catchError(() => {
               this.snackBar.open(
                 '😞 ' + $localize`Could not generate an API key`,
@@ -144,7 +143,8 @@ export class UserAccountMembershipComponent implements OnDestroy {
               );
 
               return EMPTY;
-            })
+            }),
+            takeUntil(this.unsubscribeSubject)
           )
           .subscribe(({ apiKey }) => {
             this.notificationService.alert({
@@ -170,7 +170,6 @@ export class UserAccountMembershipComponent implements OnDestroy {
       this.dataService
         .redeemCoupon(couponCode)
         .pipe(
-          takeUntil(this.unsubscribeSubject),
           catchError(() => {
             this.snackBar.open(
               '😞 ' + $localize`Could not redeem coupon code`,
@@ -181,7 +180,8 @@ export class UserAccountMembershipComponent implements OnDestroy {
             );
 
             return EMPTY;
-          })
+          }),
+          takeUntil(this.unsubscribeSubject)
         )
         .subscribe(() => {
           this.snackBarRef = this.snackBar.open(
