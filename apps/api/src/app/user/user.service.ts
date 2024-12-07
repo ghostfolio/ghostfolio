@@ -38,10 +38,9 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
+import { createHmac } from 'crypto';
 import { differenceInDays, subDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
-
-const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
@@ -62,7 +61,7 @@ export class UserService {
   }
 
   public createAccessToken(password: string, salt: string): string {
-    const hash = crypto.createHmac('sha512', salt);
+    const hash = createHmac('sha512', salt);
     hash.update(password);
 
     return hash.digest('hex');

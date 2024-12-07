@@ -1,7 +1,7 @@
-const crypto = require('crypto');
+import { randomBytes } from 'crypto';
 
 export function getRandomString(length: number) {
-  const bytes = crypto.randomBytes(length);
+  const bytes = randomBytes(length);
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const result = [];
 
