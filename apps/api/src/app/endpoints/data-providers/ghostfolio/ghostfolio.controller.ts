@@ -37,10 +37,52 @@ export class GhostfolioController {
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
-  // TODO: v2
+  /**
+   * @deprecated
+   */
   @Get('dividends/:symbol')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getDividendsV1(
+    @Param('symbol') symbol: string,
+    @Query() query: GetDividendsDto
+  ): Promise<DividendsResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const dividends = await this.ghostfolioService.getDividends({
+        symbol,
+        from: parseDate(query.from),
+        granularity: query.granularity,
+        to: parseDate(query.to)
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return dividends;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('dividends/:symbol')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  @Version('2')
   public async getDividends(
     @Param('symbol') symbol: string,
     @Query() query: GetDividendsDto
