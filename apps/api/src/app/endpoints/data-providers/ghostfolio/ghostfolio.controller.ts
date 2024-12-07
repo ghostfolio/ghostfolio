@@ -119,10 +119,52 @@ export class GhostfolioController {
     }
   }
 
-  // TODO: v2
+  /**
+   * @deprecated
+   */
   @Get('historical/:symbol')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getHistoricalV1(
+    @Param('symbol') symbol: string,
+    @Query() query: GetHistoricalDto
+  ): Promise<HistoricalResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const historicalData = await this.ghostfolioService.getHistorical({
+        symbol,
+        from: parseDate(query.from),
+        granularity: query.granularity,
+        to: parseDate(query.to)
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return historicalData;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('historical/:symbol')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  @Version('2')
   public async getHistorical(
     @Param('symbol') symbol: string,
     @Query() query: GetHistoricalDto
