@@ -24,7 +24,12 @@
           <ng-container i18n>rules are currently fulfilled.</ng-container>
         }
       </p>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': currencyClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Emergency Fund</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -43,7 +48,12 @@
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': currencyClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Currency Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -62,7 +72,12 @@
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': accountClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Account Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -81,7 +96,12 @@
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': economicMarketClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Economic Market Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -100,7 +120,12 @@
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': feeRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Fees</span>
           @if (user?.subscription?.type === 'Basic') {
