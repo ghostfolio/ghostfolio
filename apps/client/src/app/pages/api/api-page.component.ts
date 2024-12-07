@@ -134,7 +134,8 @@ export class GfApiPageComponent implements OnInit {
 
     return this.http
       .get<LookupResponse>('/api/v2/data-providers/ghostfolio/lookup', {
-        params
+        params,
+        headers: this.getHeaders()
       })
       .pipe(
         map(({ items }) => {
