@@ -201,10 +201,51 @@ export class GhostfolioController {
     }
   }
 
-  // TODO: v2
+  /**
+   * @deprecated
+   */
   @Get('lookup')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async lookupSymbolV1(
+    @Query('includeIndices') includeIndicesParam = 'false',
+    @Query('query') query = ''
+  ): Promise<LookupResponse> {
+    const includeIndices = includeIndicesParam === 'true';
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const result = await this.ghostfolioService.lookup({
+        includeIndices,
+        query: query.toLowerCase()
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return result;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('lookup')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  @Version('2')
   public async lookupSymbol(
     @Query('includeIndices') includeIndicesParam = 'false',
     @Query('query') query = ''
