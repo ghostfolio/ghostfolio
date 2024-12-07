@@ -1,6 +1,9 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ApiKeyService } from '@ghostfolio/api/services/api-key/api-key.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { HEADER_KEY_TOKEN } from '@ghostfolio/common/config';
+import { hasRole } from '@ghostfolio/common/permissions';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -14,6 +17,8 @@ export class ApiKeyStrategy extends PassportStrategy(
 ) {
   constructor(
     private readonly apiKeyService: ApiKeyService,
+    private readonly configurationService: ConfigurationService,
+    private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
     super(
@@ -23,7 +28,23 @@ export class ApiKeyStrategy extends PassportStrategy(
         try {
           const user = await this.validateApiKey(apiKey);
 
-          // TODO: Add checks from JwtStrategy
+          if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+            if (hasRole(user, 'INACTIVE')) {
+              throw new HttpException(
+                getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+                StatusCodes.TOO_MANY_REQUESTS
+              );
+            }
+
+            await this.prismaService.analytics.upsert({
+              create: { User: { connect: { id: user.id } } },
+              update: {
+                activityCount: { increment: 1 },
+                lastRequestAt: new Date()
+              },
+              where: { userId: user.id }
+            });
+          }
 
           done(null, user);
         } catch (error) {
