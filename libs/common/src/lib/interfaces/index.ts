@@ -39,6 +39,7 @@ import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
+import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
@@ -72,6 +73,7 @@ export {
   AdminMarketDataDetails,
   AdminMarketDataItem,
   AdminUsers,
+  ApiKeyResponse,
   AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
