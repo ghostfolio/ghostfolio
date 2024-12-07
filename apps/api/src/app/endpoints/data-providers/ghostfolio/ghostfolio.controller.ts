@@ -281,10 +281,48 @@ export class GhostfolioController {
     }
   }
 
-  // TODO: v2
+  /**
+   * @deprecated
+   */
   @Get('quotes')
   @HasPermission(permissions.enableDataProviderGhostfolio)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getQuotesV1(
+    @Query() query: GetQuotesDto
+  ): Promise<QuotesResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const quotes = await this.ghostfolioService.getQuotes({
+        symbols: query.symbols
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return quotes;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  @Get('quotes')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  @Version('2')
   public async getQuotes(
     @Query() query: GetQuotesDto
   ): Promise<QuotesResponse> {
