@@ -1,34 +1,58 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   Inject,
   OnDestroy
 } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Subject, takeUntil } from 'rxjs';
 
-import { MarketDataDetailDialogParams } from './interfaces/interfaces';
+import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
 
 @Component({
-  host: { class: 'h-100' },
-  selector: 'gf-market-data-detail-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrls: ['./market-data-detail-dialog.scss'],
-  templateUrl: 'market-data-detail-dialog.html'
+  host: { class: 'h-100' },
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ],
+  selector: 'gf-historical-market-data-editor-dialog',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  standalone: true,
+  styleUrls: ['./historical-market-data-editor-dialog.scss'],
+  templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class MarketDataDetailDialog implements OnDestroy {
+export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: MarketDataDetailDialogParams,
+    @Inject(MAT_DIALOG_DATA)
+    public data: HistoricalMarketDataEditorDialogParams,
     private dateAdapter: DateAdapter<any>,
-    public dialogRef: MatDialogRef<MarketDataDetailDialog>,
+    public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
     @Inject(MAT_DATE_LOCALE) private locale: string
   ) {}
 

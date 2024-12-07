@@ -10,6 +10,7 @@ import {
   HEADER_KEY_TOKEN,
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -23,7 +24,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
@@ -146,14 +147,14 @@ export class AdminService {
   public fetchGhostfolioDataProviderStatus() {
     return this.fetchAdminData().pipe(
       switchMap(({ settings }) => {
+        const headers = new HttpHeaders({
+          [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+          [HEADER_KEY_TOKEN]: `Api-Key ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
+        });
+
         return this.http.get<DataProviderGhostfolioStatusResponse>(
-          `${environment.production ? 'https://ghostfol.io' : ''}/api/v1/data-providers/ghostfolio/status`,
-          {
-            headers: {
-              [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
-              [HEADER_KEY_TOKEN]: `Bearer ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
-            }
-          }
+          `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+          { headers }
         );
       })
     );
@@ -179,10 +180,17 @@ export class AdminService {
     return this.http.get<Tag[]>('/api/v1/tag');
   }
 
-  public fetchUsers() {
+  public fetchUsers({
+    skip,
+    take = DEFAULT_PAGE_SIZE
+  }: {
+    skip?: number;
+    take?: number;
+  }) {
     let params = new HttpParams();
 
-    params = params.append('take', 30);
+    params = params.append('skip', skip);
+    params = params.append('take', take);
 
     return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }

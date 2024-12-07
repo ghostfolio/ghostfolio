@@ -42,6 +42,12 @@
       background-color: #1d2124;
       border-radius: calc(var(--borderRadius) - var(--borderWidth));
       color: rgba(var(--light-primary-text));
+      line-height: 1.2;
+
+      button {
+        color: rgba(var(--light-primary-text));
+        height: 1.5rem;
+      }
 
       .heading {
         font-size: 13px;
