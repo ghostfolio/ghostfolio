@@ -38,7 +38,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     private notificationService: NotificationService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       permissions: [this.data.access.permissions[0], Validators.required],
