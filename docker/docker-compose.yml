@@ -19,7 +19,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: [ 'CMD-SHELL', 'curl -f http://localhost:3333/api/v1/health' ]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3333/api/v1/health']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -41,7 +41,8 @@ services:
     env_file:
       - ../.env
     healthcheck:
-      test: [ 'CMD-SHELL', 'pg_isready -d "$${POSTGRES_DB}" -U $${POSTGRES_USER}' ]
+      test:
+        ['CMD-SHELL', 'pg_isready -d "$${POSTGRES_DB}" -U $${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -68,7 +69,8 @@ services:
       #   code and print a message, when the variable is not set or empty
       - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     healthcheck:
-      test: [ 'CMD-SHELL', 'redis-cli --pass "$${REDIS_PASSWORD}" ping | grep PONG' ]
+      test:
+        ['CMD-SHELL', 'redis-cli --pass "$${REDIS_PASSWORD}" ping | grep PONG']
       interval: 10s
       timeout: 5s
       retries: 5
