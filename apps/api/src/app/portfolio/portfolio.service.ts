@@ -37,7 +37,7 @@ import {
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPosition,
-  PortfolioReport,
+  PortfolioReportResponse,
   PortfolioSummary,
   Position,
   UserSettings
@@ -1162,7 +1162,9 @@ export class PortfolioService {
     };
   }
 
-  public async getReport(impersonationId: string): Promise<PortfolioReport> {
+  public async getReport(
+    impersonationId: string
+  ): Promise<PortfolioReportResponse> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const userSettings = this.request.user.Settings.settings as UserSettings;
 
@@ -1179,79 +1181,79 @@ export class PortfolioService {
       })
     ).toNumber();
 
-    return {
-      rules: {
-        accountClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new AccountClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    accounts
-                  ),
-                  new AccountClusterRiskSingleAccount(
-                    this.exchangeRateDataService,
-                    accounts
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        economicMarketClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new EconomicMarketClusterRiskDevelopedMarkets(
-                    this.exchangeRateDataService,
-                    marketsTotalInBaseCurrency,
-                    markets.developedMarkets.valueInBaseCurrency
-                  ),
-                  new EconomicMarketClusterRiskEmergingMarkets(
-                    this.exchangeRateDataService,
-                    marketsTotalInBaseCurrency,
-                    markets.emergingMarkets.valueInBaseCurrency
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        currencyClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                    this.exchangeRateDataService,
-                    Object.values(holdings)
-                  ),
-                  new CurrencyClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    Object.values(holdings)
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        emergencyFund: await this.rulesService.evaluate(
-          [
-            new EmergencyFundSetup(
-              this.exchangeRateDataService,
-              userSettings.emergencyFund
+    const rules: PortfolioReportResponse['rules'] = {
+      accountClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new AccountClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  accounts
+                ),
+                new AccountClusterRiskSingleAccount(
+                  this.exchangeRateDataService,
+                  accounts
+                )
+              ],
+              userSettings
             )
-          ],
-          userSettings
-        ),
-        fees: await this.rulesService.evaluate(
-          [
-            new FeeRatioInitialInvestment(
-              this.exchangeRateDataService,
-              summary.committedFunds,
-              summary.fees
+          : undefined,
+      economicMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new EconomicMarketClusterRiskDevelopedMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.developedMarkets.valueInBaseCurrency
+                ),
+                new EconomicMarketClusterRiskEmergingMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.emergingMarkets.valueInBaseCurrency
+                )
+              ],
+              userSettings
             )
-          ],
-          userSettings
-        )
-      }
+          : undefined,
+      currencyClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                )
+              ],
+              userSettings
+            )
+          : undefined,
+      emergencyFund: await this.rulesService.evaluate(
+        [
+          new EmergencyFundSetup(
+            this.exchangeRateDataService,
+            userSettings.emergencyFund
+          )
+        ],
+        userSettings
+      ),
+      fees: await this.rulesService.evaluate(
+        [
+          new FeeRatioInitialInvestment(
+            this.exchangeRateDataService,
+            summary.committedFunds,
+            summary.fees
+          )
+        ],
+        userSettings
+      )
     };
+
+    return { rules, statistics: this.getReportStatistics(rules) };
   }
 
   public async updateTags({
@@ -1668,6 +1670,24 @@ export class PortfolioService {
       .toNumber();
 
     return { markets, marketsAdvanced };
+  }
+
+  private getReportStatistics(
+    evaluatedRules: PortfolioReportResponse['rules']
+  ): PortfolioReportResponse['statistics'] {
+    const rulesActiveCount = Object.values(evaluatedRules)
+      .flat()
+      .filter(({ isActive }) => {
+        return isActive === true;
+      }).length;
+
+    const rulesFulfilledCount = Object.values(evaluatedRules)
+      .flat()
+      .filter(({ value }) => {
+        return value === true;
+      }).length;
+
+    return { rulesActiveCount, rulesFulfilledCount };
   }
 
   private getStreaks({
