@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the _X-ray_ page by a summary
 
+### Changed
+
+- Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
+
 ## 2.126.1 - 2024-12-07
 
 ### Added
