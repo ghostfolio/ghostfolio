@@ -37,7 +37,7 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioReport,
+  PortfolioReportResponse,
   PublicPortfolioResponse,
   User
 } from '@ghostfolio/common/interfaces';
@@ -613,7 +613,7 @@ export class DataService {
   }
 
   public fetchPortfolioReport() {
-    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
+    return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
   }
 
   public fetchPublicPortfolio(aAccessId: string) {

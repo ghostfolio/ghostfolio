@@ -23,7 +23,7 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioReport
+  PortfolioReportResponse
 } from '@ghostfolio/common/interfaces';
 import {
   hasReadRestrictedAccessPermission,
@@ -611,7 +611,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getReport(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
-  ): Promise<PortfolioReport> {
+  ): Promise<PortfolioReportResponse> {
     const report = await this.portfolioService.getReport(impersonationId);
 
     if (
