@@ -13,7 +13,7 @@ export class PortfolioSnapshot {
   @Type(() => Big)
   currentValueInBaseCurrency: Big;
 
-  errors?: AssetProfileIdentifier[];
+  errors: AssetProfileIdentifier[];
 
   hasErrors: boolean;
 
