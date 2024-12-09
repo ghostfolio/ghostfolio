@@ -220,8 +220,7 @@ export class GhostfolioService {
   public async incrementDailyRequests({ userId }: { userId: string }) {
     await this.prismaService.analytics.update({
       data: {
-        dataProviderGhostfolioDailyRequests: { increment: 1 },
-        lastRequestAt: new Date()
+        dataProviderGhostfolioDailyRequests: { increment: 1 }
       },
       where: { userId }
     });

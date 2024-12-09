@@ -34,11 +34,11 @@ import type { PortfolioOverview } from './portfolio-overview.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
-import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
+import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
@@ -49,6 +49,7 @@ import type { LookupResponse } from './responses/lookup-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
+import type { PortfolioReportResponse } from './responses/portfolio-report.interface';
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
@@ -72,6 +73,7 @@ export {
   AdminMarketDataDetails,
   AdminMarketDataItem,
   AdminUsers,
+  ApiKeyResponse,
   AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
@@ -106,7 +108,7 @@ export {
   PortfolioPerformance,
   PortfolioPerformanceResponse,
   PortfolioPosition,
-  PortfolioReport,
+  PortfolioReportResponse,
   PortfolioReportRule,
   PortfolioSummary,
   Position,

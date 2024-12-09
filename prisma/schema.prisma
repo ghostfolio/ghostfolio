@@ -79,13 +79,12 @@ model Analytics {
 
 model ApiKey {
   createdAt DateTime @default(now())
-  hashedKey String
+  hashedKey String   @unique
   id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
   userId    String
   user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
-  @@index([hashedKey])
   @@index([userId])
 }
 
