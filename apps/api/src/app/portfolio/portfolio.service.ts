@@ -1677,14 +1677,14 @@ export class PortfolioService {
   ): PortfolioReportResponse['statistics'] {
     const rulesActiveCount = Object.values(evaluatedRules)
       .flat()
-      .filter(({ isActive }) => {
-        return isActive === true;
+      .filter((rule) => {
+        return rule?.isActive === true;
       }).length;
 
     const rulesFulfilledCount = Object.values(evaluatedRules)
       .flat()
-      .filter(({ value }) => {
-        return value === true;
+      .filter((rule) => {
+        return rule?.value === true;
       }).length;
 
     return { rulesActiveCount, rulesFulfilledCount };
