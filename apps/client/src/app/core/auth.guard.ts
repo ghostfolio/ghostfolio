@@ -29,7 +29,7 @@ export class AuthGuard {
     `/${paths.resources}`
   ];
 
-  constructor(
+  public constructor(
     private dataService: DataService,
     private router: Router,
     private settingsStorageService: SettingsStorageService,
