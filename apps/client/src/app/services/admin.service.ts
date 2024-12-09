@@ -24,7 +24,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
@@ -147,14 +147,14 @@ export class AdminService {
   public fetchGhostfolioDataProviderStatus() {
     return this.fetchAdminData().pipe(
       switchMap(({ settings }) => {
+        const headers = new HttpHeaders({
+          [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+          [HEADER_KEY_TOKEN]: `Api-Key ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
+        });
+
         return this.http.get<DataProviderGhostfolioStatusResponse>(
-          `${environment.production ? 'https://ghostfol.io' : ''}/api/v1/data-providers/ghostfolio/status`,
-          {
-            headers: {
-              [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
-              [HEADER_KEY_TOKEN]: `Bearer ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
-            }
-          }
+          `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+          { headers }
         );
       })
     );

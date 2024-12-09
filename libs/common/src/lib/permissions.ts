@@ -9,6 +9,7 @@ export const permissions = {
   createAccess: 'createAccess',
   createAccount: 'createAccount',
   createAccountBalance: 'createAccountBalance',
+  createApiKey: 'createApiKey',
   createOrder: 'createOrder',
   createPlatform: 'createPlatform',
   createTag: 'createTag',
