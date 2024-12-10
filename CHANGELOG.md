@@ -7,13 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
+
+## 2.127.0 - 2024-12-08
+
 ### Added
 
 - Extended the _X-ray_ page by a summary
 
-### Changed
+### Fixed
 
-- Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
+- Fixed an exception in the caching of the portfolio snapshot in the portfolio calculator
 
 ## 2.126.1 - 2024-12-07
 
