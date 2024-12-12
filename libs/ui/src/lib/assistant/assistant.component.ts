@@ -307,7 +307,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
-  public async initialize() {
+  public initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
     this.searchResults = {
