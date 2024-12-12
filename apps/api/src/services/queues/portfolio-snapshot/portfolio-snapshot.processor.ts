@@ -86,7 +86,7 @@ export class PortfolioSnapshotProcessor {
 
       const expiration = addMilliseconds(
         new Date(),
-        (snapshot.errors?.length ?? 0) === 0
+        (snapshot?.errors?.length ?? 0) === 0
           ? this.configurationService.get('CACHE_QUOTES_TTL')
           : 0
       );
