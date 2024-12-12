@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the holding selector in the assistant
 - Improved the language localization for German (`de`)
 - Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
 
