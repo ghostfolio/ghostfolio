@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an exception in the caching of the portfolio snapshot in the portfolio calculator
 - Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
 
 ## 2.127.0 - 2024-12-08
