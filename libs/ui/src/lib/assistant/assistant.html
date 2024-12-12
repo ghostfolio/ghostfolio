@@ -87,7 +87,7 @@
     </div>
   </div>
   <form [formGroup]="filterForm">
-    <ng-container *ngIf="!(isLoading || searchFormControl.value)">
+    <ng-container *ngIf="!searchFormControl.value">
       <div class="date-range-selector-container p-3">
         <mat-form-field appearance="outline" class="w-100 without-hint">
           <mat-label i18n>Date Range</mat-label>

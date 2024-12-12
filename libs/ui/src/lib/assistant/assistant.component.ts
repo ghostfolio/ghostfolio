@@ -270,10 +270,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filterForm.disable({ emitEvent: false });
 
-    if (this.hasPermissionToChangeFilters) {
-      this.filterForm.enable({ emitEvent: false });
-    }
-
     this.tags =
       this.user?.tags
         ?.filter(({ isUsed }) => {
@@ -328,6 +324,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.searchElement?.nativeElement?.focus();
     });
 
+    this.isLoading = false;
+    this.setIsOpen(true);
+
     this.dataService
       .fetchPortfolioHoldings()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -340,8 +339,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             return a.name?.localeCompare(b.name);
           });
         this.setFilterFormValues();
-        this.isLoading = false;
-        this.setIsOpen(true);
+
+        if (this.hasPermissionToChangeFilters) {
+          this.filterForm.enable({ emitEvent: false });
+        }
+
         this.changeDetectorRef.markForCheck();
       });
   }
