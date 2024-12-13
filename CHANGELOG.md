@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.128.0 - 2024-12-12
+
+### Changed
+
+- Optimized the holding selector in the assistant
+- Improved the language localization for German (`de`)
+- Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
+
+### Fixed
+
+- Fixed an exception in the caching of the portfolio snapshot in the portfolio calculator
+- Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
+
 ## 2.127.0 - 2024-12-08
 
 ### Added
