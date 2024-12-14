@@ -621,6 +621,11 @@ export class PortfolioController {
       for (const rule in report.rules) {
         report.rules[rule] = null;
       }
+
+      report.statistics = {
+        rulesActiveCount: 0,
+        rulesFulfilledCount: 0
+      };
     }
 
     return report;
