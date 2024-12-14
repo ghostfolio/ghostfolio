@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `userId` to the `SymbolProfile` database schema
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.128.0 - 2024-12-12
 
 ### Changed
