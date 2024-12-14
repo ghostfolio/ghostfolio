@@ -188,8 +188,10 @@ model SymbolProfile {
   symbol                 String
   symbolMapping          Json?
   url                    String?
+  userId                 String?
   Order                  Order[]
   SymbolProfileOverrides SymbolProfileOverrides?
+  User                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
@@ -239,14 +241,14 @@ model Tag {
 model User {
   accessToken   String?
   authChallenge String?
-  createdAt     DateTime       @default(now())
-  id            String         @id @default(uuid())
-  provider      Provider       @default(ANONYMOUS)
-  role          Role           @default(USER)
+  createdAt     DateTime        @default(now())
+  id            String          @id @default(uuid())
+  provider      Provider        @default(ANONYMOUS)
+  role          Role            @default(USER)
   thirdPartyId  String?
-  updatedAt     DateTime       @updatedAt
-  Access        Access[]       @relation("accessGet")
-  AccessGive    Access[]       @relation("accessGive")
+  updatedAt     DateTime        @updatedAt
+  Access        Access[]        @relation("accessGet")
+  AccessGive    Access[]        @relation("accessGive")
   Account       Account[]
   Analytics     Analytics?
   ApiKey        ApiKey[]
@@ -254,6 +256,7 @@ model User {
   Order         Order[]
   Settings      Settings?
   Subscription  Subscription[]
+  SymbolProfile SymbolProfile[]
   Tag           Tag[]
 
   @@index([accessToken])
