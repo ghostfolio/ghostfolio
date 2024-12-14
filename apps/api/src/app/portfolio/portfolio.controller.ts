@@ -623,6 +623,11 @@ export class PortfolioController {
           report.rules[rule] = [];
         }
       }
+
+      report.statistics = {
+        rulesActiveCount: 0,
+        rulesFulfilledCount: 0
+      };
     }
 
     return report;
