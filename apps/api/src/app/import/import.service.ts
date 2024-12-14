@@ -224,7 +224,7 @@ export class ImportService {
 
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
-        if (activity.type === 'ITEM' || activity.type === 'LIABILITY') {
+        if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(activity.type)) {
           activity.dataSource = DataSource.MANUAL;
         } else {
           activity.dataSource =
@@ -356,6 +356,7 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
+          Account: validatedAccount,
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
@@ -380,10 +381,10 @@ export class ImportService {
             symbolMapping,
             updatedAt,
             url,
+            comment: assetProfile.comment,
             currency: assetProfile.currency,
-            comment: assetProfile.comment
+            userId: dataSource === 'MANUAL' ? user.id : undefined
           },
-          Account: validatedAccount,
           symbolProfileId: undefined,
           updatedAt: new Date(),
           userId: user.id
@@ -406,7 +407,8 @@ export class ImportService {
               create: {
                 dataSource,
                 symbol,
-                currency: assetProfile.currency
+                currency: assetProfile.currency,
+                userId: dataSource === 'MANUAL' ? user.id : undefined
               },
               where: {
                 dataSource_symbol: {
