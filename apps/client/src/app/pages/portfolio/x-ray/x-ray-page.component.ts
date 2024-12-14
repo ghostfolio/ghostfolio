@@ -134,7 +134,7 @@ export class XRayPageComponent {
     let inactiveRules: PortfolioReportRule[] = [];
 
     for (const category in rules) {
-      const rulesArray = rules[category];
+      const rulesArray = rules[category] || [];
 
       inactiveRules = inactiveRules.concat(
         rulesArray.filter(({ isActive }) => {
