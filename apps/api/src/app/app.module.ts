@@ -33,6 +33,7 @@ import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
+import { MarketDataModule } from './endpoints/market-data/market-data.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
@@ -84,6 +85,7 @@ import { UserModule } from './user/user.module';
     ImportModule,
     InfoModule,
     LogoModule,
+    MarketDataModule,
     OrderModule,
     PlatformModule,
     PortfolioModule,

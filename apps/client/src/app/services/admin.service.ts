@@ -1,5 +1,4 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
@@ -17,7 +16,6 @@ import {
   AdminData,
   AdminJobs,
   AdminMarketData,
-  AdminMarketDataDetails,
   AdminUsers,
   DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
@@ -29,8 +27,8 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
-import { format, parseISO } from 'date-fns';
-import { Observable, map, switchMap } from 'rxjs';
+import { format } from 'date-fns';
+import { switchMap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { DataService } from './data.service';
@@ -123,25 +121,6 @@ export class AdminService {
     return this.http.get<AdminMarketData>('/api/v1/admin/market-data', {
       params
     });
-  }
-
-  public fetchAdminMarketDataBySymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Observable<AdminMarketDataDetails> {
-    return this.http
-      .get<any>(`/api/v1/admin/market-data/${dataSource}/${symbol}`)
-      .pipe(
-        map((data) => {
-          for (const item of data.marketData) {
-            item.date = parseISO(item.date);
-          }
-          return data;
-        })
-      );
   }
 
   public fetchGhostfolioDataProviderStatus() {
@@ -276,20 +255,6 @@ export class AdminService {
         url
       }
     );
-  }
-
-  public postMarketData({
-    dataSource,
-    marketData,
-    symbol
-  }: {
-    dataSource: DataSource;
-    marketData: UpdateBulkMarketDataDto;
-    symbol: string;
-  }) {
-    const url = `/api/v1/admin/market-data/${dataSource}/${symbol}`;
-
-    return this.http.post<MarketData>(url, marketData);
   }
 
   public postPlatform(aPlatform: CreatePlatformDto) {
