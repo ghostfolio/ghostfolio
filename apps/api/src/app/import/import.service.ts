@@ -551,8 +551,7 @@ export class ImportService {
             holdings: undefined,
             id: undefined,
             sectors: undefined,
-            updatedAt: undefined,
-            userId: undefined
+            updatedAt: undefined
           }
         };
       }
