@@ -1,5 +1,5 @@
 import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import {
   DATE_FORMAT,
   getDateFormatString,
@@ -90,7 +90,7 @@ export class GfHistoricalMarketDataEditorComponent
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminService: AdminService,
+    private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog,
     private formBuilder: FormBuilder,
@@ -236,7 +236,7 @@ export class GfHistoricalMarketDataEditorComponent
         }
       ).data as UpdateMarketDataDto[];
 
-      this.adminService
+      this.dataService
         .postMarketData({
           dataSource: this.dataSource,
           marketData: {

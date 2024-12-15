@@ -3,6 +3,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
+import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import {
   Activities,
@@ -21,7 +22,6 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
-  AdminMarketDataDetails,
   ApiKeyResponse,
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
@@ -31,6 +31,7 @@ import {
   ImportResponse,
   InfoItem,
   LookupResponse,
+  MarketDataDetailsResponse,
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
@@ -51,6 +52,7 @@ import { SortDirection } from '@angular/material/sort';
 import {
   AccountBalance,
   DataSource,
+  MarketData,
   Order as OrderModel,
   Tag
 } from '@prisma/client';
@@ -316,7 +318,7 @@ export class DataService {
   public fetchAsset({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Observable<AdminMarketDataDetails> {
+  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
     return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
@@ -429,6 +431,25 @@ export class DataService {
       '/api/v1/portfolio/investments',
       { params }
     );
+  }
+
+  public fetchMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Observable<MarketDataDetailsResponse> {
+    return this.http
+      .get<any>(`/api/v1/market-data/${dataSource}/${symbol}`)
+      .pipe(
+        map((data) => {
+          for (const item of data.marketData) {
+            item.date = parseISO(item.date);
+          }
+          return data;
+        })
+      );
   }
 
   public fetchSymbolItem({
@@ -663,6 +684,20 @@ export class DataService {
 
   public postBenchmark(benchmark: AssetProfileIdentifier) {
     return this.http.post('/api/v1/benchmark', benchmark);
+  }
+
+  public postMarketData({
+    dataSource,
+    marketData,
+    symbol
+  }: {
+    dataSource: DataSource;
+    marketData: UpdateBulkMarketDataDto;
+    symbol: string;
+  }) {
+    const url = `/api/v1/market-data/${dataSource}/${symbol}`;
+
+    return this.http.post<MarketData>(url, marketData);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
