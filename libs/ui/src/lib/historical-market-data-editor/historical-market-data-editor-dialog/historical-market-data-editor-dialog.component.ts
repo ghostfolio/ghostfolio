@@ -1,4 +1,5 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -51,6 +52,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
     private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA)
     public data: HistoricalMarketDataEditorDialogParams,
+    private dataService: DataService,
     private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
     @Inject(MAT_DATE_LOCALE) private locale: string
@@ -81,7 +83,7 @@ export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
   }
 
   public onUpdate() {
-    this.adminService
+    this.dataService
       .postMarketData({
         dataSource: this.data.dataSource,
         marketData: {
