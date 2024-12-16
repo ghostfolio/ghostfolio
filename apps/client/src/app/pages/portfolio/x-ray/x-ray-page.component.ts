@@ -19,6 +19,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class XRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
+  public assetClassClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public economicMarketClusterRiskRules: PortfolioReportRule[];
   public emergencyFundRules: PortfolioReportRule[];
@@ -99,6 +100,11 @@ export class XRayPageComponent {
 
         this.accountClusterRiskRules =
           rules['accountClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.assetClassClusterRiskRules =
+          rules['assetClassClusterRisk']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
 

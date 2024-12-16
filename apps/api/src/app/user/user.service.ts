@@ -5,6 +5,7 @@ import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.
 import { getRandomString } from '@ghostfolio/api/helper/string.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AssetClassClusterRiskEquity } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/equity';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
@@ -226,6 +227,20 @@ export class UserService {
         undefined,
         {}
       ).getSettings(user.Settings.settings),
+      AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
+        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskCurrentInvestment:
+        new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
       EconomicMarketClusterRiskDevelopedMarkets:
         new EconomicMarketClusterRiskDevelopedMarkets(
           undefined,
@@ -235,16 +250,6 @@ export class UserService {
       EconomicMarketClusterRiskEmergingMarkets:
         new EconomicMarketClusterRiskEmergingMarkets(
           undefined,
-          undefined,
-          undefined
-        ).getSettings(user.Settings.settings),
-      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
-        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-          undefined,
-          undefined
-        ).getSettings(user.Settings.settings),
-      CurrencyClusterRiskCurrentInvestment:
-        new CurrencyClusterRiskCurrentInvestment(
           undefined,
           undefined
         ).getSettings(user.Settings.settings),
