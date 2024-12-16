@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a new static portfolio analysis rule: _Asset Class Cluster Risk_ (Equity)
+
 ### Changed
 
 - Extracted the market data management from the admin control panel endpoint to a dedicated endpoint
