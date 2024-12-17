@@ -75,6 +75,30 @@
       <div
         class="mb-4"
         [ngClass]="{
+          'd-none': assetClassClusterRiskRules?.length === 0
+        }"
+      >
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Asset Class Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoading"
+          [rules]="assetClassClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div
+        class="mb-4"
+        [ngClass]="{
           'd-none': accountClusterRiskRules?.length === 0
         }"
       >
