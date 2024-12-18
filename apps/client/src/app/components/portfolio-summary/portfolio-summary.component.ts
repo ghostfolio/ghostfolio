@@ -35,7 +35,7 @@ export class PortfolioSummaryComponent implements OnChanges {
   );
   public timeInMarket: string;
 
-  constructor(private notificationService: NotificationService) {}
+  public constructor(private notificationService: NotificationService) {}
 
   public ngOnChanges() {
     if (this.summary) {
@@ -54,7 +54,8 @@ export class PortfolioSummaryComponent implements OnChanges {
   public onEditEmergencyFund() {
     this.notificationService.prompt({
       confirmFn: (value) => {
-        const emergencyFund = parseFloat(value.trim());
+        // If empty/deleted value by user, default to 0.
+        const emergencyFund = parseFloat(value.trim()) || 0;
         if (emergencyFund >= 0) {
           this.emergencyFundChanged.emit(emergencyFund);
         }
