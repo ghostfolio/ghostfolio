@@ -2,8 +2,8 @@
   <div mat-dialog-title [innerHTML]="title"></div>
 }
 
-<div mat-dialog-content style="padding: 20px">
-  <mat-form-field appearance="outline" class="w-100">
+<div class="py-3" mat-dialog-content>
+  <mat-form-field appearance="outline" class="w-100 without-hint">
     @if (valueLabel) {
       <mat-label>{{ valueLabel }}</mat-label>
     }
