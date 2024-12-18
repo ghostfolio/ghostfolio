@@ -17,3 +17,12 @@ export interface IConfirmParams {
   message?: string;
   title: string;
 }
+
+export interface IPromptParams {
+  confirmFn: (value: string) => void;
+  confirmLabel?: string;
+  defaultValue?: string;
+  discardLabel?: string;
+  title: string;
+  valueLabel?: string;
+}
