@@ -19,10 +19,9 @@ export interface IConfirmParams {
 }
 
 export interface IPromptParams {
-  confirmFn?: (value: string) => void;
+  confirmFn: (value: string) => void;
   confirmLabel?: string;
   defaultValue?: string;
-  discardFn?: () => void;
   discardLabel?: string;
   title: string;
   valueLabel?: string;
