@@ -88,7 +88,7 @@ export class NotificationService {
     }
 
     const dialog = this.matDialog.open(GfPromptDialogComponent, {
-      autoFocus: false,
+      autoFocus: true,
       maxWidth: this.dialogMaxWidth,
       width: this.dialogWidth
     });
@@ -101,11 +101,9 @@ export class NotificationService {
       valueLabel: aParams.valueLabel
     });
 
-    return dialog.afterClosed().subscribe((value) => {
+    return dialog.afterClosed().subscribe((value: string) => {
       if (value !== undefined && isFunction(aParams.confirmFn)) {
         aParams.confirmFn(value);
-      } else if (value === 'discard' && isFunction(aParams.discardFn)) {
-        aParams.discardFn();
       }
     });
   }
