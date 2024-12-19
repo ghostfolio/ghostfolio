@@ -1,7 +1,7 @@
 name: ghostfolio_dev
 services:
   postgres:
-    image: docker.io/library/postgres:15
+    image: docker.io/library/postgres:15-alpine
     container_name: gf-postgres-dev
     restart: unless-stopped
     env_file:
@@ -17,7 +17,14 @@ services:
     restart: unless-stopped
     env_file:
       - ../.env
-    command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
+    command:
+      - /bin/sh
+      - -c
+      # - Double dollars, so that the variable is not expanded by Docker Compose
+      # - Surround by quotes, so that the shell does not split the password
+      # - The ${variable:?message} syntax causes shell to exit with a non-zero
+      #   code and print a message, when the variable is not set or empty
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     ports:
       - ${REDIS_PORT:-6379}:6379
 
