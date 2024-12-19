@@ -11,9 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a new static portfolio analysis rule: _Asset Class Cluster Risk_ (Equity)
 - Added a new static portfolio analysis rule: _Asset Class Cluster Risk_ (Fixed Income)
+- Set up a notification service for prompt dialogs
 
 ### Changed
 
+- Improved the usability to edit the emergency fund
 - Extracted the market data management from the admin control panel endpoint to a dedicated endpoint
 - Upgraded `big.js` from version `6.2.1` to `6.2.2`
 
