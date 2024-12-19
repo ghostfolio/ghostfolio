@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.128.0",
+  "version": "2.129.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -91,7 +91,7 @@
     "@simplewebauthn/server": "9.0.3",
     "@stripe/stripe-js": "4.9.0",
     "alphavantage": "2.2.0",
-    "big.js": "6.2.1",
+    "big.js": "6.2.2",
     "body-parser": "1.20.2",
     "bootstrap": "4.6.0",
     "bull": "4.16.2",

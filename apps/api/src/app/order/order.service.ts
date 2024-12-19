@@ -93,7 +93,7 @@ export class OrderService {
       userId: string;
     }
   ): Promise<Order> {
-    let Account;
+    let Account: Prisma.AccountCreateNestedOneWithoutOrderInput;
 
     if (data.accountId) {
       Account = {
@@ -124,6 +124,7 @@ export class OrderService {
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
       data.SymbolProfile.connectOrCreate.create.symbol = id;
+      data.SymbolProfile.connectOrCreate.create.userId = userId;
       data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
         dataSource,
         symbol: id

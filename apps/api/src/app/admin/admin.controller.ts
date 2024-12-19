@@ -214,6 +214,9 @@ export class AdminController {
     });
   }
 
+  /**
+   * @deprecated
+   */
   @Get('market-data/:dataSource/:symbol')
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -250,6 +253,9 @@ export class AdminController {
     }
   }
 
+  /**
+   * @deprecated
+   */
   @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)

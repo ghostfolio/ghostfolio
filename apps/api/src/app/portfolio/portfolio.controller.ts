@@ -619,10 +619,13 @@ export class PortfolioController {
       this.request.user.subscription.type === 'Basic'
     ) {
       for (const rule in report.rules) {
-        if (report.rules[rule]) {
-          report.rules[rule] = [];
-        }
+        report.rules[rule] = null;
       }
+
+      report.statistics = {
+        rulesActiveCount: 0,
+        rulesFulfilledCount: 0
+      };
     }
 
     return report;

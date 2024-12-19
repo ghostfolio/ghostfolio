@@ -121,8 +121,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         }
       });
 
-    this.adminService
-      .fetchAdminMarketDataBySymbol({
+    this.dataService
+      .fetchMarketDataBySymbol({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })

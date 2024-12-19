@@ -7,6 +7,8 @@ import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AssetClassClusterRiskEquity } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/equity';
+import { AssetClassClusterRiskFixedIncome } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/fixed-income';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
@@ -1198,19 +1200,17 @@ export class PortfolioService {
               userSettings
             )
           : undefined,
-      economicMarketClusterRisk:
+      assetClassClusterRisk:
         summary.ordersCount > 0
           ? await this.rulesService.evaluate(
               [
-                new EconomicMarketClusterRiskDevelopedMarkets(
+                new AssetClassClusterRiskEquity(
                   this.exchangeRateDataService,
-                  marketsTotalInBaseCurrency,
-                  markets.developedMarkets.valueInBaseCurrency
+                  Object.values(holdings)
                 ),
-                new EconomicMarketClusterRiskEmergingMarkets(
+                new AssetClassClusterRiskFixedIncome(
                   this.exchangeRateDataService,
-                  marketsTotalInBaseCurrency,
-                  markets.emergingMarkets.valueInBaseCurrency
+                  Object.values(holdings)
                 )
               ],
               userSettings
@@ -1227,6 +1227,24 @@ export class PortfolioService {
                 new CurrencyClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
                   Object.values(holdings)
+                )
+              ],
+              userSettings
+            )
+          : undefined,
+      economicMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new EconomicMarketClusterRiskDevelopedMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.developedMarkets.valueInBaseCurrency
+                ),
+                new EconomicMarketClusterRiskEmergingMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.emergingMarkets.valueInBaseCurrency
                 )
               ],
               userSettings
