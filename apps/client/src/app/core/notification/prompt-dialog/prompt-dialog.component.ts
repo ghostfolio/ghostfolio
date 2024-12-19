@@ -40,7 +40,7 @@ export class GfPromptDialogComponent {
     this.defaultValue = aParams.defaultValue;
     this.discardLabel = aParams.discardLabel;
     this.title = aParams.title;
-    this.valueLabel = aParams.valueLabel;
     this.value = aParams.defaultValue;
+    this.valueLabel = aParams.valueLabel;
   }
 }
