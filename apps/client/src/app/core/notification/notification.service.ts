@@ -101,9 +101,9 @@ export class NotificationService {
       valueLabel: aParams.valueLabel
     });
 
-    return dialog.afterClosed().subscribe((value: string) => {
-      if (value !== undefined && isFunction(aParams.confirmFn)) {
-        aParams.confirmFn(value);
+    return dialog.afterClosed().subscribe((result: string) => {
+      if (result !== 'discard' && isFunction(aParams.confirmFn)) {
+        aParams.confirmFn(result);
       }
     });
   }

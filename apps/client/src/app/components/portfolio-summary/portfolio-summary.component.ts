@@ -54,16 +54,13 @@ export class PortfolioSummaryComponent implements OnChanges {
   public onEditEmergencyFund() {
     this.notificationService.prompt({
       confirmFn: (value) => {
-        // If empty/deleted value by user, default to 0.
         const emergencyFund = parseFloat(value.trim()) || 0;
-        if (emergencyFund >= 0) {
-          this.emergencyFundChanged.emit(emergencyFund);
-        }
+
+        this.emergencyFundChanged.emit(emergencyFund);
       },
       confirmLabel: $localize`Save`,
       defaultValue: this.summary.emergencyFund?.total?.toString() ?? '0',
-      title: $localize`Please enter the amount of your emergency fund:`,
-      valueLabel: $localize`Emergency fund`
+      title: $localize`Please set the amount of your emergency fund.`
     });
   }
 }
