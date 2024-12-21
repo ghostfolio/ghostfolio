@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the usability to edit the emergency fund
 - Extracted the market data management from the admin control panel endpoint to a dedicated endpoint
+- Improved the language localization for Polish (`pl`)
 - Upgraded `big.js` from version `6.2.1` to `6.2.2`
 
 ## 2.129.0 - 2024-12-14
