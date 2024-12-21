@@ -190,7 +190,7 @@
     "eslint-plugin-cypress": "2.15.1",
     "eslint-plugin-import": "2.29.1",
     "eslint-plugin-storybook": "0.6.15",
-    "husky": "9.1.6",
+    "husky": "9.1.7",
     "jest": "29.7.0",
     "jest-environment-jsdom": "29.7.0",
     "jest-preset-angular": "14.1.0",
