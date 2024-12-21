@@ -2,56 +2,20 @@ name: ghostfolio_build
 services:
   ghostfolio:
     build: ../
-    container_name: ghostfolio-build
-    init: true
-    env_file:
-      - ../.env
-    ports:
-      - 3333:3333
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD-SHELL', 'curl -f http://localhost:3333/api/v1/health']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    image: ghostfolio/ghostfolio:local
+    extends:
+      file: docker-compose.yml
+      service: ghostfolio
 
   postgres:
-    image: docker.io/library/postgres:15-alpine
-    container_name: gf-postgres-build
-    env_file:
-      - ../.env
-    healthcheck:
-      test:
-        ['CMD-SHELL', 'pg_isready -d "$${POSTGRES_DB}" -U $${POSTGRES_USER}']
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - postgres:/var/lib/postgresql/data
+    extends:
+      file: docker-compose.yml
+      service: postgres
 
   redis:
-    image: docker.io/library/redis:alpine
-    container_name: gf-redis-build
-    env_file:
-      - ../.env
-    command:
-      - /bin/sh
-      - -c
-      # - Double dollars, so that the variable is not expanded by Docker Compose
-      # - Surround by quotes, so that the shell does not split the password
-      # - The ${variable:?message} syntax causes shell to exit with a non-zero
-      #   code and print a message, when the variable is not set or empty
-      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
-    healthcheck:
-      test:
-        ['CMD-SHELL', 'redis-cli --pass "$${REDIS_PASSWORD}" ping | grep PONG']
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    extends:
+      file: docker-compose.yml
+      service: redis
 
 volumes:
   postgres:
