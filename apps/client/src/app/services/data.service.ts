@@ -34,6 +34,7 @@ import {
   Filter,
   ImportResponse,
   InfoItem,
+  LookupItem,
   LookupResponse,
   MarketDataDetailsResponse,
   OAuthResponse,
@@ -561,6 +562,20 @@ export class DataService {
           }
 
           return response;
+        })
+      );
+  }
+
+  public fetchPortfolioLookup({ query }: { query: string }) {
+    let params = new HttpParams().set('query', query);
+
+    return this.http
+      .get<{ items: LookupItem[] }>('/api/v1/portfolio/lookup', {
+        params
+      })
+      .pipe(
+        map((response) => {
+          return response.items;
         })
       );
   }

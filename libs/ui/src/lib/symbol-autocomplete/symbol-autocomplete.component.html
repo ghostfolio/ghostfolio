@@ -11,7 +11,9 @@
   [displayWith]="displayFn"
   (optionSelected)="onUpdateSymbol($event)"
 >
-  @if (!isLoading) {
+  @if (
+    (!isLoadingRemote || !isLoadingLocal) && filteredLookupItems.length > 0
+  ) {
     @for (lookupItem of filteredLookupItems; track lookupItem) {
       <mat-option
         class="line-height-1"
@@ -41,9 +43,20 @@
         >
       }
     }
+    @if (isLoadingRemote || isLoadingLocal) {
+      <mat-option class="line-height-1" [disabled]="true">
+        <span class="align-items-center d-flex line-height-1">
+          <mat-spinner
+            class="mat-more-symbols-progress-spinner"
+            [diameter]="20"
+          />
+          Loading more symbols ...
+        </span>
+      </mat-option>
+    }
   }
 </mat-autocomplete>
 
-@if (isLoading) {
+@if (isLoadingRemote || isLoadingLocal) {
   <mat-spinner class="position-absolute" [diameter]="20" />
 }
