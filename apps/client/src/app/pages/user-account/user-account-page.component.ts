@@ -42,7 +42,7 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
               showCondition: !!this.user?.subscription
             },
             {
-              iconName: 'share-social-outline',
+              iconName: 'key-outline',
               label: $localize`Access`,
               path: ['/account', 'access']
             }
