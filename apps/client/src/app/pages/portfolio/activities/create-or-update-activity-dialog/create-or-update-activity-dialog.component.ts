@@ -157,10 +157,31 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(async () => {
-        let exchangeRateOfUnitPrice = 1;
+        try {
+          if (this.mode === 'create') {
+            const activity = this.getActivity() as CreateOrderDto;
 
-        this.activityForm.get('feeInCustomCurrency').setErrors(null);
-        this.activityForm.get('unitPriceInCustomCurrency').setErrors(null);
+            await validateObjectForForm({
+              classDto: CreateOrderDto,
+              form: this.activityForm,
+              ignoreFields: ['dataSource', 'date'],
+              object: activity
+            });
+          } else {
+            const activity = this.getActivity() as UpdateOrderDto;
+
+            await validateObjectForForm({
+              classDto: UpdateOrderDto,
+              form: this.activityForm,
+              ignoreFields: ['dataSource', 'date'],
+              object: activity
+            });
+          }
+        } catch (error) {
+          console.error(error);
+        }
+
+        let exchangeRateOfUnitPrice = 1;
 
         const currency = this.activityForm.get('currency').value;
         const currencyOfUnitPrice = this.activityForm.get(
@@ -464,31 +485,13 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   }
 
   public async onSubmit() {
-    const activity: CreateOrderDto | UpdateOrderDto = {
-      accountId: this.activityForm.get('accountId').value,
-      assetClass: this.activityForm.get('assetClass').value,
-      assetSubClass: this.activityForm.get('assetSubClass').value,
-      comment: this.activityForm.get('comment').value || null,
-      currency: this.activityForm.get('currency').value,
-      customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
-      date: this.activityForm.get('date').value,
-      dataSource: this.activityForm.get('dataSource').value,
-      fee: this.activityForm.get('fee').value,
-      quantity: this.activityForm.get('quantity').value,
-      symbol:
-        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
-        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
-          ? this.activityForm.get('name').value
-          : this.activityForm.get('searchSymbol').value.symbol,
-      tags: this.activityForm.get('tags').value,
-      type: this.activityForm.get('type').value,
-      unitPrice: this.activityForm.get('unitPrice').value
-    };
-
     try {
       if (this.mode === 'create') {
-        (activity as CreateOrderDto).updateAccountBalance =
-          this.activityForm.get('updateAccountBalance').value;
+        const activity = this.getActivity() as CreateOrderDto;
+
+        activity.updateAccountBalance = this.activityForm.get(
+          'updateAccountBalance'
+        ).value;
 
         await validateObjectForForm({
           classDto: CreateOrderDto,
@@ -499,16 +502,18 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         this.dialogRef.close(activity as CreateOrderDto);
       } else {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
+        const activity = this.getActivity() as UpdateOrderDto;
+
+        activity.id = this.data.activity.id;
 
         await validateObjectForForm({
           classDto: UpdateOrderDto,
           form: this.activityForm,
           ignoreFields: ['dataSource', 'date'],
-          object: activity as UpdateOrderDto
+          object: activity
         });
 
-        this.dialogRef.close(activity as UpdateOrderDto);
+        this.dialogRef.close(activity);
       }
     } catch (error) {
       console.error(error);
@@ -528,6 +533,29 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return this.tagsAvailable.filter(({ id }) => {
       return !tagIds.includes(id);
     });
+  }
+
+  private getActivity(): CreateOrderDto | UpdateOrderDto {
+    return {
+      accountId: this.activityForm.get('accountId').value,
+      assetClass: this.activityForm.get('assetClass').value,
+      assetSubClass: this.activityForm.get('assetSubClass').value,
+      comment: this.activityForm.get('comment').value || null,
+      currency: this.activityForm.get('currency').value,
+      customCurrency: this.activityForm.get('currencyOfUnitPrice').value,
+      date: this.activityForm.get('date').value,
+      dataSource: this.activityForm.get('dataSource').value,
+      fee: this.activityForm.get('fee').value,
+      quantity: this.activityForm.get('quantity').value,
+      symbol:
+        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
+        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
+          ? this.activityForm.get('name').value
+          : this.activityForm.get('searchSymbol').value.symbol,
+      tags: this.activityForm.get('tags').value,
+      type: this.activityForm.get('type').value,
+      unitPrice: this.activityForm.get('unitPrice').value
+    };
   }
 
   private updateSymbol() {
