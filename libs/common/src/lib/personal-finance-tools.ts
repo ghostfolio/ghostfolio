@@ -450,6 +450,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Gain financial control and keep your data private.'
   },
   {
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'morningstar-portfolio-manager',
+    languages: ['English'],
+    name: 'Morningstar® Portfolio Manager',
+    origin: 'United States',
+    slogan:
+      'Track your equity, fund, investment trust, ETF and pension investments in one place.'
+  },
+  {
     founded: 2017,
     hasFreePlan: false,
     hasSelfHostingAbility: false,
@@ -648,6 +658,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'A Powerful Portfolio & Investment Tracking App'
   },
   {
+    founded: 2011,
+    hasFreePlan: true,
+    key: 'stock-rover',
+    languages: ['English'],
+    name: 'Stock Rover',
+    origin: 'United States',
+    pricingPerYear: '$79.99',
+    slogan: 'Investment Research and Portfolio Management'
+  },
+  {
     hasFreePlan: true,
     hasSelfHostingAbility: false,
     key: 'stonksfolio',
@@ -704,6 +724,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'Czech Republic',
     pricingPerYear: '$600',
     slogan: 'Make Smarter Investments'
+  },
+  {
+    founded: 2019,
+    hasFreePlan: false,
+    key: 'wealthbrain',
+    languages: ['English'],
+    name: 'Wealthbrain',
+    origin: 'United Arab Emirates',
+    slogan: 'Portfolio Management System'
   },
   {
     founded: 2024,
