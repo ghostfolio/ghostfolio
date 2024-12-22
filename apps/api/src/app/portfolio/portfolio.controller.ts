@@ -1,3 +1,4 @@
+
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
@@ -18,6 +19,7 @@ import {
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import {
+  LookupItem,
   PortfolioDetails,
   PortfolioDividends,
   PortfolioHoldingsResponse,
@@ -397,6 +399,28 @@ export class PortfolioController {
     });
 
     return { holdings: Object.values(holdings) };
+  }
+
+  @Get('lookup')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInResponseInterceptor)
+  public async lookupSymbol(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('query') filterBySearchQuery?: string
+  ): Promise<{ items: LookupItem[] }> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterBySearchQuery
+    });
+
+    return {
+      items: await this.portfolioService.getLookup({
+        filters,
+        impersonationId,
+        userId: this.request.user.id
+      })
+    };
   }
 
   @Get('investments')

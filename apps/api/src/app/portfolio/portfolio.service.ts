@@ -28,13 +28,19 @@ import {
   EMERGENCY_FUND_TAG_ID,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
-import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
+import {
+  DATE_FORMAT,
+  getAssetProfileIdentifier,
+  getSum,
+  parseDate
+} from '@ghostfolio/common/helper';
 import {
   Accounts,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
   InvestmentItem,
+  LookupItem,
   PortfolioDetails,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -77,7 +83,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq } from 'lodash';
+import { isEmpty, last, uniq, uniqBy } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -329,6 +335,45 @@ export class PortfolioService {
       investments,
       streaks
     };
+  }
+
+  public async getLookup({
+    filters,
+    impersonationId,
+    userId
+  }: {
+    dateRange?: DateRange;
+    filters?: Filter[];
+    impersonationId: string;
+    userId: string;
+  }): Promise<LookupItem[]> {
+    userId = await this.getUserId(impersonationId, userId);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
+
+    const { activities } = await this.orderService.getOrders({
+      filters,
+      userCurrency,
+      userId
+    });
+
+    return uniqBy(activities, (activity) => {
+      return getAssetProfileIdentifier({
+        dataSource: activity.SymbolProfile.dataSource,
+        symbol: activity.SymbolProfile.symbol
+      });
+    }).map((activity) => ({
+      assetClass: activity.SymbolProfile.assetClass,
+      assetSubClass: activity.SymbolProfile.assetSubClass,
+      currency: activity.SymbolProfile.currency,
+      dataProviderInfo: {
+        isPremium: false,
+        name: 'Ghostfolio API'
+      },
+      dataSource: activity.SymbolProfile.dataSource,
+      name: activity.SymbolProfile.name,
+      symbol: activity.SymbolProfile.symbol
+    }));
   }
 
   public async getDetails({
