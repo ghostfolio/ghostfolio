@@ -166,7 +166,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         try {
           const { quotes } = await yahooFinance.search(symbol);
 
-          if (quotes.length === 1) {
+          if (quotes?.[0]?.symbol) {
             symbol = quotes[0].symbol;
           }
         } catch {}
