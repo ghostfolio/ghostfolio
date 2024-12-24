@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved support to import activities by `isin` in the _Yahoo Finance_ service
 - Improved the language localization for Polish (`pl`)
 
 ## 2.130.0 - 2024-12-21
