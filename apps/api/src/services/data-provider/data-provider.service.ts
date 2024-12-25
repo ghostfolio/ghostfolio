@@ -618,7 +618,8 @@ export class DataProviderService {
       promises.push(
         dataProviderService.search({
           includeIndices,
-          query
+          query,
+          userId: user.id
         })
       );
     }
