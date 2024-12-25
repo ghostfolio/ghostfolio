@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the search for asset profiles with `MANUAL` data source in the create or update activity dialog
 - Improved the usability of the link to manage access with a new icon
 - Improved support to import activities by `isin` in the _Yahoo Finance_ service
 - Improved the language localization for Polish (`pl`)

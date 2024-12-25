@@ -79,4 +79,5 @@ export interface GetQuotesParams {
 export interface GetSearchParams {
   includeIndices?: boolean;
   query: string;
+  userId?: string;
 }

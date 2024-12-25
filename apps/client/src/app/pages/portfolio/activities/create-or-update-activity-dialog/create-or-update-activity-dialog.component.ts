@@ -20,7 +20,6 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
-import { isUUID } from 'class-validator';
 import { isAfter, isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
@@ -476,10 +475,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
-        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
-          ? this.activityForm.get('name').value
-          : this.activityForm.get('searchSymbol').value.symbol,
+        this.activityForm.get('searchSymbol')?.value?.symbol ??
+        this.activityForm.get('name')?.value,
       tags: this.activityForm.get('tags').value,
       type: this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
