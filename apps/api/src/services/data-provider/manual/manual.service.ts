@@ -26,7 +26,6 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
-import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
 import got, { Headers } from 'got';
 import * as jsonpath from 'jsonpath';
@@ -219,39 +218,46 @@ export class ManualService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
-    let items = await this.prismaService.symbolProfile.findMany({
+  public async search({
+    query,
+    userId
+  }: GetSearchParams): Promise<LookupResponse> {
+    const items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,
         assetSubClass: true,
         currency: true,
         dataSource: true,
         name: true,
-        symbol: true
+        symbol: true,
+        userId: true
       },
       where: {
-        OR: [
+        AND: [
           {
-            dataSource: this.getName(),
-            name: {
-              mode: 'insensitive',
-              startsWith: query
-            }
+            dataSource: this.getName()
           },
           {
-            dataSource: this.getName(),
-            symbol: {
-              mode: 'insensitive',
-              startsWith: query
-            }
+            OR: [
+              {
+                name: {
+                  mode: 'insensitive',
+                  startsWith: query
+                }
+              },
+              {
+                symbol: {
+                  mode: 'insensitive',
+                  startsWith: query
+                }
+              }
+            ]
+          },
+          {
+            OR: [{ userId }, { userId: null }]
           }
         ]
       }
-    });
-
-    items = items.filter(({ symbol }) => {
-      // Remove UUID symbols (activities of type ITEM)
-      return !isUUID(symbol);
     });
 
     return {
