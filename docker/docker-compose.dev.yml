@@ -1,4 +1,4 @@
-name: ghostfolio_dev
+name: ghostfolio
 services:
   postgres:
     extends:

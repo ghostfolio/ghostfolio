@@ -1,4 +1,4 @@
-name: ghostfolio_build
+name: ghostfolio
 services:
   ghostfolio:
     build: ../
