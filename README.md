@@ -137,7 +137,7 @@ docker compose -f docker/docker-compose.build.yml up -d
 
 #### Upgrade Version
 
-1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
+1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`, or run `docker compose -f docker/docker-compose.yml pull` if it's the `latest` tag.
 1. Run the following command to start the new Docker image: `docker compose -f docker/docker-compose.yml up -d`  
    At each start, the container will automatically apply the database schema migrations if needed.
 
