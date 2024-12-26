@@ -89,6 +89,7 @@ export class UserService {
       }),
       this.tagService.getTagsForUser(id)
     ]);
+
     const access = userData[0];
     const firstActivity = userData[1];
     let tags = userData[2];
@@ -119,7 +120,8 @@ export class UserService {
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,
-          id: accessItem.id
+          id: accessItem.id,
+          permissions: accessItem.permissions
         };
       }),
       accounts: Account,
