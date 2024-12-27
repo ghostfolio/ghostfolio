@@ -17,7 +17,8 @@ import { formatDistanceToNow } from 'date-fns';
   selector: 'gf-portfolio-summary',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './portfolio-summary.component.html',
-  styleUrls: ['./portfolio-summary.component.scss']
+  styleUrls: ['./portfolio-summary.component.scss'],
+  standalone: false
 })
 export class PortfolioSummaryComponent implements OnChanges {
   @Input() baseCurrency: string;

@@ -28,7 +28,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-allocations-page',
   styleUrls: ['./allocations-page.scss'],
-  templateUrl: './allocations-page.html'
+  templateUrl: './allocations-page.html',
+  standalone: false
 })
 export class AllocationsPageComponent implements OnDestroy, OnInit {
   public accounts: {

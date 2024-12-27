@@ -12,7 +12,8 @@ import { takeUntil } from 'rxjs/operators';
   host: { class: 'page has-tabs' },
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
-  templateUrl: './about-page.html'
+  templateUrl: './about-page.html',
+  standalone: false
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

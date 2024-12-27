@@ -21,7 +21,6 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
   host: { class: 'page' },
   imports: [CommonModule],
   selector: 'gf-api-page',
-  standalone: true,
   styleUrls: ['./api-page.scss'],
   templateUrl: './api-page.html'
 })

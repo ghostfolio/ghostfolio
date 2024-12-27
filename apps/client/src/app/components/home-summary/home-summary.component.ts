@@ -16,7 +16,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-home-summary',
   styleUrls: ['./home-summary.scss'],
-  templateUrl: './home-summary.html'
+  templateUrl: './home-summary.html',
+  standalone: false
 })
 export class HomeSummaryComponent implements OnDestroy, OnInit {
   public hasImpersonationId: boolean;

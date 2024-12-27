@@ -50,7 +50,6 @@ import { HistoricalMarketDataEditorDialogParams } from './historical-market-data
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, MatButtonModule, MatInputModule, ReactiveFormsModule],
   selector: 'gf-historical-market-data-editor',
-  standalone: true,
   styleUrls: ['./historical-market-data-editor.component.scss'],
   templateUrl: './historical-market-data-editor.component.html'
 })

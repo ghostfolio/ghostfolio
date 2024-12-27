@@ -13,7 +13,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
-  templateUrl: './fire-page.html'
+  templateUrl: './fire-page.html',
+  standalone: false
 })
 export class FirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;

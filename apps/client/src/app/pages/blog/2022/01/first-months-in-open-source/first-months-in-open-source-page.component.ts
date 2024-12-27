@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-first-months-in-open-source-page',
-  standalone: true,
   templateUrl: './first-months-in-open-source-page.html'
 })
 export class FirstMonthsInOpenSourcePageComponent {

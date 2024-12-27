@@ -15,7 +15,8 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   selector: 'gf-pricing-page',
   styleUrls: ['./pricing-page.scss'],
-  templateUrl: './pricing-page.html'
+  templateUrl: './pricing-page.html',
+  standalone: false
 })
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;

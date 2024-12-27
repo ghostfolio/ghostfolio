@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-1000-stars-on-github-page',
-  standalone: true,
   templateUrl: './1000-stars-on-github-page.html'
 })
 export class ThousandStarsOnGitHubPageComponent {

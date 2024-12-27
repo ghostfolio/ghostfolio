@@ -18,7 +18,8 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog/show-access-to
   host: { class: 'page' },
   selector: 'gf-register-page',
   styleUrls: ['./register-page.scss'],
-  templateUrl: './register-page.html'
+  templateUrl: './register-page.html',
+  standalone: false
 })
 export class RegisterPageComponent implements OnDestroy, OnInit {
   public demoAuthToken: string;

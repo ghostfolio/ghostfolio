@@ -20,7 +20,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-home-overview',
   styleUrls: ['./home-overview.scss'],
-  templateUrl: './home-overview.html'
+  templateUrl: './home-overview.html',
+  standalone: false
 })
 export class HomeOverviewComponent implements OnDestroy, OnInit {
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;

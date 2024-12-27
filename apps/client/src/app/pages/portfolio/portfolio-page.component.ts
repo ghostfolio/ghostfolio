@@ -10,7 +10,8 @@ import { takeUntil } from 'rxjs/operators';
   host: { class: 'page has-tabs' },
   selector: 'gf-portfolio-page',
   styleUrls: ['./portfolio-page.scss'],
-  templateUrl: './portfolio-page.html'
+  templateUrl: './portfolio-page.html',
+  standalone: false
 })
 export class PortfolioPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

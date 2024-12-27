@@ -9,7 +9,8 @@ import { Subject, takeUntil } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-open-page',
   styleUrls: ['./open-page.scss'],
-  templateUrl: './open-page.html'
+  templateUrl: './open-page.html',
+  standalone: false
 })
 export class OpenPageComponent implements OnDestroy, OnInit {
   public statistics: Statistics;

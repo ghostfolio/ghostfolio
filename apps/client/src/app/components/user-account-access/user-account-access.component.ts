@@ -24,7 +24,8 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
   host: { class: 'has-fab' },
   selector: 'gf-user-account-access',
   styleUrls: ['./user-account-access.scss'],
-  templateUrl: './user-account-access.html'
+  templateUrl: './user-account-access.html',
+  standalone: false
 })
 export class UserAccountAccessComponent implements OnDestroy, OnInit {
   public accesses: Access[];

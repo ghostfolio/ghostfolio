@@ -40,7 +40,6 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   ],
   selector: 'gf-historical-market-data-editor-dialog',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  standalone: true,
   styleUrls: ['./historical-market-data-editor-dialog.scss'],
   templateUrl: 'historical-market-data-editor-dialog.html'
 })

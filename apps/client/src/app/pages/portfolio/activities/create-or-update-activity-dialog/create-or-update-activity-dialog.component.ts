@@ -31,7 +31,8 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
   selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-activity-dialog.scss'],
-  templateUrl: 'create-or-update-activity-dialog.html'
+  templateUrl: 'create-or-update-activity-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
   @ViewChild('symbolAutocomplete') symbolAutocomplete;

@@ -12,7 +12,6 @@ import {
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-logo',
-  standalone: true,
   styleUrls: ['./logo.component.scss'],
   templateUrl: './logo.component.html'
 })

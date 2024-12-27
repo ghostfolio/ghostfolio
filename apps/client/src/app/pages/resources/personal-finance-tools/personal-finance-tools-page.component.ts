@@ -7,7 +7,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-personal-finance-tools-page',
   styleUrls: ['./personal-finance-tools-page.scss'],
-  templateUrl: './personal-finance-tools-page.html'
+  templateUrl: './personal-finance-tools-page.html',
+  standalone: false
 })
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public pathAlternativeTo = $localize`open-source-alternative-to` + '-';
