@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the user interface for received access from others
+
 ### Changed
 
 - Upgraded `husky` from version `9.1.6` to `9.1.7`
