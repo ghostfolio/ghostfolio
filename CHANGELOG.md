@@ -7,9 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the user interface for received access from others
+
 ### Changed
 
+- Upgraded `husky` from version `9.1.6` to `9.1.7`
 - Upgraded `prisma` from version `6.0.1` to `6.1.0`
+
+## 2.131.0 - 2024-12-25
+
+### Changed
+
+- Improved the search for asset profiles with `MANUAL` data source in the create or update activity dialog
+- Improved the usability of the link to manage access with a new icon
+- Improved support to import activities by `isin` in the _Yahoo Finance_ service
+- Improved the language localization for Polish (`pl`)
 
 ## 2.130.0 - 2024-12-21
 
