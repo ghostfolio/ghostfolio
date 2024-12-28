@@ -216,12 +216,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value +
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         } else {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value -
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();
