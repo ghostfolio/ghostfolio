@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the coupon redemption to the notification service for prompt dialogs
 - Improved the language localization for German (`de`)
 - Upgraded `husky` from version `9.1.6` to `9.1.7`
 
