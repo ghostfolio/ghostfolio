@@ -100,7 +100,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         autoFocus: false,
         data: {
           deviceType: this.deviceType,
-          pricingUrl: this.pricingUrl
+          pricingUrl: this.pricingUrl,
+          user: this.user
         },
         height: this.deviceType === 'mobile' ? '98vh' : undefined,
         width: this.deviceType === 'mobile' ? '100vw' : '50rem'
