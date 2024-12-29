@@ -27,7 +27,8 @@ import { takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-admin-jobs',
   styleUrls: ['./admin-jobs.scss'],
-  templateUrl: './admin-jobs.html'
+  templateUrl: './admin-jobs.html',
+  standalone: false
 })
 export class AdminJobsComponent implements OnDestroy, OnInit {
   public DATA_GATHERING_QUEUE_PRIORITY_LOW = DATA_GATHERING_QUEUE_PRIORITY_LOW;

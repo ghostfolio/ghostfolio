@@ -4,7 +4,8 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'gf-privacy-policy-page',
   styleUrls: ['./privacy-policy-page.scss'],
-  templateUrl: './privacy-policy-page.html'
+  templateUrl: './privacy-policy-page.html',
+  standalone: false
 })
 export class PrivacyPolicyPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();

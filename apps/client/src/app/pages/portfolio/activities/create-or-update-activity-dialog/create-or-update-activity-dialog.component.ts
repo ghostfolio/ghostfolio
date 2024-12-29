@@ -31,7 +31,8 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
   selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-activity-dialog.scss'],
-  templateUrl: 'create-or-update-activity-dialog.html'
+  templateUrl: 'create-or-update-activity-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
   @ViewChild('symbolAutocomplete') symbolAutocomplete;
@@ -215,12 +216,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value +
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         } else {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value -
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();

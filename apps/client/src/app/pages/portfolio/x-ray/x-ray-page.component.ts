@@ -15,7 +15,8 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'gf-x-ray-page',
   styleUrl: './x-ray-page.component.scss',
-  templateUrl: './x-ray-page.component.html'
+  templateUrl: './x-ray-page.component.html',
+  standalone: false
 })
 export class XRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];

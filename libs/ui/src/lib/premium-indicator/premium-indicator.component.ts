@@ -12,7 +12,6 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-premium-indicator',
-  standalone: true,
   styleUrls: ['./premium-indicator.component.scss'],
   templateUrl: './premium-indicator.component.html'
 })

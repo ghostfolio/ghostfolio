@@ -17,7 +17,6 @@ import { GfLogoComponent } from '../logo';
   imports: [CommonModule, GfLogoComponent, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-membership-card',
-  standalone: true,
   styleUrls: ['./membership-card.component.scss'],
   templateUrl: './membership-card.component.html'
 })

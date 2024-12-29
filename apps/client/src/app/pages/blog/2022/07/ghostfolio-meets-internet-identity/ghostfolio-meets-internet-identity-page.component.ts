@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-ghostfolio-meets-internet-identity-page',
-  standalone: true,
   templateUrl: './ghostfolio-meets-internet-identity-page.html'
 })
 export class GhostfolioMeetsInternetIdentityPageComponent {}

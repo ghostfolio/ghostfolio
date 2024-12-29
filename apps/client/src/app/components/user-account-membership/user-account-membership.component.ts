@@ -26,7 +26,8 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-user-account-membership',
   styleUrls: ['./user-account-membership.scss'],
-  templateUrl: './user-account-membership.html'
+  templateUrl: './user-account-membership.html',
+  standalone: false
 })
 export class UserAccountMembershipComponent implements OnDestroy {
   public baseCurrency: string;

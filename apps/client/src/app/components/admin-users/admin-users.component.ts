@@ -29,7 +29,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-admin-users',
   styleUrls: ['./admin-users.scss'],
-  templateUrl: './admin-users.html'
+  templateUrl: './admin-users.html',
+  standalone: false
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

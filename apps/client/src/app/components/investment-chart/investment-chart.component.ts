@@ -45,7 +45,8 @@ import { isAfter } from 'date-fns';
   selector: 'gf-investment-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './investment-chart.component.html',
-  styleUrls: ['./investment-chart.component.scss']
+  styleUrls: ['./investment-chart.component.scss'],
+  standalone: false
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];

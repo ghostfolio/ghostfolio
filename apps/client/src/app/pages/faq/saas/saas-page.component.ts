@@ -8,7 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-saas-page',
   styleUrls: ['./saas-page.scss'],
-  templateUrl: './saas-page.html'
+  templateUrl: './saas-page.html',
+  standalone: false
 })
 export class SaasPageComponent implements OnDestroy {
   public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];

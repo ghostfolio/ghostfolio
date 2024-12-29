@@ -24,7 +24,8 @@ import { TransferBalanceDialogParams } from './interfaces/interfaces';
   selector: 'gf-transfer-balance-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./transfer-balance-dialog.scss'],
-  templateUrl: 'transfer-balance-dialog.html'
+  templateUrl: 'transfer-balance-dialog.html',
+  standalone: false
 })
 export class TransferBalanceDialog implements OnDestroy {
   public accounts: Account[] = [];

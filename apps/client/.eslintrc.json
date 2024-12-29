@@ -16,6 +16,12 @@
     {
       "files": ["*.js", "*.jsx"],
       "rules": {}
+    },
+    {
+      "files": ["*.ts"],
+      "rules": {
+        "@angular-eslint/prefer-standalone": "off"
+      }
     }
   ],
   "plugins": ["@angular-eslint/eslint-plugin", "@typescript-eslint"],

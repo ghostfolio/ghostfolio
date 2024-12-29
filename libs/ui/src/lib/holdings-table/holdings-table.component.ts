@@ -48,7 +48,6 @@ import { Subject, Subscription } from 'rxjs';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holdings-table',
-  standalone: true,
   styleUrls: ['./holdings-table.component.scss'],
   templateUrl: './holdings-table.component.html'
 })

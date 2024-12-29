@@ -14,7 +14,8 @@ import svgMap from 'svgmap';
   selector: 'gf-world-map-chart',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './world-map-chart.component.html',
-  styleUrls: ['./world-map-chart.component.scss']
+  styleUrls: ['./world-map-chart.component.scss'],
+  standalone: false
 })
 export class WorldMapChartComponent implements OnChanges, OnDestroy {
   @Input() countries: { [code: string]: { name?: string; value: number } };

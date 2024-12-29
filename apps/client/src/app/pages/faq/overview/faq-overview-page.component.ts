@@ -8,7 +8,8 @@ import { Subject, takeUntil } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-faq-overview-page',
   styleUrls: ['./faq-overview-page.scss'],
-  templateUrl: './faq-overview-page.html'
+  templateUrl: './faq-overview-page.html',
+  standalone: false
 })
 export class FaqOverviewPageComponent implements OnDestroy {
   public routerLinkFeatures = ['/' + $localize`:snake-case:features`];

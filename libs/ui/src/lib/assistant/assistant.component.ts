@@ -73,7 +73,6 @@ import {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
-  standalone: true,
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })

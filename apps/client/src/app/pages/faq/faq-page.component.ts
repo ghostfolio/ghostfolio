@@ -10,7 +10,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page has-tabs' },
   selector: 'gf-faq-page',
   styleUrls: ['./faq-page.scss'],
-  templateUrl: './faq-page.html'
+  templateUrl: './faq-page.html',
+  standalone: false
 })
 export class FaqPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

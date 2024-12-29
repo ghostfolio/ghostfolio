@@ -11,7 +11,8 @@ import {
   selector: 'gf-dialog-header',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-header.component.html',
-  styleUrls: ['./dialog-header.component.scss']
+  styleUrls: ['./dialog-header.component.scss'],
+  standalone: false
 })
 export class DialogHeaderComponent {
   @Input() deviceType: string;

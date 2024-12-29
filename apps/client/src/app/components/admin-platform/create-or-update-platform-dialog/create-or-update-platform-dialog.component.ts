@@ -19,7 +19,8 @@ import { CreateOrUpdatePlatformDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   selector: 'gf-create-or-update-platform-dialog',
   styleUrls: ['./create-or-update-platform-dialog.scss'],
-  templateUrl: 'create-or-update-platform-dialog.html'
+  templateUrl: 'create-or-update-platform-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdatePlatformDialog implements OnDestroy {
   public platformForm: FormGroup;

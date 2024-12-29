@@ -14,7 +14,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   imports: [CommonModule, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-trend-indicator',
-  standalone: true,
   styleUrls: ['./trend-indicator.component.scss'],
   templateUrl: './trend-indicator.component.html'
 })
