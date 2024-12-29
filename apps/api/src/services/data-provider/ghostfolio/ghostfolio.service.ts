@@ -86,12 +86,6 @@ export class GhostfolioService implements DataProviderInterface {
     } = {};
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const { dividends } = await got(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
@@ -100,7 +94,7 @@ export class GhostfolioService implements DataProviderInterface {
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<DividendsResponse>();
 
@@ -136,12 +130,6 @@ export class GhostfolioService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const { historicalData } = await got(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
@@ -150,7 +138,7 @@ export class GhostfolioService implements DataProviderInterface {
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<HistoricalResponse>();
 
@@ -204,18 +192,12 @@ export class GhostfolioService implements DataProviderInterface {
     }
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const { quotes } = await got(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<QuotesResponse>();
 
@@ -253,18 +235,14 @@ export class GhostfolioService implements DataProviderInterface {
     let searchResult: LookupResponse = { items: [] };
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       searchResult = await got(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<LookupResponse>();
     } catch (error) {

@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `ngx-markdown` from version `18.0.0` to `19.0.0`
 - Upgraded `Nx` from version `20.1.2` to `20.3.0`
 - Upgraded `zone.js` from version `0.14.10` to `0.15.0`
+- Refactored got calls to use AbortSignal.timeout instead of manual abort after setTimeout
 
 ## 2.131.0 - 2024-12-25
 
