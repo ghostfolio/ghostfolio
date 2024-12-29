@@ -33,7 +33,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as cheerio from 'cheerio';
 import { format, subDays } from 'date-fns';
-import got from 'got';
 
 @Injectable()
 export class InfoService {
@@ -155,16 +154,15 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const { pull_count } = await got(
+      const { pull_count } = await fetch(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
-          // @ts-ignore
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       return pull_count;
     } catch (error) {
@@ -176,12 +174,11 @@ export class InfoService {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
-        // @ts-ignore
+      const body = await fetch('https://github.com/ghostfolio/ghostfolio', {
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
         )
-      });
+      }).then((res) => res.text());
 
       const $ = cheerio.load(body);
 
@@ -199,16 +196,15 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const { stargazers_count } = await got(
+      const { stargazers_count } = await fetch(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
-          // @ts-ignore
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       return stargazers_count;
     } catch (error) {
@@ -323,7 +319,7 @@ export class InfoService {
           PROPERTY_BETTER_UPTIME_MONITOR_ID
         )) as string;
 
-        const { data } = await got(
+        const { data } = await fetch(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
@@ -334,12 +330,11 @@ export class InfoService {
                 'API_KEY_BETTER_UPTIME'
               )}`
             },
-            // @ts-ignore
             signal: AbortSignal.timeout(
               this.configurationService.get('REQUEST_TIMEOUT')
             )
           }
-        ).json<any>();
+        ).then((res) => res.json());
 
         return data.attributes.availability / 100;
       } catch (error) {

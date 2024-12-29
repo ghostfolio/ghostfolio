@@ -28,7 +28,6 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
-import got from 'got';
 import { StatusCodes } from 'http-status-codes';
 
 @Injectable()
@@ -86,17 +85,16 @@ export class GhostfolioService implements DataProviderInterface {
     } = {};
 
     try {
-      const { dividends } = await got(
+      const { dividends } = (await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/dividends/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
         )}`,
         {
           headers: await this.getRequestHeaders(),
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<DividendsResponse>();
+      ).then((res) => res.json())) as DividendsResponse;
 
       response = dividends;
     } catch (error) {
@@ -130,7 +128,7 @@ export class GhostfolioService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const { historicalData } = await got(
+      const { historicalData } = (await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/historical/${symbol}?from=${format(from, DATE_FORMAT)}&granularity=${granularity}&to=${format(
           to,
           DATE_FORMAT
@@ -140,7 +138,7 @@ export class GhostfolioService implements DataProviderInterface {
           // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<HistoricalResponse>();
+      ).then((res) => res.json())) as HistoricalResponse;
 
       return {
         [symbol]: historicalData
@@ -192,20 +190,19 @@ export class GhostfolioService implements DataProviderInterface {
     }
 
     try {
-      const { quotes } = await got(
+      const { quotes } = (await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/quotes?symbols=${symbols.join(',')}`,
         {
           headers: await this.getRequestHeaders(),
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<QuotesResponse>();
+      ).then((res) => res.json())) as QuotesResponse;
 
       response = quotes;
     } catch (error) {
       let message = error;
 
-      if (error.code === 'ABORT_ERR') {
+      if (error.name === 'AbortError') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
@@ -235,20 +232,19 @@ export class GhostfolioService implements DataProviderInterface {
     let searchResult: LookupResponse = { items: [] };
 
     try {
-      searchResult = await got(
+      searchResult = (await fetch(
         `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
-          // @ts-ignore
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).json<LookupResponse>();
+      ).then((res) => res.json())) as LookupResponse;
     } catch (error) {
       let message = error;
 
-      if (error.code === 'ABORT_ERR') {
+      if (error.name === 'AbortError') {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;

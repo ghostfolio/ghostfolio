@@ -21,7 +21,6 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
-import got from 'got';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -72,13 +71,12 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const { historical } = await got(
+      const { historical } = await fetch(
         `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
@@ -124,13 +122,12 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
-      const quotes = await got(
+      const quotes = await fetch(
         `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       for (const { price, symbol } of quotes) {
         response[symbol] = {
@@ -144,7 +141,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error?.name === 'AbortError') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
@@ -164,15 +161,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const result = await got(
+      const result = await fetch(
         `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       items = result.map(({ currency, name, symbol }) => {
         return {
@@ -187,7 +183,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error?.name === 'AbortError') {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
