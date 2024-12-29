@@ -51,6 +51,8 @@ export class LogoService {
           this.configurationService.get('REQUEST_TIMEOUT')
         )
       }
-    ).then((res) => res.arrayBuffer());
+    )
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => Buffer.from(buffer));
   }
 }
