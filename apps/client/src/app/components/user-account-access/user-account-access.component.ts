@@ -28,7 +28,8 @@ import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/cre
   standalone: false
 })
 export class UserAccountAccessComponent implements OnDestroy, OnInit {
-  public accesses: Access[];
+  public accessesGet: Access[];
+  public accessesGive: Access[];
   public deviceType: string;
   public hasPermissionToCreateAccess: boolean;
   public hasPermissionToDeleteAccess: boolean;
@@ -126,11 +127,21 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
   }
 
   private update() {
+    this.accessesGet = this.user.access.map(({ alias, id, permissions }) => {
+      return {
+        alias,
+        id,
+        permissions,
+        grantee: $localize`Me`,
+        type: 'PRIVATE'
+      };
+    });
+
     this.dataService
       .fetchAccesses()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((accesses) => {
-        this.accesses = accesses;
+        this.accessesGive = accesses;
 
         this.changeDetectorRef.markForCheck();
       });

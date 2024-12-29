@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the user interface for received access from others
+
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Upgraded the _Stripe_ dependencies
 - Upgraded `angular` from version `18.2.8` to `19.0.5`
 - Upgraded `husky` from version `9.1.6` to `9.1.7`
