@@ -277,16 +277,16 @@
         ></textarea>
       </mat-form-field>
     </div>
-    <div class="mb-3">
-      <mat-accordion class="my-3">
-        <mat-expansion-panel
-          (closed)="panelOpenState.set(false)"
-          (opened)="panelOpenState.set(true)"
-        >
-          <mat-expansion-panel-header>
-            <mat-panel-title> Scraper Configuration </mat-panel-title>
-          </mat-expansion-panel-header>
-          @if (assetProfile?.dataSource === 'MANUAL') {
+    @if (assetProfile?.dataSource === 'MANUAL') {
+      <div class="mb-3">
+        <mat-accordion class="my-3">
+          <mat-expansion-panel
+            (closed)="panelOpenState.set(false)"
+            (opened)="panelOpenState.set(true)"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title> Scraper Configuration </mat-panel-title>
+            </mat-expansion-panel-header>
             <div formGroupName="scraperConfiguration">
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
@@ -370,10 +370,10 @@
                 </button>
               </div>
             </div>
-          }
-        </mat-expansion-panel>
-      </mat-accordion>
-    </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    }
     @if (assetProfile?.dataSource === 'MANUAL') {
       <div>
         <mat-form-field appearance="outline" class="w-100">
