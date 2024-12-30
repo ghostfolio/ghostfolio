@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved support for automatic deletion of unused asset profiles when deleting activities
 - Improved the language localization for German (`de`)
+- Eliminated `body-parser` in favor of using `@nestjs/platform-express`
 - Upgraded the _Stripe_ dependencies
 - Upgraded `angular` from version `18.2.8` to `19.0.5`
 - Upgraded `husky` from version `9.1.6` to `9.1.7`
