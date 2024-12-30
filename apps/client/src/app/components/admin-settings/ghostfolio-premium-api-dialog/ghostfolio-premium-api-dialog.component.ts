@@ -25,7 +25,6 @@ import { GhostfolioPremiumApiDialogParams } from './interfaces/interfaces';
     MatDialogModule
   ],
   selector: 'gf-ghostfolio-premium-api-dialog',
-  standalone: true,
   styleUrls: ['./ghostfolio-premium-api-dialog.scss'],
   templateUrl: './ghostfolio-premium-api-dialog.html'
 })

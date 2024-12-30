@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
   selector: 'gf-login-with-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./login-with-access-token-dialog.scss'],
-  templateUrl: 'login-with-access-token-dialog.html'
+  templateUrl: 'login-with-access-token-dialog.html',
+  standalone: false
 })
 export class LoginWithAccessTokenDialog {
   public isAccessTokenHidden = true;

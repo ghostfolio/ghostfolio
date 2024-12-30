@@ -20,7 +20,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-home-holdings',
   styleUrls: ['./home-holdings.scss'],
-  templateUrl: './home-holdings.html'
+  templateUrl: './home-holdings.html',
+  standalone: false
 })
 export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public static DEFAULT_HOLDINGS_VIEW_MODE: HoldingsViewMode = 'TABLE';

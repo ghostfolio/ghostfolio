@@ -48,7 +48,8 @@ import { CreateAssetProfileDialogParams } from './create-asset-profile-dialog/in
   host: { class: 'has-fab' },
   selector: 'gf-admin-market-data',
   styleUrls: ['./admin-market-data.scss'],
-  templateUrl: './admin-market-data.html'
+  templateUrl: './admin-market-data.html',
+  standalone: false
 })
 export class AdminMarketDataComponent
   implements AfterViewInit, OnDestroy, OnInit

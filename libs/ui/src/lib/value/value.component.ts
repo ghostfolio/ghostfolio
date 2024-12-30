@@ -16,7 +16,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   imports: [CommonModule, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
-  standalone: true,
   styleUrls: ['./value.component.scss'],
   templateUrl: './value.component.html'
 })

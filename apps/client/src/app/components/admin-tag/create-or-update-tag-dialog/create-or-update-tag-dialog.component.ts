@@ -19,7 +19,8 @@ import { CreateOrUpdateTagDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   selector: 'gf-create-or-update-tag-dialog',
   styleUrls: ['./create-or-update-tag-dialog.scss'],
-  templateUrl: 'create-or-update-tag-dialog.html'
+  templateUrl: 'create-or-update-tag-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateTagDialog implements OnDestroy {
   public tagForm: FormGroup;

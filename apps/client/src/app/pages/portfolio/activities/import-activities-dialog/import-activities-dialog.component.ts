@@ -33,7 +33,8 @@ import { ImportActivitiesDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-import-activities-dialog',
   styleUrls: ['./import-activities-dialog.scss'],
-  templateUrl: 'import-activities-dialog.html'
+  templateUrl: 'import-activities-dialog.html',
+  standalone: false
 })
 export class ImportActivitiesDialog implements OnDestroy {
   public accounts: CreateAccountDto[] = [];

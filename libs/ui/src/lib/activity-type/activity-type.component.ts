@@ -15,7 +15,6 @@ import { Type as ActivityType } from '@prisma/client';
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activity-type',
-  standalone: true,
   styleUrls: ['./activity-type.component.scss'],
   templateUrl: './activity-type.component.html'
 })

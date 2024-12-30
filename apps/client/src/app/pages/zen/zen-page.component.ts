@@ -10,7 +10,8 @@ import { takeUntil } from 'rxjs/operators';
   host: { class: 'page has-tabs' },
   selector: 'gf-zen-page',
   styleUrls: ['./zen-page.scss'],
-  templateUrl: './zen-page.html'
+  templateUrl: './zen-page.html',
+  standalone: false
 })
 export class ZenPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

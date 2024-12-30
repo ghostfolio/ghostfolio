@@ -51,7 +51,6 @@ const {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-portfolio-proportion-chart',
-  standalone: true,
   styleUrls: ['./portfolio-proportion-chart.component.scss'],
   templateUrl: './portfolio-proportion-chart.component.html'
 })

@@ -14,7 +14,8 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
 @Component({
-  template: ''
+  template: '',
+  standalone: false
 })
 // eslint-disable-next-line @angular-eslint/component-class-suffix
 export abstract class AbstractMatFormField<T>

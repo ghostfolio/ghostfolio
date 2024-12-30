@@ -29,7 +29,8 @@ import { CreateOrUpdateTagDialog } from './create-or-update-tag-dialog/create-or
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-admin-tag',
   styleUrls: ['./admin-tag.component.scss'],
-  templateUrl: './admin-tag.component.html'
+  templateUrl: './admin-tag.component.html',
+  standalone: false
 })
 export class AdminTagComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;

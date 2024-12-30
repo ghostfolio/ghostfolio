@@ -24,7 +24,8 @@ import { GfRuleSettingsDialogComponent } from './rule-settings-dialog/rule-setti
   selector: 'gf-rule',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './rule.component.html',
-  styleUrls: ['./rule.component.scss']
+  styleUrls: ['./rule.component.scss'],
+  standalone: false
 })
 export class RuleComponent implements OnInit {
   @Input() hasPermissionToUpdateUserSettings: boolean;

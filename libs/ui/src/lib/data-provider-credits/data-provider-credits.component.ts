@@ -13,7 +13,6 @@ import {
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-data-provider-credits',
-  standalone: true,
   styleUrls: ['./data-provider-credits.component.scss'],
   templateUrl: './data-provider-credits.component.html'
 })

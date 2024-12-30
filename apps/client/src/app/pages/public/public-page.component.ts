@@ -20,7 +20,8 @@ import { catchError, takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   selector: 'gf-public-page',
   styleUrls: ['./public-page.scss'],
-  templateUrl: './public-page.html'
+  templateUrl: './public-page.html',
+  standalone: false
 })
 export class PublicPageComponent implements OnInit {
   public continents: {

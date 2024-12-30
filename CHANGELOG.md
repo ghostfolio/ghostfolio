@@ -13,9 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved support for automatic deletion of unused asset profiles when deleting activities
 - Migrated the coupon redemption to the notification service for prompt dialogs
 - Improved the language localization for German (`de`)
+- Eliminated `body-parser` in favor of using `@nestjs/platform-express`
+- Upgraded the _Stripe_ dependencies
+- Upgraded `angular` from version `18.2.8` to `19.0.5`
 - Upgraded `husky` from version `9.1.6` to `9.1.7`
+- Upgraded `marked` from version `12.0.2` to `15.0.4`
+- Upgraded `ng-extract-i18n-merge` from version `2.12.0` to `2.13.1`
+- Upgraded `ngx-device-detector` from version `8.0.0` to `9.0.0`
+- Upgraded `ngx-markdown` from version `18.0.0` to `19.0.0`
+- Upgraded `Nx` from version `20.1.2` to `20.3.0`
+- Upgraded `zone.js` from version `0.14.10` to `0.15.0`
 
 ## 2.131.0 - 2024-12-25
 

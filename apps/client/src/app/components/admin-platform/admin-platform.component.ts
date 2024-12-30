@@ -29,7 +29,8 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-admin-platform',
   styleUrls: ['./admin-platform.component.scss'],
-  templateUrl: './admin-platform.component.html'
+  templateUrl: './admin-platform.component.html',
+  standalone: false
 })
 export class AdminPlatformComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort) sort: MatSort;

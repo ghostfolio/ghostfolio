@@ -18,7 +18,6 @@ import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
   imports: [MatButtonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-carousel',
-  standalone: true,
   styleUrls: ['./carousel.component.scss'],
   templateUrl: './carousel.component.html'
 })

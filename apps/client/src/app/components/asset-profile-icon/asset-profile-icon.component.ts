@@ -13,7 +13,6 @@ import { DataSource } from '@prisma/client';
   imports: [CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-asset-profile-icon',
-  standalone: true,
   styleUrls: ['./asset-profile-icon.component.scss'],
   templateUrl: './asset-profile-icon.component.html'
 })
