@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for German (`de`)
 - Upgraded `envalid` from version `7.3.1` to `8.0.0`
 
 ## 2.132.0 - 2024-12-30
