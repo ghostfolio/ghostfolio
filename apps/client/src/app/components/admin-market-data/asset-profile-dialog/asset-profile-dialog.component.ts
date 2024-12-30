@@ -196,14 +196,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
-              this.assetProfile?.scraperConfiguration.defaultMarketPrice ?? 0,
+              this.assetProfile?.scraperConfiguration?.defaultMarketPrice ?? 0,
             headers: JSON.stringify(
-              this.assetProfile?.scraperConfiguration.headers ?? {}
+              this.assetProfile?.scraperConfiguration?.headers ?? {}
             ),
-            locale: this.assetProfile?.scraperConfiguration.locale ?? '',
-            mode: this.assetProfile?.scraperConfiguration.mode ?? '',
-            selector: this.assetProfile?.scraperConfiguration.selector ?? '',
-            url: this.assetProfile?.scraperConfiguration.url ?? ''
+            locale: this.assetProfile?.scraperConfiguration?.locale ?? '',
+            mode: this.assetProfile?.scraperConfiguration?.mode ?? '',
+            selector: this.assetProfile?.scraperConfiguration?.selector ?? '',
+            url: this.assetProfile?.scraperConfiguration?.url ?? ''
           },
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
