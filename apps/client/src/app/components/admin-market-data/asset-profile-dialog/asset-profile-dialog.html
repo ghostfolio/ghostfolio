@@ -277,32 +277,104 @@
         ></textarea>
       </mat-form-field>
     </div>
+    <div class="mb-3">
+      <mat-accordion class="my-3">
+        <mat-expansion-panel
+          (closed)="panelOpenState.set(false)"
+          (opened)="panelOpenState.set(true)"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-title> Scraper Configuration </mat-panel-title>
+          </mat-expansion-panel-header>
+          @if (assetProfile?.dataSource === 'MANUAL') {
+            <div formGroupName="scraperConfiguration">
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>Default Market Price</mat-label>
+                  <input
+                    formControlName="defaultMarketPrice"
+                    matInput
+                    type="number"
+                  />
+                  <div class="align-items-end d-flex"></div>
+                </mat-form-field>
+              </div>
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>Headers</mat-label>
+                  <div class="align-items-end d-flex">
+                    <textarea
+                      cdkTextareaAutosize
+                      formControlName="headers"
+                      matInput
+                      type="text"
+                      [matAutocomplete]="auto"
+                    ></textarea>
+                  </div>
+                </mat-form-field>
+              </div>
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>Locale</mat-label>
+                  <div class="align-items-end d-flex">
+                    <input formControlName="locale" matInput type="text" />
+                  </div>
+                </mat-form-field>
+              </div>
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>Mode</mat-label>
+                  <mat-select formControlName="mode">
+                    <mat-option [value]="null" />
+                    @for (modeVal of modeValues; track modeVal) {
+                      <mat-option [value]="modeVal.value">{{
+                        modeVal.viewValue
+                      }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>Selector</mat-label>
+                  <div class="align-items-end d-flex">
+                    <textarea
+                      cdkTextareaAutosize
+                      formControlName="selector"
+                      matInput
+                      type="text"
+                      (keyup.enter)="$event.stopPropagation()"
+                    ></textarea>
+                  </div>
+                </mat-form-field>
+              </div>
+              <div class="mt-3">
+                <mat-form-field appearance="outline" class="w-100 without-hint">
+                  <mat-label i18n>URL</mat-label>
+                  <div class="align-items-end d-flex">
+                    <input formControlName="url" matInput type="text" />
+                  </div>
+                </mat-form-field>
+              </div>
+              <div class="m-3">
+                <button
+                  color="accent"
+                  mat-flat-button
+                  type="button"
+                  [disabled]="
+                    assetProfileForm.get('scraperConfiguration').value === '{}'
+                  "
+                  (click)="onTestMarketData()"
+                >
+                  <ng-container i18n>Test</ng-container>
+                </button>
+              </div>
+            </div>
+          }
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
     @if (assetProfile?.dataSource === 'MANUAL') {
-      <div>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label i18n>Scraper Configuration</mat-label>
-          <div class="align-items-end d-flex">
-            <textarea
-              cdkTextareaAutosize
-              formControlName="scraperConfiguration"
-              matInput
-              type="text"
-              (keyup.enter)="$event.stopPropagation()"
-            ></textarea>
-            <button
-              color="accent"
-              mat-flat-button
-              type="button"
-              [disabled]="
-                assetProfileForm.get('scraperConfiguration').value === '{}'
-              "
-              (click)="onTestMarketData()"
-            >
-              <ng-container i18n>Test</ng-container>
-            </button>
-          </div>
-        </mat-form-field>
-      </div>
       <div>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label i18n>Sectors</mat-label>
