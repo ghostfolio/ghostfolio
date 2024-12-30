@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Removed `got` in favour of node's global `fetch`
+
 ## 2.132.0 - 2024-12-30
 
 ### Added
@@ -28,7 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `Nx` from version `20.1.2` to `20.3.0`
 - Upgraded `prisma` from version `6.0.1` to `6.1.0`
 - Upgraded `zone.js` from version `0.14.10` to `0.15.0`
-- Removed `got` in favour of node's global `fetch`
 
 ### Fixed
 
