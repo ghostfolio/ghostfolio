@@ -275,17 +275,13 @@ export class ManualService implements DataProviderInterface {
     scraperConfiguration: ScraperConfiguration
   ): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       let locale = scraperConfiguration.locale;
       const { body, headers } = await got(scraperConfiguration.url, {
         headers: scraperConfiguration.headers as Headers,
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       });
 
       if (headers['content-type'].includes('application/json')) {

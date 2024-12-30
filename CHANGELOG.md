@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved support for automatic deletion of unused asset profiles when deleting activities
 - Migrated the coupon redemption to the notification service for prompt dialogs
+- Refactored `got` calls to use `AbortSignal.timeout()` without `AbortController()`
 - Improved the language localization for German (`de`)
 - Eliminated `body-parser` in favor of using `@nestjs/platform-express`
 - Upgraded the _Stripe_ dependencies

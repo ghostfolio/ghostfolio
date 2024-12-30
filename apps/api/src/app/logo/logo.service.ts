@@ -44,18 +44,14 @@ export class LogoService {
   }
 
   private getBuffer(aUrl: string) {
-    const abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, this.configurationService.get('REQUEST_TIMEOUT'));
-
     return got(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
       {
         headers: { 'User-Agent': 'request' },
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       }
     ).buffer();
   }

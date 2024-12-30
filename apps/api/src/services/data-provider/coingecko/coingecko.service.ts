@@ -69,16 +69,12 @@ export class CoinGeckoService implements DataProviderInterface {
     };
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { name } = await got(`${this.apiUrl}/coins/${symbol}`, {
         headers: this.headers,
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       }).json<any>();
 
       response.name = name;
@@ -118,12 +114,6 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const { prices } = await got(
         `${
           this.apiUrl
@@ -133,7 +123,7 @@ export class CoinGeckoService implements DataProviderInterface {
         {
           headers: this.headers,
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -179,12 +169,6 @@ export class CoinGeckoService implements DataProviderInterface {
     }
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const quotes = await got(
         `${this.apiUrl}/simple/price?ids=${symbols.join(
           ','
@@ -192,7 +176,7 @@ export class CoinGeckoService implements DataProviderInterface {
         {
           headers: this.headers,
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -228,16 +212,12 @@ export class CoinGeckoService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { coins } = await got(`${this.apiUrl}/search?query=${query}`, {
         headers: this.headers,
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       }).json<any>();
 
       items = coins.map(({ id: symbol, name }) => {

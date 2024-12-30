@@ -135,12 +135,6 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { fgi } = await got(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
         {
@@ -150,7 +144,9 @@ export class RapidApiService implements DataProviderInterface {
             'x-rapidapi-key': this.configurationService.get('API_KEY_RAPID_API')
           },
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<any>();
 

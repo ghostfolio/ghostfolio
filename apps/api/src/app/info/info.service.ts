@@ -155,18 +155,14 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { pull_count } = await got(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<any>();
 
@@ -180,15 +176,11 @@ export class InfoService {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       });
 
       const $ = cheerio.load(body);
@@ -207,18 +199,14 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const { stargazers_count } = await got(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<any>();
 
@@ -335,12 +323,6 @@ export class InfoService {
           PROPERTY_BETTER_UPTIME_MONITOR_ID
         )) as string;
 
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
         const { data } = await got(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
@@ -353,7 +335,9 @@ export class InfoService {
               )}`
             },
             // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
         ).json<any>();
 

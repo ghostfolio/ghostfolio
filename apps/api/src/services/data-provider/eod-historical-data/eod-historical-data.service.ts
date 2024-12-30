@@ -91,15 +91,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
     }
 
     try {
-      const abortController = new AbortController();
-
       const response: {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
 
       const historicalResult = await got(
         `${this.URL}/div/${symbol}?api_token=${
@@ -110,7 +104,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         )}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -146,12 +140,6 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol = this.convertToEodSymbol(symbol);
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const response = await got(
         `${this.URL}/eod/${symbol}?api_token=${
           this.apiKey
@@ -161,7 +149,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         )}&period=${granularity}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -217,19 +205,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
     });
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const realTimeResponse = await got(
         `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
           this.apiKey
         }&fmt=json&s=${eodHistoricalDataSymbols.join(',')}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -418,17 +400,13 @@ export class EodHistoricalDataService implements DataProviderInterface {
     })[] = [];
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const response = await got(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<any>();
 
