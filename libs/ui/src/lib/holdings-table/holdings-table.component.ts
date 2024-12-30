@@ -1,5 +1,4 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
-import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/holding-detail-dialog/holding-detail-dialog.component';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
@@ -35,7 +34,6 @@ import { Subject, Subscription } from 'rxjs';
   imports: [
     CommonModule,
     GfAssetProfileIconComponent,
-    GfHoldingDetailDialogComponent,
     GfNoTransactionsInfoComponent,
     GfSymbolModule,
     GfValueComponent,
