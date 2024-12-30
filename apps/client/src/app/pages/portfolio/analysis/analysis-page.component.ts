@@ -24,7 +24,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
-  templateUrl: './analysis-page.html'
+  templateUrl: './analysis-page.html',
+  standalone: false
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmark: Partial<SymbolProfile>;

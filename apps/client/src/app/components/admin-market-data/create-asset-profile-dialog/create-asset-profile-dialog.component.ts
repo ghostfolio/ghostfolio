@@ -28,7 +28,8 @@ import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
   host: { class: 'h-100' },
   selector: 'gf-create-asset-profile-dialog',
   styleUrls: ['./create-asset-profile-dialog.component.scss'],
-  templateUrl: 'create-asset-profile-dialog.html'
+  templateUrl: 'create-asset-profile-dialog.html',
+  standalone: false
 })
 export class CreateAssetProfileDialog implements OnInit, OnDestroy {
   public createAssetProfileForm: FormGroup;

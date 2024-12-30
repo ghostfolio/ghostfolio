@@ -30,7 +30,8 @@ import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-admin-settings',
   styleUrls: ['./admin-settings.component.scss'],
-  templateUrl: './admin-settings.component.html'
+  templateUrl: './admin-settings.component.html',
+  standalone: false
 })
 export class AdminSettingsComponent implements OnDestroy, OnInit {
   public defaultDateFormat: string;
@@ -100,7 +101,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         autoFocus: false,
         data: {
           deviceType: this.deviceType,
-          pricingUrl: this.pricingUrl
+          pricingUrl: this.pricingUrl,
+          user: this.user
         },
         height: this.deviceType === 'mobile' ? '98vh' : undefined,
         width: this.deviceType === 'mobile' ? '100vw' : '50rem'

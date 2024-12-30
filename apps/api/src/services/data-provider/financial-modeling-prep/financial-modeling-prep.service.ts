@@ -72,17 +72,11 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const { historical } = await got(
         `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -130,17 +124,11 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, requestTimeout);
-
       const quotes = await got(
         `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).json<any>();
 
@@ -176,17 +164,13 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
       const result = await got(
         `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
         {
           // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
       ).json<any>();
 

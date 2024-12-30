@@ -224,10 +224,7 @@ export class OrderService {
         order.symbolProfileId
       ]);
 
-    if (
-      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
-      symbolProfile.activitiesCount === 0
-    ) {
+    if (symbolProfile.activitiesCount === 0) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 

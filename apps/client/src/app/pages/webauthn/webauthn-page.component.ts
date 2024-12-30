@@ -13,7 +13,6 @@ import { takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   imports: [GfLogoComponent, MatButtonModule, MatProgressSpinnerModule],
   selector: 'gf-webauthn-page',
-  standalone: true,
   styleUrls: ['./webauthn-page.scss'],
   templateUrl: './webauthn-page.html'
 })

@@ -29,7 +29,8 @@ import { ImportActivitiesDialogParams } from './import-activities-dialog/interfa
   host: { class: 'has-fab' },
   selector: 'gf-activities-page',
   styleUrls: ['./activities-page.scss'],
-  templateUrl: './activities-page.html'
+  templateUrl: './activities-page.html',
+  standalone: false
 })
 export class ActivitiesPageComponent implements OnDestroy, OnInit {
   public dataSource: MatTableDataSource<Activity>;

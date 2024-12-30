@@ -31,17 +31,19 @@
       mat-flat-button
       >Notify me</a
     >
-    <div>
-      <small class="text-muted" i18n>or</small>
-    </div>
-    <button
-      color="accent"
-      i18n
-      mat-stroked-button
-      (click)="onSetGhostfolioApiKey()"
-    >
-      I have an API key
-    </button>
+    @if (data.user?.settings?.isExperimentalFeatures) {
+      <div>
+        <small class="text-muted" i18n>or</small>
+      </div>
+      <button
+        color="accent"
+        i18n
+        mat-stroked-button
+        (click)="onSetGhostfolioApiKey()"
+      >
+        I have an API key
+      </button>
+    }
   </div>
 </div>
 

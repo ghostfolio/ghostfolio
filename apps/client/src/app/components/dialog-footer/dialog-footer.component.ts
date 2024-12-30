@@ -11,7 +11,8 @@ import {
   selector: 'gf-dialog-footer',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dialog-footer.component.html',
-  styleUrls: ['./dialog-footer.component.scss']
+  styleUrls: ['./dialog-footer.component.scss'],
+  standalone: false
 })
 export class DialogFooterComponent {
   @Input() deviceType: string;

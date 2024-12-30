@@ -16,7 +16,6 @@ import { MatInputModule } from '@angular/material/input';
     MatInputModule
   ],
   selector: 'gf-prompt-dialog',
-  standalone: true,
   templateUrl: './prompt-dialog.html'
 })
 export class GfPromptDialogComponent {

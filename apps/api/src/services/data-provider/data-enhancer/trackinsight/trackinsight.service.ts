@@ -45,34 +45,24 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    let abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, requestTimeout);
-
     const profile = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
       {
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(requestTimeout)
       }
     )
       .json<any>()
       .catch(() => {
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
         return got(
           `${TrackinsightDataEnhancerService.baseUrl}/funds/${
             symbol.split('.')?.[0]
           }.json`,
           {
             // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
         )
           .json<any>()
@@ -87,34 +77,26 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.isin = isin;
     }
 
-    abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, this.configurationService.get('REQUEST_TIMEOUT'));
-
     const holdings = await got(
       `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
       {
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       }
     )
       .json<any>()
       .catch(() => {
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
         return got(
           `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
             symbol.split('.')?.[0]
           }.json`,
           {
             // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
         )
           .json<any>()

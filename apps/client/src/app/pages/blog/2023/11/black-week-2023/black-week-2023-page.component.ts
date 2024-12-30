@@ -8,7 +8,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [GfPremiumIndicatorComponent, MatButtonModule, RouterModule],
   selector: 'gf-black-week-2023-page',
-  standalone: true,
   templateUrl: './black-week-2023-page.html'
 })
 export class BlackWeek2023PageComponent {

@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-hacktoberfest-2024-page',
-  standalone: true,
   templateUrl: './hacktoberfest-2024-page.html'
 })
 export class Hacktoberfest2024PageComponent {

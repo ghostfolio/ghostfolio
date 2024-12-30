@@ -7,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'gf-resources-glossary',
   styleUrls: ['./resources-glossary.component.scss'],
-  templateUrl: './resources-glossary.component.html'
+  templateUrl: './resources-glossary.component.html',
+  standalone: false
 })
 export class ResourcesGlossaryPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;

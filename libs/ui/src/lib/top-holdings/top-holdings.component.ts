@@ -56,7 +56,6 @@ import { Subject } from 'rxjs';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-top-holdings',
-  standalone: true,
   styleUrls: ['./top-holdings.component.scss'],
   templateUrl: './top-holdings.component.html'
 })

@@ -43,18 +43,12 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
         this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
-    const abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, requestTimeout);
-
     const mappings = await got
       .post(`${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`, {
         headers,
         json: [{ exchCode: exchange, idType: 'TICKER', idValue: ticker }],
         // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(requestTimeout)
       })
       .json<any[]>();
 

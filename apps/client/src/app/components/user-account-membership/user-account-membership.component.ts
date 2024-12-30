@@ -26,7 +26,8 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-user-account-membership',
   styleUrls: ['./user-account-membership.scss'],
-  templateUrl: './user-account-membership.html'
+  templateUrl: './user-account-membership.html',
+  standalone: false
 })
 export class UserAccountMembershipComponent implements OnDestroy {
   public baseCurrency: string;
@@ -163,50 +164,54 @@ export class UserAccountMembershipComponent implements OnDestroy {
   }
 
   public onRedeemCoupon() {
-    let couponCode = prompt($localize`Please enter your coupon code:`);
-    couponCode = couponCode?.trim();
+    this.notificationService.prompt({
+      confirmFn: (value) => {
+        const couponCode = value?.trim();
 
-    if (couponCode) {
-      this.dataService
-        .redeemCoupon(couponCode)
-        .pipe(
-          catchError(() => {
-            this.snackBar.open(
-              '😞 ' + $localize`Could not redeem coupon code`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
+        if (couponCode) {
+          this.dataService
+            .redeemCoupon(couponCode)
+            .pipe(
+              catchError(() => {
+                this.snackBar.open(
+                  '😞 ' + $localize`Could not redeem coupon code`,
+                  undefined,
+                  {
+                    duration: ms('3 seconds')
+                  }
+                );
 
-            return EMPTY;
-          }),
-          takeUntil(this.unsubscribeSubject)
-        )
-        .subscribe(() => {
-          this.snackBarRef = this.snackBar.open(
-            '✅ ' + $localize`Coupon code has been redeemed`,
-            $localize`Reload`,
-            {
-              duration: 3000
-            }
-          );
-
-          this.snackBarRef
-            .afterDismissed()
-            .pipe(takeUntil(this.unsubscribeSubject))
+                return EMPTY;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
             .subscribe(() => {
-              window.location.reload();
-            });
+              this.snackBarRef = this.snackBar.open(
+                '✅ ' + $localize`Coupon code has been redeemed`,
+                $localize`Reload`,
+                {
+                  duration: 3000
+                }
+              );
 
-          this.snackBarRef
-            .onAction()
-            .pipe(takeUntil(this.unsubscribeSubject))
-            .subscribe(() => {
-              window.location.reload();
+              this.snackBarRef
+                .afterDismissed()
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(() => {
+                  window.location.reload();
+                });
+
+              this.snackBarRef
+                .onAction()
+                .pipe(takeUntil(this.unsubscribeSubject))
+                .subscribe(() => {
+                  window.location.reload();
+                });
             });
-        });
-    }
+        }
+      },
+      title: $localize`Please enter your coupon code.`
+    });
   }
 
   public ngOnDestroy() {

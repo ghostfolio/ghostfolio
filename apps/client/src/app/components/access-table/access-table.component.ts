@@ -18,7 +18,8 @@ import { MatTableDataSource } from '@angular/material/table';
   selector: 'gf-access-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './access-table.component.html',
-  styleUrls: ['./access-table.component.scss']
+  styleUrls: ['./access-table.component.scss'],
+  standalone: false
 })
 export class AccessTableComponent implements OnChanges {
   @Input() accesses: Access[];

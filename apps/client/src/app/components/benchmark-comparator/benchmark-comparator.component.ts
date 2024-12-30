@@ -44,7 +44,8 @@ import annotationPlugin from 'chartjs-plugin-annotation';
   selector: 'gf-benchmark-comparator',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './benchmark-comparator.component.html',
-  styleUrls: ['./benchmark-comparator.component.scss']
+  styleUrls: ['./benchmark-comparator.component.scss'],
+  standalone: false
 })
 export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() benchmark: Partial<SymbolProfile>;

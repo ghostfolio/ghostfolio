@@ -25,7 +25,8 @@ import { TransferBalanceDialog } from './transfer-balance/transfer-balance-dialo
   host: { class: 'has-fab page' },
   selector: 'gf-accounts-page',
   styleUrls: ['./accounts-page.scss'],
-  templateUrl: './accounts-page.html'
+  templateUrl: './accounts-page.html',
+  standalone: false
 })
 export class AccountsPageComponent implements OnDestroy, OnInit {
   public accounts: AccountModel[];

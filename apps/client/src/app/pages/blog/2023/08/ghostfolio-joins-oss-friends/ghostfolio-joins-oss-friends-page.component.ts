@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-ghostfolio-joins-oss-friends-page',
-  standalone: true,
   templateUrl: './ghostfolio-joins-oss-friends-page.html'
 })
 export class GhostfolioJoinsOssFriendsPageComponent {

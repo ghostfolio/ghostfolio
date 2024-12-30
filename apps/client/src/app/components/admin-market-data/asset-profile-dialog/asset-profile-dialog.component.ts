@@ -42,7 +42,8 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   selector: 'gf-asset-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'asset-profile-dialog.html',
-  styleUrls: ['./asset-profile-dialog.component.scss']
+  styleUrls: ['./asset-profile-dialog.component.scss'],
+  standalone: false
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfileClass: string;

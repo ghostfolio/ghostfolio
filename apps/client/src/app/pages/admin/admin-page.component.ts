@@ -8,7 +8,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page has-tabs' },
   selector: 'gf-admin-page',
   styleUrls: ['./admin-page.scss'],
-  templateUrl: './admin-page.html'
+  templateUrl: './admin-page.html',
+  standalone: false
 })
 export class AdminPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

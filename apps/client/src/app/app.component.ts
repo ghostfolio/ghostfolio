@@ -38,7 +38,8 @@ import { UserService } from './services/user/user.service';
   selector: 'gf-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: false
 })
 export class AppComponent implements OnDestroy, OnInit {
   @HostBinding('class.has-info-message') get getHasMessage() {

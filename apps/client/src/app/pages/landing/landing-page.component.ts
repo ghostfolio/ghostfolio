@@ -11,7 +11,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-landing-page',
   styleUrls: ['./landing-page.scss'],
-  templateUrl: './landing-page.html'
+  templateUrl: './landing-page.html',
+  standalone: false
 })
 export class LandingPageComponent implements OnDestroy, OnInit {
   public countriesOfSubscribersMap: {

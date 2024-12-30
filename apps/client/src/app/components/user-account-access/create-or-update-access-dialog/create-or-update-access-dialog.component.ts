@@ -22,7 +22,8 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   selector: 'gf-create-or-update-access-dialog',
   styleUrls: ['./create-or-update-access-dialog.scss'],
-  templateUrl: 'create-or-update-access-dialog.html'
+  templateUrl: 'create-or-update-access-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateAccessDialog implements OnDestroy {
   public accessForm: FormGroup;

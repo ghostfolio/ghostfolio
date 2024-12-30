@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-markets-page',
   styleUrls: ['./markets-page.scss'],
-  templateUrl: './markets-page.html'
+  templateUrl: './markets-page.html',
+  standalone: false
 })
 export class MarketsPageComponent implements OnDestroy {
   private unsubscribeSubject = new Subject<void>();

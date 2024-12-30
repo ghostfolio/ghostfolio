@@ -42,7 +42,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-line-chart',
-  standalone: true,
   styleUrls: ['./line-chart.component.scss'],
   templateUrl: './line-chart.component.html'
 })
