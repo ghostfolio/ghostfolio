@@ -135,7 +135,6 @@ export class GhostfolioService implements DataProviderInterface {
         )}`,
         {
           headers: await this.getRequestHeaders(),
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json())) as HistoricalResponse;
