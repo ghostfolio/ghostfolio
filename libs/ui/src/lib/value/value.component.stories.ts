@@ -1,71 +1,77 @@
-import { Meta, Story, moduleMetadata } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { ValueComponent } from './value.component';
+import { GfValueComponent } from './value.component';
 
 export default {
   title: 'Value',
-  component: ValueComponent,
+  component: GfValueComponent,
   decorators: [
     moduleMetadata({
       imports: [NgxSkeletonLoaderModule]
     })
   ]
-} as Meta<ValueComponent>;
+} as Meta<GfValueComponent>;
 
-const Template: Story<ValueComponent> = (args: ValueComponent) => ({
-  props: args
-});
+type Story = StoryObj<GfValueComponent>;
 
-export const Loading = Template.bind({});
-Loading.args = {
-  value: undefined
+export const Loading: Story = {
+  args: {
+    value: undefined
+  }
 };
 
-export const Currency = Template.bind({});
-Currency.args = {
-  isCurrency: true,
-  locale: 'en-US',
-  unit: 'USD',
-  value: 7
+export const Currency: Story = {
+  args: {
+    isCurrency: true,
+    locale: 'en-US',
+    unit: 'USD',
+    value: 7
+  }
 };
 
-export const Label = Template.bind({});
-Label.args = {
-  locale: 'en-US',
-  value: 7.25
+export const Label: Story = {
+  args: {
+    locale: 'en-US',
+    value: 7.25
+  }
 };
 
-export const PerformancePositive = Template.bind({});
-PerformancePositive.args = {
-  locale: 'en-US',
-  colorizeSign: true,
-  isPercent: true,
-  value: 0.0136810853673890378
+export const PerformancePositive: Story = {
+  args: {
+    locale: 'en-US',
+    colorizeSign: true,
+    isPercent: true,
+    value: 0.0136810853673890378
+  },
+  storyName: 'Performance (positive)'
 };
-PerformancePositive.storyName = 'Performance (positive)';
 
-export const PerformanceNegative = Template.bind({});
-PerformanceNegative.args = {
-  locale: 'en-US',
-  colorizeSign: true,
-  isPercent: true,
-  value: -0.0136810853673890378
+export const PerformanceNegative: Story = {
+  args: {
+    locale: 'en-US',
+    colorizeSign: true,
+    isPercent: true,
+    value: -0.0136810853673890378
+  },
+  storyName: 'Performance (negative)'
 };
-PerformanceNegative.storyName = 'Performance (negative)';
 
-export const PerformanceCloseToZero = Template.bind({});
-PerformanceCloseToZero.args = {
-  locale: 'en-US',
-  colorizeSign: true,
-  isPercent: true,
-  value: -2.388915360475e-8
+export const PerformanceCloseToZero: Story = {
+  args: {
+    locale: 'en-US',
+    colorizeSign: true,
+    isPercent: true,
+    value: -2.388915360475e-8
+  },
+  storyName: 'Performance (negative zero)'
 };
-PerformanceCloseToZero.storyName = 'Performance (negative zero)';
 
-export const Precision = Template.bind({});
-Precision.args = {
-  locale: 'en-US',
-  precision: 3,
-  value: 7.2534802394809285309
+export const Precision: Story = {
+  args: {
+    locale: 'en-US',
+    precision: 3,
+    value: 7.2534802394809285309
+  }
 };
