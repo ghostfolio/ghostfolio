@@ -154,7 +154,7 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const { pull_count } = await fetch(
+      const { pull_count } = (await fetch(
         `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
@@ -162,7 +162,7 @@ export class InfoService {
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).then((res) => res.json());
+      ).then((res) => res.json())) as { pull_count: number };
 
       return pull_count;
     } catch (error) {
@@ -196,7 +196,7 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const { stargazers_count } = await fetch(
+      const { stargazers_count } = (await fetch(
         `https://api.github.com/repos/ghostfolio/ghostfolio`,
         {
           headers: { 'User-Agent': 'request' },
@@ -204,7 +204,7 @@ export class InfoService {
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).then((res) => res.json());
+      ).then((res) => res.json())) as { stargazers_count: number };
 
       return stargazers_count;
     } catch (error) {

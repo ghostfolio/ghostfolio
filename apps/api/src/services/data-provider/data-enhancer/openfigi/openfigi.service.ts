@@ -45,14 +45,14 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
     const mappings = (await fetch(
       `${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`,
       {
+        body: JSON.stringify([
+          { exchCode: exchange, idType: 'TICKER', idValue: ticker }
+        ]),
         headers: {
           'Content-Type': 'application/json',
           ...headers
         },
         method: 'POST',
-        body: JSON.stringify([
-          { exchCode: exchange, idType: 'TICKER', idValue: ticker }
-        ]),
         signal: AbortSignal.timeout(requestTimeout)
       }
     ).then((res) => res.json())) as any[];
