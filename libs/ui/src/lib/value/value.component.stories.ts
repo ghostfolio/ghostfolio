@@ -45,7 +45,7 @@ export const PerformancePositive: Story = {
     isPercent: true,
     value: 0.0136810853673890378
   },
-  storyName: 'Performance (positive)'
+  name: 'Performance (positive)'
 };
 
 export const PerformanceNegative: Story = {
@@ -55,7 +55,7 @@ export const PerformanceNegative: Story = {
     isPercent: true,
     value: -0.0136810853673890378
   },
-  storyName: 'Performance (negative)'
+  name: 'Performance (negative)'
 };
 
 export const PerformanceCloseToZero: Story = {
@@ -65,7 +65,7 @@ export const PerformanceCloseToZero: Story = {
     isPercent: true,
     value: -2.388915360475e-8
   },
-  storyName: 'Performance (negative zero)'
+  name: 'Performance (negative zero)'
 };
 
 export const Precision: Story = {
