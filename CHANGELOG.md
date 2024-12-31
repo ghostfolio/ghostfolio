@@ -9,7 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Removed `got` in favour of node's global `fetch`
+- Eliminated `got` in favor of using `fetch`
+- Changed the `REDIS_HOST` from `localhost` to `redis` in `.env.example`
+- Changed the _Postgres_ host from `localhost` to `postgres` in `.env.example`
+- Changed the _Postgres_ image from `postgres:15` to `postgres:15-alpine` in the `docker-compose` files
+- Introduced `extends` in the `docker-compose` files
+- Improved the language localization for German (`de`)
 
 ## 2.132.0 - 2024-12-30
 

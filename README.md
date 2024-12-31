@@ -118,7 +118,7 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 Run the following command to start the Docker images from [Docker Hub](https://hub.docker.com/r/ghostfolio/ghostfolio):
 
 ```bash
-docker compose --env-file ./.env -f docker/docker-compose.yml up -d
+docker compose -f docker/docker-compose.yml up -d
 ```
 
 #### b. Build and run environment
@@ -126,8 +126,8 @@ docker compose --env-file ./.env -f docker/docker-compose.yml up -d
 Run the following commands to build and start the Docker images:
 
 ```bash
-docker compose --env-file ./.env -f docker/docker-compose.build.yml build
-docker compose --env-file ./.env -f docker/docker-compose.build.yml up -d
+docker compose -f docker/docker-compose.build.yml build
+docker compose -f docker/docker-compose.build.yml up -d
 ```
 
 #### Setup
@@ -137,9 +137,19 @@ docker compose --env-file ./.env -f docker/docker-compose.build.yml up -d
 
 #### Upgrade Version
 
-1. Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
-1. Run the following command to start the new Docker image: `docker compose --env-file ./.env -f docker/docker-compose.yml up -d`  
-   At each start, the container will automatically apply the database schema migrations if needed.
+1. Update the _Ghostfolio_ Docker image
+
+   - Increase the version of the `ghostfolio/ghostfolio` Docker image in `docker/docker-compose.yml`
+   - Run the following command if `ghostfolio:latest` is set:
+     ```bash
+     docker compose -f docker/docker-compose.yml pull
+     ```
+
+1. Run the following command to start the new Docker image:
+   ```bash
+   docker compose -f docker/docker-compose.yml up -d
+   ```
+   The container will automatically apply any required database schema migrations during startup.
 
 ### Home Server Systems (Community)
 
