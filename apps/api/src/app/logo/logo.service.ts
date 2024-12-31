@@ -29,7 +29,7 @@ export class LogoService {
       { dataSource, symbol }
     ]);
 
-    if (!assetProfile) {
+    if (!assetProfile?.url) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
