@@ -12,7 +12,7 @@
 ### Setup
 
 1. Run `npm install`
-1. Run `docker compose --env-file ./.env -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
+1. Run `docker compose -f docker/docker-compose.dev.yml up -d` to start [PostgreSQL](https://www.postgresql.org) and [Redis](https://redis.io)
 1. Run `npm run database:setup` to initialize the database schema
 1. Start the [server](#start-server) and the [client](#start-client)
 1. Open https://localhost:4200/en in your browser
