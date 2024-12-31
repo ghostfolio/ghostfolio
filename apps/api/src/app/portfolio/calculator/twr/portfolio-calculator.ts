@@ -13,7 +13,7 @@ import { DateRange } from '@ghostfolio/common/types';
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
-import { cloneDeep, first, last, sortBy } from 'lodash';
+import { cloneDeep, sortBy } from 'lodash';
 
 export class TWRPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
@@ -221,7 +221,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       };
     }
 
-    const dateOfFirstTransaction = new Date(first(orders).date);
+    const dateOfFirstTransaction = new Date(orders[0].date);
 
     const endDateString = format(end, DATE_FORMAT);
     const startDateString = format(start, DATE_FORMAT);
@@ -342,7 +342,7 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
         });
       }
 
-      const lastOrder = last(orders);
+      const lastOrder = orders.at(-1);
 
       lastUnitPrice = lastOrder.unitPriceFromMarketData ?? lastOrder.unitPrice;
     }

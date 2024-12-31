@@ -77,7 +77,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -1133,18 +1133,15 @@ export class PortfolioService {
       netWorth,
       totalInvestment,
       valueWithCurrencyEffect
-    } =
-      chart?.length > 0
-        ? last(chart)
-        : {
-            netPerformance: 0,
-            netPerformanceInPercentage: 0,
-            netPerformanceInPercentageWithCurrencyEffect: 0,
-            netPerformanceWithCurrencyEffect: 0,
-            netWorth: 0,
-            totalInvestment: 0,
-            valueWithCurrencyEffect: 0
-          };
+    } = chart?.at(-1) ?? {
+      netPerformance: 0,
+      netPerformanceInPercentage: 0,
+      netPerformanceInPercentageWithCurrencyEffect: 0,
+      netPerformanceWithCurrencyEffect: 0,
+      netWorth: 0,
+      totalInvestment: 0,
+      valueWithCurrencyEffect: 0
+    };
 
     return {
       chart,
