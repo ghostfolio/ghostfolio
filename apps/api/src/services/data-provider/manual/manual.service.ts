@@ -27,7 +27,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
 import { addDays, format, isBefore } from 'date-fns';
-import got, { Headers } from 'got';
 import * as jsonpath from 'jsonpath';
 
 @Injectable()
@@ -276,23 +275,22 @@ export class ManualService implements DataProviderInterface {
   ): Promise<number> {
     try {
       let locale = scraperConfiguration.locale;
-      const { body, headers } = await got(scraperConfiguration.url, {
-        headers: scraperConfiguration.headers as Headers,
-        // @ts-ignore
+      const response = await fetch(scraperConfiguration.url, {
+        headers: scraperConfiguration.headers as HeadersInit,
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
         )
       });
 
-      if (headers['content-type'].includes('application/json')) {
-        const data = JSON.parse(body);
+      if (response.headers['content-type'].includes('application/json')) {
+        const data = await response.json();
         const value = String(
           jsonpath.query(data, scraperConfiguration.selector)[0]
         );
 
         return extractNumberFromString({ locale, value });
       } else {
-        const $ = cheerio.load(body);
+        const $ = cheerio.load(await response.text());
 
         if (!locale) {
           try {

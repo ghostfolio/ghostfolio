@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Eliminated `got` in favor of using `fetch`
 - Changed the `REDIS_HOST` from `localhost` to `redis` in `.env.example`
 - Changed the _Postgres_ host from `localhost` to `postgres` in `.env.example`
 - Changed the _Postgres_ image from `postgres:15` to `postgres:15-alpine` in the `docker-compose` files

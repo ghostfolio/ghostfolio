@@ -4,7 +4,6 @@ import { parseSymbol } from '@ghostfolio/common/helper';
 
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
-import got, { Headers } from 'got';
 
 @Injectable()
 export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
@@ -32,7 +31,7 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const headers: Headers = {};
+    const headers: HeadersInit = {};
     const { exchange, ticker } = parseSymbol({
       symbol,
       dataSource: response.dataSource
@@ -43,14 +42,20 @@ export class OpenFigiDataEnhancerService implements DataEnhancerInterface {
         this.configurationService.get('API_KEY_OPEN_FIGI');
     }
 
-    const mappings = await got
-      .post(`${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`, {
-        headers,
-        json: [{ exchCode: exchange, idType: 'TICKER', idValue: ticker }],
-        // @ts-ignore
+    const mappings = (await fetch(
+      `${OpenFigiDataEnhancerService.baseUrl}/v3/mapping`,
+      {
+        body: JSON.stringify([
+          { exchCode: exchange, idType: 'TICKER', idValue: ticker }
+        ]),
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers
+        },
+        method: 'POST',
         signal: AbortSignal.timeout(requestTimeout)
-      })
-      .json<any[]>();
+      }
+    ).then((res) => res.json())) as any[];
 
     if (mappings?.length === 1 && mappings[0].data?.length === 1) {
       const { compositeFIGI, figi, shareClassFIGI } = mappings[0].data[0];

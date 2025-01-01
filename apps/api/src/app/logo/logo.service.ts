@@ -4,7 +4,6 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
 import { HttpException, Injectable } from '@nestjs/common';
 import { DataSource } from '@prisma/client';
-import got from 'got';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 @Injectable()
@@ -44,15 +43,16 @@ export class LogoService {
   }
 
   private getBuffer(aUrl: string) {
-    return got(
+    return fetch(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
       {
         headers: { 'User-Agent': 'request' },
-        // @ts-ignore
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
         )
       }
-    ).buffer();
+    )
+      .then((res) => res.arrayBuffer())
+      .then((buffer) => Buffer.from(buffer));
   }
 }
