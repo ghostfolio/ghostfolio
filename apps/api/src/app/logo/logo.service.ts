@@ -38,12 +38,12 @@ export class LogoService {
     return this.getBuffer(assetProfile.url);
   }
 
-  public async getLogoByUrl(aUrl: string) {
+  public getLogoByUrl(aUrl: string) {
     return this.getBuffer(aUrl);
   }
 
-  private getBuffer(aUrl: string) {
-    return fetch(
+  private async getBuffer(aUrl: string) {
+    const blob = await fetch(
       `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${aUrl}&size=64`,
       {
         headers: { 'User-Agent': 'request' },
@@ -51,8 +51,11 @@ export class LogoService {
           this.configurationService.get('REQUEST_TIMEOUT')
         )
       }
-    )
-      .then((res) => res.arrayBuffer())
-      .then((buffer) => Buffer.from(buffer));
+    ).then((res) => res.blob());
+
+    return {
+      buffer: await blob.arrayBuffer().then((ab) => Buffer.from(ab)),
+      type: blob.type
+    };
   }
 }
