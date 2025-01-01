@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the usability of the _Copy link to clipboard_ action by adding a confirmation on success in the access table to share the portfolio
 - Eliminated `got` in favor of using `fetch`
 - Changed the `REDIS_HOST` from `localhost` to `redis` in `.env.example`
 - Changed the _Postgres_ host from `localhost` to `postgres` in `.env.example`
