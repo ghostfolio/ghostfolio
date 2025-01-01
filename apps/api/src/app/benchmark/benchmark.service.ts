@@ -38,7 +38,7 @@ import {
   isSameDay,
   subDays
 } from 'date-fns';
-import { isNumber, last, uniqBy } from 'lodash';
+import { isNumber, uniqBy } from 'lodash';
 import ms from 'ms';
 
 import { BenchmarkValue } from './interfaces/benchmark-value.interface';
@@ -258,7 +258,7 @@ export class BenchmarkService {
     }
 
     const includesEndDate = isSameDay(
-      parseDate(last(marketData).date),
+      parseDate(marketData.at(-1).date),
       endDate
     );
 
