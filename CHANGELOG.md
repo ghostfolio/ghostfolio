@@ -10,12 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usability of the _Copy link to clipboard_ action by adding a confirmation on success in the access table to share the portfolio
+- Improved the endpoint to fetch the logo of an asset or a platform by sending the original MIME type
 - Eliminated `got` in favor of using `fetch`
 - Changed the `REDIS_HOST` from `localhost` to `redis` in `.env.example`
 - Changed the _Postgres_ host from `localhost` to `postgres` in `.env.example`
 - Changed the _Postgres_ image from `postgres:15` to `postgres:15-alpine` in the `docker-compose` files
 - Introduced `extends` in the `docker-compose` files
 - Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Improved the handling of a missing url in the endpoint to fetch the logo of an asset or a platform
 
 ## 2.132.0 - 2024-12-30
 
