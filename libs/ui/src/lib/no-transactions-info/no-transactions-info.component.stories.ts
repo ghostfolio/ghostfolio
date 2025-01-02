@@ -1,25 +1,23 @@
-import { GfLogoModule } from '@ghostfolio/ui/logo';
+import { GfLogoComponent } from '@ghostfolio/ui/logo';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import { Meta, Story, moduleMetadata } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 
-import { NoTransactionsInfoComponent } from './no-transactions-info.component';
+import { GfNoTransactionsInfoComponent } from './no-transactions-info.component';
 
 export default {
   title: 'No Transactions Info',
-  component: NoTransactionsInfoComponent,
+  component: GfNoTransactionsInfoComponent,
   decorators: [
     moduleMetadata({
-      imports: [GfLogoModule, RouterTestingModule]
+      imports: [GfLogoComponent, RouterTestingModule]
     })
   ]
-} as Meta<NoTransactionsInfoComponent>;
+} as Meta<GfNoTransactionsInfoComponent>;
 
-const Template: Story<NoTransactionsInfoComponent> = (
-  args: NoTransactionsInfoComponent
-) => ({
-  props: args
-});
+type Story = StoryObj<GfNoTransactionsInfoComponent>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {
+  args: {}
+};

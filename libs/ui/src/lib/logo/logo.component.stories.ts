@@ -1,30 +1,32 @@
-import { Meta, Story, moduleMetadata } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 
-import { LogoComponent } from './logo.component';
+import { GfLogoComponent } from './logo.component';
 
 export default {
   title: 'Logo',
-  component: LogoComponent,
+  component: GfLogoComponent,
   decorators: [
     moduleMetadata({
       imports: []
     })
   ]
-} as Meta<LogoComponent>;
+} as Meta<GfLogoComponent>;
 
-const Template: Story<LogoComponent> = (args: LogoComponent) => ({
-  props: args
-});
+type Story = StoryObj<GfLogoComponent>;
 
-export const Default = Template.bind({});
-Default.args = {};
-
-export const Large = Template.bind({});
-Large.args = {
-  size: 'large'
+export const Default: Story = {
+  args: {}
 };
 
-export const NoLabel = Template.bind({});
-NoLabel.args = {
-  showLabel: false
+export const Large: Story = {
+  args: {
+    size: 'large'
+  }
+};
+
+export const NoLabel: Story = {
+  args: {
+    showLabel: false
+  }
 };
