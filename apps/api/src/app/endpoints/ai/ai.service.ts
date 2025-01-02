@@ -24,7 +24,7 @@ export class AiService {
 
     const holdingsTable = [
       '| Name | Symbol | Currency | Asset Class | Asset Sub Class | Allocation in Percentage |',
-      '| --- | --- | --- | --- |',
+      '| --- | --- | --- | --- | --- | --- |',
       ...Object.values(holdings)
         .sort((a, b) => {
           return b.allocationInPercentage - a.allocationInPercentage;
@@ -52,8 +52,8 @@ export class AiService {
       'Advantages: Highlight strengths, focusing on growth potential, diversification, or other benefits.',
       'Disadvantages: Point out weaknesses, such as overexposure or lack of defensive assets.',
       'Target Group: Discuss who this portfolio might suit (e.g., risk tolerance, investment goals, life stages, and experience levels).',
-      'Optimization Ideas: Offer ideas to improve or complement the portfolio, ensuring they are constructive and neutral in tone.',
-      'Conclusion: Provide a concise summary, highlighting key insights.',
+      'Optimization Ideas: Offer ideas to complement the portfolio, ensuring they are constructive and neutral in tone.',
+      'Conclusion: Provide a concise summary highlighting key insights.',
       `Provide your answer in the following language: ${languageCode}.`
     ].join('\n');
   }
