@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Introduced `extends` in the `docker-compose` files
 - Improved the language localization for German (`de`)
 - Refreshed the cryptocurrencies list
+- Upgraded `envalid` from version `7.3.1` to `8.0.0`
 - Upgraded `replace-in-file` from version `7.0.1` to `8.3.0`
 
 ### Fixed
