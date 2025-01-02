@@ -54,7 +54,9 @@ export class LogoService {
     ).then((res) => res.blob());
 
     return {
-      buffer: await blob.arrayBuffer().then((ab) => Buffer.from(ab)),
+      buffer: await blob.arrayBuffer().then((arrayBuffer) => {
+        return Buffer.from(arrayBuffer);
+      }),
       type: blob.type
     };
   }
