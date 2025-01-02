@@ -40,9 +40,9 @@ export const Label: Story = {
 
 export const PerformancePositive: Story = {
   args: {
-    locale: 'en-US',
     colorizeSign: true,
     isPercent: true,
+    locale: 'en-US',
     value: 0.0136810853673890378
   },
   name: 'Performance (positive)'
@@ -50,9 +50,9 @@ export const PerformancePositive: Story = {
 
 export const PerformanceNegative: Story = {
   args: {
-    locale: 'en-US',
     colorizeSign: true,
     isPercent: true,
+    locale: 'en-US',
     value: -0.0136810853673890378
   },
   name: 'Performance (negative)'
@@ -60,9 +60,9 @@ export const PerformanceNegative: Story = {
 
 export const PerformanceCloseToZero: Story = {
   args: {
-    locale: 'en-US',
     colorizeSign: true,
     isPercent: true,
+    locale: 'en-US',
     value: -2.388915360475e-8
   },
   name: 'Performance (negative zero)'

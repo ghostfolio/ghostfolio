@@ -12,8 +12,8 @@ export default {
   decorators: [
     moduleMetadata({
       imports: [
-        GfPortfolioProportionChartComponent,
         CommonModule,
+        GfPortfolioProportionChartComponent,
         NgxSkeletonLoaderModule
       ]
     })

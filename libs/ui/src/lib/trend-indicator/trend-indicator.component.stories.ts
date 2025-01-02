@@ -28,8 +28,8 @@ export const Default: Story = {
 
 export const Delayed: Story = {
   args: {
-    marketState: 'delayed',
-    dateRange: '1d'
+    dateRange: '1d',
+    marketState: 'delayed'
   }
 };
 
@@ -47,7 +47,7 @@ export const Up: Story = {
 
 export const MarketClosed: Story = {
   args: {
-    marketState: 'closed',
-    dateRange: '1d'
+    dateRange: '1d',
+    marketState: 'closed'
   }
 };

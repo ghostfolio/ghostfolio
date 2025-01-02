@@ -10,7 +10,7 @@ export default {
   component: GfLineChartComponent,
   decorators: [
     moduleMetadata({
-      imports: [GfLineChartComponent, CommonModule, NgxSkeletonLoaderModule]
+      imports: [CommonModule, GfLineChartComponent, NgxSkeletonLoaderModule]
     })
   ]
 } as Meta<GfLineChartComponent>;

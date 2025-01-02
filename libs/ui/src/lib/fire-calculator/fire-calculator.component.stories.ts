@@ -25,15 +25,15 @@ export default {
       imports: [
         CommonModule,
         FormsModule,
+        GfFireCalculatorComponent,
         GfValueComponent,
         MatButtonModule,
+        MatDatepickerModule,
         MatFormFieldModule,
         MatInputModule,
-        MatDatepickerModule,
         NgxSkeletonLoaderModule,
         NoopAnimationsModule,
-        ReactiveFormsModule,
-        GfFireCalculatorComponent
+        ReactiveFormsModule
       ],
       providers: [FireCalculatorService, provideNativeDateAdapter()]
     })
