@@ -312,7 +312,8 @@ export class UserService {
         currentPermissions = without(
           currentPermissions,
           permissions.accessHoldingsChart,
-          permissions.createAccess
+          permissions.createAccess,
+          permissions.readAiPrompt
         );
 
         // Reset benchmark

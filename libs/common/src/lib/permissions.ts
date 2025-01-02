@@ -35,6 +35,7 @@ export const permissions = {
   enableSubscriptionInterstitial: 'enableSubscriptionInterstitial',
   enableSystemMessage: 'enableSystemMessage',
   impersonateAllUsers: 'impersonateAllUsers',
+  readAiPrompt: 'readAiPrompt',
   readMarketData: 'readMarketData',
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
@@ -76,6 +77,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deletePlatform,
         permissions.deleteTag,
         permissions.deleteUser,
+        permissions.readAiPrompt,
         permissions.readMarketData,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
@@ -95,7 +97,8 @@ export function getPermissions(aRole: Role): string[] {
       return [
         permissions.accessAssistant,
         permissions.accessHoldingsChart,
-        permissions.createUserAccount
+        permissions.createUserAccount,
+        permissions.readAiPrompt
       ];
 
     case 'USER':
@@ -113,6 +116,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
         permissions.deleteOwnUser,
+        permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.updateAccount,
         permissions.updateAuthDevice,
