@@ -155,7 +155,7 @@ export class InfoService {
   private async countDockerHubPulls(): Promise<number> {
     try {
       const { pull_count } = (await fetch(
-        `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
+        'https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio',
         {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
@@ -184,7 +184,7 @@ export class InfoService {
 
       return extractNumberFromString({
         value: $(
-          `a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter`
+          'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
         ).text()
       });
     } catch (error) {
@@ -197,7 +197,7 @@ export class InfoService {
   private async countGitHubStargazers(): Promise<number> {
     try {
       const { stargazers_count } = (await fetch(
-        `https://api.github.com/repos/ghostfolio/ghostfolio`,
+        'https://api.github.com/repos/ghostfolio/ghostfolio',
         {
           headers: { 'User-Agent': 'request' },
           signal: AbortSignal.timeout(
