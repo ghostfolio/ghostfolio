@@ -114,6 +114,12 @@
                     >Türkçe (<ng-container i18n>Community</ng-container
                     >)</mat-option
                   >
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <mat-option value="uk"
+                      >Ukrainian (<ng-container i18n>Community</ng-container
+                      >)</mat-option
+                    >
+                  }
                 </mat-select>
               </mat-form-field>
             </div>

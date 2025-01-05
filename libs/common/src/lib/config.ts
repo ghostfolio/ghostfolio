@@ -164,6 +164,7 @@ export const SUPPORTED_LANGUAGE_CODES = [
   'pl',
   'pt',
   'tr',
+  'uk',
   'zh'
 ];
 
