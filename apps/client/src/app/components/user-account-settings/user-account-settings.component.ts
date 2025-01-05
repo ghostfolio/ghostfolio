@@ -62,6 +62,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     'pl',
     'pt',
     'tr',
+    'uk',
     'zh'
   ];
   public user: User;
