@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the handling of a missing url in the endpoint to fetch the logo of an asset or a platform
 
+### Fixed
+
+- Fixed the _Storybook_ setup
+
 ## 2.132.0 - 2024-12-30
 
 ### Added
@@ -47,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `ngx-markdown` from version `18.0.0` to `19.0.0`
 - Upgraded `Nx` from version `20.1.2` to `20.3.0`
 - Upgraded `prisma` from version `6.0.1` to `6.1.0`
+- Upgraded `storybook` from version `8.2.5` to `8.4.7`
 - Upgraded `zone.js` from version `0.14.10` to `0.15.0`
 
 ### Fixed
