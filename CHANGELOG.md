@@ -24,9 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Improved the handling of a missing url in the endpoint to fetch the logo of an asset or a platform
-
-### Fixed
-
 - Fixed the _Storybook_ setup
 
 ## 2.132.0 - 2024-12-30
