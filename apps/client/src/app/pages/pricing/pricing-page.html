@@ -178,6 +178,9 @@
             class="h-100"
             [ngClass]="{ active: user?.subscription?.type === 'Premium' }"
           >
+            @if (label) {
+              <mat-card-title>{{ label }}</mat-card-title>
+            }
             <mat-card-content class="d-flex flex-column h-100">
               <div class="flex-grow-1">
                 <div class="align-items-center d-flex mb-2">
