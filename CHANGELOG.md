@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Copy AI prompt to clipboard_ action to the analysis page (experimental)
+
 ### Changed
 
 - Improved the usability of the _Copy link to clipboard_ action by adding a confirmation on success in the access table to share the portfolio
