@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import {
+  DEFAULT_CURRENCY,
   DEFAULT_LANGUAGE_CODE,
   HEADER_KEY_IMPERSONATION
 } from '@ghostfolio/common/config';
@@ -36,7 +37,8 @@ export class AiController {
       impersonationId: impersonationUserId,
       languageCode:
         this.request.user.Settings.settings.language ?? DEFAULT_LANGUAGE_CODE,
-      userCurrency: this.request.user.Settings.settings.baseCurrency,
+      userCurrency:
+        this.request.user.Settings.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: this.request.user.id
     });
 
