@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
 
-## 2.133.0 - 2025-01-08
+## 2.133.1 - 2025-01-09
 
 ### Added
 
