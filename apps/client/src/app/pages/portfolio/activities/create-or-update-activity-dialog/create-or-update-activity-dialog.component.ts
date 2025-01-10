@@ -476,7 +476,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        (['ITEM', 'FEE'].includes(this.activityForm.get('type').value)
+        (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(
+          this.activityForm.get('type').value
+        )
           ? undefined
           : this.activityForm.get('searchSymbol')?.value?.symbol) ??
         this.activityForm.get('name')?.value,
