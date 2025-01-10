@@ -328,7 +328,8 @@ export class ImportService {
           date
         );
 
-        if (!unitPrice) {
+        // unitPrice can be 0 if it's a fee record
+        if (unitPrice === undefined) {
           throw new Error(
             `activities.${index} historical exchange rate at ${format(
               date,
