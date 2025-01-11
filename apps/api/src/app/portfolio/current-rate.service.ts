@@ -102,7 +102,9 @@ export class CurrentRateService {
         })
     );
 
-    const values = await Promise.all(promises).then((arr) => arr.flat());
+    const values = await Promise.all(promises).then((array) => {
+      return array.flat();
+    });
 
     const response: GetValuesObject = {
       dataProviderInfos,
