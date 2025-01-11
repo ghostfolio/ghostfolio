@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Refactored various `lodash` functions with native JavaScript equivalents
+
 ### Fixed
 
 - Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`

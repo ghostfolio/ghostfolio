@@ -13,7 +13,7 @@ import type { RequestWithUser } from '@ghostfolio/common/types';
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { isBefore, isToday } from 'date-fns';
-import { flatten, isEmpty, uniqBy } from 'lodash';
+import { isEmpty, uniqBy } from 'lodash';
 
 import { GetValueObject } from './interfaces/get-value-object.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
@@ -102,7 +102,9 @@ export class CurrentRateService {
         })
     );
 
-    const values = flatten(await Promise.all(promises));
+    const values = await Promise.all(promises).then((array) => {
+      return array.flat();
+    });
 
     const response: GetValuesObject = {
       dataProviderInfos,
