@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prisma` from version `6.1.0` to `6.2.1`
 
+### Fixed
+
+- Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
+
 ## 2.133.1 - 2025-01-09
 
 ### Added
