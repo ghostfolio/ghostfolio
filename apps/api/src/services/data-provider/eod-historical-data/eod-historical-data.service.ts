@@ -31,7 +31,6 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { addDays, format, isSameDay, isToday } from 'date-fns';
-import got from 'got';
 import { isNumber } from 'lodash';
 
 @Injectable()
@@ -95,7 +94,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
 
-      const historicalResult = await got(
+      const historicalResult = await fetch(
         `${this.URL}/div/${symbol}?api_token=${
           this.apiKey
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
@@ -103,10 +102,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
           DATE_FORMAT
         )}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       for (const { date, value } of historicalResult) {
         response[date] = {
@@ -140,7 +138,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     symbol = this.convertToEodSymbol(symbol);
 
     try {
-      const response = await got(
+      const response = await fetch(
         `${this.URL}/eod/${symbol}?api_token=${
           this.apiKey
         }&fmt=json&from=${format(from, DATE_FORMAT)}&to=${format(
@@ -148,10 +146,9 @@ export class EodHistoricalDataService implements DataProviderInterface {
           DATE_FORMAT
         )}&period=${granularity}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       return response.reduce(
         (result, { adjusted_close, date }) => {
@@ -205,15 +202,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     });
 
     try {
-      const realTimeResponse = await got(
+      const realTimeResponse = await fetch(
         `${this.URL}/real-time/${eodHistoricalDataSymbols[0]}?api_token=${
           this.apiKey
         }&fmt=json&s=${eodHistoricalDataSymbols.join(',')}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(requestTimeout)
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       const quotes: {
         close: number;
@@ -286,7 +282,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error?.name === 'AbortError') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;
@@ -400,15 +396,14 @@ export class EodHistoricalDataService implements DataProviderInterface {
     })[] = [];
 
     try {
-      const response = await got(
+      const response = await fetch(
         `${this.URL}/search/${aQuery}?api_token=${this.apiKey}`,
         {
-          // @ts-ignore
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       searchResult = response.map(
         ({ Code, Currency, Exchange, ISIN: isin, Name: name, Type }) => {
@@ -431,7 +426,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
+      if (error?.name === 'AbortError') {
         message = `RequestError: The operation to search for ${aQuery} was aborted because the request to the data provider took more than ${(
           this.configurationService.get('REQUEST_TIMEOUT') / 1000
         ).toFixed(3)} seconds`;

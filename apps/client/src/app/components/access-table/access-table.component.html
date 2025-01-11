@@ -66,7 +66,7 @@
         </button>
         <mat-menu #transactionMenu="matMenu" xPosition="before">
           @if (element.type === 'PUBLIC') {
-            <button mat-menu-item (click)="onCopyToClipboard(element.id)">
+            <button mat-menu-item (click)="onCopyUrlToClipboard(element.id)">
               <ng-container i18n>Copy link to clipboard</ng-container>
             </button>
             <hr class="my-0" />

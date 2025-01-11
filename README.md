@@ -306,6 +306,6 @@ If you like to support this project, get [**Ghostfolio Premium**](https://ghostf
 
 ## License
 
-© 2021 - 2024 [Ghostfolio](https://ghostfol.io)
+© 2021 - 2025 [Ghostfolio](https://ghostfol.io)
 
 Licensed under the [AGPLv3 License](https://www.gnu.org/licenses/agpl-3.0.html).

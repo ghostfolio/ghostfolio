@@ -1,9 +1,13 @@
-const dotenv = require('dotenv');
-const path = require('path');
-const replace = require('replace-in-file');
+import dotenv from 'dotenv';
+import { dirname, resolve } from 'path';
+import { replaceInFileSync } from 'replace-in-file';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 dotenv.config({
-  path: path.resolve(__dirname, '.env')
+  path: resolve(__dirname, '.env')
 });
 
 const now = new Date();
@@ -16,7 +20,7 @@ const buildTimestamp = `${formatWithTwoDigits(
 )}:${formatWithTwoDigits(now.getMinutes())}`;
 
 try {
-  const changedFiles = replace.sync({
+  const changedFiles = replaceInFileSync({
     files: './dist/apps/client/main.*.js',
     from: /{BUILD_TIMESTAMP}/g,
     to: buildTimestamp,
