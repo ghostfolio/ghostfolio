@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the health check endpoint to include database and cache operations (experimental)
+- Refactored various `lodash` functions with native JavaScript equivalents
 
 ### Fixed
 
