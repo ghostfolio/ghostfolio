@@ -22,6 +22,7 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
+  AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
@@ -635,6 +636,10 @@ export class DataService {
 
   public fetchPortfolioReport() {
     return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
+  }
+
+  public fetchPrompt() {
+    return this.http.get<AiPromptResponse>('/api/v1/ai/prompt');
   }
 
   public fetchPublicPortfolio(aAccessId: string) {

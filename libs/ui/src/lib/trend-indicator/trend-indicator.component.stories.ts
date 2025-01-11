@@ -1,50 +1,53 @@
-import { Meta, Story, moduleMetadata } from '@storybook/angular';
+import { moduleMetadata } from '@storybook/angular';
+import type { Meta, StoryObj } from '@storybook/angular';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
-import { TrendIndicatorComponent } from './trend-indicator.component';
+import { GfTrendIndicatorComponent } from './trend-indicator.component';
 
 export default {
   title: 'Trend Indicator',
-  component: TrendIndicatorComponent,
+  component: GfTrendIndicatorComponent,
   decorators: [
     moduleMetadata({
       imports: [NgxSkeletonLoaderModule]
     })
   ]
-} as Meta<TrendIndicatorComponent>;
+} as Meta<GfTrendIndicatorComponent>;
 
-const Template: Story<TrendIndicatorComponent> = (
-  args: TrendIndicatorComponent
-) => ({
-  props: args
-});
+type Story = StoryObj<GfTrendIndicatorComponent>;
 
-export const Loading = Template.bind({});
-Loading.args = {
-  isLoading: true
+export const Loading: Story = {
+  args: {
+    isLoading: true
+  }
 };
 
-export const Default = Template.bind({});
-Default.args = {};
-
-export const Delayed = Template.bind({});
-Delayed.args = {
-  marketState: 'delayed',
-  range: '1d'
+export const Default: Story = {
+  args: {}
 };
 
-export const Down = Template.bind({});
-Down.args = {
-  value: -1
+export const Delayed: Story = {
+  args: {
+    dateRange: '1d',
+    marketState: 'delayed'
+  }
 };
 
-export const Up = Template.bind({});
-Up.args = {
-  value: 1
+export const Down: Story = {
+  args: {
+    value: -1
+  }
 };
 
-export const MarketClosed = Template.bind({});
-MarketClosed.args = {
-  marketState: 'closed',
-  range: '1d'
+export const Up: Story = {
+  args: {
+    value: 1
+  }
+};
+
+export const MarketClosed: Story = {
+  args: {
+    dateRange: '1d',
+    marketState: 'closed'
+  }
 };

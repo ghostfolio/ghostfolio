@@ -31,6 +31,7 @@ import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
 import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
+import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
@@ -57,6 +58,7 @@ import { UserModule } from './user/user.module';
     AdminModule,
     AccessModule,
     AccountModule,
+    AiModule,
     ApiKeysModule,
     AssetModule,
     AuthDeviceModule,

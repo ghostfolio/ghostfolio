@@ -11,10 +11,13 @@ import {
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { Clipboard } from '@angular/cdk/clipboard';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
 import { isNumber, sortBy } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -38,6 +41,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public dividendTimelineDataLabel = $localize`Dividend`;
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
+  public hasPermissionToReadAiPrompt: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
@@ -64,9 +68,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public constructor(
     private changeDetectorRef: ChangeDetectorRef,
+    private clipboard: Clipboard,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
     private impersonationStorageService: ImpersonationStorageService,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {
     const { benchmarks } = this.dataService.fetchInfo();
@@ -104,6 +110,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             return id === this.user.settings?.benchmark;
           });
 
+          this.hasPermissionToReadAiPrompt = hasPermission(
+            this.user.permissions,
+            permissions.readAiPrompt
+          );
+
           this.update();
         }
       });
@@ -128,6 +139,20 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
+  }
+
+  public onCopyPromptToClipboard() {
+    this.dataService.fetchPrompt().subscribe(({ prompt }) => {
+      this.clipboard.copy(prompt);
+
+      this.snackBar.open(
+        '✅ ' + $localize`AI prompt has been copied to the clipboard`,
+        undefined,
+        {
+          duration: 3000
+        }
+      );
+    });
   }
 
   public ngOnDestroy() {

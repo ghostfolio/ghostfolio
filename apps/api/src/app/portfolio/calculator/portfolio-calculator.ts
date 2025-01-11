@@ -49,7 +49,7 @@ import {
   min,
   subDays
 } from 'date-fns';
-import { first, isNumber, last, sortBy, sum, uniq, uniqBy } from 'lodash';
+import { isNumber, sortBy, sum, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -167,7 +167,7 @@ export abstract class PortfolioCalculator {
 
   @LogPerformance
   public async computeSnapshot(): Promise<PortfolioSnapshot> {
-    const lastTransactionPoint = last(this.transactionPoints);
+    const lastTransactionPoint = this.transactionPoints.at(-1);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
       return isBefore(parseDate(date), this.endDate);
@@ -772,9 +772,7 @@ export abstract class PortfolioCalculator {
     let firstActivityDate: Date;
 
     try {
-      const firstAccountBalanceDateString = first(
-        this.accountBalanceItems
-      )?.date;
+      const firstAccountBalanceDateString = this.accountBalanceItems[0]?.date;
       firstAccountBalanceDate = firstAccountBalanceDateString
         ? parseDate(firstAccountBalanceDateString)
         : new Date();
