@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Refactored various `lodash` functions with native JavaScript equivalents
 - Upgraded `prisma` from version `6.1.0` to `6.2.1`
 
 ### Fixed
