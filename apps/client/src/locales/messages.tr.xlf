@@ -3584,7 +3584,7 @@
       </trans-unit>
       <trans-unit id="ae508ae33a02ae69247d9e4d84e98b610209ef3b" datatype="html">
         <source> What our <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>users<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> are saying </source>
-        <target state="new"> What our <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>users<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> are saying </target>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Kullanıcılarımızın<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> görüşleri </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">327</context>
@@ -3648,7 +3648,7 @@
       </trans-unit>
       <trans-unit id="80abe38d82bca467f47bbb65f821a115cf9dfdc1" datatype="html">
         <source> Are <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>you<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ready? </source>
-        <target state="new"> Are <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>you<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ready? </target>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Hazır<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> mısınız? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">431</context>
@@ -6684,7 +6684,7 @@
       </trans-unit>
       <trans-unit id="8289b77182a57fbf7ebe3bfd506b85e3fdd9e537" datatype="html">
         <source> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></source>
-        <target state="new"> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
+        <target state="translated"> Hemen katıl <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> ya da örnek hesabı incele <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">434</context>
