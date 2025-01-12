@@ -7,6 +7,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Milliseconds } from 'cache-manager';
 import { RedisCache } from 'cache-manager-redis-yet';
 import { createHash } from 'crypto';
+import ms from 'ms';
 
 @Injectable()
 export class RedisCacheService {
@@ -57,6 +58,26 @@ export class RedisCacheService {
 
   public getQuoteKey({ dataSource, symbol }: AssetProfileIdentifier) {
     return `quote-${getAssetProfileIdentifier({ dataSource, symbol })}`;
+  }
+
+  public async isHealthy() {
+    try {
+      const client = this.cache.store.client;
+
+      const isHealthy = await Promise.race([
+        client.ping(),
+        new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error('Redis health check timeout')),
+            ms('2 seconds')
+          )
+        )
+      ]);
+
+      return isHealthy === 'PONG';
+    } catch (error) {
+      return false;
+    }
   }
 
   public async remove(key: string) {
