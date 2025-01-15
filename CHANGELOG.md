@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the health check endpoint to include database and cache operations (experimental)
 - Refactored various `lodash` functions with native JavaScript equivalents
 - Improved the language localization for German (`de`)
 - Upgraded `prisma` from version `6.1.0` to `6.2.1`
