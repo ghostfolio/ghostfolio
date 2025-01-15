@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
+- Handled an exception in the scraper configuration introduced by the migration from `got` to `fetch`
 
 ## 2.133.1 - 2025-01-09
 
