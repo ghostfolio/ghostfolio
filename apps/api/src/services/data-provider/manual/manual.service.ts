@@ -273,38 +273,36 @@ export class ManualService implements DataProviderInterface {
   private async scrape(
     scraperConfiguration: ScraperConfiguration
   ): Promise<number> {
-    try {
-      let locale = scraperConfiguration.locale;
-      const response = await fetch(scraperConfiguration.url, {
-        headers: scraperConfiguration.headers as HeadersInit,
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
-      });
+    let locale = scraperConfiguration.locale;
 
-      if (response.headers['content-type'].includes('application/json')) {
-        const data = await response.json();
-        const value = String(
-          jsonpath.query(data, scraperConfiguration.selector)[0]
-        );
+    const response = await fetch(scraperConfiguration.url, {
+      headers: scraperConfiguration.headers as HeadersInit,
+      signal: AbortSignal.timeout(
+        this.configurationService.get('REQUEST_TIMEOUT')
+      )
+    });
 
-        return extractNumberFromString({ locale, value });
-      } else {
-        const $ = cheerio.load(await response.text());
+    if (response.headers['content-type']?.includes('application/json')) {
+      const data = await response.json();
 
-        if (!locale) {
-          try {
-            locale = $('html').attr('lang');
-          } catch {}
-        }
+      const value = String(
+        jsonpath.query(data, scraperConfiguration.selector)[0]
+      );
 
-        return extractNumberFromString({
-          locale,
-          value: $(scraperConfiguration.selector).first().text()
-        });
+      return extractNumberFromString({ locale, value });
+    } else {
+      const $ = cheerio.load(await response.text());
+
+      if (!locale) {
+        try {
+          locale = $('html').attr('lang');
+        } catch {}
       }
-    } catch (error) {
-      throw error;
+
+      return extractNumberFromString({
+        locale,
+        value: $(scraperConfiguration.selector).first().text()
+      });
     }
   }
 }
