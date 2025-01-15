@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the import of activities with type `FEE` (where unit price is `0`)
 - Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
 - Handled an exception in the scraper configuration introduced by the migration from `got` to `fetch`
 
