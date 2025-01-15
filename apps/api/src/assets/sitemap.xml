@@ -582,10 +582,12 @@
     <loc>https://ghostfol.io/tr</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
-  <!-- <url>
+  <!--
+  <url>
     <loc>https://ghostfol.io/uk</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-  </url> -->
+  </url>
+  -->
   <!--
   <url>
     <loc>https://ghostfol.io/zh</loc>
