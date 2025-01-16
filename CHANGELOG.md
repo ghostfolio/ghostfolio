@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `eslint` dependencies
 - Upgraded `nestjs` from version `10.1.3` to `10.4.15`
 - Upgraded `Nx` from version `20.3.0` to `20.3.2`
+- Upgraded `reflect-metadata` from version `0.1.13` to `0.2.2`
 - Upgraded `uuid` from version `11.0.2` to `11.0.5`
 
 ## 2.134.0 - 2025-01-15
