@@ -1,6 +1,6 @@
 const baseConfig = require('../../eslint.config.cjs');
-const angularEslintEslintPluginEslintPlugin = require('@angular-eslint/eslint-plugin-eslint-plugin');
-const typescriptEslintEslintPlugin = require('@typescript-eslint/eslint-plugin');
+const angularEslintPlugin = require('@angular-eslint/eslint-plugin');
+const typescriptEslintPlugin = require('@typescript-eslint/eslint-plugin');
 
 module.exports = [
   {
@@ -9,8 +9,8 @@ module.exports = [
   ...baseConfig,
   {
     plugins: {
-      '@angular-eslint/eslint-plugin': angularEslintEslintPluginEslintPlugin,
-      '@typescript-eslint': typescriptEslintEslintPlugin
+      '@angular-eslint': angularEslintPlugin,
+      '@typescript-eslint': typescriptEslintPlugin
     }
   },
   {
