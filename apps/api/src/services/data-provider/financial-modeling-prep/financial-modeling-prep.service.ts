@@ -21,11 +21,12 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
+import { uniqBy } from 'lodash';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
   private apiKey: string;
-  private readonly URL = 'https://financialmodelingprep.com/api/v3';
+  private readonly URL = this.getUrl({ version: 3 });
 
   public constructor(
     private readonly configurationService: ConfigurationService
@@ -161,23 +162,33 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const result = await fetch(
-        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
-        {
+      const [resultSearch, resultSearchIsin] = await Promise.all([
+        fetch(`${this.URL}/search?query=${query}&apikey=${this.apiKey}`, {
           signal: AbortSignal.timeout(
             this.configurationService.get('REQUEST_TIMEOUT')
           )
-        }
-      ).then((res) => res.json());
+        }).then((res) => res.json()),
+        fetch(
+          `${this.getUrl({ version: 4 })}/search/isin?isin=${query}&apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json())
+      ]);
 
-      items = result.map(({ currency, name, symbol }) => {
+      const result = uniqBy([...resultSearch, ...resultSearchIsin], 'symbol');
+
+      items = result.map(({ companyName, currency, name, symbol }) => {
         return {
-          // TODO: Add assetClass
-          // TODO: Add assetSubClass
           currency,
-          name,
           symbol,
-          dataSource: this.getName()
+          assetClass: undefined, // TODO
+          assetSubClass: undefined, // TODO
+          dataProviderInfo: this.getDataProviderInfo(),
+          dataSource: this.getName(),
+          name: name ?? companyName
         };
       });
     } catch (error) {
@@ -193,5 +204,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private getUrl({ version }: { version: number }) {
+    return `https://financialmodelingprep.com/api/v${version}`;
   }
 }
