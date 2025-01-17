@@ -1,6 +1,7 @@
 const { FlatCompat } = require('@eslint/eslintrc');
 const js = require('@eslint/js');
 const nxEslintPlugin = require('@nx/eslint-plugin');
+const storybook = require('eslint-plugin-storybook');
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
@@ -11,7 +12,7 @@ module.exports = [
   {
     ignores: ['**/dist']
   },
-  ...compat.extends('plugin:storybook/recommended'),
+  ...storybook.configs['flat/recommended'],
   { plugins: { '@nx': nxEslintPlugin } },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
