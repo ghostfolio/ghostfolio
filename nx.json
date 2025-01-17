@@ -63,12 +63,12 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/eslint.config.cjs",
       "!{projectRoot}/jest.config.[jt]s",
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/tsconfig.storybook.json",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/webpack.config.js",
-      "!{projectRoot}/eslint.config.cjs"
+      "!{projectRoot}/webpack.config.js"
     ]
   },
   "parallel": 1,
