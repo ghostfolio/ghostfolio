@@ -67,7 +67,8 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/tsconfig.storybook.json",
       "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/webpack.config.js"
+      "!{projectRoot}/webpack.config.js",
+      "!{projectRoot}/eslint.config.cjs"
     ]
   },
   "parallel": 1,
