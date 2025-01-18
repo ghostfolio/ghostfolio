@@ -11,7 +11,6 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -27,6 +26,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
+import { countries } from 'countries-list';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
 
 @Injectable()
@@ -87,10 +87,83 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
         response.assetClass = assetClass;
         response.assetSubClass = assetSubClass;
-        response.currency = assetProfile.currency;
-        response.name = assetProfile.companyName;
 
-        if (assetSubClass === AssetSubClass.STOCK) {
+        if (assetSubClass === AssetSubClass.ETF) {
+          const etfCountryWeightings = await fetch(
+            `${this.URL}/etf-country-weightings/${symbol}?apikey=${this.apiKey}`,
+            {
+              signal: AbortSignal.timeout(
+                this.configurationService.get('REQUEST_TIMEOUT')
+              )
+            }
+          ).then((res) => res.json());
+
+          response.countries = etfCountryWeightings.map(
+            ({ country: countryName, weightPercentage }) => {
+              let countryCode: string;
+
+              for (const [code, country] of Object.entries(countries)) {
+                if (country.name === countryName) {
+                  countryCode = code;
+                  break;
+                }
+              }
+
+              return {
+                code: countryCode,
+                weight: parseFloat(weightPercentage.slice(0, -1)) / 100
+              };
+            }
+          );
+
+          const [portfolioDate] = await fetch(
+            `${this.getUrl({ version: 4 })}/etf-holdings/portfolio-date?symbol=${symbol}&apikey=${this.apiKey}`,
+            {
+              signal: AbortSignal.timeout(
+                this.configurationService.get('REQUEST_TIMEOUT')
+              )
+            }
+          ).then((res) => res.json());
+
+          if (portfolioDate) {
+            const etfHoldings = await fetch(
+              `${this.getUrl({ version: 4 })}/etf-holdings?date=${portfolioDate.date}&symbol=${symbol}&apikey=${this.apiKey}`,
+              {
+                signal: AbortSignal.timeout(
+                  this.configurationService.get('REQUEST_TIMEOUT')
+                )
+              }
+            ).then((res) => res.json());
+
+            const sortedTopHoldings = etfHoldings
+              .sort((a, b) => {
+                return b.pctVal - a.pctVal;
+              })
+              .slice(0, 10);
+
+            response.holdings = sortedTopHoldings.map(({ name, pctVal }) => {
+              return { name, weight: pctVal / 100 };
+            });
+          }
+
+          const etfSectorWeightings = await fetch(
+            `${this.URL}/etf-sector-weightings/${symbol}?apikey=${this.apiKey}`,
+            {
+              signal: AbortSignal.timeout(
+                this.configurationService.get('REQUEST_TIMEOUT')
+              )
+            }
+          ).then((res) => res.json());
+
+          response.sectors = etfSectorWeightings.map(
+            ({ sector, weightPercentage }) => {
+              return {
+                name: sector,
+                weight: parseFloat(weightPercentage.slice(0, -1)) / 100
+              };
+            }
+          );
+        } else if (assetSubClass === AssetSubClass.STOCK) {
           if (assetProfile.country) {
             response.countries = [{ code: assetProfile.country, weight: 1 }];
           }
@@ -99,6 +172,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             response.sectors = [{ name: assetProfile.sector, weight: 1 }];
           }
         }
+
+        response.currency = assetProfile.currency;
+
+        if (assetProfile.isin) {
+          response.isin = assetProfile.isin;
+        }
+
+        response.name = assetProfile.companyName;
 
         if (assetProfile.website) {
           response.url = assetProfile.website;
@@ -199,8 +280,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       ).then((res) => res.json());
 
       for (const { price, symbol } of quotes) {
+        const { currency } = await this.getAssetProfile({ symbol });
+
         response[symbol] = {
-          currency: DEFAULT_CURRENCY,
+          currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
           marketPrice: price,
