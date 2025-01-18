@@ -98,7 +98,7 @@
     "cache-manager-redis-yet": "5.1.4",
     "chart.js": "4.2.0",
     "chartjs-adapter-date-fns": "3.0.0",
-    "chartjs-chart-treemap": "2.3.1",
+    "chartjs-chart-treemap": "3.1.0",
     "chartjs-plugin-annotation": "2.1.2",
     "chartjs-plugin-datalabels": "2.2.0",
     "cheerio": "1.0.0",
