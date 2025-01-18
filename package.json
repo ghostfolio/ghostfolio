@@ -96,7 +96,7 @@
     "bull": "4.16.2",
     "cache-manager": "5.7.6",
     "cache-manager-redis-yet": "5.1.4",
-    "chart.js": "4.2.0",
+    "chart.js": "4.4.7",
     "chartjs-adapter-date-fns": "3.0.0",
     "chartjs-chart-treemap": "3.1.0",
     "chartjs-plugin-annotation": "3.1.0",
