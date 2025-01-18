@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the search by `isin` in the _Financial Modeling Prep_ service
+- Switched to _ESLint_’s flat config format
+- Upgraded `eslint` dependencies
 
 ## 2.134.0 - 2025-01-15
 
