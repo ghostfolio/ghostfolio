@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended the asset profile data in the _Financial Modeling Prep_ service
 - Extended the search by `isin` in the _Financial Modeling Prep_ service
 - Switched to _ESLint_’s flat config format
 - Upgraded `eslint` dependencies
