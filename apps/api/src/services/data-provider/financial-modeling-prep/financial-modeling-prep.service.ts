@@ -432,7 +432,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return `https://financialmodelingprep.com/api/v${version}`;
   }
 
-  public parseAssetClass(profile: any): {
+  private parseAssetClass(profile: any): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
   } {
