@@ -20,8 +20,8 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import { isISIN } from 'class-validator';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
-import { uniqBy } from 'lodash';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -162,35 +162,49 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const [resultSearch, resultSearchIsin] = await Promise.all([
-        fetch(`${this.URL}/search?query=${query}&apikey=${this.apiKey}`, {
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
-        }).then((res) => res.json()),
-        fetch(
+      if (isISIN(query)) {
+        const result = await fetch(
           `${this.getUrl({ version: 4 })}/search/isin?isin=${query}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(
               this.configurationService.get('REQUEST_TIMEOUT')
             )
           }
-        ).then((res) => res.json())
-      ]);
+        ).then((res) => res.json());
 
-      const result = uniqBy([...resultSearch, ...resultSearchIsin], 'symbol');
+        items = result.map(({ companyName, currency, symbol }) => {
+          return {
+            currency,
+            symbol,
+            assetClass: undefined, // TODO
+            assetSubClass: undefined, // TODO
+            dataProviderInfo: this.getDataProviderInfo(),
+            dataSource: this.getName(),
+            name: companyName
+          };
+        });
+      } else {
+        const result = await fetch(
+          `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json());
 
-      items = result.map(({ companyName, currency, name, symbol }) => {
-        return {
-          currency,
-          symbol,
-          assetClass: undefined, // TODO
-          assetSubClass: undefined, // TODO
-          dataProviderInfo: this.getDataProviderInfo(),
-          dataSource: this.getName(),
-          name: name ?? companyName
-        };
-      });
+        items = result.map(({ currency, name, symbol }) => {
+          return {
+            currency,
+            name,
+            symbol,
+            assetClass: undefined, // TODO
+            assetSubClass: undefined, // TODO
+            dataProviderInfo: this.getDataProviderInfo(),
+            dataSource: this.getName()
+          };
+        });
+      }
     } catch (error) {
       let message = error;
 
