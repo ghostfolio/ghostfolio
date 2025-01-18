@@ -1,4 +1,5 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import {
   DataProviderInterface,
   GetDividendsParams,
@@ -19,7 +20,12 @@ import {
 } from '@ghostfolio/common/interfaces';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource, SymbolProfile } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  SymbolProfile
+} from '@prisma/client';
 import { isISIN } from 'class-validator';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
 
@@ -29,7 +35,8 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   private readonly URL = this.getUrl({ version: 3 });
 
   public constructor(
-    private readonly configurationService: ConfigurationService
+    private readonly configurationService: ConfigurationService,
+    private readonly cryptocurrencyService: CryptocurrencyService
   ) {
     this.apiKey = this.configurationService.get(
       'API_KEY_FINANCIAL_MODELING_PREP'
@@ -45,10 +52,71 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }: {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    return {
+    const response: Partial<SymbolProfile> = {
       symbol,
       dataSource: this.getName()
     };
+
+    try {
+      if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+        const [quote] = await fetch(
+          `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json());
+
+        response.assetClass = AssetClass.LIQUIDITY;
+        response.assetSubClass = AssetSubClass.CRYPTOCURRENCY;
+        response.currency = symbol.substring(symbol.length - 3);
+        response.name = quote.name;
+      } else {
+        const [assetProfile] = await fetch(
+          `${this.URL}/profile/${symbol}?apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json());
+
+        const { assetClass, assetSubClass } =
+          this.parseAssetClass(assetProfile);
+
+        response.assetClass = assetClass;
+        response.assetSubClass = assetSubClass;
+        response.currency = assetProfile.currency;
+        response.name = assetProfile.companyName;
+
+        if (assetSubClass === AssetSubClass.STOCK) {
+          if (assetProfile.country) {
+            response.countries = [{ code: assetProfile.country, weight: 1 }];
+          }
+
+          if (assetProfile.sector) {
+            response.sectors = [{ name: assetProfile.sector, weight: 1 }];
+          }
+        }
+
+        if (assetProfile.website) {
+          response.url = assetProfile.website;
+        }
+      }
+    } catch (error) {
+      let message = error;
+
+      if (error?.name === 'AbortError') {
+        message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
+      }
+
+      Logger.error(message, 'FinancialModelingPrepService');
+    }
+
+    return response;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
@@ -222,5 +290,26 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
   private getUrl({ version }: { version: number }) {
     return `https://financialmodelingprep.com/api/v${version}`;
+  }
+
+  public parseAssetClass(profile: any): {
+    assetClass: AssetClass;
+    assetSubClass: AssetSubClass;
+  } {
+    let assetClass: AssetClass;
+    let assetSubClass: AssetSubClass;
+
+    if (profile.isEtf) {
+      assetClass = AssetClass.EQUITY;
+      assetSubClass = AssetSubClass.ETF;
+    } else if (profile.isFund) {
+      assetClass = AssetClass.EQUITY;
+      assetSubClass = AssetSubClass.MUTUALFUND;
+    } else {
+      assetClass = AssetClass.EQUITY;
+      assetSubClass = AssetSubClass.STOCK;
+    }
+
+    return { assetClass, assetSubClass };
   }
 }
