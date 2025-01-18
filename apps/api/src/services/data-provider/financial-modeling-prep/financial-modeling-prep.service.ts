@@ -20,12 +20,13 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
+import { isISIN } from 'class-validator';
 import { format, isAfter, isBefore, isSameDay } from 'date-fns';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
   private apiKey: string;
-  private readonly URL = 'https://financialmodelingprep.com/api/v3';
+  private readonly URL = this.getUrl({ version: 3 });
 
   public constructor(
     private readonly configurationService: ConfigurationService
@@ -161,25 +162,49 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let items: LookupItem[] = [];
 
     try {
-      const result = await fetch(
-        `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
-        {
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
-        }
-      ).then((res) => res.json());
+      if (isISIN(query)) {
+        const result = await fetch(
+          `${this.getUrl({ version: 4 })}/search/isin?isin=${query}&apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json());
 
-      items = result.map(({ currency, name, symbol }) => {
-        return {
-          // TODO: Add assetClass
-          // TODO: Add assetSubClass
-          currency,
-          name,
-          symbol,
-          dataSource: this.getName()
-        };
-      });
+        items = result.map(({ companyName, currency, symbol }) => {
+          return {
+            currency,
+            symbol,
+            assetClass: undefined, // TODO
+            assetSubClass: undefined, // TODO
+            dataProviderInfo: this.getDataProviderInfo(),
+            dataSource: this.getName(),
+            name: companyName
+          };
+        });
+      } else {
+        const result = await fetch(
+          `${this.URL}/search?query=${query}&apikey=${this.apiKey}`,
+          {
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
+          }
+        ).then((res) => res.json());
+
+        items = result.map(({ currency, name, symbol }) => {
+          return {
+            currency,
+            name,
+            symbol,
+            assetClass: undefined, // TODO
+            assetSubClass: undefined, // TODO
+            dataProviderInfo: this.getDataProviderInfo(),
+            dataSource: this.getName()
+          };
+        });
+      }
     } catch (error) {
       let message = error;
 
@@ -193,5 +218,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private getUrl({ version }: { version: number }) {
+    return `https://financialmodelingprep.com/api/v${version}`;
   }
 }
