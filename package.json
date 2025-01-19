@@ -214,8 +214,5 @@
   },
   "prisma": {
     "seed": "node prisma/seed.js"
-  },
-  "resolutions": {
-    "rxjs": "7.5.6"
   }
 }
