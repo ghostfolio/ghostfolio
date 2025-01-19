@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the database seeding to _TypeScript_
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
+- Upgraded `bull` from version `4.16.4` to `4.16.5`
 - Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
 
 ## 2.136.0 - 2025-01-24
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the language localization for Polski (`pl`) from experimental to general availability
 - Extended the _Financial Modeling Prep_ service
 - Switched to _ESLint_’s flat config format
+- Upgraded `bull` from version `4.16.2` to `4.16.4`
 - Upgraded `chart.js` from version `4.2.0` to `4.4.7`
 - Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
 - Upgraded `chartjs-plugin-annotation` from version `2.1.2` to `3.1.0`
