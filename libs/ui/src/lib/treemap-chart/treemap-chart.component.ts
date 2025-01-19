@@ -196,7 +196,7 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
-    const data: ChartConfiguration['data'] = {
+    const data: ChartConfiguration<'treemap'>['data'] = {
       datasets: [
         {
           backgroundColor: (ctx) => {
