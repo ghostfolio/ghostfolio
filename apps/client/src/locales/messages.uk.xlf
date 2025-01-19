@@ -2448,7 +2448,7 @@
       </trans-unit>
       <trans-unit id="3cc9c2ae277393b3946b38c088dabff671b1ee1b" datatype="html">
         <source>Performance</source>
-        <target state="translated">Продуктивність</target>
+        <target state="translated">Прибутковість</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.html</context>
           <context context-type="linenumber">6</context>
@@ -2696,7 +2696,7 @@
       </trans-unit>
       <trans-unit id="9bbc9e4cebf91162be7d3e324ca5984d576e462c" datatype="html">
         <source>Investment</source>
-        <target state="translated">Інвестиція</target>
+        <target state="translated">Інвестиції</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">152</context>
@@ -2708,7 +2708,7 @@
       </trans-unit>
       <trans-unit id="d3aa83bd247983dd056a62f56ffb25269bd98d47" datatype="html">
         <source>Dividend</source>
-        <target state="translated">Дивіденд</target>
+        <target state="translated">Дивіденди</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">165</context>
@@ -2884,7 +2884,7 @@
       </trans-unit>
       <trans-unit id="80c8f0ef9eb8f28bdb327674ce54dfc2431d3959" datatype="html">
         <source>Record your investment activities to keep your portfolio up to date.</source>
-        <target state="translated">Записуйте ваші інвестиційні активності, щоб підтримувати актуальність вашого портфеля.</target>
+        <target state="translated">Записуйте ваші інвестиційні дії, щоб підтримувати актуальність вашого портфеля.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">26</context>
@@ -2928,7 +2928,7 @@
       </trans-unit>
       <trans-unit id="a8233de047500bf0f0d9f9f1712ddb071501a283" datatype="html">
         <source>Summary</source>
-        <target state="translated">Резюме</target>
+        <target state="translated">Зведення</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-summary/home-summary.html</context>
           <context context-type="linenumber">2</context>
@@ -3016,7 +3016,7 @@
       </trans-unit>
       <trans-unit id="ebf471e68247ca2110cdc5c98538e2e2bbf6e56e" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
-        <target state="translated">{VAR_PLURAL, plural, =1 {актив} other {активи}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {дія} other {дій}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">14</context>
@@ -3024,7 +3024,7 @@
       </trans-unit>
       <trans-unit id="1befce3c6f0c468b06ae5199116e5b096a35a3ef" datatype="html">
         <source>Buy</source>
-        <target state="translated">Купити</target>
+        <target state="translated">Купівля</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">31</context>
@@ -3032,7 +3032,7 @@
       </trans-unit>
       <trans-unit id="fe708b572beec788b18edd1b5852d63c07dfaead" datatype="html">
         <source>Sell</source>
-        <target state="translated">Продати</target>
+        <target state="translated">Продаж</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">43</context>
@@ -3040,7 +3040,7 @@
       </trans-unit>
       <trans-unit id="a64cd8d0131a583e3de081c9e6458af7aecdafbc" datatype="html">
         <source>Absolute Gross Performance</source>
-        <target state="translated">Абсолютна валова продуктивність</target>
+        <target state="translated">Абсолютний валовий дохід</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">70</context>
@@ -3048,7 +3048,7 @@
       </trans-unit>
       <trans-unit id="de518fa0cd3a454e84102c0d9984c4a3cfdb590d" datatype="html">
         <source>Absolute Net Performance</source>
-        <target state="translated">Абсолютна чиста продуктивність</target>
+        <target state="translated">Абсолютний чистий прибуток</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">102</context>
@@ -3056,7 +3056,7 @@
       </trans-unit>
       <trans-unit id="26de2fb4d52a11f78e22587a48690cba0fc6fa58" datatype="html">
         <source>Net Performance</source>
-        <target state="translated">Чиста продуктивність</target>
+        <target state="translated">Чистий прибуток</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">117</context>
@@ -3140,7 +3140,7 @@
       </trans-unit>
       <trans-unit id="67251f04518ae452230c68a748b3fa2838b4db74" datatype="html">
         <source>Net Worth</source>
-        <target state="translated">Чистий капітал</target>
+        <target state="translated">Чиста вартість</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">273</context>
@@ -3148,7 +3148,7 @@
       </trans-unit>
       <trans-unit id="e702514cebbfb335331b6d6156ffeacb8c3b14e4" datatype="html">
         <source> Annualized Performance </source>
-        <target state="translated"> Річна продуктивність </target>
+        <target state="translated"> Річна доходність </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">285</context>
@@ -4364,7 +4364,7 @@
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
         <source>Summary</source>
-        <target state="translated">Резюме</target>
+        <target state="translated">Зведення</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">33</context>
@@ -5344,7 +5344,7 @@
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
         <source>Dividend</source>
-        <target state="translated">Дивіденд</target>
+        <target state="translated">Дивіденди</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">41</context>
@@ -5356,7 +5356,7 @@
       </trans-unit>
       <trans-unit id="8580549503047096056" datatype="html">
         <source>Investment</source>
-        <target state="translated">Інвестиція</target>
+        <target state="translated">Інвестиції</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">46</context>
@@ -5396,7 +5396,7 @@
       </trans-unit>
       <trans-unit id="e19955db970092b9cde70be2cea163ab6adfac97" datatype="html">
         <source>Absolute Asset Performance</source>
-        <target state="translated">Абсолютна продуктивність активів</target>
+        <target state="translated">Абсолютна прибутковість активів</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">60</context>
@@ -5404,7 +5404,7 @@
       </trans-unit>
       <trans-unit id="c726a56ba67c6c788e3759983dd8a1671d8cc886" datatype="html">
         <source> Asset Performance </source>
-        <target state="translated"> Продуктивність активів </target>
+        <target state="translated"> Прибутковість активів </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">81</context>
@@ -5412,7 +5412,7 @@
       </trans-unit>
       <trans-unit id="8ce52b52483f502dd23ed290357a17307c60280c" datatype="html">
         <source>Absolute Currency Performance</source>
-        <target state="translated">Абсолютна продуктивність валюти</target>
+        <target state="translated">Абсолютна прибутковість валюти</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">103</context>
@@ -5420,7 +5420,7 @@
       </trans-unit>
       <trans-unit id="e4da628796a8880899b986c2af0559a55d6a700c" datatype="html">
         <source> Currency Performance </source>
-        <target state="translated"> Продуктивність валюти </target>
+        <target state="translated"> Прибутковість валюти </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">127</context>
@@ -5428,7 +5428,7 @@
       </trans-unit>
       <trans-unit id="5584854134b3049db7dfb7bf4d87a0b9b9b4b149" datatype="html">
         <source> Absolute Net Performance </source>
-        <target state="translated"> Абсолютна чиста продуктивність </target>
+        <target state="translated"> Абсолютна чиста прибутковість </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">150</context>
@@ -5436,7 +5436,7 @@
       </trans-unit>
       <trans-unit id="d88d656d93dd2029b9d35712789d2567d2c0d739" datatype="html">
         <source> Net Performance </source>
-        <target state="translated"> Чиста продуктивність </target>
+        <target state="translated"> Чиста прибутковість </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.html</context>
           <context context-type="linenumber">169</context>
@@ -5668,7 +5668,7 @@
       </trans-unit>
       <trans-unit id="60d7aee1c199a9995a318cfce24cbccbcfb52863" datatype="html">
         <source>Portfolio Performance</source>
-        <target state="translated">Продуктивність портфеля</target>
+        <target state="translated">Прибутковість портфеля</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">53</context>
@@ -6846,7 +6846,7 @@
       </trans-unit>
       <trans-unit id="c81076431c2d98928ac370ca3e57092ae77366d7" datatype="html">
         <source>Change from All Time High</source>
-        <target state="translated">Зміна від рекордного максимуму</target>
+        <target state="translated">Зміна від Історичного Максимуму</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
           <context context-type="linenumber">81</context>
@@ -6854,7 +6854,7 @@
       </trans-unit>
       <trans-unit id="4bbe89749f1580cdca7f9238cb67ba2bd6968126" datatype="html">
         <source>from ATH</source>
-        <target state="translated">від РМ</target>
+        <target state="translated">від ІМ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
           <context context-type="linenumber">83</context>
@@ -6946,7 +6946,7 @@
       </trans-unit>
       <trans-unit id="2ee26d58f2707416e636887111d5603b35346c4a" datatype="html">
         <source>Allocation</source>
-        <target state="translated">Алоція</target>
+        <target state="translated">Розподіл</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">98</context>
@@ -7010,7 +7010,7 @@
       </trans-unit>
       <trans-unit id="8903954975609359428" datatype="html">
         <source>Buy and sell</source>
-        <target state="translated">Купити та продати</target>
+        <target state="translated">Купівля та продаж</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">8</context>
@@ -7658,7 +7658,7 @@
       </trans-unit>
       <trans-unit id="4499ce8c46ad55564b23a42ed752e72984c0248f" datatype="html">
         <source>Early Access</source>
-        <target state="new">Early Access</target>
+        <target state="translated">Ранній доступ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">16</context>
