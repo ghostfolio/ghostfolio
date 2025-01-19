@@ -11,7 +11,6 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -66,10 +65,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     };
 
     try {
-      if (
-        symbol.endsWith(DEFAULT_CURRENCY) &&
-        this.cryptocurrencyService.isCryptocurrency(symbol)
-      ) {
+      if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
         const [quote] = await fetch(
           `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
           {
