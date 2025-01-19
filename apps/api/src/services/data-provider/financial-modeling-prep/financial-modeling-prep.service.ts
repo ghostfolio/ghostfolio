@@ -11,6 +11,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -27,7 +28,14 @@ import {
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
-import { format, isAfter, isBefore, isSameDay } from 'date-fns';
+import {
+  addDays,
+  format,
+  isAfter,
+  isBefore,
+  isSameDay,
+  parseISO
+} from 'date-fns';
 
 @Injectable()
 export class FinancialModelingPrepService implements DataProviderInterface {
@@ -58,7 +66,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     };
 
     try {
-      if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+      if (
+        symbol.endsWith(DEFAULT_CURRENCY) &&
+        this.cryptocurrencyService.isCryptocurrency(symbol)
+      ) {
         const [quote] = await fetch(
           `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
           {
@@ -208,8 +219,54 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     };
   }
 
-  public async getDividends({}: GetDividendsParams) {
-    return {};
+  public async getDividends({
+    from,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol,
+    to
+  }: GetDividendsParams) {
+    if (isSameDay(from, to)) {
+      to = addDays(to, 1);
+    }
+
+    try {
+      const response: {
+        [date: string]: IDataProviderHistoricalResponse;
+      } = {};
+
+      const { historical } = await fetch(
+        `${this.URL}/historical-price-full/stock_dividend/${symbol}?apikey=${this.apiKey}`,
+        {
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      ).then((res) => res.json());
+
+      historical
+        .filter(({ date }) => {
+          return (
+            (isSameDay(parseISO(date), from) ||
+              isAfter(parseISO(date), from)) &&
+            isBefore(parseISO(date), to)
+          );
+        })
+        .forEach(({ adjDividend, date }) => {
+          response[date] = {
+            marketPrice: adjDividend
+          };
+        });
+
+      return response;
+    } catch (error) {
+      Logger.error(
+        `Could not get dividends for ${symbol} (${this.getName()}) from ${format(
+          from,
+          DATE_FORMAT
+        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`,
+        'FinancialModelingPrepService'
+      );
+
+      return {};
+    }
   }
 
   public async getHistorical({
@@ -234,14 +291,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [symbol]: {}
       };
 
-      for (const { close, date } of historical) {
+      for (const { adjClose, date } of historical) {
         if (
           (isSameDay(parseDate(date), from) ||
             isAfter(parseDate(date), from)) &&
           isBefore(parseDate(date), to)
         ) {
           result[symbol][date] = {
-            marketPrice: close
+            marketPrice: adjClose
           };
         }
       }
@@ -375,7 +432,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return `https://financialmodelingprep.com/api/v${version}`;
   }
 
-  public parseAssetClass(profile: any): {
+  private parseAssetClass(profile: any): {
     assetClass: AssetClass;
     assetSubClass: AssetSubClass;
   } {
