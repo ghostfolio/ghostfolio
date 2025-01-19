@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the language localization for Polski (`pl`) from experimental to general availability
 - Extended the _Financial Modeling Prep_ service
 - Switched to _ESLint_’s flat config format
 - Upgraded `chart.js` from version `4.2.0` to `4.4.7`
