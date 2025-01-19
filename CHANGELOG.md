@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
 - Upgraded `chartjs-plugin-annotation` from version `2.1.2` to `3.1.0`
 - Upgraded `eslint` dependencies
+- Upgraded `uuid` from version `11.0.2` to `11.0.5`
 
 ## 2.134.0 - 2025-01-15
 
