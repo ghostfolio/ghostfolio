@@ -29,6 +29,7 @@ import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
 import {
   addDays,
+  addYears,
   format,
   isAfter,
   isBefore,
@@ -273,30 +274,44 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    const MAX_YEARS_PER_REQUEST = 5;
+    const result: {
+      [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
+    } = {
+      [symbol]: {}
+    };
+
+    let currentFrom = from;
+
     try {
-      const { historical } = await fetch(
-        `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}`,
-        {
-          signal: AbortSignal.timeout(requestTimeout)
-        }
-      ).then((res) => res.json());
+      while (isBefore(currentFrom, to) || isSameDay(currentFrom, to)) {
+        const currentTo = isBefore(
+          addYears(currentFrom, MAX_YEARS_PER_REQUEST),
+          to
+        )
+          ? addYears(currentFrom, MAX_YEARS_PER_REQUEST)
+          : to;
 
-      const result: {
-        [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
-      } = {
-        [symbol]: {}
-      };
+        const { historical } = await fetch(
+          `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
+          {
+            signal: AbortSignal.timeout(requestTimeout)
+          }
+        ).then((res) => res.json());
 
-      for (const { adjClose, date } of historical) {
-        if (
-          (isSameDay(parseDate(date), from) ||
-            isAfter(parseDate(date), from)) &&
-          isBefore(parseDate(date), to)
-        ) {
-          result[symbol][date] = {
-            marketPrice: adjClose
-          };
+        for (const { adjClose, date } of historical) {
+          if (
+            (isSameDay(parseDate(date), currentFrom) ||
+              isAfter(parseDate(date), currentFrom)) &&
+            isBefore(parseDate(date), currentTo)
+          ) {
+            result[symbol][date] = {
+              marketPrice: adjClose
+            };
+          }
         }
+
+        currentFrom = addYears(currentFrom, MAX_YEARS_PER_REQUEST);
       }
 
       return result;
