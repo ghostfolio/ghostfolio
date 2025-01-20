@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Ukrainian (`uk`)
 - Upgraded `date-fns` from version `3.6.0` to `4.1.0`
+- Upgraded `rxjs` from version `7.5.6` to `7.8.1`
 
 ## 2.135.0 - 2025-01-19
 
