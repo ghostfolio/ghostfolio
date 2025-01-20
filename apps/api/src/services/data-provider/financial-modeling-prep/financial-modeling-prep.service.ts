@@ -124,6 +124,19 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             }
           );
 
+          const [etfInformation] = await fetch(
+            `${this.getUrl({ version: 4 })}/etf-info?symbol=${symbol}&apikey=${this.apiKey}`,
+            {
+              signal: AbortSignal.timeout(
+                this.configurationService.get('REQUEST_TIMEOUT')
+              )
+            }
+          ).then((res) => res.json());
+
+          if (etfInformation.website) {
+            response.url = etfInformation.website;
+          }
+
           const [portfolioDate] = await fetch(
             `${this.getUrl({ version: 4 })}/etf-holdings/portfolio-date?symbol=${symbol}&apikey=${this.apiKey}`,
             {
