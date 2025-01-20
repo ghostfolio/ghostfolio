@@ -130,7 +130,7 @@
     "passport-headerapikey": "1.2.2",
     "passport-jwt": "4.0.1",
     "reflect-metadata": "0.2.2",
-    "rxjs": "7.5.6",
+    "rxjs": "7.8.1",
     "stripe": "17.3.0",
     "svgmap": "2.6.0",
     "twitter-api-v2": "1.14.2",
@@ -214,8 +214,5 @@
   },
   "prisma": {
     "seed": "node prisma/seed.js"
-  },
-  "resolutions": {
-    "rxjs": "7.5.6"
   }
 }
