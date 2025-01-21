@@ -281,11 +281,11 @@
       <div class="mb-3">
         <mat-accordion class="my-3">
           <mat-expansion-panel
-            (closed)="panelOpenState.set(false)"
-            (opened)="panelOpenState.set(true)"
+            (closed)="scraperConfiguationIsExpanded.set(false)"
+            (opened)="scraperConfiguationIsExpanded.set(true)"
           >
             <mat-expansion-panel-header>
-              <mat-panel-title> Scraper Configuration </mat-panel-title>
+              <mat-panel-title i18n> Scraper Configuration </mat-panel-title>
             </mat-expansion-panel-header>
             <div formGroupName="scraperConfiguration">
               <div class="mt-3">
@@ -296,39 +296,36 @@
                     matInput
                     type="number"
                   />
-                  <div class="align-items-end d-flex"></div>
                 </mat-form-field>
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>Headers</mat-label>
-                  <div class="align-items-end d-flex">
-                    <textarea
-                      cdkTextareaAutosize
-                      formControlName="headers"
-                      matInput
-                      type="text"
-                      [matAutocomplete]="auto"
-                    ></textarea>
-                  </div>
+                  <textarea
+                    cdkTextareaAutosize
+                    formControlName="headers"
+                    matInput
+                    type="text"
+                    [matAutocomplete]="auto"
+                  ></textarea>
                 </mat-form-field>
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>Locale</mat-label>
-                  <div class="align-items-end d-flex">
-                    <input formControlName="locale" matInput type="text" />
-                  </div>
+                  <input formControlName="locale" matInput type="text" />
                 </mat-form-field>
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>Mode</mat-label>
-                  <mat-select formControlName="mode">
-                    <mat-option [value]="null" />
-                    @for (modeVal of modeValues; track modeVal) {
-                      <mat-option [value]="modeVal.value">{{
-                        modeVal.viewValue
+                  <mat-select
+                    formControlName="mode"
+                    [(ngModel)]="selectedModeValue"
+                  >
+                    @for (modeValue of modeValues; track modeValue) {
+                      <mat-option [value]="modeValue.value">{{
+                        modeValue.viewValue
                       }}</mat-option>
                     }
                   </mat-select>
@@ -337,32 +334,38 @@
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>Selector</mat-label>
-                  <div class="align-items-end d-flex">
-                    <textarea
-                      cdkTextareaAutosize
-                      formControlName="selector"
-                      matInput
-                      type="text"
-                      (keyup.enter)="$event.stopPropagation()"
-                    ></textarea>
-                  </div>
+                  <textarea
+                    cdkTextareaAutosize
+                    formControlName="selector"
+                    matInput
+                    type="text"
+                  ></textarea>
                 </mat-form-field>
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>URL</mat-label>
-                  <div class="align-items-end d-flex">
-                    <input formControlName="url" matInput type="text" />
-                  </div>
+                  <input formControlName="url" matInput type="text" />
                 </mat-form-field>
               </div>
-              <div class="m-3">
+              <div class="my-3">
                 <button
                   color="accent"
                   mat-flat-button
                   type="button"
                   [disabled]="
-                    assetProfileForm.get('scraperConfiguration').value === '{}'
+                    assetProfileForm.controls.scraperConfiguration.controls
+                      .defaultMarketPrice.value === null &&
+                    assetProfileForm.controls.scraperConfiguration.controls
+                      .headers.value === '{}' &&
+                    assetProfileForm.controls.scraperConfiguration.controls
+                      .locale.value === '' &&
+                    !assetProfileForm.controls.scraperConfiguration.controls
+                      .mode.dirty &&
+                    assetProfileForm.controls.scraperConfiguration.controls
+                      .selector.value === '' &&
+                    assetProfileForm.controls.scraperConfiguration.controls.url
+                      .value === ''
                   "
                   (click)="onTestMarketData()"
                 >

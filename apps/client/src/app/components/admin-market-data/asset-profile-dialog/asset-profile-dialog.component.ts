@@ -66,8 +66,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }),
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
-      defaultMarketPrice: 0,
-      headers: '',
+      defaultMarketPrice: undefined,
+      headers: JSON.stringify({}),
       locale: '',
       mode: '',
       selector: '',
@@ -88,13 +88,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public isBenchmark = false;
   public marketDataItems: MarketData[] = [];
   public modeValues = [
-    { value: 'lazy', viewValue: 'Lazy' },
-    { value: 'instant', viewValue: 'Instant' }
+    { value: 'lazy', viewValue: $localize`Lazy` },
+    { value: 'instant', viewValue: $localize`Instant` }
   ];
+  public selectedModeValue: string;
+  public scraperConfiguationIsExpanded = signal(false);
   public sectors: {
     [name: string]: { name: string; value: number };
   };
-  readonly panelOpenState = signal(false);
   public user: User;
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
@@ -126,6 +127,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   public initialize() {
     this.historicalDataItems = undefined;
+    this.selectedModeValue = 'lazy';
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -196,12 +198,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
-              this.assetProfile?.scraperConfiguration?.defaultMarketPrice ?? 0,
+              this.assetProfile?.scraperConfiguration?.defaultMarketPrice,
             headers: JSON.stringify(
               this.assetProfile?.scraperConfiguration?.headers ?? {}
             ),
             locale: this.assetProfile?.scraperConfiguration?.locale ?? '',
-            mode: this.assetProfile?.scraperConfiguration?.mode ?? '',
+            mode:
+              this.assetProfile?.scraperConfiguration?.mode ??
+              this.selectedModeValue,
             selector: this.assetProfile?.scraperConfiguration?.selector ?? '',
             url: this.assetProfile?.scraperConfiguration?.url ?? ''
           },
