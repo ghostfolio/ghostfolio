@@ -32,10 +32,9 @@ jobs:
         if: steps.verify-changed-files.outputs.files_changed == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'Update locales'
-          title: 'Feature/update locales'
-          body: 'This pull request updates the locales.'
           author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
           branch: 'feature/update-locales'
+          commit-message: 'Update locales'
           delete-branch: true
+          title: 'Feature/update locales'
+          token: ${{ secrets.GITHUB_TOKEN }}
