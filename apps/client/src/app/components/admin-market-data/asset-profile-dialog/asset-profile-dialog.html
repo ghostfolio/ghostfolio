@@ -319,10 +319,7 @@
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-label i18n>Mode</mat-label>
-                  <mat-select
-                    formControlName="mode"
-                    [(ngModel)]="selectedModeValue"
-                  >
+                  <mat-select formControlName="mode">
                     @for (modeValue of modeValues; track modeValue) {
                       <mat-option [value]="modeValue.value">{{
                         modeValue.viewValue

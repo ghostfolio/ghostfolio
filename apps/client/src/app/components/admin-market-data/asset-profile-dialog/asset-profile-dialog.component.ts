@@ -66,7 +66,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }),
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
-      defaultMarketPrice: undefined,
+      defaultMarketPrice: null,
       headers: JSON.stringify({}),
       locale: '',
       mode: '',
@@ -91,7 +91,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     { value: 'lazy', viewValue: $localize`Lazy` },
     { value: 'instant', viewValue: $localize`Instant` }
   ];
-  public selectedModeValue: string;
   public scraperConfiguationIsExpanded = signal(false);
   public sectors: {
     [name: string]: { name: string; value: number };
@@ -127,7 +126,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   public initialize() {
     this.historicalDataItems = undefined;
-    this.selectedModeValue = 'lazy';
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -198,14 +196,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
-              this.assetProfile?.scraperConfiguration?.defaultMarketPrice,
+              this.assetProfile?.scraperConfiguration?.defaultMarketPrice ??
+              null,
             headers: JSON.stringify(
               this.assetProfile?.scraperConfiguration?.headers ?? {}
             ),
             locale: this.assetProfile?.scraperConfiguration?.locale ?? '',
-            mode:
-              this.assetProfile?.scraperConfiguration?.mode ??
-              this.selectedModeValue,
+            mode: this.assetProfile?.scraperConfiguration?.mode ?? 'lazy',
             selector: this.assetProfile?.scraperConfiguration?.selector ?? '',
             url: this.assetProfile?.scraperConfiguration?.url ?? ''
           },
