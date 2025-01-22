@@ -1,0 +1,41 @@
+name: Extract locales
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  extract_locales:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract locales
+        run: npm run extract-locales
+
+      - name: Check changes
+        id: verify-changed-files
+        uses: tj-actions/verify-changed-files@v20
+
+      - name: Create pull request
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Update locales'
+          title: 'Feature/update locales'
+          body: 'This pull request updates the locales.'
+          author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+          branch: 'feature/update-locales'
+          delete-branch: true
