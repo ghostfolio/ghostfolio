@@ -251,11 +251,9 @@ export function getNumberFormatDecimal(aLocale?: string) {
 }
 
 export function getNumberFormatGroup(aLocale = getLocale()) {
-  const formatOptions = { useGrouping: true };
-  const formatObject = new Intl.NumberFormat(
-    aLocale,
-    formatOptions
-  ).formatToParts(9999.99);
+  const formatObject = new Intl.NumberFormat(aLocale, {
+    useGrouping: true
+  }).formatToParts(9999.99);
 
   return formatObject.find((object) => {
     return object.type === 'group';
