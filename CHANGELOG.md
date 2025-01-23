@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up a _GitHub Action_ to automatically extract locales when the `main` branch changes
+
 ### Changed
 
 - Extended the _Financial Modeling Prep_ service
