@@ -1,4 +1,7 @@
-import { extractNumberFromString } from '@ghostfolio/common/helper';
+import {
+  extractNumberFromString,
+  getNumberFormatGroup
+} from '@ghostfolio/common/helper';
 
 describe('Helper', () => {
   describe('Extract number from string', () => {
@@ -34,6 +37,16 @@ describe('Helper', () => {
 
     it('Not a number', () => {
       expect(extractNumberFromString({ value: 'X' })).toEqual(NaN);
+    });
+  });
+
+  describe('Get Number Format Group', () => {
+    it('Get en-US number format group', () => {
+      expect(getNumberFormatGroup('en-US')).toEqual(',');
+    });
+
+    it('Get es-ES number format group', () => {
+      expect(getNumberFormatGroup('es-ES')).toEqual('.');
     });
   });
 });
