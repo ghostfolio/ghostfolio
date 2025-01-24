@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-the-importance-of-tracking-your-personal-finances-page',
-  standalone: true,
   templateUrl: './the-importance-of-tracking-your-personal-finances-page.html'
 })
 export class TheImportanceOfTrackingYourPersonalFinancesPageComponent {}

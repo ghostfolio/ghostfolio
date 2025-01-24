@@ -73,7 +73,6 @@ import {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
-  standalone: true,
   styleUrls: ['./assistant.scss'],
   templateUrl: './assistant.html'
 })
@@ -167,8 +166,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   ) {}
 
   public ngOnInit() {
-    this.initializeFilterForm();
-
     this.assetClasses = Object.keys(AssetClass).map((assetClass) => {
       return {
         id: assetClass,
@@ -272,12 +269,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     this.filterForm.disable({ emitEvent: false });
 
-    if (this.hasPermissionToChangeFilters) {
-      this.filterForm.enable({ emitEvent: false });
-    }
-
-    this.initializeFilterForm();
-
     this.tags =
       this.user?.tags
         ?.filter(({ isUsed }) => {
@@ -315,7 +306,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     );
   }
 
-  public async initialize() {
+  public initialize() {
     this.isLoading = true;
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
     this.searchResults = {
@@ -335,7 +326,25 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.isLoading = false;
     this.setIsOpen(true);
 
-    this.changeDetectorRef.markForCheck();
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.holdings = holdings
+          .filter(({ assetSubClass }) => {
+            return !['CASH'].includes(assetSubClass);
+          })
+          .sort((a, b) => {
+            return a.name?.localeCompare(b.name);
+          });
+        this.setFilterFormValues();
+
+        if (this.hasPermissionToChangeFilters) {
+          this.filterForm.enable({ emitEvent: false });
+        }
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   public onApplyFilters() {
@@ -497,22 +506,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         }),
         takeUntil(this.unsubscribeSubject)
       );
-  }
-
-  private initializeFilterForm() {
-    this.dataService
-      .fetchPortfolioHoldings()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
-        this.holdings = holdings
-          .filter(({ assetSubClass }) => {
-            return !['CASH'].includes(assetSubClass);
-          })
-          .sort((a, b) => {
-            return a.name?.localeCompare(b.name);
-          });
-        this.setFilterFormValues();
-      });
   }
 
   private setFilterFormValues() {

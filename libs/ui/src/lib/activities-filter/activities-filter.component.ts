@@ -45,7 +45,6 @@ import { takeUntil } from 'rxjs/operators';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-filter',
-  standalone: true,
   styleUrls: ['./activities-filter.component.scss'],
   templateUrl: './activities-filter.component.html'
 })

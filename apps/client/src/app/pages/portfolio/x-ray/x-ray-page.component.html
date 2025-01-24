@@ -2,12 +2,34 @@
   <div class="row">
     <div class="col">
       <h2 class="d-none d-sm-block h3 mb-3 text-center">X-ray</h2>
-      <p class="mb-4" i18n>
+      <p i18n>
         Ghostfolio X-ray uses static analysis to uncover potential issues and
         risks in your portfolio. Adjust the rules below and set custom
         thresholds to align with your personal investment strategy.
       </p>
-      <div class="mb-4">
+      <p class="mb-4">
+        @if (isLoading) {
+          <ngx-skeleton-loader
+            animation="pulse"
+            class="w-100"
+            [theme]="{
+              height: '1rem',
+              width: '100%'
+            }"
+          />
+        } @else {
+          {{ statistics?.rulesFulfilledCount }}
+          <ng-container i18n>out of</ng-container>
+          {{ statistics?.rulesActiveCount }}
+          <ng-container i18n>rules align with your portfolio.</ng-container>
+        }
+      </p>
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': emergencyFundRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Emergency Fund</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -20,13 +42,18 @@
             hasPermissionToUpdateUserSettings &&
             user?.settings?.isExperimentalFeatures
           "
-          [isLoading]="isLoadingPortfolioReport"
+          [isLoading]="isLoading"
           [rules]="emergencyFundRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': currencyClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Currency Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -39,13 +66,42 @@
             hasPermissionToUpdateUserSettings &&
             user?.settings?.isExperimentalFeatures
           "
-          [isLoading]="isLoadingPortfolioReport"
+          [isLoading]="isLoading"
           [rules]="currencyClusterRiskRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': assetClassClusterRiskRules?.length === 0
+        }"
+      >
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Asset Class Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoading"
+          [rules]="assetClassClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': accountClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Account Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -58,13 +114,18 @@
             hasPermissionToUpdateUserSettings &&
             user?.settings?.isExperimentalFeatures
           "
-          [isLoading]="isLoadingPortfolioReport"
+          [isLoading]="isLoading"
           [rules]="accountClusterRiskRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': economicMarketClusterRiskRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Economic Market Cluster Risks</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -77,13 +138,18 @@
             hasPermissionToUpdateUserSettings &&
             user?.settings?.isExperimentalFeatures
           "
-          [isLoading]="isLoadingPortfolioReport"
+          [isLoading]="isLoading"
           [rules]="economicMarketClusterRiskRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />
       </div>
-      <div class="mb-4">
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': feeRules?.length === 0
+        }"
+      >
         <h4 class="align-items-center d-flex m-0">
           <span i18n>Fees</span>
           @if (user?.subscription?.type === 'Basic') {
@@ -96,7 +162,7 @@
             hasPermissionToUpdateUserSettings &&
             user?.settings?.isExperimentalFeatures
           "
-          [isLoading]="isLoadingPortfolioReport"
+          [isLoading]="isLoading"
           [rules]="feeRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
@@ -111,7 +177,7 @@
               hasPermissionToUpdateUserSettings &&
               user?.settings?.isExperimentalFeatures
             "
-            [isLoading]="isLoadingPortfolioReport"
+            [isLoading]="isLoading"
             [rules]="inactiveRules"
             [settings]="user?.settings?.xRayRules"
             (rulesUpdated)="onRulesUpdated($event)"

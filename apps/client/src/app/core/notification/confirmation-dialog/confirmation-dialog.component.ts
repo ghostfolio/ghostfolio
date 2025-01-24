@@ -9,7 +9,6 @@ import { IConfirmDialogParams } from './interfaces/interfaces';
 @Component({
   imports: [CommonModule, MatButtonModule, MatDialogModule],
   selector: 'gf-confirmation-dialog',
-  standalone: true,
   styleUrls: ['./confirmation-dialog.scss'],
   templateUrl: './confirmation-dialog.html'
 })

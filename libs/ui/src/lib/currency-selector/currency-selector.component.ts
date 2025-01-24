@@ -53,7 +53,6 @@ import { map, startWith, takeUntil } from 'rxjs/operators';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-currency-selector',
-  standalone: true,
   styleUrls: ['./currency-selector.component.scss'],
   templateUrl: 'currency-selector.component.html'
 })

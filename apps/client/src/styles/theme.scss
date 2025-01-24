@@ -104,7 +104,8 @@ $gf-theme-dark: mat.m2-define-dark-theme(
 }
 
 @include mat.button-density(0);
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.table-density(-1);
 
 :root {

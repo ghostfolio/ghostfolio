@@ -8,7 +8,6 @@ import { IAlertDialogParams } from './interfaces/interfaces';
 @Component({
   imports: [CommonModule, MatButtonModule, MatDialogModule],
   selector: 'gf-alert-dialog',
-  standalone: true,
   styleUrls: ['./alert-dialog.scss'],
   templateUrl: './alert-dialog.html'
 })

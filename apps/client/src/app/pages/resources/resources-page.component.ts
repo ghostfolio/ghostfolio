@@ -6,7 +6,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page has-tabs' },
   selector: 'gf-resources-page',
   styleUrls: ['./resources-page.scss'],
-  templateUrl: './resources-page.html'
+  templateUrl: './resources-page.html',
+  standalone: false
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;

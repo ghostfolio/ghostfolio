@@ -67,7 +67,6 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-activities-table',
-  standalone: true,
   styleUrls: ['./activities-table.component.scss'],
   templateUrl: './activities-table.component.html'
 })

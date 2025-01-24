@@ -22,7 +22,6 @@ import { IRuleSettingsDialogParams } from './interfaces/interfaces';
     MatSliderModule
   ],
   selector: 'gf-rule-settings-dialog',
-  standalone: true,
   styleUrls: ['./rule-settings-dialog.scss'],
   templateUrl: './rule-settings-dialog.html'
 })

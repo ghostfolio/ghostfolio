@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
 import { RouterModule } from '@angular/router';
 
 import { AdminSettingsComponent } from './admin-settings.component';
@@ -19,6 +20,7 @@ import { AdminSettingsComponent } from './admin-settings.component';
     GfPremiumIndicatorComponent,
     MatButtonModule,
     MatCardModule,
+    MatMenuModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

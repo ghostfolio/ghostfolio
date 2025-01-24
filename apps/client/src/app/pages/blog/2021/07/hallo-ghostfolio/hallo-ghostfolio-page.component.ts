@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-hallo-ghostfolio-page',
-  standalone: true,
   templateUrl: './hallo-ghostfolio-page.html'
 })
 export class HalloGhostfolioPageComponent {

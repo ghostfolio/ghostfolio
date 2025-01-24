@@ -4,7 +4,9 @@
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
+          [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [name]="user?.subscription?.type"
+          (generateApiKeyClicked)="onGenerateApiKey()"
         />
         @if (user?.subscription?.type === 'Basic') {
           <div class="d-flex flex-column mt-5">

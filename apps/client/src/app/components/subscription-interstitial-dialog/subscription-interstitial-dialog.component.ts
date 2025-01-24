@@ -8,7 +8,8 @@ import { SubscriptionInterstitialDialogParams } from './interfaces/interfaces';
   host: { class: 'd-flex flex-column flex-grow-1 h-100' },
   selector: 'gf-subscription-interstitial-dialog',
   styleUrls: ['./subscription-interstitial-dialog.scss'],
-  templateUrl: 'subscription-interstitial-dialog.html'
+  templateUrl: 'subscription-interstitial-dialog.html',
+  standalone: false
 })
 export class SubscriptionInterstitialDialog {
   private readonly VARIANTS_COUNT = 2;

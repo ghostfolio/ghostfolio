@@ -3,6 +3,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
+import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import {
   Activities,
@@ -21,7 +22,8 @@ import {
   Access,
   AccountBalancesResponse,
   Accounts,
-  AdminMarketDataDetails,
+  AiPromptResponse,
+  ApiKeyResponse,
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
@@ -30,13 +32,14 @@ import {
   ImportResponse,
   InfoItem,
   LookupResponse,
+  MarketDataDetailsResponse,
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioReport,
+  PortfolioReportResponse,
   PublicPortfolioResponse,
   User
 } from '@ghostfolio/common/interfaces';
@@ -50,6 +53,7 @@ import { SortDirection } from '@angular/material/sort';
 import {
   AccountBalance,
   DataSource,
+  MarketData,
   Order as OrderModel,
   Tag
 } from '@prisma/client';
@@ -289,7 +293,7 @@ export class DataService {
   public deleteActivities({ filters }) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.delete<any>(`/api/v1/order`, { params });
+    return this.http.delete<any>('/api/v1/order', { params });
   }
 
   public deleteActivity(aId: string) {
@@ -315,7 +319,7 @@ export class DataService {
   public fetchAsset({
     dataSource,
     symbol
-  }: AssetProfileIdentifier): Observable<AdminMarketDataDetails> {
+  }: AssetProfileIdentifier): Observable<MarketDataDetailsResponse> {
     return this.http.get<any>(`/api/v1/asset/${dataSource}/${symbol}`).pipe(
       map((data) => {
         for (const item of data.marketData) {
@@ -428,6 +432,25 @@ export class DataService {
       '/api/v1/portfolio/investments',
       { params }
     );
+  }
+
+  public fetchMarketDataBySymbol({
+    dataSource,
+    symbol
+  }: {
+    dataSource: DataSource;
+    symbol: string;
+  }): Observable<MarketDataDetailsResponse> {
+    return this.http
+      .get<any>(`/api/v1/market-data/${dataSource}/${symbol}`)
+      .pipe(
+        map((data) => {
+          for (const item of data.marketData) {
+            item.date = parseISO(item.date);
+          }
+          return data;
+        })
+      );
   }
 
   public fetchSymbolItem({
@@ -623,7 +646,11 @@ export class DataService {
   }
 
   public fetchPortfolioReport() {
-    return this.http.get<PortfolioReport>('/api/v1/portfolio/report');
+    return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
+  }
+
+  public fetchPrompt() {
+    return this.http.get<AiPromptResponse>('/api/v1/ai/prompt');
   }
 
   public fetchPublicPortfolio(aAccessId: string) {
@@ -647,36 +674,54 @@ export class DataService {
   }
 
   public loginAnonymous(accessToken: string) {
-    return this.http.post<OAuthResponse>(`/api/v1/auth/anonymous`, {
+    return this.http.post<OAuthResponse>('/api/v1/auth/anonymous', {
       accessToken
     });
   }
 
   public postAccess(aAccess: CreateAccessDto) {
-    return this.http.post<OrderModel>(`/api/v1/access`, aAccess);
+    return this.http.post<OrderModel>('/api/v1/access', aAccess);
   }
 
   public postAccount(aAccount: CreateAccountDto) {
-    return this.http.post<OrderModel>(`/api/v1/account`, aAccount);
+    return this.http.post<OrderModel>('/api/v1/account', aAccount);
   }
 
   public postAccountBalance(aAccountBalance: CreateAccountBalanceDto) {
     return this.http.post<AccountBalance>(
-      `/api/v1/account-balance`,
+      '/api/v1/account-balance',
       aAccountBalance
     );
   }
 
+  public postApiKey() {
+    return this.http.post<ApiKeyResponse>('/api/v1/api-keys', {});
+  }
+
   public postBenchmark(benchmark: AssetProfileIdentifier) {
-    return this.http.post(`/api/v1/benchmark`, benchmark);
+    return this.http.post('/api/v1/benchmark', benchmark);
+  }
+
+  public postMarketData({
+    dataSource,
+    marketData,
+    symbol
+  }: {
+    dataSource: DataSource;
+    marketData: UpdateBulkMarketDataDto;
+    symbol: string;
+  }) {
+    const url = `/api/v1/market-data/${dataSource}/${symbol}`;
+
+    return this.http.post<MarketData>(url, marketData);
   }
 
   public postOrder(aOrder: CreateOrderDto) {
-    return this.http.post<OrderModel>(`/api/v1/order`, aOrder);
+    return this.http.post<OrderModel>('/api/v1/order', aOrder);
   }
 
   public postUser() {
-    return this.http.post<UserItem>(`/api/v1/user`, {});
+    return this.http.post<UserItem>('/api/v1/user', {});
   }
 
   public putAccount(aAccount: UpdateAccountDto) {
@@ -703,7 +748,7 @@ export class DataService {
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {
-    return this.http.put<User>(`/api/v1/user/setting`, aData);
+    return this.http.put<User>('/api/v1/user/setting', aData);
   }
 
   public redeemCoupon(couponCode: string) {

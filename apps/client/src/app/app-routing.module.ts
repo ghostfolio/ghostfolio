@@ -33,6 +33,15 @@ const routes: Routes = [
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
   {
+    canActivate: [AuthGuard],
+    loadComponent: () =>
+      import('./pages/api/api-page.component').then(
+        (c) => c.GfApiPageComponent
+      ),
+    path: 'api',
+    title: 'Ghostfolio API'
+  },
+  {
     path: 'auth',
     loadChildren: () =>
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)

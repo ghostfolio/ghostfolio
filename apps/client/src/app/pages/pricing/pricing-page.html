@@ -179,6 +179,11 @@
             [ngClass]="{ active: user?.subscription?.type === 'Premium' }"
           >
             <mat-card-content class="d-flex flex-column h-100">
+              @if (label) {
+                <div class="badge-container position-absolute text-right">
+                  <span class="badge badge-warning m-1">{{ label }}</span>
+                </div>
+              }
               <div class="flex-grow-1">
                 <div class="align-items-center d-flex mb-2">
                   <h4 class="align-items-center d-flex flex-grow-1 m-0">

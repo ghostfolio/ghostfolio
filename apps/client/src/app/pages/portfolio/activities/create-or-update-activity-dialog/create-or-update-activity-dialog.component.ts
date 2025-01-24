@@ -1,7 +1,5 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -20,11 +18,12 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
-import { isUUID } from 'class-validator';
 import { isAfter, isToday } from 'date-fns';
 import { EMPTY, Observable, Subject, lastValueFrom, of } from 'rxjs';
 import { catchError, delay, map, startWith, takeUntil } from 'rxjs/operators';
 
+import { DataService } from '../../../../services/data.service';
+import { validateObjectForForm } from '../../../../util/form.util';
 import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -32,7 +31,8 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
   selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-activity-dialog.scss'],
-  templateUrl: 'create-or-update-activity-dialog.html'
+  templateUrl: 'create-or-update-activity-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
   @ViewChild('symbolAutocomplete') symbolAutocomplete;
@@ -124,7 +124,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       name: [this.data.activity?.SymbolProfile?.name, Validators.required],
       quantity: [this.data.activity?.quantity, Validators.required],
       searchSymbol: [
-        !!this.data.activity?.SymbolProfile
+        this.data.activity?.SymbolProfile
           ? {
               dataSource: this.data.activity?.SymbolProfile?.dataSource,
               symbol: this.data.activity?.SymbolProfile?.symbol
@@ -216,7 +216,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value +
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         } else if (this.activityForm.get('type').value === 'STAKE') {
           this.total =
             this.activityForm.get('quantity').value * this.currentMarketPrice ??
@@ -225,7 +225,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.total =
             this.activityForm.get('quantity').value *
               this.activityForm.get('unitPrice').value -
-              this.activityForm.get('fee').value ?? 0;
+            (this.activityForm.get('fee').value ?? 0);
         }
 
         this.changeDetectorRef.markForCheck();
@@ -480,10 +480,12 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       fee: this.activityForm.get('fee').value,
       quantity: this.activityForm.get('quantity').value,
       symbol:
-        this.activityForm.get('searchSymbol').value?.symbol === undefined ||
-        isUUID(this.activityForm.get('searchSymbol').value?.symbol)
-          ? this.activityForm.get('name').value
-          : this.activityForm.get('searchSymbol').value.symbol,
+        (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(
+          this.activityForm.get('type').value
+        )
+          ? undefined
+          : this.activityForm.get('searchSymbol')?.value?.symbol) ??
+        this.activityForm.get('name')?.value,
       tags: this.activityForm.get('tags').value,
       type: this.activityForm.get('type').value,
       unitPrice: this.activityForm.get('unitPrice').value
@@ -491,8 +493,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
     try {
       if (this.mode === 'create') {
-        (activity as CreateOrderDto).updateAccountBalance =
-          this.activityForm.get('updateAccountBalance').value;
+        activity.updateAccountBalance = this.activityForm.get(
+          'updateAccountBalance'
+        ).value;
 
         await validateObjectForForm({
           classDto: CreateOrderDto,
@@ -501,7 +504,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           object: activity
         });
 
-        this.dialogRef.close(activity as CreateOrderDto);
+        this.dialogRef.close(activity);
       } else {
         (activity as UpdateOrderDto).id = this.data.activity.id;
 

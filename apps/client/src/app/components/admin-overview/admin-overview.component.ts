@@ -36,7 +36,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-admin-overview',
   styleUrls: ['./admin-overview.scss'],
-  templateUrl: './admin-overview.html'
+  templateUrl: './admin-overview.html',
+  standalone: false
 })
 export class AdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '14 days';

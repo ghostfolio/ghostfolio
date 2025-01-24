@@ -11,23 +11,65 @@
                 target="_blank"
                 [href]="pricingUrl"
               >
-                <span class="badge badge-warning mr-1" i18n>NEW</span>
+                @if (isGhostfolioApiKeyValid === false) {
+                  <span class="badge badge-warning mr-1" i18n
+                    >Early Access</span
+                  >
+                }
                 Ghostfolio Premium
                 <gf-premium-indicator
                   class="d-inline-block ml-1"
                   [enableLink]="false"
                 />
               </a>
+              @if (isGhostfolioApiKeyValid === true) {
+                <div class="line-height-1">
+                  <small class="text-muted">
+                    <ng-container i18n>Valid until</ng-container>
+                    {{
+                      ghostfolioApiStatus?.subscription?.expiresAt
+                        | date: defaultDateFormat
+                    }}</small
+                  >
+                </div>
+              }
             </div>
             <div class="w-50">
-              <button
-                color="accent"
-                mat-flat-button
-                (click)="onSetGhostfolioApiKey()"
-              >
-                <ion-icon class="mr-1" name="key-outline" />
-                <span i18n>Set API Key</span>
-              </button>
+              @if (isGhostfolioApiKeyValid === true) {
+                <div class="align-items-center d-flex flex-wrap">
+                  <div class="flex-grow-1 mr-3">
+                    {{ ghostfolioApiStatus.dailyRequests }}
+                    <ng-container i18n>of</ng-container>
+                    {{ ghostfolioApiStatus.dailyRequestsMax }}
+                    <ng-container i18n>daily requests</ng-container>
+                  </div>
+                  <button
+                    class="mx-1 no-min-width px-2"
+                    mat-button
+                    [matMenuTriggerFor]="ghostfolioApiMenu"
+                    (click)="$event.stopPropagation()"
+                  >
+                    <ion-icon name="ellipsis-horizontal" />
+                  </button>
+                  <mat-menu #ghostfolioApiMenu="matMenu" xPosition="before">
+                    <button mat-menu-item (click)="onRemoveGhostfolioApiKey()">
+                      <span class="align-items-center d-flex">
+                        <ion-icon class="mr-2" name="trash-outline" />
+                        <span i18n>Remove API key</span>
+                      </span>
+                    </button>
+                  </mat-menu>
+                </div>
+              } @else if (isGhostfolioApiKeyValid === false) {
+                <button
+                  color="accent"
+                  mat-flat-button
+                  (click)="onSetGhostfolioApiKey()"
+                >
+                  <ion-icon class="mr-1" name="key-outline" />
+                  <span i18n>Set API key</span>
+                </button>
+              }
             </div>
           </div>
         </mat-card-content>

@@ -30,7 +30,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, format, isAfter, isSameSecond, parseISO } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { isNumber, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -224,7 +224,7 @@ export class ImportService {
 
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
-        if (activity.type === 'ITEM' || activity.type === 'LIABILITY') {
+        if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(activity.type)) {
           activity.dataSource = DataSource.MANUAL;
         } else {
           activity.dataSource =
@@ -328,7 +328,7 @@ export class ImportService {
           date
         );
 
-        if (!unitPrice) {
+        if (!isNumber(unitPrice)) {
           throw new Error(
             `activities.${index} historical exchange rate at ${format(
               date,
@@ -356,6 +356,7 @@ export class ImportService {
           quantity,
           type,
           unitPrice,
+          Account: validatedAccount,
           accountId: validatedAccount?.id,
           accountUserId: undefined,
           createdAt: new Date(),
@@ -380,10 +381,10 @@ export class ImportService {
             symbolMapping,
             updatedAt,
             url,
+            comment: assetProfile.comment,
             currency: assetProfile.currency,
-            comment: assetProfile.comment
+            userId: dataSource === 'MANUAL' ? user.id : undefined
           },
-          Account: validatedAccount,
           symbolProfileId: undefined,
           updatedAt: new Date(),
           userId: user.id
@@ -406,7 +407,8 @@ export class ImportService {
               create: {
                 dataSource,
                 symbol,
-                currency: assetProfile.currency
+                currency: assetProfile.currency,
+                userId: dataSource === 'MANUAL' ? user.id : undefined
               },
               where: {
                 dataSource_symbol: {
@@ -582,12 +584,13 @@ export class ImportService {
     const assetProfiles: {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
     } = {};
+    const dataSources = await this.dataProviderService.getDataSources();
 
     for (const [
       index,
       { currency, dataSource, symbol, type }
     ] of activitiesDto.entries()) {
-      if (!this.configurationService.get('DATA_SOURCES').includes(dataSource)) {
+      if (!dataSources.includes(dataSource)) {
         throw new Error(
           `activities.${index}.dataSource ("${dataSource}") is not valid`
         );

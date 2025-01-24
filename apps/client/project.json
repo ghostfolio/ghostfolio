@@ -122,6 +122,10 @@
           "baseHref": "/tr/",
           "localize": ["tr"]
         },
+        "development-uk": {
+          "baseHref": "/uk/",
+          "localize": ["uk"]
+        },
         "development-zh": {
           "baseHref": "/zh/",
           "localize": ["zh"]
@@ -247,6 +251,9 @@
         "development-tr": {
           "buildTarget": "client:build:development-tr"
         },
+        "development-uk": {
+          "buildTarget": "client:build:development-uk"
+        },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
         },
@@ -258,7 +265,7 @@
     "extract-i18n": {
       "executor": "ng-extract-i18n-merge:ng-extract-i18n-merge",
       "options": {
-        "browserTarget": "client:build",
+        "buildTarget": "client:build",
         "includeContext": true,
         "outputPath": "src/locales",
         "targetFiles": [
@@ -271,6 +278,7 @@
           "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf",
+          "messages.uk.xlf",
           "messages.zh.xlf"
         ]
       }
@@ -288,5 +296,55 @@
       },
       "outputs": ["{workspaceRoot}/coverage/apps/client"]
     }
-  }
+  },
+  "i18n": {
+    "locales": {
+      "ca": {
+        "baseHref": "/ca/",
+        "translation": "apps/client/src/locales/messages.ca.xlf"
+      },
+      "de": {
+        "baseHref": "/de/",
+        "translation": "apps/client/src/locales/messages.de.xlf"
+      },
+      "es": {
+        "baseHref": "/es/",
+        "translation": "apps/client/src/locales/messages.es.xlf"
+      },
+      "fr": {
+        "baseHref": "/fr/",
+        "translation": "apps/client/src/locales/messages.fr.xlf"
+      },
+      "it": {
+        "baseHref": "/it/",
+        "translation": "apps/client/src/locales/messages.it.xlf"
+      },
+      "nl": {
+        "baseHref": "/nl/",
+        "translation": "apps/client/src/locales/messages.nl.xlf"
+      },
+      "pl": {
+        "baseHref": "/pl/",
+        "translation": "apps/client/src/locales/messages.pl.xlf"
+      },
+      "pt": {
+        "baseHref": "/pt/",
+        "translation": "apps/client/src/locales/messages.pt.xlf"
+      },
+      "tr": {
+        "baseHref": "/tr/",
+        "translation": "apps/client/src/locales/messages.tr.xlf"
+      },
+      "uk": {
+        "baseHref": "/uk/",
+        "translation": "apps/client/src/locales/messages.uk.xlf"
+      },
+      "zh": {
+        "baseHref": "/zh/",
+        "translation": "apps/client/src/locales/messages.zh.xlf"
+      }
+    },
+    "sourceLocale": "en"
+  },
+  "tags": []
 }

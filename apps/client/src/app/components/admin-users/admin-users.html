@@ -169,6 +169,27 @@
                 />
               </td>
             </ng-container>
+            <ng-container matColumnDef="dailyApiRequests">
+              <th
+                *matHeaderCellDef
+                class="mat-mdc-header-cell px-1 py-2 text-right"
+                mat-header-cell
+              >
+                <ng-container i18n>API Requests Today</ng-container>
+              </th>
+              <td
+                *matCellDef="let element"
+                class="mat-mdc-cell px-1 py-2 text-right"
+                mat-cell
+              >
+                <gf-value
+                  class="d-inline-block justify-content-end"
+                  [locale]="user?.settings?.locale"
+                  [precision]="0"
+                  [value]="element.dailyApiRequests"
+                />
+              </td>
+            </ng-container>
           }
 
           @if (hasPermissionForSubscription) {
@@ -246,6 +267,17 @@
           ></tr>
         </table>
       </div>
+
+      <mat-paginator
+        [length]="totalItems"
+        [ngClass]="{
+          'd-none': (isLoading && totalItems === 0) || totalItems <= pageSize
+        }"
+        [pageSize]="pageSize"
+        [showFirstLastButtons]="true"
+        (page)="onChangePage($event)"
+      />
+
       @if (isLoading) {
         <ngx-skeleton-loader
           animation="pulse"

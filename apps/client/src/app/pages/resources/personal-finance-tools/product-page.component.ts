@@ -12,7 +12,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [CommonModule, MatButtonModule, RouterModule],
   selector: 'gf-product-page',
-  standalone: true,
   styleUrls: ['./product-page.scss'],
   templateUrl: './product-page.html'
 })

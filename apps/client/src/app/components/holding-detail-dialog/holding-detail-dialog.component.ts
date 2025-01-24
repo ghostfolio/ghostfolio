@@ -81,7 +81,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-holding-detail-dialog',
-  standalone: true,
   styleUrls: ['./holding-detail-dialog.component.scss'],
   templateUrl: 'holding-detail-dialog.html'
 })

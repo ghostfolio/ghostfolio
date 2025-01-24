@@ -19,6 +19,7 @@ import type { Export } from './export.interface';
 import type { FilterGroup } from './filter-group.interface';
 import type { Filter } from './filter.interface';
 import type { HistoricalDataItem } from './historical-data-item.interface';
+import type { HoldingWithParents } from './holding-with-parents.interface';
 import type { Holding } from './holding.interface';
 import type { InfoItem } from './info-item.interface';
 import type { InvestmentItem } from './investment-item.interface';
@@ -33,19 +34,26 @@ import type { PortfolioOverview } from './portfolio-overview.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
 import type { PortfolioReportRule } from './portfolio-report-rule.interface';
-import type { PortfolioReport } from './portfolio-report.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
+import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
+import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
+import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
+import type { HistoricalResponse } from './responses/historical-response.interface';
 import type { ImportResponse } from './responses/import-response.interface';
 import type { LookupResponse } from './responses/lookup-response.interface';
+import type { MarketDataDetailsResponse } from './responses/market-data-details-response.interface';
 import type { OAuthResponse } from './responses/oauth-response.interface';
 import type { PortfolioHoldingsResponse } from './responses/portfolio-holdings-response.interface';
 import type { PortfolioPerformanceResponse } from './responses/portfolio-performance-response.interface';
+import type { PortfolioReportResponse } from './responses/portfolio-report.interface';
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
+import type { QuotesResponse } from './responses/quotes-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
@@ -67,25 +75,32 @@ export {
   AdminMarketDataDetails,
   AdminMarketDataItem,
   AdminUsers,
+  AiPromptResponse,
+  ApiKeyResponse,
   AssetProfileIdentifier,
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  DataProviderGhostfolioStatusResponse,
   DataProviderInfo,
+  DividendsResponse,
   EnhancedSymbolProfile,
   Export,
   Filter,
   FilterGroup,
   HistoricalDataItem,
+  HistoricalResponse,
   Holding,
+  HoldingWithParents,
   ImportResponse,
   InfoItem,
   InvestmentItem,
   LineChartItem,
   LookupItem,
   LookupResponse,
+  MarketDataDetailsResponse,
   OAuthResponse,
   PortfolioChart,
   PortfolioDetails,
@@ -97,12 +112,13 @@ export {
   PortfolioPerformance,
   PortfolioPerformanceResponse,
   PortfolioPosition,
-  PortfolioReport,
+  PortfolioReportResponse,
   PortfolioReportRule,
   PortfolioSummary,
   Position,
   Product,
   PublicPortfolioResponse,
+  QuotesResponse,
   ResponseError,
   ScraperConfiguration,
   Statistics,

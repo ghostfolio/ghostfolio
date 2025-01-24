@@ -87,9 +87,15 @@ export class TwitterBotService {
 
     return benchmarks
       .map(({ marketCondition, name, performances }) => {
-        return `${name} ${(
+        let changeFormAllTimeHigh = (
           performances.allTimeHigh.performancePercent * 100
-        ).toFixed(1)}%${
+        ).toFixed(1);
+
+        if (Math.abs(parseFloat(changeFormAllTimeHigh)) === 0) {
+          changeFormAllTimeHigh = '0.0';
+        }
+
+        return `${name} ${changeFormAllTimeHigh}%${
           marketCondition !== 'NEUTRAL_MARKET'
             ? ' ' + resolveMarketCondition(marketCondition).emoji
             : ''

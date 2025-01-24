@@ -49,7 +49,7 @@ import {
   min,
   subDays
 } from 'date-fns';
-import { first, isNumber, last, sortBy, sum, uniq, uniqBy } from 'lodash';
+import { isNumber, sortBy, sum, uniq, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -164,7 +164,7 @@ export abstract class PortfolioCalculator {
 
   @LogPerformance
   public async computeSnapshot(): Promise<PortfolioSnapshot> {
-    const lastTransactionPoint = last(this.transactionPoints);
+    const lastTransactionPoint = this.transactionPoints.at(-1);
 
     const transactionPoints = this.transactionPoints?.filter(({ date }) => {
       return isBefore(parseDate(date), this.endDate);
@@ -173,6 +173,7 @@ export abstract class PortfolioCalculator {
     if (!transactionPoints.length) {
       return {
         currentValueInBaseCurrency: new Big(0),
+        errors: [],
         hasErrors: false,
         historicalData: [],
         positions: [],
@@ -765,7 +766,59 @@ export abstract class PortfolioCalculator {
     return { chart };
   }
 
-  @LogPerformance
+  public async getSnapshot() {
+    await this.snapshotPromise;
+
+    return this.snapshot;
+  }
+
+  public getStartDate() {
+    let firstAccountBalanceDate: Date;
+    let firstActivityDate: Date;
+
+    try {
+      const firstAccountBalanceDateString = this.accountBalanceItems[0]?.date;
+      firstAccountBalanceDate = firstAccountBalanceDateString
+        ? parseDate(firstAccountBalanceDateString)
+        : new Date();
+    } catch (error) {
+      firstAccountBalanceDate = new Date();
+    }
+
+    try {
+      const firstActivityDateString = this.transactionPoints[0].date;
+      firstActivityDate = firstActivityDateString
+        ? parseDate(firstActivityDateString)
+        : new Date();
+    } catch (error) {
+      firstActivityDate = new Date();
+    }
+
+    return min([firstAccountBalanceDate, firstActivityDate]);
+  }
+
+  protected abstract getSymbolMetrics({
+    chartDateMap,
+    dataSource,
+    end,
+    exchangeRates,
+    marketSymbolMap,
+    start,
+    symbol
+  }: {
+    chartDateMap: { [date: string]: boolean };
+    end: Date;
+    exchangeRates: { [dateString: string]: number };
+    marketSymbolMap: {
+      [date: string]: { [symbol: string]: Big };
+    };
+    start: Date;
+  } & AssetProfileIdentifier): SymbolMetrics;
+
+  public getTransactionPoints() {
+    return this.transactionPoints;
+  }
+
   public async getValuablesInBaseCurrency() {
     await this.snapshotPromise;
 

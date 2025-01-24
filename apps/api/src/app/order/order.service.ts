@@ -100,7 +100,7 @@ export class OrderService {
       userId: string;
     }
   ): Promise<Order> {
-    let Account;
+    let Account: Prisma.AccountCreateNestedOneWithoutOrderInput;
 
     if (data.accountId) {
       Account = {
@@ -131,6 +131,7 @@ export class OrderService {
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
       data.SymbolProfile.connectOrCreate.create.symbol = id;
+      data.SymbolProfile.connectOrCreate.create.userId = userId;
       data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
         dataSource,
         symbol: id
@@ -230,10 +231,7 @@ export class OrderService {
         order.symbolProfileId
       ]);
 
-    if (
-      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(order.type) ||
-      symbolProfile.activitiesCount === 0
-    ) {
+    if (symbolProfile.activitiesCount === 0) {
       await this.symbolProfileService.deleteById(order.symbolProfileId);
     }
 

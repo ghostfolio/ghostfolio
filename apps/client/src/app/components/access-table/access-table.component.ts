@@ -12,13 +12,15 @@ import {
   OnChanges,
   Output
 } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'gf-access-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './access-table.component.html',
-  styleUrls: ['./access-table.component.scss']
+  styleUrls: ['./access-table.component.scss'],
+  standalone: false
 })
 export class AccessTableComponent implements OnChanges {
   @Input() accesses: Access[];
@@ -33,7 +35,8 @@ export class AccessTableComponent implements OnChanges {
 
   public constructor(
     private clipboard: Clipboard,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private snackBar: MatSnackBar
   ) {}
 
   public ngOnChanges() {
@@ -54,8 +57,16 @@ export class AccessTableComponent implements OnChanges {
     return `${this.baseUrl}/${languageCode}/p/${aId}`;
   }
 
-  public onCopyToClipboard(aId: string): void {
+  public onCopyUrlToClipboard(aId: string): void {
     this.clipboard.copy(this.getPublicUrl(aId));
+
+    this.snackBar.open(
+      '✅ ' + $localize`Link has been copied to the clipboard`,
+      undefined,
+      {
+        duration: 3000
+      }
+    );
   }
 
   public onDeleteAccess(aId: string) {

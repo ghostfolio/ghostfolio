@@ -15,7 +15,8 @@ import { catchError, switchMap, takeUntil } from 'rxjs/operators';
   host: { class: 'page' },
   selector: 'gf-pricing-page',
   styleUrls: ['./pricing-page.scss'],
-  templateUrl: './pricing-page.html'
+  templateUrl: './pricing-page.html',
+  standalone: false
 })
 export class PricingPageComponent implements OnDestroy, OnInit {
   public baseCurrency: string;
@@ -33,6 +34,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     'DATA_IMPORT_AND_EXPORT_TOOLTIP_PREMIUM'
   );
   public isLoggedIn: boolean;
+  public label: string;
   public price: number;
   public priceId: string;
   public professionalDataProviderTooltipPremium = translate(
@@ -58,6 +60,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
 
     this.coupon = subscriptionOffers?.default?.coupon;
     this.durationExtension = subscriptionOffers?.default?.durationExtension;
+    this.label = subscriptionOffers?.default?.label;
     this.price = subscriptionOffers?.default?.price;
 
     this.userService.stateChanged
@@ -79,6 +82,8 @@ export class PricingPageComponent implements OnDestroy, OnInit {
             subscriptionOffers?.[
               this.user?.subscription?.offer
             ]?.durationExtension;
+          this.label =
+            subscriptionOffers?.[this.user?.subscription?.offer]?.label;
           this.price =
             subscriptionOffers?.[this.user?.subscription?.offer]?.price;
           this.priceId =

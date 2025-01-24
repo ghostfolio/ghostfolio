@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
   host: { class: 'page' },
   imports: [MatButtonModule, RouterModule],
   selector: 'gf-how-do-i-get-my-finances-in-order-page',
-  standalone: true,
   templateUrl: './how-do-i-get-my-finances-in-order-page.html'
 })
 export class HowDoIGetMyFinancesInOrderPageComponent {

@@ -16,7 +16,8 @@ import {
   selector: 'gf-rules',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './rules.component.html',
-  styleUrls: ['./rules.component.scss']
+  styleUrls: ['./rules.component.scss'],
+  standalone: false
 })
 export class RulesComponent {
   @Input() hasPermissionToUpdateUserSettings: boolean;

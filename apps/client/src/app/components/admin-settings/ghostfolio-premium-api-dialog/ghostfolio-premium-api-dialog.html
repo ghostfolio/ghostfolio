@@ -29,9 +29,21 @@
       href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello%0D%0DPlease notify me as soon as the Ghostfolio Premium Data Provider is available.%0D%0DKind regards"
       i18n
       mat-flat-button
+      >Notify me</a
     >
-      Notify me
-    </a>
+    @if (data.user?.settings?.isExperimentalFeatures) {
+      <div>
+        <small class="text-muted" i18n>or</small>
+      </div>
+      <button
+        color="accent"
+        i18n
+        mat-stroked-button
+        (click)="onSetGhostfolioApiKey()"
+      >
+        I have an API key
+      </button>
+    }
   </div>
 </div>
 

@@ -2,8 +2,11 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { PortfolioChangedEvent } from '@ghostfolio/api/events/portfolio-changed.event';
+import { getRandomString } from '@ghostfolio/api/helper/string.helper';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AssetClassClusterRiskEquity } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/equity';
+import { AssetClassClusterRiskFixedIncome } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/fixed-income';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
@@ -37,10 +40,9 @@ import { UserWithSettings } from '@ghostfolio/common/types';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Prisma, Role, User } from '@prisma/client';
+import { createHmac } from 'crypto';
 import { differenceInDays, subDays } from 'date-fns';
 import { sortBy, without } from 'lodash';
-
-const crypto = require('crypto');
 
 @Injectable()
 export class UserService {
@@ -61,7 +63,7 @@ export class UserService {
   }
 
   public createAccessToken(password: string, salt: string): string {
-    const hash = crypto.createHmac('sha512', salt);
+    const hash = createHmac('sha512', salt);
     hash.update(password);
 
     return hash.digest('hex');
@@ -87,6 +89,7 @@ export class UserService {
       }),
       this.tagService.getTagsForUser(id)
     ]);
+
     const access = userData[0];
     const firstActivity = userData[1];
     let tags = userData[2];
@@ -117,7 +120,8 @@ export class UserService {
       access: access.map((accessItem) => {
         return {
           alias: accessItem.alias,
-          id: accessItem.id
+          id: accessItem.id,
+          permissions: accessItem.permissions
         };
       }),
       accounts: Account,
@@ -183,7 +187,9 @@ export class UserService {
       Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: Analytics?.activityCount
+      activityCount: Analytics?.activityCount,
+      dataProviderGhostfolioDailyRequests:
+        Analytics?.dataProviderGhostfolioDailyRequests
     };
 
     if (user?.Settings) {
@@ -224,6 +230,24 @@ export class UserService {
         undefined,
         {}
       ).getSettings(user.Settings.settings),
+      AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      AssetClassClusterRiskFixedIncome: new AssetClassClusterRiskFixedIncome(
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
+        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
+      CurrencyClusterRiskCurrentInvestment:
+        new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
       EconomicMarketClusterRiskDevelopedMarkets:
         new EconomicMarketClusterRiskDevelopedMarkets(
           undefined,
@@ -233,16 +257,6 @@ export class UserService {
       EconomicMarketClusterRiskEmergingMarkets:
         new EconomicMarketClusterRiskEmergingMarkets(
           undefined,
-          undefined,
-          undefined
-        ).getSettings(user.Settings.settings),
-      CurrencyClusterRiskBaseCurrencyCurrentInvestment:
-        new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-          undefined,
-          undefined
-        ).getSettings(user.Settings.settings),
-      CurrencyClusterRiskCurrentInvestment:
-        new CurrencyClusterRiskCurrentInvestment(
           undefined,
           undefined
         ).getSettings(user.Settings.settings),
@@ -298,7 +312,8 @@ export class UserService {
         currentPermissions = without(
           currentPermissions,
           permissions.accessHoldingsChart,
-          permissions.createAccess
+          permissions.createAccess,
+          permissions.readAiPrompt
         );
 
         // Reset benchmark
@@ -307,6 +322,8 @@ export class UserService {
         // Reset holdings view mode
         user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
+        currentPermissions.push(permissions.createApiKey);
+        currentPermissions.push(permissions.enableDataProviderGhostfolio);
         currentPermissions.push(permissions.reportDataGlitch);
 
         currentPermissions = without(
@@ -405,10 +422,7 @@ export class UserService {
     }
 
     if (data.provider === 'ANONYMOUS') {
-      const accessToken = this.createAccessToken(
-        user.id,
-        this.getRandomString(10)
-      );
+      const accessToken = this.createAccessToken(user.id, getRandomString(10));
 
       const hashedAccessToken = this.createAccessToken(
         accessToken,
@@ -524,18 +538,5 @@ export class UserService {
     }
 
     return settings;
-  }
-
-  private getRandomString(length: number) {
-    const bytes = crypto.randomBytes(length);
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const result = [];
-
-    for (let i = 0; i < length; i++) {
-      const randomByte = bytes[i];
-      result.push(characters[randomByte % characters.length]);
-    }
-
-    return result.join('');
   }
 }
