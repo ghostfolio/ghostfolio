@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the detection of the thousand separator by locale
 - Fixed an issue with the MIME type detection in the scraper configuration
 
 ## 2.135.0 - 2025-01-19
