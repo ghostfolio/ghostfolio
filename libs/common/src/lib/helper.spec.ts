@@ -17,6 +17,12 @@ describe('Helper', () => {
       expect(extractNumberFromString({ value: '999.99 CHF' })).toEqual(999.99);
     });
 
+    it('Get decimal number (comma notation) for locale where currency is not grouped by default', () => {
+      expect(
+        extractNumberFromString({ locale: 'es-ES', value: '999,99' })
+      ).toEqual(999.99);
+    });
+
     it('Get decimal number (comma notation)', () => {
       expect(
         extractNumberFromString({ locale: 'de-DE', value: '999,99' })
