@@ -1714,24 +1714,6 @@ export class PortfolioService {
     return { markets, marketsAdvanced };
   }
 
-  private getReportStatistics(
-    evaluatedRules: PortfolioReportResponse['rules']
-  ): PortfolioReportResponse['statistics'] {
-    const rulesActiveCount = Object.values(evaluatedRules)
-      .flat()
-      .filter((rule) => {
-        return rule?.isActive === true;
-      }).length;
-
-    const rulesFulfilledCount = Object.values(evaluatedRules)
-      .flat()
-      .filter((rule) => {
-        return rule?.value === true;
-      }).length;
-
-    return { rulesActiveCount, rulesFulfilledCount };
-  }
-
   @LogPerformance
   private getReportStatistics(
     evaluatedRules: PortfolioReportResponse['rules']

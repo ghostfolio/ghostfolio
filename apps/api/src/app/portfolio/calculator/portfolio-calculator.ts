@@ -766,12 +766,6 @@ export abstract class PortfolioCalculator {
     return { chart };
   }
 
-  public async getSnapshot() {
-    await this.snapshotPromise;
-
-    return this.snapshot;
-  }
-
   public getStartDate() {
     let firstAccountBalanceDate: Date;
     let firstActivityDate: Date;
@@ -796,24 +790,6 @@ export abstract class PortfolioCalculator {
 
     return min([firstAccountBalanceDate, firstActivityDate]);
   }
-
-  protected abstract getSymbolMetrics({
-    chartDateMap,
-    dataSource,
-    end,
-    exchangeRates,
-    marketSymbolMap,
-    start,
-    symbol
-  }: {
-    chartDateMap: { [date: string]: boolean };
-    end: Date;
-    exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
-    start: Date;
-  } & AssetProfileIdentifier): SymbolMetrics;
 
   public getTransactionPoints() {
     return this.transactionPoints;
@@ -1051,37 +1027,6 @@ export abstract class PortfolioCalculator {
 
       await this.initialize();
     }
-  }
-
-  public getStartDate() {
-    let firstAccountBalanceDate: Date;
-    let firstActivityDate: Date;
-
-    try {
-      const firstAccountBalanceDateString = first(
-        this.accountBalanceItems
-      )?.date;
-      firstAccountBalanceDate = firstAccountBalanceDateString
-        ? parseDate(firstAccountBalanceDateString)
-        : new Date();
-    } catch (error) {
-      firstAccountBalanceDate = new Date();
-    }
-
-    try {
-      const firstActivityDateString = this.transactionPoints[0].date;
-      firstActivityDate = firstActivityDateString
-        ? parseDate(firstActivityDateString)
-        : new Date();
-    } catch (error) {
-      firstActivityDate = new Date();
-    }
-
-    return min([firstAccountBalanceDate, firstActivityDate]);
-  }
-
-  public getTransactionPoints() {
-    return this.transactionPoints;
   }
 
   private getChartDateMap({

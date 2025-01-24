@@ -219,8 +219,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             (this.activityForm.get('fee').value ?? 0);
         } else if (this.activityForm.get('type').value === 'STAKE') {
           this.total =
-            this.activityForm.get('quantity').value * this.currentMarketPrice ??
-            0;
+            this.activityForm.get('quantity').value *
+            (this.currentMarketPrice ?? 0);
         } else {
           this.total =
             this.activityForm.get('quantity').value *
