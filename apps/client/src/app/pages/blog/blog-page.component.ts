@@ -8,7 +8,8 @@ import { Subject } from 'rxjs';
   host: { class: 'page' },
   selector: 'gf-blog-page',
   styleUrls: ['./blog-page.scss'],
-  templateUrl: './blog-page.html'
+  templateUrl: './blog-page.html',
+  standalone: false
 })
 export class BlogPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;

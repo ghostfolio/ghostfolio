@@ -23,7 +23,8 @@ import { Subject, Subscription } from 'rxjs';
   selector: 'gf-accounts-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './accounts-table.component.html',
-  styleUrls: ['./accounts-table.component.scss']
+  styleUrls: ['./accounts-table.component.scss'],
+  standalone: false
 })
 export class AccountsTableComponent implements OnChanges, OnDestroy {
   @Input() accounts: AccountModel[];

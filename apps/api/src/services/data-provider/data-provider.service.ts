@@ -12,6 +12,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   DEFAULT_CURRENCY,
   DERIVED_CURRENCIES,
+  PROPERTY_API_KEY_GHOSTFOLIO,
   PROPERTY_DATA_SOURCE_MAPPING
 } from '@ghostfolio/common/config';
 import {
@@ -152,6 +153,24 @@ export class DataProviderService {
 
   public getDataSourceForImport(): DataSource {
     return DataSource[this.configurationService.get('DATA_SOURCE_IMPORT')];
+  }
+
+  public async getDataSources(): Promise<DataSource[]> {
+    const dataSources: DataSource[] = this.configurationService
+      .get('DATA_SOURCES')
+      .map((dataSource) => {
+        return DataSource[dataSource];
+      });
+
+    const ghostfolioApiKey = (await this.propertyService.getByKey(
+      PROPERTY_API_KEY_GHOSTFOLIO
+    )) as string;
+
+    if (ghostfolioApiKey) {
+      dataSources.push('GHOSTFOLIO');
+    }
+
+    return dataSources.sort();
   }
 
   public async getDividends({
@@ -612,28 +631,29 @@ export class DataProviderService {
       return { items: lookupItems };
     }
 
-    const dataProviderServices = this.configurationService
-      .get('DATA_SOURCES')
-      .map((dataSource) => {
-        return this.getDataProvider(DataSource[dataSource]);
-      });
+    const dataSources = await this.getDataSources();
+
+    const dataProviderServices = dataSources.map((dataSource) => {
+      return this.getDataProvider(DataSource[dataSource]);
+    });
 
     for (const dataProviderService of dataProviderServices) {
       promises.push(
         dataProviderService.search({
           includeIndices,
-          query
+          query,
+          userId: user.id
         })
       );
     }
 
     const searchResults = await Promise.all(promises);
 
-    searchResults.forEach(({ items }) => {
+    for (const { items } of searchResults) {
       if (items?.length > 0) {
         lookupItems = lookupItems.concat(items);
       }
-    });
+    }
 
     const filteredItems = lookupItems
       .filter(({ currency }) => {

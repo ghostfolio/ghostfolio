@@ -3,8 +3,8 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
-  PortfolioReportRule,
-  PortfolioReport
+  PortfolioReportResponse,
+  PortfolioReportRule
 } from '@ghostfolio/common/interfaces';
 import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -15,10 +15,12 @@ import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'gf-x-ray-page',
   styleUrl: './x-ray-page.component.scss',
-  templateUrl: './x-ray-page.component.html'
+  templateUrl: './x-ray-page.component.html',
+  standalone: false
 })
 export class XRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
+  public assetClassClusterRiskRules: PortfolioReportRule[];
   public currencyClusterRiskRules: PortfolioReportRule[];
   public economicMarketClusterRiskRules: PortfolioReportRule[];
   public emergencyFundRules: PortfolioReportRule[];
@@ -26,7 +28,8 @@ export class XRayPageComponent {
   public hasImpersonationId: boolean;
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
-  public isLoadingPortfolioReport = false;
+  public isLoading = false;
+  public statistics: PortfolioReportResponse['statistics'];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -87,56 +90,58 @@ export class XRayPageComponent {
   }
 
   private initializePortfolioReport() {
-    this.isLoadingPortfolioReport = true;
+    this.isLoading = true;
 
     this.dataService
       .fetchPortfolioReport()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((portfolioReport) => {
-        this.inactiveRules = this.mergeInactiveRules(portfolioReport);
+      .subscribe(({ rules, statistics }) => {
+        this.inactiveRules = this.mergeInactiveRules(rules);
+        this.statistics = statistics;
 
         this.accountClusterRiskRules =
-          portfolioReport.rules['accountClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
+          rules['accountClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.assetClassClusterRiskRules =
+          rules['assetClassClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
 
         this.currencyClusterRiskRules =
-          portfolioReport.rules['currencyClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
+          rules['currencyClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
 
         this.economicMarketClusterRiskRules =
-          portfolioReport.rules['economicMarketClusterRisk']?.filter(
-            ({ isActive }) => {
-              return isActive;
-            }
-          ) ?? null;
+          rules['economicMarketClusterRisk']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
 
         this.emergencyFundRules =
-          portfolioReport.rules['emergencyFund']?.filter(({ isActive }) => {
+          rules['emergencyFund']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
 
         this.feeRules =
-          portfolioReport.rules['fees']?.filter(({ isActive }) => {
+          rules['fees']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
 
-        this.isLoadingPortfolioReport = false;
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
   }
 
-  private mergeInactiveRules(report: PortfolioReport): PortfolioReportRule[] {
+  private mergeInactiveRules(
+    rules: PortfolioReportResponse['rules']
+  ): PortfolioReportRule[] {
     let inactiveRules: PortfolioReportRule[] = [];
 
-    for (const category in report.rules) {
-      const rulesArray = report.rules[category];
+    for (const category in rules) {
+      const rulesArray = rules[category] || [];
 
       inactiveRules = inactiveRules.concat(
         rulesArray.filter(({ isActive }) => {

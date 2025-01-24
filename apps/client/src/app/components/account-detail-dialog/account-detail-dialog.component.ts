@@ -37,7 +37,8 @@ import { AccountDetailDialogParams } from './interfaces/interfaces';
   selector: 'gf-account-detail-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'account-detail-dialog.html',
-  styleUrls: ['./account-detail-dialog.component.scss']
+  styleUrls: ['./account-detail-dialog.component.scss'],
+  standalone: false
 })
 export class AccountDetailDialog implements OnDestroy, OnInit {
   public accountBalances: AccountBalancesResponse['balances'];

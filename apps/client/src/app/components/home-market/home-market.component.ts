@@ -18,7 +18,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-home-market',
   styleUrls: ['./home-market.scss'],
-  templateUrl: './home-market.html'
+  templateUrl: './home-market.html',
+  standalone: false
 })
 export class HomeMarketComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];

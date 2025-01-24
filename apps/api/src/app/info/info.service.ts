@@ -7,6 +7,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
+  HEADER_KEY_TOKEN,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
   PROPERTY_DEMO_USER_ID,
@@ -32,7 +33,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as cheerio from 'cheerio';
 import { format, subDays } from 'date-fns';
-import got from 'got';
 
 @Injectable()
 export class InfoService {
@@ -154,20 +154,15 @@ export class InfoService {
 
   private async countDockerHubPulls(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-      const { pull_count } = await got(
-        `https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio`,
+      const { pull_count } = (await fetch(
+        'https://hub.docker.com/v2/repositories/ghostfolio/ghostfolio',
         {
           headers: { 'User-Agent': 'request' },
-          // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
-      ).json<any>();
+      ).then((res) => res.json())) as { pull_count: number };
 
       return pull_count;
     } catch (error) {
@@ -179,22 +174,17 @@ export class InfoService {
 
   private async countGitHubContributors(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-      const { body } = await got('https://github.com/ghostfolio/ghostfolio', {
-        // @ts-ignore
-        signal: abortController.signal
-      });
+      const body = await fetch('https://github.com/ghostfolio/ghostfolio', {
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
+      }).then((res) => res.text());
 
       const $ = cheerio.load(body);
 
       return extractNumberFromString({
         value: $(
-          `a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter`
+          'a[href="/ghostfolio/ghostfolio/graphs/contributors"] .Counter'
         ).text()
       });
     } catch (error) {
@@ -206,20 +196,15 @@ export class InfoService {
 
   private async countGitHubStargazers(): Promise<number> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-      const { stargazers_count } = await got(
-        `https://api.github.com/repos/ghostfolio/ghostfolio`,
+      const { stargazers_count } = (await fetch(
+        'https://api.github.com/repos/ghostfolio/ghostfolio',
         {
           headers: { 'User-Agent': 'request' },
-          // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
-      ).json<any>();
+      ).then((res) => res.json())) as { stargazers_count: number };
 
       return stargazers_count;
     } catch (error) {
@@ -334,27 +319,22 @@ export class InfoService {
           PROPERTY_BETTER_UPTIME_MONITOR_ID
         )) as string;
 
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-        const { data } = await got(
+        const { data } = await fetch(
           `https://uptime.betterstack.com/api/v2/monitors/${monitorId}/sla?from=${format(
             subDays(new Date(), 90),
             DATE_FORMAT
           )}&to${format(new Date(), DATE_FORMAT)}`,
           {
             headers: {
-              Authorization: `Bearer ${this.configurationService.get(
+              [HEADER_KEY_TOKEN]: `Bearer ${this.configurationService.get(
                 'API_KEY_BETTER_UPTIME'
               )}`
             },
-            // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
-        ).json<any>();
+        ).then((res) => res.json());
 
         return data.attributes.availability / 100;
       } catch (error) {

@@ -41,7 +41,6 @@ const { gray, green, red } = require('open-color');
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-treemap-chart',
-  standalone: true,
   styleUrls: ['./treemap-chart.component.scss'],
   templateUrl: './treemap-chart.component.html'
 })
@@ -197,7 +196,7 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
-    const data: ChartConfiguration['data'] = {
+    const data: ChartConfiguration<'treemap'>['data'] = {
       datasets: [
         {
           backgroundColor: (ctx) => {

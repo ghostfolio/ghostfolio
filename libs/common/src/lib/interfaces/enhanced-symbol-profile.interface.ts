@@ -31,4 +31,5 @@ export interface EnhancedSymbolProfile {
   updatedAt: Date;
   url?: string;
   tags?: Tag[];
+  userId?: string;
 }

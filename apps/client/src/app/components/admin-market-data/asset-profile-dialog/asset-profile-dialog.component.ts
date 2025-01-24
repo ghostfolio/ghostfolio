@@ -1,15 +1,17 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { UpdateMarketDataDto } from '@ghostfolio/api/app/admin/update-market-data.dto';
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
-  AssetProfileIdentifier
+  AssetProfileIdentifier,
+  LineChartItem,
+  User
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -27,7 +29,6 @@ import {
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   AssetClass,
   AssetSubClass,
@@ -36,7 +37,6 @@ import {
   Tag
 } from '@prisma/client';
 import { format } from 'date-fns';
-import { parse as csvToJson } from 'papaparse';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -47,7 +47,8 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   selector: 'gf-asset-profile-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'asset-profile-dialog.html',
-  styleUrls: ['./asset-profile-dialog.component.scss']
+  styleUrls: ['./asset-profile-dialog.component.scss'],
+  standalone: false
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
@@ -84,13 +85,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   };
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
+  public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
-  public marketDataDetails: MarketData[] = [];
+  public marketDataItems: MarketData[] = [];
   public sectors: {
     [name: string]: { name: string; value: number };
   };
 
   public HoldingTags: { id: string; name: string; userId: string }[];
+  public user: User;
 
   private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
     new Date(),
@@ -107,7 +110,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
-    private snackBar: MatSnackBar
+    private userService: UserService
   ) {}
 
   public ngOnInit() {
@@ -132,8 +135,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.changeDetectorRef.markForCheck();
       });
 
-    this.adminService
-      .fetchAdminMarketDataBySymbol({
+    this.historicalDataItems = undefined;
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+        }
+      });
+
+    this.dataService
+      .fetchMarketDataBySymbol({
         dataSource: this.data.dataSource,
         symbol: this.data.symbol
       })
@@ -144,10 +157,19 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         this.assetProfileClass = translate(this.assetProfile?.assetClass);
         this.assetProfileSubClass = translate(this.assetProfile?.assetSubClass);
         this.countries = {};
+
         this.isBenchmark = this.benchmarks.some(({ id }) => {
           return id === this.assetProfile.id;
         });
-        this.marketDataDetails = marketData;
+
+        this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
+          return {
+            date: format(date, DATE_FORMAT),
+            value: marketPrice
+          };
+        });
+
+        this.marketDataItems = marketData;
         this.sectors = {};
 
         if (this.assetProfile?.countries?.length > 0) {
@@ -233,47 +255,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .gatherSymbolMissingOnly({ dataSource, symbol })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe();
-  }
-
-  public onImportHistoricalData() {
-    try {
-      const marketData = csvToJson(
-        this.assetProfileForm.controls['historicalData'].controls['csvString']
-          .value,
-        {
-          dynamicTyping: true,
-          header: true,
-          skipEmptyLines: true
-        }
-      ).data as UpdateMarketDataDto[];
-
-      this.adminService
-        .postMarketData({
-          dataSource: this.data.dataSource,
-          marketData: {
-            marketData
-          },
-          symbol: this.data.symbol
-        })
-        .pipe(
-          catchError(({ error, message }) => {
-            this.snackBar.open(`${error}: ${message[0]}`, undefined, {
-              duration: 3000
-            });
-            return EMPTY;
-          }),
-          takeUntil(this.unsubscribeSubject)
-        )
-        .subscribe(() => {
-          this.initialize();
-        });
-    } catch {
-      this.snackBar.open(
-        $localize`Oops! Could not parse historical data.`,
-        undefined,
-        { duration: 3000 }
-      );
-    }
   }
 
   public onMarketDataChanged(withRefresh: boolean = false) {

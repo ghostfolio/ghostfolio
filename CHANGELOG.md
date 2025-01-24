@@ -94,12 +94,233 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.115.0 - 2024-10-14
 
+### Added
+
+- Set up a _GitHub Action_ to automatically extract locales when the `main` branch changes
+
 ### Changed
 
+- Extended the _Financial Modeling Prep_ service
+- Improved the language localization for Ukrainian (`uk`)
+- Refreshed the cryptocurrencies list
+- Upgraded `date-fns` from version `3.6.0` to `4.1.0`
+- Upgraded `rxjs` from version `7.5.6` to `7.8.1`
+
+### Fixed
+
+- Fixed an issue with the MIME type detection in the scraper configuration
+
+## 2.135.0 - 2025-01-19
+
+### Changed
+
+- Moved the language localization for Polski (`pl`) from experimental to general availability
+- Extended the _Financial Modeling Prep_ service
+- Switched to _ESLint_’s flat config format
+- Upgraded `chart.js` from version `4.2.0` to `4.4.7`
+- Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
+- Upgraded `chartjs-plugin-annotation` from version `2.1.2` to `3.1.0`
+- Upgraded `eslint` dependencies
+- Upgraded `nestjs` from version `10.1.3` to `10.4.15`
+- Upgraded `Nx` from version `20.3.0` to `20.3.2`
+- Upgraded `reflect-metadata` from version `0.1.13` to `0.2.2`
+- Upgraded `uuid` from version `11.0.2` to `11.0.5`
+
+## 2.134.0 - 2025-01-15
+
+### Added
+
+- Set up the language localization for Українська (`uk`)
+
+### Changed
+
+- Extended the health check endpoint to include database and cache operations (experimental)
+- Refactored various `lodash` functions with native JavaScript equivalents
+- Improved the language localization for German (`de`)
+- Upgraded `prisma` from version `6.1.0` to `6.2.1`
+
+### Fixed
+
+- Fixed an issue with the import of activities with type `FEE` (where unit price is `0`)
+- Fixed an issue with the renaming of activities with type `FEE`, `INTEREST`, `ITEM` or `LIABILITY`
+- Handled an exception in the scraper configuration introduced by the migration from `got` to `fetch`
+
+## 2.133.1 - 2025-01-09
+
+### Added
+
+- Added a _Copy AI prompt to clipboard_ action to the analysis page (experimental)
+
+### Changed
+
+- Improved the usability of the _Copy link to clipboard_ action by adding a confirmation on success in the access table to share the portfolio
+- Improved the endpoint to fetch the logo of an asset or a platform by sending the original MIME type
+- Eliminated `got` in favor of using `fetch`
+- Changed the `REDIS_HOST` from `localhost` to `redis` in `.env.example`
+- Changed the _Postgres_ host from `localhost` to `postgres` in `.env.example`
+- Changed the _Postgres_ image from `postgres:15` to `postgres:15-alpine` in the `docker-compose` files
+- Introduced `extends` in the `docker-compose` files
+- Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
+- Upgraded `envalid` from version `7.3.1` to `8.0.0`
+- Upgraded `replace-in-file` from version `7.0.1` to `8.3.0`
+
+### Fixed
+
+- Improved the handling of a missing url in the endpoint to fetch the logo of an asset or a platform
+- Fixed the _Storybook_ setup
+
+## 2.132.0 - 2024-12-30
+
+### Added
+
+- Added the user interface for received access from others
+
+### Changed
+
+- Improved support for automatic deletion of unused asset profiles when deleting activities
+- Migrated the coupon redemption to the notification service for prompt dialogs
+- Refactored `got` calls to use `AbortSignal.timeout()` without `AbortController()`
+- Improved the language localization for German (`de`)
+- Eliminated `body-parser` in favor of using `@nestjs/platform-express`
+- Upgraded the _Stripe_ dependencies
+- Upgraded `angular` from version `18.2.8` to `19.0.5`
+- Upgraded `husky` from version `9.1.6` to `9.1.7`
+- Upgraded `marked` from version `12.0.2` to `15.0.4`
+- Upgraded `ng-extract-i18n-merge` from version `2.12.0` to `2.13.1`
+- Upgraded `ngx-device-detector` from version `8.0.0` to `9.0.0`
+- Upgraded `ngx-markdown` from version `18.0.0` to `19.0.0`
+- Upgraded `Nx` from version `20.1.2` to `20.3.0`
+- Upgraded `prisma` from version `6.0.1` to `6.1.0`
+- Upgraded `storybook` from version `8.2.5` to `8.4.7`
+- Upgraded `zone.js` from version `0.14.10` to `0.15.0`
+
+### Fixed
+
+- Fixed an issue with the algebraic sign in the twitter bot service
+
+## 2.131.0 - 2024-12-25
+
+### Changed
+
+- Improved the search for asset profiles with `MANUAL` data source in the create or update activity dialog
+- Improved the usability of the link to manage access with a new icon
+- Improved support to import activities by `isin` in the _Yahoo Finance_ service
+- Improved the language localization for Polish (`pl`)
+
+## 2.130.0 - 2024-12-21
+
+### Added
+
+- Added a new static portfolio analysis rule: _Asset Class Cluster Risk_ (Equity)
+- Added a new static portfolio analysis rule: _Asset Class Cluster Risk_ (Fixed Income)
+- Set up a notification service for prompt dialogs
+
+### Changed
+
+- Improved the usability to edit the emergency fund
+- Extracted the market data management from the admin control panel endpoint to a dedicated endpoint
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `big.js` from version `6.2.1` to `6.2.2`
+
+## 2.129.0 - 2024-12-14
+
+### Added
+
+- Added `userId` to the `SymbolProfile` database schema
+
+### Changed
+
+- Improved the usability of the _X-ray_ page by hiding empty rule categories
+- Improved the language localization for German (`de`)
+
+## 2.128.0 - 2024-12-12
+
+### Changed
+
+- Optimized the holding selector in the assistant
+- Improved the language localization for German (`de`)
+- Upgraded `@internationalized/number` from version `3.5.2` to `3.6.0`
+
+### Fixed
+
+- Fixed an exception in the caching of the portfolio snapshot in the portfolio calculator
+- Fixed the import of `jsonpath` to support REST APIs (`JSON`) via the scraper configuration
+
+## 2.127.0 - 2024-12-08
+
+### Added
+
+- Extended the _X-ray_ page by a summary
+
+### Fixed
+
+- Fixed an exception in the caching of the portfolio snapshot in the portfolio calculator
+
+## 2.126.1 - 2024-12-07
+
+### Added
+
+- Added pagination to the users table of the admin control panel
+
+### Changed
+
+- Improved the labels of the assistant
+- Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries immediately in case of errors
+- Extracted the historical market data editor to a reusable component
+- Upgraded `prettier` from version `3.3.3` to `3.4.2`
+- Upgraded `prisma` from version `6.0.0` to `6.0.1`
+
+## 2.125.0 - 2024-11-30
+
+### Changed
+
+- Improved the style of the symbol search component
+- Extended the users table in the admin control panel
+- Refreshed the cryptocurrencies list
+- Increased the default request timeout (`REQUEST_TIMEOUT`)
+- Upgraded `cheerio` from version `1.0.0-rc.12` to `1.0.0`
+- Upgraded `prisma` from version `5.22.0` to `6.0.0`
+
+## 2.124.1 - 2024-11-25
+
+### Fixed
+
+- Fixed the tables style related to sticky columns
+
+## 2.124.0 - 2024-11-24
+
+### Added
+
+- Added pagination parameters (`skip`, `take`) to the endpoint `GET api/v1/admin/user`
+- Added pagination response (`count`) to the endpoint `GET api/v1/admin/user`
+- Added `GHOSTFOLIO` as a new data source type
+
+### Changed
+
+- Extended the allocations by ETF holding on the allocations page by the parent ETFs (experimental)
+- Improved the language localization for German (`de`)
+- Upgraded `countries-and-timezones` from version `3.4.1` to `3.7.2`
+- Upgraded `Nx` from version `20.0.6` to `20.1.2`
+
+## 2.123.0 - 2024-11-16
+
+### Added
+
+- Added a blog post: _Black Weeks 2024_
+
+### Changed
+
+- Moved the chart of the holdings tab on the home page from experimental to general availability
 - Extended the assistant by a holding selector
 - Separated the _FIRE_ / _X-ray_ page
+- Improved the usability to customize the rule thresholds in the _X-ray_ page by introducing range sliders (experimental)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Upgraded `ngx-skeleton-loader` from version `7.0.0` to `9.0.0`
+- Upgraded `prisma` from version `5.21.1` to `5.22.0`
+- Upgraded `uuid` from version `9.0.1` to `11.0.2`
 
 ## 2.122.0 - 2024-11-07
 

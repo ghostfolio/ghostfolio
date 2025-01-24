@@ -1,0 +1,21 @@
+@if (title) {
+  <div mat-dialog-title [innerHTML]="title"></div>
+}
+
+<div class="py-3" mat-dialog-content>
+  <mat-form-field appearance="outline" class="w-100 without-hint">
+    @if (valueLabel) {
+      <mat-label>{{ valueLabel }}</mat-label>
+    }
+    <input matInput [(ngModel)]="value" />
+  </mat-form-field>
+</div>
+
+<div align="end" mat-dialog-actions>
+  <button mat-button (click)="dialogRef.close('discard')">
+    {{ discardLabel }}
+  </button>
+  <button color="primary" mat-flat-button (click)="dialogRef.close(value)">
+    {{ confirmLabel }}
+  </button>
+</div>

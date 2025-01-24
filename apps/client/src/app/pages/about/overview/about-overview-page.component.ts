@@ -10,7 +10,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
-  templateUrl: './about-overview-page.html'
+  templateUrl: './about-overview-page.html',
+  standalone: false
 })
 export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;

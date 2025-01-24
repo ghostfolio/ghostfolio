@@ -1,76 +1,128 @@
 <div mat-dialog-title>{{ data.rule.name }}</div>
 
 <div class="py-3" mat-dialog-content>
-  <div
-    class="w-100"
-    [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMin }"
-  >
-    <h6 class="mb-0">
-      <ng-container i18n>Threshold Min</ng-container>:
-      @if (data.rule.configuration.threshold.unit === '%') {
-        {{ data.settings.thresholdMin | percent: '1.2-2' }}
-      } @else {
-        {{ data.settings.thresholdMin }}
-      }
-    </h6>
-    @if (data.rule.configuration.threshold.unit === '%') {
-      <label>{{
-        data.rule.configuration.threshold.min | percent: '1.2-2'
-      }}</label>
-    } @else {
-      <label>{{ data.rule.configuration.threshold.min }}</label>
-    }
-    <mat-slider
-      name="thresholdMin"
-      [max]="data.rule.configuration.threshold.max"
-      [min]="data.rule.configuration.threshold.min"
-      [step]="data.rule.configuration.threshold.step"
+  @if (
+    data.rule.configuration.thresholdMin && data.rule.configuration.thresholdMax
+  ) {
+    <div class="w-100">
+      <h6 class="mb-0">
+        <ng-container i18n>Threshold range</ng-container>:
+        @if (data.rule.configuration.threshold.unit === '%') {
+          {{ data.settings.thresholdMin | percent: '1.2-2' }}
+        } @else {
+          {{ data.settings.thresholdMin }}
+        }
+        -
+        @if (data.rule.configuration.threshold.unit === '%') {
+          {{ data.settings.thresholdMax | percent: '1.2-2' }}
+        } @else {
+          {{ data.settings.thresholdMax }}
+        }
+      </h6>
+      <div class="align-items-center d-flex w-100">
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.min | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.min }}</label>
+        }
+        <mat-slider
+          class="flex-grow-1"
+          [max]="data.rule.configuration.threshold.max"
+          [min]="data.rule.configuration.threshold.min"
+          [step]="data.rule.configuration.threshold.step"
+        >
+          <input matSliderStartThumb [(ngModel)]="data.settings.thresholdMin" />
+          <input matSliderEndThumb [(ngModel)]="data.settings.thresholdMax" />
+        </mat-slider>
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.max | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.max }}</label>
+        }
+      </div>
+    </div>
+  } @else {
+    <div
+      class="w-100"
+      [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMin }"
     >
-      <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
-    </mat-slider>
-    @if (data.rule.configuration.threshold.unit === '%') {
-      <label>{{
-        data.rule.configuration.threshold.max | percent: '1.2-2'
-      }}</label>
-    } @else {
-      <label>{{ data.rule.configuration.threshold.max }}</label>
-    }
-  </div>
-  <div
-    class="w-100"
-    [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMax }"
-  >
-    <h6 class="mb-0">
-      <ng-container i18n>Threshold Max</ng-container>:
-      @if (data.rule.configuration.threshold.unit === '%') {
-        {{ data.settings.thresholdMax | percent: '1.2-2' }}
-      } @else {
-        {{ data.settings.thresholdMax }}
-      }
-    </h6>
-    @if (data.rule.configuration.threshold.unit === '%') {
-      <label>{{
-        data.rule.configuration.threshold.min | percent: '1.2-2'
-      }}</label>
-    } @else {
-      <label>{{ data.rule.configuration.threshold.min }}</label>
-    }
-    <mat-slider
-      name="thresholdMax"
-      [max]="data.rule.configuration.threshold.max"
-      [min]="data.rule.configuration.threshold.min"
-      [step]="data.rule.configuration.threshold.step"
+      <h6 class="mb-0">
+        <ng-container i18n>Threshold Min</ng-container>:
+        @if (data.rule.configuration.threshold.unit === '%') {
+          {{ data.settings.thresholdMin | percent: '1.2-2' }}
+        } @else {
+          {{ data.settings.thresholdMin }}
+        }
+      </h6>
+      <div class="align-items-center d-flex w-100">
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.min | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.min }}</label>
+        }
+        <mat-slider
+          class="flex-grow-1"
+          name="thresholdMin"
+          [max]="data.rule.configuration.threshold.max"
+          [min]="data.rule.configuration.threshold.min"
+          [step]="data.rule.configuration.threshold.step"
+        >
+          <input matSliderThumb [(ngModel)]="data.settings.thresholdMin" />
+        </mat-slider>
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.max | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.max }}</label>
+        }
+      </div>
+    </div>
+    <div
+      class="w-100"
+      [ngClass]="{ 'd-none': !data.rule.configuration.thresholdMax }"
     >
-      <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
-    </mat-slider>
-    @if (data.rule.configuration.threshold.unit === '%') {
-      <label>{{
-        data.rule.configuration.threshold.max | percent: '1.2-2'
-      }}</label>
-    } @else {
-      <label>{{ data.rule.configuration.threshold.max }}</label>
-    }
-  </div>
+      <h6 class="mb-0">
+        <ng-container i18n>Threshold Max</ng-container>:
+        @if (data.rule.configuration.threshold.unit === '%') {
+          {{ data.settings.thresholdMax | percent: '1.2-2' }}
+        } @else {
+          {{ data.settings.thresholdMax }}
+        }
+      </h6>
+      <div class="align-items-center d-flex w-100">
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.min | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.min }}</label>
+        }
+        <mat-slider
+          class="flex-grow-1"
+          name="thresholdMax"
+          [max]="data.rule.configuration.threshold.max"
+          [min]="data.rule.configuration.threshold.min"
+          [step]="data.rule.configuration.threshold.step"
+        >
+          <input matSliderThumb [(ngModel)]="data.settings.thresholdMax" />
+        </mat-slider>
+        @if (data.rule.configuration.threshold.unit === '%') {
+          <label>{{
+            data.rule.configuration.threshold.max | percent: '1.2-2'
+          }}</label>
+        } @else {
+          <label>{{ data.rule.configuration.threshold.max }}</label>
+        }
+      </div>
+    </div>
+  }
 </div>
 
 <div align="end" mat-dialog-actions>

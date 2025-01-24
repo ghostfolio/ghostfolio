@@ -4,11 +4,19 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {
   differenceInSeconds,
@@ -21,9 +29,12 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'gf-admin-users',
   styleUrls: ['./admin-users.scss'],
-  templateUrl: './admin-users.html'
+  templateUrl: './admin-users.html',
+  standalone: false
 })
 export class AdminUsersComponent implements OnDestroy, OnInit {
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   public dataSource = new MatTableDataSource<AdminUsers['users'][0]>();
   public defaultDateFormat: string;
   public displayedColumns: string[] = [];
@@ -32,6 +43,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
   public hasPermissionToImpersonateAllUsers: boolean;
   public info: InfoItem;
   public isLoading = false;
+  public pageSize = DEFAULT_PAGE_SIZE;
+  public totalItems = 0;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -60,6 +73,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
         'accounts',
         'activities',
         'engagementPerDay',
+        'dailyApiRequests',
         'lastRequest',
         'actions'
       ];
@@ -136,19 +150,33 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     window.location.reload();
   }
 
+  public onChangePage(page: PageEvent) {
+    this.fetchUsers({
+      pageIndex: page.pageIndex
+    });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
 
-  private fetchUsers() {
+  private fetchUsers({ pageIndex }: { pageIndex: number } = { pageIndex: 0 }) {
     this.isLoading = true;
 
+    if (pageIndex === 0 && this.paginator) {
+      this.paginator.pageIndex = 0;
+    }
+
     this.adminService
-      .fetchUsers()
+      .fetchUsers({
+        skip: pageIndex * this.pageSize,
+        take: this.pageSize
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ users }) => {
+      .subscribe(({ count, users }) => {
         this.dataSource = new MatTableDataSource(users);
+        this.totalItems = count;
 
         this.isLoading = false;
 

@@ -1,6 +1,11 @@
 {
-  "createdAt": "2024-08-31T00:00:00.000Z",
+  "createdAt": "2024-12-30T00:00:00.000Z",
   "data": [
+    {
+      "name": "Activepieces",
+      "description": "Activepieces is an open source, no-code, AI-first business automation tool. Alternative to Zapier, Make and Workato.",
+      "href": "https://activepieces.com"
+    },
     {
       "name": "Aptabase",
       "description": "Analytics for Apps, open source, simple and privacy-friendly. SDKs for Swift, React Native, Electron, Flutter and many others.",
@@ -53,7 +58,7 @@
     },
     {
       "name": "Formbricks",
-      "description": "Survey granular user segments at any point in the user journey. Gather up to 6x more insights with targeted micro-surveys. All open-source.",
+      "description": "Open source survey software and Experience Management Platform. Understand your customers, keep full control over your data.",
       "href": "https://formbricks.com"
     },
     {
@@ -80,6 +85,11 @@
       "name": "Infisical",
       "description": "Open source, end-to-end encrypted platform that lets you securely manage secrets and configs across your team, devices, and infrastructure.",
       "href": "https://infisical.com"
+    },
+    {
+      "name": "KeepHQ",
+      "description": "Keep is an open-source AIOps (AI for IT operations) platform",
+      "href": "https://www.keephq.dev"
     },
     {
       "name": "Langfuse",

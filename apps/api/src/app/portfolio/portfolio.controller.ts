@@ -26,7 +26,7 @@ import {
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
-  PortfolioReport
+  PortfolioReportResponse
 } from '@ghostfolio/common/interfaces';
 import {
   hasReadRestrictedAccessPermission,
@@ -161,24 +161,22 @@ export class PortfolioController {
           portfolioPosition.investment / totalInvestment;
         portfolioPosition.valueInPercentage =
           portfolioPosition.valueInBaseCurrency / totalValue;
-        (portfolioPosition.assetClass = hasDetails
+        portfolioPosition.assetClass = hasDetails
           ? portfolioPosition.assetClass
-          : undefined),
-          (portfolioPosition.assetSubClass = hasDetails
-            ? portfolioPosition.assetSubClass
-            : undefined),
-          (portfolioPosition.countries = hasDetails
-            ? portfolioPosition.countries
-            : []),
-          (portfolioPosition.currency = hasDetails
-            ? portfolioPosition.currency
-            : undefined),
-          (portfolioPosition.markets = hasDetails
-            ? portfolioPosition.markets
-            : undefined),
-          (portfolioPosition.sectors = hasDetails
-            ? portfolioPosition.sectors
-            : []);
+          : undefined;
+        portfolioPosition.assetSubClass = hasDetails
+          ? portfolioPosition.assetSubClass
+          : undefined;
+        portfolioPosition.countries = hasDetails
+          ? portfolioPosition.countries
+          : [];
+        portfolioPosition.currency = hasDetails
+          ? portfolioPosition.currency
+          : undefined;
+        portfolioPosition.markets = hasDetails
+          ? portfolioPosition.markets
+          : undefined;
+        portfolioPosition.sectors = hasDetails ? portfolioPosition.sectors : [];
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -633,7 +631,7 @@ export class PortfolioController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getReport(
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string
-  ): Promise<PortfolioReport> {
+  ): Promise<PortfolioReportResponse> {
     const report = await this.portfolioService.getReport(impersonationId);
 
     if (
@@ -641,10 +639,13 @@ export class PortfolioController {
       this.request.user.subscription.type === 'Basic'
     ) {
       for (const rule in report.rules) {
-        if (report.rules[rule]) {
-          report.rules[rule] = [];
-        }
+        report.rules[rule] = null;
       }
+
+      report.statistics = {
+        rulesActiveCount: 0,
+        rulesFulfilledCount: 0
+      };
     }
 
     return report;

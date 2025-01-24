@@ -41,7 +41,6 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-benchmark-detail-dialog',
-  standalone: true,
   styleUrls: ['./benchmark-detail-dialog.component.scss'],
   templateUrl: 'benchmark-detail-dialog.html'
 })

@@ -28,7 +28,12 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     let maxItem = holdingsGroupedByCurrency[0];
     let totalValue = 0;
 
-    holdingsGroupedByCurrency.forEach((groupItem) => {
+    const baseCurrencyValue =
+      holdingsGroupedByCurrency.find(({ groupKey }) => {
+        return groupKey === ruleSettings.baseCurrency;
+      })?.value ?? 0;
+
+    for (const groupItem of holdingsGroupedByCurrency) {
       // Calculate total value
       totalValue += groupItem.value;
 
@@ -36,13 +41,11 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
       if (groupItem.investment > maxItem.investment) {
         maxItem = groupItem;
       }
-    });
+    }
 
-    const baseCurrencyItem = holdingsGroupedByCurrency.find((item) => {
-      return item.groupKey === ruleSettings.baseCurrency;
-    });
-
-    const baseCurrencyValueRatio = baseCurrencyItem?.value / totalValue || 0;
+    const baseCurrencyValueRatio = totalValue
+      ? baseCurrencyValue / totalValue
+      : 0;
 
     if (maxItem?.groupKey !== ruleSettings.baseCurrency) {
       return {

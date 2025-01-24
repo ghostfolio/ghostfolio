@@ -51,7 +51,6 @@ import { GfValueComponent } from '../value';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-account-balances',
-  standalone: true,
   styleUrls: ['./account-balances.component.scss'],
   templateUrl: './account-balances.component.html'
 })

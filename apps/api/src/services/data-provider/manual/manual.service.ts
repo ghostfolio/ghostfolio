@@ -27,9 +27,7 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import * as cheerio from 'cheerio';
-import { isUUID } from 'class-validator';
 import { addDays, format, isBefore } from 'date-fns';
-import got, { Headers } from 'got';
 import * as jsonpath from 'jsonpath';
 
 @Injectable()
@@ -227,39 +225,46 @@ export class ManualService implements DataProviderInterface {
     return undefined;
   }
 
-  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
-    let items = await this.prismaService.symbolProfile.findMany({
+  public async search({
+    query,
+    userId
+  }: GetSearchParams): Promise<LookupResponse> {
+    const items = await this.prismaService.symbolProfile.findMany({
       select: {
         assetClass: true,
         assetSubClass: true,
         currency: true,
         dataSource: true,
         name: true,
-        symbol: true
+        symbol: true,
+        userId: true
       },
       where: {
-        OR: [
+        AND: [
           {
-            dataSource: this.getName(),
-            name: {
-              mode: 'insensitive',
-              startsWith: query
-            }
+            dataSource: this.getName()
           },
           {
-            dataSource: this.getName(),
-            symbol: {
-              mode: 'insensitive',
-              startsWith: query
-            }
+            OR: [
+              {
+                name: {
+                  mode: 'insensitive',
+                  startsWith: query
+                }
+              },
+              {
+                symbol: {
+                  mode: 'insensitive',
+                  startsWith: query
+                }
+              }
+            ]
+          },
+          {
+            OR: [{ userId }, { userId: null }]
           }
         ]
       }
-    });
-
-    items = items.filter(({ symbol }) => {
-      // Remove UUID symbols (activities of type ITEM)
-      return !isUUID(symbol);
     });
 
     return {
@@ -276,43 +281,36 @@ export class ManualService implements DataProviderInterface {
   private async scrape(
     scraperConfiguration: ScraperConfiguration
   ): Promise<number> {
-    try {
-      const abortController = new AbortController();
+    let locale = scraperConfiguration.locale;
 
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
+    const response = await fetch(scraperConfiguration.url, {
+      headers: scraperConfiguration.headers as HeadersInit,
+      signal: AbortSignal.timeout(
+        this.configurationService.get('REQUEST_TIMEOUT')
+      )
+    });
 
-      let locale = scraperConfiguration.locale;
-      const { body, headers } = await got(scraperConfiguration.url, {
-        headers: scraperConfiguration.headers as Headers,
-        // @ts-ignore
-        signal: abortController.signal
-      });
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      const data = await response.json();
 
-      if (headers['content-type'].includes('application/json')) {
-        const data = JSON.parse(body);
-        const value = String(
-          jsonpath.query(data, scraperConfiguration.selector)[0]
-        );
+      const value = String(
+        jsonpath.query(data, scraperConfiguration.selector)[0]
+      );
 
-        return extractNumberFromString({ locale, value });
-      } else {
-        const $ = cheerio.load(body);
+      return extractNumberFromString({ locale, value });
+    } else {
+      const $ = cheerio.load(await response.text());
 
-        if (!locale) {
-          try {
-            locale = $('html').attr('lang');
-          } catch {}
-        }
-
-        return extractNumberFromString({
-          locale,
-          value: $(scraperConfiguration.selector).first().text()
-        });
+      if (!locale) {
+        try {
+          locale = $('html').attr('lang');
+        } catch {}
       }
-    } catch (error) {
-      throw error;
+
+      return extractNumberFromString({
+        locale,
+        value: $(scraperConfiguration.selector).first().text()
+      });
     }
   }
 }

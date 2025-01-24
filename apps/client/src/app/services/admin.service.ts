@@ -1,30 +1,36 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
-import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
 import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
+import {
+  HEADER_KEY_SKIP_INTERCEPTOR,
+  HEADER_KEY_TOKEN,
+  PROPERTY_API_KEY_GHOSTFOLIO
+} from '@ghostfolio/common/config';
+import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   AdminData,
   AdminJobs,
   AdminMarketData,
-  AdminMarketDataDetails,
   AdminUsers,
+  DataProviderGhostfolioStatusResponse,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
 import { JobStatus } from 'bull';
-import { format, parseISO } from 'date-fns';
-import { Observable, map } from 'rxjs';
+import { format } from 'date-fns';
+import { switchMap } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { DataService } from './data.service';
 
 @Injectable({
@@ -117,23 +123,20 @@ export class AdminService {
     });
   }
 
-  public fetchAdminMarketDataBySymbol({
-    dataSource,
-    symbol
-  }: {
-    dataSource: DataSource;
-    symbol: string;
-  }): Observable<AdminMarketDataDetails> {
-    return this.http
-      .get<any>(`/api/v1/admin/market-data/${dataSource}/${symbol}`)
-      .pipe(
-        map((data) => {
-          for (const item of data.marketData) {
-            item.date = parseISO(item.date);
-          }
-          return data;
-        })
-      );
+  public fetchGhostfolioDataProviderStatus() {
+    return this.fetchAdminData().pipe(
+      switchMap(({ settings }) => {
+        const headers = new HttpHeaders({
+          [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+          [HEADER_KEY_TOKEN]: `Api-Key ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
+        });
+
+        return this.http.get<DataProviderGhostfolioStatusResponse>(
+          `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+          { headers }
+        );
+      })
+    );
   }
 
   public fetchJobs({ status }: { status?: JobStatus[] }) {
@@ -156,8 +159,19 @@ export class AdminService {
     return this.http.get<Tag[]>('/api/v1/tag');
   }
 
-  public fetchUsers() {
-    return this.http.get<AdminUsers>('/api/v1/admin/user');
+  public fetchUsers({
+    skip,
+    take = DEFAULT_PAGE_SIZE
+  }: {
+    skip?: number;
+    take?: number;
+  }) {
+    let params = new HttpParams();
+
+    params = params.append('skip', skip);
+    params = params.append('take', take);
+
+    return this.http.get<AdminUsers>('/api/v1/admin/user', { params });
   }
 
   public gather7Days() {
@@ -265,20 +279,6 @@ export class AdminService {
         url
       }
     );
-  }
-
-  public postMarketData({
-    dataSource,
-    marketData,
-    symbol
-  }: {
-    dataSource: DataSource;
-    marketData: UpdateBulkMarketDataDto;
-    symbol: string;
-  }) {
-    const url = `/api/v1/admin/market-data/${dataSource}/${symbol}`;
-
-    return this.http.post<MarketData>(url, marketData);
   }
 
   public postPlatform(aPlatform: CreatePlatformDto) {

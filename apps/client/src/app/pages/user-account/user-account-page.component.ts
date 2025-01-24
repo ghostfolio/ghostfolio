@@ -9,7 +9,8 @@ import { Subject, takeUntil } from 'rxjs';
   host: { class: 'page has-tabs' },
   selector: 'gf-user-account-page',
   styleUrls: ['./user-account-page.scss'],
-  templateUrl: './user-account-page.html'
+  templateUrl: './user-account-page.html',
+  standalone: false
 })
 export class UserAccountPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
@@ -42,7 +43,7 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
               showCondition: !!this.user?.subscription
             },
             {
-              iconName: 'share-social-outline',
+              iconName: 'key-outline',
               label: $localize`Access`,
               path: ['/account', 'access']
             }

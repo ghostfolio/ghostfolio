@@ -71,7 +71,6 @@ import { FireCalculatorService } from './fire-calculator.service';
   ],
   providers: [FireCalculatorService],
   selector: 'gf-fire-calculator',
-  standalone: true,
   styleUrls: ['./fire-calculator.component.scss'],
   templateUrl: './fire-calculator.component.html'
 })

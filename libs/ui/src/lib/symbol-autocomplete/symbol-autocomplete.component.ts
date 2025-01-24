@@ -69,7 +69,6 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
   ],
   selector: 'gf-symbol-autocomplete',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  standalone: true,
   styleUrls: ['./symbol-autocomplete.component.scss'],
   templateUrl: 'symbol-autocomplete.component.html'
 })

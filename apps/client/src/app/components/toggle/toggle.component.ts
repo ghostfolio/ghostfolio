@@ -14,7 +14,8 @@ import { FormControl } from '@angular/forms';
   selector: 'gf-toggle',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './toggle.component.html',
-  styleUrls: ['./toggle.component.scss']
+  styleUrls: ['./toggle.component.scss'],
+  standalone: false
 })
 export class ToggleComponent implements OnChanges {
   public static DEFAULT_DATE_RANGE_OPTIONS: ToggleOption[] = [

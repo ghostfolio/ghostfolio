@@ -22,7 +22,8 @@ import { CreateOrUpdateAccessDialogParams } from './interfaces/interfaces';
   host: { class: 'h-100' },
   selector: 'gf-create-or-update-access-dialog',
   styleUrls: ['./create-or-update-access-dialog.scss'],
-  templateUrl: 'create-or-update-access-dialog.html'
+  templateUrl: 'create-or-update-access-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateAccessDialog implements OnDestroy {
   public accessForm: FormGroup;
@@ -38,7 +39,7 @@ export class CreateOrUpdateAccessDialog implements OnDestroy {
     private notificationService: NotificationService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.accessForm = this.formBuilder.group({
       alias: [this.data.access.alias],
       permissions: [this.data.access.permissions[0], Validators.required],

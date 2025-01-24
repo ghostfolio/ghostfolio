@@ -20,7 +20,6 @@ import {
 import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { format } from 'date-fns';
-import got from 'got';
 
 @Injectable()
 export class RapidApiService implements DataProviderInterface {
@@ -135,13 +134,7 @@ export class RapidApiService implements DataProviderInterface {
     oneYearAgo: { value: number; valueText: string };
   }> {
     try {
-      const abortController = new AbortController();
-
-      setTimeout(() => {
-        abortController.abort();
-      }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-      const { fgi } = await got(
+      const { fgi } = await fetch(
         `https://fear-and-greed-index.p.rapidapi.com/v1/fgi`,
         {
           headers: {
@@ -149,19 +142,20 @@ export class RapidApiService implements DataProviderInterface {
             'x-rapidapi-host': 'fear-and-greed-index.p.rapidapi.com',
             'x-rapidapi-key': this.configurationService.get('API_KEY_RAPID_API')
           },
-          // @ts-ignore
-          signal: abortController.signal
+          signal: AbortSignal.timeout(
+            this.configurationService.get('REQUEST_TIMEOUT')
+          )
         }
-      ).json<any>();
+      ).then((res) => res.json());
 
       return fgi;
     } catch (error) {
       let message = error;
 
-      if (error?.code === 'ABORT_ERR') {
-        message = `RequestError: The operation was aborted because the request to the data provider took more than ${this.configurationService.get(
-          'REQUEST_TIMEOUT'
-        )}ms`;
+      if (error?.name === 'AbortError') {
+        message = `RequestError: The operation was aborted because the request to the data provider took more than ${(
+          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+        ).toFixed(3)} seconds`;
       }
 
       Logger.error(message, 'RapidApiService');

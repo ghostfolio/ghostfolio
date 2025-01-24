@@ -28,7 +28,8 @@ import { CreateOrUpdateAccountDialogParams } from './interfaces/interfaces';
   selector: 'gf-create-or-update-account-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-account-dialog.scss'],
-  templateUrl: 'create-or-update-account-dialog.html'
+  templateUrl: 'create-or-update-account-dialog.html',
+  standalone: false
 })
 export class CreateOrUpdateAccountDialog implements OnDestroy {
   public accountForm: FormGroup;

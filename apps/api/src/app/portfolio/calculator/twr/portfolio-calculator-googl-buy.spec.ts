@@ -20,7 +20,6 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
-import { last } from 'lodash';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -185,7 +184,7 @@ describe('PortfolioCalculator', () => {
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
-      expect(last(portfolioSnapshot.historicalData)).toMatchObject(
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
           netPerformance: new Big('26.33').mul(0.8854).toNumber(),
           netPerformanceInPercentage: 0.29544434470377019749,

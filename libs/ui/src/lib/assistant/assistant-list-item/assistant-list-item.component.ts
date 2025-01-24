@@ -20,7 +20,6 @@ import { Params, RouterModule } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [GfSymbolModule, RouterModule],
   selector: 'gf-assistant-list-item',
-  standalone: true,
   styleUrls: ['./assistant-list-item.scss'],
   templateUrl: './assistant-list-item.html'
 })

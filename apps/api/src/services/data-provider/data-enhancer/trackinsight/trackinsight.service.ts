@@ -7,7 +7,6 @@ import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { Injectable } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { countries } from 'countries-list';
-import got from 'got';
 
 @Injectable()
 export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
@@ -44,37 +43,25 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    let abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, requestTimeout);
-
-    const profile = await got(
+    const profile = await fetch(
       `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
       {
-        // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(requestTimeout)
       }
     )
-      .json<any>()
+      .then((res) => res.json())
       .catch(() => {
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-        return got(
+        return fetch(
           `${TrackinsightDataEnhancerService.baseUrl}/funds/${
             symbol.split('.')?.[0]
           }.json`,
           {
-            // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
         )
-          .json<any>()
+          .then((res) => res.json())
           .catch(() => {
             return {};
           });
@@ -86,37 +73,27 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       response.isin = isin;
     }
 
-    abortController = new AbortController();
-
-    setTimeout(() => {
-      abortController.abort();
-    }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-    const holdings = await got(
+    const holdings = await fetch(
       `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
       {
-        // @ts-ignore
-        signal: abortController.signal
+        signal: AbortSignal.timeout(
+          this.configurationService.get('REQUEST_TIMEOUT')
+        )
       }
     )
-      .json<any>()
+      .then((res) => res.json())
       .catch(() => {
-        const abortController = new AbortController();
-
-        setTimeout(() => {
-          abortController.abort();
-        }, this.configurationService.get('REQUEST_TIMEOUT'));
-
-        return got(
+        return fetch(
           `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
             symbol.split('.')?.[0]
           }.json`,
           {
-            // @ts-ignore
-            signal: abortController.signal
+            signal: AbortSignal.timeout(
+              this.configurationService.get('REQUEST_TIMEOUT')
+            )
           }
         )
-          .json<any>()
+          .then((res) => res.json())
           .catch(() => {
             return {};
           });

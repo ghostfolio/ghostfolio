@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  font-size: 0.9rem;
+
+  .date {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
+  }
+
+  .day {
+    height: 0.5rem;
+    margin-right: 0.25rem;
+    width: 0.5rem;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &.valid {
+      background-color: var(--danger);
+    }
+
+    &.available {
+      background-color: var(--success);
+    }
+
+    &.today {
+      background-color: rgba(var(--palette-accent-500), 1);
+    }
+  }
+}

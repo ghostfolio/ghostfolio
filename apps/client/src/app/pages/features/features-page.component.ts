@@ -19,7 +19,6 @@ import { Subject, takeUntil } from 'rxjs';
     RouterModule
   ],
   selector: 'gf-features-page',
-  standalone: true,
   styleUrls: ['./features-page.scss'],
   templateUrl: './features-page.html'
 })

@@ -32,7 +32,8 @@ import { catchError, takeUntil } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'gf-user-account-settings',
   styleUrls: ['./user-account-settings.scss'],
-  templateUrl: './user-account-settings.html'
+  templateUrl: './user-account-settings.html',
+  standalone: false
 })
 export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   public appearancePlaceholder = $localize`Auto`;
@@ -61,6 +62,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
     'pl',
     'pt',
     'tr',
+    'uk',
     'zh'
   ];
   public user: User;
@@ -117,7 +119,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
   }
 
   public isCommunityLanguage() {
-    return !(this.language === 'de' || this.language === 'en');
+    return !['de', 'en'].includes(this.language);
   }
 
   public onChangeUserSetting(aKey: string, aValue: string) {

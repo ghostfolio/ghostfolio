@@ -51,7 +51,6 @@ const {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-portfolio-proportion-chart',
-  standalone: true,
   styleUrls: ['./portfolio-proportion-chart.component.scss'],
   templateUrl: './portfolio-proportion-chart.component.html'
 })
@@ -78,7 +77,7 @@ export class GfPortfolioProportionChartComponent
 
   @ViewChild('chartCanvas') chartCanvas: ElementRef<HTMLCanvasElement>;
 
-  public chart: Chart<'pie'>;
+  public chart: Chart<'doughnut'>;
   public isLoading = true;
 
   private readonly OTHER_KEY = 'OTHER';
@@ -258,7 +257,7 @@ export class GfPortfolioProportionChartComponent
       });
     });
 
-    const datasets: ChartConfiguration['data']['datasets'] = [
+    const datasets: ChartConfiguration<'doughnut'>['data']['datasets'] = [
       {
         backgroundColor: chartDataSorted.map(([, item]) => {
           return item.color;
@@ -296,7 +295,7 @@ export class GfPortfolioProportionChartComponent
       datasets[1].data[1] = Number.MAX_SAFE_INTEGER;
     }
 
-    const data: ChartConfiguration['data'] = {
+    const data: ChartConfiguration<'doughnut'>['data'] = {
       datasets,
       labels
     };
@@ -309,7 +308,7 @@ export class GfPortfolioProportionChartComponent
         ) as unknown;
         this.chart.update();
       } else {
-        this.chart = new Chart(this.chartCanvas.nativeElement, {
+        this.chart = new Chart<'doughnut'>(this.chartCanvas.nativeElement, {
           data,
           options: {
             animation: false,

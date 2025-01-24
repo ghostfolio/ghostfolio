@@ -1,0 +1,74 @@
+<div>
+  @for (itemByMonth of marketDataByMonth | keyvalue; track itemByMonth) {
+    <div class="d-flex">
+      <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
+      <div class="align-items-center d-flex flex-grow-1 px-1">
+        @for (dayItem of days; track dayItem; let i = $index) {
+          <div
+            class="day"
+            [ngClass]="{
+              'cursor-pointer valid': isDateOfInterest(
+                itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+              ),
+              available:
+                marketDataByMonth[itemByMonth.key][
+                  i + 1 < 10 ? '0' + (i + 1) : i + 1
+                ]?.marketPrice,
+              today: isToday(
+                itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+              )
+            }"
+            [title]="
+              (itemByMonth.key + '-' + (i + 1 < 10 ? '0' + (i + 1) : i + 1)
+                | date: defaultDateFormat) ?? ''
+            "
+            (click)="
+              onOpenMarketDataDetail({
+                day: i + 1 < 10 ? '0' + (i + 1) : i + 1,
+                yearMonth: itemByMonth.key
+              })
+            "
+          ></div>
+        }
+      </div>
+    </div>
+  }
+  <form
+    class="d-flex flex-column h-100"
+    [formGroup]="historicalDataForm"
+    (ngSubmit)="onImportHistoricalData()"
+  >
+    <div class="mt-3" formGroupName="historicalData">
+      <mat-form-field appearance="outline" class="w-100 without-hint">
+        <mat-label>
+          <ng-container i18n>Historical Data</ng-container> (CSV)
+        </mat-label>
+        <textarea
+          cdkAutosizeMaxRows="5"
+          cdkTextareaAutosize
+          formControlName="csvString"
+          matInput
+          type="text"
+          (keyup.enter)="$event.stopPropagation()"
+        ></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="d-flex justify-content-end mt-2">
+      <button
+        color="accent"
+        mat-flat-button
+        type="button"
+        [disabled]="
+          !historicalDataForm.controls['historicalData']?.controls['csvString']
+            .touched ||
+          historicalDataForm.controls['historicalData']?.controls['csvString']
+            ?.value === ''
+        "
+        (click)="onImportHistoricalData()"
+      >
+        <ng-container i18n>Import</ng-container>
+      </button>
+    </div>
+  </form>
+</div>

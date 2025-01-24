@@ -8,6 +8,8 @@ import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { AccountClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/account-cluster-risk/current-investment';
 import { AccountClusterRiskSingleAccount } from '@ghostfolio/api/models/rules/account-cluster-risk/single-account';
+import { AssetClassClusterRiskEquity } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/equity';
+import { AssetClassClusterRiskFixedIncome } from '@ghostfolio/api/models/rules/asset-class-cluster-risk/fixed-income';
 import { CurrencyClusterRiskBaseCurrencyCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/base-currency-current-investment';
 import { CurrencyClusterRiskCurrentInvestment } from '@ghostfolio/api/models/rules/currency-cluster-risk/current-investment';
 import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/developed-markets';
@@ -38,7 +40,7 @@ import {
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPosition,
-  PortfolioReport,
+  PortfolioReportResponse,
   PortfolioSummary,
   Position,
   UserSettings
@@ -76,7 +78,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, last, uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 
 import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
@@ -1156,18 +1158,15 @@ export class PortfolioService {
       netWorth,
       totalInvestment,
       valueWithCurrencyEffect
-    } =
-      chart?.length > 0
-        ? last(chart)
-        : {
-            netPerformance: 0,
-            netPerformanceInPercentage: 0,
-            netPerformanceInPercentageWithCurrencyEffect: 0,
-            netPerformanceWithCurrencyEffect: 0,
-            netWorth: 0,
-            totalInvestment: 0,
-            valueWithCurrencyEffect: 0
-          };
+    } = chart?.at(-1) ?? {
+      netPerformance: 0,
+      netPerformanceInPercentage: 0,
+      netPerformanceInPercentageWithCurrencyEffect: 0,
+      netPerformanceWithCurrencyEffect: 0,
+      netWorth: 0,
+      totalInvestment: 0,
+      valueWithCurrencyEffect: 0
+    };
 
     return {
       chart,
@@ -1187,7 +1186,9 @@ export class PortfolioService {
   }
 
   @LogPerformance
-  public async getReport(impersonationId: string): Promise<PortfolioReport> {
+  public async getReport(
+    impersonationId: string
+  ): Promise<PortfolioReportResponse> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const userSettings = this.request.user.Settings.settings as UserSettings;
 
@@ -1204,79 +1205,95 @@ export class PortfolioService {
       })
     ).toNumber();
 
-    return {
-      rules: {
-        accountClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new AccountClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    accounts
-                  ),
-                  new AccountClusterRiskSingleAccount(
-                    this.exchangeRateDataService,
-                    accounts
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        economicMarketClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new EconomicMarketClusterRiskDevelopedMarkets(
-                    this.exchangeRateDataService,
-                    marketsTotalInBaseCurrency,
-                    markets.developedMarkets.valueInBaseCurrency
-                  ),
-                  new EconomicMarketClusterRiskEmergingMarkets(
-                    this.exchangeRateDataService,
-                    marketsTotalInBaseCurrency,
-                    markets.emergingMarkets.valueInBaseCurrency
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        currencyClusterRisk:
-          summary.ordersCount > 0
-            ? await this.rulesService.evaluate(
-                [
-                  new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
-                    this.exchangeRateDataService,
-                    Object.values(holdings)
-                  ),
-                  new CurrencyClusterRiskCurrentInvestment(
-                    this.exchangeRateDataService,
-                    Object.values(holdings)
-                  )
-                ],
-                userSettings
-              )
-            : undefined,
-        emergencyFund: await this.rulesService.evaluate(
-          [
-            new EmergencyFundSetup(
-              this.exchangeRateDataService,
-              userSettings.emergencyFund
+    const rules: PortfolioReportResponse['rules'] = {
+      accountClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new AccountClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  accounts
+                ),
+                new AccountClusterRiskSingleAccount(
+                  this.exchangeRateDataService,
+                  accounts
+                )
+              ],
+              userSettings
             )
-          ],
-          userSettings
-        ),
-        fees: await this.rulesService.evaluate(
-          [
-            new FeeRatioInitialInvestment(
-              this.exchangeRateDataService,
-              summary.committedFunds,
-              summary.fees
+          : undefined,
+      assetClassClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new AssetClassClusterRiskEquity(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                ),
+                new AssetClassClusterRiskFixedIncome(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                )
+              ],
+              userSettings
             )
-          ],
-          userSettings
-        )
-      }
+          : undefined,
+      currencyClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                ),
+                new CurrencyClusterRiskCurrentInvestment(
+                  this.exchangeRateDataService,
+                  Object.values(holdings)
+                )
+              ],
+              userSettings
+            )
+          : undefined,
+      economicMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new EconomicMarketClusterRiskDevelopedMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.developedMarkets.valueInBaseCurrency
+                ),
+                new EconomicMarketClusterRiskEmergingMarkets(
+                  this.exchangeRateDataService,
+                  marketsTotalInBaseCurrency,
+                  markets.emergingMarkets.valueInBaseCurrency
+                )
+              ],
+              userSettings
+            )
+          : undefined,
+      emergencyFund: await this.rulesService.evaluate(
+        [
+          new EmergencyFundSetup(
+            this.exchangeRateDataService,
+            userSettings.emergencyFund
+          )
+        ],
+        userSettings
+      ),
+      fees: await this.rulesService.evaluate(
+        [
+          new FeeRatioInitialInvestment(
+            this.exchangeRateDataService,
+            summary.committedFunds,
+            summary.fees
+          )
+        ],
+        userSettings
+      )
     };
+
+    return { rules, statistics: this.getReportStatistics(rules) };
   }
 
   @LogPerformance
@@ -1695,6 +1712,25 @@ export class PortfolioService {
       .toNumber();
 
     return { markets, marketsAdvanced };
+  }
+
+  @LogPerformance
+  private getReportStatistics(
+    evaluatedRules: PortfolioReportResponse['rules']
+  ): PortfolioReportResponse['statistics'] {
+    const rulesActiveCount = Object.values(evaluatedRules)
+      .flat()
+      .filter((rule) => {
+        return rule?.isActive === true;
+      }).length;
+
+    const rulesFulfilledCount = Object.values(evaluatedRules)
+      .flat()
+      .filter((rule) => {
+        return rule?.value === true;
+      }).length;
+
+    return { rulesActiveCount, rulesFulfilledCount };
   }
 
   @LogPerformance

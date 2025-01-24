@@ -24,7 +24,8 @@ import { isNumber } from 'lodash';
   selector: 'gf-portfolio-performance',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './portfolio-performance.component.html',
-  styleUrls: ['./portfolio-performance.component.scss']
+  styleUrls: ['./portfolio-performance.component.scss'],
+  standalone: false
 })
 export class PortfolioPerformanceComponent implements OnChanges {
   @Input() deviceType: string;

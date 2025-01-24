@@ -1,6 +1,6 @@
 import * as currencies from '@dinero.js/currencies';
 import { NumberParser } from '@internationalized/number';
-import { DataSource, MarketData, Type as ActivityType } from '@prisma/client';
+import { Type as ActivityType, DataSource, MarketData } from '@prisma/client';
 import { Big } from 'big.js';
 import {
   getDate,
@@ -11,7 +11,7 @@ import {
   parseISO,
   subDays
 } from 'date-fns';
-import { ca, de, es, fr, it, nl, pl, pt, tr, zhCN } from 'date-fns/locale';
+import { ca, de, es, fr, it, nl, pl, pt, tr, uk, zhCN } from 'date-fns/locale';
 
 import {
   DEFAULT_CURRENCY,
@@ -192,6 +192,8 @@ export function getDateFnsLocale(aLanguageCode: string) {
     return pt;
   } else if (aLanguageCode === 'tr') {
     return tr;
+  } else if (aLanguageCode === 'uk') {
+    return uk;
   } else if (aLanguageCode === 'zh') {
     return zhCN;
   }

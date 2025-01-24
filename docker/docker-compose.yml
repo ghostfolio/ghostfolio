@@ -3,6 +3,7 @@ services:
   ghostfolio:
     image: docker.io/ghostfolio/ghostfolio:latest
     container_name: ghostfolio
+    restart: unless-stopped
     init: true
     cap_drop:
       - ALL
@@ -10,10 +11,6 @@ services:
       - no-new-privileges:true
     env_file:
       - ../.env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?connect_timeout=300&sslmode=prefer
-      REDIS_HOST: redis
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
     ports:
       - 3333:3333
     depends_on:
@@ -28,8 +25,9 @@ services:
       retries: 5
 
   postgres:
-    image: docker.io/library/postgres:15
+    image: docker.io/library/postgres:15-alpine
     container_name: gf-postgres
+    restart: unless-stopped
     cap_drop:
       - ALL
     cap_add:
@@ -43,7 +41,8 @@ services:
     env_file:
       - ../.env
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}']
+      test:
+        ['CMD-SHELL', 'pg_isready -d "$${POSTGRES_DB}" -U $${POSTGRES_USER}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -53,6 +52,7 @@ services:
   redis:
     image: docker.io/library/redis:alpine
     container_name: gf-redis
+    restart: unless-stopped
     user: '999:1000'
     cap_drop:
       - ALL
@@ -60,9 +60,13 @@ services:
       - no-new-privileges:true
     env_file:
       - ../.env
-    command: ['redis-server', '--requirepass', $REDIS_PASSWORD]
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
     healthcheck:
-      test: ['CMD-SHELL', 'redis-cli --pass "$REDIS_PASSWORD" ping | grep PONG']
+      test:
+        ['CMD-SHELL', 'redis-cli --pass "$${REDIS_PASSWORD}" ping | grep PONG']
       interval: 10s
       timeout: 5s
       retries: 5
