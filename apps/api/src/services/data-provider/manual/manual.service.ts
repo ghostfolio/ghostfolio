@@ -282,7 +282,7 @@ export class ManualService implements DataProviderInterface {
       )
     });
 
-    if (response.headers['content-type']?.includes('application/json')) {
+    if (response.headers.get('content-type')?.includes('application/json')) {
       const data = await response.json();
 
       const value = String(
