@@ -177,9 +177,13 @@ export class SymbolProfileService {
           symbolProfile?.countries as unknown as Prisma.JsonArray
         ),
         dateOfFirstActivity: undefined as Date,
-        holdings: this.getHoldings(symbolProfile),
+        holdings: this.getHoldings(
+          symbolProfile?.holdings as unknown as Prisma.JsonArray
+        ),
         scraperConfiguration: this.getScraperConfiguration(symbolProfile),
-        sectors: this.getSectors(symbolProfile),
+        sectors: this.getSectors(
+          symbolProfile?.sectors as unknown as Prisma.JsonArray
+        ),
         symbolMapping: this.getSymbolMapping(symbolProfile)
       };
 
@@ -209,8 +213,9 @@ export class SymbolProfileService {
           (item.SymbolProfileOverrides.holdings as unknown as Holding[])
             ?.length > 0
         ) {
-          item.holdings = item.SymbolProfileOverrides
-            .holdings as unknown as Holding[];
+          item.holdings = this.getHoldings(
+            item.SymbolProfileOverrides?.holdings as unknown as Prisma.JsonArray
+          );
         }
 
         item.name = item.SymbolProfileOverrides?.name ?? item.name;
@@ -219,8 +224,9 @@ export class SymbolProfileService {
           (item.SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
           0
         ) {
-          item.sectors = item.SymbolProfileOverrides
-            .sectors as unknown as Sector[];
+          item.sectors = this.getSectors(
+            item.SymbolProfileOverrides?.sectors as unknown as Prisma.JsonArray
+          );
         }
 
         item.url = item.SymbolProfileOverrides?.url ?? item.url;
@@ -249,18 +255,20 @@ export class SymbolProfileService {
     });
   }
 
-  private getHoldings(symbolProfile: SymbolProfile): Holding[] {
-    return ((symbolProfile?.holdings as Prisma.JsonArray) ?? []).map(
-      (holding) => {
-        const { name, weight } = holding as Prisma.JsonObject;
+  private getHoldings(aHoldings: Prisma.JsonArray = []): Holding[] {
+    if (aHoldings === null) {
+      return [];
+    }
 
-        return {
-          allocationInPercentage: weight as number,
-          name: (name as string) ?? UNKNOWN_KEY,
-          valueInBaseCurrency: undefined
-        };
-      }
-    );
+    return aHoldings.map((holding) => {
+      const { name, weight } = holding as Prisma.JsonObject;
+
+      return {
+        allocationInPercentage: weight as number,
+        name: (name as string) ?? UNKNOWN_KEY,
+        valueInBaseCurrency: undefined
+      };
+    });
   }
 
   private getScraperConfiguration(
@@ -285,17 +293,19 @@ export class SymbolProfileService {
     return null;
   }
 
-  private getSectors(symbolProfile: SymbolProfile): Sector[] {
-    return ((symbolProfile?.sectors as Prisma.JsonArray) ?? []).map(
-      (sector) => {
-        const { name, weight } = sector as Prisma.JsonObject;
+  private getSectors(aSectors: Prisma.JsonArray = []): Sector[] {
+    if (aSectors === null) {
+      return [];
+    }
 
-        return {
-          name: (name as string) ?? UNKNOWN_KEY,
-          weight: weight as number
-        };
-      }
-    );
+    return aSectors.map((sector) => {
+      const { name, weight } = sector as Prisma.JsonObject;
+
+      return {
+        name: (name as string) ?? UNKNOWN_KEY,
+        weight: weight as number
+      };
+    });
   }
 
   private getSymbolMapping(symbolProfile: SymbolProfile) {
