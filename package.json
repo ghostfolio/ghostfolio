@@ -213,6 +213,6 @@
     "node": ">=20"
   },
   "prisma": {
-    "seed": "node prisma/seed.js"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
