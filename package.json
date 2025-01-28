@@ -93,7 +93,7 @@
     "alphavantage": "2.2.0",
     "big.js": "6.2.2",
     "bootstrap": "4.6.0",
-    "bull": "4.16.4",
+    "bull": "4.16.5",
     "cache-manager": "6.4.0",
     "cache-manager-redis-yet": "5.1.4",
     "chart.js": "4.4.7",
