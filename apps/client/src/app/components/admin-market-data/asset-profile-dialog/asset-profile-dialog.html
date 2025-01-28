@@ -282,6 +282,12 @@
         <mat-accordion class="my-3">
           <mat-expansion-panel
             class="shadow-none"
+            [expanded]="
+              assetProfileForm.controls.scraperConfiguration.controls.selector
+                .value !== '' &&
+              assetProfileForm.controls.scraperConfiguration.controls.url
+                .value !== ''
+            "
             (closed)="scraperConfiguationIsExpanded.set(false)"
             (opened)="scraperConfiguationIsExpanded.set(true)"
           >
@@ -331,7 +337,9 @@
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
-                  <mat-label i18n>Selector</mat-label>
+                  <mat-label>
+                    <ng-container i18n>Selector</ng-container>*
+                  </mat-label>
                   <textarea
                     cdkTextareaAutosize
                     formControlName="selector"
@@ -342,7 +350,9 @@
               </div>
               <div class="mt-3">
                 <mat-form-field appearance="outline" class="w-100 without-hint">
-                  <mat-label i18n>Url</mat-label>
+                  <mat-label>
+                    <ng-container i18n>Url</ng-container>*
+                  </mat-label>
                   <input formControlName="url" matInput type="text" />
                 </mat-form-field>
               </div>
@@ -353,15 +363,7 @@
                   type="button"
                   [disabled]="
                     assetProfileForm.controls.scraperConfiguration.controls
-                      .defaultMarketPrice.value === null &&
-                    assetProfileForm.controls.scraperConfiguration.controls
-                      .headers.value === '{}' &&
-                    assetProfileForm.controls.scraperConfiguration.controls
-                      .locale.value === '' &&
-                    !assetProfileForm.controls.scraperConfiguration.controls
-                      .mode.dirty &&
-                    assetProfileForm.controls.scraperConfiguration.controls
-                      .selector.value === '' &&
+                      .selector.value === '' ||
                     assetProfileForm.controls.scraperConfiguration.controls.url
                       .value === ''
                   "
