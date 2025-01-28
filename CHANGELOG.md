@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extracted the scraper configuration to a sub form in the asset profile details dialog of the admin control
 - Migrated the database seeding to _TypeScript_
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
 - Upgraded `bull` from version `4.16.4` to `4.16.5`
