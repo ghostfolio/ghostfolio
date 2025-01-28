@@ -1189,19 +1189,6 @@ export class PortfolioService {
     ).toNumber();
 
     const rules: PortfolioReportResponse['rules'] = {
-      RegionalMarketClusterRiskNorthAmerica:
-        summary.ordersCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new RegionalMarketClusterRiskNorthAmerica(
-                  this.exchangeRateDataService,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced['northAmerica']
-                )
-              ],
-              userSettings
-            )
-          : undefined,
       accountClusterRisk:
         summary.ordersCount > 0
           ? await this.rulesService.evaluate(
@@ -1263,6 +1250,19 @@ export class PortfolioService {
                   this.exchangeRateDataService,
                   marketsTotalInBaseCurrency,
                   markets.emergingMarkets.valueInBaseCurrency
+                )
+              ],
+              userSettings
+            )
+          : undefined,
+      regionalMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new RegionalMarketClusterRiskNorthAmerica(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.northAmerica.valueInBaseCurrency
                 )
               ],
               userSettings
