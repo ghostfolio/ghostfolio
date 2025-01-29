@@ -15,7 +15,8 @@ export class TagService {
               where: {
                 userId
               }
-            }
+            },
+            symbolProfile: {}
           }
         }
       },
@@ -34,11 +35,11 @@ export class TagService {
       }
     });
 
-    return tags.map(({ _count, id, name, userId }) => ({
+    return tags.map(({ id, name, userId }) => ({
       id,
       name,
       userId,
-      isUsed: _count.orders > 0
+      isUsed: true
     }));
   }
 }
