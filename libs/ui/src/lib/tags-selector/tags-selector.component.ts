@@ -44,6 +44,7 @@ import { Tag } from '@prisma/client';
 export class GfTagsSelectorComponent implements OnInit {
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
+  @Input() withoutHint: boolean;
 
   @Output() tagsChanged = new EventEmitter<Tag[]>();
 
