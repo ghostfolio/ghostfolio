@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `bull` from version `4.16.4` to `4.16.5`
 - Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
 
+### Fixed
+
+- Fixed the dynamic numerical precision for cryptocurrencies in the holding detail dialog
+
 ## 2.136.0 - 2025-01-24
 
 ### Added
