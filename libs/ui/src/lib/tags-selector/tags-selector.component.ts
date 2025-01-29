@@ -21,7 +21,6 @@ import {
 } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Tag } from '@prisma/client';
 
@@ -31,10 +30,9 @@ import { Tag } from '@prisma/client';
     CommonModule,
     FormsModule,
     MatAutocompleteModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatChipsModule,
-    MatIconModule
+    MatFormFieldModule,
+    MatInputModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
