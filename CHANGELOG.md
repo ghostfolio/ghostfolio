@@ -11,6 +11,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (North America)
 
+### Changed
+
+- Migrated the database seeding to _TypeScript_
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
+- Upgraded `bull` from version `4.16.4` to `4.16.5`
+- Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
+
+### Fixed
+
+- Fixed the dynamic numerical precision for cryptocurrencies in the holding detail dialog
+
+## 2.136.0 - 2025-01-24
+
+### Added
+
+- Set up a _GitHub Action_ to automatically extract locales when the `main` branch changes
+
+### Changed
+
+- Extended the _Financial Modeling Prep_ service
+- Improved the language localization for Ukrainian (`uk`)
+- Refreshed the cryptocurrencies list
+- Upgraded `date-fns` from version `3.6.0` to `4.1.0`
+- Upgraded `rxjs` from version `7.5.6` to `7.8.1`
+
+### Fixed
+
+- Fixed an issue with the detection of the thousand separator by locale
+- Fixed an issue with holdings and sectors while using symbol profile overrides
+- Fixed an issue with the MIME type detection in the scraper configuration
+
+## 2.135.0 - 2025-01-19
+
+### Changed
+
+- Moved the language localization for Polski (`pl`) from experimental to general availability
+- Extended the _Financial Modeling Prep_ service
+- Switched to _ESLint_’s flat config format
+- Upgraded `bull` from version `4.16.2` to `4.16.4`
+- Upgraded `chart.js` from version `4.2.0` to `4.4.7`
+- Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
+- Upgraded `chartjs-plugin-annotation` from version `2.1.2` to `3.1.0`
+- Upgraded `eslint` dependencies
+- Upgraded `nestjs` from version `10.1.3` to `10.4.15`
+- Upgraded `Nx` from version `20.3.0` to `20.3.2`
+- Upgraded `reflect-metadata` from version `0.1.13` to `0.2.2`
+- Upgraded `uuid` from version `11.0.2` to `11.0.5`
+
 ## 2.134.0 - 2025-01-15
 
 ### Added
