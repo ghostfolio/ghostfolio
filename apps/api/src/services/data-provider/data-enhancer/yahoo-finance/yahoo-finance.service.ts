@@ -197,10 +197,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         assetProfile.price.symbol
       );
 
-      if (
-        assetSubClass === AssetSubClass.ETF ||
-        assetSubClass === AssetSubClass.MUTUALFUND
-      ) {
+      if (['ETF', 'MUTUALFUND'].includes(assetSubClass)) {
         response.sectors = [];
 
         for (const sectorWeighting of assetProfile.topHoldings
@@ -210,7 +207,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           }
         }
       } else if (
-        assetSubClass === AssetSubClass.STOCK &&
+        assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country
       ) {
         // Add country if asset is stock and country available
