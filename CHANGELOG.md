@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the database seeding to _TypeScript_
+- Improved the language localization for German (`de`)
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
 - Upgraded `bull` from version `4.16.4` to `4.16.5`
 - Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
