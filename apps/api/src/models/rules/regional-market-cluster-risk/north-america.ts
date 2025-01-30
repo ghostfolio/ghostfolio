@@ -5,7 +5,7 @@ import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
-  private regionalMarketNorthAmericaValueInBaseCurrency: number;
+  private northAmericaValueInBaseCurrency: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
@@ -14,27 +14,28 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
   ) {
     super(exchangeRateDataService, {
       key: RegionalMarketClusterRiskNorthAmerica.name,
-      name: 'Regional Markets'
+      name: 'North America'
     });
+
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
-    this.regionalMarketNorthAmericaValueInBaseCurrency = valueInBaseCurrency;
+    this.northAmericaValueInBaseCurrency = valueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
     const northAmericaMarketValueRatio = this.currentValueInBaseCurrency
-      ? this.regionalMarketNorthAmericaValueInBaseCurrency /
-        this.currentValueInBaseCurrency
+      ? this.northAmericaValueInBaseCurrency / this.currentValueInBaseCurrency
       : 0;
+
     if (northAmericaMarketValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The north america market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
+        evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
           ruleSettings.thresholdMax * 100
         ).toPrecision(3)}%`,
         value: false
       };
     } else if (northAmericaMarketValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The north america market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is below ${(
+        evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is below ${(
           ruleSettings.thresholdMin * 100
         ).toPrecision(3)}%`,
         value: false
@@ -42,7 +43,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     }
 
     return {
-      evaluation: `The north america market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
+      evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
         ruleSettings.thresholdMin * 100
       ).toPrecision(
         3

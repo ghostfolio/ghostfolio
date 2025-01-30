@@ -261,11 +261,6 @@ export class UserService {
           undefined,
           undefined
         ).getSettings(user.Settings.settings),
-      RegionalMarketClusterRisk: new RegionalMarketClusterRiskNorthAmerica(
-        undefined,
-        undefined,
-        undefined
-      ).getSettings(user.Settings.settings),
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
         undefined
@@ -274,7 +269,13 @@ export class UserService {
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings)
+      ).getSettings(user.Settings.settings),
+      RegionalMarketClusterRiskNorthAmerica:
+        new RegionalMarketClusterRiskNorthAmerica(
+          undefined,
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings)
     };
 
     let currentPermissions = getPermissions(user.role);

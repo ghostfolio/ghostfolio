@@ -7,9 +7,9 @@ export interface XRayRulesSettings {
   CurrencyClusterRiskCurrentInvestment?: RuleSettings;
   EconomicMarketClusterRiskDevelopedMarkets?: RuleSettings;
   EconomicMarketClusterRiskEmergingMarkets?: RuleSettings;
-  RegionalMarketClusterRisk?: RuleSettings;
   EmergencyFundSetup?: RuleSettings;
   FeeRatioInitialInvestment?: RuleSettings;
+  RegionalMarketClusterRiskNorthAmerica?: RuleSettings;
 }
 
 interface RuleSettings {

@@ -1176,14 +1176,14 @@ export class PortfolioService {
         withSummary: true
       });
 
-    const marketsTotalInBaseCurrency = getSum(
-      Object.values(markets).map(({ valueInBaseCurrency }) => {
+    const marketsAdvancedTotalInBaseCurrency = getSum(
+      Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
         return new Big(valueInBaseCurrency);
       })
     ).toNumber();
 
-    const marketsAdvancedTotalInBaseCurrency = getSum(
-      Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
+    const marketsTotalInBaseCurrency = getSum(
+      Object.values(markets).map(({ valueInBaseCurrency }) => {
         return new Big(valueInBaseCurrency);
       })
     ).toNumber();
@@ -1255,19 +1255,6 @@ export class PortfolioService {
               userSettings
             )
           : undefined,
-      regionalMarketClusterRisk:
-        summary.ordersCount > 0
-          ? await this.rulesService.evaluate(
-              [
-                new RegionalMarketClusterRiskNorthAmerica(
-                  this.exchangeRateDataService,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.northAmerica.valueInBaseCurrency
-                )
-              ],
-              userSettings
-            )
-          : undefined,
       emergencyFund: await this.rulesService.evaluate(
         [
           new EmergencyFundSetup(
@@ -1286,7 +1273,20 @@ export class PortfolioService {
           )
         ],
         userSettings
-      )
+      ),
+      regionalMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new RegionalMarketClusterRiskNorthAmerica(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.northAmerica.valueInBaseCurrency
+                )
+              ],
+              userSettings
+            )
+          : undefined
     };
 
     return { rules, statistics: this.getReportStatistics(rules) };
