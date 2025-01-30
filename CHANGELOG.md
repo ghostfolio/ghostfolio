@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (North America)
+
 ### Changed
 
 - Migrated the database seeding to _TypeScript_
