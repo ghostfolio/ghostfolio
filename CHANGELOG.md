@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for ETF sector data in the _Yahoo Finance_ data enhancer
+
 ### Changed
 
 - Migrated the database seeding to _TypeScript_
