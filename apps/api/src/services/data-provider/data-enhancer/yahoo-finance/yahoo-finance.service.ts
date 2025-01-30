@@ -197,7 +197,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         assetProfile.price.symbol
       );
 
-      if (assetSubClass in [AssetSubClass.ETF, AssetSubClass.MUTUALFUND]) {
+      if (
+        assetSubClass === AssetSubClass.ETF ||
+        assetSubClass === AssetSubClass.MUTUALFUND
+      ) {
         response.sectors = [];
 
         for (const sectorWeighting of assetProfile.topHoldings
