@@ -17,7 +17,7 @@
     }
     <input
       #tagInput
-      name="close-outline"
+      [formControl]="tagInputControl"
       [matAutocomplete]="autocompleteTags"
       [matChipInputFor]="tagsChipList"
       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -27,7 +27,7 @@
     #autocompleteTags="matAutocomplete"
     (optionSelected)="onAddTag($event)"
   >
-    @for (tag of tagsUnselected(); track tag.id) {
+    @for (tag of filteredOptions | async; track tag.id) {
       <mat-option [value]="tag.id">
         {{ tag.name }}
       </mat-option>

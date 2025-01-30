@@ -3,18 +3,18 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   signal,
   ViewChild
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent
@@ -23,6 +23,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Tag } from '@prisma/client';
+import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,14 +33,15 @@ import { Tag } from '@prisma/client';
     MatAutocompleteModule,
     MatChipsModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    ReactiveFormsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
   styleUrls: ['./tags-selector.component.scss'],
   templateUrl: 'tags-selector.component.html'
 })
-export class GfTagsSelectorComponent implements OnInit {
+export class GfTagsSelectorComponent implements OnInit, OnDestroy {
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
   @Input() withoutHint: boolean;
@@ -48,12 +50,12 @@ export class GfTagsSelectorComponent implements OnInit {
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
+  public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
+  public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
   public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
-  public readonly tagsUnselected = computed(() => {
-    const tags = this.tagsSelected();
-    return tags ? this.filterTags(tags) : this.tagsAvailable.slice();
-  });
+
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor() {
     effect(() => {
@@ -61,10 +63,21 @@ export class GfTagsSelectorComponent implements OnInit {
         this.tagsChanged.emit(this.tagsSelected());
       }
     });
+    this.tagInputControl.valueChanges
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((value) => {
+        this.filteredOptions.next(this.filterTags(value));
+      });
   }
 
   public ngOnInit() {
     this.tagsSelected.set(this.tags);
+    this.updateFilters();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
@@ -75,6 +88,7 @@ export class GfTagsSelectorComponent implements OnInit {
       return [...(tags ?? []), tag];
     });
     this.tagInput.nativeElement.value = '';
+    this.tagInputControl.setValue(undefined);
   }
 
   public onRemoveTag(tag: Tag) {
@@ -83,15 +97,23 @@ export class GfTagsSelectorComponent implements OnInit {
         return id !== tag.id;
       });
     });
+    this.updateFilters();
   }
 
-  private filterTags(tagsSelected: Tag[]) {
-    const tagIds = tagsSelected.map(({ id }) => {
+  private filterTags(query: string = ''): Tag[] {
+    const tags = this.tagsSelected() ?? [];
+    const tagIds = tags.map(({ id }) => {
       return id;
     });
 
-    return this.tagsAvailable.filter(({ id }) => {
-      return !tagIds.includes(id);
+    return this.tagsAvailable.filter(({ id, name }) => {
+      return (
+        !tagIds.includes(id) && name.toLowerCase().includes(query.toLowerCase())
+      );
     });
+  }
+
+  private updateFilters() {
+    this.filteredOptions.next(this.filterTags());
   }
 }
