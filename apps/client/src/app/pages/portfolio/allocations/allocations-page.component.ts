@@ -7,6 +7,7 @@ import { MAX_TOP_HOLDINGS, UNKNOWN_KEY } from '@ghostfolio/common/config';
 import { prettifySymbol } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
+  Holding,
   HoldingWithParents,
   PortfolioDetails,
   PortfolioPosition,
