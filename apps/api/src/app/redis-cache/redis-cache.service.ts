@@ -4,7 +4,6 @@ import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-// import { Milliseconds } from 'cache-manager';
 import { RedisCache } from 'cache-manager-redis-yet';
 import { createHash } from 'crypto';
 import ms from 'ms';
