@@ -177,6 +177,7 @@ export class PortfolioController {
           ? portfolioPosition.markets
           : undefined;
         portfolioPosition.sectors = hasDetails ? portfolioPosition.sectors : [];
+        portfolioPosition.tags = hasDetails ? portfolioPosition.tags : [];
       }
 
       for (const [name, { valueInBaseCurrency }] of Object.entries(accounts)) {
@@ -243,6 +244,7 @@ export class PortfolioController {
         currency: hasDetails ? portfolioPosition.currency : undefined,
         holdings: hasDetails ? portfolioPosition.holdings : [],
         markets: hasDetails ? portfolioPosition.markets : undefined,
+        tags: hasDetails ? portfolioPosition.tags : [],
         marketsAdvanced: hasDetails
           ? portfolioPosition.marketsAdvanced
           : undefined,
