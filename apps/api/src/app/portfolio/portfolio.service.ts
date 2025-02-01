@@ -78,7 +78,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty, uniq, uniqBy } from 'lodash';
 
 import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
@@ -486,13 +486,17 @@ export class PortfolioService {
         }));
       }
 
+      const tagsInternal = tags.concat(
+        symbolProfiles.find((sp) => sp.symbol === symbol)?.tags ?? []
+      );
+
       holdings[symbol] = {
         currency,
         markets,
         marketsAdvanced,
         marketPrice,
         symbol,
-        tags,
+        tags: uniqBy(tagsInternal, 'id'),
         transactionCount,
         allocationInPercentage: filteredValueInBaseCurrency.eq(0)
           ? 0
