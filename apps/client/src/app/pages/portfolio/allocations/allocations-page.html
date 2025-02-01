@@ -330,6 +330,24 @@
       <mat-card appearance="outlined" class="mb-3">
         <mat-card-header class="overflow-hidden w-100">
           <mat-card-title class="align-items-center d-flex text-truncate">
+            <span i18n>By Tag Holding</span>
+            @if (user?.subscription?.type === 'Basic') {
+              <gf-premium-indicator class="ml-1" />
+            }
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <gf-top-holdings
+            [baseCurrency]="user?.settings?.baseCurrency"
+            [locale]="user?.settings?.locale"
+            [pageSize]="10"
+            [topHoldings]="tagHoldings"
+          />
+        </mat-card-content>
+      </mat-card>
+      <mat-card appearance="outlined" class="mb-3">
+        <mat-card-header class="overflow-hidden w-100">
+          <mat-card-title class="align-items-center d-flex text-truncate">
             <span i18n>By ETF Holding</span>
             @if (user?.subscription?.type === 'Basic') {
               <gf-premium-indicator class="ml-1" />
