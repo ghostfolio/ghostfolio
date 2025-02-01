@@ -416,10 +416,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
-  }
-
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(['/portfolio', 'activities'], {
       queryParams: { activityId: aActivity.id, createDialog: true }
@@ -450,6 +446,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           format: 'json'
         });
       });
+  }
+
+  public onTagsChanged(tags: Tag[]) {
+    this.activityForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {

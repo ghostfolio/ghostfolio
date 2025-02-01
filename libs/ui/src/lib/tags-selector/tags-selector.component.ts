@@ -44,7 +44,6 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 export class GfTagsSelectorComponent implements OnInit, OnDestroy {
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
-  @Input() withoutHint: boolean;
 
   @Output() tagsChanged = new EventEmitter<Tag[]>();
 
@@ -63,6 +62,7 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
         this.tagsChanged.emit(this.tagsSelected());
       }
     });
+
     this.tagInputControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((value) => {
@@ -84,9 +84,11 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
     const tag = this.tagsAvailable.find(({ id }) => {
       return id === event.option.value;
     });
+
     this.tagsSelected.update((tags) => {
       return [...(tags ?? []), tag];
     });
+
     this.tagInput.nativeElement.value = '';
     this.tagInputControl.setValue(undefined);
   }
@@ -97,6 +99,7 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
         return id !== tag.id;
       });
     });
+
     this.updateFilters();
   }
 

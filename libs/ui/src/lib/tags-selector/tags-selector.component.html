@@ -1,8 +1,4 @@
-<mat-form-field
-  appearance="outline"
-  class="w-100"
-  [ngClass]="{ 'without-hint': this.withoutHint }"
->
+<mat-form-field appearance="outline" class="w-100 without-hint">
   <mat-label i18n>Tags</mat-label>
   <mat-chip-grid #tagsChipList>
     @for (tag of tagsSelected(); track tag.id) {

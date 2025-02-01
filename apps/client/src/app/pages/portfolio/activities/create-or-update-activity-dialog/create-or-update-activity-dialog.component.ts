@@ -422,10 +422,6 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return isAfter(aDate, new Date(0));
   }
 
-  public onTagsChanged(tags: Tag[]) {
-    this.activityForm.get('tags').setValue(tags);
-  }
-
   public onCancel() {
     this.dialogRef.close();
   }
@@ -483,6 +479,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  public onTagsChanged(tags: Tag[]) {
+    this.activityForm.get('tags').setValue(tags);
   }
 
   public ngOnDestroy() {
