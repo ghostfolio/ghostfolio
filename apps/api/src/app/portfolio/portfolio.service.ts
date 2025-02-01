@@ -15,6 +15,7 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
@@ -1167,12 +1168,19 @@ export class PortfolioService {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const userSettings = this.request.user.Settings.settings as UserSettings;
 
-    const { accounts, holdings, markets, summary } = await this.getDetails({
-      impersonationId,
-      userId,
-      withMarkets: true,
-      withSummary: true
-    });
+    const { accounts, holdings, markets, marketsAdvanced, summary } =
+      await this.getDetails({
+        impersonationId,
+        userId,
+        withMarkets: true,
+        withSummary: true
+      });
+
+    const marketsAdvancedTotalInBaseCurrency = getSum(
+      Object.values(marketsAdvanced).map(({ valueInBaseCurrency }) => {
+        return new Big(valueInBaseCurrency);
+      })
+    ).toNumber();
 
     const marketsTotalInBaseCurrency = getSum(
       Object.values(markets).map(({ valueInBaseCurrency }) => {
@@ -1265,7 +1273,20 @@ export class PortfolioService {
           )
         ],
         userSettings
-      )
+      ),
+      regionalMarketClusterRisk:
+        summary.ordersCount > 0
+          ? await this.rulesService.evaluate(
+              [
+                new RegionalMarketClusterRiskNorthAmerica(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.northAmerica.valueInBaseCurrency
+                )
+              ],
+              userSettings
+            )
+          : undefined
     };
 
     return { rules, statistics: this.getReportStatistics(rules) };
