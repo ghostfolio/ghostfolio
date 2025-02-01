@@ -7682,7 +7682,7 @@
       </trans-unit>
       <trans-unit id="8540986733881734625" datatype="html">
         <source>Lazy</source>
-        <target state="new">Lazy</target>
+        <target state="translated">Verzögert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -7690,7 +7690,7 @@
       </trans-unit>
       <trans-unit id="6882618704933649036" datatype="html">
         <source>Instant</source>
-        <target state="new">Instant</target>
+        <target state="translated">Sofort</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">92</context>
@@ -7698,7 +7698,7 @@
       </trans-unit>
       <trans-unit id="47969a4a0916bea5385b42c18749e32a35f07bd7" datatype="html">
         <source>Default Market Price</source>
-        <target state="new">Default Market Price</target>
+        <target state="translated">Standardmarktpreis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">300</context>
@@ -7714,7 +7714,7 @@
       </trans-unit>
       <trans-unit id="37e10df2d9c0c25ef04ac112c9c9a7723e8efae0" datatype="html">
         <source>Mode</source>
-        <target state="new">Mode</target>
+        <target state="translated">Modus</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">328</context>
@@ -7722,7 +7722,7 @@
       </trans-unit>
       <trans-unit id="5de9d226db382155f482a557b832da6d63108112" datatype="html">
         <source>Selector</source>
-        <target state="new">Selector</target>
+        <target state="translated">Selektor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">341</context>
