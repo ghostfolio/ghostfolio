@@ -346,6 +346,22 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
         name: position.name
       };
 
+      if (position.tags.length > 0) {
+        for (const tag of position.tags) {
+          const { name } = tag;
+
+          if (this.tagHoldingsMap[name]?.value) {
+            this.tagHoldingsMap[name].value +=
+              position.valueInBaseCurrency ?? 0;
+          } else {
+            this.tagHoldingsMap[name] = {
+              name,
+              value: position.valueInBaseCurrency ?? 0
+            };
+          }
+        }
+      }
+
       if (position.assetClass !== AssetClass.LIQUIDITY) {
         // Prepare analysis data by continents, countries, holdings and sectors except for liquidity
 
@@ -418,22 +434,6 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
                   ? valueInBaseCurrency
                   : allocationInPercentage *
                     this.portfolioDetails.holdings[symbol].valueInPercentage
-              };
-            }
-          }
-        }
-
-        if (position.tags.length > 0) {
-          for (const tag of position.tags) {
-            const { name } = tag;
-
-            if (this.tagHoldingsMap[name]?.value) {
-              this.tagHoldingsMap[name].value +=
-                position.valueInBaseCurrency ?? 0;
-            } else {
-              this.tagHoldingsMap[name] = {
-                name,
-                value: position.valueInBaseCurrency ?? 0
               };
             }
           }
