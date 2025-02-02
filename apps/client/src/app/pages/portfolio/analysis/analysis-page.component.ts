@@ -20,6 +20,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
 import { isNumber, sortBy } from 'lodash';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -142,17 +143,27 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   public onCopyPromptToClipboard() {
-    this.dataService.fetchPrompt().subscribe(({ prompt }) => {
-      this.clipboard.copy(prompt);
+    this.dataService
+      .fetchPrompt()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ prompt }) => {
+        this.clipboard.copy(prompt);
 
-      this.snackBar.open(
-        '✅ ' + $localize`AI prompt has been copied to the clipboard`,
-        undefined,
-        {
-          duration: 3000
-        }
-      );
-    });
+        const snackBarRef = this.snackBar.open(
+          '✅ ' + $localize`AI prompt has been copied to the clipboard`,
+          $localize`Open Duck.ai` + ' →',
+          {
+            duration: ms('7 seconds')
+          }
+        );
+
+        snackBarRef
+          .onAction()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            window.open('https://duck.ai', '_blank');
+          });
+      });
   }
 
   public ngOnDestroy() {
