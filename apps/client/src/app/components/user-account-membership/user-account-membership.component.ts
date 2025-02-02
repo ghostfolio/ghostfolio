@@ -12,11 +12,7 @@ import {
   Component,
   OnDestroy
 } from '@angular/core';
-import {
-  MatSnackBar,
-  MatSnackBarRef,
-  TextOnlySnackBar
-} from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import ms, { StringValue } from 'ms';
 import { StripeService } from 'ngx-stripe';
 import { EMPTY, Subject } from 'rxjs';
@@ -41,7 +37,6 @@ export class UserAccountMembershipComponent implements OnDestroy {
   public price: number;
   public priceId: string;
   public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
   public trySubscriptionMail =
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;
@@ -186,22 +181,22 @@ export class UserAccountMembershipComponent implements OnDestroy {
               takeUntil(this.unsubscribeSubject)
             )
             .subscribe(() => {
-              this.snackBarRef = this.snackBar.open(
+              const snackBarRef = this.snackBar.open(
                 '✅ ' + $localize`Coupon code has been redeemed`,
                 $localize`Reload`,
                 {
-                  duration: 3000
+                  duration: ms('3 seconds')
                 }
               );
 
-              this.snackBarRef
+              snackBarRef
                 .afterDismissed()
                 .pipe(takeUntil(this.unsubscribeSubject))
                 .subscribe(() => {
                   window.location.reload();
                 });
 
-              this.snackBarRef
+              snackBarRef
                 .onAction()
                 .pipe(takeUntil(this.unsubscribeSubject))
                 .subscribe(() => {
