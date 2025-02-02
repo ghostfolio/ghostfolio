@@ -50,9 +50,9 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   public filteredOptions: Subject<Tag[]> = new BehaviorSubject([]);
+  public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
   public readonly tagInputControl = new FormControl('');
   public readonly tagsSelected = signal<Tag[]>([]);
-  public readonly separatorKeysCodes: number[] = [COMMA, ENTER];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -72,11 +72,6 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges() {
     this.tagsSelected.set(this.tags);
     this.updateFilters();
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
@@ -102,6 +97,11 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
 
     this.tagsChanged.emit(this.tagsSelected());
     this.updateFilters();
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 
   private filterTags(query: string = ''): Tag[] {
