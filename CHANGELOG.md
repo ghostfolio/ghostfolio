@@ -5,14 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.137.1 - 2025-02-01
+
+### Added
+
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (North America)
+- Added support for ETF sector data in the _Yahoo Finance_ data enhancer
 
 ### Changed
 
+- Extracted the scraper configuration to a sub form in the asset profile details dialog of the admin control
 - Migrated the database seeding to _TypeScript_
+- Improved the language localization for German (`de`)
 - Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
 - Upgraded `bull` from version `4.16.4` to `4.16.5`
 - Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
+- Upgraded `prisma` from version `6.2.1` to `6.3.0`
 
 ### Fixed
 
