@@ -25,6 +25,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
 import { uniq } from 'lodash';
+import ms from 'ms';
 import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -301,7 +302,9 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
             this.snackBar.open(
               $localize`Oops! There was an error setting up biometric authentication.`,
               undefined,
-              { duration: 3000 }
+              {
+                duration: ms('3 seconds')
+              }
             );
 
             return throwError(() => {
