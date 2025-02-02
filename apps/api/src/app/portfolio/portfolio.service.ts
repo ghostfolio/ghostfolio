@@ -15,6 +15,7 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
 import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
@@ -1282,6 +1283,11 @@ export class PortfolioService {
                   this.exchangeRateDataService,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.northAmerica.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskEurope(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.europe.valueInBaseCurrency
                 )
               ],
               userSettings
