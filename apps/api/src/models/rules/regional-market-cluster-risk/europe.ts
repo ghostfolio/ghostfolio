@@ -1,4 +1,4 @@
-import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
+import { Settings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
@@ -73,10 +73,4 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
       thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.11
     };
   }
-}
-
-interface Settings extends RuleSettings {
-  baseCurrency: string;
-  thresholdMin: number;
-  thresholdMax: number;
 }
