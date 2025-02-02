@@ -1,0 +1,32 @@
+<mat-form-field appearance="outline" class="w-100 without-hint">
+  <mat-label i18n>Tags</mat-label>
+  <mat-chip-grid #tagsChipList>
+    @for (tag of tagsSelected(); track tag.id) {
+      <mat-chip-row
+        matChipRemove
+        [removable]="true"
+        (removed)="onRemoveTag(tag)"
+      >
+        {{ tag.name }}
+        <ion-icon matChipTrailingIcon name="close-outline" />
+      </mat-chip-row>
+    }
+    <input
+      #tagInput
+      [formControl]="tagInputControl"
+      [matAutocomplete]="autocompleteTags"
+      [matChipInputFor]="tagsChipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+    />
+  </mat-chip-grid>
+  <mat-autocomplete
+    #autocompleteTags="matAutocomplete"
+    (optionSelected)="onAddTag($event)"
+  >
+    @for (tag of filteredOptions | async; track tag.id) {
+      <mat-option [value]="tag.id">
+        {{ tag.name }}
+      </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
