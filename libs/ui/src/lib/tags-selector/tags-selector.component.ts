@@ -4,10 +4,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  effect,
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
@@ -41,7 +41,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./tags-selector.component.scss'],
   templateUrl: 'tags-selector.component.html'
 })
-export class GfTagsSelectorComponent implements OnInit, OnDestroy {
+export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
@@ -57,12 +57,6 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor() {
-    effect(() => {
-      if (this.tagsSelected()) {
-        this.tagsChanged.emit(this.tagsSelected());
-      }
-    });
-
     this.tagInputControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((value) => {
@@ -71,6 +65,11 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit() {
+    this.tagsSelected.set(this.tags);
+    this.updateFilters();
+  }
+
+  public ngOnChanges() {
     this.tagsSelected.set(this.tags);
     this.updateFilters();
   }
@@ -89,6 +88,7 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
       return [...(tags ?? []), tag];
     });
 
+    this.tagsChanged.emit(this.tagsSelected());
     this.tagInput.nativeElement.value = '';
     this.tagInputControl.setValue(undefined);
   }
@@ -100,6 +100,7 @@ export class GfTagsSelectorComponent implements OnInit, OnDestroy {
       });
     });
 
+    this.tagsChanged.emit(this.tagsSelected());
     this.updateFilters();
   }
 
