@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import ms from 'ms';
 
 @Component({
   selector: 'gf-access-table',
@@ -64,7 +65,7 @@ export class AccessTableComponent implements OnChanges {
       '✅ ' + $localize`Link has been copied to the clipboard`,
       undefined,
       {
-        duration: 3000
+        duration: ms('3 seconds')
       }
     );
   }

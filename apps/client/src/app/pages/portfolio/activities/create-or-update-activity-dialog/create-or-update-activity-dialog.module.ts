@@ -1,14 +1,13 @@
 import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,11 +23,10 @@ import { CreateOrUpdateActivityDialog } from './create-or-update-activity-dialog
     FormsModule,
     GfAssetProfileIconComponent,
     GfSymbolAutocompleteComponent,
+    GfTagsSelectorComponent,
     GfValueComponent,
-    MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,

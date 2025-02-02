@@ -88,8 +88,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public isBenchmark = false;
   public marketDataItems: MarketData[] = [];
   public modeValues = [
-    { value: 'lazy', viewValue: $localize`Lazy` },
-    { value: 'instant', viewValue: $localize`Instant` }
+    {
+      value: 'lazy',
+      viewValue: $localize`Lazy` + ' (' + $localize`end of day` + ')'
+    },
+    {
+      value: 'instant',
+      viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
+    }
   ];
   public scraperConfiguationIsExpanded = signal(false);
   public sectors: {

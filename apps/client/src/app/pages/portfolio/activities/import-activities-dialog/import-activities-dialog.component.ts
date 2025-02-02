@@ -23,6 +23,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { AssetClass } from '@prisma/client';
 import { isArray, sortBy } from 'lodash';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -133,7 +134,7 @@ export class ImportActivitiesDialog implements OnDestroy {
         '✅ ' + $localize`Import has been completed`,
         undefined,
         {
-          duration: 3000
+          duration: ms('3 seconds')
         }
       );
     } catch (error) {
@@ -142,7 +143,9 @@ export class ImportActivitiesDialog implements OnDestroy {
           ' ' +
           $localize`Please try again later.`,
         $localize`Okay`,
-        { duration: 3000 }
+        {
+          duration: ms('3 seconds')
+        }
       );
     } finally {
       this.dialogRef.close();

@@ -10,7 +10,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     currentValueInBaseCurrency: number,
-    valueInBaseCurrency
+    northAmericaValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
       key: RegionalMarketClusterRiskNorthAmerica.name,
@@ -18,7 +18,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
-    this.northAmericaValueInBaseCurrency = valueInBaseCurrency;
+    this.northAmericaValueInBaseCurrency = northAmericaValueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
