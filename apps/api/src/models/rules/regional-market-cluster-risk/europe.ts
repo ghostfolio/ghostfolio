@@ -1,7 +1,8 @@
-import { Settings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { UserSettings } from '@ghostfolio/common/interfaces';
+
+import { Settings } from './interfaces/rule-settings.interface';
 
 export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
@@ -10,7 +11,7 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     currentValueInBaseCurrency: number,
-    valueInBaseCurrency: number
+    europeValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
       key: RegionalMarketClusterRiskEurope.name,
@@ -18,7 +19,7 @@ export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
-    this.europeValueInBaseCurrency = valueInBaseCurrency;
+    this.europeValueInBaseCurrency = europeValueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {

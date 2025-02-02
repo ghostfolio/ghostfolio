@@ -1279,15 +1279,15 @@ export class PortfolioService {
         summary.ordersCount > 0
           ? await this.rulesService.evaluate(
               [
-                new RegionalMarketClusterRiskNorthAmerica(
-                  this.exchangeRateDataService,
-                  marketsAdvancedTotalInBaseCurrency,
-                  marketsAdvanced.northAmerica.valueInBaseCurrency
-                ),
                 new RegionalMarketClusterRiskEurope(
                   this.exchangeRateDataService,
                   marketsAdvancedTotalInBaseCurrency,
                   marketsAdvanced.europe.valueInBaseCurrency
+                ),
+                new RegionalMarketClusterRiskNorthAmerica(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.northAmerica.valueInBaseCurrency
                 )
               ],
               userSettings

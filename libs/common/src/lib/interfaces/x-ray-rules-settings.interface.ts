@@ -9,6 +9,7 @@ export interface XRayRulesSettings {
   EconomicMarketClusterRiskEmergingMarkets?: RuleSettings;
   EmergencyFundSetup?: RuleSettings;
   FeeRatioInitialInvestment?: RuleSettings;
+  RegionalMarketClusterRiskEurope?: RuleSettings;
   RegionalMarketClusterRiskNorthAmerica?: RuleSettings;
 }
 
