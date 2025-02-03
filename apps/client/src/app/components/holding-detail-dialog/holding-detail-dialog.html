@@ -364,6 +364,22 @@
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <ion-icon name="server-outline" />
+          <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+        </ng-template>
+        <gf-historical-market-data-editor
+          [currency]="assetProfile?.currency"
+          [dataSource]="assetProfileData.dataSource"
+          [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
+          [locale]="assetProfileData.locale"
+          [marketData]="marketDataItems"
+          [symbol]="assetProfileData.symbol"
+          [user]="user"
+          (marketDataChanged)="onMarketDataChanged($event)"
+        />
+      </mat-tab>
     </mat-tab-group>
 
     <gf-tags-selector

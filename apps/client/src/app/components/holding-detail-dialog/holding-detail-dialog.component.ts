@@ -7,6 +7,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
+  AdminMarketDataDetails,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -15,6 +16,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
+import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
@@ -44,12 +46,13 @@ import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { Account, Tag } from '@prisma/client';
+import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { AssetProfileDialogParams } from '../admin-market-data/asset-profile-dialog/interfaces/interfaces';
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -62,6 +65,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfDataProviderCreditsComponent,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
     GfTagsSelectorComponent,
@@ -82,6 +86,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
+  public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
@@ -98,6 +103,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public investmentPrecision = 2;
+  public marketDataItems: MarketData[] = [];
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
@@ -126,6 +132,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    @Inject(MAT_DIALOG_DATA) public assetProfileData: AssetProfileDialogParams,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
@@ -414,6 +421,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+    this.onFetchMarketData();
   }
 
   public onCloneActivity(aActivity: Activity) {
@@ -446,6 +454,32 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           format: 'json'
         });
       });
+  }
+
+  public onFetchMarketData() {
+    this.dataService
+      .fetchMarketDataBySymbol({
+        dataSource: this.assetProfileData.dataSource,
+        symbol: this.assetProfileData.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ assetProfile, marketData }) => {
+        this.assetProfile = assetProfile;
+        this.marketDataItems = marketData;
+        this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
+          return {
+            date: format(date, DATE_FORMAT),
+            value: marketPrice
+          };
+        });
+        this.changeDetectorRef.markForCheck();
+      });
+  }
+
+  public onMarketDataChanged(withRefresh: boolean = false) {
+    if (withRefresh) {
+      this.onFetchMarketData();
+    }
   }
 
   public onTagsChanged(tags: Tag[]) {
