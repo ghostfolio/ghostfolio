@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extracted the tags selector to a reusable component used in the create or update activity dialog and holding detail dialog
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.137.1 - 2025-02-01
 
 ### Added
