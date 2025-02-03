@@ -21,38 +21,38 @@ export class ApiKeyStrategy extends PassportStrategy(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
-    super(
-      { header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' },
-      true,
-      async (apiKey: string, done: (error: any, user?: any) => void) => {
-        try {
-          const user = await this.validateApiKey(apiKey);
-
-          if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-            if (hasRole(user, 'INACTIVE')) {
-              throw new HttpException(
-                getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
-                StatusCodes.TOO_MANY_REQUESTS
-              );
-            }
-
-            await this.prismaService.analytics.upsert({
-              create: { User: { connect: { id: user.id } } },
-              update: {
-                activityCount: { increment: 1 },
-                lastRequestAt: new Date()
-              },
-              where: { userId: user.id }
-            });
-          }
-
-          done(null, user);
-        } catch (error) {
-          done(error, null);
-        }
-      }
-    );
+    super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, true);
   }
+
+  public validate = async (
+    apiKey: string,
+    done: (error: any, user?: any) => void
+  ) => {
+    try {
+      const user = await this.validateApiKey(apiKey);
+      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+        if (hasRole(user, 'INACTIVE')) {
+          throw new HttpException(
+            getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+            StatusCodes.TOO_MANY_REQUESTS
+          );
+        }
+
+        await this.prismaService.analytics.upsert({
+          create: { User: { connect: { id: user.id } } },
+          update: {
+            activityCount: { increment: 1 },
+            lastRequestAt: new Date()
+          },
+          where: { userId: user.id }
+        });
+      }
+
+      done(null, user);
+    } catch (error) {
+      done(error, null);
+    }
+  };
 
   private async validateApiKey(apiKey: string) {
     if (!apiKey) {
