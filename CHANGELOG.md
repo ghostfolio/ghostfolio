@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Upgraded `svgmap` from version `2.6.0` to `2.12.2`
 
 ## 2.137.1 - 2025-02-01
 
