@@ -24,12 +24,13 @@ export class ApiKeyStrategy extends PassportStrategy(
     super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, true);
   }
 
-  public validate = async (
+  public async validate(
     apiKey: string,
     done: (error: any, user?: any) => void
-  ) => {
+  ) {
     try {
       const user = await this.validateApiKey(apiKey);
+
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         if (hasRole(user, 'INACTIVE')) {
           throw new HttpException(
@@ -52,7 +53,7 @@ export class ApiKeyStrategy extends PassportStrategy(
     } catch (error) {
       done(error, null);
     }
-  };
+  }
 
   private async validateApiKey(apiKey: string) {
     if (!apiKey) {
