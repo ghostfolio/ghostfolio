@@ -20,12 +20,17 @@ const OPTIONS = [
   {
     id: 'EMERGENCY_FUND',
     name: 'Emergency Fund',
-    userId: '1'
+    userId: null
   },
   {
     id: 'RETIREMENT_FUND',
     name: 'Retirement Fund',
-    userId: '2'
+    userId: null
+  },
+  {
+    id: '3ef7e6d9-4598-4eb2-b0e8-00e61cfc0ea6',
+    name: 'Gambling',
+    userId: 'c6a71541-d0e3-4e22-ae83-b5e5611b6695'
   }
 ];
 
@@ -35,7 +40,7 @@ export const Default: Story = {
       {
         id: 'EMERGENCY_FUND',
         name: 'Emergency Fund',
-        userId: '1'
+        userId: null
       }
     ],
     tagsAvailable: OPTIONS
