@@ -58,12 +58,7 @@ describe('PortfolioCalculator', () => {
 
     currentRateService = new CurrentRateService(null, null, null, null);
 
-    exchangeRateDataService = new ExchangeRateDataService(
-      null,
-      null,
-      null,
-      null
-    );
+    exchangeRateDataService = new ExchangeRateDataService(null, null, null);
 
     portfolioSnapshotService = new PortfolioSnapshotService(null);
 

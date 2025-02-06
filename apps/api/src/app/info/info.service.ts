@@ -3,7 +3,7 @@ import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { CurrencyService } from '@ghostfolio/api/services/currency/currency.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import {
   DEFAULT_CURRENCY,
@@ -41,7 +41,7 @@ export class InfoService {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
     private readonly configurationService: ConfigurationService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly currencyService: CurrencyService,
     private readonly jwtService: JwtService,
     private readonly platformService: PlatformService,
     private readonly propertyService: PropertyService,
@@ -127,7 +127,7 @@ export class InfoService {
       statistics,
       subscriptionOffers,
       baseCurrency: DEFAULT_CURRENCY,
-      currencies: this.exchangeRateDataService.getCurrencies()
+      currencies: this.currencyService.getCurrencies()
     };
   }
 

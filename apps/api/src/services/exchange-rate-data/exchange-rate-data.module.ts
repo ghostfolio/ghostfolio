@@ -1,4 +1,5 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { CurrencyModule } from '@ghostfolio/api/services/currency/currency.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
@@ -11,6 +12,7 @@ import { Module } from '@nestjs/common';
   exports: [ExchangeRateDataService],
   imports: [
     ConfigurationModule,
+    CurrencyModule,
     DataProviderModule,
     MarketDataModule,
     PrismaModule,

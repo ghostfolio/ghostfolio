@@ -22,6 +22,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
 import { join } from 'path';
 
+import { CurrencyModule } from '../services/currency/currency.module';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
@@ -75,6 +76,7 @@ import { UserModule } from './user/user.module';
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,
+    CurrencyModule,
     DataGatheringModule,
     DataProviderModule,
     EventEmitterModule.forRoot(),
