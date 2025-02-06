@@ -370,12 +370,12 @@
           <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
         </ng-template>
         <gf-historical-market-data-editor
-          [currency]="assetProfile?.currency"
-          [dataSource]="assetProfileData.dataSource"
-          [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
-          [locale]="assetProfileData.locale"
+          [currency]="SymbolProfile?.currency"
+          [dataSource]="SymbolProfile?.dataSource"
+          [dateOfFirstActivity]="firstBuyDate"
+          [locale]="data.locale"
           [marketData]="marketDataItems"
-          [symbol]="assetProfileData.symbol"
+          [symbol]="SymbolProfile?.symbol"
           [user]="user"
           (marketDataChanged)="onMarketDataChanged($event)"
         />

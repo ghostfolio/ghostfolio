@@ -7,7 +7,6 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
 import {
-  AdminMarketDataDetails,
   DataProviderInfo,
   EnhancedSymbolProfile,
   Filter,
@@ -52,7 +51,6 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { AssetProfileDialogParams } from '../admin-market-data/asset-profile-dialog/interfaces/interfaces';
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
 @Component({
@@ -86,7 +84,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
-  public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetSubClass: string;
   public averagePrice: number;
   public benchmarkDataItems: LineChartItem[];
@@ -132,7 +129,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public assetProfileData: AssetProfileDialogParams,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
@@ -399,7 +395,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
               };
             }
           );
-
+          this.fetchMarketData();
           this.changeDetectorRef.markForCheck();
         }
       );
@@ -421,7 +417,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-    this.onFetchMarketData();
   }
 
   public onCloneActivity(aActivity: Activity) {
@@ -456,15 +451,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onFetchMarketData() {
+  public fetchMarketData() {
     this.dataService
       .fetchMarketDataBySymbol({
-        dataSource: this.assetProfileData.dataSource,
-        symbol: this.assetProfileData.symbol
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
       })
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ assetProfile, marketData }) => {
-        this.assetProfile = assetProfile;
+      .subscribe(({ marketData }) => {
         this.marketDataItems = marketData;
         this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
           return {
@@ -478,7 +472,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
   public onMarketDataChanged(withRefresh: boolean = false) {
     if (withRefresh) {
-      this.onFetchMarketData();
+      this.fetchMarketData();
     }
   }
 
