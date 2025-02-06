@@ -4,39 +4,39 @@ import { UserSettings } from '@ghostfolio/common/interfaces';
 
 import { Settings } from './interfaces/rule-settings.interface';
 
-export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
+export class RegionalMarketClusterRiskEurope extends Rule<Settings> {
   private currentValueInBaseCurrency: number;
-  private northAmericaValueInBaseCurrency: number;
+  private europeValueInBaseCurrency: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     currentValueInBaseCurrency: number,
-    northAmericaValueInBaseCurrency: number
+    europeValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: RegionalMarketClusterRiskNorthAmerica.name,
-      name: 'North America'
+      key: RegionalMarketClusterRiskEurope.name,
+      name: 'Europe'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
-    this.northAmericaValueInBaseCurrency = northAmericaValueInBaseCurrency;
+    this.europeValueInBaseCurrency = europeValueInBaseCurrency;
   }
 
   public evaluate(ruleSettings: Settings) {
-    const northAmericaMarketValueRatio = this.currentValueInBaseCurrency
-      ? this.northAmericaValueInBaseCurrency / this.currentValueInBaseCurrency
+    const europeMarketValueRatio = this.currentValueInBaseCurrency
+      ? this.europeValueInBaseCurrency / this.currentValueInBaseCurrency
       : 0;
 
-    if (northAmericaMarketValueRatio > ruleSettings.thresholdMax) {
+    if (europeMarketValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
+        evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
           ruleSettings.thresholdMax * 100
         ).toPrecision(3)}%`,
         value: false
       };
-    } else if (northAmericaMarketValueRatio < ruleSettings.thresholdMin) {
+    } else if (europeMarketValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is below ${(
+        evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) is below ${(
           ruleSettings.thresholdMin * 100
         ).toPrecision(3)}%`,
         value: false
@@ -44,7 +44,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     }
 
     return {
-      evaluation: `The North America market contribution of your current investment (${(northAmericaMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
+      evaluation: `The Europe market contribution of your current investment (${(europeMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
         ruleSettings.thresholdMin * 100
       ).toPrecision(
         3
@@ -70,8 +70,8 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     return {
       baseCurrency,
       isActive: xRayRules?.[this.getKey()]?.isActive ?? true,
-      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.69,
-      thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.65
+      thresholdMax: xRayRules?.[this.getKey()]?.thresholdMax ?? 0.15,
+      thresholdMin: xRayRules?.[this.getKey()]?.thresholdMin ?? 0.11
     };
   }
 }

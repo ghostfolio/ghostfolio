@@ -63,20 +63,27 @@ export class OrderService {
       }
     });
 
-    return Promise.all(
+    await Promise.all(
       orders.map(({ id }) =>
         this.prismaService.order.update({
           data: {
             tags: {
               // The set operation replaces all existing connections with the provided ones
-              set: tags.map(({ id }) => {
-                return { id };
+              set: tags.map((tag) => {
+                return { id: tag.id };
               })
             }
           },
           where: { id }
         })
       )
+    );
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId
+      })
     );
   }
 

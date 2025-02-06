@@ -9,11 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Europe)
+- Added a link to _Duck.ai_ to the _Copy AI prompt to clipboard_ action on the analysis page (experimental)
 - Extracted the tags selector to a reusable component used in the create or update activity dialog and holding detail dialog
 
 ### Changed
 
+- Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries when a user changes tags in the holding detail dialog
 - Improved the language localization for German (`de`)
+- Upgraded `svgmap` from version `2.6.0` to `2.12.2`
 
 ## 2.137.1 - 2025-02-01
 
