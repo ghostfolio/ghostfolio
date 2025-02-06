@@ -1,4 +1,5 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
+import { CurrencyService } from '@ghostfolio/api/services/currency/currency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import {
   DataProviderInterface,
@@ -11,7 +12,6 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -33,6 +33,7 @@ import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   public constructor(
+    private readonly currencyService: CurrencyService,
     private readonly cryptocurrencyService: CryptocurrencyService,
     private readonly yahooFinanceDataEnhancerService: YahooFinanceDataEnhancerService
   ) {}
@@ -247,21 +248,16 @@ export class YahooFinanceService implements DataProviderInterface {
         .filter(({ quoteType, symbol }) => {
           return (
             (quoteType === 'CRYPTOCURRENCY' &&
-              this.cryptocurrencyService.isCryptocurrency(
-                symbol.replace(
-                  new RegExp(`-${DEFAULT_CURRENCY}$`),
-                  DEFAULT_CURRENCY
-                )
-              )) ||
+              this.currencyService.getCurrencies().some((currency) => {
+                return this.cryptocurrencyService.isCryptocurrency(
+                  symbol.replace(new RegExp(`-${currency}$`), '')
+                );
+              })) ||
             quoteTypes.includes(quoteType)
           );
         })
         .filter(({ quoteType, symbol }) => {
-          if (quoteType === 'CRYPTOCURRENCY') {
-            // Only allow cryptocurrencies in base currency to avoid having redundancy in the database.
-            // Transactions need to be converted manually to the base currency before
-            return symbol.includes(DEFAULT_CURRENCY);
-          } else if (quoteType === 'FUTURE') {
+          if (quoteType === 'FUTURE') {
             // Allow GC=F, but not MGC=F
             return symbol.length === 4;
           }

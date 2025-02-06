@@ -26,6 +26,7 @@ import { GhostfolioService } from './ghostfolio.service';
 @Module({
   controllers: [GhostfolioController],
   imports: [
+    CurrencyModule,
     CryptocurrencyModule,
     DataProviderModule,
     MarketDataModule,
