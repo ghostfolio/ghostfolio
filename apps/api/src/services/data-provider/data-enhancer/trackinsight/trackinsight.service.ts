@@ -44,28 +44,26 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
+    let trackinsightSymbol = await this.searchTrackinsightSymbol(
+      symbol,
+      requestTimeout
+    );
+    if (trackinsightSymbol === '') {
+      trackinsightSymbol = await this.searchTrackinsightSymbol(
+        symbol.split('.')?.[0],
+        requestTimeout
+      );
+    }
+
     const profile = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
+      `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
       {
         signal: AbortSignal.timeout(requestTimeout)
       }
     )
       .then((res) => res.json())
       .catch(() => {
-        return fetch(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
     const isin = profile?.isin?.split(';')?.[0];
@@ -75,7 +73,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     const holdings = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
+      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
       {
         signal: AbortSignal.timeout(
           this.configurationService.get('REQUEST_TIMEOUT')
@@ -84,20 +82,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     )
       .then((res) => res.json())
       .catch(() => {
-        return fetch(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
     if (
@@ -171,6 +156,29 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     }
 
     return Promise.resolve(response);
+  }
+
+  private async searchTrackinsightSymbol(
+    symbol,
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
+  ) {
+    return await fetch(
+      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+      {
+        signal: AbortSignal.timeout(requestTimeout)
+      }
+    )
+      .then((res) => res.json())
+      .then((jsonRes) => {
+        if (jsonRes['results']['count'] === 1) {
+          // Return the only ticker that matches the one in the search
+          return jsonRes['results']['docs'][0]['ticker'];
+        }
+        return '';
+      })
+      .catch(() => {
+        return '';
+      });
   }
 
   public getName() {
