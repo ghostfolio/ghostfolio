@@ -15,7 +15,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
   ) {
     super(exchangeRateDataService, {
       key: RegionalMarketClusterRiskEmergingMarkets.name,
-      name: 'Emerging markets'
+      name: 'Emerging Markets'
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -31,14 +31,14 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
 
     if (emergingMarketsValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The Emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) exceeds ${(
+        evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) exceeds ${(
           ruleSettings.thresholdMax * 100
         ).toPrecision(3)}%`,
         value: false
       };
     } else if (emergingMarketsValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The Emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is below ${(
+        evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is below ${(
           ruleSettings.thresholdMin * 100
         ).toPrecision(3)}%`,
         value: false
@@ -46,7 +46,7 @@ export class RegionalMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     }
 
     return {
-      evaluation: `The Emerging markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is within the range of ${(
+      evaluation: `The Emerging Markets contribution of your current investment (${(emergingMarketsValueRatio * 100).toPrecision(3)}%) is within the range of ${(
         ruleSettings.thresholdMin * 100
       ).toPrecision(
         3
