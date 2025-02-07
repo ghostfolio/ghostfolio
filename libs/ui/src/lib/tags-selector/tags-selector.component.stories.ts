@@ -18,6 +18,11 @@ type Story = StoryObj<GfTagsSelectorComponent>;
 
 const OPTIONS = [
   {
+    id: '3ef7e6d9-4598-4eb2-b0e8-00e61cfc0ea6',
+    name: 'Gambling',
+    userId: 'c6a71541-d0e3-4e22-ae83-b5e5611b6695'
+  },
+  {
     id: 'EMERGENCY_FUND',
     name: 'Emergency Fund',
     userId: null
@@ -26,11 +31,6 @@ const OPTIONS = [
     id: 'RETIREMENT_FUND',
     name: 'Retirement Fund',
     userId: null
-  },
-  {
-    id: '3ef7e6d9-4598-4eb2-b0e8-00e61cfc0ea6',
-    name: 'Gambling',
-    userId: 'c6a71541-d0e3-4e22-ae83-b5e5611b6695'
   }
 ];
 
@@ -47,14 +47,14 @@ export const Default: Story = {
   }
 };
 
-export const NoSelected: Story = {
+export const WithoutValue: Story = {
   args: {
     tags: [],
     tagsAvailable: OPTIONS
   }
 };
 
-export const NoOptions: Story = {
+export const WithoutOptions: Story = {
   args: {
     tags: [],
     tagsAvailable: []
