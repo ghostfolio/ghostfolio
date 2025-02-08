@@ -2,11 +2,15 @@
   <div class="col">
     @if (readonly) {
       <div class="h5" i18n>Tags</div>
-      <mat-chip-listbox>
-        @for (tag of tags; track tag) {
-          <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
-        }
-      </mat-chip-listbox>
+      @if (tags?.length > 0) {
+        <mat-chip-listbox>
+          @for (tag of tags; track tag) {
+            <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
+          }
+        </mat-chip-listbox>
+      } @else {
+        <div>-</div>
+      }
     } @else {
       <mat-form-field appearance="outline" class="w-100 without-hint">
         <mat-label i18n>Tags</mat-label>
