@@ -42,6 +42,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() readonly = false;
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
 
