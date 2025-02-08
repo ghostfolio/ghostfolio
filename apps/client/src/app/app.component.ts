@@ -355,7 +355,9 @@ export class AppComponent implements OnDestroy, OnInit {
 
     if (isDarkTheme) {
       this.document.body.classList.add('theme-dark');
+      this.document.body.classList.remove('theme-light');
     } else {
+      this.document.body.classList.add('theme-light');
       this.document.body.classList.remove('theme-dark');
     }
 
