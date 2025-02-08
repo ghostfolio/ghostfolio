@@ -203,6 +203,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'All your wealth, in one place.'
   },
   {
+    founded: 2018,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'fey',
+    name: 'Fey',
+    origin: 'Canada',
+    pricingPerYear: '$300',
+    slogan: 'Make better investments.'
+  },
+  {
     founded: 2023,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
