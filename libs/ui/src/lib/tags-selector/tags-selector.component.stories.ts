@@ -47,6 +47,25 @@ export const Default: Story = {
   }
 };
 
+export const Readonly: Story = {
+  args: {
+    readonly: true,
+    tags: [
+      {
+        id: 'EMERGENCY_FUND',
+        name: 'Emergency Fund',
+        userId: null
+      },
+      {
+        id: 'RETIREMENT_FUND',
+        name: 'Retirement Fund',
+        userId: null
+      }
+    ],
+    tagsAvailable: OPTIONS
+  }
+};
+
 export const WithoutValue: Story = {
   args: {
     tags: [],

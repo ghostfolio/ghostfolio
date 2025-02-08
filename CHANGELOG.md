@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the tags selector component by a `readonly` attribute
 - Added global styles to the _Storybook_ setup
 
 ## 2.138.0 - 2025-02-08

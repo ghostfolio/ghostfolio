@@ -366,33 +366,12 @@
       </mat-tab>
     </mat-tab-group>
 
-    <div
-      class="row"
-      [ngClass]="{
-        'd-none': !data.hasPermissionToUpdateOrder
-      }"
-    >
-      <div class="col">
-        <gf-tags-selector
-          [tags]="activityForm.get('tags')?.value"
-          [tagsAvailable]="tagsAvailable"
-          (tagsChanged)="onTagsChanged($event)"
-        />
-      </div>
-    </div>
-
-    @if (!data.hasPermissionToUpdateOrder && tagsAvailable?.length > 0) {
-      <div class="row">
-        <div class="col">
-          <div class="h5" i18n>Tags</div>
-          <mat-chip-listbox>
-            @for (tag of tags; track tag) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
-            }
-          </mat-chip-listbox>
-        </div>
-      </div>
-    }
+    <gf-tags-selector
+      [readonly]="!data.hasPermissionToUpdateOrder"
+      [tags]="activityForm.get('tags')?.value"
+      [tagsAvailable]="tagsAvailable"
+      (tagsChanged)="onTagsChanged($event)"
+    />
 
     @if (
       dataSource?.data.length > 0 &&
