@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import '@angular/localize/init';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
