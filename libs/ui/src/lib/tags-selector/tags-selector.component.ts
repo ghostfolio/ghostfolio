@@ -42,6 +42,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() hasPermissionToCreateTags = false;
   @Input() readonly = false;
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
@@ -76,9 +77,17 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onAddTag(event: MatAutocompleteSelectedEvent) {
-    const tag = this.tagsAvailable.find(({ id }) => {
+    let tag = this.tagsAvailable.find(({ id }) => {
       return id === event.option.value;
     });
+
+    if (!tag && this.hasPermissionToCreateTags) {
+      tag = {
+        id: undefined,
+        name: event.option.value as string,
+        userId: null
+      };
+    }
 
     this.tagsSelected.update((tags) => {
       return [...(tags ?? []), tag];

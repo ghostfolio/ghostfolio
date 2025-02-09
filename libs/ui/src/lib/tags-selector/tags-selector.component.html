@@ -42,6 +42,11 @@
               {{ tag.name }}
             </mat-option>
           }
+          @if ((filteredOptions | async)?.length === 0) {
+            <mat-option [value]="tagInputControl.value">
+              Create new tag "{{ tagInputControl.value }}"
+            </mat-option>
+          }
         </mat-autocomplete>
       </mat-form-field>
     }
