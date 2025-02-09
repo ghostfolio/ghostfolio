@@ -2218,12 +2218,12 @@
           <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">387</context>
+          <context context-type="sourcefile">libs/ui/src/lib/tags-selector/tags-selector.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/tags-selector/tags-selector.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="de074268d7d7d759a6ca93af78aace60e16bb671" datatype="html">
@@ -2639,7 +2639,7 @@
         <target state="translated">Informar d’un Problema amb les Dades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
-          <context context-type="linenumber">406</context>
+          <context context-type="linenumber">385</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8204176479746810612" datatype="html">
@@ -7746,6 +7746,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">154</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="70a67e04629f6d412db0a12d51820b480788d795" datatype="html">
+        <source>Create</source>
+        <target state="new">Create</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/tags-selector/tags-selector.component.html</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
     </body>
