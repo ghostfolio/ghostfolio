@@ -367,6 +367,7 @@
     </mat-tab-group>
 
     <gf-tags-selector
+      [hasPermissionToCreateTags]="hasPermissionToCreateTags"
       [readonly]="!data.hasPermissionToUpdateOrder"
       [tags]="activityForm.get('tags')?.value"
       [tagsAvailable]="tagsAvailable"

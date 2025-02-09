@@ -13,6 +13,7 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -95,6 +96,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
+  public hasPermissionToCreateTags: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public investmentPrecision = 2;
@@ -402,6 +404,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateTags = hasPermission(
+            this.user.permissions,
+            permissions.createTag
+          );
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {
