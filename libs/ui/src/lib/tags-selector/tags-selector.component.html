@@ -42,9 +42,12 @@
               {{ tag.name }}
             </mat-option>
           }
-          @if ((filteredOptions | async)?.length === 0) {
-            <mat-option [value]="tagInputControl.value">
-              Create new tag "{{ tagInputControl.value }}"
+          @if (tagInputControl.value && hasPermissionToCreateTags) {
+            <mat-option [value]="tagInputControl.value.trim()">
+              <span class="d-flex align-items-center">
+                <ion-icon class="mr-2" name="add" />
+                Create new tag "{{ tagInputControl.value.trim() }}"
+              </span>
             </mat-option>
           }
         </mat-autocomplete>
