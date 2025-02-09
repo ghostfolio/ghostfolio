@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the tags selector component to support creating custom tags
 - Added global styles to the _Storybook_ setup
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.138.0 - 2025-02-08
 
 ### Added
