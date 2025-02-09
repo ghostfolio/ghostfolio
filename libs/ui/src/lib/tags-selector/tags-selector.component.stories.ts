@@ -47,6 +47,20 @@ export const Default: Story = {
   }
 };
 
+export const CreateCustomTags: Story = {
+  args: {
+    hasPermissionToCreateTags: true,
+    tags: [
+      {
+        id: 'EMERGENCY_FUND',
+        name: 'Emergency Fund',
+        userId: null
+      }
+    ],
+    tagsAvailable: OPTIONS
+  }
+};
+
 export const Readonly: Story = {
   args: {
     readonly: true,
