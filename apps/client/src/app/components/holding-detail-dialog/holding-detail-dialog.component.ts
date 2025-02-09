@@ -2,6 +2,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
@@ -48,8 +49,8 @@ import { Router } from '@angular/router';
 import { Account, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -128,6 +129,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
@@ -150,15 +152,45 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.activityForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((tags) => {
-        this.dataService
-          .putHoldingTags({
-            tags,
-            dataSource: this.data.dataSource,
-            symbol: this.data.symbol
-          })
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe();
+      .subscribe((tags: Tag[]) => {
+        const newTags = tags.filter((tag) => {
+          return tag.id === undefined;
+        });
+
+        if (this.hasPermissionToCreateTags && newTags.length > 0) {
+          const createTagObservables = newTags.map((newTag) => {
+            return this.adminService.postTag({ name: newTag.name }).pipe();
+          });
+
+          forkJoin(createTagObservables)
+            .pipe(
+              map((createdTags) => [
+                ...tags.filter((tag) => tag.id !== undefined),
+                ...createdTags
+              ]),
+              switchMap((updatedTags) => {
+                this.activityForm
+                  .get('tags')
+                  .setValue(updatedTags, { emitEvent: false });
+                return this.dataService.putHoldingTags({
+                  tags: updatedTags,
+                  dataSource: this.data.dataSource,
+                  symbol: this.data.symbol
+                });
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe();
+        } else {
+          this.dataService
+            .putHoldingTags({
+              tags,
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            })
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+        }
       });
 
     this.dataService
