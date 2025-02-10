@@ -1,6 +1,6 @@
+import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -24,20 +24,16 @@ import {
   BenchmarkProperty,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
-import { BenchmarkTrend } from '@ghostfolio/common/types';
+import {
+  BenchmarkTrend,
+  DateRange,
+  UserWithSettings
+} from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import {
-  addHours,
-  differenceInDays,
-  eachDayOfInterval,
-  format,
-  isAfter,
-  isSameDay,
-  subDays
-} from 'date-fns';
+import { addHours, format, isAfter, isSameDay, subDays } from 'date-fns';
 import { isNumber, uniqBy } from 'lodash';
 import ms from 'ms';
 
@@ -48,11 +44,11 @@ export class BenchmarkService {
   private readonly CACHE_KEY_BENCHMARKS = 'BENCHMARKS';
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
+    private readonly portfolioService: PortfolioService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
     private readonly symbolProfileService: SymbolProfileService,
@@ -158,31 +154,27 @@ export class BenchmarkService {
 
   public async getMarketDataForUser({
     dataSource,
+    dateRange,
     endDate = new Date(),
+    impersonationId,
     startDate,
     symbol,
-    userCurrency
+    user
   }: {
+    dateRange: DateRange;
     endDate?: Date;
+    impersonationId: string;
     startDate: Date;
-    userCurrency: string;
+    user: UserWithSettings;
   } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
+    const userCurrency = user.Settings.settings.baseCurrency;
+    const userId = user.id;
 
-    const days = differenceInDays(endDate, startDate) + 1;
-    const dates = eachDayOfInterval(
-      {
-        start: startDate,
-        end: endDate
-      },
-      {
-        step: Math.round(
-          days /
-            Math.min(days, this.configurationService.get('MAX_CHART_ITEMS'))
-        )
-      }
-    ).map((date) => {
-      return resetHours(date);
+    const { chart } = await this.portfolioService.getPerformance({
+      dateRange,
+      impersonationId,
+      userId
     });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
@@ -200,7 +192,9 @@ export class BenchmarkService {
           dataSource,
           symbol,
           date: {
-            in: dates
+            in: chart.map(({ date }) => {
+              return resetHours(parseDate(date));
+            })
           }
         }
       })
