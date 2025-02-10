@@ -44,15 +44,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    let trackinsightSymbol = await this.searchTrackinsightSymbol(
-      symbol,
-      requestTimeout
-    );
-    if (trackinsightSymbol === '') {
-      trackinsightSymbol = await this.searchTrackinsightSymbol(
-        symbol.split('.')?.[0],
-        requestTimeout
-      );
+    const trackinsightSymbol = await this.searchTrackinsightSymbol({
+      requestTimeout,
+      symbol
+    });
+
+    if (!trackinsightSymbol) {
+      return response;
     }
 
     const profile = await fetch(
@@ -158,11 +156,22 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     return Promise.resolve(response);
   }
 
-  private async searchTrackinsightSymbol(
-    symbol,
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT')
-  ) {
-    return await fetch(
+  public getName() {
+    return 'TRACKINSIGHT';
+  }
+
+  public getTestSymbol() {
+    return 'QQQ';
+  }
+
+  private async searchTrackinsightSymbol({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol
+  }: {
+    symbol: string;
+    requestTimeout: number;
+  }) {
+    const newSymbol = await fetch(
       `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
       {
         signal: AbortSignal.timeout(requestTimeout)
@@ -174,18 +183,31 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
           // Return the only ticker that matches the one in the search
           return jsonRes['results']['docs'][0]['ticker'];
         }
-        return '';
+        return undefined;
       })
       .catch(() => {
-        return '';
+        return undefined;
       });
-  }
+    if (newSymbol) {
+      return newSymbol;
+    }
 
-  public getName() {
-    return 'TRACKINSIGHT';
-  }
-
-  public getTestSymbol() {
-    return 'QQQ';
+    return await fetch(
+      `https://www.trackinsight.com/search-api/search_v2/${symbol.split('.')?.[0]}/_/ticker/default/0/3`,
+      {
+        signal: AbortSignal.timeout(requestTimeout)
+      }
+    )
+      .then((res) => res.json())
+      .then((jsonRes) => {
+        if (jsonRes['results']['count'] === 1) {
+          // Return the only ticker that matches the one in the search
+          return jsonRes['results']['docs'][0]['ticker'];
+        }
+        return undefined;
+      })
+      .catch(() => {
+        return undefined;
+      });
   }
 }
