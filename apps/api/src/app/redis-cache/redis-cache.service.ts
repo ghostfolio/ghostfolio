@@ -2,24 +2,17 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { RedisCache } from 'cache-manager-redis-yet';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import ms from 'ms';
 
 @Injectable()
 export class RedisCacheService {
   public constructor(
-    @Inject(CACHE_MANAGER) private readonly cache: RedisCache,
+    @Inject(CACHE_MANAGER) private cache: Cache,
     private readonly configurationService: ConfigurationService
-  ) {
-    const client = cache.store.client;
-
-    client.on('error', (error) => {
-      Logger.error(error, 'RedisCacheService');
-    });
-  }
+  ) {}
 
   public async get(key: string): Promise<string> {
     return this.cache.get(key);
@@ -32,7 +25,7 @@ export class RedisCacheService {
       prefix = `${prefix}*`;
     }
 
-    return this.cache.store.keys(prefix);
+    return this.cache.get(prefix);
   }
 
   public getPortfolioSnapshotKey({
@@ -61,10 +54,8 @@ export class RedisCacheService {
 
   public async isHealthy() {
     try {
-      const client = this.cache.store.client;
-
       const isHealthy = await Promise.race([
-        client.ping(),
+        this.cache,
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Redis health check timeout')),
@@ -98,7 +89,7 @@ export class RedisCacheService {
   }
 
   public async reset() {
-    return this.cache.reset();
+    return this.cache.clear();
   }
 
   public async set(key: string, value: string, ttl?: number) {
