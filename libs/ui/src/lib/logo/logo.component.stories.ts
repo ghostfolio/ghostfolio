@@ -25,7 +25,7 @@ export const Large: Story = {
   }
 };
 
-export const NoLabel: Story = {
+export const WithoutLabel: Story = {
   args: {
     showLabel: false
   }
