@@ -61,7 +61,7 @@ export class OrderService {
           symbol
         }
       ])[0];
-    var result = await this.symbolProfileService.updateSymbolProfile({
+    const result = await this.symbolProfileService.updateSymbolProfile({
       assetClass: symbolProfile.assetClass,
       assetSubClass: symbolProfile.assetSubClass,
       countries: symbolProfile.countries,
