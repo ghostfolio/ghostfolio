@@ -3,6 +3,7 @@ import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-ta
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -13,6 +14,7 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
@@ -97,6 +99,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
+  public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public investmentPrecision = 2;
@@ -126,6 +129,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public user: User;
   public value: number;
 
+  private hasImpersonationId: boolean;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -134,6 +138,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
     private formBuilder: FormBuilder,
+    private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
     private userService: UserService
   ) {}
@@ -233,6 +238,15 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
+
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
+            !this.hasImpersonationId &&
+            hasPermission(
+              this.user?.permissions,
+              permissions.readMarketDataOfOwnAssetProfile
+            ) &&
+            SymbolProfile?.dataSource === 'MANUAL' &&
+            SymbolProfile?.userId === this.user?.id;
 
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
@@ -395,10 +409,21 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
               };
             }
           );
-          this.fetchMarketData();
+
+          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+            this.fetchMarketData();
+          }
+
           this.changeDetectorRef.markForCheck();
         }
       );
+
+    this.impersonationStorageService
+      .onChangeHasImpersonation()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((impersonationId) => {
+        this.hasImpersonationId = !!impersonationId;
+      });
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -451,26 +476,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public fetchMarketData() {
-    this.dataService
-      .fetchMarketDataBySymbol({
-        dataSource: this.data.dataSource,
-        symbol: this.data.symbol
-      })
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ marketData }) => {
-        this.marketDataItems = marketData;
-        this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
-          return {
-            date: format(date, DATE_FORMAT),
-            value: marketPrice
-          };
-        });
-        this.changeDetectorRef.markForCheck();
-      });
-  }
-
-  public onMarketDataChanged(withRefresh: boolean = false) {
+  public onMarketDataChanged(withRefresh = false) {
     if (withRefresh) {
       this.fetchMarketData();
     }
@@ -491,5 +497,28 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchMarketData() {
+    this.dataService
+      .fetchMarketDataBySymbol({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ marketData }) => {
+        this.marketDataItems = marketData;
+
+        this.historicalDataItems = this.marketDataItems.map(
+          ({ date, marketPrice }) => {
+            return {
+              date: format(date, DATE_FORMAT),
+              value: marketPrice
+            };
+          }
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

@@ -333,7 +333,10 @@ export class UserService {
           currentPermissions,
           permissions.accessHoldingsChart,
           permissions.createAccess,
-          permissions.readAiPrompt
+          permissions.createMarketDataOfOwnAssetProfile,
+          permissions.readAiPrompt,
+          permissions.readMarketDataOfOwnAssetProfile,
+          permissions.updateMarketDataOfOwnAssetProfile
         );
 
         // Reset benchmark

@@ -364,22 +364,24 @@
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <ion-icon name="server-outline" />
-          <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
-        </ng-template>
-        <gf-historical-market-data-editor
-          [currency]="SymbolProfile?.currency"
-          [dataSource]="SymbolProfile?.dataSource"
-          [dateOfFirstActivity]="firstBuyDate"
-          [locale]="data.locale"
-          [marketData]="marketDataItems"
-          [symbol]="SymbolProfile?.symbol"
-          [user]="user"
-          (marketDataChanged)="onMarketDataChanged($event)"
-        />
-      </mat-tab>
+      @if (hasPermissionToReadMarketDataOfOwnAssetProfile) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <ion-icon name="server-outline" />
+            <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+          </ng-template>
+          <gf-historical-market-data-editor
+            [currency]="SymbolProfile?.currency"
+            [dataSource]="SymbolProfile?.dataSource"
+            [dateOfFirstActivity]="firstBuyDate"
+            [locale]="data.locale"
+            [marketData]="marketDataItems"
+            [symbol]="SymbolProfile?.symbol"
+            [user]="user"
+            (marketDataChanged)="onMarketDataChanged($event)"
+          />
+        </mat-tab>
+      }
     </mat-tab-group>
 
     <gf-tags-selector
