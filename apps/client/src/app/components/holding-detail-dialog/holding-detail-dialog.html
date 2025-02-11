@@ -364,7 +364,10 @@
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
-      @if (hasPermissionToReadMarketDataOfOwnAssetProfile) {
+      @if (
+        hasPermissionToReadMarketDataOfOwnAssetProfile &&
+        user?.settings?.isExperimentalFeatures
+      ) {
         <mat-tab>
           <ng-template mat-tab-label>
             <ion-icon name="server-outline" />
