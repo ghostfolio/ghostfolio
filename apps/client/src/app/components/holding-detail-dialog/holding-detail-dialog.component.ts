@@ -3,7 +3,6 @@ import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-ta
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -129,7 +128,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public user: User;
   public value: number;
 
-  private hasImpersonationId: boolean;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -138,7 +136,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: HoldingDetailDialogParams,
     private formBuilder: FormBuilder,
-    private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
     private userService: UserService
   ) {}
@@ -240,7 +237,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.firstBuyDate = firstBuyDate;
 
           this.hasPermissionToReadMarketDataOfOwnAssetProfile =
-            !this.hasImpersonationId &&
             hasPermission(
               this.user?.permissions,
               permissions.readMarketDataOfOwnAssetProfile
@@ -417,13 +413,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       );
-
-    this.impersonationStorageService
-      .onChangeHasImpersonation()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((impersonationId) => {
-        this.hasImpersonationId = !!impersonationId;
-      });
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
