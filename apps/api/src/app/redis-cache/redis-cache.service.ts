@@ -10,7 +10,7 @@ import ms from 'ms';
 @Injectable()
 export class RedisCacheService {
   public constructor(
-    @Inject(CACHE_MANAGER) private cache: Cache,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly configurationService: ConfigurationService
   ) {}
 
