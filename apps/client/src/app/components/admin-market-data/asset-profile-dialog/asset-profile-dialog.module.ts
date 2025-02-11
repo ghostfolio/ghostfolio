@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,6 +39,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,
+    MatExpansionModule,
     MatInputModule,
     MatMenuModule,
     MatSelectModule,

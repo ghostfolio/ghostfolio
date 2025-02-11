@@ -51,6 +51,7 @@ export class OrderService {
   public async assignTags({
     dataSource,
     symbol,
+    userId,
     tags
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
     const symbolProfile: SymbolProfile =
@@ -60,7 +61,7 @@ export class OrderService {
           symbol
         }
       ])[0];
-    return await this.symbolProfileService.updateSymbolProfile({
+    var result = await this.symbolProfileService.updateSymbolProfile({
       assetClass: symbolProfile.assetClass,
       assetSubClass: symbolProfile.assetSubClass,
       countries: symbolProfile.countries,
@@ -85,6 +86,15 @@ export class OrderService {
       },
       url: symbolProfile.url
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId
+      })
+    );
+
+    return result;
   }
 
   public async createOrder(
