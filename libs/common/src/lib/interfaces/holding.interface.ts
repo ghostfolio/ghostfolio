@@ -1,5 +1,5 @@
 export interface Holding {
-  allocationInPercentage?: number;
+  allocationInPercentage: number;
   name: string;
   valueInBaseCurrency: number;
 }

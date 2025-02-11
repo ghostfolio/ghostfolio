@@ -96,6 +96,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the tags selector component by a `readonly` attribute
+- Extended the tags selector component to support creating custom tags
+- Added global styles to the _Storybook_ setup
+
+### Changed
+
+- Improved the language localization for German (`de`)
+
+## 2.138.0 - 2025-02-08
+
+### Added
+
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Emerging Markets)
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Europe)
+- Added a link to _Duck.ai_ to the _Copy AI prompt to clipboard_ action on the analysis page (experimental)
+- Extracted the tags selector to a reusable component used in the create or update activity dialog and holding detail dialog
+- Added stories for the tags selector component
+
+### Changed
+
+- Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries when a user changes tags in the holding detail dialog
+- Improved the error handling in the _CoinGecko_ service
+- Improved the language localization for German (`de`)
+- Upgraded `svgmap` from version `2.6.0` to `2.12.2`
+
+## 2.137.1 - 2025-02-01
+
+### Added
+
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (North America)
+- Added support for ETF sector data in the _Yahoo Finance_ data enhancer
+
+### Changed
+
+- Extracted the scraper configuration to a sub form in the asset profile details dialog of the admin control
+- Migrated the database seeding to _TypeScript_
+- Improved the language localization for German (`de`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `4.3.0` to `5.2.1`
+- Upgraded `bull` from version `4.16.4` to `4.16.5`
+- Upgraded `ng-extract-i18n-merge` from version `2.13.1` to `2.14.1`
+- Upgraded `prisma` from version `6.2.1` to `6.3.0`
+
+### Fixed
+
+- Fixed the dynamic numerical precision for cryptocurrencies in the holding detail dialog
+
+## 2.136.0 - 2025-01-24
+
+### Added
+
 - Set up a _GitHub Action_ to automatically extract locales when the `main` branch changes
 
 ### Changed
@@ -108,6 +158,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the detection of the thousand separator by locale
+- Fixed an issue with holdings and sectors while using symbol profile overrides
 - Fixed an issue with the MIME type detection in the scraper configuration
 
 ## 2.135.0 - 2025-01-19
@@ -117,6 +169,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Moved the language localization for Polski (`pl`) from experimental to general availability
 - Extended the _Financial Modeling Prep_ service
 - Switched to _ESLint_’s flat config format
+- Upgraded `bull` from version `4.16.2` to `4.16.4`
 - Upgraded `chart.js` from version `4.2.0` to `4.4.7`
 - Upgraded `chartjs-chart-treemap` from version `2.3.1` to `3.1.0`
 - Upgraded `chartjs-plugin-annotation` from version `2.1.2` to `3.1.0`

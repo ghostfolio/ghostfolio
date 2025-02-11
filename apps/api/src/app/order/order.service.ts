@@ -27,8 +27,7 @@ import {
   Order,
   Prisma,
   Tag,
-  Type as ActivityType,
-  SymbolProfile
+  Type as ActivityType
 } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter } from 'date-fns';
@@ -51,24 +50,37 @@ export class OrderService {
   public async assignTags({
     dataSource,
     symbol,
+    userId,
     tags
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    const symbolProfile: SymbolProfile =
-      await this.symbolProfileService.getSymbolProfiles([
-        {
-          dataSource,
-          symbol
-        }
-      ])[0];
-    return await this.symbolProfileService.updateSymbolProfile({
+    const promis = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
+      }
+    ]);
+    const symbolProfile: EnhancedSymbolProfile = promis[0];
+    const result = await this.symbolProfileService.updateSymbolProfile({
       assetClass: symbolProfile.assetClass,
       assetSubClass: symbolProfile.assetSubClass,
-      countries: symbolProfile.countries,
+      countries: symbolProfile.countries.reduce(
+        (all, v) => [...all, { code: v.code, weight: v.weight }],
+        []
+      ),
       currency: symbolProfile.currency,
       dataSource,
-      holdings: symbolProfile.holdings,
+      holdings: symbolProfile.holdings.reduce(
+        (all, v) => [
+          ...all,
+          { name: v.name, weight: v.allocationInPercentage }
+        ],
+        []
+      ),
       name: symbolProfile.name,
-      sectors: symbolProfile.sectors,
+      sectors: symbolProfile.sectors.reduce(
+        (all, v) => [...all, { name: v.name, weight: v.weight }],
+        []
+      ),
       symbol,
       tags: {
         connectOrCreate: tags.map(({ id, name }) => {
@@ -85,6 +97,15 @@ export class OrderService {
       },
       url: symbolProfile.url
     });
+
+    this.eventEmitter.emit(
+      PortfolioChangedEvent.getName(),
+      new PortfolioChangedEvent({
+        userId
+      })
+    );
+
+    return result;
   }
 
   public async createOrder(

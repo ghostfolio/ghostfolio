@@ -7,5 +7,21 @@
     gf-line-chart {
       aspect-ratio: 16/9;
     }
+
+    .mat-expansion-panel {
+      --mat-expansion-container-background-color: transparent;
+
+      ::ng-deep {
+        .mat-expansion-panel-body {
+          padding: 0;
+        }
+      }
+
+      .mat-expansion-panel-header {
+        &:hover {
+          --mat-expansion-header-hover-state-layer-color: transparent;
+        }
+      }
+    }
   }
 }

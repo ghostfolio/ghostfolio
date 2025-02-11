@@ -29,6 +29,7 @@ export class XRayPageComponent {
   public hasPermissionToUpdateUserSettings: boolean;
   public inactiveRules: PortfolioReportRule[];
   public isLoading = false;
+  public regionalMarketClusterRiskRules: PortfolioReportRule[];
   public statistics: PortfolioReportResponse['statistics'];
   public user: User;
 
@@ -126,6 +127,11 @@ export class XRayPageComponent {
 
         this.feeRules =
           rules['fees']?.filter(({ isActive }) => {
+            return isActive;
+          }) ?? null;
+
+        this.regionalMarketClusterRiskRules =
+          rules['regionalMarketClusterRisk']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
 

@@ -390,38 +390,11 @@
       </mat-form-field>
     </div>
     <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Tags</mat-label>
-        <mat-chip-grid #tagsChipList>
-          @for (tag of activityForm.get('tags')?.value; track tag.id) {
-            <mat-chip-row
-              matChipRemove
-              [removable]="true"
-              (removed)="onRemoveTag(tag)"
-            >
-              {{ tag.name }}
-              <ion-icon class="ml-2" matPrefix name="close-outline" />
-            </mat-chip-row>
-          }
-          <input
-            #tagInput
-            name="close-outline"
-            [matAutocomplete]="autocompleteTags"
-            [matChipInputFor]="tagsChipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-          />
-        </mat-chip-grid>
-        <mat-autocomplete
-          #autocompleteTags="matAutocomplete"
-          (optionSelected)="onAddTag($event)"
-        >
-          @for (tag of filteredTagsObservable | async; track tag.id) {
-            <mat-option [value]="tag.id">
-              {{ tag.name }}
-            </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
+      <gf-tags-selector
+        [tags]="activityForm.get('tags')?.value"
+        [tagsAvailable]="tagsAvailable"
+        (tagsChanged)="onTagsChanged($event)"
+      />
     </div>
   </div>
   <div class="d-flex" mat-dialog-actions>
