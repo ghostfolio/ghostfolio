@@ -5,8 +5,8 @@ import { UserSettings } from '@ghostfolio/common/interfaces';
 import { Settings } from './interfaces/rule-settings.interface';
 
 export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
-  private currentValueInBaseCurrency: number;
   private asiaPacificValueInBaseCurrency: number;
+  private currentValueInBaseCurrency: number;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
