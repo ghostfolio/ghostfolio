@@ -15,6 +15,7 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { RegionalMarketClusterRiskAsiaPacific } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/asia-pacific';
 import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/emerging-markets';
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
 import { RegionalMarketClusterRiskJapan } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/japan';
@@ -1281,6 +1282,11 @@ export class PortfolioService {
         summary.ordersCount > 0
           ? await this.rulesService.evaluate(
               [
+                new RegionalMarketClusterRiskAsiaPacific(
+                  this.exchangeRateDataService,
+                  marketsAdvancedTotalInBaseCurrency,
+                  marketsAdvanced.asiaPacific.valueInBaseCurrency
+                ),
                 new RegionalMarketClusterRiskEmergingMarkets(
                   this.exchangeRateDataService,
                   marketsAdvancedTotalInBaseCurrency,
