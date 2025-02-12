@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
@@ -16,6 +17,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpException,
   Inject,
   Param,
@@ -108,6 +110,7 @@ export class BenchmarkController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getBenchmarkMarketDataForUser(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
@@ -117,14 +120,15 @@ export class BenchmarkController {
       dateRange,
       new Date(startDateString)
     );
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
 
     return this.benchmarkService.getMarketDataForUser({
       dataSource,
+      dateRange,
       endDate,
+      impersonationId,
       startDate,
       symbol,
-      userCurrency
+      user: this.request.user
     });
   }
 }
