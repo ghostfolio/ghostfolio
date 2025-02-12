@@ -29,14 +29,14 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
 
     if (asiaPacificMarketValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The Japan market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
+        evaluation: `The Asia Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) exceeds ${(
           ruleSettings.thresholdMax * 100
         ).toPrecision(3)}%`,
         value: false
       };
     } else if (asiaPacificMarketValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The Japan market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is below ${(
+        evaluation: `The Asia Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is below ${(
           ruleSettings.thresholdMin * 100
         ).toPrecision(3)}%`,
         value: false
@@ -44,7 +44,7 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
     }
 
     return {
-      evaluation: `The Japan market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
+      evaluation: `The Asia Pacific market contribution of your current investment (${(asiaPacificMarketValueRatio * 100).toPrecision(3)}%) is within the range of ${(
         ruleSettings.thresholdMin * 100
       ).toPrecision(
         3
