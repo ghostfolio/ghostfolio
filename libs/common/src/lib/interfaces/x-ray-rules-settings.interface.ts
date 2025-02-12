@@ -12,6 +12,7 @@ export interface XRayRulesSettings {
   RegionalMarketClusterRiskAsiaPacific?: RuleSettings;
   RegionalMarketClusterRiskEmergingMarkets?: RuleSettings;
   RegionalMarketClusterRiskEurope?: RuleSettings;
+  RegionalMarketClusterRiskJapan?: RuleSettings;
   RegionalMarketClusterRiskNorthAmerica?: RuleSettings;
 }
 
