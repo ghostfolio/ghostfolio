@@ -178,7 +178,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     requestTimeout: number;
     symbol: string;
   }) {
-    return await fetch(
+    return fetch(
       `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
       {
         signal: AbortSignal.timeout(requestTimeout)
@@ -186,10 +186,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     )
       .then((res) => res.json())
       .then((jsonRes) => {
-        if (jsonRes['results']['count'] === 1) {
-          // Return the only ticker that matches the one in the search
+        if (
+          jsonRes['results']?.['count'] === 1 ||
+          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol
+        ) {
           return jsonRes['results']['docs'][0]['ticker'];
         }
+
         return undefined;
       })
       .catch(() => {
