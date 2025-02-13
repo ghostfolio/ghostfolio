@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 - Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries when a user changes tags in the holding detail dialog
 - Improved the error handling in the _CoinGecko_ service
 - Improved the language localization for German (`de`)
