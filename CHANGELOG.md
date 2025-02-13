@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Upgraded `@trivago/prettier-plugin-sort-imports` from version `5.2.1` to `5.2.2`
 
 ## 2.138.0 - 2025-02-08
 

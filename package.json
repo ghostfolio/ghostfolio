@@ -171,7 +171,7 @@
     "@storybook/addon-interactions": "8.4.7",
     "@storybook/angular": "8.4.7",
     "@storybook/core-server": "8.4.7",
-    "@trivago/prettier-plugin-sort-imports": "5.2.1",
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/big.js": "6.2.2",
     "@types/cache-manager": "4.0.6",
     "@types/color": "4.2.0",
