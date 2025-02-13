@@ -44,10 +44,17 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
-    const trackinsightSymbol = await this.searchTrackinsightSymbol({
+    let trackinsightSymbol = await this.searchTrackinsightSymbol({
       requestTimeout,
       symbol
     });
+
+    if (!trackinsightSymbol) {
+      trackinsightSymbol = await this.searchTrackinsightSymbol({
+        requestTimeout,
+        symbol: symbol.split('.')?.[0]
+      });
+    }
 
     if (!trackinsightSymbol) {
       return response;
@@ -165,35 +172,14 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
   }
 
   private async searchTrackinsightSymbol({
-    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    requestTimeout,
     symbol
   }: {
-    symbol: string;
     requestTimeout: number;
+    symbol: string;
   }) {
-    const newSymbol = await fetch(
-      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
-      {
-        signal: AbortSignal.timeout(requestTimeout)
-      }
-    )
-      .then((res) => res.json())
-      .then((jsonRes) => {
-        if (jsonRes['results']['count'] === 1) {
-          // Return the only ticker that matches the one in the search
-          return jsonRes['results']['docs'][0]['ticker'];
-        }
-        return undefined;
-      })
-      .catch(() => {
-        return undefined;
-      });
-    if (newSymbol) {
-      return newSymbol;
-    }
-
     return await fetch(
-      `https://www.trackinsight.com/search-api/search_v2/${symbol.split('.')?.[0]}/_/ticker/default/0/3`,
+      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
       {
         signal: AbortSignal.timeout(requestTimeout)
       }
