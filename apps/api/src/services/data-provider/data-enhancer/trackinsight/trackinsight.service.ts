@@ -80,9 +80,7 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
     const holdings = await fetch(
       `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
       {
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
+        signal: AbortSignal.timeout(requestTimeout)
       }
     )
       .then((res) => res.json())
