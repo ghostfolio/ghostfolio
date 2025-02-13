@@ -4,8 +4,8 @@ import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.mo
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { CurrencyModule } from '@ghostfolio/api/services/currency/currency.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
-import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
@@ -21,9 +21,9 @@ import { InfoService } from './info.service';
   imports: [
     BenchmarkModule,
     ConfigurationModule,
+    CurrencyModule,
     DataGatheringModule,
     DataProviderModule,
-    ExchangeRateDataModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: '30 days' }

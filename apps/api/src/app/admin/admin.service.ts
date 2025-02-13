@@ -3,6 +3,7 @@ import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { CurrencyService } from '@ghostfolio/api/services/currency/currency.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -49,6 +50,7 @@ import { groupBy } from 'lodash';
 export class AdminService {
   public constructor(
     private readonly benchmarkService: BenchmarkService,
+    private readonly currencyService: CurrencyService,
     private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -112,7 +114,7 @@ export class AdminService {
   }
 
   public async get(): Promise<AdminData> {
-    const exchangeRates = this.exchangeRateDataService
+    const exchangeRates = this.currencyService
       .getCurrencies()
       .filter((currency) => {
         return currency !== DEFAULT_CURRENCY;
@@ -513,6 +515,7 @@ export class AdminService {
     if (key === PROPERTY_IS_READ_ONLY_MODE && value === 'true') {
       await this.putSetting(PROPERTY_IS_USER_SIGNUP_ENABLED, 'false');
     } else if (key === PROPERTY_CURRENCIES) {
+      await this.currencyService.initialize();
       await this.exchangeRateDataService.initialize();
     }
 
