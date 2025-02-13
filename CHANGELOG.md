@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 - Improved the language localization for German (`de`)
 
 ## 2.138.0 - 2025-02-08
