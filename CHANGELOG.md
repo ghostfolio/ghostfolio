@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Asia-Pacific Markets)
+- Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Japan)
 - Extended the tags selector component by a `readonly` attribute
 - Extended the tags selector component to support creating custom tags
+- Extended the holding detail dialog by the historical market data editor (experimental)
 - Added global styles to the _Storybook_ setup
 
 ### Changed

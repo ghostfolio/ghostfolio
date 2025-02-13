@@ -17,6 +17,7 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
+import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
@@ -46,7 +47,7 @@ import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { Account, Tag } from '@prisma/client';
+import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { forkJoin, Subject } from 'rxjs';
@@ -64,6 +65,7 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfDataProviderCreditsComponent,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
     GfTagsSelectorComponent,
@@ -98,9 +100,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
   public hasPermissionToCreateTags: boolean;
+  public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public investmentPrecision = 2;
+  public marketDataItems: MarketData[] = [];
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
@@ -265,6 +269,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
 
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
+            hasPermission(
+              this.user?.permissions,
+              permissions.readMarketDataOfOwnAssetProfile
+            ) &&
+            SymbolProfile?.dataSource === 'MANUAL' &&
+            SymbolProfile?.userId === this.user?.id;
+
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
@@ -427,6 +439,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             }
           );
 
+          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+            this.fetchMarketData();
+          }
+
           this.changeDetectorRef.markForCheck();
         }
       );
@@ -487,6 +503,12 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
+  public onMarketDataChanged(withRefresh = false) {
+    if (withRefresh) {
+      this.fetchMarketData();
+    }
+  }
+
   public onTagsChanged(tags: Tag[]) {
     this.activityForm.get('tags').setValue(tags);
   }
@@ -502,5 +524,28 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private fetchMarketData() {
+    this.dataService
+      .fetchMarketDataBySymbol({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ marketData }) => {
+        this.marketDataItems = marketData;
+
+        this.historicalDataItems = this.marketDataItems.map(
+          ({ date, marketPrice }) => {
+            return {
+              date: format(date, DATE_FORMAT),
+              value: marketPrice
+            };
+          }
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }
