@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateTagDto {
   @IsString()
@@ -6,4 +6,8 @@ export class UpdateTagDto {
 
   @IsString()
   name: string;
+
+  @IsOptional()
+  @IsString()
+  userId?: string;
 }

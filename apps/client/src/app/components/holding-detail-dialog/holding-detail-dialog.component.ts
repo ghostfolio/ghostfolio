@@ -99,7 +99,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
-  public hasPermissionToCreateTag: boolean;
+  public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
@@ -161,9 +161,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           return id === undefined;
         });
 
-        if (newTag && this.hasPermissionToCreateTag) {
+        if (newTag && this.hasPermissionToCreateOwnTag) {
           this.adminService
-            .postTag(newTag)
+            .postTag({ ...newTag, userId: this.user.id })
             .pipe(
               switchMap((createdTag) => {
                 return this.dataService.putHoldingTags({
@@ -448,9 +448,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateTag = hasPermission(
+          this.hasPermissionToCreateOwnTag = hasPermission(
             this.user.permissions,
-            permissions.createTag
+            permissions.createOwnTag
           );
 
           this.tagsAvailable =
