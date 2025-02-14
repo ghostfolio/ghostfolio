@@ -50,7 +50,7 @@ export const Default: Story = {
 
 export const CreateCustomTags: Story = {
   args: {
-    hasPermissionToCreateTags: true,
+    hasPermissionToCreateTag: true,
     tags: [
       {
         id: 'EMERGENCY_FUND',

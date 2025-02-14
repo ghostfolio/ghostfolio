@@ -50,8 +50,8 @@ import { Router } from '@angular/router';
 import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { forkJoin, Subject } from 'rxjs';
-import { map, switchMap, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -99,7 +99,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
-  public hasPermissionToCreateTags: boolean;
+  public hasPermissionToCreateTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
@@ -157,29 +157,24 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags: Tag[]) => {
-        const newTags = tags.filter((tag) => {
-          return tag.id === undefined;
+        const newTag = tags.find(({ id }) => {
+          return id === undefined;
         });
 
-        if (this.hasPermissionToCreateTags && newTags.length > 0) {
-          const createTagObservables = newTags.map((newTag) => {
-            return this.adminService.postTag({ name: newTag.name }).pipe();
-          });
-
-          forkJoin(createTagObservables)
+        if (newTag && this.hasPermissionToCreateTag) {
+          this.adminService
+            .postTag(newTag)
             .pipe(
-              map((createdTags) => [
-                ...tags.filter((tag) => tag.id !== undefined),
-                ...createdTags
-              ]),
-              switchMap((updatedTags) => {
-                this.activityForm
-                  .get('tags')
-                  .setValue(updatedTags, { emitEvent: false });
+              switchMap((createdTag) => {
                 return this.dataService.putHoldingTags({
-                  tags: updatedTags,
                   dataSource: this.data.dataSource,
-                  symbol: this.data.symbol
+                  symbol: this.data.symbol,
+                  tags: [
+                    ...tags.filter(({ id }) => {
+                      return id !== undefined;
+                    }),
+                    createdTag
+                  ]
                 });
               }),
               takeUntil(this.unsubscribeSubject)
@@ -453,7 +448,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateTags = hasPermission(
+          this.hasPermissionToCreateTag = hasPermission(
             this.user.permissions,
             permissions.createTag
           );
