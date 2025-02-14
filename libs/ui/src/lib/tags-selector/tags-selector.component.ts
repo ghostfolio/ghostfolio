@@ -42,7 +42,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   templateUrl: 'tags-selector.component.html'
 })
 export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() hasPermissionToCreateTags = false;
+  @Input() hasPermissionToCreateTag = false;
   @Input() readonly = false;
   @Input() tags: Tag[];
   @Input() tagsAvailable: Tag[];
@@ -81,7 +81,7 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
       return id === event.option.value;
     });
 
-    if (!tag && this.hasPermissionToCreateTags) {
+    if (!tag && this.hasPermissionToCreateTag) {
       tag = {
         id: undefined,
         name: event.option.value as string,
