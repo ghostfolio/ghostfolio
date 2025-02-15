@@ -22,7 +22,8 @@ import {
   Benchmark,
   BenchmarkMarketDataDetails,
   BenchmarkProperty,
-  BenchmarkResponse
+  BenchmarkResponse,
+  Filter
 } from '@ghostfolio/common/interfaces';
 import {
   BenchmarkTrend,
@@ -156,16 +157,20 @@ export class BenchmarkService {
     dataSource,
     dateRange,
     endDate = new Date(),
+    filters,
     impersonationId,
     startDate,
     symbol,
-    user
+    user,
+    withExcludedAccounts
   }: {
     dateRange: DateRange;
     endDate?: Date;
+    filters?: Filter[];
     impersonationId: string;
     startDate: Date;
     user: UserWithSettings;
+    withExcludedAccounts?: boolean;
   } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
     const userCurrency = user.Settings.settings.baseCurrency;
@@ -173,8 +178,10 @@ export class BenchmarkService {
 
     const { chart } = await this.portfolioService.getPerformance({
       dateRange,
+      filters,
       impersonationId,
-      userId
+      userId,
+      withExcludedAccounts
     });
 
     const [currentSymbolItem, marketDataItems] = await Promise.all([
