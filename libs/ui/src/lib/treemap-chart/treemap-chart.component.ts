@@ -347,13 +347,22 @@ export class GfTreemapChartComponent
 
           if (context.raw._data.valueInBaseCurrency !== null) {
             const value = context.raw._data.valueInBaseCurrency as number;
+            const sign =
+              context.raw._data.netPerformanceWithCurrencyEffect > 0 ? '+' : '';
 
             return [
               `${name ?? symbol}`,
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency}`
+              })} ${this.baseCurrency}`,
+              `${sign}${context.raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+                this.locale,
+                {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }
+              )} (${sign}${(context.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%)`
             ];
           } else {
             const percentage =
