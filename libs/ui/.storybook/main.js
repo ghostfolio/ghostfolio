@@ -1,3 +1,4 @@
+/** @type {import('@storybook/angular').StorybookConfig} */
 const config = {
   addons: ['@storybook/addon-essentials'],
   framework: {
