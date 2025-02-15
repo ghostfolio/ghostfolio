@@ -2,7 +2,9 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
+import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
@@ -16,6 +18,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpException,
   Inject,
   Param,
@@ -34,6 +37,7 @@ import { BenchmarkService } from './benchmark.service';
 @Controller('benchmark')
 export class BenchmarkController {
   public constructor(
+    private readonly apiService: ApiService,
     private readonly benchmarkService: BenchmarkService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -108,23 +112,43 @@ export class BenchmarkController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getBenchmarkMarketDataForUser(
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,
     @Param('startDateString') startDateString: string,
     @Param('symbol') symbol: string,
-    @Query('range') dateRange: DateRange = 'max'
+    @Query('range') dateRange: DateRange = 'max',
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string,
+    @Query('withExcludedAccounts') withExcludedAccountsParam = 'false'
   ): Promise<BenchmarkMarketDataDetails> {
     const { endDate, startDate } = getIntervalFromDateRange(
       dateRange,
       new Date(startDateString)
     );
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByDataSource,
+      filterBySymbol,
+      filterByTags
+    });
+
+    const withExcludedAccounts = withExcludedAccountsParam === 'true';
 
     return this.benchmarkService.getMarketDataForUser({
       dataSource,
+      dateRange,
       endDate,
+      filters,
+      impersonationId,
       startDate,
       symbol,
-      userCurrency
+      withExcludedAccounts,
+      user: this.request.user
     });
   }
 }

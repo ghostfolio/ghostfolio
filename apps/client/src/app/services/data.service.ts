@@ -338,17 +338,23 @@ export class DataService {
 
   public fetchBenchmarkForUser({
     dataSource,
+    filters,
     range,
     startDate,
-    symbol
+    symbol,
+    withExcludedAccounts
   }: {
+    filters?: Filter[];
     range: DateRange;
     startDate: Date;
+    withExcludedAccounts?: boolean;
   } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
-    let params = new HttpParams();
+    let params = this.buildFiltersAsQueryParams({ filters });
 
-    if (range) {
-      params = params.append('range', range);
+    params = params.append('range', range);
+
+    if (withExcludedAccounts) {
+      params = params.append('withExcludedAccounts', withExcludedAccounts);
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
