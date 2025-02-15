@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -6,7 +6,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { IAlertDialogParams } from './interfaces/interfaces';
 
 @Component({
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  imports: [MatButtonModule, MatDialogModule],
   selector: 'gf-alert-dialog',
   styleUrls: ['./alert-dialog.scss'],
   templateUrl: './alert-dialog.html'

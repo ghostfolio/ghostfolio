@@ -1,6 +1,6 @@
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 
-import { CommonModule } from '@angular/common';
+
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -10,7 +10,7 @@ import {
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-data-provider-credits',
   styleUrls: ['./data-provider-credits.component.scss'],

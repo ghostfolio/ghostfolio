@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, HostListener } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +7,7 @@ import { ConfirmationDialogType } from './confirmation-dialog.type';
 import { IConfirmDialogParams } from './interfaces/interfaces';
 
 @Component({
-  imports: [CommonModule, MatButtonModule, MatDialogModule],
+  imports: [MatButtonModule, MatDialogModule],
   selector: 'gf-confirmation-dialog',
   styleUrls: ['./confirmation-dialog.scss'],
   templateUrl: './confirmation-dialog.html'

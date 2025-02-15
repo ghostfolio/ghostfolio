@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,14 +28,13 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     MatAutocompleteModule,
     MatChipsModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule
-  ],
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
   styleUrls: ['./tags-selector.component.scss'],

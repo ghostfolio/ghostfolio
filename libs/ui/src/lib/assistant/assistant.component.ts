@@ -8,7 +8,7 @@ import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
-import { CommonModule } from '@angular/common';
+
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -59,7 +59,6 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     FormsModule,
     GfAssetProfileIconComponent,
     GfAssistantListItemComponent,
@@ -70,7 +69,7 @@ import {
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,
     RouterModule
-  ],
+],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
   styleUrls: ['./assistant.scss'],

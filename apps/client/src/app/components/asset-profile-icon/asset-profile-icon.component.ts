@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -10,7 +10,7 @@ import { DataSource } from '@prisma/client';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-asset-profile-icon',
   styleUrls: ['./asset-profile-icon.component.scss'],
