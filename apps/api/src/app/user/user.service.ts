@@ -347,6 +347,7 @@ export class UserService {
           permissions.accessHoldingsChart,
           permissions.createAccess,
           permissions.createMarketDataOfOwnAssetProfile,
+          permissions.createOwnTag,
           permissions.readAiPrompt,
           permissions.readMarketDataOfOwnAssetProfile,
           permissions.updateMarketDataOfOwnAssetProfile

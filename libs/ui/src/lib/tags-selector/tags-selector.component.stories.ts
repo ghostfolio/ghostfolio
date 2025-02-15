@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import '@angular/localize/init';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Meta, moduleMetadata, StoryObj } from '@storybook/angular';
 
@@ -49,7 +50,7 @@ export const Default: Story = {
 
 export const CreateCustomTags: Story = {
   args: {
-    hasPermissionToCreateTags: true,
+    hasPermissionToCreateTag: true,
     tags: [
       {
         id: 'EMERGENCY_FUND',

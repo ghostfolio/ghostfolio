@@ -2,6 +2,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
@@ -50,7 +51,7 @@ import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -98,6 +99,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
   public firstBuyDate: string;
+  public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
@@ -131,6 +133,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
+    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     public dialogRef: MatDialogRef<GfHoldingDetailDialogComponent>,
@@ -153,15 +156,40 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.activityForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((tags) => {
-        this.dataService
-          .putHoldingTags({
-            tags,
-            dataSource: this.data.dataSource,
-            symbol: this.data.symbol
-          })
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe();
+      .subscribe((tags: Tag[]) => {
+        const newTag = tags.find(({ id }) => {
+          return id === undefined;
+        });
+
+        if (newTag && this.hasPermissionToCreateOwnTag) {
+          this.adminService
+            .postTag({ ...newTag, userId: this.user.id })
+            .pipe(
+              switchMap((createdTag) => {
+                return this.dataService.putHoldingTags({
+                  dataSource: this.data.dataSource,
+                  symbol: this.data.symbol,
+                  tags: [
+                    ...tags.filter(({ id }) => {
+                      return id !== undefined;
+                    }),
+                    createdTag
+                  ]
+                });
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe();
+        } else {
+          this.dataService
+            .putHoldingTags({
+              tags,
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            })
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+        }
       });
 
     this.dataService
@@ -419,6 +447,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOwnTag = hasPermission(
+            this.user.permissions,
+            permissions.createOwnTag
+          );
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {

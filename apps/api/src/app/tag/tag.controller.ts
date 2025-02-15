@@ -1,6 +1,7 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
-import { permissions } from '@ghostfolio/common/permissions';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { RequestWithUser } from '@ghostfolio/common/types';
 
 import {
   Body,
@@ -8,11 +9,13 @@ import {
   Delete,
   Get,
   HttpException,
+  Inject,
   Param,
   Post,
   Put,
   UseGuards
 } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Tag } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
@@ -23,7 +26,10 @@ import { UpdateTagDto } from './update-tag.dto';
 
 @Controller('tag')
 export class TagController {
-  public constructor(private readonly tagService: TagService) {}
+  public constructor(
+    @Inject(REQUEST) private readonly request: RequestWithUser,
+    private readonly tagService: TagService
+  ) {}
 
   @Get()
   @HasPermission(permissions.readTags)
@@ -33,9 +39,34 @@ export class TagController {
   }
 
   @Post()
-  @HasPermission(permissions.createTag)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseGuards(AuthGuard('jwt'))
   public async createTag(@Body() data: CreateTagDto): Promise<Tag> {
+    const canCreateOwnTag = hasPermission(
+      this.request.user.permissions,
+      permissions.createOwnTag
+    );
+
+    const canCreateTag = hasPermission(
+      this.request.user.permissions,
+      permissions.createTag
+    );
+
+    if (!canCreateOwnTag && !canCreateTag) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    if (canCreateOwnTag && !canCreateTag) {
+      if (data.userId !== this.request.user.id) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.BAD_REQUEST),
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    }
+
     return this.tagService.createTag(data);
   }
 
