@@ -4,6 +4,8 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import {
   Activities,
@@ -306,6 +308,10 @@ export class DataService {
 
   public deleteOwnUser(aData: DeleteOwnUserDto) {
     return this.http.delete<any>(`/api/v1/user`, { body: aData });
+  }
+
+  public deleteTag(aId: string) {
+    return this.http.delete<void>(`/api/v1/tags/${aId}`);
   }
 
   public deleteUser(aId: string) {
@@ -662,6 +668,10 @@ export class DataService {
       );
   }
 
+  public fetchTags() {
+    return this.http.get<Tag[]>('/api/v1/tags');
+  }
+
   public loginAnonymous(accessToken: string) {
     return this.http.post<OAuthResponse>('/api/v1/auth/anonymous', {
       accessToken
@@ -709,6 +719,10 @@ export class DataService {
     return this.http.post<OrderModel>('/api/v1/order', aOrder);
   }
 
+  public postTag(aTag: CreateTagDto) {
+    return this.http.post<Tag>(`/api/v1/tags`, aTag);
+  }
+
   public postUser() {
     return this.http.post<UserItem>('/api/v1/user', {});
   }
@@ -734,6 +748,10 @@ export class DataService {
 
   public putOrder(aOrder: UpdateOrderDto) {
     return this.http.put<UserItem>(`/api/v1/order/${aOrder.id}`, aOrder);
+  }
+
+  public putTag(aTag: UpdateTagDto) {
+    return this.http.put<Tag>(`/api/v1/tags/${aTag.id}`, aTag);
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {

@@ -1,8 +1,6 @@
 import { UpdateAssetProfileDto } from '@ghostfolio/api/app/admin/update-asset-profile.dto';
 import { CreatePlatformDto } from '@ghostfolio/api/app/platform/create-platform.dto';
 import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.dto';
-import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
@@ -25,7 +23,7 @@ import {
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
-import { DataSource, MarketData, Platform, Tag } from '@prisma/client';
+import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
 import { format } from 'date-fns';
 import { switchMap } from 'rxjs';
@@ -73,10 +71,6 @@ export class AdminService {
     return this.http.delete<void>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`
     );
-  }
-
-  public deleteTag(aId: string) {
-    return this.http.delete<void>(`/api/v1/tag/${aId}`);
   }
 
   public executeJob(aId: string) {
@@ -153,10 +147,6 @@ export class AdminService {
 
   public fetchPlatforms() {
     return this.http.get<Platform[]>('/api/v1/platform');
-  }
-
-  public fetchTags() {
-    return this.http.get<Tag[]>('/api/v1/tag');
   }
 
   public fetchUsers({
@@ -261,19 +251,11 @@ export class AdminService {
     return this.http.post<Platform>(`/api/v1/platform`, aPlatform);
   }
 
-  public postTag(aTag: CreateTagDto) {
-    return this.http.post<Tag>(`/api/v1/tag`, aTag);
-  }
-
   public putPlatform(aPlatform: UpdatePlatformDto) {
     return this.http.put<Platform>(
       `/api/v1/platform/${aPlatform.id}`,
       aPlatform
     );
-  }
-
-  public putTag(aTag: UpdateTagDto) {
-    return this.http.put<Tag>(`/api/v1/tag/${aTag.id}`, aTag);
   }
 
   public testMarketData({
