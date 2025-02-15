@@ -4,6 +4,12 @@ const config = {
     name: '@storybook/angular',
     options: {}
   },
+  staticDirs: [
+    {
+      from: '../../../apps/client/src/assets',
+      to: '/assets'
+    }
+  ],
   stories: ['../**/*.stories.@(js|jsx|ts|tsx|mdx)']
 };
 
