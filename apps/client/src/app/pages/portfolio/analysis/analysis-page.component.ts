@@ -321,6 +321,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .fetchBenchmarkForUser({
             dataSource,
             symbol,
+            filters: this.userService.getFilters(),
             range: this.user?.settings?.dateRange,
             startDate: this.firstOrderDate
           })
