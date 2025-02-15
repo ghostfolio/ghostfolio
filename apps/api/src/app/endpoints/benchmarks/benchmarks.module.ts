@@ -11,6 +11,7 @@ import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -24,12 +25,11 @@ import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/sym
 
 import { Module } from '@nestjs/common';
 
-import { BenchmarkController } from './benchmark.controller';
-import { BenchmarkService } from './benchmark.service';
+import { BenchmarksController } from './benchmarks.controller';
+import { BenchmarksService } from './benchmarks.service';
 
 @Module({
-  controllers: [BenchmarkController],
-  exports: [BenchmarkService],
+  controllers: [BenchmarksController],
   imports: [
     ApiModule,
     ConfigurationModule,
@@ -52,6 +52,7 @@ import { BenchmarkService } from './benchmark.service';
     AccountBalanceService,
     AccountService,
     BenchmarkService,
+    BenchmarksService,
     CurrentRateService,
     MarketDataService,
     PortfolioCalculatorFactory,
@@ -59,4 +60,4 @@ import { BenchmarkService } from './benchmark.service';
     RulesService
   ]
 })
-export class BenchmarkModule {}
+export class BenchmarksModule {}

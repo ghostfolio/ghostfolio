@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import type {
@@ -32,13 +33,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { DataSource } from '@prisma/client';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { BenchmarkService } from './benchmark.service';
+import { BenchmarksService } from './benchmarks.service';
 
-@Controller('benchmark')
-export class BenchmarkController {
+@Controller('benchmarks')
+export class BenchmarksController {
   public constructor(
     private readonly apiService: ApiService,
     private readonly benchmarkService: BenchmarkService,
+    private readonly benchmarksService: BenchmarksService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -139,7 +141,7 @@ export class BenchmarkController {
 
     const withExcludedAccounts = withExcludedAccountsParam === 'true';
 
-    return this.benchmarkService.getMarketDataForUser({
+    return this.benchmarksService.getMarketDataForUser({
       dataSource,
       dateRange,
       endDate,
