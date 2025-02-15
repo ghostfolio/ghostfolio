@@ -1,6 +1,5 @@
 import { DateRange, MarketState } from '@ghostfolio/common/types';
 
-
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,

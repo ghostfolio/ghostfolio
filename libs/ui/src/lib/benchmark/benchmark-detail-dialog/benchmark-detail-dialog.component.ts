@@ -8,7 +8,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 
-
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -37,7 +36,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
     GfDialogHeaderModule,
     GfLineChartComponent,
     MatDialogModule
-],
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-benchmark-detail-dialog',
   styleUrls: ['./benchmark-detail-dialog.component.scss'],

@@ -8,7 +8,6 @@ import { DateRange } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
-
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -69,7 +68,7 @@ import {
     NgxSkeletonLoaderModule,
     ReactiveFormsModule,
     RouterModule
-],
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-assistant',
   styleUrls: ['./assistant.scss'],

@@ -1,5 +1,4 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-
 import {
   ChangeDetectionStrategy,
   Component,
@@ -34,7 +33,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule
-],
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-tags-selector',
   styleUrls: ['./tags-selector.component.scss'],

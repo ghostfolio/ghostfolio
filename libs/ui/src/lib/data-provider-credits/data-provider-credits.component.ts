@@ -1,6 +1,5 @@
 import { DataProviderInfo } from '@ghostfolio/common/interfaces';
 
-
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,

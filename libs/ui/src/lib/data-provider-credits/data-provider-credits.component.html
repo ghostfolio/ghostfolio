@@ -1,10 +1,16 @@
 <small class="text-muted">
-  <ng-container i18n>Market data provided by</ng-container>&nbsp;@for (dataProviderInfo of dataProviderInfos; track dataProviderInfo; let last = $last) {
-  <a target="_blank" [href]="dataProviderInfo.url">{{
-    dataProviderInfo.name
-    }}</a
-    >@if (!last) {
-    ,
+  <ng-container i18n>Market data provided by</ng-container>&nbsp;
+  @for (
+    dataProviderInfo of dataProviderInfos;
+    track dataProviderInfo;
+    let last = $last
+  ) {
+    <a target="_blank" [href]="dataProviderInfo.url">{{
+      dataProviderInfo.name
+    }}</a>
+    @if (!last) {
+      ,
+    }
   }
-  }.
+  .
 </small>
