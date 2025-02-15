@@ -29,7 +29,7 @@ import { AppController } from './app.controller';
 import { AssetModule } from './asset/asset.module';
 import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
-import { BenchmarkModule } from './benchmark/benchmark.module';
+import { BenchmarksModule } from './benchmark/benchmarks.module';
 import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
@@ -63,7 +63,7 @@ import { UserModule } from './user/user.module';
     AssetModule,
     AuthDeviceModule,
     AuthModule,
-    BenchmarkModule,
+    BenchmarksModule,
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),

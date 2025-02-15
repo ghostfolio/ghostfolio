@@ -303,7 +303,7 @@ export class DataService {
   }
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
+    return this.http.delete<any>(`/api/v1/benchmarks/${dataSource}/${symbol}`);
   }
 
   public deleteOwnUser(aData: DeleteOwnUserDto) {
@@ -358,7 +358,7 @@ export class DataService {
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmark/${dataSource}/${symbol}/${format(
+      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(
         startDate,
         DATE_FORMAT
       )}`,
@@ -367,7 +367,7 @@ export class DataService {
   }
 
   public fetchBenchmarks() {
-    return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
+    return this.http.get<BenchmarkResponse>('/api/v1/benchmarks');
   }
 
   public fetchExport({
@@ -704,7 +704,7 @@ export class DataService {
   }
 
   public postBenchmark(benchmark: AssetProfileIdentifier) {
-    return this.http.post('/api/v1/benchmark', benchmark);
+    return this.http.post('/api/v1/benchmarks', benchmark);
   }
 
   public postMarketData({
