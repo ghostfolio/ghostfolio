@@ -15,87 +15,76 @@
         [formControl]="searchFormControl"
         [placeholder]="placeholder"
       />
-      @if (deviceType !== 'mobile' && !searchFormControl.value) {
-        <div class="hot-key-hint mx-1 px-1">/</div>
-      }
-      @if (searchFormControl.value) {
-        <button
-          class="h-100 no-min-width px-3 rounded-0"
-          mat-button
-          (click)="initialize()"
-        >
-          <ion-icon class="m-0" name="close-circle-outline" />
-        </button>
-      } @else {
-        <button
-          class="h-100 no-min-width px-3 rounded-0"
-          mat-button
-          (click)="onCloseAssistant()"
-        >
-          <ion-icon class="m-0" name="close-outline" />
-        </button>
-      }
-    </div>
-    @if (isLoading || searchFormControl.value) {
-      <div class="overflow-auto py-3 result-container">
-        <div>
-          <div class="h6 mb-1 px-2" i18n>Holdings</div>
-          @for (
-            searchResultItem of searchResults?.holdings;
-            track searchResultItem
-          ) {
-            <gf-assistant-list-item
-              mode="holding"
-              [item]="searchResultItem"
-              (clicked)="onCloseAssistant()"
-            />
-          }
-          @if (searchResults?.holdings?.length === 0) {
-            @if (isLoading) {
-              <ngx-skeleton-loader
-                animation="pulse"
-                class="mx-2"
-                [theme]="{
-                  height: '1.5rem',
-                  width: '100%'
-                }"
-              />
-            } @else {
-              <div class="px-2 py-1" i18n>No entries...</div>
-            }
-          }
-        </div>
-        @if (hasPermissionToAccessAdminControl) {
-          <div class="mt-3">
-            <div class="h6 mb-1 px-2" i18n>Asset Profiles</div>
-            @for (
-              searchResultItem of searchResults?.assetProfiles;
-              track searchResultItem
-            ) {
-              <gf-assistant-list-item
-                mode="assetProfile"
-                [item]="searchResultItem"
-                (clicked)="onCloseAssistant()"
-              />
-            }
-            @if (searchResults?.assetProfiles?.length === 0) {
-              @if (isLoading) {
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  class="mx-2"
-                  [theme]="{
-                    height: '1.5rem',
-                    width: '100%'
-                  }"
-                />
-              } @else {
-                <div class="px-2 py-1" i18n>No entries...</div>
-              }
-            }
-          </div>
-        }
+      <div
+        *ngIf="deviceType !== 'mobile' && !searchFormControl.value"
+        class="hot-key-hint mx-1 px-1"
+      >
+        /
       </div>
-    }
+      <button
+        *ngIf="searchFormControl.value"
+        class="h-100 no-min-width px-3 rounded-0"
+        mat-button
+        (click)="initialize()"
+      >
+        <ion-icon class="m-0" name="close-circle-outline" />
+      </button>
+      <button
+        *ngIf="!searchFormControl.value"
+        class="h-100 no-min-width px-3 rounded-0"
+        mat-button
+        (click)="onCloseAssistant()"
+      >
+        <ion-icon class="m-0" name="close-outline" />
+      </button>
+    </div>
+    <div
+      *ngIf="isLoading || searchFormControl.value"
+      class="overflow-auto py-3 result-container"
+    >
+      <div>
+        <div class="h6 mb-1 px-2" i18n>Holdings</div>
+        <gf-assistant-list-item
+          *ngFor="let searchResultItem of searchResults?.holdings"
+          mode="holding"
+          [item]="searchResultItem"
+          (clicked)="onCloseAssistant()"
+        />
+        <ng-container *ngIf="searchResults?.holdings?.length === 0">
+          <ngx-skeleton-loader
+            *ngIf="isLoading"
+            animation="pulse"
+            class="mx-2"
+            [theme]="{
+              height: '1.5rem',
+              width: '100%'
+            }"
+          />
+          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+        </ng-container>
+      </div>
+      <div *ngIf="hasPermissionToAccessAdminControl" class="mt-3">
+        <div class="h6 mb-1 px-2" i18n>Asset Profiles</div>
+        <gf-assistant-list-item
+          *ngFor="let searchResultItem of searchResults?.assetProfiles"
+          mode="assetProfile"
+          [item]="searchResultItem"
+          (clicked)="onCloseAssistant()"
+        />
+        <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
+          <ngx-skeleton-loader
+            *ngIf="isLoading"
+            animation="pulse"
+            class="mx-2"
+            [theme]="{
+              height: '1.5rem',
+              width: '100%'
+            }"
+          />
+          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+        </ng-container>
+      </div>
+    </div>
   </div>
   <form [formGroup]="filterForm">
     @if (!searchFormControl.value) {
@@ -121,14 +110,12 @@
               @for (account of accounts; track account.id) {
                 <mat-option [value]="account.id">
                   <div class="d-flex">
-                    @if (account.Platform?.url) {
-                      <gf-asset-profile-icon
-                        class="mr-1"
-                        [tooltip]="account.Platform?.name"
-                        [url]="account.Platform?.url"
-                      />
-                    }
-                    <span>{{ account.name }}</span>
+                    <gf-asset-profile-icon
+                      *ngIf="account.Platform?.url"
+                      class="mr-1"
+                      [tooltip]="account.Platform?.name"
+                      [url]="account.Platform?.url"
+                    /><span>{{ account.name }}</span>
                   </div>
                 </mat-option>
               }
