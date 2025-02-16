@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Improved the numeric comparison of strings in the value component
 - Added missing assets in _Storybook_ setup
 
 ## 2.139.1 - 2025-02-15
