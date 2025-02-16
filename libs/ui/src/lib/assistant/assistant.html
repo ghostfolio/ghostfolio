@@ -61,8 +61,7 @@
                   width: '100%'
                 }"
               />
-            }
-            @if (!isLoading) {
+            } @else {
               <div class="px-2 py-1" i18n>No entries...</div>
             }
           }
@@ -90,8 +89,7 @@
                     width: '100%'
                   }"
                 />
-              }
-              @if (!isLoading) {
+              } @else {
                 <div class="px-2 py-1" i18n>No entries...</div>
               }
             }

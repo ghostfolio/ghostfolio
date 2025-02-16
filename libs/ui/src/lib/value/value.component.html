@@ -33,8 +33,7 @@
               {{ formattedValue }}%
             }
           </div>
-        }
-        @if (!isPercent) {
+        } @else {
           <div
             class="mb-0 value"
             [ngClass]="{
@@ -50,14 +49,15 @@
           </div>
         }
         @if (unit && size === 'medium') {
-          <small class="ml-1">
-            {{ unit }}
-          </small>
-        }
-        @if (unit && size !== 'medium') {
-          <div class="ml-1">
-            {{ unit }}
-          </div>
+          @if (size === 'medium') {
+            <small class="ml-1">
+              {{ unit }}
+            </small>
+          } @else {
+            <div class="ml-1">
+              {{ unit }}
+            </div>
+          }
         }
       }
       @if (isString) {
@@ -95,8 +95,7 @@
           <span class="text-muted"> {{ subLabel }}</span>
         }
       </div>
-    }
-    @if (size !== 'large') {
+    } @else {
       <small class="d-block text-truncate">
         <ng-container *ngTemplateOutlet="label"></ng-container>
       </small>
