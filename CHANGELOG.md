@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reloaded the available tags after creating a custom tag in the holding detail dialog (experimental)
 
+### Fixed
+
+- Added missing assets in _Storybook_ setup
+
 ## 2.139.1 - 2025-02-15
 
 ### Added
