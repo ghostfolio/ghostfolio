@@ -12,7 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the `@ghostfolio/client` components to control flow
 - Migrated the `@ghostfolio/ui` components to control flow
 
-## 2.139.0 - 2025-02-15
+### Fixed
+
+- Added missing assets in _Storybook_ setup
+
+## 2.139.1 - 2025-02-15
 
 ### Added
 
