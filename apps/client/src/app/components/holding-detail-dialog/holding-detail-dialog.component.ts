@@ -175,6 +175,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
                   ]
                 });
               }),
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
               takeUntil(this.unsubscribeSubject)
             )
             .subscribe();
