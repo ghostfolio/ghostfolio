@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the tooltip in the chart of the holdings tab on the home page by the allocation, change and performance
 - Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Asia-Pacific Markets)
 - Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Japan)
 - Added support to create custom tags in the holding detail dialog (experimental)
