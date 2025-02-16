@@ -8,7 +8,6 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 
-import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
@@ -33,7 +32,6 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'd-flex flex-column h-100' },
   imports: [
-    CommonModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfLineChartComponent,

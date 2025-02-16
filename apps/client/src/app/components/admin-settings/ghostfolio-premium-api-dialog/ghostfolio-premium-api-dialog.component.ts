@@ -3,7 +3,6 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
-import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -18,7 +17,6 @@ import { GhostfolioPremiumApiDialogParams } from './interfaces/interfaces';
 
 @Component({
   imports: [
-    CommonModule,
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfPremiumIndicatorComponent,
