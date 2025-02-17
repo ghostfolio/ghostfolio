@@ -1,7 +1,6 @@
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -29,7 +28,6 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
   imports: [
-    CommonModule,
     FormsModule,
     MatButtonModule,
     MatDatepickerModule,
