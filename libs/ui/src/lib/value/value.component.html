@@ -10,8 +10,8 @@
     >
       <ng-container *ngIf="isNumber || value === null">
         <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
-          <div *ngIf="value > 0" class="mr-1 text-success">+</div>
-          <div *ngIf="value < 0" class="mr-1 text-danger">-</div>
+          <div *ngIf="+value > 0" class="mr-1 text-success">+</div>
+          <div *ngIf="+value < 0" class="mr-1 text-danger">-</div>
         </ng-container>
         <div
           *ngIf="isPercent"
