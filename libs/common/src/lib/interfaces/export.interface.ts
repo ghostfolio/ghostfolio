@@ -1,4 +1,4 @@
-import { Account, Order } from '@prisma/client';
+import { Account, Order, Tag } from '@prisma/client';
 
 export interface Export {
   meta: {
@@ -16,5 +16,6 @@ export interface Export {
     | 'updatedAt'
     | 'userId'
   > & { date: string; symbol: string })[];
+  tags: Omit<Tag, 'userId'>[];
   user: { settings: { currency: string } };
 }
