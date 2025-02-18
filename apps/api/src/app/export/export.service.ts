@@ -73,7 +73,8 @@ export class ExportService {
           quantity,
           SymbolProfile,
           type,
-          unitPrice
+          unitPrice,
+          tags
         }) => {
           return {
             accountId,
@@ -92,7 +93,8 @@ export class ExportService {
               type === 'ITEM' ||
               type === 'LIABILITY'
                 ? SymbolProfile.name
-                : SymbolProfile.symbol
+                : SymbolProfile.symbol,
+            tags: tags.map(({ id: tagId }) => tagId)
           };
         }
       ),
