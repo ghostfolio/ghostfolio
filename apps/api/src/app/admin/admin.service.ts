@@ -30,6 +30,7 @@ import {
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
+import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
@@ -259,7 +260,8 @@ export class AdminService {
             },
             scraperConfiguration: true,
             sectors: true,
-            symbol: true
+            symbol: true,
+            SymbolProfileOverrides: true
           }
         }),
         this.prismaService.symbolProfile.count({ where })
@@ -313,11 +315,10 @@ export class AdminService {
             name,
             Order,
             sectors,
-            symbol
+            symbol,
+            SymbolProfileOverrides
           }) => {
-            const countriesCount = countries
-              ? Object.keys(countries).length
-              : 0;
+            let countriesCount = countries ? Object.keys(countries).length : 0;
 
             const lastMarketPrice = lastMarketPriceMap.get(
               getAssetProfileIdentifier({ dataSource, symbol })
@@ -331,7 +332,34 @@ export class AdminService {
                 );
               })?._count ?? 0;
 
-            const sectorsCount = sectors ? Object.keys(sectors).length : 0;
+            let sectorsCount = sectors ? Object.keys(sectors).length : 0;
+
+            if (SymbolProfileOverrides) {
+              assetClass = SymbolProfileOverrides.assetClass ?? assetClass;
+              assetSubClass =
+                SymbolProfileOverrides.assetSubClass ?? assetSubClass;
+
+              if (
+                (
+                  SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
+                )?.length > 0
+              ) {
+                countriesCount = (
+                  SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
+                ).length;
+              }
+
+              name = SymbolProfileOverrides.name ?? name;
+
+              if (
+                (SymbolProfileOverrides.sectors as unknown as Sector[])
+                  ?.length > 0
+              ) {
+                sectorsCount = (
+                  SymbolProfileOverrides.sectors as unknown as Prisma.JsonArray
+                ).length;
+              }
+            }
 
             return {
               assetClass,
