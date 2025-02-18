@@ -1,6 +1,7 @@
 import { AdminService } from '@ghostfolio/api/app/admin/admin.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import { MarketDataDetailsResponse } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
@@ -42,7 +43,7 @@ export class MarketDataController {
       { dataSource, symbol }
     ]);
 
-    if (!assetProfile) {
+    if (!assetProfile && !isCurrency(getCurrencyFromSymbol(symbol))) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
@@ -55,7 +56,7 @@ export class MarketDataController {
     );
 
     const canReadOwnAssetProfile =
-      assetProfile.userId === this.request.user.id &&
+      assetProfile?.userId === this.request.user.id &&
       hasPermission(
         this.request.user.permissions,
         permissions.readMarketDataOfOwnAssetProfile
