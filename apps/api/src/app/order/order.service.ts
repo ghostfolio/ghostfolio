@@ -130,11 +130,28 @@ export class OrderService {
       data.SymbolProfile.connectOrCreate.create.assetSubClass = assetSubClass;
       data.SymbolProfile.connectOrCreate.create.dataSource = dataSource;
       data.SymbolProfile.connectOrCreate.create.name = name;
-      data.SymbolProfile.connectOrCreate.create.symbol = id;
       data.SymbolProfile.connectOrCreate.create.userId = userId;
+
+      let symbolProfileSymbol = id;
+
+      if (['FEE', 'INTEREST'].includes(data.type)) {
+        const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+          where: {
+            dataSource: dataSource,
+            name: name,
+            userId: userId
+          }
+        });
+
+        if (symbolProfile) {
+          symbolProfileSymbol = symbolProfile.symbol;
+        }
+      }
+
+      data.SymbolProfile.connectOrCreate.create.symbol = symbolProfileSymbol;
       data.SymbolProfile.connectOrCreate.where.dataSource_symbol = {
         dataSource,
-        symbol: id
+        symbol: symbolProfileSymbol
       };
     }
 
@@ -625,12 +642,51 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
+    if (['ITEM', 'LIABILITY'].includes(data.type)) {
       delete data.SymbolProfile.connect;
 
       if (data.Account?.connect?.id_userId?.id === null) {
         data.Account = { disconnect: true };
       }
+    } else if (['FEE', 'INTEREST'].includes(data.type)) {
+      if (data.Account?.connect?.id_userId?.id === null) {
+        data.Account = { disconnect: true };
+      }
+
+      const symbolProfileDataSource =
+        data.SymbolProfile.connect.dataSource_symbol.dataSource;
+      const symbolProfileName =
+        data.SymbolProfile.connect.dataSource_symbol.symbol;
+
+      delete data.SymbolProfile.update;
+      delete data.SymbolProfile.connect;
+
+      const symbolProfile = await this.prismaService.symbolProfile.findFirst({
+        where: {
+          currency: data.currency,
+          dataSource: symbolProfileDataSource,
+          name: symbolProfileName,
+          userId: data.User?.connect?.id
+        }
+      });
+
+      const symbolProfileSymbol = symbolProfile?.symbol ?? uuidv4();
+
+      data.SymbolProfile.connectOrCreate = {
+        create: {
+          currency: data.currency,
+          dataSource: symbolProfileDataSource,
+          name: symbolProfileName,
+          symbol: symbolProfileSymbol,
+          userId: data.User?.connect?.id
+        },
+        where: {
+          dataSource_symbol: {
+            dataSource: symbolProfileDataSource,
+            symbol: symbolProfileSymbol
+          }
+        }
+      };
     } else {
       delete data.SymbolProfile.update;
 
