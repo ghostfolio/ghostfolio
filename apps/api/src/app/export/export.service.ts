@@ -1,6 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
@@ -9,7 +10,8 @@ import { Injectable } from '@nestjs/common';
 export class ExportService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly tagService: TagService
   ) {}
 
   public async export({
@@ -43,6 +45,19 @@ export class ExportService {
         };
       }
     );
+    const allTags = (
+      await this.tagService.getTags({
+        orderBy: {
+          name: 'asc'
+        },
+        where: { userId }
+      })
+    ).map(({ id, name }) => {
+      return {
+        id,
+        name
+      };
+    });
 
     let { activities } = await this.orderService.getOrders({
       filters,
@@ -72,6 +87,7 @@ export class ExportService {
           id,
           quantity,
           SymbolProfile,
+          tags,
           type,
           unitPrice
         }) => {
@@ -81,6 +97,9 @@ export class ExportService {
             fee,
             id,
             quantity,
+            tags: tags.map(({ id: tagId }) => {
+              return tagId;
+            }),
             type,
             unitPrice,
             currency: SymbolProfile.currency,
@@ -96,6 +115,7 @@ export class ExportService {
           };
         }
       ),
+      tags: allTags,
       user: {
         settings: { currency: userCurrency }
       }
