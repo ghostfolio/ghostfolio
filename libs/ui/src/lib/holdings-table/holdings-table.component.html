@@ -16,6 +16,7 @@
           [tooltip]="element.name"
         />
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
     <ng-container matColumnDef="nameWithSymbol">
@@ -38,6 +39,7 @@
           <small class="text-muted">{{ element.symbol }}</small>
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>Total</td>
     </ng-container>
 
     <ng-container matColumnDef="dateOfFirstActivity">
@@ -62,6 +64,7 @@
           />
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
@@ -86,6 +89,14 @@
           />
         </div>
       </td>
+
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <gf-value
+          [isCurrency]="true"
+          [locale]="locale"
+          [value]="totalValue"
+        ></gf-value>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="allocationInPercentage">
@@ -107,6 +118,7 @@
           />
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
     <ng-container matColumnDef="performance">
@@ -128,6 +140,15 @@
               isLoading ? undefined : element.netPerformanceWithCurrencyEffect
             "
           />
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="totalChange"
+          ></gf-value>
         </div>
       </td>
     </ng-container>
@@ -156,6 +177,15 @@
           />
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [isPercent]="true"
+            [locale]="locale"
+            [value]="totalChangePercentage"
+          ></gf-value>
+        </div>
+      </td>
     </ng-container>
 
     <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
@@ -174,6 +204,11 @@
             symbol: row.symbol
           })
       "
+    ></tr>
+    <tr
+      *matFooterRowDef="displayedColumns"
+      mat-footer-row
+      [ngClass]="{ hidden: isLoading }"
     ></tr>
   </table>
 </div>

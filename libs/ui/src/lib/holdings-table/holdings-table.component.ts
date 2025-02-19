@@ -70,6 +70,10 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public routeQueryParams: Subscription;
 
+  protected totalValue = 0;
+  protected totalChange = 0;
+  protected totalChangePercentage = 0;
+
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnChanges() {
@@ -92,6 +96,15 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.dataSource = new MatTableDataSource(this.holdings);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.totalValue = this.dataSource.data.reduce(
+      (sum, current) => sum + current.valueInBaseCurrency,
+      0
+    );
+    this.totalChange = this.dataSource.data.reduce(
+      (sum, current) => sum + current.netPerformancePercentWithCurrencyEffect,
+      0
+    );
+    this.totalChangePercentage = (this.totalChange / this.totalValue) * 100;
 
     if (this.holdings) {
       this.isLoading = false;
