@@ -45,19 +45,17 @@ export class ExportService {
         };
       }
     );
-    const allTags = (
-      await this.tagService.getTags({
-        orderBy: {
-          name: 'asc'
-        },
-        where: { userId }
+
+    const allTags = (await this.tagService.getTagsForUser(userId))
+      .filter((value) => {
+        return value.isUsed;
       })
-    ).map(({ id, name }) => {
-      return {
-        id,
-        name
-      };
-    });
+      .map(({ id, name }) => {
+        return {
+          id,
+          name
+        };
+      });
 
     let { activities } = await this.orderService.getOrders({
       filters,
