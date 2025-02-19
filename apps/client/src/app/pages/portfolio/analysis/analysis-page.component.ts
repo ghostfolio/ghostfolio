@@ -69,7 +69,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     [];
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public streaks: PortfolioInvestments['streaks'];
-  public timeWeightedPerformance: string = 'N';
   public top3: PortfolioPosition[];
   public unitCurrentStreak: string;
   public unitLongestStreak: string;
@@ -165,12 +164,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onTimeWeightedPerformanceChanged(timeWeightedPerformance: string) {
-    this.timeWeightedPerformance = timeWeightedPerformance;
-
-    this.update();
-  }
-
   public onChangeGroupBy(aMode: GroupBy) {
     this.mode = aMode;
     this.fetchDividendsAndInvestments();
@@ -263,9 +256,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.dataService
       .fetchPortfolioPerformance({
         filters: this.userService.getFilters(),
-        range: this.user?.settings?.dateRange,
-        timeWeightedPerformance:
-          this.timeWeightedPerformance === 'N' ? false : true
+        range: this.user?.settings?.dateRange
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ chart, firstOrderDate, performance }) => {
@@ -304,12 +295,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
             date,
             value: netPerformanceInPercentageWithCurrencyEffect
           });
-          if ((this.timeWeightedPerformance ?? 'N') !== 'N') {
-            this.performanceDataItemsTimeWeightedInPercentage.push({
-              date,
-              value: chart[index].timeWeightedPerformance
-            });
-          }
         }
 
         this.isLoadingInvestmentChart = false;

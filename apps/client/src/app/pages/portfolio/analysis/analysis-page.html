@@ -42,36 +42,10 @@
         [colorScheme]="user?.settings?.colorScheme"
         [isLoading]="isLoadingBenchmarkComparator || isLoadingInvestmentChart"
         [locale]="user?.settings?.locale"
-        [performanceDataItems]="
-          timeWeightedPerformance === 'O'
-            ? []
-            : performanceDataItemsInPercentage
-        "
-        [timeWeightedPerformanceDataItems]="
-          timeWeightedPerformance === 'N'
-            ? []
-            : performanceDataItemsTimeWeightedInPercentage
-        "
+        [performanceDataItems]="performanceDataItemsInPercentage"
         [user]="user"
         (benchmarkChanged)="onChangeBenchmark($event)"
       ></gf-benchmark-comparator>
-      <div>
-        <div class="col-md-6 col-xs-12 d-flex">
-          <div
-            class="align-items-center d-flex flex-grow-1 h6 mb-0 py-2 text-truncate"
-          >
-            <span i18n>Include time-weighted performance </span>
-            <gf-toggle
-              [defaultValue]="timeWeightedPerformance"
-              [isLoading]="
-                isLoadingBenchmarkComparator || isLoadingInvestmentChart
-              "
-              [options]="timeWeightedPerformanceOptions"
-              (change)="onTimeWeightedPerformanceChanged($event.value)"
-            ></gf-toggle>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 

@@ -55,7 +55,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
   @Input() isLoading: boolean;
   @Input() locale = getLocale();
   @Input() performanceDataItems: LineChartItem[];
-  @Input() timeWeightedPerformanceDataItems: LineChartItem[];
   @Input() user: User;
 
   @Output() benchmarkChanged = new EventEmitter<string>();
@@ -86,10 +85,7 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
       permissions.accessAdminControl
     );
 
-    if (
-      this.performanceDataItems ||
-      this.timeWeightedPerformanceDataItems?.length > 0
-    ) {
+    if (this.performanceDataItems) {
       this.initialize();
     }
   }
@@ -119,16 +115,6 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
             return { x: parseDate(date).getTime(), y: value * 100 };
           }),
           label: $localize`Portfolio`
-        },
-        {
-          backgroundColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderColor: `rgb(${primaryColorRgb.r}, ${primaryColorRgb.g}, ${primaryColorRgb.b})`,
-          borderWidth: 2,
-          borderDash: [5, 5],
-          data: this.timeWeightedPerformanceDataItems.map(({ date, value }) => {
-            return { x: parseDate(date).getTime(), y: value };
-          }),
-          label: $localize`Portfolio (time-weighted)`
         },
         {
           backgroundColor: `rgb(${secondaryColorRgb.r}, ${secondaryColorRgb.g}, ${secondaryColorRgb.b})`,
