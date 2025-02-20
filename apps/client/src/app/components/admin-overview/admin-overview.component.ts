@@ -28,7 +28,6 @@ import {
   formatDistanceToNowStrict,
   parseISO
 } from 'date-fns';
-import { uniq } from 'lodash';
 import { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -120,24 +119,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       }
     ];
     this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
-  }
-
-  public onAddCurrency() {
-    const currency = prompt($localize`Please add a currency:`);
-
-    if (currency) {
-      if (currency.length === 3) {
-        const currencies = uniq([
-          ...this.customCurrencies,
-          currency.toUpperCase()
-        ]);
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-      } else {
-        this.notificationService.alert({
-          title: $localize`${currency} is an invalid currency!`
-        });
-      }
-    }
   }
 
   public onChangeCouponDuration(aCouponDuration: StringValue) {
