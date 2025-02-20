@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the validation of the currency management in the admin control panel
 - Migrated the `@ghostfolio/client` components to control flow
 - Migrated the `@ghostfolio/ui` components to control flow
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
