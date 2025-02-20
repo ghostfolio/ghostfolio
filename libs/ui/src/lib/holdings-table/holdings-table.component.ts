@@ -98,14 +98,15 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.totalValue = this.dataSource.data.reduce(
-      (sum, current) => sum + current.valueInBaseCurrency,
+      (sum, current) => (sum += current.valueInBaseCurrency),
       0
     );
     this.totalChange = this.dataSource.data.reduce(
-      (sum, current) => sum + current.netPerformancePercentWithCurrencyEffect,
+      (sum, current) => (sum += current.netPerformanceWithCurrencyEffect),
       0
     );
-    this.totalChangePercentage = (this.totalChange / this.totalValue) * 100;
+    this.totalChangePercentage =
+      this.totalChange / (this.totalValue - this.totalChange);
 
     if (this.holdings) {
       this.isLoading = false;
