@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.140.0 - 2025-02-20
 
+### Added
+
+- Extended the export functionality by the tags
+
 ### Changed
 
 - Reloaded the available tags after creating a custom tag in the holding detail dialog (experimental)
@@ -33,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the tags selector component to support creating custom tags
 - Extended the holding detail dialog by the historical market data editor (experimental)
 - Added global styles to the _Storybook_ setup
-- Added tags to the activities export
 
 ### Changed
 
