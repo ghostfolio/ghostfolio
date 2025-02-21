@@ -46,17 +46,6 @@ export class ExportService {
       }
     );
 
-    const tags = (await this.tagService.getTagsForUser(userId))
-      .filter(({ isUsed }) => {
-        return isUsed;
-      })
-      .map(({ id, name }) => {
-        return {
-          id,
-          name
-        };
-      });
-
     let { activities } = await this.orderService.getOrders({
       filters,
       userCurrency,
@@ -72,6 +61,17 @@ export class ExportService {
         return activityIds.includes(activity.id);
       });
     }
+
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(({ isUsed }) => {
+        return isUsed;
+      })
+      .map(({ id, name }) => {
+        return {
+          id,
+          name
+        };
+      });
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
