@@ -3,7 +3,6 @@ import { Market } from '../../types';
 
 export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
   alias?: string;
-  createdAt: Date;
   hasDetails: boolean;
   holdings: {
     [symbol: string]: Pick<
@@ -33,6 +32,7 @@ export interface PublicPortfolioResponse extends PublicPortfolioResponseV1 {
 }
 
 interface PublicPortfolioResponseV1 {
+  createdAt: Date;
   performance: {
     '1d': {
       relativeChange: number;

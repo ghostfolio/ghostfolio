@@ -175,7 +175,10 @@ export abstract class PortfolioCalculator {
 
     if (!transactionPoints.length) {
       return {
+<<<<<<< HEAD
         activitiesCount: 0,
+=======
+>>>>>>> 6e5db62f (Code review fixes)
         currentValueInBaseCurrency: new Big(0),
         createdAt: new Date(),
         errors: [],

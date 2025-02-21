@@ -1100,7 +1100,7 @@ export class PortfolioService {
         firstOrderDate: undefined,
         hasErrors: false,
         performance: {
-          createdAt: undefined,
+          createdAt: new Date(),
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
           netPerformance: 0,
@@ -1155,10 +1155,10 @@ export class PortfolioService {
       hasErrors,
       firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
+        createdAt,
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
-        createdAt: createdAt,
         currentNetWorth: netWorth,
         currentValueInBaseCurrency: valueWithCurrencyEffect,
         netPerformancePercentage: netPerformanceInPercentage,
@@ -1916,6 +1916,7 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
+      createdAt,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
@@ -1929,7 +1930,6 @@ export class PortfolioService {
       totalSell,
       committedFunds: committedFunds.toNumber(),
       currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
-      createdAt: createdAt,
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
         assets: emergencyFundPositionsValueInBaseCurrency,
