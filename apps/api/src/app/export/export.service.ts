@@ -46,9 +46,9 @@ export class ExportService {
       }
     );
 
-    const allTags = (await this.tagService.getTagsForUser(userId))
-      .filter((value) => {
-        return value.isUsed;
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(({ isUsed }) => {
+        return isUsed;
       })
       .map(({ id, name }) => {
         return {
@@ -76,6 +76,7 @@ export class ExportService {
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
+      tags,
       activities: activities.map(
         ({
           accountId,
@@ -85,7 +86,7 @@ export class ExportService {
           id,
           quantity,
           SymbolProfile,
-          tags,
+          tags: currentTags,
           type,
           unitPrice
         }) => {
@@ -95,25 +96,20 @@ export class ExportService {
             fee,
             id,
             quantity,
-            tags: tags.map(({ id: tagId }) => {
-              return tagId;
-            }),
             type,
             unitPrice,
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol:
-              type === 'FEE' ||
-              type === 'INTEREST' ||
-              type === 'ITEM' ||
-              type === 'LIABILITY'
-                ? SymbolProfile.name
-                : SymbolProfile.symbol
+            symbol: ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
+              ? SymbolProfile.name
+              : SymbolProfile.symbol,
+            tags: currentTags.map(({ id: tagId }) => {
+              return tagId;
+            })
           };
         }
       ),
-      tags: allTags,
       user: {
         settings: { currency: userCurrency }
       }
