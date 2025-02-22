@@ -29,23 +29,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: storybook
-          path: dist/storybook/ui
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download built Storybook
-        uses: actions/download-artifact@v4
-        with:
-          name: storybook
-          path: dist/storybook/ui
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: dist/storybook/ui
+          path: dist/storybook
