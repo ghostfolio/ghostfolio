@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the user endpoint `GET api/v1/user` by the activities count
+
 ### Changed
 
 - Upgraded `prettier` from version `3.4.2` to `3.5.1`
