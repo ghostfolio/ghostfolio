@@ -185,7 +185,8 @@ export abstract class PortfolioCalculator {
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
         totalLiabilitiesWithCurrencyEffect: new Big(0),
-        totalValuablesWithCurrencyEffect: new Big(0)
+        totalValuablesWithCurrencyEffect: new Big(0),
+        activitiesCount: 0
       };
     }
 

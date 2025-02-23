@@ -104,7 +104,8 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       errors: [],
       historicalData: [],
       totalLiabilitiesWithCurrencyEffect: new Big(0),
-      totalValuablesWithCurrencyEffect: new Big(0)
+      totalValuablesWithCurrencyEffect: new Big(0),
+      activitiesCount: this.activities.length
     };
   }
 

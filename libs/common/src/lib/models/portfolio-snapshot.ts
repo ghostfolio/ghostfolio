@@ -45,4 +45,6 @@ export class PortfolioSnapshot {
   @Transform(transformToBig, { toClassOnly: true })
   @Type(() => Big)
   totalValuablesWithCurrencyEffect: Big;
+
+  activitiesCount: number;
 }
