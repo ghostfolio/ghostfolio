@@ -92,12 +92,16 @@ export class UserService {
         },
         where: { userId: id }
       }),
+      this.prismaService.order.count({
+        where: { userId: id }
+      }),
       this.tagService.getTagsForUser(id)
     ]);
 
     const access = userData[0];
     const firstActivity = userData[1];
-    let tags = userData[2];
+    let tags = userData[3];
+    const activitiesCount = userData[2];
 
     let systemMessage: SystemMessage;
 
@@ -134,7 +138,8 @@ export class UserService {
       settings: {
         ...(Settings.settings as UserSettings),
         locale: (Settings.settings as UserSettings)?.locale ?? aLocale
-      }
+      },
+      activitiesCount
     };
   }
 

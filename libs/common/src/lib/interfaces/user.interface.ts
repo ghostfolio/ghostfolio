@@ -21,4 +21,5 @@ export interface User {
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];
+  activitiesCount: number;
 }
