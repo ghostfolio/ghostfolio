@@ -10,6 +10,7 @@ import { UserSettings } from './user-settings.interface';
 export interface User {
   access: Pick<Access, 'alias' | 'id' | 'permissions'>[];
   accounts: Account[];
+  activitiesCount: number;
   dateOfFirstActivity: Date;
   id: string;
   permissions: string[];
@@ -21,5 +22,4 @@ export interface User {
     type: SubscriptionType;
   };
   tags: (Tag & { isUsed: boolean })[];
-  activitiesCount: number;
 }

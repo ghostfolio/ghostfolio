@@ -86,22 +86,22 @@ export class UserService {
         orderBy: { alias: 'asc' },
         where: { GranteeUser: { id } }
       }),
+      this.prismaService.order.count({
+        where: { userId: id }
+      }),
       this.prismaService.order.findFirst({
         orderBy: {
           date: 'asc'
         },
         where: { userId: id }
       }),
-      this.prismaService.order.count({
-        where: { userId: id }
-      }),
       this.tagService.getTagsForUser(id)
     ]);
 
     const access = userData[0];
-    const firstActivity = userData[1];
+    const activitiesCount = userData[1];
+    const firstActivity = userData[2];
     let tags = userData[3];
-    const activitiesCount = userData[2];
 
     let systemMessage: SystemMessage;
 
@@ -121,6 +121,7 @@ export class UserService {
     }
 
     return {
+      activitiesCount,
       id,
       permissions,
       subscription,
@@ -138,8 +139,7 @@ export class UserService {
       settings: {
         ...(Settings.settings as UserSettings),
         locale: (Settings.settings as UserSettings)?.locale ?? aLocale
-      },
-      activitiesCount
+      }
     };
   }
 
