@@ -1,6 +1,7 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
@@ -9,7 +10,8 @@ import { Injectable } from '@nestjs/common';
 export class ExportService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly tagService: TagService
   ) {}
 
   public async export({
@@ -60,9 +62,21 @@ export class ExportService {
       });
     }
 
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(({ isUsed }) => {
+        return isUsed;
+      })
+      .map(({ id, name }) => {
+        return {
+          id,
+          name
+        };
+      });
+
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
+      tags,
       activities: activities.map(
         ({
           accountId,
@@ -72,6 +86,7 @@ export class ExportService {
           id,
           quantity,
           SymbolProfile,
+          tags: currentTags,
           type,
           unitPrice
         }) => {
@@ -86,13 +101,12 @@ export class ExportService {
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol:
-              type === 'FEE' ||
-              type === 'INTEREST' ||
-              type === 'ITEM' ||
-              type === 'LIABILITY'
-                ? SymbolProfile.name
-                : SymbolProfile.symbol
+            symbol: ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
+              ? SymbolProfile.name
+              : SymbolProfile.symbol,
+            tags: currentTags.map(({ id: tagId }) => {
+              return tagId;
+            })
           };
         }
       ),
