@@ -7,15 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the export functionality by the tags
+- Extended the user endpoint `GET api/v1/user` by the activities count
+
+### Changed
+
+- Upgraded `prettier` from version `3.4.2` to `3.5.1`
+
 ### Fixed
 
 - Improved the numeric comparison of strings in the value component
+
+## 2.140.0 - 2025-02-20
+
+### Changed
+
+- Reloaded the available tags after creating a custom tag in the holding detail dialog (experimental)
+- Improved the validation of the currency management in the admin control panel
+- Migrated the `@ghostfolio/client` components to control flow
+- Migrated the `@ghostfolio/ui` components to control flow
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Improved the error handling in the `HttpResponseInterceptor`
+- Fixed an issue while using symbol profile overrides in the historical market data table of the admin control panel
 - Added missing assets in _Storybook_ setup
 
 ## 2.139.1 - 2025-02-15
 
 ### Added
 
+- Extended the tooltip in the chart of the holdings tab on the home page by the allocation, change and performance
 - Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Asia-Pacific Markets)
 - Added a new static portfolio analysis rule: _Regional Market Cluster Risk_ (Japan)
 - Added support to create custom tags in the holding detail dialog (experimental)
