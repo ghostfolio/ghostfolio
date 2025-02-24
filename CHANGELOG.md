@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `prettier` from version `3.4.2` to `3.5.1`
 
+### Fixed
+
+- Improved the numeric comparison of strings in the value component
+
 ## 2.140.0 - 2025-02-20
 
 ### Changed
