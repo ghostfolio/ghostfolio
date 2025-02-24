@@ -86,6 +86,9 @@ export class UserService {
         orderBy: { alias: 'asc' },
         where: { GranteeUser: { id } }
       }),
+      this.prismaService.order.count({
+        where: { userId: id }
+      }),
       this.prismaService.order.findFirst({
         orderBy: {
           date: 'asc'
@@ -96,8 +99,9 @@ export class UserService {
     ]);
 
     const access = userData[0];
-    const firstActivity = userData[1];
-    let tags = userData[2];
+    const activitiesCount = userData[1];
+    const firstActivity = userData[2];
+    let tags = userData[3];
 
     let systemMessage: SystemMessage;
 
@@ -117,6 +121,7 @@ export class UserService {
     }
 
     return {
+      activitiesCount,
       id,
       permissions,
       subscription,
