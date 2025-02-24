@@ -24,8 +24,8 @@ export class SymbolProfileService {
   }
 
   public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.prismaService.symbolProfile.delete({
-      where: { dataSource_symbol: { dataSource, symbol } }
+    return this.prismaService.symbolProfile.deleteMany({
+      where: { dataSource, symbol }
     });
   }
 
