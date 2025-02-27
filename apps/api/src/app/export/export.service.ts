@@ -50,8 +50,8 @@ export class ExportService {
         Platform: platform
       }) => {
         if (
-          !platforms.some(({ id: currentId }) => {
-            return currentId === platform.id;
+          !platforms.some(({ id: currentPlatformId }) => {
+            return currentPlatformId === platform.id;
           })
         ) {
           platforms.push(platform);
