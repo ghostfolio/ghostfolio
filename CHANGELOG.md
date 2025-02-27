@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Extended the export functionality by the platforms
+
 ## 2.141.0 - 2025-02-25
 
 ### Added
@@ -13,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the portfolio snapshot in the portfolio calculator by the activities count
 - Extended the user endpoint `GET api/v1/user` by the activities count
 - Added `cusip` to the asset profile model
-- Extended the export functionality by the platforms
 
 ### Changed
 
