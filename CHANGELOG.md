@@ -9,16 +9,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the _Trackinsight_ data enhancer for asset profile data by `cusip`
 - Added _Storybook_ to the build process
+
+## 2.141.0 - 2025-02-25
+
+### Added
+
+- Extended the export functionality by the tags
+- Extended the portfolio snapshot in the portfolio calculator by the activities count
+- Extended the user endpoint `GET api/v1/user` by the activities count
+- Added `cusip` to the asset profile model
+
+### Changed
+
+- Upgraded `prettier` from version `3.4.2` to `3.5.1`
+
+### Fixed
+
+- Improved the numeric comparison of strings in the value component
+
+## 2.140.0 - 2025-02-20
 
 ### Changed
 
 - Reloaded the available tags after creating a custom tag in the holding detail dialog (experimental)
+- Improved the validation of the currency management in the admin control panel
 - Migrated the `@ghostfolio/client` components to control flow
 - Migrated the `@ghostfolio/ui` components to control flow
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
+- Improved the error handling in the `HttpResponseInterceptor`
+- Fixed an issue while using symbol profile overrides in the historical market data table of the admin control panel
 - Added missing assets in _Storybook_ setup
 
 ## 2.139.1 - 2025-02-15
