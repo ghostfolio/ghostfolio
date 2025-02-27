@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the export functionality by the platforms
+- Extended the _Trackinsight_ data enhancer for asset profile data by `cusip`
 
 ## 2.141.0 - 2025-02-25
 
