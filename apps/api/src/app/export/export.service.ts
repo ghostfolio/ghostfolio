@@ -5,6 +5,7 @@ import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { Platform } from '@prisma/client';
 
 @Injectable()
 export class ExportService {
@@ -25,15 +26,37 @@ export class ExportService {
     userCurrency: string;
     userId: string;
   }): Promise<Export> {
+    const platforms: Platform[] = [];
+
     const accounts = (
       await this.accountService.accounts({
+        include: {
+          Platform: true
+        },
         orderBy: {
           name: 'asc'
         },
         where: { userId }
       })
     ).map(
-      ({ balance, comment, currency, id, isExcluded, name, platformId }) => {
+      ({
+        balance,
+        comment,
+        currency,
+        id,
+        isExcluded,
+        name,
+        platformId,
+        Platform: platform
+      }) => {
+        if (
+          !platforms.some(({ id: currentPlatformId }) => {
+            return currentPlatformId === platform.id;
+          })
+        ) {
+          platforms.push(platform);
+        }
+
         return {
           balance,
           comment,
@@ -76,6 +99,7 @@ export class ExportService {
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
+      platforms,
       tags,
       activities: activities.map(
         ({
