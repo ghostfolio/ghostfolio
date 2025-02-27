@@ -787,9 +787,9 @@ export class AdminService {
       (aCurrency) => aCurrency !== currency
     );
 
-    await this.propertyService.put({
-      key: PROPERTY_CURRENCIES,
-      value: JSON.stringify(updatedCustomCurrencies)
-    });
+    await this.putSetting(
+      PROPERTY_CURRENCIES,
+      JSON.stringify(updatedCustomCurrencies)
+    );
   }
 }
