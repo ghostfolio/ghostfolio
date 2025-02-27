@@ -41,7 +41,7 @@
       "executor": "@storybook/angular:build-storybook",
       "outputs": ["{options.outputDir}"],
       "options": {
-        "outputDir": "dist/storybook",
+        "outputDir": "dist/apps/client/development/storybook",
         "configDir": "libs/ui/.storybook",
         "browserTarget": "ui:build-storybook",
         "compodoc": false,
