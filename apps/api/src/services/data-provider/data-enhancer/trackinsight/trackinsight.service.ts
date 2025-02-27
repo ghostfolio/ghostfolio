@@ -71,7 +71,13 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
         return {};
       });
 
-    const isin = profile?.isin?.split(';')?.[0];
+    const cusip = profile?.cusip;
+
+    if (cusip) {
+      response.cusip = cusip;
+    }
+
+    const isin = profile?.isins?.[0];
 
     if (isin) {
       response.isin = isin;
