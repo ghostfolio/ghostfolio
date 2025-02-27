@@ -56,6 +56,7 @@ export class ExportService {
         ) {
           platforms.push(platform);
         }
+
         return {
           balance,
           comment,
