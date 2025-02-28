@@ -376,7 +376,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { currentValueInBaseCurrency, hasErrors, positions } =
+    const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
       await portfolioCalculator.getSnapshot();
 
     const cashDetails = await this.accountService.getCashDetails({
@@ -617,6 +617,7 @@ export class PortfolioService {
 
     return {
       accounts,
+      createdAt,
       hasErrors,
       holdings,
       markets,
