@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the export functionality by the tags
 - Extended the portfolio snapshot in the portfolio calculator by the activities count
+- Extended the portfolio snapshot in the portfolio calculator by the `createdAt` timestamp
 - Extended the user endpoint `GET api/v1/user` by the activities count
 - Added `cusip` to the asset profile model
 
