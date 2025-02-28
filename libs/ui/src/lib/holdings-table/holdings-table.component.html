@@ -64,7 +64,11 @@
           />
         </div>
       </td>
-      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-footer-cell
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
@@ -90,7 +94,7 @@
         </div>
       </td>
 
-      <td *matFooterCellDef class="px-1" mat-footer-cell>
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
         <gf-value
           [isCurrency]="true"
           [locale]="locale"
