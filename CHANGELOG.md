@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the _Trackinsight_ data enhancer for asset profile data by `cusip`
 - Added _Storybook_ to the build process
 
+### Changed
+
+- Upgraded `eslint` dependencies
+
 ## 2.141.0 - 2025-02-25
 
 ### Added
@@ -84,7 +88,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the caching of the portfolio snapshot in the portfolio calculator by expiring cache entries when a user changes tags in the holding detail dialog
 - Improved the error handling in the _CoinGecko_ service
 - Improved the language localization for German (`de`)
-- Upgraded `eslint` dependencies
 - Upgraded `svgmap` from version `2.6.0` to `2.12.2`
 
 ## 2.137.1 - 2025-02-01
