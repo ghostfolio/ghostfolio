@@ -376,7 +376,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { currentValueInBaseCurrency, hasErrors, positions } =
+    const { createdAt, currentValueInBaseCurrency, hasErrors, positions } =
       await portfolioCalculator.getSnapshot();
 
     const cashDetails = await this.accountService.getCashDetails({
@@ -617,6 +617,7 @@ export class PortfolioService {
 
     return {
       accounts,
+      createdAt,
       hasErrors,
       holdings,
       markets,
@@ -1100,7 +1101,6 @@ export class PortfolioService {
         firstOrderDate: undefined,
         hasErrors: false,
         performance: {
-          createdAt: new Date(),
           currentNetWorth: 0,
           currentValueInBaseCurrency: 0,
           netPerformance: 0,
@@ -1121,7 +1121,7 @@ export class PortfolioService {
       currency: userCurrency
     });
 
-    const { createdAt, errors, hasErrors, historicalData } =
+    const { errors, hasErrors, historicalData } =
       await portfolioCalculator.getSnapshot();
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
@@ -1155,7 +1155,6 @@ export class PortfolioService {
       hasErrors,
       firstOrderDate: parseDate(historicalData[0]?.date),
       performance: {
-        createdAt,
         netPerformance,
         netPerformanceWithCurrencyEffect,
         totalInvestment,
@@ -1811,7 +1810,7 @@ export class PortfolioService {
       }
     }
 
-    const { createdAt, currentValueInBaseCurrency, totalInvestment } =
+    const { currentValueInBaseCurrency, totalInvestment } =
       await portfolioCalculator.getSnapshot();
 
     const { performance } = await this.getPerformance({
@@ -1916,7 +1915,6 @@ export class PortfolioService {
       })?.toNumber();
 
     return {
-      createdAt,
       annualizedPerformancePercent,
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
