@@ -192,7 +192,10 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       .then((jsonRes) => {
         if (
           jsonRes['results']?.['count'] === 1 ||
-          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol
+          // Allow exact match
+          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
+          // Allow EXCHANGE:SYMBOL
+          jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
         ) {
           return jsonRes['results']['docs'][0]['ticker'];
         }
