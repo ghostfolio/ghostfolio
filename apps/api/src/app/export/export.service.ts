@@ -26,7 +26,7 @@ export class ExportService {
     userCurrency: string;
     userId: string;
   }): Promise<Export> {
-    const platforms: Platform[] = [];
+    const platformsMap: { [platformId: string]: Platform } = {};
 
     const accounts = (
       await this.accountService.accounts({
@@ -46,15 +46,11 @@ export class ExportService {
         id,
         isExcluded,
         name,
-        platformId,
-        Platform: platform
+        Platform: platform,
+        platformId
       }) => {
-        if (
-          !platforms.some(({ id: currentPlatformId }) => {
-            return currentPlatformId === platform.id;
-          })
-        ) {
-          platforms.push(platform);
+        if (platformId) {
+          platformsMap[platformId] = platform;
         }
 
         return {
@@ -99,7 +95,7 @@ export class ExportService {
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
-      platforms,
+      platforms: Object.values(platformsMap),
       tags,
       activities: activities.map(
         ({
