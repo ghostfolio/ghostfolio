@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 
+### Fixed
+
+- Handled an exception in the benchmark service related to unnamed asset profiles
+
 ## 2.142.0 - 2025-02-28
 
 ### Added
