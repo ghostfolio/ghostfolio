@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Fixed
+
+- Handled an exception in the benchmark service related to unnamed asset profiles
+
 ## 2.142.0 - 2025-02-28
 
 ### Added
@@ -50,7 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the error handling in the `HttpResponseInterceptor`
 - Fixed an issue while using symbol profile overrides in the historical market data table of the admin control panel
 - Added missing assets in _Storybook_ setup
-- Fixed an issue when using an unnamed manual symbol as a benchmark
 
 ## 2.139.1 - 2025-02-15
 
