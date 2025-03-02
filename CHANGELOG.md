@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized the asynchronous operations using `Promise.all()` in the portfolio service (`getPerformance`)
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 
 ### Fixed
