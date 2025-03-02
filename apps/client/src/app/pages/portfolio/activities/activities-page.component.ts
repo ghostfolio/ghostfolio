@@ -163,7 +163,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        // TODO: Reload user
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
 
         this.fetchActivities();
       });
@@ -174,7 +177,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .deleteActivity(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        // TODO: Reload user
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
 
         this.fetchActivities();
       });
@@ -237,7 +243,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
-        // TODO: Reload user
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
 
         this.fetchActivities();
       });
@@ -257,6 +266,11 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        this.userService
+          .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe();
+
         this.fetchActivities();
       });
   }
@@ -342,7 +356,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
-                  // TODO: Reload user
+                  this.userService
+                    .get(true)
+                    .pipe(takeUntil(this.unsubscribeSubject))
+                    .subscribe();
 
                   this.fetchActivities();
                 }
