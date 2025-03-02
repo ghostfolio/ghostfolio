@@ -7,11 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the Ghostfolio _LinkedIn_ page to the about page
+- Added the Ghostfolio _LinkedIn_ page to the footer
+
 ### Changed
 
+- Optimized the asynchronous operations using `Promise.all()` in the portfolio service (`getPerformance`)
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 - Removed the no transactions info component from the holdings table on the home page
 - Refactored the show condition of the step by step introduction for new users using the activities count
+- Upgraded `color` from version `4.2.3` to `5.0.0`
 
 ### Fixed
 

@@ -1081,19 +1081,18 @@ export class PortfolioService {
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
-    const accountBalanceItems =
-      await this.accountBalanceService.getAccountBalanceItems({
+    const [accountBalanceItems, { activities }] = await Promise.all([
+      this.accountBalanceService.getAccountBalanceItems({
         filters,
         userId,
         userCurrency
-      });
-
-    const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
+      }),
+      this.orderService.getOrdersForPortfolioCalculator({
         filters,
         userCurrency,
         userId
-      });
+      })
+    ]);
 
     if (accountBalanceItems.length === 0 && activities.length === 0) {
       return {
