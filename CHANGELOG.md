@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
+- Upgraded `prisma` from version `6.3.0` to `6.4.1`
 
 ### Fixed
 
