@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized the asynchronous operations using `Promise.all()` in the portfolio service (`getPerformance`)
 - Improved the symbol lookup in the _Trackinsight_ data enhancer for asset profile data
 - Upgraded `color` from version `4.2.3` to `5.0.0`
+- Upgraded `prisma` from version `6.3.0` to `6.4.1`
 
 ### Fixed
 
