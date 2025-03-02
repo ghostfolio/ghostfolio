@@ -125,7 +125,10 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
         this.dataSource = new MatTableDataSource(activities);
         this.totalItems = count;
 
-        if (this.hasPermissionToCreateActivity && this.totalItems <= 0) {
+        if (
+          this.hasPermissionToCreateActivity &&
+          this.user?.activitiesCount === 0
+        ) {
           this.router.navigate([], { queryParams: { createDialog: true } });
         }
 
@@ -160,6 +163,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        // TODO: Reload user
+
         this.fetchActivities();
       });
   }
@@ -169,6 +174,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .deleteActivity(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        // TODO: Reload user
+
         this.fetchActivities();
       });
   }
@@ -230,6 +237,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
+        // TODO: Reload user
+
         this.fetchActivities();
       });
   }
@@ -333,6 +342,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
             if (transaction) {
               this.dataService.postOrder(transaction).subscribe({
                 next: () => {
+                  // TODO: Reload user
+
                   this.fetchActivities();
                 }
               });
