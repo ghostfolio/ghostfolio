@@ -174,7 +174,6 @@
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/big.js": "6.2.2",
     "@types/cache-manager": "4.0.6",
-    "@types/color": "4.2.0",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.5.13",
     "@types/lodash": "4.17.7",
