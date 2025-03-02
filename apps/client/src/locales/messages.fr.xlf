@@ -6,7 +6,7 @@
         <target state="translated">Le risque de perte en investissant peut être important. Il est déconseillé d’investir de l’argent dont vous pourriez avoir besoin à court terme.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
-          <context context-type="linenumber">205</context>
+          <context context-type="linenumber">214</context>
         </context-group>
       </trans-unit>
       <trans-unit id="fbaaeb297e70b9a800acf841b9d26c19d60651ef" datatype="html">
@@ -4162,7 +4162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/overview/about-overview-page.html</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">154</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1c275927e7e22395d21a86e4ab459e428bcac27e" datatype="html">
