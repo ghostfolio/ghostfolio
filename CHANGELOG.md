@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Handled an exception in the export functionality related to platforms
 - Handled an exception in the benchmark service related to unnamed asset profiles
 
 ## 2.142.0 - 2025-02-28
