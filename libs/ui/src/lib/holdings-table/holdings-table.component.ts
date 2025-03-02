@@ -5,7 +5,6 @@ import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -34,7 +33,6 @@ import { Subject, Subscription } from 'rxjs';
   imports: [
     CommonModule,
     GfAssetProfileIconComponent,
-    GfNoTransactionsInfoComponent,
     GfSymbolModule,
     GfValueComponent,
     MatButtonModule,
@@ -52,7 +50,6 @@ import { Subject, Subscription } from 'rxjs';
 export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() baseCurrency: string;
   @Input() deviceType: string;
-  @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToOpenDetails = true;
   @Input() hasPermissionToShowValues = true;
   @Input() holdings: PortfolioPosition[];
