@@ -109,8 +109,24 @@ export class AdminService {
     symbol
   }: AssetProfileIdentifier) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
-    await this.symbolProfileService.delete({ dataSource, symbol });
-    await this.deleteCustomCurrency(symbol);
+
+    const currency = getCurrencyFromSymbol(symbol);
+    const customCurrencies = (await this.propertyService.getByKey(
+      PROPERTY_CURRENCIES
+    )) as string[];
+
+    if (customCurrencies.includes(currency)) {
+      const updatedCustomCurrencies = customCurrencies.filter(
+        (aCurrency) => aCurrency !== currency
+      );
+
+      await this.putSetting(
+        PROPERTY_CURRENCIES,
+        JSON.stringify(updatedCustomCurrencies)
+      );
+    } else {
+      await this.symbolProfileService.delete({ dataSource, symbol });
+    }
   }
 
   public async get(): Promise<AdminData> {
@@ -775,21 +791,6 @@ export class AdminService {
           transactionCount: _count.Order || 0
         };
       }
-    );
-  }
-
-  private async deleteCustomCurrency(symbol: string) {
-    const currency = getCurrencyFromSymbol(symbol);
-    const customCurrencies = (await this.propertyService.getByKey(
-      PROPERTY_CURRENCIES
-    )) as string[];
-    const updatedCustomCurrencies = customCurrencies.filter(
-      (aCurrency) => aCurrency !== currency
-    );
-
-    await this.putSetting(
-      PROPERTY_CURRENCIES,
-      JSON.stringify(updatedCustomCurrencies)
     );
   }
 }
