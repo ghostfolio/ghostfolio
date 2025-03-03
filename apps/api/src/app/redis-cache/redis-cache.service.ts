@@ -19,13 +19,17 @@ export class RedisCacheService {
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
-    let prefix = aPrefix;
+    const prefix = aPrefix;
+    const keyList = [];
+    this.cache.stores[0].iterator((key) => {
+      if (prefix && key.startsWith(prefix)) {
+        keyList.push(key);
+      } else if (!prefix) {
+        keyList.push(key);
+      }
+    });
 
-    if (prefix) {
-      prefix = `${prefix}*`;
-    }
-
-    return this.cache.get(prefix);
+    return keyList;
   }
 
   public getPortfolioSnapshotKey({
@@ -54,8 +58,9 @@ export class RedisCacheService {
 
   public async isHealthy() {
     try {
+      const client = this.cache.stores[0];
       const isHealthy = await Promise.race([
-        this.cache,
+        client.ttl,
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Redis health check timeout')),
@@ -82,10 +87,7 @@ export class RedisCacheService {
     const keys = await this.getKeys(
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
-
-    for (const key of keys) {
-      await this.remove(key);
-    }
+    this.cache.mdel(keys);
   }
 
   public async reset() {
