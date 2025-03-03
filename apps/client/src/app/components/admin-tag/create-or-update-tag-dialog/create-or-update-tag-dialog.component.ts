@@ -1,5 +1,5 @@
-import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
 
 import {

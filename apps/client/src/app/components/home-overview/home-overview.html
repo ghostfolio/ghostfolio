@@ -1,7 +1,7 @@
 <div
   class="align-items-center container d-flex flex-column h-100 justify-content-center overview p-0 position-relative"
 >
-  @if (hasPermissionToCreateOrder && historicalDataItems?.length === 0) {
+  @if (hasPermissionToCreateOrder && user?.activitiesCount === 0) {
     <div class="justify-content-center row w-100">
       <div class="col introduction">
         <h4 i18n>Welcome to Ghostfolio</h4>

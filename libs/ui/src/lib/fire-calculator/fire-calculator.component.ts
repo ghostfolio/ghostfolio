@@ -41,7 +41,7 @@ import {
   Tooltip
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import * as Color from 'color';
+import Color from 'color';
 import {
   add,
   addYears,

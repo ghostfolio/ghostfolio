@@ -29,7 +29,7 @@ import { ArcElement } from 'chart.js';
 import { DoughnutController } from 'chart.js';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import * as Color from 'color';
+import Color from 'color';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 const {

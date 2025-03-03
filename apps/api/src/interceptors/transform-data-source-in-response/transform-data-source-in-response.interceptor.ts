@@ -33,9 +33,12 @@ export class TransformDataSourceInResponseInterceptor<T>
                 attribute: 'dataSource',
                 valueMap: Object.keys(DataSource).reduce(
                   (valueMap, dataSource) => {
-                    valueMap[dataSource] = encodeDataSource(
-                      DataSource[dataSource]
-                    );
+                    if (!['MANUAL'].includes(dataSource)) {
+                      valueMap[dataSource] = encodeDataSource(
+                        DataSource[dataSource]
+                      );
+                    }
+
                     return valueMap;
                   },
                   {}

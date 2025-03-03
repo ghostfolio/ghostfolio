@@ -204,8 +204,7 @@ export class SymbolProfileService {
             ?.length > 0
         ) {
           item.countries = this.getCountries(
-            item.SymbolProfileOverrides
-              ?.countries as unknown as Prisma.JsonArray
+            item.SymbolProfileOverrides.countries as unknown as Prisma.JsonArray
           );
         }
 
@@ -214,22 +213,22 @@ export class SymbolProfileService {
             ?.length > 0
         ) {
           item.holdings = this.getHoldings(
-            item.SymbolProfileOverrides?.holdings as unknown as Prisma.JsonArray
+            item.SymbolProfileOverrides.holdings as unknown as Prisma.JsonArray
           );
         }
 
-        item.name = item.SymbolProfileOverrides?.name ?? item.name;
+        item.name = item.SymbolProfileOverrides.name ?? item.name;
 
         if (
           (item.SymbolProfileOverrides.sectors as unknown as Sector[])?.length >
           0
         ) {
           item.sectors = this.getSectors(
-            item.SymbolProfileOverrides?.sectors as unknown as Prisma.JsonArray
+            item.SymbolProfileOverrides.sectors as unknown as Prisma.JsonArray
           );
         }
 
-        item.url = item.SymbolProfileOverrides?.url ?? item.url;
+        item.url = item.SymbolProfileOverrides.url ?? item.url;
 
         delete item.SymbolProfileOverrides;
       }

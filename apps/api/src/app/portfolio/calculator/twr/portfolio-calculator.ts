@@ -101,6 +101,10 @@ export class TWRPortfolioCalculator extends PortfolioCalculator {
       totalInterestWithCurrencyEffect,
       totalInvestment,
       totalInvestmentWithCurrencyEffect,
+      activitiesCount: this.activities.filter(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      }).length,
+      createdAt: new Date(),
       errors: [],
       historicalData: [],
       totalLiabilitiesWithCurrencyEffect: new Big(0),

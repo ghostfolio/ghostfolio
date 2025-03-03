@@ -13,8 +13,10 @@ import { EconomicMarketClusterRiskDevelopedMarkets } from '@ghostfolio/api/model
 import { EconomicMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/economic-market-cluster-risk/emerging-markets';
 import { EmergencyFundSetup } from '@ghostfolio/api/models/rules/emergency-fund/emergency-fund-setup';
 import { FeeRatioInitialInvestment } from '@ghostfolio/api/models/rules/fees/fee-ratio-initial-investment';
+import { RegionalMarketClusterRiskAsiaPacific } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/asia-pacific';
 import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/emerging-markets';
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
+import { RegionalMarketClusterRiskJapan } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/japan';
 import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
@@ -84,6 +86,9 @@ export class UserService {
         orderBy: { alias: 'asc' },
         where: { GranteeUser: { id } }
       }),
+      this.prismaService.order.count({
+        where: { userId: id }
+      }),
       this.prismaService.order.findFirst({
         orderBy: {
           date: 'asc'
@@ -94,8 +99,9 @@ export class UserService {
     ]);
 
     const access = userData[0];
-    const firstActivity = userData[1];
-    let tags = userData[2];
+    const activitiesCount = userData[1];
+    const firstActivity = userData[2];
+    let tags = userData[3];
 
     let systemMessage: SystemMessage;
 
@@ -115,6 +121,7 @@ export class UserService {
     }
 
     return {
+      activitiesCount,
       id,
       permissions,
       subscription,
@@ -272,6 +279,12 @@ export class UserService {
         undefined,
         undefined
       ).getSettings(user.Settings.settings),
+      RegionalMarketClusterRiskAsiaPacific:
+        new RegionalMarketClusterRiskAsiaPacific(
+          undefined,
+          undefined,
+          undefined
+        ).getSettings(user.Settings.settings),
       RegionalMarketClusterRiskEmergingMarkets:
         new RegionalMarketClusterRiskEmergingMarkets(
           undefined,
@@ -279,6 +292,11 @@ export class UserService {
           undefined
         ).getSettings(user.Settings.settings),
       RegionalMarketClusterRiskEurope: new RegionalMarketClusterRiskEurope(
+        undefined,
+        undefined,
+        undefined
+      ).getSettings(user.Settings.settings),
+      RegionalMarketClusterRiskJapan: new RegionalMarketClusterRiskJapan(
         undefined,
         undefined,
         undefined
@@ -333,7 +351,11 @@ export class UserService {
           currentPermissions,
           permissions.accessHoldingsChart,
           permissions.createAccess,
-          permissions.readAiPrompt
+          permissions.createMarketDataOfOwnAssetProfile,
+          permissions.createOwnTag,
+          permissions.readAiPrompt,
+          permissions.readMarketDataOfOwnAssetProfile,
+          permissions.updateMarketDataOfOwnAssetProfile
         );
 
         // Reset benchmark
