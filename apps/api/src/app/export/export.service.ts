@@ -41,6 +41,7 @@ export class ExportService {
     ).map(
       ({
         balance,
+        balances,
         comment,
         currency,
         id,
@@ -55,6 +56,7 @@ export class ExportService {
 
         return {
           balance,
+          balances,
           comment,
           currency,
           id,
@@ -94,7 +96,14 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
-      accounts,
+      accounts: accounts.map(({ balances, ...account }) => {
+        return {
+          balances: balances.map(({ date, value }) => {
+            return { date: date.toISOString(), value };
+          }),
+          ...account
+        };
+      }),
       platforms: Object.values(platformsMap),
       tags,
       activities: activities.map(
