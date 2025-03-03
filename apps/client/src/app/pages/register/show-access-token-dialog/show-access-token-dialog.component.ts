@@ -9,11 +9,16 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   standalone: false
 })
 export class ShowAccessTokenDialog {
-  public isAgreeButtonDisabled = true;
+  public isCreateAccountButtonDisabled = true;
+  public disclaimerChecked = false;
 
   public constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
 
-  public enableAgreeButton() {
-    this.isAgreeButtonDisabled = false;
+  public onChangeDislaimerChecked() {
+    this.disclaimerChecked = !this.disclaimerChecked;
+  }
+
+  public enableCreateAccountButton() {
+    this.isCreateAccountButtonDisabled = false;
   }
 }
