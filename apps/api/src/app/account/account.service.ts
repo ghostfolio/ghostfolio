@@ -7,7 +7,13 @@ import { Filter } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Account, Order, Platform, Prisma } from '@prisma/client';
+import {
+  Account,
+  AccountBalance,
+  Order,
+  Platform,
+  Prisma
+} from '@prisma/client';
 import { Big } from 'big.js';
 import { format } from 'date-fns';
 import { groupBy } from 'lodash';
@@ -56,13 +62,14 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (Account & {
+      balances?: AccountBalance[];
       Order?: Order[];
       Platform?: Platform;
     })[]
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
 
-    include.balances = { orderBy: { date: 'desc' }, take: 1 };
+    include.balances = { orderBy: { date: 'desc' } };
 
     const accounts = await this.prismaService.account.findMany({
       cursor,
@@ -75,8 +82,6 @@ export class AccountService {
 
     return accounts.map((account) => {
       account = { ...account, balance: account.balances[0]?.value ?? 0 };
-
-      delete account.balances;
 
       return account;
     });
