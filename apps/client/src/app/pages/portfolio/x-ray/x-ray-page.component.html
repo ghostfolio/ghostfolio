@@ -18,10 +18,35 @@
             }"
           />
         } @else {
-          {{ statistics?.rulesFulfilledCount }}
-          <ng-container i18n>out of</ng-container>
-          {{ statistics?.rulesActiveCount }}
-          <ng-container i18n>rules align with your portfolio.</ng-container>
+          <span
+            class="icon-container mr-2 px-2"
+            [ngClass]="{
+              okay:
+                statistics?.rulesFulfilledCount ===
+                statistics?.rulesActiveCount,
+              warn:
+                statistics?.rulesFulfilledCount !== statistics?.rulesActiveCount
+            }"
+          >
+            @if (
+              statistics?.rulesFulfilledCount === statistics?.rulesActiveCount
+            ) {
+              <ion-icon name="checkmark-circle-outline" />
+            } @else if (
+              statistics?.rulesActiveCount === 0 ||
+              statistics?.rulesFulfilledCount === 0
+            ) {
+              <ion-icon class="text-muted" name="remove-circle-outline" />
+            } @else {
+              <ion-icon name="warning-outline" />
+            }
+          </span>
+          <span>
+            {{ statistics?.rulesFulfilledCount }}
+            <ng-container i18n>out of</ng-container>
+            {{ statistics?.rulesActiveCount }}
+            <ng-container i18n>rules align with your portfolio.</ng-container>
+          </span>
         }
       </p>
       <div

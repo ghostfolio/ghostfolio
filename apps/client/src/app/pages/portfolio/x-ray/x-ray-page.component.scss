@@ -1,3 +1,18 @@
 :host {
   display: block;
+
+  .icon-container {
+    background-color: rgba(var(--dark-primary-text), 0.05);
+    border-radius: 0.25rem;
+    height: 2rem;
+    vertical-align: middle;
+
+    &.okay {
+      color: var(--success);
+    }
+
+    &.warn {
+      color: var(--danger);
+    }
+  }
 }
