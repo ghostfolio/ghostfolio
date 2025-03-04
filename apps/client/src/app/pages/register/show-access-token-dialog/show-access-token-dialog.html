@@ -41,8 +41,8 @@
             color="primary"
             i18n
             mat-flat-button
-            matStepperNext
             [disabled]="!disclaimerChecked"
+            (click)="createAccount()"
           >
             Continue
           </button>
