@@ -9,11 +9,13 @@ export class AiService {
   public async getPrompt({
     impersonationId,
     languageCode,
+    mode,
     userCurrency,
     userId
   }: {
     impersonationId: string;
     languageCode: string;
+    mode: 'analysis' | 'portfolio';
     userCurrency: string;
     userId: string;
   }) {
@@ -42,6 +44,10 @@ export class AiService {
           }
         )
     ];
+
+    if (mode === 'portfolio') {
+      return holdingsTable.join('\n');
+    }
 
     return [
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
