@@ -117,7 +117,9 @@ export class AdminService {
 
     if (customCurrencies.includes(currency)) {
       const updatedCustomCurrencies = customCurrencies.filter(
-        (aCurrency) => aCurrency !== currency
+        (customCurrency) => {
+          return customCurrency !== currency;
+        }
       );
 
       await this.putSetting(
