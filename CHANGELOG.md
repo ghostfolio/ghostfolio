@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the missing import functionality on the non-empty activities page
+- Fixed the functionality to delete an asset profile of a custom currency in the admin control panel
 
 ## 2.143.0 - 2025-03-02
 
@@ -31,7 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handled an exception in the export functionality related to platforms
 - Handled an exception in the benchmark service related to unnamed asset profiles
-- Fixed the functionality to delete an asset profile of a custom currency
 
 ## 2.142.0 - 2025-02-28
 
