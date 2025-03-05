@@ -357,7 +357,7 @@ export class DataService {
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmarks/${dataSource}/${symbol}/${date.toISOString().split('T')[0]}`,
+      `/api/v1/benchmarks/${dataSource}/${symbol}/${startDate.toISOString().split('T')[0]}`,
       { params }
     );
   }
