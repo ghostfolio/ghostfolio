@@ -69,7 +69,12 @@ export class AccountService {
   > {
     const { include = {}, skip, take, cursor, where, orderBy } = params;
 
-    include.balances = { orderBy: { date: 'desc' } };
+    const isBalancesIncluded = !!include.balances;
+
+    include.balances = {
+      orderBy: { date: 'desc' },
+      ...(isBalancesIncluded ? {} : { take: 1 })
+    };
 
     const accounts = await this.prismaService.account.findMany({
       cursor,
@@ -82,6 +87,10 @@ export class AccountService {
 
     return accounts.map((account) => {
       account = { ...account, balance: account.balances[0]?.value ?? 0 };
+
+      if (!isBalancesIncluded) {
+        delete account.balances;
+      }
 
       return account;
     });
