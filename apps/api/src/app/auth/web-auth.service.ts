@@ -58,7 +58,6 @@ export class WebAuthService {
       userID: isoUint8Array.fromUTF8String(user.id),
       userName: '',
       timeout: 60000,
-      attestationType: 'indirect',
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
         requireResidentKey: false,
