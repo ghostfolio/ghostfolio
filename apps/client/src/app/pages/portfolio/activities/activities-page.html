@@ -6,9 +6,8 @@
         [baseCurrency]="user?.settings?.baseCurrency"
         [dataSource]="dataSource"
         [deviceType]="deviceType"
-        [hasPermissionToCreateActivity]="
-          hasPermissionToCreateActivity && user?.activitiesCount === 0
-        "
+        [hasActivities]="user?.activitiesCount > 0"
+        [hasPermissionToCreateActivity]="hasPermissionToCreateActivity"
         [hasPermissionToDeleteActivity]="hasPermissionToDeleteActivity"
         [hasPermissionToExportActivities]="!hasImpersonationId"
         [locale]="user?.settings?.locale"

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed the missing import functionality on the non-empty activities page
 - Fixed the functionality to delete an asset profile of a custom currency in the admin control panel
 
 ## 2.143.0 - 2025-03-02
