@@ -68,11 +68,6 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
 
   public openShowAccessTokenDialog() {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: {
-        accessToken: undefined,
-        authToken: undefined,
-        role: undefined
-      },
       disableClose: true,
       width: '30rem'
     });
@@ -80,9 +75,9 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        if (data?.authToken) {
-          this.tokenStorageService.saveToken(data.authToken, true);
+      .subscribe((authToken) => {
+        if (authToken) {
+          this.tokenStorageService.saveToken(authToken, true);
 
           this.router.navigate(['/']);
         }

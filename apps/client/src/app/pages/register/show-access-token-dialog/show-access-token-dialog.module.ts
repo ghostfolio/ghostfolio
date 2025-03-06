@@ -23,13 +23,13 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog.component';
     CommonModule,
     FormsModule,
     MatButtonModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
-    ReactiveFormsModule,
-    TextFieldModule,
     MatStepperModule,
-    MatCheckboxModule
+    ReactiveFormsModule,
+    TextFieldModule
   ],
   providers: [
     {
