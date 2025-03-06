@@ -1,7 +1,7 @@
 <h1 mat-dialog-title>
   <span i18n>Create Account</span>
-  @if (data.role === 'ADMIN') {
-    <span class="badge badge-light ml-2">{{ data.role }}</span>
+  @if (role === 'ADMIN') {
+    <span class="badge badge-light ml-2">{{ role }}</span>
   }
 </h1>
 <div class="py-3" mat-dialog-content>
@@ -62,13 +62,13 @@
           matInput
           readonly
           type="text"
-          [(value)]="data.accessToken"
+          [(value)]="accessToken"
         ></textarea>
         <div class="float-right mt-1">
           <button
             color="secondary"
             mat-flat-button
-            [cdkCopyToClipboard]="data.accessToken"
+            [cdkCopyToClipboard]="accessToken"
             (click)="enableCreateAccountButton()"
           >
             <ion-icon class="mr-1" name="copy-outline" />
@@ -83,7 +83,7 @@
             mat-flat-button
             matStepperNext
             [disabled]="isCreateAccountButtonDisabled"
-            [mat-dialog-close]="data"
+            [mat-dialog-close]="authToken"
           >
             <span i18n>Create Account</span>
             <ion-icon class="ml-1" name="arrow-forward-outline" />

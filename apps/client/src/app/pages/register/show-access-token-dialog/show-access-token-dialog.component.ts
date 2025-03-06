@@ -2,11 +2,10 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
-  Inject,
   ViewChild
 } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,13 +19,16 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ShowAccessTokenDialog {
   @ViewChild(MatStepper) stepper!: MatStepper;
-  public isCreateAccountButtonDisabled = true;
+  public accessToken: string;
+  public authToken: string;
   public disclaimerChecked = false;
+  public isCreateAccountButtonDisabled = true;
+  public role: string;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService
   ) {}
 
@@ -43,12 +45,13 @@ export class ShowAccessTokenDialog {
       .postUser()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ accessToken, authToken, role }) => {
-        this.data = {
-          accessToken,
-          authToken,
-          role
-        };
+        this.accessToken = accessToken;
+        this.authToken = authToken;
+        this.role = role;
+
         this.stepper.next();
+
+        this.changeDetectorRef.markForCheck();
       });
   }
 }
