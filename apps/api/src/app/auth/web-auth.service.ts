@@ -24,6 +24,7 @@ import {
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts
 } from '@simplewebauthn/server';
+import { isoBase64URL, isoUint8Array } from '@simplewebauthn/server/helpers';
 
 import {
   AssertionCredentialJSON,
@@ -54,7 +55,7 @@ export class WebAuthService {
     const opts: GenerateRegistrationOptionsOpts = {
       rpName: 'Ghostfolio',
       rpID: this.rpID,
-      userID: user.id,
+      userID: isoUint8Array.fromUTF8String(user.id),
       userName: '',
       timeout: 60000,
       attestationType: 'indirect',
@@ -114,7 +115,8 @@ export class WebAuthService {
       const { counter, credentialID, credentialPublicKey } = registrationInfo;
 
       let existingDevice = devices.find(
-        (device) => device.credentialId === credentialID
+        (device) =>
+          isoBase64URL.fromBuffer(device.credentialId) === credentialID
       );
 
       if (!existingDevice) {
@@ -148,9 +150,8 @@ export class WebAuthService {
     const opts: GenerateAuthenticationOptionsOpts = {
       allowCredentials: [
         {
-          id: device.credentialId,
-          transports: ['internal'],
-          type: 'public-key'
+          id: isoBase64URL.fromBuffer(device.credentialId),
+          transports: ['internal']
         }
       ],
       rpID: this.rpID,
@@ -188,7 +189,7 @@ export class WebAuthService {
     try {
       const opts: VerifyAuthenticationResponseOpts = {
         authenticator: {
-          credentialID: device.credentialId,
+          credentialID: isoBase64URL.fromBuffer(device.credentialId),
           credentialPublicKey: device.credentialPublicKey,
           counter: device.counter
         },
