@@ -1,7 +1,9 @@
 import { Account, Order, Platform, Tag } from '@prisma/client';
 
 export interface Export {
-  accounts: Omit<Account, 'createdAt' | 'updatedAt' | 'userId'>[];
+  accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
+    balances: { date: string; value: number }[];
+  })[];
   activities: (Omit<
     Order,
     | 'accountUserId'

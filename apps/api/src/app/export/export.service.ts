@@ -31,6 +31,7 @@ export class ExportService {
     const accounts = (
       await this.accountService.accounts({
         include: {
+          balances: true,
           Platform: true
         },
         orderBy: {
@@ -41,6 +42,7 @@ export class ExportService {
     ).map(
       ({
         balance,
+        balances,
         comment,
         currency,
         id,
@@ -55,6 +57,9 @@ export class ExportService {
 
         return {
           balance,
+          balances: balances.map(({ date, value }) => {
+            return { date: date.toISOString(), value };
+          }),
           comment,
           currency,
           id,
