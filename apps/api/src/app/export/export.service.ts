@@ -31,6 +31,7 @@ export class ExportService {
     const accounts = (
       await this.accountService.accounts({
         include: {
+          balances: true,
           Platform: true
         },
         orderBy: {
@@ -56,7 +57,9 @@ export class ExportService {
 
         return {
           balance,
-          balances,
+          balances: balances.map(({ date, value }) => {
+            return { date: date.toISOString(), value };
+          }),
           comment,
           currency,
           id,
@@ -96,14 +99,7 @@ export class ExportService {
 
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
-      accounts: accounts.map(({ balances, ...account }) => {
-        return {
-          balances: balances.map(({ date, value }) => {
-            return { date: date.toISOString(), value };
-          }),
-          ...account
-        };
-      }),
+      accounts,
       platforms: Object.values(platformsMap),
       tags,
       activities: activities.map(
