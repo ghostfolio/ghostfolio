@@ -134,7 +134,7 @@ export class XRayPageComponent {
           rules['regionalMarketClusterRisk']?.filter(({ isActive }) => {
             return isActive;
           }) ?? null;
-
+        debugger;
         this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();

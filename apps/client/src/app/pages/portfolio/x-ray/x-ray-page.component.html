@@ -7,18 +7,28 @@
         risks in your portfolio. Adjust the rules below and set custom
         thresholds to align with your personal investment strategy.
       </p>
-      <p class="mb-4">
+      <div class="d-flex py-3">
         @if (isLoading) {
-          <ngx-skeleton-loader
-            animation="pulse"
-            class="w-100"
-            [theme]="{
-              height: '1rem',
-              width: '100%'
-            }"
-          />
+          <div class="d-flex">
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mr-2"
+              [theme]="{
+                height: '2rem',
+                width: '2rem'
+              }"
+            />
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mt-2 mb-1"
+              [theme]="{
+                height: '1rem',
+                width: '10rem'
+              }"
+            />
+          </div>
         } @else {
-          <span
+          <div
             class="icon-container mr-2 px-2"
             [ngClass]="{
               okay:
@@ -32,23 +42,26 @@
               statistics?.rulesActiveCount === 0 ||
               statistics?.rulesFulfilledCount === 0
             ) {
-              <ion-icon class="text-muted" name="remove-circle-outline" />
+              <ion-icon
+                class="align-middle text-muted"
+                name="remove-circle-outline"
+              />
             } @else if (
               statistics?.rulesFulfilledCount === statistics?.rulesActiveCount
             ) {
-              <ion-icon name="checkmark-circle-outline" />
+              <ion-icon class="align-middle" name="checkmark-circle-outline" />
             } @else {
-              <ion-icon name="warning-outline" />
+              <ion-icon class="align-middle" name="warning-outline" />
             }
-          </span>
-          <span>
-            {{ statistics?.rulesFulfilledCount }}
+          </div>
+          <div>
+            <ng-container>{{ statistics?.rulesFulfilledCount }} </ng-container>
             <ng-container i18n>out of</ng-container>
             {{ statistics?.rulesActiveCount }}
             <ng-container i18n>rules align with your portfolio.</ng-container>
-          </span>
+          </div>
         }
-      </p>
+      </div>
       <div
         class="mb-4"
         [ngClass]="{
