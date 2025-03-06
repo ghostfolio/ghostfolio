@@ -112,7 +112,13 @@ export class WebAuthService {
       where: { userId: user.id }
     });
     if (registrationInfo && verified) {
-      const { counter, credentialID, credentialPublicKey } = registrationInfo;
+      const {
+        credential: {
+          counter,
+          id: credentialID,
+          publicKey: credentialPublicKey
+        }
+      } = registrationInfo;
 
       let existingDevice = devices.find(
         (device) =>
@@ -188,9 +194,9 @@ export class WebAuthService {
     let verification: VerifiedAuthenticationResponse;
     try {
       const opts: VerifyAuthenticationResponseOpts = {
-        authenticator: {
-          credentialID: isoBase64URL.fromBuffer(device.credentialId),
-          credentialPublicKey: device.credentialPublicKey,
+        credential: {
+          id: isoBase64URL.fromBuffer(device.credentialId),
+          publicKey: device.credentialPublicKey,
           counter: device.counter
         },
         expectedChallenge: `${user.authChallenge}`,

@@ -45,7 +45,7 @@ export class WebAuthnService {
           return of(null);
         }),
         switchMap((attOps) => {
-          return startRegistration(attOps);
+          return startRegistration({ optionsJSON: attOps });
         }),
         switchMap((credential) => {
           return this.http.post<AuthDeviceDto>(
@@ -90,7 +90,7 @@ export class WebAuthnService {
       )
       .pipe(
         switchMap((requestOptionsJSON) => {
-          return startAuthentication(requestOptionsJSON);
+          return startAuthentication({ optionsJSON: requestOptionsJSON });
         }),
         switchMap((credential) => {
           return this.http.post<{ authToken: string }>(
