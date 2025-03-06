@@ -29,7 +29,7 @@
           </div>
         } @else {
           <div
-            class="icon-container mr-2 px-2"
+            class="icon-container align-items-center d-flex mr-2 px-2"
             [ngClass]="{
               okay:
                 statistics?.rulesFulfilledCount ===
@@ -42,19 +42,16 @@
               statistics?.rulesActiveCount === 0 ||
               statistics?.rulesFulfilledCount === 0
             ) {
-              <ion-icon
-                class="align-middle text-muted"
-                name="remove-circle-outline"
-              />
+              <ion-icon class="text-muted" name="remove-circle-outline" />
             } @else if (
               statistics?.rulesFulfilledCount === statistics?.rulesActiveCount
             ) {
-              <ion-icon class="align-middle" name="checkmark-circle-outline" />
+              <ion-icon name="checkmark-circle-outline" />
             } @else {
-              <ion-icon class="align-middle" name="warning-outline" />
+              <ion-icon name="warning-outline" />
             }
           </div>
-          <div>
+          <div class="d-flex align-items-center">
             <ng-container>{{ statistics?.rulesFulfilledCount }} </ng-container>
             <ng-container i18n>out of</ng-container>
             {{ statistics?.rulesActiveCount }}
