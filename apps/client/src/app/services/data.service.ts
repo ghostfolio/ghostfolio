@@ -46,7 +46,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import {
+import type {
   AccountWithValue,
   AiPromptMode,
   DateRange,
