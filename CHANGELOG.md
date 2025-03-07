@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a _Copy portfolio data to clipboard for AI prompt_ action to the analysis page (experimental)
+
 ### Changed
 
 - Improved the style of the summary on the _X-ray_ page
