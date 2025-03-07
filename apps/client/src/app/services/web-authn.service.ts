@@ -89,8 +89,8 @@ export class WebAuthnService {
         { deviceId }
       )
       .pipe(
-        switchMap((requestOptionsJSON) => {
-          return startAuthentication({ optionsJSON: requestOptionsJSON });
+        switchMap((optionsJSON) => {
+          return startAuthentication({ optionsJSON });
         }),
         switchMap((credential) => {
           return this.http.post<{ authToken: string }>(

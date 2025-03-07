@@ -114,15 +114,14 @@ export class WebAuthService {
       const {
         credential: {
           counter,
-          id: credentialID,
+          id: credentialId,
           publicKey: credentialPublicKey
         }
       } = registrationInfo;
 
-      let existingDevice = devices.find(
-        (device) =>
-          isoBase64URL.fromBuffer(device.credentialId) === credentialID
-      );
+      let existingDevice = devices.find((device) => {
+        return isoBase64URL.fromBuffer(device.credentialId) === credentialId;
+      });
 
       if (!existingDevice) {
         /**
@@ -130,7 +129,7 @@ export class WebAuthService {
          */
         existingDevice = await this.deviceService.createAuthDevice({
           counter,
-          credentialId: Buffer.from(credentialID),
+          credentialId: Buffer.from(credentialId),
           credentialPublicKey: Buffer.from(credentialPublicKey),
           User: { connect: { id: user.id } }
         });
@@ -194,9 +193,9 @@ export class WebAuthService {
     try {
       const opts: VerifyAuthenticationResponseOpts = {
         credential: {
+          counter: device.counter,
           id: isoBase64URL.fromBuffer(device.credentialId),
-          publicKey: device.credentialPublicKey,
-          counter: device.counter
+          publicKey: device.credentialPublicKey
         },
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,
