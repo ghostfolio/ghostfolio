@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the summary on the _X-ray_ page
+- Improved the language localization for German (`de`)
 
 ## 2.144.0 - 2025-03-06
 
