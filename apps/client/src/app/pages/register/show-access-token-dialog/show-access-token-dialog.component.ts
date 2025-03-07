@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DataService } from '@ghostfolio/client/services/data.service';
+
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild
+} from '@angular/core';
+import { MatStepper } from '@angular/material/stepper';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'gf-show-access-token-dialog',
@@ -9,11 +18,40 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   standalone: false
 })
 export class ShowAccessTokenDialog {
-  public isAgreeButtonDisabled = true;
+  @ViewChild(MatStepper) stepper!: MatStepper;
+  public accessToken: string;
+  public authToken: string;
+  public disclaimerChecked = false;
+  public isCreateAccountButtonDisabled = true;
+  public role: string;
 
-  public constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  private unsubscribeSubject = new Subject<void>();
 
-  public enableAgreeButton() {
-    this.isAgreeButtonDisabled = false;
+  public constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private dataService: DataService
+  ) {}
+
+  public onChangeDislaimerChecked() {
+    this.disclaimerChecked = !this.disclaimerChecked;
+  }
+
+  public enableCreateAccountButton() {
+    this.isCreateAccountButtonDisabled = false;
+  }
+
+  public async createAccount() {
+    this.dataService
+      .postUser()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ accessToken, authToken, role }) => {
+        this.accessToken = accessToken;
+        this.authToken = authToken;
+        this.role = role;
+
+        this.stepper.next();
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }
