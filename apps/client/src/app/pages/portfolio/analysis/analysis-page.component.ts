@@ -12,7 +12,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { GroupBy } from '@ghostfolio/common/types';
+import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -142,9 +142,9 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.fetchDividendsAndInvestments();
   }
 
-  public onCopyPromptToClipboard() {
+  public onCopyPromptToClipboard(mode: AiPromptMode) {
     this.dataService
-      .fetchPrompt()
+      .fetchPrompt(mode)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ prompt }) => {
         this.clipboard.copy(prompt);
