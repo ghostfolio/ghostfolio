@@ -1,6 +1,7 @@
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { CryptocurrencyModule } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.module';
+import { CurrencyModule } from '@ghostfolio/api/services/currency/currency.module';
 import { AlphaVantageService } from '@ghostfolio/api/services/data-provider/alpha-vantage/alpha-vantage.service';
 import { CoinGeckoService } from '@ghostfolio/api/services/data-provider/coingecko/coingecko.service';
 import { EodHistoricalDataService } from '@ghostfolio/api/services/data-provider/eod-historical-data/eod-historical-data.service';
@@ -24,6 +25,7 @@ import { DataProviderService } from './data-provider.service';
 @Module({
   imports: [
     ConfigurationModule,
+    CurrencyModule,
     CryptocurrencyModule,
     DataEnhancerModule,
     MarketDataModule,
