@@ -6,7 +6,7 @@ import {
 } from '@ghostfolio/common/config';
 import { AiPromptResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import type { RequestWithUser } from '@ghostfolio/common/types';
+import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
 
 import { Controller, Get, Inject, Param, UseGuards } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -25,13 +25,13 @@ export class AiController {
   @HasPermission(permissions.readAiPrompt)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPrompt(
-    @Param('mode') mode: 'analysis' | 'portfolio'
+    @Param('mode') mode: AiPromptMode
   ): Promise<AiPromptResponse> {
     const prompt = await this.aiService.getPrompt({
+      mode,
       impersonationId: undefined,
       languageCode:
         this.request.user.Settings.settings.language ?? DEFAULT_LANGUAGE_CODE,
-      mode,
       userCurrency:
         this.request.user.Settings.settings.baseCurrency ?? DEFAULT_CURRENCY,
       userId: this.request.user.id

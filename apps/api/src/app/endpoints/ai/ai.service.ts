@@ -1,4 +1,5 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 
@@ -15,7 +16,7 @@ export class AiService {
   }: {
     impersonationId: string;
     languageCode: string;
-    mode: 'analysis' | 'portfolio';
+    mode: AiPromptMode;
     userCurrency: string;
     userId: string;
   }) {

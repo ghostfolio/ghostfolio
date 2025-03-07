@@ -46,7 +46,12 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
+import {
+  AccountWithValue,
+  AiPromptMode,
+  DateRange,
+  GroupBy
+} from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -650,8 +655,8 @@ export class DataService {
     return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
   }
 
-  public fetchPrompt() {
-    return this.http.get<AiPromptResponse>('/api/v1/ai/prompt');
+  public fetchPrompt(mode: AiPromptMode) {
+    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`);
   }
 
   public fetchPublicPortfolio(aAccessId: string) {

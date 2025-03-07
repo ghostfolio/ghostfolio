@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added a _Copy portfolio data to clipboard for AI prompt_ action to the analysis page (experimental)
+
+### Changed
+
+- Updated _Copy AI prompt to clipboard_ action to _Copy AI prompt to clipboard for analysis_ on the analysis page
+
 ## 2.144.0 - 2025-03-06
 
 ### Fixed
@@ -18,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the Ghostfolio _LinkedIn_ page to the about page
 - Added the Ghostfolio _LinkedIn_ page to the footer
+- Added a _Copy portfolio data to clipboard for AI prompt_ action to the analysis page (experimental)
 
 ### Changed
 
@@ -27,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the show condition of the step by step introduction for new users using the activities count
 - Upgraded `color` from version `4.2.3` to `5.0.0`
 - Upgraded `prisma` from version `6.3.0` to `6.4.1`
+- Updated _Copy AI prompt to clipboard_ action to _Copy AI prompt to clipboard for analysis_ on the analysis page
 
 ### Fixed
 
