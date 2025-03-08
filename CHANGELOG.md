@@ -15,12 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the summary on the _X-ray_ page
 - Improved the language localization for German (`de`)
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `9.0` to `13.1`
 
 ## 2.144.0 - 2025-03-06
-
-### Changed
-
-- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `9.0` to `13.1`
 
 ### Fixed
 
