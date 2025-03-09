@@ -129,6 +129,7 @@ export const HtmlTemplateMiddleware = async (
 
   if (
     path.startsWith('/api/') ||
+    path.startsWith('/development/storybook') ||
     isFileRequest(path) ||
     !environment.production
   ) {
