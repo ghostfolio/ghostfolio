@@ -244,7 +244,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
 
-      const { historical } = await fetch(
+      const { historical = [] } = await fetch(
         `${this.URL}/historical-price-full/stock_dividend/${symbol}?apikey=${this.apiKey}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
@@ -305,7 +305,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           ? addYears(currentFrom, MAX_YEARS_PER_REQUEST)
           : to;
 
-        const { historical } = await fetch(
+        const { historical = [] } = await fetch(
           `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
