@@ -1,14 +1,9 @@
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
+import { CurrencyService } from '@ghostfolio/api/services/currency/currency.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
-import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import {
-  DEFAULT_CURRENCY,
-  DERIVED_CURRENCIES,
-  PROPERTY_CURRENCIES
-} from '@ghostfolio/common/config';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
   getYesterday,
@@ -23,25 +18,19 @@ import {
   isToday,
   subDays
 } from 'date-fns';
-import { isNumber, uniq } from 'lodash';
+import { isNumber } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
 export class ExchangeRateDataService {
-  private currencies: string[] = [];
   private currencyPairs: IDataGatheringItem[] = [];
   private exchangeRates: { [currencyPair: string]: number } = {};
 
   public constructor(
+    private readonly currencyService: CurrencyService,
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService,
-    private readonly prismaService: PrismaService,
-    private readonly propertyService: PropertyService
+    private readonly marketDataService: MarketDataService
   ) {}
-
-  public getCurrencies() {
-    return this.currencies?.length > 0 ? this.currencies : [DEFAULT_CURRENCY];
-  }
 
   public getCurrencyPairs() {
     return this.currencyPairs;
@@ -133,7 +122,6 @@ export class ExchangeRateDataService {
   }
 
   public async initialize() {
-    this.currencies = await this.prepareCurrencies();
     this.currencyPairs = [];
     this.exchangeRates = {};
 
@@ -141,7 +129,7 @@ export class ExchangeRateDataService {
       currency1,
       currency2,
       dataSource
-    } of this.prepareCurrencyPairs(this.currencies)) {
+    } of this.prepareCurrencyPairs(this.currencyService.getCurrencies())) {
       this.currencyPairs.push({
         dataSource,
         symbol: `${currency1}${currency2}`
@@ -467,55 +455,6 @@ export class ExchangeRateDataService {
     }
 
     return factors;
-  }
-
-  private async prepareCurrencies(): Promise<string[]> {
-    let currencies: string[] = [DEFAULT_CURRENCY];
-
-    (
-      await this.prismaService.account.findMany({
-        distinct: ['currency'],
-        orderBy: [{ currency: 'asc' }],
-        select: { currency: true },
-        where: {
-          currency: {
-            not: null
-          }
-        }
-      })
-    ).forEach(({ currency }) => {
-      currencies.push(currency);
-    });
-
-    (
-      await this.prismaService.symbolProfile.findMany({
-        distinct: ['currency'],
-        orderBy: [{ currency: 'asc' }],
-        select: { currency: true }
-      })
-    ).forEach(({ currency }) => {
-      currencies.push(currency);
-    });
-
-    const customCurrencies = (await this.propertyService.getByKey(
-      PROPERTY_CURRENCIES
-    )) as string[];
-
-    if (customCurrencies?.length > 0) {
-      currencies = currencies.concat(customCurrencies);
-    }
-
-    // Add derived currencies
-    currencies.push('USX');
-
-    for (const { currency, rootCurrency } of DERIVED_CURRENCIES) {
-      if (currencies.includes(currency) || currencies.includes(rootCurrency)) {
-        currencies.push(currency);
-        currencies.push(rootCurrency);
-      }
-    }
-
-    return uniq(currencies).filter(Boolean).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {

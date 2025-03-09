@@ -4,6 +4,7 @@ import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
+import { CurrencyModule } from '@ghostfolio/api/services/currency/currency.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
@@ -23,6 +24,7 @@ import { QueueModule } from './queue/queue.module';
     ApiModule,
     BenchmarkModule,
     ConfigurationModule,
+    CurrencyModule,
     DataGatheringModule,
     DataProviderModule,
     ExchangeRateDataModule,
