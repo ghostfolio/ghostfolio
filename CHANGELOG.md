@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue to get dividends in the _Financial Modeling Prep_ service
 - Fixed an issue to get historical market data in the _Financial Modeling Prep_ service
+- Fixed an issue with serving _Storybook_
 
 ## 2.144.0 - 2025-03-06
 
