@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { parseDate } from '@ghostfolio/common/helper';
 import {
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DividendsResponse,
   HistoricalResponse,
@@ -36,6 +37,41 @@ export class GhostfolioController {
     private readonly ghostfolioService: GhostfolioService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
+
+  @Get('asset-profile/:symbol')
+  @HasPermission(permissions.enableDataProviderGhostfolio)
+  @UseGuards(AuthGuard('api-key'), HasPermissionGuard)
+  public async getAssetProfile(
+    @Param('symbol') symbol: string
+  ): Promise<DataProviderGhostfolioAssetProfileResponse> {
+    const maxDailyRequests = await this.ghostfolioService.getMaxDailyRequests();
+
+    if (
+      this.request.user.dataProviderGhostfolioDailyRequests > maxDailyRequests
+    ) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+        StatusCodes.TOO_MANY_REQUESTS
+      );
+    }
+
+    try {
+      const assetProfile = await this.ghostfolioService.getAssetProfile({
+        symbol
+      });
+
+      await this.ghostfolioService.incrementDailyRequests({
+        userId: this.request.user.id
+      });
+
+      return assetProfile;
+    } catch {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR),
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
 
   /**
    * @deprecated
