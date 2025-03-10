@@ -75,8 +75,6 @@ export class GhostfolioService {
 
       throw error;
     }
-
-    return result;
   }
 
   public async getDividends({
