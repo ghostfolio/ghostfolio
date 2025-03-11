@@ -1,14 +1,6 @@
 :host {
-  .terms-and-conditions {
-    text-align: justify;
-
-    a {
-      color: rgba(var(--palette-primary-500), 1);
-      font-weight: 500;
-
-      &:hover {
-        color: rgba(var(--palette-primary-300), 1);
-      }
-    }
+  .mat-mdc-dialog-actions {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }

@@ -4,56 +4,49 @@
     <span class="badge badge-light ml-2">{{ role }}</span>
   }
 </h1>
-<div class="py-3" mat-dialog-content>
-  <mat-stepper #stepper linear>
-    <mat-step
-      editable="false"
-      state="disclaimer"
-      [completed]="disclaimerChecked"
-    >
+<div class="px-0" mat-dialog-content>
+  <mat-stepper #stepper animationDuration="0ms" linear>
+    <mat-step editable="false" [completed]="isDisclaimerChecked">
       <ng-template i18n matStepLabel>Terms and Conditions</ng-template>
-      <div class="terms-and-conditions pt-2" i18n>
-        Please take a moment to read and accept the
-        <a
-          href="https://ghostfol.io/en/about/privacy-policy"
-          target="_blank"
-          title="Terms and Conditions"
+      <div class="pt-2">
+        <ng-container i18n>
+          Please keep your security token safe. If you lose it, you will not be
+          able to recover your account.</ng-container
         >
-          terms and conditions</a
-        >. Remember to keep your security token safe. If you lose it, you will
-        not be able to recover your account.
       </div>
       <mat-checkbox
         class="pt-2"
         color="primary"
-        i18n
         (change)="onChangeDislaimerChecked()"
       >
-        I agree to the terms and understand that if I lose my security token, I
-        cannot recover my account.
+        <ng-container i18n
+          >I understand that if I lose my security token, I cannot recover my
+          account.</ng-container
+        >
       </mat-checkbox>
-      <div mat-dialog-actions>
+      <div class="mt-3" mat-dialog-actions>
         <div class="flex-grow-1">
           <button i18n mat-button [mat-dialog-close]="undefined">Cancel</button>
         </div>
         <div>
           <button
             color="primary"
-            i18n
             mat-flat-button
-            [disabled]="!disclaimerChecked"
+            [disabled]="!isDisclaimerChecked"
             (click)="createAccount()"
           >
-            Continue
+            <ng-container i18n>Continue</ng-container>
           </button>
         </div>
       </div>
     </mat-step>
-    <mat-step editable="false" state="copy">
+    <mat-step editable="false">
       <ng-template i18n matStepLabel>Security Token</ng-template>
-      <div class="pt-2" i18n>
-        Here is your security token. It is only visible once, please store and
-        keep it in a safe place.
+      <div class="pt-2">
+        <ng-container i18n
+          >Here is your security token. It is only visible once, please store
+          and keep it in a safe place.</ng-container
+        >
       </div>
       <mat-form-field appearance="outline" class="w-100 pt-3">
         <mat-label i18n>Security Token</mat-label>
@@ -72,11 +65,11 @@
             (click)="enableCreateAccountButton()"
           >
             <ion-icon class="mr-1" name="copy-outline" />
-            <span i18n> Copy to clipboard </span>
+            <span i18n>Copy to clipboard</span>
           </button>
         </div>
       </mat-form-field>
-      <div align="end" mat-dialog-actions>
+      <div align="end" class="mt-3" mat-dialog-actions>
         <div>
           <button
             color="primary"
@@ -93,15 +86,6 @@
     </mat-step>
 
     <!-- Custom icons -->
-    <ng-template matStepperIcon="disclaimer">
-      <ion-icon name="information-outline"></ion-icon>
-    </ng-template>
-    <ng-template matStepperIcon="create">
-      <ion-icon name="information-outline"></ion-icon>
-    </ng-template>
-    <ng-template matStepperIcon="copy">
-      <ion-icon name="copy-outline"></ion-icon>
-    </ng-template>
     <ng-template matStepperIcon="done">
       <ion-icon name="checkmark-outline"></ion-icon>
     </ng-template>

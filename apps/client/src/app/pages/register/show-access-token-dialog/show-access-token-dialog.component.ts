@@ -11,18 +11,18 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'gf-show-access-token-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'gf-show-access-token-dialog',
+  standalone: false,
   styleUrls: ['./show-access-token-dialog.scss'],
-  templateUrl: 'show-access-token-dialog.html',
-  standalone: false
+  templateUrl: 'show-access-token-dialog.html'
 })
 export class ShowAccessTokenDialog {
   @ViewChild(MatStepper) stepper!: MatStepper;
   public accessToken: string;
   public authToken: string;
-  public disclaimerChecked = false;
   public isCreateAccountButtonDisabled = true;
+  public isDisclaimerChecked = false;
   public role: string;
 
   private unsubscribeSubject = new Subject<void>();
@@ -33,7 +33,7 @@ export class ShowAccessTokenDialog {
   ) {}
 
   public onChangeDislaimerChecked() {
-    this.disclaimerChecked = !this.disclaimerChecked;
+    this.isDisclaimerChecked = !this.isDisclaimerChecked;
   }
 
   public enableCreateAccountButton() {
