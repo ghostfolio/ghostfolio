@@ -58,6 +58,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
   public isLoadingInvestmentTimelineChart: boolean;
+  public isLoadingAiPrompt: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -151,6 +152,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   public onCopyPromptToClipboard(mode: AiPromptMode) {
+    this.isLoadingAiPrompt = true;
     this.dataService
       .fetchPrompt(mode)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -173,6 +175,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           });
 
         this.actionsMenuButton.closeMenu();
+        this.isLoadingAiPrompt = false;
       });
   }
 

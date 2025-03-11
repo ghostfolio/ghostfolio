@@ -24,7 +24,11 @@
                   @if (user?.subscription?.type === 'Basic') {
                     <gf-premium-indicator class="mr-2" />
                   } @else {
-                    <ion-icon class="mr-2" name="copy-outline" />
+                    @if (isLoadingAiPrompt) {
+                      <mat-spinner class="mr-2" [diameter]="20" />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
                   }
                   <ng-container i18n
                     >Copy portfolio data to clipboard for AI
@@ -41,7 +45,11 @@
                   @if (user?.subscription?.type === 'Basic') {
                     <gf-premium-indicator class="mr-2" />
                   } @else {
-                    <ion-icon class="mr-2" name="copy-outline" />
+                    @if (isLoadingAiPrompt) {
+                      <mat-spinner class="mr-2" [diameter]="20" />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
                   }
                   <ng-container i18n
                     >Copy AI prompt to clipboard for analysis</ng-container
