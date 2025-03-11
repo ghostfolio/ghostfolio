@@ -19,6 +19,7 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class ShowAccessTokenDialog {
   @ViewChild(MatStepper) stepper!: MatStepper;
+
   public accessToken: string;
   public authToken: string;
   public isCreateAccountButtonDisabled = true;
@@ -32,15 +33,11 @@ export class ShowAccessTokenDialog {
     private dataService: DataService
   ) {}
 
-  public onChangeDislaimerChecked() {
-    this.isDisclaimerChecked = !this.isDisclaimerChecked;
-  }
-
   public enableCreateAccountButton() {
     this.isCreateAccountButtonDisabled = false;
   }
 
-  public async createAccount() {
+  public createAccount() {
     this.dataService
       .postUser()
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -53,5 +50,9 @@ export class ShowAccessTokenDialog {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public onChangeDislaimerChecked() {
+    this.isDisclaimerChecked = !this.isDisclaimerChecked;
   }
 }
