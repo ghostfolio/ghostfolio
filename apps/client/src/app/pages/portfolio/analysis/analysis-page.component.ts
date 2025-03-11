@@ -16,7 +16,14 @@ import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
 import { isNumber, sortBy } from 'lodash';
@@ -32,6 +39,7 @@ import { takeUntil } from 'rxjs/operators';
   standalone: false
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
@@ -163,6 +171,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .subscribe(() => {
             window.open('https://duck.ai', '_blank');
           });
+
+        this.actionsMenuButton.closeMenu();
       });
   }
 
