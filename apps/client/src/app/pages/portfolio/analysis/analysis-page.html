@@ -13,7 +13,11 @@
           >
             <ion-icon name="ellipsis-vertical" />
           </button>
-          <mat-menu #actionsMenu="matMenu" class="wide-menu" xPosition="before">
+          <mat-menu
+            #actionsMenu="matMenu"
+            class="no-max-width"
+            xPosition="before"
+          >
             <div (click)="$event.stopPropagation()">
               <button
                 mat-menu-item
