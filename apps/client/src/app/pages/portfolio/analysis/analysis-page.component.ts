@@ -144,7 +144,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   public onCopyPromptToClipboard(mode: AiPromptMode) {
     this.dataService
-      .fetchPrompt(mode)
+      .fetchPrompt({
+        filters: this.userService.getFilters(),
+        mode
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ prompt }) => {
         this.clipboard.copy(prompt);

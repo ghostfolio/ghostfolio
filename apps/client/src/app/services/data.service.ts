@@ -655,8 +655,18 @@ export class DataService {
     return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
   }
 
-  public fetchPrompt(mode: AiPromptMode) {
-    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`);
+  public fetchPrompt({
+    filters,
+    mode
+  }: {
+    filters?: Filter[];
+    mode: AiPromptMode;
+  }) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`, {
+      params
+    });
   }
 
   public fetchPublicPortfolio(aAccessId: string) {
