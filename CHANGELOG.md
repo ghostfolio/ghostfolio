@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Exported the analysis functionality by supporting filters in AI prompts
+- Extended the analysis functionality by supporting filters in AI prompts
 
 ## 2.145.1 - 2025-03-10
 
