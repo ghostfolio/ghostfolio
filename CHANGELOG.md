@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the export functionality by filters
+
 ### Changed
 
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
