@@ -7,7 +7,6 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Role } from '@prisma/client';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -59,15 +58,6 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     );
   }
 
-  public async createAccount() {
-    this.dataService
-      .postUser()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ accessToken, authToken, role }) => {
-        this.openShowAccessTokenDialog(accessToken, authToken, role);
-      });
-  }
-
   public async onLoginWithInternetIdentity() {
     try {
       const { authToken } = await this.internetIdentityService.login();
@@ -76,17 +66,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     } catch {}
   }
 
-  public openShowAccessTokenDialog(
-    accessToken: string,
-    authToken: string,
-    role: Role
-  ) {
+  public openShowAccessTokenDialog() {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
-      data: {
-        accessToken,
-        authToken,
-        role
-      },
       disableClose: true,
       width: '30rem'
     });
@@ -94,8 +75,8 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     dialogRef
       .afterClosed()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((data) => {
-        if (data?.authToken) {
+      .subscribe((authToken) => {
+        if (authToken) {
           this.tokenStorageService.saveToken(authToken, true);
 
           this.router.navigate(['/']);

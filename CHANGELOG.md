@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Improved the usability of the user account registration
+
 ### Changed
 
 - Upgraded `Nx` from version `20.3.2` to `20.5.0`
