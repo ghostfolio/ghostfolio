@@ -1,5 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
+import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LANGUAGE_CODE
@@ -8,7 +9,14 @@ import { AiPromptResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
 
-import { Controller, Get, Inject, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Query,
+  UseGuards
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -17,6 +25,7 @@ import { AiService } from './ai.service';
 @Controller('ai')
 export class AiController {
   public constructor(
+    private readonly apiService: ApiService,
     private readonly aiService: AiService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -25,10 +34,24 @@ export class AiController {
   @HasPermission(permissions.readAiPrompt)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getPrompt(
-    @Param('mode') mode: AiPromptMode
+    @Param('mode') mode: AiPromptMode,
+    @Query('accounts') filterByAccounts?: string,
+    @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
+    @Query('tags') filterByTags?: string
   ): Promise<AiPromptResponse> {
+    const filters = this.apiService.buildFiltersFromQueryParams({
+      filterByAccounts,
+      filterByAssetClasses,
+      filterByDataSource,
+      filterBySymbol,
+      filterByTags
+    });
+
     const prompt = await this.aiService.getPrompt({
       mode,
+      filters,
       impersonationId: undefined,
       languageCode:
         this.request.user.Settings.settings.language ?? DEFAULT_LANGUAGE_CODE,
