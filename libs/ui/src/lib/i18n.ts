@@ -71,9 +71,11 @@ const locales = {
   'South America': $localize`South America`,
 
   // Countries
+  Armenia: $localize`Armenia`,
   Australia: $localize`Australia`,
   Austria: $localize`Austria`,
   Belgium: $localize`Belgium`,
+  'British Virgin Islands': $localize`British Virgin Islands`,
   Bulgaria: $localize`Bulgaria`,
   Canada: $localize`Canada`,
   'Czech Republic': $localize`Czech Republic`,
@@ -87,6 +89,7 @@ const locales = {
   'New Zealand': $localize`New Zealand`,
   Poland: $localize`Poland`,
   Romania: $localize`Romania`,
+  Singapore: $localize`Singapore`,
   'South Africa': $localize`South Africa`,
   Switzerland: $localize`Switzerland`,
   Thailand: $localize`Thailand`,

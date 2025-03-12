@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -44,9 +45,7 @@ export class ManualService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     const assetProfile: Partial<SymbolProfile> = {
       symbol,
       dataSource: this.getName()

@@ -41,6 +41,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
@@ -83,6 +84,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DataProviderInfo,
   DividendsResponse,

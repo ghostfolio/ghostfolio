@@ -142,7 +142,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public initialize() {
-    this.adminService
+    this.dataService
       .fetchTags()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags) => {

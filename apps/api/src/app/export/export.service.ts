@@ -1,15 +1,18 @@
 import { AccountService } from '@ghostfolio/api/app/account/account.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import { environment } from '@ghostfolio/api/environments/environment';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { Filter, Export } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
+import { Platform } from '@prisma/client';
 
 @Injectable()
 export class ExportService {
   public constructor(
     private readonly accountService: AccountService,
-    private readonly orderService: OrderService
+    private readonly orderService: OrderService,
+    private readonly tagService: TagService
   ) {}
 
   public async export({
@@ -23,17 +26,40 @@ export class ExportService {
     userCurrency: string;
     userId: string;
   }): Promise<Export> {
+    const platformsMap: { [platformId: string]: Platform } = {};
+
     const accounts = (
       await this.accountService.accounts({
+        include: {
+          balances: true,
+          Platform: true
+        },
         orderBy: {
           name: 'asc'
         },
         where: { userId }
       })
     ).map(
-      ({ balance, comment, currency, id, isExcluded, name, platformId }) => {
+      ({
+        balance,
+        balances,
+        comment,
+        currency,
+        id,
+        isExcluded,
+        name,
+        Platform: platform,
+        platformId
+      }) => {
+        if (platformId) {
+          platformsMap[platformId] = platform;
+        }
+
         return {
           balance,
+          balances: balances.map(({ date, value }) => {
+            return { date: date.toISOString(), value };
+          }),
           comment,
           currency,
           id,
@@ -60,9 +86,22 @@ export class ExportService {
       });
     }
 
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(({ isUsed }) => {
+        return isUsed;
+      })
+      .map(({ id, name }) => {
+        return {
+          id,
+          name
+        };
+      });
+
     return {
       meta: { date: new Date().toISOString(), version: environment.version },
       accounts,
+      platforms: Object.values(platformsMap),
+      tags,
       activities: activities.map(
         ({
           accountId,
@@ -72,6 +111,7 @@ export class ExportService {
           id,
           quantity,
           SymbolProfile,
+          tags: currentTags,
           type,
           unitPrice
         }) => {
@@ -86,13 +126,12 @@ export class ExportService {
             currency: SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol:
-              type === 'FEE' ||
-              type === 'INTEREST' ||
-              type === 'ITEM' ||
-              type === 'LIABILITY'
-                ? SymbolProfile.name
-                : SymbolProfile.symbol
+            symbol: ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
+              ? SymbolProfile.name
+              : SymbolProfile.symbol,
+            tags: currentTags.map(({ id: tagId }) => {
+              return tagId;
+            })
           };
         }
       ),
