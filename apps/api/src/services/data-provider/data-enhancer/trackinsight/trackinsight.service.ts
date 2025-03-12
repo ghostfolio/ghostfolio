@@ -43,60 +43,54 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
       return response;
     }
 
+    let trackinsightSymbol = await this.searchTrackinsightSymbol({
+      requestTimeout,
+      symbol
+    });
+
+    if (!trackinsightSymbol) {
+      trackinsightSymbol = await this.searchTrackinsightSymbol({
+        requestTimeout,
+        symbol: symbol.split('.')?.[0]
+      });
+    }
+
+    if (!trackinsightSymbol) {
+      return response;
+    }
+
     const profile = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/funds/${symbol}.json`,
+      `${TrackinsightDataEnhancerService.baseUrl}/funds/${trackinsightSymbol}.json`,
       {
         signal: AbortSignal.timeout(requestTimeout)
       }
     )
       .then((res) => res.json())
       .catch(() => {
-        return fetch(
-          `${TrackinsightDataEnhancerService.baseUrl}/funds/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
-    const isin = profile?.isin?.split(';')?.[0];
+    const cusip = profile?.cusip;
+
+    if (cusip) {
+      response.cusip = cusip;
+    }
+
+    const isin = profile?.isins?.[0];
 
     if (isin) {
       response.isin = isin;
     }
 
     const holdings = await fetch(
-      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${symbol}.json`,
+      `${TrackinsightDataEnhancerService.baseUrl}/holdings/${trackinsightSymbol}.json`,
       {
-        signal: AbortSignal.timeout(
-          this.configurationService.get('REQUEST_TIMEOUT')
-        )
+        signal: AbortSignal.timeout(requestTimeout)
       }
     )
       .then((res) => res.json())
       .catch(() => {
-        return fetch(
-          `${TrackinsightDataEnhancerService.baseUrl}/holdings/${
-            symbol.split('.')?.[0]
-          }.json`,
-          {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
-          }
-        )
-          .then((res) => res.json())
-          .catch(() => {
-            return {};
-          });
+        return {};
       });
 
     if (holdings?.weight < 1 - Math.min(holdings?.count * 0.000015, 0.95)) {
@@ -176,5 +170,37 @@ export class TrackinsightDataEnhancerService implements DataEnhancerInterface {
 
   public getTestSymbol() {
     return 'QQQ';
+  }
+
+  private async searchTrackinsightSymbol({
+    requestTimeout,
+    symbol
+  }: {
+    requestTimeout: number;
+    symbol: string;
+  }) {
+    return fetch(
+      `https://www.trackinsight.com/search-api/search_v2/${symbol}/_/ticker/default/0/3`,
+      {
+        signal: AbortSignal.timeout(requestTimeout)
+      }
+    )
+      .then((res) => res.json())
+      .then((jsonRes) => {
+        if (
+          jsonRes['results']?.['count'] === 1 ||
+          // Allow exact match
+          jsonRes['results']?.['docs']?.[0]?.['ticker'] === symbol ||
+          // Allow EXCHANGE:SYMBOL
+          jsonRes['results']?.['docs']?.[0]?.['ticker']?.endsWith(`:${symbol}`)
+        ) {
+          return jsonRes['results']['docs'][0]['ticker'];
+        }
+
+        return undefined;
+      })
+      .catch(() => {
+        return undefined;
+      });
   }
 }

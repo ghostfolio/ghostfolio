@@ -1,8 +1,5 @@
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
-import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
@@ -11,16 +8,10 @@ import {
   CACHE_TTL_INFINITE,
   PROPERTY_BENCHMARKS
 } from '@ghostfolio/common/config';
-import {
-  DATE_FORMAT,
-  calculateBenchmarkTrend,
-  parseDate,
-  resetHours
-} from '@ghostfolio/common/helper';
+import { calculateBenchmarkTrend } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   Benchmark,
-  BenchmarkMarketDataDetails,
   BenchmarkProperty,
   BenchmarkResponse
 } from '@ghostfolio/common/interfaces';
@@ -29,16 +20,8 @@ import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { Injectable, Logger } from '@nestjs/common';
 import { SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
-import {
-  addHours,
-  differenceInDays,
-  eachDayOfInterval,
-  format,
-  isAfter,
-  isSameDay,
-  subDays
-} from 'date-fns';
-import { isNumber, uniqBy } from 'lodash';
+import { addHours, isAfter, subDays } from 'date-fns';
+import { uniqBy } from 'lodash';
 import ms from 'ms';
 
 import { BenchmarkValue } from './interfaces/benchmark-value.interface';
@@ -48,15 +31,12 @@ export class BenchmarkService {
   private readonly CACHE_KEY_BENCHMARKS = 'BENCHMARKS';
 
   public constructor(
-    private readonly configurationService: ConfigurationService,
     private readonly dataProviderService: DataProviderService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
-    private readonly symbolProfileService: SymbolProfileService,
-    private readonly symbolService: SymbolService
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   public calculateChangeInPercentage(baseValue: number, currentValue: number) {
@@ -153,139 +133,9 @@ export class BenchmarkService {
           symbol
         };
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  }
-
-  public async getMarketDataForUser({
-    dataSource,
-    endDate = new Date(),
-    startDate,
-    symbol,
-    userCurrency
-  }: {
-    endDate?: Date;
-    startDate: Date;
-    userCurrency: string;
-  } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
-    const marketData: { date: string; value: number }[] = [];
-
-    const days = differenceInDays(endDate, startDate) + 1;
-    const dates = eachDayOfInterval(
-      {
-        start: startDate,
-        end: endDate
-      },
-      {
-        step: Math.round(
-          days /
-            Math.min(days, this.configurationService.get('MAX_CHART_ITEMS'))
-        )
-      }
-    ).map((date) => {
-      return resetHours(date);
-    });
-
-    const [currentSymbolItem, marketDataItems] = await Promise.all([
-      this.symbolService.get({
-        dataGatheringItem: {
-          dataSource,
-          symbol
-        }
-      }),
-      this.marketDataService.marketDataItems({
-        orderBy: {
-          date: 'asc'
-        },
-        where: {
-          dataSource,
-          symbol,
-          date: {
-            in: dates
-          }
-        }
-      })
-    ]);
-
-    const exchangeRates =
-      await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        startDate,
-        currencies: [currentSymbolItem.currency],
-        targetCurrency: userCurrency
+      .sort((a, b) => {
+        return a.name?.localeCompare(b?.name) ?? 0;
       });
-
-    const exchangeRateAtStartDate =
-      exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-        format(startDate, DATE_FORMAT)
-      ];
-
-    const marketPriceAtStartDate = marketDataItems?.find(({ date }) => {
-      return isSameDay(date, startDate);
-    })?.marketPrice;
-
-    if (!marketPriceAtStartDate) {
-      Logger.error(
-        `No historical market data has been found for ${symbol} (${dataSource}) at ${format(
-          startDate,
-          DATE_FORMAT
-        )}`,
-        'BenchmarkService'
-      );
-
-      return { marketData };
-    }
-
-    for (const marketDataItem of marketDataItems) {
-      const exchangeRate =
-        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(marketDataItem.date, DATE_FORMAT)
-        ];
-
-      const exchangeRateFactor =
-        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
-          ? exchangeRate / exchangeRateAtStartDate
-          : 1;
-
-      marketData.push({
-        date: format(marketDataItem.date, DATE_FORMAT),
-        value:
-          marketPriceAtStartDate === 0
-            ? 0
-            : this.calculateChangeInPercentage(
-                marketPriceAtStartDate,
-                marketDataItem.marketPrice * exchangeRateFactor
-              ) * 100
-      });
-    }
-
-    const includesEndDate = isSameDay(
-      parseDate(marketData.at(-1).date),
-      endDate
-    );
-
-    if (currentSymbolItem?.marketPrice && !includesEndDate) {
-      const exchangeRate =
-        exchangeRates[`${currentSymbolItem.currency}${userCurrency}`]?.[
-          format(endDate, DATE_FORMAT)
-        ];
-
-      const exchangeRateFactor =
-        isNumber(exchangeRateAtStartDate) && isNumber(exchangeRate)
-          ? exchangeRate / exchangeRateAtStartDate
-          : 1;
-
-      marketData.push({
-        date: format(endDate, DATE_FORMAT),
-        value:
-          this.calculateChangeInPercentage(
-            marketPriceAtStartDate,
-            currentSymbolItem.marketPrice * exchangeRateFactor
-          ) * 100
-      });
-    }
-
-    return {
-      marketData
-    };
   }
 
   public async addBenchmark({

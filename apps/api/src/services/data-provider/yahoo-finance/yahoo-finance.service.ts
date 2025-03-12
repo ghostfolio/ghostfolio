@@ -2,6 +2,7 @@ import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/c
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -43,9 +44,7 @@ export class YahooFinanceService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     return this.yahooFinanceDataEnhancerService.getAssetProfile(symbol);
   }
 

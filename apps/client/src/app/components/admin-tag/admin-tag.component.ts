@@ -1,8 +1,7 @@
-import { CreateTagDto } from '@ghostfolio/api/app/tag/create-tag.dto';
-import { UpdateTagDto } from '@ghostfolio/api/app/tag/update-tag.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 
@@ -49,7 +48,6 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
     private deviceService: DeviceDetectorService,
@@ -106,7 +104,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private deleteTag(aId: string) {
-    this.adminService
+    this.dataService
       .deleteTag(aId)
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe({
@@ -122,7 +120,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
   }
 
   private fetchTags() {
-    this.adminService
+    this.dataService
       .fetchTags()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tags) => {
@@ -154,7 +152,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tag: CreateTagDto | null) => {
         if (tag) {
-          this.adminService
+          this.dataService
             .postTag(tag)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({
@@ -190,7 +188,7 @@ export class AdminTagComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((tag: UpdateTagDto | null) => {
         if (tag) {
-          this.adminService
+          this.dataService
             .putTag(tag)
             .pipe(takeUntil(this.unsubscribeSubject))
             .subscribe({

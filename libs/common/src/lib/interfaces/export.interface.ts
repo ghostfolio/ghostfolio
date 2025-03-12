@@ -1,11 +1,9 @@
-import { Account, Order } from '@prisma/client';
+import { Account, Order, Platform, Tag } from '@prisma/client';
 
 export interface Export {
-  meta: {
-    date: string;
-    version: string;
-  };
-  accounts: Omit<Account, 'createdAt' | 'updatedAt' | 'userId'>[];
+  accounts: (Omit<Account, 'createdAt' | 'updatedAt' | 'userId'> & {
+    balances: { date: string; value: number }[];
+  })[];
   activities: (Omit<
     Order,
     | 'accountUserId'
@@ -16,5 +14,11 @@ export interface Export {
     | 'updatedAt'
     | 'userId'
   > & { date: string; symbol: string })[];
+  meta: {
+    date: string;
+    version: string;
+  };
+  platforms: Platform[];
+  tags: Omit<Tag, 'userId'>[];
   user: { settings: { currency: string } };
 }

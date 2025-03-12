@@ -1,8 +1,8 @@
-import { BenchmarkModule } from '@ghostfolio/api/app/benchmark/benchmark.module';
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
 import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';

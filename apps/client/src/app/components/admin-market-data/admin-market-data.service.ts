@@ -4,7 +4,8 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
 import {
   getCurrencyFromSymbol,
-  isDerivedCurrency
+  isDerivedCurrency,
+  isRootCurrency
 } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
@@ -77,6 +78,7 @@ export class AdminMarketDataService {
       activitiesCount === 0 &&
       !isBenchmark &&
       !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
+      !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
       !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
     );
   }

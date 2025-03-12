@@ -108,6 +108,7 @@ export class PortfolioController {
 
     const {
       accounts,
+      createdAt,
       hasErrors,
       holdings,
       markets,
@@ -254,6 +255,7 @@ export class PortfolioController {
 
     return {
       accounts,
+      createdAt,
       hasError,
       holdings,
       platforms,
