@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
+### Changed
 
-- Extended the export functionality by filters
+- Improved the export functionality by applying filters on accounts and tags
 
 ### Changed
 
