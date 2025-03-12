@@ -33,10 +33,6 @@ export class ShowAccessTokenDialog {
     private dataService: DataService
   ) {}
 
-  public enableCreateAccountButton() {
-    this.isCreateAccountButtonDisabled = false;
-  }
-
   public createAccount() {
     this.dataService
       .postUser()
@@ -50,6 +46,10 @@ export class ShowAccessTokenDialog {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public enableCreateAccountButton() {
+    this.isCreateAccountButtonDisabled = false;
   }
 
   public onChangeDislaimerChecked() {
