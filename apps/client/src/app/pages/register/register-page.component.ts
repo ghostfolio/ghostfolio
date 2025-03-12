@@ -61,7 +61,9 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
   public async onLoginWithInternetIdentity() {
     try {
       const { authToken } = await this.internetIdentityService.login();
+
       this.tokenStorageService.saveToken(authToken);
+
       await this.router.navigate(['/']);
     } catch {}
   }
