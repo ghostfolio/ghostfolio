@@ -62,14 +62,15 @@ export class RegisterPageComponent implements OnDestroy, OnInit {
     try {
       const { authToken } = await this.internetIdentityService.login();
       this.tokenStorageService.saveToken(authToken);
-      this.router.navigate(['/']);
+      await this.router.navigate(['/']);
     } catch {}
   }
 
   public openShowAccessTokenDialog() {
     const dialogRef = this.dialog.open(ShowAccessTokenDialog, {
       disableClose: true,
-      width: '30rem'
+      height: this.deviceType === 'mobile' ? '98vh' : undefined,
+      width: this.deviceType === 'mobile' ? '100vw' : '30rem'
     });
 
     dialogRef
