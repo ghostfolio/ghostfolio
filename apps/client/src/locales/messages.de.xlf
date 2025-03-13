@@ -7790,7 +7790,7 @@
       </trans-unit>
       <trans-unit id="e9048704780ed5bb3fc1af4f94d4fc5fdeb72cab" datatype="html">
         <source>Terms and Conditions</source>
-        <target state="new">Terms and Conditions</target>
+        <target state="translated">Nutzungsbedingungen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">10</context>
@@ -7798,7 +7798,7 @@
       </trans-unit>
       <trans-unit id="4051385e7211aebdb652666927a0564de3e74fd0" datatype="html">
         <source>Please keep your security token safe. If you lose it, you will not be able to recover your account.</source>
-        <target state="new">Please keep your security token safe. If you lose it, you will not be able to recover your account.</target>
+        <target state="translated">Bitte bewahre dein Sicherheits-Token sicher auf. Wenn du es verlierst, kannst du dein Benutzerkonto nicht wiederherstellen.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">13</context>
@@ -7806,7 +7806,7 @@
       </trans-unit>
       <trans-unit id="0c165378eae03c8bd376d2819d94b108d9929c64" datatype="html">
         <source>I understand that if I lose my security token, I cannot recover my account.</source>
-        <target state="new">I understand that if I lose my security token, I cannot recover my account.</target>
+        <target state="translated">Ich nehme zur Kenntnis, dass ich mein Benutzerkonto nicht wiederherstellen kann, wenn ich mein Sicherheits-Token verliere.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">23</context>
@@ -7814,7 +7814,7 @@
       </trans-unit>
       <trans-unit id="ac10a3d9b59575640797c1a8e6aea642cf5d5e77" datatype="html">
         <source>Continue</source>
-        <target state="new">Continue</target>
+        <target state="translated">Weiter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">38</context>
@@ -7822,7 +7822,7 @@
       </trans-unit>
       <trans-unit id="43a04e6b986ac8b5184330fdcc4235867d48bcf7" datatype="html">
         <source>Here is your security token. It is only visible once, please store and keep it in a safe place.</source>
-        <target state="new">Here is your security token. It is only visible once, please store and keep it in a safe place.</target>
+        <target state="translated">Hier ist dein Sicherheits-Token. Es ist nur ein einziges Mal sichtbar. Bitte bewahre es sicher auf.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">47</context>
