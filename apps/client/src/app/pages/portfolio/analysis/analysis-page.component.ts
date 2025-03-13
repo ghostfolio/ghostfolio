@@ -55,11 +55,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
-  public isLoadingAiPrompt: boolean;
+  public isLoadingAnalysisPrompt: boolean;
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
   public isLoadingInvestmentTimelineChart: boolean;
+  public isLoadingPortfolioPrompt: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -153,7 +154,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   public onCopyPromptToClipboard(mode: AiPromptMode) {
-    this.isLoadingAiPrompt = true;
+    if (mode === 'analysis') {
+      this.isLoadingAnalysisPrompt = true;
+    } else if (mode === 'portfolio') {
+      this.isLoadingPortfolioPrompt = true;
+    }
 
     this.dataService
       .fetchPrompt(mode)
@@ -178,7 +183,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
         this.actionsMenuButton.closeMenu();
 
-        this.isLoadingAiPrompt = false;
+        if (mode === 'analysis') {
+          this.isLoadingAnalysisPrompt = false;
+        } else if (mode === 'portfolio') {
+          this.isLoadingPortfolioPrompt = false;
+        }
       });
   }
 

@@ -28,7 +28,7 @@
                   @if (user?.subscription?.type === 'Basic') {
                     <gf-premium-indicator class="mr-2" />
                   } @else {
-                    @if (isLoadingAiPrompt) {
+                    @if (isLoadingPortfolioPrompt) {
                       <mat-spinner class="mr-2" [diameter]="20" />
                     } @else {
                       <ion-icon class="mr-2" name="copy-outline" />
@@ -49,7 +49,7 @@
                   @if (user?.subscription?.type === 'Basic') {
                     <gf-premium-indicator class="mr-2" />
                   } @else {
-                    @if (isLoadingAiPrompt) {
+                    @if (isLoadingAnalysisPrompt) {
                       <mat-spinner class="mr-2" [diameter]="20" />
                     } @else {
                       <ion-icon class="mr-2" name="copy-outline" />
