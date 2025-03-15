@@ -16,7 +16,14 @@ import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
 import { isNumber, sortBy } from 'lodash';
@@ -32,6 +39,8 @@ import { takeUntil } from 'rxjs/operators';
   standalone: false
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
+
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
@@ -46,10 +55,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
+  public isLoadingAnalysisPrompt: boolean;
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
   public isLoadingInvestmentTimelineChart: boolean;
+  public isLoadingPortfolioPrompt: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -143,6 +154,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   }
 
   public onCopyPromptToClipboard(mode: AiPromptMode) {
+    if (mode === 'analysis') {
+      this.isLoadingAnalysisPrompt = true;
+    } else if (mode === 'portfolio') {
+      this.isLoadingPortfolioPrompt = true;
+    }
+
     this.dataService
       .fetchPrompt(mode)
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -163,6 +180,14 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .subscribe(() => {
             window.open('https://duck.ai', '_blank');
           });
+
+        this.actionsMenuButton.closeMenu();
+
+        if (mode === 'analysis') {
+          this.isLoadingAnalysisPrompt = false;
+        } else if (mode === 'portfolio') {
+          this.isLoadingPortfolioPrompt = false;
+        }
       });
   }
 
