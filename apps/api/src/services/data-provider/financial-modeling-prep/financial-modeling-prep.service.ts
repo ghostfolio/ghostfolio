@@ -12,6 +12,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { REPLACE_NAME_PARTS } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -186,7 +187,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           response.isin = assetProfile.isin;
         }
 
-        response.name = assetProfile.companyName;
+        response.name = this.formatName({ name: assetProfile.companyName });
 
         if (assetProfile.website) {
           response.url = assetProfile.website;
@@ -398,7 +399,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             assetSubClass: undefined, // TODO
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: this.getName(),
-            name: companyName
+            name: this.formatName({ name: companyName })
           };
         });
       } else {
@@ -414,12 +415,12 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         items = result.map(({ currency, name, symbol }) => {
           return {
             currency,
-            name,
             symbol,
             assetClass: undefined, // TODO
             assetSubClass: undefined, // TODO
             dataProviderInfo: this.getDataProviderInfo(),
-            dataSource: this.getName()
+            dataSource: this.getName(),
+            name: this.formatName({ name })
           };
         });
       }
@@ -436,6 +437,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private formatName({ name }: { name: string }) {
+    if (name) {
+      for (const part of REPLACE_NAME_PARTS) {
+        name = name.replace(part, '');
+      }
+
+      name = name.trim();
+    }
+
+    return name;
   }
 
   private getUrl({ version }: { version: number }) {
