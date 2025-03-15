@@ -28,48 +28,6 @@ export class ExportService {
   }): Promise<Export> {
     const platformsMap: { [platformId: string]: Platform } = {};
 
-    const accounts = (
-      await this.accountService.accounts({
-        include: {
-          balances: true,
-          Platform: true
-        },
-        orderBy: {
-          name: 'asc'
-        },
-        where: { userId }
-      })
-    ).map(
-      ({
-        balance,
-        balances,
-        comment,
-        currency,
-        id,
-        isExcluded,
-        name,
-        Platform: platform,
-        platformId
-      }) => {
-        if (platformId) {
-          platformsMap[platformId] = platform;
-        }
-
-        return {
-          balance,
-          balances: balances.map(({ date, value }) => {
-            return { date: date.toISOString(), value };
-          }),
-          comment,
-          currency,
-          id,
-          isExcluded,
-          name,
-          platformId
-        };
-      }
-    );
-
     let { activities } = await this.orderService.getOrders({
       filters,
       userCurrency,
@@ -86,10 +44,60 @@ export class ExportService {
       });
     }
 
-    const tags = (await this.tagService.getTagsForUser(userId))
-      .filter(({ isUsed }) => {
-        return isUsed;
+    const accounts = (
+      await this.accountService.accounts({
+        include: {
+          balances: true,
+          Platform: true
+        },
+        orderBy: {
+          name: 'asc'
+        },
+        where: { userId }
       })
+    )
+      .filter((account) =>
+        activities.some(({ accountId }) => accountId === account.id)
+      )
+      .map(
+        ({
+          balance,
+          balances,
+          comment,
+          currency,
+          id,
+          isExcluded,
+          name,
+          Platform: platform,
+          platformId
+        }) => {
+          if (platformId) {
+            platformsMap[platformId] = platform;
+          }
+
+          return {
+            balance,
+            balances: balances.map(({ date, value }) => {
+              return { date: date.toISOString(), value };
+            }),
+            comment,
+            currency,
+            id,
+            isExcluded,
+            name,
+            platformId
+          };
+        }
+      );
+
+    const tags = (await this.tagService.getTagsForUser(userId))
+      .filter(
+        (tag) =>
+          tag.isUsed &&
+          activities.some((activity) =>
+            activity.tags.some(({ id: tagId }) => tagId === tag.id)
+          )
+      )
       .map(({ id, name }) => {
         return {
           id,

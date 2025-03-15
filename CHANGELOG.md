@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `19.0.5` to `19.2.1`
 - Upgraded `Nx` from version `20.3.2` to `20.5.0`
+- Improved the export functionality by applying filters on accounts and tags
 
 ### Fixed
 
