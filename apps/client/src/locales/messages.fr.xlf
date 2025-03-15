@@ -590,7 +590,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor-dialog/historical-market-data-editor-dialog.html</context>
@@ -1438,7 +1438,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="053e81597467a642e04109eebe934c84e6a1f467" datatype="html">
@@ -2928,6 +2932,10 @@
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="e1c4e91c3cf021ce1810d037887e0d7d4d1cface" datatype="html">
         <source>Continue with Internet Identity</source>
@@ -2950,23 +2958,7 @@
         <target state="translated">Copier vers le presse-papier</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9397711dc06a5d217fb57befe8ae2fec4b8ed039" datatype="html">
-        <source> I agree to have stored my <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Security Token<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> from above in a secure place. If I lose it, I cannot get my account back. </source>
-        <target state="translated"> Je certifie avoir sauvé mon <x id="START_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;i&gt;"/>Jeton de Sécurité<x id="CLOSE_ITALIC_TEXT" ctype="x-i" equiv-text="&lt;/i&gt;"/> ci-dessus dans un endroit sûr. Si je le perds, je ne pourrai pas récupérer mon compte. </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6a9a8caf09dab1871f119d73dfb79db2eda37a35" datatype="html">
-        <source>Agree and continue</source>
-        <target state="translated">Accepter et continuer</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2446117790692479672" datatype="html">
@@ -7794,6 +7786,46 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e9048704780ed5bb3fc1af4f94d4fc5fdeb72cab" datatype="html">
+        <source>Terms and Conditions</source>
+        <target state="new">Terms and Conditions</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="4051385e7211aebdb652666927a0564de3e74fd0" datatype="html">
+        <source>Please keep your security token safe. If you lose it, you will not be able to recover your account.</source>
+        <target state="new">Please keep your security token safe. If you lose it, you will not be able to recover your account.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="0c165378eae03c8bd376d2819d94b108d9929c64" datatype="html">
+        <source>I understand that if I lose my security token, I cannot recover my account.</source>
+        <target state="new">I understand that if I lose my security token, I cannot recover my account.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ac10a3d9b59575640797c1a8e6aea642cf5d5e77" datatype="html">
+        <source>Continue</source>
+        <target state="new">Continue</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="43a04e6b986ac8b5184330fdcc4235867d48bcf7" datatype="html">
+        <source>Here is your security token. It is only visible once, please store and keep it in a safe place.</source>
+        <target state="new">Here is your security token. It is only visible once, please store and keep it in a safe place.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/register/show-access-token-dialog/show-access-token-dialog.html</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
     </body>
