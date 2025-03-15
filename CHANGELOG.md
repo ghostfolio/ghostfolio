@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the usability of the user account registration
 - Improved the usability of the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
 - Formatted the name in the _Financial Modeling Prep_ service
+- Removed the exchange rates from the overview of the admin control panel
 - Improved the language localization for German (`de`)
 - Upgraded `angular` from version `19.0.5` to `19.2.1`
 - Upgraded `Nx` from version `20.3.2` to `20.5.0`
+- Upgraded `prettier` from version `3.5.1` to `3.5.3`
 
 ### Fixed
 
