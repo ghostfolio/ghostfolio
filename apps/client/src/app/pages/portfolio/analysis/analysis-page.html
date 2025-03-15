@@ -29,7 +29,11 @@
                     <gf-premium-indicator class="mr-2" />
                   } @else {
                     @if (isLoadingPortfolioPrompt) {
-                      <mat-spinner class="mr-2" [diameter]="20" />
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
                     } @else {
                       <ion-icon class="mr-2" name="copy-outline" />
                     }
@@ -50,7 +54,11 @@
                     <gf-premium-indicator class="mr-2" />
                   } @else {
                     @if (isLoadingAnalysisPrompt) {
-                      <mat-spinner class="mr-2" [diameter]="20" />
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
                     } @else {
                       <ion-icon class="mr-2" name="copy-outline" />
                     }
