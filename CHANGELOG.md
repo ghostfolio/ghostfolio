@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
+
 ### Fixed
 
 - Fixed an issue in the activities import functionality related to the account balances
