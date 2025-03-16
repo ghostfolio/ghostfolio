@@ -15,7 +15,7 @@ import { Big } from 'big.js';
 import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
 import { cloneDeep, sortBy } from 'lodash';
 
-export class TWRPortfolioCalculator extends PortfolioCalculator {
+export class RoaiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
 
   protected calculateOverallPerformance(

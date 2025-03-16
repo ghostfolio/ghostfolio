@@ -1,12 +1,7 @@
-import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
-  activityDummyData,
-  symbolProfileDummyData,
-  userDummyData
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
-import {
-  PortfolioCalculatorFactory,
-  PerformanceCalculationType
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
@@ -83,40 +78,42 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('compute portfolio snapshot', () => {
-    it.only('with liability activity', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
-
-      const activities: Activity[] = [
-        {
-          ...activityDummyData,
-          date: new Date('2023-01-01'), // Date in future
-          fee: 0,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: 'MANUAL',
-            name: 'Loan',
-            symbol: '55196015-1365-4560-aa60-8751ae6d18f8'
-          },
-          type: 'LIABILITY',
-          unitPrice: 3000
-        }
-      ];
+  describe('get current positions', () => {
+    it('with no orders', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities,
-        calculationType: PerformanceCalculationType.TWR,
-        currency: 'USD',
+        activities: [],
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      expect(portfolioSnapshot.totalLiabilitiesWithCurrencyEffect).toEqual(
-        new Big(3000)
-      );
+      const investments = portfolioCalculator.getInvestments();
+
+      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
+        data: portfolioSnapshot.historicalData,
+        groupBy: 'month'
+      });
+
+      expect(portfolioSnapshot).toMatchObject({
+        currentValueInBaseCurrency: new Big(0),
+        hasErrors: false,
+        historicalData: [],
+        positions: [],
+        totalFeesWithCurrencyEffect: new Big('0'),
+        totalInterestWithCurrencyEffect: new Big('0'),
+        totalInvestment: new Big(0),
+        totalInvestmentWithCurrencyEffect: new Big(0),
+        totalLiabilitiesWithCurrencyEffect: new Big('0'),
+        totalValuablesWithCurrencyEffect: new Big('0')
+      });
+
+      expect(investments).toEqual([]);
+
+      expect(investmentsByMonth).toEqual([]);
     });
   });
 });

@@ -1,14 +1,12 @@
-import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
   activityDummyData,
-  loadActivityExportFile,
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
@@ -21,7 +19,6 @@ import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/po
 import { parseDate } from '@ghostfolio/common/helper';
 
 import { Big } from 'big.js';
-import { join } from 'path';
 
 jest.mock('@ghostfolio/api/app/portfolio/current-rate.service', () => {
   return {
@@ -54,23 +51,12 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
 });
 
 describe('PortfolioCalculator', () => {
-  let activityDtos: CreateOrderDto[];
-
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
   let exchangeRateDataService: ExchangeRateDataService;
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
-
-  beforeAll(() => {
-    activityDtos = loadActivityExportFile(
-      join(
-        __dirname,
-        '../../../../../../../test/import/ok-novn-buy-and-sell-partially.json'
-      )
-    );
-  });
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -98,25 +84,30 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with NOVN.SW buy and sell partially', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
+    it.only('with BALN.SW buy', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
-      const activities: Activity[] = activityDtos.map((activity) => ({
-        ...activityDummyData,
-        ...activity,
-        date: parseDate(activity.date),
-        SymbolProfile: {
-          ...symbolProfileDummyData,
-          currency: activity.currency,
-          dataSource: activity.dataSource,
-          name: 'Novartis AG',
-          symbol: activity.symbol
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-30'),
+          fee: 1.55,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          type: 'BUY',
+          unitPrice: 136.6
         }
-      }));
+      ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
       });
@@ -131,74 +122,77 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('87.8'),
+        currentValueInBaseCurrency: new Big('297.8'),
         errors: [],
         hasErrors: false,
         positions: [
           {
-            averagePrice: new Big('75.80'),
+            averagePrice: new Big('136.6'),
             currency: 'CHF',
             dataSource: 'YAHOO',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
-            fee: new Big('4.25'),
-            feeInBaseCurrency: new Big('4.25'),
-            firstBuyDate: '2022-03-07',
-            grossPerformance: new Big('21.93'),
-            grossPerformancePercentage: new Big('0.15113417083448194384'),
+            fee: new Big('1.55'),
+            feeInBaseCurrency: new Big('1.55'),
+            firstBuyDate: '2021-11-30',
+            grossPerformance: new Big('24.6'),
+            grossPerformancePercentage: new Big('0.09004392386530014641'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.15113417083448194384'
+              '0.09004392386530014641'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('21.93'),
-            investment: new Big('75.80'),
-            investmentWithCurrencyEffect: new Big('75.80'),
-            netPerformance: new Big('17.68'),
-            netPerformancePercentage: new Big('0.12184460284330327256'),
+            grossPerformanceWithCurrencyEffect: new Big('24.6'),
+            investment: new Big('273.2'),
+            investmentWithCurrencyEffect: new Big('273.2'),
+            netPerformance: new Big('23.05'),
+            netPerformancePercentage: new Big('0.08437042459736456808'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.12348284960422163588')
+              max: new Big('0.08437042459736456808')
             },
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('17.68')
+              '1d': new Big('10.00'), // 2 * (148.9 - 143.9) -> no fees in this time period
+              '1y': new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              '5y': new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              max: new Big('23.05'), // 2 * (148.9 - 136.6) - 1.55
+              mtd: new Big('24.60'), // 2 * (148.9 - 136.6) -> no fees in this time period
+              wtd: new Big('13.80'), // 2 * (148.9 - 142.0) -> no fees in this time period
+              ytd: new Big('23.05') // 2 * (148.9 - 136.6) - 1.55
             },
-            marketPrice: 87.8,
-            marketPriceInBaseCurrency: 87.8,
-            quantity: new Big('1'),
-            symbol: 'NOVN.SW',
+            marketPrice: 148.9,
+            marketPriceInBaseCurrency: 148.9,
+            quantity: new Big('2'),
+            symbol: 'BALN.SW',
             tags: [],
-            timeWeightedInvestment: new Big('145.10285714285714285714'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '145.10285714285714285714'
-            ),
-            transactionCount: 2,
-            valueInBaseCurrency: new Big('87.8')
+            timeWeightedInvestment: new Big('273.2'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('273.2'),
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('297.8')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('4.25'),
+        totalFeesWithCurrencyEffect: new Big('1.55'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('75.80'),
-        totalInvestmentWithCurrencyEffect: new Big('75.80'),
+        totalInvestment: new Big('273.2'),
+        totalInvestmentWithCurrencyEffect: new Big('273.2'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
-          netPerformance: 17.68,
-          netPerformanceInPercentage: 0.12184460284330327256,
-          netPerformanceInPercentageWithCurrencyEffect: 0.12184460284330327256,
-          netPerformanceWithCurrencyEffect: 17.68,
-          totalInvestmentValueWithCurrencyEffect: 75.8
+          netPerformance: 23.05,
+          netPerformanceInPercentage: 0.08437042459736457,
+          netPerformanceInPercentageWithCurrencyEffect: 0.08437042459736457,
+          netPerformanceWithCurrencyEffect: 23.05,
+          totalInvestmentValueWithCurrencyEffect: 273.2
         })
       );
 
       expect(investments).toEqual([
-        { date: '2022-03-07', investment: new Big('151.6') },
-        { date: '2022-04-08', investment: new Big('75.8') }
+        { date: '2021-11-30', investment: new Big('273.2') }
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2022-03-01', investment: 151.6 },
-        { date: '2022-04-01', investment: -75.8 }
+        { date: '2021-11-01', investment: 273.2 },
+        { date: '2021-12-01', investment: 0 }
       ]);
     });
   });
