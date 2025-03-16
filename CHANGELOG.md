@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the _Storybook_ path to the `sitemap.xml` file
+
 ### Changed
 
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
