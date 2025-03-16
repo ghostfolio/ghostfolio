@@ -22,6 +22,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { StatusCodes } from 'http-status-codes';
 import { join } from 'path';
 
+import { ConfigurationService } from '../services/configuration/configuration.service';
 import { AccessModule } from './access/access.module';
 import { AccountModule } from './account/account.module';
 import { AdminModule } from './admin/admin.module';
@@ -51,9 +52,10 @@ import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
+import { WebManifestController } from './webmanifest/webmanifest.controller';
 
 @Module({
-  controllers: [AppController],
+  controllers: [AppController, WebManifestController],
   imports: [
     AdminModule,
     AccessModule,
@@ -128,6 +130,6 @@ import { UserModule } from './user/user.module';
     TwitterBotModule,
     UserModule
   ],
-  providers: [CronService]
+  providers: [ConfigurationService, CronService]
 })
 export class AppModule {}
