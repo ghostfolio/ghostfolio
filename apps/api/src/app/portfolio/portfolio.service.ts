@@ -295,7 +295,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.TWR,
+      calculationType: PerformanceCalculationType.ROAI,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
@@ -372,7 +372,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.TWR,
+      calculationType: PerformanceCalculationType.ROAI,
       currency: userCurrency
     });
 
@@ -680,7 +680,7 @@ export class PortfolioService {
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       userId,
-      calculationType: PerformanceCalculationType.TWR,
+      calculationType: PerformanceCalculationType.ROAI,
       currency: userCurrency
     });
 
@@ -950,7 +950,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.TWR,
+      calculationType: PerformanceCalculationType.ROAI,
       currency: this.request.user.Settings.settings.baseCurrency
     });
 
@@ -1116,7 +1116,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.TWR,
+      calculationType: PerformanceCalculationType.ROAI,
       currency: userCurrency
     });
 
