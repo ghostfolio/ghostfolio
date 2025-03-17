@@ -39,8 +39,8 @@ export class ExportService {
     });
 
     if (activityIds) {
-      activities = activities.filter((activity) => {
-        return activityIds.includes(activity.id);
+      activities = activities.filter(({ id }) => {
+        return activityIds.includes(id);
       });
     }
 
@@ -56,9 +56,13 @@ export class ExportService {
         where: { userId }
       })
     )
-      .filter((account) =>
-        activities.some(({ accountId }) => accountId === account.id)
-      )
+      .filter(({ id }) => {
+        return filters.length > 0
+          ? activities.some(({ accountId }) => {
+              return accountId === id;
+            })
+          : true;
+      })
       .map(
         ({
           balance,
@@ -92,11 +96,13 @@ export class ExportService {
 
     const tags = (await this.tagService.getTagsForUser(userId))
       .filter(
-        (tag) =>
-          tag.isUsed &&
-          activities.some((activity) =>
-            activity.tags.some(({ id: tagId }) => tagId === tag.id)
-          )
+        ({ id, isUsed }) =>
+          isUsed &&
+          activities.some((activity) => {
+            return activity.tags.some(({ id: tagId }) => {
+              return tagId === id;
+            });
+          })
       )
       .map(({ id, name }) => {
         return {
