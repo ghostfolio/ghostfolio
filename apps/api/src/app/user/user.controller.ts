@@ -2,7 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
-import { User, UserSettings } from '@ghostfolio/common/interfaces';
+import { AccessToken, User, UserSettings } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -121,6 +121,19 @@ export class UserController {
         id
       })
     };
+  }
+
+  @Post(':id/security-token')
+  @HasPermission(permissions.accessAdminControl)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async generateSecurityToken(
+    @Param('id') id: string
+  ): Promise<AccessToken> {
+    const accessToken = await this.userService.generateAccessToken({
+      userId: id
+    });
+
+    return { accessToken };
   }
 
   @Put('setting')

@@ -1,9 +1,3 @@
-import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
-import { AdminService } from '@ghostfolio/client/services/admin.service';
-import { DataService } from '@ghostfolio/client/services/data.service';
-import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
-import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import { getDateFormatString, getEmojiFlag } from '@ghostfolio/common/helper';
 import { AdminUsers, InfoItem, User } from '@ghostfolio/common/interfaces';
@@ -25,6 +19,13 @@ import {
 } from 'date-fns';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '../../core/notification/notification.service';
+import { AdminService } from '../../services/admin.service';
+import { DataService } from '../../services/data.service';
+import { ImpersonationStorageService } from '../../services/impersonation-storage.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
   selector: 'gf-admin-users',
@@ -137,6 +138,25 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this user?`
+    });
+  }
+
+  public onGenerateSecurityToken(aId: string) {
+    this.notificationService.confirm({
+      confirmFn: () => {
+        this.dataService
+          .generateSecurityToken(aId)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(({ accessToken }) => {
+            this.notificationService.prompt({
+              confirmFn: () => {},
+              defaultValue: accessToken,
+              title: $localize`Security token`
+            });
+          });
+      },
+      confirmType: ConfirmationDialogType.Warn,
+      title: $localize`Do you really want to generate a new security token for this user?`
     });
   }
 

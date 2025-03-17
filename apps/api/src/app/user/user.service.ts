@@ -433,7 +433,7 @@ export class UserService {
       data.provider = 'ANONYMOUS';
     }
 
-    let user = await this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         ...data,
         Account: {
@@ -464,17 +464,7 @@ export class UserService {
     }
 
     if (data.provider === 'ANONYMOUS') {
-      const accessToken = this.createAccessToken(user.id, getRandomString(10));
-
-      const hashedAccessToken = this.createAccessToken(
-        accessToken,
-        this.configurationService.get('ACCESS_TOKEN_SALT')
-      );
-
-      user = await this.prismaService.user.update({
-        data: { accessToken: hashedAccessToken },
-        where: { id: user.id }
-      });
+      const accessToken = await this.generateAccessToken({ userId: user.id });
 
       return { ...user, accessToken };
     }
@@ -580,5 +570,25 @@ export class UserService {
     }
 
     return settings;
+  }
+
+  public async generateAccessToken({
+    userId
+  }: {
+    userId: string;
+  }): Promise<string> {
+    const accessToken = this.createAccessToken(userId, getRandomString(10));
+
+    const hashedAccessToken = this.createAccessToken(
+      accessToken,
+      this.configurationService.get('ACCESS_TOKEN_SALT')
+    );
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: userId }
+    });
+
+    return accessToken;
   }
 }

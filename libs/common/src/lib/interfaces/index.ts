@@ -1,3 +1,4 @@
+import type { AccessToken } from './access-token.interface';
 import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
 import type { Accounts } from './accounts.interface';
@@ -69,6 +70,7 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
+  AccessToken,
   AccountBalance,
   AccountBalancesResponse,
   Accounts,

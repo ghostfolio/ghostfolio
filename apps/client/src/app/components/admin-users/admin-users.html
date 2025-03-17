@@ -243,6 +243,15 @@
                 }
                 <button
                   mat-menu-item
+                  (click)="onGenerateSecurityToken(element.id)"
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="key-outline" />
+                    <span i18n>Generate Security Token</span>
+                  </span>
+                </button>
+                <button
+                  mat-menu-item
                   [disabled]="element.id === user?.id"
                   (click)="onDeleteUser(element.id)"
                 >

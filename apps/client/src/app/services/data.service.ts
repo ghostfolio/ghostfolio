@@ -22,6 +22,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
+  AccessToken,
   AccountBalancesResponse,
   Accounts,
   AiPromptResponse,
@@ -322,6 +323,13 @@ export class DataService {
 
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
+  }
+
+  public generateSecurityToken(aId: string) {
+    return this.http.post<AccessToken>(
+      `/api/v1/user/${aId}/security-token`,
+      {}
+    );
   }
 
   public fetchAccesses() {
