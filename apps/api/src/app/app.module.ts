@@ -51,6 +51,7 @@ import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
+import { WebManifestModule } from './webmanifest/webmanifest.module';
 
 @Module({
   controllers: [AppController],
@@ -126,7 +127,8 @@ import { UserModule } from './user/user.module';
     SymbolModule,
     TagsModule,
     TwitterBotModule,
-    UserModule
+    UserModule,
+    WebManifestModule
   ],
   providers: [CronService]
 })

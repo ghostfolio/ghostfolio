@@ -1,32 +1,31 @@
 {
-    "background_color": "#FFFFFF",
-    "categories": ["finance", "utilities"],
-    "description": "Open Source Wealth Management Software",
-    "display": "standalone",
-    "icons": [
-      {
-        "sizes": "192x192",
-        "src": "/assets/android-chrome-192x192.png",
-        "type": "image/png"
-      },
-      {
-        "purpose": "any",
-        "sizes": "512x512",
-        "src": "/assets/android-chrome-512x512.png",
-        "type": "image/png"
-      },
-      {
-        "purpose": "maskable",
-        "sizes": "512x512",
-        "src": "/assets/android-chrome-512x512.png",
-        "type": "image/png"
-      }
-    ],
-    "name": "Ghostfolio",
-    "orientation": "portrait",
-    "short_name": "Ghostfolio",
-    "start_url": "/${languageCode}/",
-    "theme_color": "#FFFFFF",
-    "url": "${rootUrl}"
-  }
-  
+  "background_color": "#FFFFFF",
+  "categories": ["finance", "utilities"],
+  "description": "Open Source Wealth Management Software",
+  "display": "standalone",
+  "icons": [
+    {
+      "sizes": "192x192",
+      "src": "/assets/android-chrome-192x192.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "/assets/android-chrome-512x512.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "/assets/android-chrome-512x512.png",
+      "type": "image/png"
+    }
+  ],
+  "name": "Ghostfolio",
+  "orientation": "portrait",
+  "short_name": "Ghostfolio",
+  "start_url": "/${languageCode}/",
+  "theme_color": "#FFFFFF",
+  "url": "${rootUrl}"
+}
