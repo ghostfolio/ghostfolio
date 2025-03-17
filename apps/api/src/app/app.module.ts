@@ -32,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
 import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
+import { AssetsModule } from './endpoints/assets/assets.module';
 import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
@@ -51,7 +52,6 @@ import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
 import { UserModule } from './user/user.module';
-import { WebManifestModule } from './webmanifest/webmanifest.module';
 
 @Module({
   controllers: [AppController],
@@ -62,6 +62,7 @@ import { WebManifestModule } from './webmanifest/webmanifest.module';
     AiModule,
     ApiKeysModule,
     AssetModule,
+    AssetsModule,
     AuthDeviceModule,
     AuthModule,
     BenchmarksModule,
@@ -127,8 +128,7 @@ import { WebManifestModule } from './webmanifest/webmanifest.module';
     SymbolModule,
     TagsModule,
     TwitterBotModule,
-    UserModule,
-    WebManifestModule
+    UserModule
   ],
   providers: [CronService]
 })

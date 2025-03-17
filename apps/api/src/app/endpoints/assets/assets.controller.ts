@@ -14,7 +14,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 @Controller('assets')
-export class WebManifestController {
+export class AssetsController {
   private webManifest = '';
 
   public constructor(
