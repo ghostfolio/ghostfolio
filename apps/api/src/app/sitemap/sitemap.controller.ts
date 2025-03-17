@@ -9,8 +9,8 @@ import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools'
 import { Controller, Get, Res, VERSION_NEUTRAL, Version } from '@nestjs/common';
 import { format } from 'date-fns';
 import { Response } from 'express';
-import * as fs from 'fs';
-import * as path from 'path';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 @Controller('sitemap.xml')
 export class SitemapController {
@@ -20,8 +20,8 @@ export class SitemapController {
     private readonly configurationService: ConfigurationService
   ) {
     try {
-      this.sitemapXml = fs.readFileSync(
-        path.join(__dirname, 'assets', 'sitemap.xml'),
+      this.sitemapXml = readFileSync(
+        join(__dirname, 'assets', 'sitemap.xml'),
         'utf8'
       );
     } catch {}
