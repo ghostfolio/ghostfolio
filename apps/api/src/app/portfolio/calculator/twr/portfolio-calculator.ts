@@ -5,7 +5,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 
-export class MwrPortfolioCalculator extends PortfolioCalculator {
+export class TwrPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
