@@ -125,22 +125,43 @@ export class SymbolProfileService {
     });
   }
 
-  public updateSymbolProfile({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    holdings,
-    name,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    SymbolProfileOverrides,
-    url
-  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
+  public updateAssetProfileIdentifier(
+    oldAssetProfileIdentifier: AssetProfileIdentifier,
+    newAssetProfileIdentifier: AssetProfileIdentifier
+  ) {
+    return this.prismaService.symbolProfile.update({
+      data: {
+        dataSource: newAssetProfileIdentifier.dataSource,
+        symbol: newAssetProfileIdentifier.symbol
+      },
+      where: {
+        dataSource_symbol: {
+          dataSource: oldAssetProfileIdentifier.dataSource,
+          symbol: oldAssetProfileIdentifier.symbol
+        }
+      }
+    });
+  }
+
+  public updateSymbolProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
+      comment,
+      countries,
+      currency,
+      //dataSource,
+      holdings,
+      name,
+      scraperConfiguration,
+      sectors,
+      //symbol,
+      symbolMapping,
+      SymbolProfileOverrides,
+      url
+    }: Prisma.SymbolProfileUpdateInput
+  ) {
     return this.prismaService.symbolProfile.update({
       data: {
         assetClass,

@@ -4,6 +4,7 @@ import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { TextFieldModule } from '@angular/cdk/text-field';
@@ -30,6 +31,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     GfCurrencySelectorComponent,
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
+    GfSymbolAutocompleteComponent,
     GfPortfolioProportionChartComponent,
     GfValueComponent,
     MatButtonModule,

@@ -55,6 +55,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public assetProfile: AdminMarketDataDetails['assetProfile'];
+  public assetProfileIdentifierForm;
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -86,6 +87,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
+  public isEditSymbolMode = false;
   public marketDataItems: MarketData[] = [];
   public modeValues = [
     {
@@ -269,7 +271,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public async onSubmit() {
+  public onSetEditSymboleMode() {
+    this.isEditSymbolMode = true;
+
+    this.assetProfileForm.disable();
+
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public onCancelEditSymboleMode() {
+    this.isEditSymbolMode = false;
+
+    this.assetProfileForm.enable();
+
+    this.changeDetectorRef.markForCheck();
+  }
+
+  public async onSubmitAssetProfileForm() {
     let countries = [];
     let scraperConfiguration = {};
     let sectors = [];
