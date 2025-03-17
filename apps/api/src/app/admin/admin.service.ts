@@ -463,61 +463,102 @@ export class AdminService {
     return { count, users };
   }
 
-  public async patchAssetProfileData({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    holdings,
-    name,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    url
-  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
-    const symbolProfileOverrides = {
-      assetClass: assetClass as AssetClass,
-      assetSubClass: assetSubClass as AssetSubClass,
-      name: name as string,
-      url: url as string
-    };
-
-    const updatedSymbolProfile: AssetProfileIdentifier &
-      Prisma.SymbolProfileUpdateInput = {
+  public async patchAssetProfileData(
+    assetProfileIdentifier: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
       comment,
       countries,
       currency,
       dataSource,
       holdings,
+      name,
       scraperConfiguration,
       sectors,
       symbol,
       symbolMapping,
-      ...(dataSource === 'MANUAL'
-        ? { assetClass, assetSubClass, name, url }
-        : {
-            SymbolProfileOverrides: {
-              upsert: {
-                create: symbolProfileOverrides,
-                update: symbolProfileOverrides
-              }
-            }
-          })
-    };
+      url
+    }: Prisma.SymbolProfileUpdateInput
+  ) {
+    if (
+      symbol &&
+      dataSource &&
+      assetProfileIdentifier.symbol !== symbol &&
+      assetProfileIdentifier.dataSource !== dataSource
+    ) {
+      await this.symbolProfileService.updateAssetProfileIdentifier(
+        assetProfileIdentifier,
+        {
+          dataSource: dataSource as DataSource, // TODO change
+          symbol: symbol as string
+        }
+      );
 
-    await this.symbolProfileService.updateSymbolProfile(updatedSymbolProfile);
+      await this.marketDataService.updateAssetProfileIdentifier(
+        assetProfileIdentifier,
+        {
+          dataSource: dataSource as DataSource,
+          symbol: symbol as string
+        }
+      );
 
-    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      {
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [
+          {
+            dataSource: dataSource as DataSource,
+            symbol: symbol as string
+          }
+        ]
+      );
+
+      return symbolProfile;
+    } else {
+      const symbolProfileOverrides = {
+        assetClass: assetClass as AssetClass,
+        assetSubClass: assetSubClass as AssetSubClass,
+        name: name as string,
+        url: url as string
+      };
+
+      const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
+        comment,
+        countries,
+        currency,
         dataSource,
-        symbol
-      }
-    ]);
+        holdings,
+        scraperConfiguration,
+        sectors,
+        symbol,
+        symbolMapping,
+        ...(dataSource === 'MANUAL'
+          ? { assetClass, assetSubClass, name, url }
+          : {
+              SymbolProfileOverrides: {
+                upsert: {
+                  create: symbolProfileOverrides,
+                  update: symbolProfileOverrides
+                }
+              }
+            })
+      };
 
-    return symbolProfile;
+      await this.symbolProfileService.updateSymbolProfile(
+        assetProfileIdentifier,
+        updatedSymbolProfile
+      );
+
+      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
+        [
+          {
+            dataSource: dataSource as DataSource,
+            symbol: symbol as string
+          }
+        ]
+      );
+
+      return symbolProfile;
+    }
   }
 
   public async putSetting(key: string, value: string) {
