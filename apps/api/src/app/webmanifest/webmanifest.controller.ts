@@ -1,50 +1,31 @@
-import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
-
-import { Controller, Get, Param, Res } from '@nestjs/common';
+import { Controller, Get, Param, Res, Version, VERSION_NEUTRAL } from '@nestjs/common';
 import { Response } from 'express';
+import { interpolate } from '@ghostfolio/common/helper';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import * as fs from 'fs';
+import * as path from 'path';
 
-@Controller('site.webmanifest')
+@Controller('assets')
 export class WebManifestController {
-  constructor(private readonly configService: ConfigurationService) {}
+  public webManifestTemplate: string;
 
-  @Get('/:languageCode')
-  getWebManifest(
-    @Param('languageCode') languageCode: string,
-    @Res() res: Response
-  ) {
-    const rootUrl = this.configService.get('ROOT_URL');
+  public constructor(public readonly configService: ConfigurationService) {
+    try {
+      this.webManifestTemplate = fs.readFileSync(
+        path.resolve(__dirname, '../../assets/site.webmanifest'), 
+        'utf8'
+      );
+    } catch (error) {
+      console.error('Error reading site.webmanifest:', error);
+      this.webManifestTemplate = ''; 
+    }
+  }
 
-    const webManifest = {
-      background_color: '#FFFFFF',
-      categories: ['finance', 'utilities'],
-      description: 'Open Source Wealth Management Software',
-      display: 'standalone',
-      icons: [
-        {
-          sizes: '192x192',
-          src: '/assets/android-chrome-192x192.png',
-          type: 'image/png'
-        },
-        {
-          purpose: 'any',
-          sizes: '512x512',
-          src: '/assets/android-chrome-512x512.png',
-          type: 'image/png'
-        },
-        {
-          purpose: 'maskable',
-          sizes: '512x512',
-          src: '/assets/android-chrome-512x512.png',
-          type: 'image/png'
-        }
-      ],
-      name: 'Ghostfolio',
-      orientation: 'portrait',
-      short_name: 'Ghostfolio',
-      start_url: `/${languageCode}/`, // Dynamic Language Support
-      theme_color: '#FFFFFF',
-      url: rootUrl
-    };
+  @Get('/:languageCode/site.webmanifest')
+  @Version(VERSION_NEUTRAL)
+  public getWebManifest(@Param('languageCode') languageCode: string, @Res() res: Response): void {
+    const rootUrl = this.configService.get('ROOT_URL') || 'https://default.url.com';
+    const webManifest = interpolate(this.webManifestTemplate, { languageCode, rootUrl });
 
     res.setHeader('Content-Type', 'application/json');
     res.send(webManifest);
