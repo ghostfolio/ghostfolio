@@ -9,12 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the export functionality by applying filters on accounts and tags
-
-### Changed
-
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
 - Refreshed the cryptocurrencies list
+- Improved the export functionality by applying filters on accounts and tags
 
 ## 2.146.0 - 2025-03-15
 
