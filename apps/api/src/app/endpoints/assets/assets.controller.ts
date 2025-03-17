@@ -32,7 +32,7 @@ export class AssetsController {
   @Version(VERSION_NEUTRAL)
   public getWebManifest(
     @Param('languageCode') languageCode: string,
-    @Res() res: Response
+    @Res() response: Response
   ): void {
     const rootUrl = this.configurationService.get('ROOT_URL');
     const webManifest = interpolate(this.webManifest, {
@@ -40,7 +40,7 @@ export class AssetsController {
       rootUrl
     });
 
-    res.setHeader('Content-Type', 'application/json');
-    res.send(webManifest);
+    response.setHeader('Content-Type', 'application/json');
+    response.send(webManifest);
   }
 }
