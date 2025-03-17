@@ -2,10 +2,10 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 
 import { Module } from '@nestjs/common';
 
-import { WebManifestController } from './webmanifest.controller';
+import { AssetsController } from './assets.controller';
 
 @Module({
-  controllers: [WebManifestController],
+  controllers: [AssetsController],
   providers: [ConfigurationService]
 })
-export class WebManifestModule {}
+export class AssetsModule {}
