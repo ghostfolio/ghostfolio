@@ -25,8 +25,8 @@ import { AiService } from './ai.service';
 @Controller('ai')
 export class AiController {
   public constructor(
-    private readonly apiService: ApiService,
     private readonly aiService: AiService,
+    private readonly apiService: ApiService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -50,8 +50,8 @@ export class AiController {
     });
 
     const prompt = await this.aiService.getPrompt({
-      mode,
       filters,
+      mode,
       impersonationId: undefined,
       languageCode:
         this.request.user.Settings.settings.language ?? DEFAULT_LANGUAGE_CODE,
