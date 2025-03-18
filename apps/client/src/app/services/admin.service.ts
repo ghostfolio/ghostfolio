@@ -8,7 +8,6 @@ import {
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   AdminData,
@@ -25,7 +24,6 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
-import { format } from 'date-fns';
 import { switchMap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -186,19 +184,8 @@ export class AdminService {
     );
   }
 
-  public gatherSymbol({
-    dataSource,
-    date,
-    symbol
-  }: AssetProfileIdentifier & {
-    date?: Date;
-  }) {
-    let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
-
-    if (date) {
-      url = `${url}/${format(date, DATE_FORMAT)}`;
-    }
-
+  public gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
+    const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
     return this.http.post<MarketData | void>(url, {});
   }
 

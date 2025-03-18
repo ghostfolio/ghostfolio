@@ -19,6 +19,7 @@ import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interfac
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
+import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
   AccountBalancesResponse,
@@ -56,6 +57,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
+import { utc } from '@date-fns/utc';
 import {
   AccountBalance,
   DataSource,
@@ -63,7 +65,7 @@ import {
   Order as OrderModel,
   Tag
 } from '@prisma/client';
-import { parseISO } from 'date-fns';
+import { parseISO, format } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -280,7 +282,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http.get<IDataProviderHistoricalResponse>(
-      `/api/v1/exchange-rate/${symbol}/${date.toISOString().split('T')[0]}`
+      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
 
@@ -362,7 +364,7 @@ export class DataService {
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmarks/${dataSource}/${symbol}/${startDate.toISOString().split('T')[0]}`,
+      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(startDate, DATE_FORMAT, { in: utc })}`,
       { params }
     );
   }
