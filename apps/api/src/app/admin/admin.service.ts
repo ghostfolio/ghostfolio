@@ -464,42 +464,48 @@ export class AdminService {
   }
 
   public async patchAssetProfileData(
-    assetProfileIdentifier: AssetProfileIdentifier,
+    dataSource: DataSource,
+    symbol: string,
     {
       assetClass,
       assetSubClass,
       comment,
       countries,
       currency,
-      dataSource,
+      dataSource: newDataSource,
       holdings,
       name,
       scraperConfiguration,
       sectors,
-      symbol,
+      symbol: newSymbol,
       symbolMapping,
       url
     }: Prisma.SymbolProfileUpdateInput
   ) {
     if (
-      symbol &&
-      dataSource &&
-      assetProfileIdentifier.symbol !== symbol &&
-      assetProfileIdentifier.dataSource !== dataSource
+      newSymbol &&
+      newDataSource &&
+      (newSymbol !== symbol || newDataSource !== dataSource)
     ) {
       await this.symbolProfileService.updateAssetProfileIdentifier(
-        assetProfileIdentifier,
         {
-          dataSource: dataSource as DataSource, // TODO change
-          symbol: symbol as string
+          dataSource,
+          symbol
+        },
+        {
+          dataSource: newDataSource as DataSource,
+          symbol: newSymbol as string
         }
       );
 
       await this.marketDataService.updateAssetProfileIdentifier(
-        assetProfileIdentifier,
         {
-          dataSource: dataSource as DataSource,
-          symbol: symbol as string
+          dataSource,
+          symbol
+        },
+        {
+          dataSource: newDataSource as DataSource,
+          symbol: newSymbol as string
         }
       );
 
@@ -544,7 +550,10 @@ export class AdminService {
       };
 
       await this.symbolProfileService.updateSymbolProfile(
-        assetProfileIdentifier,
+        {
+          dataSource,
+          symbol
+        },
         updatedSymbolProfile
       );
 

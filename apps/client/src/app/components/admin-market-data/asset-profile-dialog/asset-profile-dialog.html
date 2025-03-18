@@ -88,24 +88,39 @@
     <div class="row">
       @if (isEditSymbolMode) {
         <div class="col-12 mb-3">
-          <mat-form-field appearance="outline">
-            <mat-label i18n>Name, symbol or ISIN</mat-label>
-            <gf-symbol-autocomplete
-              formControlName="searchSymbol"
-              [includeIndices]="true"
-            />
-          </mat-form-field>
-          <button class="mx-1 no-min-width px-2" mat-button type="button">
-            Apply
-          </button>
-          <button
-            class="mx-1 no-min-width px-2"
-            mat-button
-            type="button"
-            (click)="onCancelEditSymboleMode()"
+          <form
+            [formGroup]="assetProfileIdentifierForm"
+            (keyup.enter)="
+              assetProfileIdentifierForm.valid &&
+                onSubmitAssetProfileIdentifierForm()
+            "
+            (ngSubmit)="onSubmitAssetProfileIdentifierForm()"
           >
-            Cancel
-          </button>
+            <mat-form-field appearance="outline">
+              <mat-label i18n>Name, symbol or ISIN</mat-label>
+              <gf-symbol-autocomplete
+                formControlName="editedSearchSymbol"
+                [includeIndices]="true"
+              />
+            </mat-form-field>
+            <button
+              class="mx-1 no-min-width px-2"
+              color="primary"
+              mat-flat-button
+              type="submit"
+              [disabled]="!assetProfileIdentifierForm.valid"
+            >
+              Apply
+            </button>
+            <button
+              class="mx-1 no-min-width px-2"
+              mat-button
+              type="button"
+              (click)="onCancelEditSymboleMode()"
+            >
+              Cancel
+            </button>
+          </form>
         </div>
       } @else {
         <div class="col-6 mb-3">
@@ -128,7 +143,10 @@
             class="mx-1 no-min-width px-2"
             mat-button
             type="button"
-            [disabled]="assetProfileForm.dirty"
+            [disabled]="!isSymbolEditable"
+            [ngClass]="{
+              'd-none': isSymbolEditButtonInvisible
+            }"
             (click)="onSetEditSymboleMode()"
           >
             <ion-icon name="create-outline"></ion-icon>
