@@ -1,3 +1,5 @@
+import { STORYBOOK_PATH } from '@ghostfolio/common/config';
+
 import {
   Logger,
   LogLevel,
@@ -7,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
+import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
@@ -50,20 +53,24 @@ async function bootstrap() {
   app.useBodyParser('json', { limit: '10mb' });
 
   if (configService.get<string>('ENABLE_FEATURE_SUBSCRIPTION') === 'true') {
-    app.use(
-      helmet({
-        contentSecurityPolicy: {
-          directives: {
-            connectSrc: ["'self'", 'https://js.stripe.com'], // Allow connections to Stripe
-            frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
-            scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
-            scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
-            styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
-          }
-        },
-        crossOriginOpenerPolicy: false // Disable Cross-Origin-Opener-Policy header (for Internet Identity)
-      })
-    );
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      if (req.path.startsWith(STORYBOOK_PATH)) {
+        next();
+      } else {
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+              connectSrc: ["'self'", 'https://js.stripe.com'], // Allow connections to Stripe
+              frameSrc: ["'self'", 'https://js.stripe.com'], // Allow loading frames from Stripe
+              scriptSrc: ["'self'", "'unsafe-inline'", 'https://js.stripe.com'], // Allow inline scripts and scripts from Stripe
+              scriptSrcAttr: ["'self'", "'unsafe-inline'"], // Allow inline event handlers
+              styleSrc: ["'self'", "'unsafe-inline'"] // Allow inline styles
+            }
+          },
+          crossOriginOpenerPolicy: false // Disable Cross-Origin-Opener-Policy header (for Internet Identity)
+        })(req, res, next);
+      }
+    });
   }
 
   app.use(HtmlTemplateMiddleware);

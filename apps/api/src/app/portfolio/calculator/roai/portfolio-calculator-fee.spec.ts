@@ -84,30 +84,30 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('compute portfolio snapshot', () => {
-    it.only('with item activity', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
+    it.only('with fee activity', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2022-01-01'),
-          fee: 0,
-          quantity: 1,
+          date: new Date('2021-09-01'),
+          fee: 49,
+          quantity: 0,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'MANUAL',
-            name: 'Penthouse Apartment',
-            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
+            name: 'Account Opening Fee',
+            symbol: '2c463fb3-af07-486e-adb0-8301b3d72141'
           },
-          type: 'ITEM',
-          unitPrice: 500000
+          type: 'FEE',
+          unitPrice: 0
         }
       ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
         userId: userDummyData.id
       });
@@ -120,14 +120,14 @@ describe('PortfolioCalculator', () => {
         hasErrors: true,
         positions: [
           {
-            averagePrice: new Big('500000'),
+            averagePrice: new Big('0'),
             currency: 'USD',
             dataSource: 'MANUAL',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
-            fee: new Big('0'),
-            feeInBaseCurrency: new Big('0'),
-            firstBuyDate: '2022-01-01',
+            fee: new Big('49'),
+            feeInBaseCurrency: new Big('49'),
+            firstBuyDate: '2021-09-01',
             grossPerformance: null,
             grossPerformancePercentage: null,
             grossPerformancePercentageWithCurrencyEffect: null,
@@ -135,13 +135,13 @@ describe('PortfolioCalculator', () => {
             investment: new Big('0'),
             investmentWithCurrencyEffect: new Big('0'),
             marketPrice: null,
-            marketPriceInBaseCurrency: 500000,
+            marketPriceInBaseCurrency: 0,
             netPerformance: null,
             netPerformancePercentage: null,
             netPerformancePercentageWithCurrencyEffectMap: null,
             netPerformanceWithCurrencyEffectMap: null,
             quantity: new Big('0'),
-            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
+            symbol: '2c463fb3-af07-486e-adb0-8301b3d72141',
             tags: [],
             timeWeightedInvestment: new Big('0'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('0'),
@@ -149,7 +149,7 @@ describe('PortfolioCalculator', () => {
             valueInBaseCurrency: new Big('0')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('0'),
+        totalFeesWithCurrencyEffect: new Big('49'),
         totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('0'),
         totalInvestmentWithCurrencyEffect: new Big('0'),

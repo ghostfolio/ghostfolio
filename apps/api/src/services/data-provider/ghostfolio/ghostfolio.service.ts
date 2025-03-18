@@ -2,6 +2,7 @@ import { environment } from '@ghostfolio/api/environments/environment';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -18,6 +19,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderInfo,
   DividendsResponse,
   HistoricalResponse,
@@ -46,21 +48,46 @@ export class GhostfolioService implements DataProviderInterface {
   }
 
   public async getAssetProfile({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
-    const { items } = await this.search({ query: symbol });
-    const searchResult = items?.[0];
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
+    let response: DataProviderGhostfolioAssetProfileResponse = {};
 
-    return {
-      symbol,
-      assetClass: searchResult?.assetClass,
-      assetSubClass: searchResult?.assetSubClass,
-      currency: searchResult?.currency,
-      dataSource: this.getName(),
-      name: searchResult?.name
-    };
+    try {
+      const assetProfile = (await fetch(
+        `${this.URL}/v1/data-providers/ghostfolio/asset-profile/${symbol}`,
+        {
+          headers: await this.getRequestHeaders(),
+          signal: AbortSignal.timeout(requestTimeout)
+        }
+      ).then((res) =>
+        res.json()
+      )) as DataProviderGhostfolioAssetProfileResponse;
+
+      response = assetProfile;
+    } catch (error) {
+      let message = error;
+
+      if (error.name === 'AbortError') {
+        message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
+          requestTimeout / 1000
+        ).toFixed(3)} seconds`;
+      } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
+        message = 'RequestError: The daily request limit has been exceeded';
+      } else if (error.response?.statusCode === StatusCodes.UNAUTHORIZED) {
+        if (!error.request?.options?.headers?.authorization?.includes('-')) {
+          message =
+            'RequestError: The provided API key is invalid. Please update it in the Settings section of the Admin Control panel.';
+        } else {
+          message =
+            'RequestError: The provided API key has expired. Please request a new one and update it in the Settings section of the Admin Control panel.';
+        }
+      }
+
+      Logger.error(message, 'GhostfolioService');
+    }
+
+    return response;
   }
 
   public getDataProviderInfo(): DataProviderInfo {
@@ -203,7 +230,7 @@ export class GhostfolioService implements DataProviderInterface {
 
       if (error.name === 'AbortError') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
-          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+          requestTimeout / 1000
         ).toFixed(3)} seconds`;
       } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
@@ -224,10 +251,13 @@ export class GhostfolioService implements DataProviderInterface {
   }
 
   public getTestSymbol() {
-    return 'AAPL.US';
+    return 'AAPL';
   }
 
-  public async search({ query }: GetSearchParams): Promise<LookupResponse> {
+  public async search({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    query
+  }: GetSearchParams): Promise<LookupResponse> {
     let searchResult: LookupResponse = { items: [] };
 
     try {
@@ -235,9 +265,7 @@ export class GhostfolioService implements DataProviderInterface {
         `${this.URL}/v2/data-providers/ghostfolio/lookup?query=${query}`,
         {
           headers: await this.getRequestHeaders(),
-          signal: AbortSignal.timeout(
-            this.configurationService.get('REQUEST_TIMEOUT')
-          )
+          signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json())) as LookupResponse;
     } catch (error) {
@@ -245,7 +273,7 @@ export class GhostfolioService implements DataProviderInterface {
 
       if (error.name === 'AbortError') {
         message = `RequestError: The operation to search for ${query} was aborted because the request to the data provider took more than ${(
-          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+          requestTimeout / 1000
         ).toFixed(3)} seconds`;
       } else if (error.response?.statusCode === StatusCodes.TOO_MANY_REQUESTS) {
         message = 'RequestError: The daily request limit has been exceeded';
