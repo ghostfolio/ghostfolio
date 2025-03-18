@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the activities import functionality related to the account balances
+- Changed client-side dates to be sent in UTC format to ensure date consistency
+  - Benchmark endpoint
+  - Exchange rate endpoint
 
 ## 2.146.0 - 2025-03-15
 
