@@ -65,7 +65,7 @@ import {
   Order as OrderModel,
   Tag
 } from '@prisma/client';
-import { parseISO, format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { cloneDeep, groupBy, isNumber } from 'lodash';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

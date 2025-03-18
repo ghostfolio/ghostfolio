@@ -68,7 +68,7 @@
     "@angular/router": "19.2.1",
     "@angular/service-worker": "19.2.1",
     "@codewithdan/observable-store": "2.2.15",
-    "@date-fns/utc": "^2.1.0",
+    "@date-fns/utc": "2.1.0",
     "@dfinity/agent": "0.15.7",
     "@dfinity/auth-client": "0.15.7",
     "@dfinity/candid": "0.15.7",
