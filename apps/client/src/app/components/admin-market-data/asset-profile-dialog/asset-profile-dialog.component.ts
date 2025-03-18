@@ -55,7 +55,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public assetProfile: AdminMarketDataDetails['assetProfile'];
-  public assetProfileIdentifierForm;
+  public assetProfileIdentifierForm = this.formBuilder.group({
+    editedSearchSymbol: new FormControl<AssetProfileIdentifier>(
+      { symbol: null, dataSource: null },
+      [Validators.required]
+    )
+  });
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -225,6 +230,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
+  public get isSymbolEditable() {
+    return !this.assetProfileForm.dirty;
+  }
+
+  public get isSymbolEditButtonInvisible() {
+    return this.assetProfile?.dataSource === 'MANUAL';
+  }
+
   public onClose() {
     this.dialogRef.close();
   }
@@ -284,7 +297,38 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
     this.assetProfileForm.enable();
 
+    this.assetProfileIdentifierForm.reset();
+
     this.changeDetectorRef.markForCheck();
+  }
+
+  public async onSubmitAssetProfileIdentifierForm() {
+    const assetProfileIdentifierData: UpdateAssetProfileDto = {
+      dataSource:
+        this.assetProfileIdentifierForm.get('editedSearchSymbol').value
+          .dataSource,
+      symbol:
+        this.assetProfileIdentifierForm.get('editedSearchSymbol').value.symbol
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileIdentifierForm,
+        object: assetProfileIdentifierData
+      });
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
+    this.adminService
+      .patchAssetProfile(this.data.dataSource, this.data.symbol, {
+        ...assetProfileIdentifierData
+      })
+      .subscribe(() => {
+        this.initialize();
+      });
   }
 
   public async onSubmitAssetProfileForm() {
@@ -360,10 +404,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
 
     this.adminService
-      .patchAssetProfile({
-        ...assetProfileData,
-        dataSource: this.data.dataSource,
-        symbol: this.data.symbol
+      .patchAssetProfile(this.data.dataSource, this.data.symbol, {
+        ...assetProfileData
       })
       .subscribe(() => {
         this.initialize();
