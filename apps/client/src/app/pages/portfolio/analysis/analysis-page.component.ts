@@ -161,7 +161,10 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     }
 
     this.dataService
-      .fetchPrompt(mode)
+      .fetchPrompt({
+        mode,
+        filters: this.userService.getFilters()
+      })
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ prompt }) => {
         this.clipboard.copy(prompt);
