@@ -149,7 +149,7 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(({ accessToken }) => {
             this.notificationService.prompt({
-              confirmFn: () => {},
+              confirmFn: () => undefined,
               defaultValue: accessToken,
               title: $localize`Security token`
             });
