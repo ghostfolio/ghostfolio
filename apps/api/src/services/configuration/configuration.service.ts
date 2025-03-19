@@ -1,11 +1,13 @@
+import { environment } from '@ghostfolio/api/environments/environment';
 import { Environment } from '@ghostfolio/api/services/interfaces/environment.interface';
 import {
   CACHE_TTL_NO_CACHE,
+  DEFAULT_HOST,
+  DEFAULT_PORT,
   DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
   DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY,
   DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY,
-  DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT,
-  DEFAULT_ROOT_URL
+  DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT
 } from '@ghostfolio/common/config';
 
 import { Injectable } from '@nestjs/common';
@@ -49,11 +51,11 @@ export class ConfigurationService {
       GOOGLE_SHEETS_ACCOUNT: str({ default: '' }),
       GOOGLE_SHEETS_ID: str({ default: '' }),
       GOOGLE_SHEETS_PRIVATE_KEY: str({ default: '' }),
-      HOST: host({ default: '0.0.0.0' }),
+      HOST: host({ default: DEFAULT_HOST }),
       JWT_SECRET_KEY: str({}),
       MAX_ACTIVITIES_TO_IMPORT: num({ default: Number.MAX_SAFE_INTEGER }),
       MAX_CHART_ITEMS: num({ default: 365 }),
-      PORT: port({ default: 3333 }),
+      PORT: port({ default: DEFAULT_PORT }),
       PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY: num({
         default: DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY
       }),
@@ -71,7 +73,9 @@ export class ConfigurationService {
       REDIS_PASSWORD: str({ default: '' }),
       REDIS_PORT: port({ default: 6379 }),
       REQUEST_TIMEOUT: num({ default: ms('3 seconds') }),
-      ROOT_URL: url({ default: DEFAULT_ROOT_URL }),
+      ROOT_URL: url({
+        default: environment.rootUrl
+      }),
       STRIPE_PUBLIC_KEY: str({ default: '' }),
       STRIPE_SECRET_KEY: str({ default: '' }),
       TWITTER_ACCESS_TOKEN: str({ default: 'dummyAccessToken' }),
