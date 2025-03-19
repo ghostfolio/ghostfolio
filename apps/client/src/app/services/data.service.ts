@@ -57,6 +57,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
+import { utc } from '@date-fns/utc';
 import {
   AccountBalance,
   DataSource,
@@ -281,7 +282,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http.get<IDataProviderHistoricalResponse>(
-      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT)}`
+      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
 
@@ -363,10 +364,7 @@ export class DataService {
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(
-        startDate,
-        DATE_FORMAT
-      )}`,
+      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(startDate, DATE_FORMAT, { in: utc })}`,
       { params }
     );
   }
@@ -655,8 +653,18 @@ export class DataService {
     return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
   }
 
-  public fetchPrompt(mode: AiPromptMode) {
-    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`);
+  public fetchPrompt({
+    filters,
+    mode
+  }: {
+    filters?: Filter[];
+    mode: AiPromptMode;
+  }) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`, {
+      params
+    });
   }
 
   public fetchPublicPortfolio(aAccessId: string) {

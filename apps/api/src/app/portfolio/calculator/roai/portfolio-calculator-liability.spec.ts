@@ -5,8 +5,8 @@ import {
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
@@ -14,7 +14,6 @@ import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.s
 import { RedisCacheServiceMock } from '@ghostfolio/api/app/redis-cache/redis-cache.service.mock';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service.mock';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
@@ -51,18 +50,6 @@ jest.mock('@ghostfolio/api/app/redis-cache/redis-cache.service', () => {
   };
 });
 
-jest.mock(
-  '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service',
-  () => {
-    return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      ExchangeRateDataService: jest.fn().mockImplementation(() => {
-        return ExchangeRateDataServiceMock;
-      })
-    };
-  }
-);
-
 describe('PortfolioCalculator', () => {
   let configurationService: ConfigurationService;
   let currentRateService: CurrentRateService;
@@ -96,103 +83,39 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('get current positions', () => {
-    it.only('with MSFT buy', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
+  describe('compute portfolio snapshot', () => {
+    it.only('with liability activity', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
 
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2021-09-16'),
-          fee: 19,
-          quantity: 1,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            name: 'Microsoft Inc.',
-            symbol: 'MSFT'
-          },
-          type: 'BUY',
-          unitPrice: 298.58
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2021-11-16'),
+          date: new Date('2023-01-01'), // Date in future
           fee: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
-            dataSource: 'YAHOO',
-            name: 'Microsoft Inc.',
-            symbol: 'MSFT'
+            dataSource: 'MANUAL',
+            name: 'Loan',
+            symbol: '55196015-1365-4560-aa60-8751ae6d18f8'
           },
-          type: 'DIVIDEND',
-          unitPrice: 0.62
+          type: 'LIABILITY',
+          unitPrice: 3000
         }
       ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'USD',
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      expect(portfolioSnapshot).toMatchObject({
-        errors: [],
-        hasErrors: false,
-        positions: [
-          {
-            averagePrice: new Big('298.58'),
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            dividend: new Big('0.62'),
-            dividendInBaseCurrency: new Big('0.62'),
-            fee: new Big('19'),
-            firstBuyDate: '2021-09-16',
-            grossPerformance: new Big('33.25'),
-            grossPerformancePercentage: new Big('0.11136043941322258691'),
-            grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.11136043941322258691'
-            ),
-            grossPerformanceWithCurrencyEffect: new Big('33.25'),
-            investment: new Big('298.58'),
-            investmentWithCurrencyEffect: new Big('298.58'),
-            marketPrice: 331.83,
-            marketPriceInBaseCurrency: 331.83,
-            netPerformance: new Big('14.25'),
-            netPerformancePercentage: new Big('0.04772590260566682296'),
-            netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.04772590260566682296')
-            },
-            netPerformanceWithCurrencyEffectMap: {
-              '1d': new Big('-5.39'),
-              '5y': new Big('14.25'),
-              max: new Big('14.25'),
-              wtd: new Big('-5.39')
-            },
-            quantity: new Big('1'),
-            symbol: 'MSFT',
-            tags: [],
-            transactionCount: 2
-          }
-        ],
-        totalFeesWithCurrencyEffect: new Big('19'),
-        totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('298.58'),
-        totalInvestmentWithCurrencyEffect: new Big('298.58'),
-        totalLiabilitiesWithCurrencyEffect: new Big('0'),
-        totalValuablesWithCurrencyEffect: new Big('0')
-      });
-
-      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
-        expect.objectContaining({
-          totalInvestmentValueWithCurrencyEffect: 298.58
-        })
+      expect(portfolioSnapshot.totalLiabilitiesWithCurrencyEffect).toEqual(
+        new Big(3000)
       );
     });
   });

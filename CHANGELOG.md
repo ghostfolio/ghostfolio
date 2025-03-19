@@ -9,11 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for filtering in the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
 - Added the _Storybook_ path to the `sitemap.xml` file
 
 ### Changed
 
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Fixed an issue in the activities import functionality related to the account balances
+- Changed client-side dates to be sent in UTC format to ensure date consistency
+  - Benchmark endpoint
+  - Exchange rate endpoint
 
 ## 2.146.0 - 2025-03-15
 
