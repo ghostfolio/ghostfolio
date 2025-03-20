@@ -32,7 +32,12 @@ import {
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  Logger
+} from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
@@ -42,6 +47,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { groupBy } from 'lodash';
 
 @Injectable()
@@ -487,38 +493,58 @@ export class AdminService {
       newDataSource &&
       (newSymbol !== symbol || newDataSource !== dataSource)
     ) {
-      await this.symbolProfileService.updateAssetProfileIdentifier(
-        {
-          dataSource,
-          symbol
-        },
+      const [profile] = await this.symbolProfileService.getSymbolProfiles([
         {
           dataSource: newDataSource as DataSource,
           symbol: newSymbol as string
         }
-      );
+      ]);
 
-      await this.marketDataService.updateAssetProfileIdentifier(
-        {
-          dataSource,
-          symbol
-        },
-        {
-          dataSource: newDataSource as DataSource,
-          symbol: newSymbol as string
-        }
-      );
+      if (profile) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.CONFLICT),
+          StatusCodes.CONFLICT
+        );
+      }
 
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [
+      try {
+        await this.symbolProfileService.updateAssetProfileIdentifier(
           {
-            dataSource: dataSource as DataSource,
-            symbol: symbol as string
+            dataSource,
+            symbol
+          },
+          {
+            dataSource: newDataSource as DataSource,
+            symbol: newSymbol as string
           }
-        ]
-      );
+        );
 
-      return symbolProfile;
+        await this.marketDataService.updateAssetProfileIdentifier(
+          {
+            dataSource,
+            symbol
+          },
+          {
+            dataSource: newDataSource as DataSource,
+            symbol: newSymbol as string
+          }
+        );
+
+        const [symbolProfile] =
+          await this.symbolProfileService.getSymbolProfiles([
+            {
+              dataSource: newDataSource as DataSource,
+              symbol: newSymbol as string
+            }
+          ]);
+
+        return symbolProfile;
+      } catch {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.BAD_REQUEST),
+          StatusCodes.BAD_REQUEST
+        );
+      }
     } else {
       const symbolProfileOverrides = {
         assetClass: assetClass as AssetClass,

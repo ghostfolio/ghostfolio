@@ -250,6 +250,7 @@
       }
     </div>
     <form
+      #assetProfileFormElement
       [formGroup]="assetProfileForm"
       (keyup.enter)="assetProfileForm.valid && onSubmitAssetProfileForm()"
       (ngSubmit)="onSubmitAssetProfileForm()"
@@ -505,8 +506,8 @@
     <button
       color="primary"
       mat-flat-button
-      type="submit"
       [disabled]="!(assetProfileForm.dirty && assetProfileForm.valid)"
+      (click)="triggerIdentifierSubmit()"
     >
       <ng-container i18n>Save</ng-container>
     </button>

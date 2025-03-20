@@ -186,13 +186,11 @@ export class SymbolProfileService {
       comment,
       countries,
       currency,
-      //dataSource,
       holdings,
       isActive,
       name,
       scraperConfiguration,
       sectors,
-      //symbol,
       symbolMapping,
       SymbolProfileOverrides,
       url
