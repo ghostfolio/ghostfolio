@@ -19,13 +19,17 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   Inject,
   OnDestroy,
   OnInit,
+  ViewChild,
   signal
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import {
   AssetClass,
   AssetSubClass,
@@ -33,6 +37,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { format } from 'date-fns';
+import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -47,6 +52,9 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   standalone: false
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  @ViewChild('assetProfileFormElement')
+  assetProfileFormElement: ElementRef<HTMLFormElement>;
+
   public assetProfileClass: string;
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };
@@ -125,6 +133,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
+    private router: Router,
+    private snackBar: MatSnackBar,
     private userService: UserService
   ) {}
 
@@ -326,8 +336,23 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       .patchAssetProfile(this.data.dataSource, this.data.symbol, {
         ...assetProfileIdentifierData
       })
+      .pipe(
+        catchError(() => {
+          this.snackBar.open('Conflict', undefined, {
+            duration: ms('3 seconds')
+          });
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
       .subscribe(() => {
-        this.initialize();
+        this.onOpenAssetProfileDialog({
+          dataSource: assetProfileIdentifierData.dataSource,
+          symbol: assetProfileIdentifierData.symbol
+        });
+
+        this.dialogRef.close();
       });
   }
 
@@ -481,5 +506,24 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  public onOpenAssetProfileDialog({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.router.navigate([], {
+      queryParams: {
+        dataSource,
+        symbol,
+        assetProfileDialog: true
+      }
+    });
+  }
+
+  public triggerIdentifierSubmit() {
+    if (this.assetProfileIdentifierForm) {
+      this.assetProfileFormElement.nativeElement.requestSubmit();
+    }
   }
 }
