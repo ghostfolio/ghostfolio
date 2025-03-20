@@ -22,7 +22,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
-  AccessToken,
+  AccessTokenResponse,
   AccountBalancesResponse,
   Accounts,
   AiPromptResponse,
@@ -323,13 +323,6 @@ export class DataService {
 
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
-  }
-
-  public generateSecurityToken(aId: string) {
-    return this.http.post<AccessToken>(
-      `/api/v1/user/${aId}/security-token`,
-      {}
-    );
   }
 
   public fetchAccesses() {
@@ -697,6 +690,13 @@ export class DataService {
 
   public fetchTags() {
     return this.http.get<Tag[]>('/api/v1/tags');
+  }
+
+  public generateAccessToken(aId: string) {
+    return this.http.post<AccessTokenResponse>(
+      `/api/v1/user/${aId}/access-token`,
+      {}
+    );
   }
 
   public loginAnonymous(accessToken: string) {

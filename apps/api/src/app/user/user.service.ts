@@ -464,7 +464,9 @@ export class UserService {
     }
 
     if (data.provider === 'ANONYMOUS') {
-      const accessToken = await this.generateAccessToken({ userId: user.id });
+      const { accessToken } = await this.generateAccessToken({
+        userId: user.id
+      });
 
       return { ...user, accessToken };
     }
@@ -576,7 +578,7 @@ export class UserService {
     userId
   }: {
     userId: string;
-  }): Promise<string> {
+  }): Promise<{ accessToken: string }> {
     const accessToken = this.createAccessToken(userId, getRandomString(10));
 
     const hashedAccessToken = this.createAccessToken(
@@ -589,6 +591,6 @@ export class UserService {
       where: { id: userId }
     });
 
-    return accessToken;
+    return { accessToken };
   }
 }

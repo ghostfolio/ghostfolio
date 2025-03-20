@@ -1,4 +1,3 @@
-import type { AccessToken } from './access-token.interface';
 import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
 import type { Accounts } from './accounts.interface';
@@ -39,6 +38,7 @@ import type { PortfolioReportRule } from './portfolio-report-rule.interface';
 import type { PortfolioSummary } from './portfolio-summary.interface';
 import type { Position } from './position.interface';
 import type { Product } from './product';
+import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
@@ -70,7 +70,7 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
-  AccessToken,
+  AccessTokenResponse,
   AccountBalance,
   AccountBalancesResponse,
   Accounts,

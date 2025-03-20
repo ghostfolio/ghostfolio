@@ -141,16 +141,15 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
     });
   }
 
-  public onGenerateSecurityToken(aId: string) {
+  public onGenerateAccessToken(aId: string) {
     this.notificationService.confirm({
       confirmFn: () => {
         this.dataService
-          .generateSecurityToken(aId)
+          .generateAccessToken(aId)
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(({ accessToken }) => {
-            this.notificationService.prompt({
-              confirmFn: () => undefined,
-              defaultValue: accessToken,
+            this.notificationService.alert({
+              message: accessToken,
               title: $localize`Security token`
             });
           });
