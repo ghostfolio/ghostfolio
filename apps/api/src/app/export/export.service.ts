@@ -38,7 +38,7 @@ export class ExportService {
       withExcludedAccounts: true
     });
 
-    if (activityIds) {
+    if (activityIds?.length > 0) {
       activities = activities.filter(({ id }) => {
         return activityIds.includes(id);
       });
@@ -57,7 +57,7 @@ export class ExportService {
       })
     )
       .filter(({ id }) => {
-        return filters.length > 0
+        return activities.length > 0
           ? activities.some(({ accountId }) => {
               return accountId === id;
             })
