@@ -100,7 +100,7 @@
             <mat-form-field appearance="outline" class="gf-spacer without-hint">
               <mat-label i18n>Name, symbol or ISIN</mat-label>
               <gf-symbol-autocomplete
-                formControlName="editedSearchSymbol"
+                formControlName="symbol"
                 [includeIndices]="true"
               />
             </mat-form-field>
@@ -110,10 +110,8 @@
               mat-flat-button
               type="submit"
               [disabled]="
-                assetProfileIdentifierForm.hasError(
-                  'invalidData',
-                  'editedSearchSymbol'
-                ) || assetProfileIdentifierForm.hasError('equalsPreviousSymbol')
+                assetProfileIdentifierForm.hasError('invalidData', 'symbol') ||
+                assetProfileIdentifierForm.hasError('equalsPreviousSymbol')
               "
             >
               Apply

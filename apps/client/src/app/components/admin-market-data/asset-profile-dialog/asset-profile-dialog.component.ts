@@ -71,7 +71,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public assetProfileIdentifierForm = this.formBuilder.group(
     {
-      editedSearchSymbol: new FormControl<AssetProfileIdentifier>(
+      symbol: new FormControl<AssetProfileIdentifier>(
         { symbol: null, dataSource: null },
         [Validators.required]
       )
@@ -253,11 +253,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   private isNewSymbolValid(control: AbstractControl): ValidationErrors {
     const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
-      control.get('editedSearchSymbol').value;
+      control.get('symbol').value;
 
     if (
-      currentAssetProfileIdentifier.dataSource === this.data?.dataSource &&
-      currentAssetProfileIdentifier.symbol === this.data?.symbol
+      currentAssetProfileIdentifier?.dataSource === this.data?.dataSource &&
+      currentAssetProfileIdentifier?.symbol === this.data?.symbol
     ) {
       return {
         equalsPreviousSymbol: true
@@ -340,10 +340,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public async onSubmitAssetProfileIdentifierForm() {
     const assetProfileIdentifierData: UpdateAssetProfileDto = {
       dataSource:
-        this.assetProfileIdentifierForm.get('editedSearchSymbol').value
-          .dataSource,
-      symbol:
-        this.assetProfileIdentifierForm.get('editedSearchSymbol').value.symbol
+        this.assetProfileIdentifierForm.get('symbol').value.dataSource,
+      symbol: this.assetProfileIdentifierForm.get('symbol').value.symbol
     };
 
     try {
@@ -372,7 +370,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         catchError((error: HttpErrorResponse) => {
           if (error.status === 409) {
             this.snackBar.open(
-              $localize`This symbol is already in use`,
+              $localize`This symbol is already in use.`,
               undefined,
               {
                 duration: ms('3 seconds')
@@ -380,7 +378,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             );
           } else {
             this.snackBar.open(
-              $localize`An error occurred while updating the symbol`,
+              $localize`An error occurred while updating the symbol.`,
               undefined,
               {
                 duration: ms('3 seconds')
