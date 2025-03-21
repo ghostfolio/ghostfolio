@@ -196,7 +196,7 @@ export class GfTreemapChartComponent
       min: Math.min(...negativeNetPerformancePercents)
     };
 
-    const data: ChartConfiguration['data'] = {
+    const data: ChartConfiguration<'treemap'>['data'] = {
       datasets: [
         {
           backgroundColor: (ctx) => {
@@ -342,24 +342,42 @@ export class GfTreemapChartComponent
       }),
       callbacks: {
         label: (context) => {
+          const allocationInPercentage = `${((context.raw._data.allocationInPercentage as number) * 100).toFixed(2)}%`;
           const name = context.raw._data.name;
+          const sign =
+            context.raw._data.netPerformancePercentWithCurrencyEffect > 0
+              ? '+'
+              : '';
           const symbol = context.raw._data.symbol;
+
+          const netPerformanceInPercentageWithSign = `${sign}${(context.raw._data.netPerformancePercentWithCurrencyEffect * 100).toFixed(2)}%`;
 
           if (context.raw._data.valueInBaseCurrency !== null) {
             const value = context.raw._data.valueInBaseCurrency as number;
 
             return [
-              `${name ?? symbol}`,
+              `${name ?? symbol} (${allocationInPercentage})`,
               `${value.toLocaleString(this.locale, {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
-              })} ${this.baseCurrency}`
+              })} ${this.baseCurrency}`,
+              '',
+              $localize`Change` + ' (' + $localize`Performance` + ')',
+              `${sign}${context.raw._data.netPerformanceWithCurrencyEffect.toLocaleString(
+                this.locale,
+                {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }
+              )} ${this.baseCurrency} (${netPerformanceInPercentageWithSign})`
             ];
           } else {
-            const percentage =
-              (context.raw._data.allocationInPercentage as number) * 100;
-
-            return [`${name ?? symbol}`, `${percentage.toFixed(2)}%`];
+            return [
+              `${name ?? symbol} (${allocationInPercentage})`,
+              '',
+              $localize`Performance`,
+              netPerformanceInPercentageWithSign
+            ];
           }
         },
         title: () => {

@@ -15,10 +15,11 @@ import {
   FormControl,
   FormGroup,
   ValidationErrors,
+  ValidatorFn,
   Validators
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { uniq } from 'lodash';
+import { isISO4217CurrencyCode } from 'class-validator';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
@@ -52,9 +53,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     this.createAssetProfileForm = this.formBuilder.group(
       {
         addCurrency: new FormControl(null, [
-          Validators.maxLength(3),
-          Validators.minLength(3),
-          Validators.required
+          this.iso4217CurrencyCodeValidator()
         ]),
         addSymbol: new FormControl(null, [Validators.required]),
         searchSymbol: new FormControl(null, [Validators.required])
@@ -83,11 +82,13 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         symbol: this.createAssetProfileForm.get('searchSymbol').value.symbol
       });
     } else if (this.mode === 'currency') {
-      const currency = this.createAssetProfileForm
-        .get('addCurrency')
-        .value.toUpperCase();
+      const currency = (
+        this.createAssetProfileForm.get('addCurrency').value as string
+      ).toUpperCase();
 
-      const currencies = uniq([...this.customCurrencies, currency]);
+      const currencies = Array.from(
+        new Set([...this.customCurrencies, currency])
+      ).sort();
 
       this.dataService
         .putAdminSetting(PROPERTY_CURRENCIES, {
@@ -109,10 +110,7 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
     const addCurrencyFormControl =
       this.createAssetProfileForm.get('addCurrency');
 
-    if (
-      addCurrencyFormControl.hasError('maxlength') ||
-      addCurrencyFormControl.hasError('minlength')
-    ) {
+    if (addCurrencyFormControl.hasError('invalidCurrency')) {
       return true;
     }
 
@@ -160,5 +158,15 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  private iso4217CurrencyCodeValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!isISO4217CurrencyCode(control.value?.toUpperCase())) {
+        return { invalidCurrency: true };
+      }
+
+      return null;
+    };
   }
 }

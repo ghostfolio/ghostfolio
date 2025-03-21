@@ -261,7 +261,9 @@ export class GfHistoricalMarketDataEditorComponent
       this.snackBar.open(
         $localize`Oops! Could not parse historical data.`,
         undefined,
-        { duration: ms('3 seconds') }
+        {
+          duration: ms('3 seconds')
+        }
       );
     }
   }

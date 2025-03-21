@@ -30,7 +30,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, format, isAfter, isSameSecond, parseISO } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { isNumber, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -293,6 +293,7 @@ export class ImportService {
         assetSubClass,
         countries,
         createdAt,
+        cusip,
         dataSource,
         figi,
         figiComposite,
@@ -328,7 +329,7 @@ export class ImportService {
           date
         );
 
-        if (!unitPrice) {
+        if (!isNumber(unitPrice)) {
           throw new Error(
             `activities.${index} historical exchange rate at ${format(
               date,
@@ -367,6 +368,7 @@ export class ImportService {
             assetSubClass,
             countries,
             createdAt,
+            cusip,
             dataSource,
             figi,
             figiComposite,

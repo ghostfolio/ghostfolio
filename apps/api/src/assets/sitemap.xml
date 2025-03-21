@@ -93,6 +93,10 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
+    <loc>https://ghostfol.io/development/storybook</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
     <loc>https://ghostfol.io/en</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -504,12 +508,10 @@
     <loc>https://ghostfol.io/pl/o-ghostfolio</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
-  <!--
-    <url>
-      <loc>https://ghostfol.io/pl/open</loc>
-      <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-    </url>
-  -->
+  <url>
+    <loc>https://ghostfol.io/pl/open</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
   <url>
     <loc>https://ghostfol.io/pl/rynki</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
@@ -582,6 +584,12 @@
     <loc>https://ghostfol.io/tr</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
+  <!--
+  <url>
+    <loc>https://ghostfol.io/uk</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  -->
   <!--
   <url>
     <loc>https://ghostfol.io/zh</loc>

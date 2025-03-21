@@ -60,6 +60,10 @@ Remove permission in `UserService` using `without()`
 
 Use `@if (user?.settings?.isExperimentalFeatures) {}` in HTML template
 
+## Component Library (_Storybook_)
+
+https://ghostfol.io/development/storybook
+
 ## Git
 
 ### Rebase
@@ -101,3 +105,12 @@ https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
 Run `npm run prisma migrate dev --name added_job_title`
 
 https://www.prisma.io/docs/concepts/components/prisma-migrate#getting-started-with-prisma-migrate
+
+## SSL
+
+Generate `localhost.cert` and `localhost.pem` files.
+
+```
+openssl req -x509 -newkey rsa:2048 -nodes -keyout apps/client/localhost.pem -out apps/client/localhost.cert -days 365 \
+  -subj "/C=CH/ST=State/L=City/O=Organization/OU=Unit/CN=localhost"
+```

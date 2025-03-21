@@ -260,6 +260,7 @@ export class AllocationsPageComponent implements OnDestroy, OnInit {
     this.platforms = {};
     this.portfolioDetails = {
       accounts: {},
+      createdAt: undefined,
       holdings: {},
       platforms: {},
       summary: undefined

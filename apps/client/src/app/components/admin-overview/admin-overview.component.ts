@@ -6,7 +6,6 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   PROPERTY_COUPONS,
-  PROPERTY_CURRENCIES,
   PROPERTY_IS_DATA_GATHERING_ENABLED,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED,
@@ -28,7 +27,6 @@ import {
   formatDistanceToNowStrict,
   parseISO
 } from 'date-fns';
-import { uniq } from 'lodash';
 import { StringValue } from 'ms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -42,8 +40,6 @@ import { takeUntil } from 'rxjs/operators';
 export class AdminOverviewComponent implements OnDestroy, OnInit {
   public couponDuration: StringValue = '14 days';
   public coupons: Coupon[];
-  public customCurrencies: string[];
-  public exchangeRates: { label1: string; label2: string; value: number }[];
   public hasPermissionForSubscription: boolean;
   public hasPermissionForSystemMessage: boolean;
   public hasPermissionToToggleReadOnlyMode: boolean;
@@ -122,24 +118,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.putAdminSetting({ key: PROPERTY_COUPONS, value: coupons });
   }
 
-  public onAddCurrency() {
-    const currency = prompt($localize`Please add a currency:`);
-
-    if (currency) {
-      if (currency.length === 3) {
-        const currencies = uniq([
-          ...this.customCurrencies,
-          currency.toUpperCase()
-        ]);
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-      } else {
-        this.notificationService.alert({
-          title: $localize`${currency} is an invalid currency!`
-        });
-      }
-    }
-  }
-
   public onChangeCouponDuration(aCouponDuration: StringValue) {
     this.couponDuration = aCouponDuration;
   }
@@ -154,19 +132,6 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
       },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this coupon?`
-    });
-  }
-
-  public onDeleteCurrency(aCurrency: string) {
-    this.notificationService.confirm({
-      confirmFn: () => {
-        const currencies = this.customCurrencies.filter((currency) => {
-          return currency !== aCurrency;
-        });
-        this.putAdminSetting({ key: PROPERTY_CURRENCIES, value: currencies });
-      },
-      confirmType: ConfirmationDialogType.Warn,
-      title: $localize`Do you really want to delete this currency?`
     });
   }
 
@@ -250,25 +215,17 @@ export class AdminOverviewComponent implements OnDestroy, OnInit {
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(
-        ({ exchangeRates, settings, transactionCount, userCount, version }) => {
-          this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
-          this.customCurrencies = settings[PROPERTY_CURRENCIES] as string[];
-          this.exchangeRates = exchangeRates;
-          this.isDataGatheringEnabled =
-            settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false
-              ? false
-              : true;
-          this.systemMessage = settings[
-            PROPERTY_SYSTEM_MESSAGE
-          ] as SystemMessage;
-          this.transactionCount = transactionCount;
-          this.userCount = userCount;
-          this.version = version;
+      .subscribe(({ settings, transactionCount, userCount, version }) => {
+        this.coupons = (settings[PROPERTY_COUPONS] as Coupon[]) ?? [];
+        this.isDataGatheringEnabled =
+          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
+        this.systemMessage = settings[PROPERTY_SYSTEM_MESSAGE] as SystemMessage;
+        this.transactionCount = transactionCount;
+        this.userCount = userCount;
+        this.version = version;
 
-          this.changeDetectorRef.markForCheck();
-        }
-      );
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
   private generateCouponCode(aLength: number) {

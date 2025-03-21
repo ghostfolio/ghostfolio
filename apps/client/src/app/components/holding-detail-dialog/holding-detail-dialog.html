@@ -364,62 +364,38 @@
           [showValueInBaseCurrency]="false"
         />
       </mat-tab>
+      @if (
+        hasPermissionToReadMarketDataOfOwnAssetProfile &&
+        user?.settings?.isExperimentalFeatures
+      ) {
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <ion-icon name="server-outline" />
+            <div class="d-none d-sm-block ml-2" i18n>Market Data</div>
+          </ng-template>
+          <gf-historical-market-data-editor
+            [currency]="SymbolProfile?.currency"
+            [dataSource]="SymbolProfile?.dataSource"
+            [dateOfFirstActivity]="firstBuyDate"
+            [locale]="data.locale"
+            [marketData]="marketDataItems"
+            [symbol]="SymbolProfile?.symbol"
+            [user]="user"
+            (marketDataChanged)="onMarketDataChanged($event)"
+          />
+        </mat-tab>
+      }
     </mat-tab-group>
 
-    <div
-      class="row"
-      [ngClass]="{
-        'd-none': !data.hasPermissionToUpdateOrder
-      }"
-    >
-      <div class="col">
-        <mat-form-field appearance="outline" class="w-100 without-hint">
-          <mat-label i18n>Tags</mat-label>
-          <mat-chip-grid #tagsChipList>
-            @for (tag of activityForm.get('tags')?.value; track tag.id) {
-              <mat-chip-row
-                matChipRemove
-                [removable]="true"
-                (removed)="onRemoveTag(tag)"
-              >
-                {{ tag.name }}
-                <ion-icon class="ml-2" matPrefix name="close-outline" />
-              </mat-chip-row>
-            }
-            <input
-              #tagInput
-              name="close-outline"
-              [matAutocomplete]="autocompleteTags"
-              [matChipInputFor]="tagsChipList"
-              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-            />
-          </mat-chip-grid>
-          <mat-autocomplete
-            #autocompleteTags="matAutocomplete"
-            (optionSelected)="onAddTag($event)"
-          >
-            @for (tag of filteredTagsObservable | async; track tag.id) {
-              <mat-option [value]="tag.id">
-                {{ tag.name }}
-              </mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-    </div>
-
-    @if (!data.hasPermissionToUpdateOrder && tagsAvailable?.length > 0) {
-      <div class="row">
-        <div class="col">
-          <div class="h5" i18n>Tags</div>
-          <mat-chip-listbox>
-            @for (tag of tags; track tag) {
-              <mat-chip-option disabled>{{ tag.name }}</mat-chip-option>
-            }
-          </mat-chip-listbox>
-        </div>
-      </div>
-    }
+    <gf-tags-selector
+      [hasPermissionToCreateTag]="
+        hasPermissionToCreateOwnTag && user?.settings?.isExperimentalFeatures
+      "
+      [readonly]="!data.hasPermissionToUpdateOrder"
+      [tags]="activityForm.get('tags')?.value"
+      [tagsAvailable]="tagsAvailable"
+      (tagsChanged)="onTagsChanged($event)"
+    />
 
     @if (
       dataSource?.data.length > 0 &&

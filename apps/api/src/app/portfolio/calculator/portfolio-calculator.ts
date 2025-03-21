@@ -49,7 +49,7 @@ import {
   min,
   subDays
 } from 'date-fns';
-import { isNumber, sortBy, sum, uniq, uniqBy } from 'lodash';
+import { isNumber, sortBy, sum, uniqBy } from 'lodash';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -175,6 +175,8 @@ export abstract class PortfolioCalculator {
 
     if (!transactionPoints.length) {
       return {
+        activitiesCount: 0,
+        createdAt: new Date(),
         currentValueInBaseCurrency: new Big(0),
         errors: [],
         hasErrors: false,
@@ -220,7 +222,7 @@ export abstract class PortfolioCalculator {
 
     const exchangeRatesByCurrency =
       await this.exchangeRateDataService.getExchangeRatesByCurrency({
-        currencies: uniq(Object.values(currencies)),
+        currencies: Array.from(new Set(Object.values(currencies))),
         endDate: endOfDay(this.endDate),
         startDate: this.startDate,
         targetCurrency: this.currency

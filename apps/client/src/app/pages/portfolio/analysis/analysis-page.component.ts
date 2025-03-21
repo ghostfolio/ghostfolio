@@ -12,14 +12,22 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { GroupBy } from '@ghostfolio/common/types';
+import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
 import { isNumber, sortBy } from 'lodash';
+import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -31,6 +39,8 @@ import { takeUntil } from 'rxjs/operators';
   standalone: false
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
+  @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;
+
   public benchmark: Partial<SymbolProfile>;
   public benchmarkDataItems: HistoricalDataItem[] = [];
   public benchmarks: Partial<SymbolProfile>[];
@@ -45,10 +55,12 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
   public investmentsByGroup: InvestmentItem[];
+  public isLoadingAnalysisPrompt: boolean;
   public isLoadingBenchmarkComparator: boolean;
   public isLoadingDividendTimelineChart: boolean;
   public isLoadingInvestmentChart: boolean;
   public isLoadingInvestmentTimelineChart: boolean;
+  public isLoadingPortfolioPrompt: boolean;
   public mode: GroupBy = 'month';
   public modeOptions: ToggleOption[] = [
     { label: $localize`Monthly`, value: 'month' },
@@ -141,18 +153,45 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
     this.fetchDividendsAndInvestments();
   }
 
-  public onCopyPromptToClipboard() {
-    this.dataService.fetchPrompt().subscribe(({ prompt }) => {
-      this.clipboard.copy(prompt);
+  public onCopyPromptToClipboard(mode: AiPromptMode) {
+    if (mode === 'analysis') {
+      this.isLoadingAnalysisPrompt = true;
+    } else if (mode === 'portfolio') {
+      this.isLoadingPortfolioPrompt = true;
+    }
 
-      this.snackBar.open(
-        '✅ ' + $localize`AI prompt has been copied to the clipboard`,
-        undefined,
-        {
-          duration: 3000
+    this.dataService
+      .fetchPrompt({
+        mode,
+        filters: this.userService.getFilters()
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ prompt }) => {
+        this.clipboard.copy(prompt);
+
+        const snackBarRef = this.snackBar.open(
+          '✅ ' + $localize`AI prompt has been copied to the clipboard`,
+          $localize`Open Duck.ai` + ' →',
+          {
+            duration: ms('7 seconds')
+          }
+        );
+
+        snackBarRef
+          .onAction()
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe(() => {
+            window.open('https://duck.ai', '_blank');
+          });
+
+        this.actionsMenuButton.closeMenu();
+
+        if (mode === 'analysis') {
+          this.isLoadingAnalysisPrompt = false;
+        } else if (mode === 'portfolio') {
+          this.isLoadingPortfolioPrompt = false;
         }
-      );
-    });
+      });
   }
 
   public ngOnDestroy() {
@@ -310,6 +349,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           .fetchBenchmarkForUser({
             dataSource,
             symbol,
+            filters: this.userService.getFilters(),
             range: this.user?.settings?.dateRange,
             startDate: this.firstOrderDate
           })

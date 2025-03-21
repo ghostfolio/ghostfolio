@@ -170,6 +170,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             symbol = quotes[0].symbol;
           }
         } catch {}
+      } else if (symbol?.includes('-')) {
+        throw new Error(`${symbol} is not valid`);
       } else {
         symbol = this.convertToYahooFinanceSymbol(symbol);
       }
@@ -197,7 +199,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         assetProfile.price.symbol
       );
 
-      if (assetSubClass === AssetSubClass.MUTUALFUND) {
+      if (['ETF', 'MUTUALFUND'].includes(assetSubClass)) {
         response.sectors = [];
 
         for (const sectorWeighting of assetProfile.topHoldings
@@ -207,7 +209,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
           }
         }
       } else if (
-        assetSubClass === AssetSubClass.STOCK &&
+        assetSubClass === 'STOCK' &&
         assetProfile.summaryProfile?.country
       ) {
         // Add country if asset is stock and country available

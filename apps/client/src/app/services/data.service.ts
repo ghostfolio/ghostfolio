@@ -4,6 +4,8 @@ import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto
 import { TransferBalanceDto } from '@ghostfolio/api/app/account/transfer-balance.dto';
 import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto';
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
+import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
+import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import {
   Activities,
@@ -44,12 +46,18 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
-import { AccountWithValue, DateRange, GroupBy } from '@ghostfolio/common/types';
+import type {
+  AccountWithValue,
+  AiPromptMode,
+  DateRange,
+  GroupBy
+} from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
+import { utc } from '@date-fns/utc';
 import {
   AccountBalance,
   DataSource,
@@ -274,7 +282,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http.get<IDataProviderHistoricalResponse>(
-      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT)}`
+      `/api/v1/exchange-rate/${symbol}/${format(date, DATE_FORMAT, { in: utc })}`
     );
   }
 
@@ -301,11 +309,15 @@ export class DataService {
   }
 
   public deleteBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.http.delete<any>(`/api/v1/benchmark/${dataSource}/${symbol}`);
+    return this.http.delete<any>(`/api/v1/benchmarks/${dataSource}/${symbol}`);
   }
 
   public deleteOwnUser(aData: DeleteOwnUserDto) {
     return this.http.delete<any>(`/api/v1/user`, { body: aData });
+  }
+
+  public deleteTag(aId: string) {
+    return this.http.delete<void>(`/api/v1/tags/${aId}`);
   }
 
   public deleteUser(aId: string) {
@@ -332,30 +344,33 @@ export class DataService {
 
   public fetchBenchmarkForUser({
     dataSource,
+    filters,
     range,
     startDate,
-    symbol
+    symbol,
+    withExcludedAccounts
   }: {
+    filters?: Filter[];
     range: DateRange;
     startDate: Date;
+    withExcludedAccounts?: boolean;
   } & AssetProfileIdentifier): Observable<BenchmarkMarketDataDetails> {
-    let params = new HttpParams();
+    let params = this.buildFiltersAsQueryParams({ filters });
 
-    if (range) {
-      params = params.append('range', range);
+    params = params.append('range', range);
+
+    if (withExcludedAccounts) {
+      params = params.append('withExcludedAccounts', withExcludedAccounts);
     }
 
     return this.http.get<BenchmarkMarketDataDetails>(
-      `/api/v1/benchmark/${dataSource}/${symbol}/${format(
-        startDate,
-        DATE_FORMAT
-      )}`,
+      `/api/v1/benchmarks/${dataSource}/${symbol}/${format(startDate, DATE_FORMAT, { in: utc })}`,
       { params }
     );
   }
 
   public fetchBenchmarks() {
-    return this.http.get<BenchmarkResponse>('/api/v1/benchmark');
+    return this.http.get<BenchmarkResponse>('/api/v1/benchmarks');
   }
 
   public fetchExport({
@@ -638,8 +653,18 @@ export class DataService {
     return this.http.get<PortfolioReportResponse>('/api/v1/portfolio/report');
   }
 
-  public fetchPrompt() {
-    return this.http.get<AiPromptResponse>('/api/v1/ai/prompt');
+  public fetchPrompt({
+    filters,
+    mode
+  }: {
+    filters?: Filter[];
+    mode: AiPromptMode;
+  }) {
+    const params = this.buildFiltersAsQueryParams({ filters });
+
+    return this.http.get<AiPromptResponse>(`/api/v1/ai/prompt/${mode}`, {
+      params
+    });
   }
 
   public fetchPublicPortfolio(aAccessId: string) {
@@ -660,6 +685,10 @@ export class DataService {
           return response;
         })
       );
+  }
+
+  public fetchTags() {
+    return this.http.get<Tag[]>('/api/v1/tags');
   }
 
   public loginAnonymous(accessToken: string) {
@@ -688,7 +717,7 @@ export class DataService {
   }
 
   public postBenchmark(benchmark: AssetProfileIdentifier) {
-    return this.http.post('/api/v1/benchmark', benchmark);
+    return this.http.post('/api/v1/benchmarks', benchmark);
   }
 
   public postMarketData({
@@ -707,6 +736,10 @@ export class DataService {
 
   public postOrder(aOrder: CreateOrderDto) {
     return this.http.post<OrderModel>('/api/v1/order', aOrder);
+  }
+
+  public postTag(aTag: CreateTagDto) {
+    return this.http.post<Tag>(`/api/v1/tags`, aTag);
   }
 
   public postUser() {
@@ -734,6 +767,10 @@ export class DataService {
 
   public putOrder(aOrder: UpdateOrderDto) {
     return this.http.put<UserItem>(`/api/v1/order/${aOrder.id}`, aOrder);
+  }
+
+  public putTag(aTag: UpdateTagDto) {
+    return this.http.put<Tag>(`/api/v1/tags/${aTag.id}`, aTag);
   }
 
   public putUserSetting(aData: UpdateUserSettingDto) {

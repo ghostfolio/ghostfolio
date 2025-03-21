@@ -13,31 +13,27 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
+import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { translate } from '@ghostfolio/ui/i18n';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Inject,
   OnDestroy,
-  OnInit,
-  ViewChild
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import {
-  MatAutocompleteModule,
-  MatAutocompleteSelectedEvent
-} from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import {
@@ -50,11 +46,11 @@ import { SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { Account, Tag } from '@prisma/client';
+import { Account, MarketData, Tag } from '@prisma/client';
 import { format, isSameMonth, isToday, parseISO } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { Observable, of, Subject } from 'rxjs';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { HoldingDetailDialogParams } from './interfaces/interfaces';
 
@@ -68,10 +64,11 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
     GfDataProviderCreditsComponent,
     GfDialogFooterModule,
     GfDialogHeaderModule,
+    GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
+    GfTagsSelectorComponent,
     GfValueComponent,
-    MatAutocompleteModule,
     MatButtonModule,
     MatChipsModule,
     MatDialogModule,
@@ -85,8 +82,6 @@ import { HoldingDetailDialogParams } from './interfaces/interfaces';
   templateUrl: 'holding-detail-dialog.html'
 })
 export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
-  @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
-
   public activityForm: FormGroup;
   public accounts: Account[];
   public assetClass: string;
@@ -102,11 +97,13 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public dividendInBaseCurrencyPrecision = 2;
   public dividendYieldPercentWithCurrencyEffect: number;
   public feeInBaseCurrency: number;
-  public filteredTagsObservable: Observable<Tag[]> = of([]);
   public firstBuyDate: string;
+  public hasPermissionToCreateOwnTag: boolean;
+  public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
   public investment: number;
   public investmentPrecision = 2;
+  public marketDataItems: MarketData[] = [];
   public marketPrice: number;
   public maxPrice: number;
   public minPrice: number;
@@ -122,7 +119,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public sectors: {
     [name: string]: { name: string; value: number };
   };
-  public separatorKeysCodes: number[] = [COMMA, ENTER];
   public sortColumn = 'date';
   public sortDirection: SortDirection = 'desc';
   public SymbolProfile: EnhancedSymbolProfile;
@@ -158,15 +154,43 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.activityForm
       .get('tags')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((tags) => {
-        this.dataService
-          .putHoldingTags({
-            tags,
-            dataSource: this.data.dataSource,
-            symbol: this.data.symbol
-          })
-          .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe();
+      .subscribe((tags: Tag[]) => {
+        const newTag = tags.find(({ id }) => {
+          return id === undefined;
+        });
+
+        if (newTag && this.hasPermissionToCreateOwnTag) {
+          this.dataService
+            .postTag({ ...newTag, userId: this.user.id })
+            .pipe(
+              switchMap((createdTag) => {
+                return this.dataService.putHoldingTags({
+                  dataSource: this.data.dataSource,
+                  symbol: this.data.symbol,
+                  tags: [
+                    ...tags.filter(({ id }) => {
+                      return id !== undefined;
+                    }),
+                    createdTag
+                  ]
+                });
+              }),
+              switchMap(() => {
+                return this.userService.get(true);
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe();
+        } else {
+          this.dataService
+            .putHoldingTags({
+              tags,
+              dataSource: this.data.dataSource,
+              symbol: this.data.symbol
+            })
+            .pipe(takeUntil(this.unsubscribeSubject))
+            .subscribe();
+        }
       });
 
     this.dataService
@@ -241,6 +265,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.feeInBaseCurrency = feeInBaseCurrency;
           this.firstBuyDate = firstBuyDate;
 
+          this.hasPermissionToReadMarketDataOfOwnAssetProfile =
+            hasPermission(
+              this.user?.permissions,
+              permissions.readMarketDataOfOwnAssetProfile
+            ) &&
+            SymbolProfile?.dataSource === 'MANUAL' &&
+            SymbolProfile?.userId === this.user?.id;
+
           this.historicalDataItems = historicalData.map(
             ({ averagePrice, date, marketPrice }) => {
               this.benchmarkDataItems.push({
@@ -296,7 +328,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
 
           if (Number.isInteger(this.quantity)) {
             this.quantityPrecision = 0;
-          } else if (this.SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
+          } else if (SymbolProfile?.assetSubClass === 'CRYPTOCURRENCY') {
             if (this.quantity < 1) {
               this.quantityPrecision = 7;
             } else if (this.quantity < 1000) {
@@ -318,17 +350,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           });
 
           this.activityForm.setValue({ tags: this.tags }, { emitEvent: false });
-
-          this.filteredTagsObservable = this.activityForm.controls[
-            'tags'
-          ].valueChanges.pipe(
-            startWith(this.activityForm.get('tags').value),
-            map((aTags: Tag[] | null) => {
-              return aTags
-                ? this.filterTags(aTags)
-                : this.tagsAvailable.slice();
-            })
-          );
 
           this.transactionCount = transactionCount;
           this.totalItems = transactionCount;
@@ -414,6 +435,10 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             }
           );
 
+          if (this.hasPermissionToReadMarketDataOfOwnAssetProfile) {
+            this.fetchMarketData();
+          }
+
           this.changeDetectorRef.markForCheck();
         }
       );
@@ -423,6 +448,11 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateOwnTag = hasPermission(
+            this.user.permissions,
+            permissions.createOwnTag
+          );
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {
@@ -435,17 +465,6 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
-  }
-
-  public onAddTag(event: MatAutocompleteSelectedEvent) {
-    this.activityForm.get('tags').setValue([
-      ...(this.activityForm.get('tags').value ?? []),
-      this.tagsAvailable.find(({ id }) => {
-        return id === event.option.value;
-      })
-    ]);
-
-    this.tagInput.nativeElement.value = '';
   }
 
   public onCloneActivity(aActivity: Activity) {
@@ -480,12 +499,14 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
       });
   }
 
-  public onRemoveTag(aTag: Tag) {
-    this.activityForm.get('tags').setValue(
-      this.activityForm.get('tags').value.filter(({ id }) => {
-        return id !== aTag.id;
-      })
-    );
+  public onMarketDataChanged(withRefresh = false) {
+    if (withRefresh) {
+      this.fetchMarketData();
+    }
+  }
+
+  public onTagsChanged(tags: Tag[]) {
+    this.activityForm.get('tags').setValue(tags);
   }
 
   public onUpdateActivity(aActivity: Activity) {
@@ -501,13 +522,26 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  private filterTags(aTags: Tag[]) {
-    const tagIds = aTags.map(({ id }) => {
-      return id;
-    });
+  private fetchMarketData() {
+    this.dataService
+      .fetchMarketDataBySymbol({
+        dataSource: this.data.dataSource,
+        symbol: this.data.symbol
+      })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ marketData }) => {
+        this.marketDataItems = marketData;
 
-    return this.tagsAvailable.filter(({ id }) => {
-      return !tagIds.includes(id);
-    });
+        this.historicalDataItems = this.marketDataItems.map(
+          ({ date, marketPrice }) => {
+            return {
+              date: format(date, DATE_FORMAT),
+              value: marketPrice
+            };
+          }
+        );
+
+        this.changeDetectorRef.markForCheck();
+      });
   }
 }

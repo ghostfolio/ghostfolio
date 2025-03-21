@@ -21,7 +21,8 @@ import {
   Component,
   Inject,
   OnDestroy,
-  OnInit
+  OnInit,
+  signal
 } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -64,7 +65,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       csvString: ''
     }),
     name: ['', Validators.required],
-    scraperConfiguration: '',
+    scraperConfiguration: this.formBuilder.group({
+      defaultMarketPrice: null,
+      headers: JSON.stringify({}),
+      locale: '',
+      mode: '',
+      selector: '',
+      url: ''
+    }),
     sectors: '',
     symbolMapping: '',
     url: ''
@@ -79,6 +87,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
   public marketDataItems: MarketData[] = [];
+  public modeValues = [
+    {
+      value: 'lazy',
+      viewValue: $localize`Lazy` + ' (' + $localize`end of day` + ')'
+    },
+    {
+      value: 'instant',
+      viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
+    }
+  ];
+  public scraperConfiguationIsExpanded = signal(false);
   public sectors: {
     [name: string]: { name: string; value: number };
   };
@@ -181,9 +200,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
           name: this.assetProfile.name ?? this.assetProfile.symbol,
-          scraperConfiguration: JSON.stringify(
-            this.assetProfile?.scraperConfiguration ?? {}
-          ),
+          scraperConfiguration: {
+            defaultMarketPrice:
+              this.assetProfile?.scraperConfiguration?.defaultMarketPrice ??
+              null,
+            headers: JSON.stringify(
+              this.assetProfile?.scraperConfiguration?.headers ?? {}
+            ),
+            locale: this.assetProfile?.scraperConfiguration?.locale ?? '',
+            mode: this.assetProfile?.scraperConfiguration?.mode ?? 'lazy',
+            selector: this.assetProfile?.scraperConfiguration?.selector ?? '',
+            url: this.assetProfile?.scraperConfiguration?.url ?? ''
+          },
           sectors: JSON.stringify(this.assetProfile?.sectors ?? []),
           symbolMapping: JSON.stringify(this.assetProfile?.symbolMapping ?? {}),
           url: this.assetProfile?.url ?? ''
@@ -252,9 +280,31 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } catch {}
 
     try {
-      scraperConfiguration = JSON.parse(
-        this.assetProfileForm.get('scraperConfiguration').value
-      );
+      scraperConfiguration = {
+        defaultMarketPrice:
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'defaultMarketPrice'
+          ].value,
+        headers: JSON.parse(
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'headers'
+          ].value
+        ),
+        locale:
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'locale'
+          ].value,
+        mode: this.assetProfileForm.controls['scraperConfiguration'].controls[
+          'mode'
+        ].value,
+        selector:
+          this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'selector'
+          ].value,
+        url: this.assetProfileForm.controls['scraperConfiguration'].controls[
+          'url'
+        ].value
+      };
     } catch {}
 
     try {
@@ -306,8 +356,31 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.adminService
       .testMarketData({
         dataSource: this.data.dataSource,
-        scraperConfiguration: this.assetProfileForm.get('scraperConfiguration')
-          .value,
+        scraperConfiguration: JSON.stringify({
+          defaultMarketPrice:
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'defaultMarketPrice'
+            ].value,
+          headers: JSON.parse(
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'headers'
+            ].value
+          ),
+          locale:
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'locale'
+            ].value,
+          mode: this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'mode'
+          ].value,
+          selector:
+            this.assetProfileForm.controls['scraperConfiguration'].controls[
+              'selector'
+            ].value,
+          url: this.assetProfileForm.controls['scraperConfiguration'].controls[
+            'url'
+          ].value
+        }),
         symbol: this.data.symbol
       })
       .pipe(

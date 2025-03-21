@@ -14,6 +14,7 @@ export interface PortfolioDetails {
       valueInPercentage?: number;
     };
   };
+  createdAt: Date;
   holdings: { [symbol: string]: PortfolioPosition };
   markets?: {
     [key in Market]: {

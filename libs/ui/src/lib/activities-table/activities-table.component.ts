@@ -76,6 +76,7 @@ export class GfActivitiesTableComponent
   @Input() baseCurrency: string;
   @Input() dataSource: MatTableDataSource<Activity>;
   @Input() deviceType: string;
+  @Input() hasActivities: boolean;
   @Input() hasPermissionToCreateActivity: boolean;
   @Input() hasPermissionToDeleteActivity: boolean;
   @Input() hasPermissionToExportActivities: boolean;

@@ -1,9 +1,16 @@
+/** @type {import('@storybook/angular').StorybookConfig} */
 const config = {
   addons: ['@storybook/addon-essentials'],
   framework: {
     name: '@storybook/angular',
     options: {}
   },
+  staticDirs: [
+    {
+      from: '../../../apps/client/src/assets',
+      to: '/assets'
+    }
+  ],
   stories: ['../**/*.stories.@(js|jsx|ts|tsx|mdx)']
 };
 

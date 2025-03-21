@@ -7,23 +7,58 @@
         risks in your portfolio. Adjust the rules below and set custom
         thresholds to align with your personal investment strategy.
       </p>
-      <p class="mb-4">
+      <div class="d-flex pb-3">
         @if (isLoading) {
-          <ngx-skeleton-loader
-            animation="pulse"
-            class="w-100"
-            [theme]="{
-              height: '1rem',
-              width: '100%'
-            }"
-          />
+          <div class="d-flex">
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mr-2"
+              [theme]="{
+                height: '2rem',
+                width: '2rem'
+              }"
+            />
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mt-2 mb-1"
+              [theme]="{
+                height: '1rem',
+                width: '15rem'
+              }"
+            />
+          </div>
         } @else {
-          {{ statistics?.rulesFulfilledCount }}
-          <ng-container i18n>out of</ng-container>
-          {{ statistics?.rulesActiveCount }}
-          <ng-container i18n>rules align with your portfolio.</ng-container>
+          <div
+            class="align-items-center d-flex icon-container mr-2 px-2"
+            [ngClass]="{
+              okay:
+                statistics?.rulesFulfilledCount ===
+                statistics?.rulesActiveCount,
+              warn:
+                statistics?.rulesFulfilledCount !== statistics?.rulesActiveCount
+            }"
+          >
+            @if (
+              statistics?.rulesActiveCount === 0 ||
+              statistics?.rulesFulfilledCount === 0
+            ) {
+              <ion-icon class="text-muted" name="remove-circle-outline" />
+            } @else if (
+              statistics?.rulesFulfilledCount === statistics?.rulesActiveCount
+            ) {
+              <ion-icon name="checkmark-circle-outline" />
+            } @else {
+              <ion-icon name="warning-outline" />
+            }
+          </div>
+          <div class="d-flex align-items-center">
+            <ng-container>{{ statistics?.rulesFulfilledCount }} </ng-container>
+            <ng-container i18n>out of</ng-container>
+            {{ statistics?.rulesActiveCount }}
+            <ng-container i18n>rules align with your portfolio.</ng-container>
+          </div>
         }
-      </p>
+      </div>
       <div
         class="mb-4"
         [ngClass]="{
@@ -140,6 +175,30 @@
           "
           [isLoading]="isLoading"
           [rules]="economicMarketClusterRiskRules"
+          [settings]="user?.settings?.xRayRules"
+          (rulesUpdated)="onRulesUpdated($event)"
+        />
+      </div>
+      <div
+        class="mb-4"
+        [ngClass]="{
+          'd-none': regionalMarketClusterRiskRules?.length === 0
+        }"
+      >
+        <h4 class="align-items-center d-flex m-0">
+          <span i18n>Regional Market Cluster Risks</span>
+          @if (user?.subscription?.type === 'Basic') {
+            <gf-premium-indicator class="ml-1" />
+          }
+        </h4>
+        <gf-rules
+          [hasPermissionToUpdateUserSettings]="
+            !hasImpersonationId &&
+            hasPermissionToUpdateUserSettings &&
+            user?.settings?.isExperimentalFeatures
+          "
+          [isLoading]="isLoading"
+          [rules]="regionalMarketClusterRiskRules"
           [settings]="user?.settings?.xRayRules"
           (rulesUpdated)="onRulesUpdated($event)"
         />

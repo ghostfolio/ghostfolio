@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import {
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -15,6 +16,7 @@ import {
 } from '@ghostfolio/common/config';
 import { PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS } from '@ghostfolio/common/config';
 import {
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderInfo,
   DividendsResponse,
   HistoricalResponse,
@@ -25,7 +27,7 @@ import {
 import { UserWithSettings } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { DataSource, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 
 @Injectable()
@@ -36,6 +38,44 @@ export class GhostfolioService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService
   ) {}
+
+  public async getAssetProfile({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
+    symbol
+  }: GetAssetProfileParams) {
+    let result: DataProviderGhostfolioAssetProfileResponse = {};
+
+    try {
+      const promises: Promise<Partial<SymbolProfile>>[] = [];
+
+      for (const dataProviderService of this.getDataProviderServices()) {
+        promises.push(
+          dataProviderService
+            .getAssetProfile({
+              requestTimeout,
+              symbol
+            })
+            .then((assetProfile) => {
+              result = {
+                ...result,
+                ...assetProfile,
+                dataSource: DataSource.GHOSTFOLIO
+              };
+
+              return assetProfile;
+            })
+        );
+      }
+
+      await Promise.all(promises);
+
+      return result;
+    } catch (error) {
+      Logger.error(error, 'GhostfolioService');
+
+      throw error;
+    }
+  }
 
   public async getDividends({
     from,
@@ -277,6 +317,7 @@ export class GhostfolioService {
         });
 
       results.items = filteredItems;
+
       return results;
     } catch (error) {
       Logger.error(error, 'GhostfolioService');

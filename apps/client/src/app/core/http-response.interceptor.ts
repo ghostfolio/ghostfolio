@@ -19,6 +19,7 @@ import {
 } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { StatusCodes } from 'http-status-codes';
+import ms from 'ms';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
@@ -54,13 +55,17 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                   ' ' +
                   $localize`Please try again later.`,
                 undefined,
-                { duration: 6000 }
+                {
+                  duration: ms('6 seconds')
+                }
               );
             } else if (!error.url.includes('/auth')) {
               this.snackBarRef = this.snackBar.open(
                 $localize`This action is not allowed.`,
                 undefined,
-                { duration: 6000 }
+                {
+                  duration: ms('6 seconds')
+                }
               );
             }
 
@@ -79,7 +84,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                 ' ' +
                 $localize`Please try again later.`,
               $localize`Okay`,
-              { duration: 6000 }
+              {
+                duration: ms('6 seconds')
+              }
             );
 
             this.snackBarRef.afterDismissed().subscribe(() => {
@@ -101,10 +108,12 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
           }
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
-          if (this.webAuthnService.isEnabled()) {
-            this.router.navigate(['/webauthn']);
-          } else if (!error.url.includes('/data-providers/ghostfolio/status')) {
-            this.tokenStorageService.signOut();
+          if (!error.url.includes('/data-providers/ghostfolio/status')) {
+            if (this.webAuthnService.isEnabled()) {
+              this.router.navigate(['/webauthn']);
+            } else {
+              this.tokenStorageService.signOut();
+            }
           }
         }
 

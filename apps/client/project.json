@@ -76,6 +76,10 @@
           "baseHref": "/tr/",
           "localize": ["tr"]
         },
+        "development-uk": {
+          "baseHref": "/uk/",
+          "localize": ["uk"]
+        },
         "development-zh": {
           "baseHref": "/zh/",
           "localize": ["zh"]
@@ -201,6 +205,9 @@
         "development-tr": {
           "buildTarget": "client:build:development-tr"
         },
+        "development-uk": {
+          "buildTarget": "client:build:development-uk"
+        },
         "development-zh": {
           "buildTarget": "client:build:development-zh"
         },
@@ -225,6 +232,7 @@
           "messages.pl.xlf",
           "messages.pt.xlf",
           "messages.tr.xlf",
+          "messages.uk.xlf",
           "messages.zh.xlf"
         ]
       }
@@ -280,6 +288,10 @@
       "tr": {
         "baseHref": "/tr/",
         "translation": "apps/client/src/locales/messages.tr.xlf"
+      },
+      "uk": {
+        "baseHref": "/uk/",
+        "translation": "apps/client/src/locales/messages.uk.xlf"
       },
       "zh": {
         "baseHref": "/zh/",

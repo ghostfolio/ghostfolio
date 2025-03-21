@@ -1,5 +1,5 @@
-import { BenchmarkService } from '@ghostfolio/api/app/benchmark/benchmark.service';
 import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   ghostfolioFearAndGreedIndexDataSource,

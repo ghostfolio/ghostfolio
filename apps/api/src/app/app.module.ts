@@ -29,13 +29,14 @@ import { AppController } from './app.controller';
 import { AssetModule } from './asset/asset.module';
 import { AuthDeviceModule } from './auth-device/auth-device.module';
 import { AuthModule } from './auth/auth.module';
-import { BenchmarkModule } from './benchmark/benchmark.module';
 import { CacheModule } from './cache/cache.module';
 import { AiModule } from './endpoints/ai/ai.module';
 import { ApiKeysModule } from './endpoints/api-keys/api-keys.module';
+import { BenchmarksModule } from './endpoints/benchmarks/benchmarks.module';
 import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfolio.module';
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
 import { PublicModule } from './endpoints/public/public.module';
+import { TagsModule } from './endpoints/tags/tags.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
 import { HealthModule } from './health/health.module';
@@ -49,7 +50,6 @@ import { RedisCacheModule } from './redis-cache/redis-cache.module';
 import { SitemapModule } from './sitemap/sitemap.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { SymbolModule } from './symbol/symbol.module';
-import { TagModule } from './tag/tag.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -63,7 +63,7 @@ import { UserModule } from './user/user.module';
     AssetModule,
     AuthDeviceModule,
     AuthModule,
-    BenchmarkModule,
+    BenchmarksModule,
     BullModule.forRoot({
       redis: {
         db: parseInt(process.env.REDIS_DB ?? '0', 10),
@@ -124,7 +124,7 @@ import { UserModule } from './user/user.module';
     SitemapModule,
     SubscriptionModule,
     SymbolModule,
-    TagModule,
+    TagsModule,
     TwitterBotModule,
     UserModule
   ],

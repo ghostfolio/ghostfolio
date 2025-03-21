@@ -1,6 +1,7 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -56,9 +57,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
   public async getAssetProfile({
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {
       symbol,
       assetClass: AssetClass.LIQUIDITY,
@@ -112,7 +111,7 @@ export class CoinGeckoService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      const { prices } = await fetch(
+      const { error, prices, status } = await fetch(
         `${
           this.apiUrl
         }/coins/${symbol}/market_chart/range?vs_currency=${DEFAULT_CURRENCY.toLowerCase()}&from=${getUnixTime(
@@ -123,6 +122,14 @@ export class CoinGeckoService implements DataProviderInterface {
           signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json());
+
+      if (error?.status) {
+        throw new Error(error.status.error_message);
+      }
+
+      if (status) {
+        throw new Error(status.error_message);
+      }
 
       const result: {
         [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
