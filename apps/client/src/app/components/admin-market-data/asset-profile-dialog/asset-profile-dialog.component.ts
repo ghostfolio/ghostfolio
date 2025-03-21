@@ -36,7 +36,6 @@ import {
 } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import {
   AssetClass,
   AssetSubClass,
@@ -146,7 +145,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     public dialogRef: MatDialogRef<AssetProfileDialog>,
     private formBuilder: FormBuilder,
     private notificationService: NotificationService,
-    private router: Router,
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {}
@@ -256,14 +254,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   private isNewSymbolValid(control: AbstractControl): ValidationErrors {
     const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
       control.get('editedSearchSymbol').value;
-    console.log(this.assetProfileIdentifierForm?.valid);
 
     if (
       currentAssetProfileIdentifier.dataSource === this.data?.dataSource &&
       currentAssetProfileIdentifier.symbol === this.data?.symbol
     ) {
       return {
-        isPreviousIdentifier: true
+        equalsPreviousSymbol: true
       };
     }
   }
@@ -274,6 +271,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   public get isSymbolEditButtonInvisible() {
     return this.assetProfile?.dataSource === 'MANUAL';
+  }
+
+  public onCancelEditSymboleMode() {
+    this.isEditSymbolMode = false;
+
+    this.assetProfileForm.enable();
+
+    this.assetProfileIdentifierForm.reset();
+
+    this.changeDetectorRef.markForCheck();
   }
 
   public onClose() {
@@ -330,16 +337,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.changeDetectorRef.markForCheck();
   }
 
-  public onCancelEditSymboleMode() {
-    this.isEditSymbolMode = false;
-
-    this.assetProfileForm.enable();
-
-    this.assetProfileIdentifierForm.reset();
-
-    this.changeDetectorRef.markForCheck();
-  }
-
   public async onSubmitAssetProfileIdentifierForm() {
     const assetProfileIdentifierData: UpdateAssetProfileDto = {
       dataSource:
@@ -357,13 +354,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
     } catch (error) {
       console.error(error);
+
       return;
     }
 
     this.adminService
-      .patchAssetProfile(this.data.dataSource, this.data.symbol, {
-        ...assetProfileIdentifierData
-      })
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        {
+          ...assetProfileIdentifierData
+        }
+      )
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 409) {
@@ -471,9 +475,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     }
 
     this.adminService
-      .patchAssetProfile(this.data.dataSource, this.data.symbol, {
-        ...assetProfileData
-      })
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        {
+          ...assetProfileData
+        }
+      )
       .subscribe(() => {
         this.initialize();
       });
@@ -550,20 +560,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  public onOpenAssetProfileDialog({
-    dataSource,
-    symbol
-  }: AssetProfileIdentifier) {
-    this.router.navigate([], {
-      queryParams: {
-        dataSource,
-        symbol,
-        assetProfileDialog: true
-      }
-    });
-  }
-
-  public triggerProfileFormSubmit() {
+  public onTriggerSubmitAssetProfileForm() {
     if (this.assetProfileForm) {
       this.assetProfileFormElement.nativeElement.requestSubmit();
     }
