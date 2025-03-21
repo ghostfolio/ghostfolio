@@ -498,8 +498,7 @@ export class AdminService {
   }
 
   public async patchAssetProfileData(
-    dataSource: DataSource,
-    symbol: string,
+    { dataSource, symbol }: AssetProfileIdentifier,
     {
       assetClass,
       assetSubClass,

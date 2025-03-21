@@ -217,8 +217,7 @@ export class AdminService {
   }
 
   public patchAssetProfile(
-    dataSource: DataSource,
-    symbol: string,
+    { dataSource, symbol }: AssetProfileIdentifier,
     {
       assetClass,
       assetSubClass,
@@ -242,11 +241,11 @@ export class AdminService {
         comment,
         countries,
         currency,
-        name,
         dataSource: newDataSource,
-        symbol: newSymbol,
+        name,
         scraperConfiguration,
         sectors,
+        symbol: newSymbol,
         symbolMapping,
         url
       }

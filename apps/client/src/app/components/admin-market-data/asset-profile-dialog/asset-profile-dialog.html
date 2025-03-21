@@ -113,7 +113,7 @@
                 assetProfileIdentifierForm.hasError(
                   'invalidData',
                   'editedSearchSymbol'
-                ) || assetProfileIdentifierForm.hasError('isPreviousIdentifier')
+                ) || assetProfileIdentifierForm.hasError('equalsPreviousSymbol')
               "
             >
               Apply
@@ -512,7 +512,7 @@
       color="primary"
       mat-flat-button
       [disabled]="!(assetProfileForm.dirty && assetProfileForm.valid)"
-      (click)="triggerProfileFormSubmit()"
+      (click)="onTriggerSubmitAssetProfileForm()"
     >
       <ng-container i18n>Save</ng-container>
     </button>

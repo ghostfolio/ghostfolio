@@ -31,17 +31,13 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   currency?: string;
 
-  @IsString()
-  @IsOptional()
-  name?: string;
-
   @IsEnum(DataSource, { each: true })
   @IsOptional()
   dataSource?: DataSource;
 
   @IsString()
   @IsOptional()
-  symbol?: string;
+  name?: string;
 
   @IsObject()
   @IsOptional()
@@ -50,6 +46,10 @@ export class UpdateAssetProfileDto {
   @IsArray()
   @IsOptional()
   sectors?: Prisma.InputJsonArray;
+
+  @IsString()
+  @IsOptional()
+  symbol?: string;
 
   @IsObject()
   @IsOptional()
