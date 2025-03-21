@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
 - Refactored `lodash.uniq` with `Array.from(new Set(...))`
 - Refreshed the cryptocurrencies list
+- Improved the language localization for Turkish (`tr`)
 
 ### Fixed
 
