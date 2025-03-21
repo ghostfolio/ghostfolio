@@ -21,10 +21,9 @@ export class RedisCacheService {
   public async getKeys(aPrefix?: string): Promise<string[]> {
     const prefix = aPrefix;
     const keyList = [];
+
     this.cache.stores[0].iterator((key) => {
-      if (prefix && key.startsWith(prefix)) {
-        keyList.push(key);
-      } else if (!prefix) {
+      if ((prefix && key.startsWith(prefix)) || !prefix) {
         keyList.push(key);
       }
     });
@@ -58,9 +57,8 @@ export class RedisCacheService {
 
   public async isHealthy() {
     try {
-      const client = this.cache.stores[0];
       const isHealthy = await Promise.race([
-        client.ttl,
+        this.getKeys(),
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Redis health check timeout')),
