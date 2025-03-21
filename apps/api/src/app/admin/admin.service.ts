@@ -10,7 +10,6 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
-  DEFAULT_CURRENCY,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
@@ -37,7 +36,6 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
-  DataSource,
   Prisma,
   PrismaClient,
   Property,
@@ -109,35 +107,29 @@ export class AdminService {
     symbol
   }: AssetProfileIdentifier) {
     await this.marketDataService.deleteMany({ dataSource, symbol });
-    await this.symbolProfileService.delete({ dataSource, symbol });
+
+    const currency = getCurrencyFromSymbol(symbol);
+    const customCurrencies = (await this.propertyService.getByKey(
+      PROPERTY_CURRENCIES
+    )) as string[];
+
+    if (customCurrencies.includes(currency)) {
+      const updatedCustomCurrencies = customCurrencies.filter(
+        (customCurrency) => {
+          return customCurrency !== currency;
+        }
+      );
+
+      await this.putSetting(
+        PROPERTY_CURRENCIES,
+        JSON.stringify(updatedCustomCurrencies)
+      );
+    } else {
+      await this.symbolProfileService.delete({ dataSource, symbol });
+    }
   }
 
   public async get(): Promise<AdminData> {
-    const exchangeRates = this.exchangeRateDataService
-      .getCurrencies()
-      .filter((currency) => {
-        return currency !== DEFAULT_CURRENCY;
-      })
-      .map((currency) => {
-        const label1 = DEFAULT_CURRENCY;
-        const label2 = currency;
-
-        return {
-          label1,
-          label2,
-          dataSource:
-            DataSource[
-              this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
-            ],
-          symbol: `${label1}${label2}`,
-          value: this.exchangeRateDataService.toCurrency(
-            1,
-            DEFAULT_CURRENCY,
-            currency
-          )
-        };
-      });
-
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
@@ -145,7 +137,6 @@ export class AdminService {
     ]);
 
     return {
-      exchangeRates,
       settings,
       transactionCount,
       userCount,

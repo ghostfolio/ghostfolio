@@ -40,8 +40,8 @@ export class GfApiPageComponent implements OnInit {
     this.apiKey = prompt($localize`Please enter your Ghostfolio API key:`);
 
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
-    this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL.US' });
-    this.quotes$ = this.fetchQuotes({ symbols: ['AAPL.US', 'VOO.US'] });
+    this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
+    this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO.US'] });
     this.status$ = this.fetchStatus();
     this.symbols$ = this.fetchSymbols({ query: 'apple' });
   }

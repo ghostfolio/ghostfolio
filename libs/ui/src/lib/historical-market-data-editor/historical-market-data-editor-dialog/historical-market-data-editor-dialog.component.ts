@@ -7,7 +7,8 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   Inject,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,7 +42,9 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   styleUrls: ['./historical-market-data-editor-dialog.scss'],
   templateUrl: 'historical-market-data-editor-dialog.html'
 })
-export class GfHistoricalMarketDataEditorDialogComponent implements OnDestroy {
+export class GfHistoricalMarketDataEditorDialogComponent
+  implements OnDestroy, OnInit
+{
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(

@@ -1,4 +1,5 @@
 import type { Access } from './access.interface';
+import type { AccountBalance } from './account-balance.interface';
 import type { Accounts } from './accounts.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
@@ -41,6 +42,7 @@ import type { AccountBalancesResponse } from './responses/account-balances-respo
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
+import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
@@ -67,6 +69,7 @@ import type { XRayRulesSettings } from './x-ray-rules-settings.interface';
 
 export {
   Access,
+  AccountBalance,
   AccountBalancesResponse,
   Accounts,
   AdminData,
@@ -83,6 +86,7 @@ export {
   BenchmarkProperty,
   BenchmarkResponse,
   Coupon,
+  DataProviderGhostfolioAssetProfileResponse,
   DataProviderGhostfolioStatusResponse,
   DataProviderInfo,
   DividendsResponse,

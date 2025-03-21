@@ -24,6 +24,7 @@ import {
   verifyRegistrationResponse,
   VerifyRegistrationResponseOpts
 } from '@simplewebauthn/server';
+import { isoBase64URL, isoUint8Array } from '@simplewebauthn/server/helpers';
 
 import {
   AssertionCredentialJSON,
@@ -54,10 +55,9 @@ export class WebAuthService {
     const opts: GenerateRegistrationOptionsOpts = {
       rpName: 'Ghostfolio',
       rpID: this.rpID,
-      userID: user.id,
+      userID: isoUint8Array.fromUTF8String(user.id),
       userName: '',
       timeout: 60000,
-      attestationType: 'indirect',
       authenticatorSelection: {
         authenticatorAttachment: 'platform',
         requireResidentKey: false,
@@ -111,11 +111,17 @@ export class WebAuthService {
       where: { userId: user.id }
     });
     if (registrationInfo && verified) {
-      const { counter, credentialID, credentialPublicKey } = registrationInfo;
+      const {
+        credential: {
+          counter,
+          id: credentialId,
+          publicKey: credentialPublicKey
+        }
+      } = registrationInfo;
 
-      let existingDevice = devices.find(
-        (device) => device.credentialId === credentialID
-      );
+      let existingDevice = devices.find((device) => {
+        return isoBase64URL.fromBuffer(device.credentialId) === credentialId;
+      });
 
       if (!existingDevice) {
         /**
@@ -123,7 +129,7 @@ export class WebAuthService {
          */
         existingDevice = await this.deviceService.createAuthDevice({
           counter,
-          credentialId: Buffer.from(credentialID),
+          credentialId: Buffer.from(credentialId),
           credentialPublicKey: Buffer.from(credentialPublicKey),
           User: { connect: { id: user.id } }
         });
@@ -148,9 +154,8 @@ export class WebAuthService {
     const opts: GenerateAuthenticationOptionsOpts = {
       allowCredentials: [
         {
-          id: device.credentialId,
-          transports: ['internal'],
-          type: 'public-key'
+          id: isoBase64URL.fromBuffer(device.credentialId),
+          transports: ['internal']
         }
       ],
       rpID: this.rpID,
@@ -187,10 +192,10 @@ export class WebAuthService {
     let verification: VerifiedAuthenticationResponse;
     try {
       const opts: VerifyAuthenticationResponseOpts = {
-        authenticator: {
-          credentialID: device.credentialId,
-          credentialPublicKey: device.credentialPublicKey,
-          counter: device.counter
+        credential: {
+          counter: device.counter,
+          id: isoBase64URL.fromBuffer(device.credentialId),
+          publicKey: device.credentialPublicKey
         },
         expectedChallenge: `${user.authChallenge}`,
         expectedOrigin: this.expectedOrigin,

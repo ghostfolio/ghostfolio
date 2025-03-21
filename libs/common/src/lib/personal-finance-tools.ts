@@ -83,6 +83,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Take control of your financial future'
   },
   {
+    founded: 2017,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'coinstats',
+    name: 'CoinStats',
+    origin: 'Armenia',
+    pricingPerYear: '$168',
+    slogan: 'Manage All Your Wallets & Exchanges From One Place'
+  },
+  {
     founded: 2013,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -154,6 +164,7 @@ export const personalFinanceTools: Product[] = [
     name: 'Delta Investment Tracker',
     note: 'Acquired by eToro',
     origin: 'Belgium',
+    pricingPerYear: '$150',
     slogan: 'The app to track all your investments. Make smart moves only.'
   },
   {
@@ -253,6 +264,13 @@ export const personalFinanceTools: Product[] = [
       'The most convenient mobile application for personal finance accounting'
   },
   {
+    founded: 2022,
+    key: 'fincake',
+    name: 'Fincake',
+    origin: 'British Virgin Islands',
+    slogan: 'Easy-to-use Portfolio Tracker'
+  },
+  {
     founded: 2023,
     hasFreePlan: true,
     key: 'finwise',
@@ -339,6 +357,15 @@ export const personalFinanceTools: Product[] = [
     origin: 'Germany',
     pricingPerYear: '€119',
     slogan: 'ETF portfolios made simple'
+  },
+  {
+    founded: 2018,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'koinly',
+    name: 'Koinly',
+    origin: 'Singapore',
+    slogan: 'Track all your crypto wallets in one place'
   },
   {
     founded: 2016,
@@ -468,6 +495,16 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     slogan:
       'Track your equity, fund, investment trust, ETF and pension investments in one place.'
+  },
+  {
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'nansen',
+    name: 'Crypto Portfolio Tracker by Nansen',
+    origin: 'Singapore',
+    pricingPerYear: '$1188',
+    slogan: 'Your Complete Crypto Portfolio, Reimagined'
   },
   {
     founded: 2017,
@@ -635,6 +672,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Stock Portfolio Tracker'
   },
   {
+    founded: 2014,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'simply-wallstreet',
+    name: 'Stock Portfolio Tracker & Visualizer by Simply Wall St',
+    origin: 'Australia',
+    pricingPerYear: '$120',
+    slogan: 'Smart portfolio tracker for informed investors'
+  },
+  {
     founded: 2021,
     hasFreePlan: true,
     hasSelfHostingAbility: false,
@@ -705,6 +752,16 @@ export const personalFinanceTools: Product[] = [
     pricingPerYear: '$79',
     slogan:
       'Your financial life in a spreadsheet, automatically updated each day'
+  },
+  {
+    founded: 2011,
+    hasFreePlan: false,
+    hasSelfHostingAbility: false,
+    key: 'tradervue',
+    name: 'Tradervue',
+    origin: 'United States',
+    pricingPerYear: '$360',
+    slogan: 'The Trading Journal to Improve Your Trading Performance'
   },
   {
     hasFreePlan: true,

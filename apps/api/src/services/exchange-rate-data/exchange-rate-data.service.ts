@@ -23,7 +23,7 @@ import {
   isToday,
   subDays
 } from 'date-fns';
-import { isNumber, uniq } from 'lodash';
+import { isNumber } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
@@ -515,7 +515,7 @@ export class ExchangeRateDataService {
       }
     }
 
-    return uniq(currencies).filter(Boolean).sort();
+    return Array.from(new Set(currencies)).filter(Boolean).sort();
   }
 
   private prepareCurrencyPairs(aCurrencies: string[]) {

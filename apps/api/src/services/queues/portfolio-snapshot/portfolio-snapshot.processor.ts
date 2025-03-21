@@ -68,7 +68,7 @@ export class PortfolioSnapshotProcessor {
       const portfolioCalculator = this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: job.data.userCurrency,
         filters: job.data.filters,
         userId: job.data.userId

@@ -8,12 +8,14 @@ import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
 
 import { Injectable } from '@nestjs/common';
 
-import { MWRPortfolioCalculator } from './mwr/portfolio-calculator';
+import { MwrPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
-import { TWRPortfolioCalculator } from './twr/portfolio-calculator';
+import { RoaiPortfolioCalculator } from './roai/portfolio-calculator';
+import { TwrPortfolioCalculator } from './twr/portfolio-calculator';
 
 export enum PerformanceCalculationType {
   MWR = 'MWR', // Money-Weighted Rate of Return
+  ROAI = 'ROAI', // Return on Average Investment
   TWR = 'TWR' // Time-Weighted Rate of Return
 }
 
@@ -44,7 +46,20 @@ export class PortfolioCalculatorFactory {
   }): PortfolioCalculator {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
-        return new MWRPortfolioCalculator({
+        return new MwrPortfolioCalculator({
+          accountBalanceItems,
+          activities,
+          currency,
+          filters,
+          userId,
+          configurationService: this.configurationService,
+          currentRateService: this.currentRateService,
+          exchangeRateDataService: this.exchangeRateDataService,
+          portfolioSnapshotService: this.portfolioSnapshotService,
+          redisCacheService: this.redisCacheService
+        });
+      case PerformanceCalculationType.ROAI:
+        return new RoaiPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,
@@ -57,14 +72,14 @@ export class PortfolioCalculatorFactory {
           redisCacheService: this.redisCacheService
         });
       case PerformanceCalculationType.TWR:
-        return new TWRPortfolioCalculator({
+        return new TwrPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,
-          currentRateService: this.currentRateService,
           filters,
           userId,
           configurationService: this.configurationService,
+          currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService

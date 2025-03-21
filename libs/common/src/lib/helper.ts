@@ -354,6 +354,16 @@ export function isDerivedCurrency(aCurrency: string) {
   });
 }
 
+export function isRootCurrency(aCurrency: string) {
+  if (aCurrency === 'USD') {
+    return true;
+  }
+
+  return DERIVED_CURRENCIES.find(({ rootCurrency }) => {
+    return rootCurrency === aCurrency;
+  });
+}
+
 export function parseDate(date: string): Date {
   if (!date) {
     return undefined;

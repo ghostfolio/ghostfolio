@@ -2,6 +2,7 @@ import type { AccessType } from './access-type.type';
 import type { AccessWithGranteeUser } from './access-with-grantee-user.type';
 import type { AccountWithPlatform } from './account-with-platform.type';
 import type { AccountWithValue } from './account-with-value.type';
+import type { AiPromptMode } from './ai-prompt-mode.type';
 import type { BenchmarkTrend } from './benchmark-trend.type';
 import type { ColorScheme } from './color-scheme.type';
 import type { DateRange } from './date-range.type';
@@ -24,6 +25,7 @@ export type {
   AccessWithGranteeUser,
   AccountWithPlatform,
   AccountWithValue,
+  AiPromptMode,
   BenchmarkTrend,
   ColorScheme,
   DateRange,

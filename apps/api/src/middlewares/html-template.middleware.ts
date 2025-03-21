@@ -3,6 +3,7 @@ import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   DEFAULT_LANGUAGE_CODE,
   DEFAULT_ROOT_URL,
+  STORYBOOK_PATH,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
@@ -129,6 +130,7 @@ export const HtmlTemplateMiddleware = async (
 
   if (
     path.startsWith('/api/') ||
+    path.startsWith(STORYBOOK_PATH) ||
     isFileRequest(path) ||
     !environment.production
   ) {

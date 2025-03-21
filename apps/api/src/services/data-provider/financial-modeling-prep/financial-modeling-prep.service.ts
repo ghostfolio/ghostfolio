@@ -2,6 +2,7 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import {
   DataProviderInterface,
+  GetAssetProfileParams,
   GetDividendsParams,
   GetHistoricalParams,
   GetQuotesParams,
@@ -11,6 +12,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { REPLACE_NAME_PARTS } from '@ghostfolio/common/config';
 import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -56,10 +58,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async getAssetProfile({
+    requestTimeout = this.configurationService.get('REQUEST_TIMEOUT'),
     symbol
-  }: {
-    symbol: string;
-  }): Promise<Partial<SymbolProfile>> {
+  }: GetAssetProfileParams): Promise<Partial<SymbolProfile>> {
     const response: Partial<SymbolProfile> = {
       symbol,
       dataSource: this.getName()
@@ -70,9 +71,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         const [quote] = await fetch(
           `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
           {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
+            signal: AbortSignal.timeout(requestTimeout)
           }
         ).then((res) => res.json());
 
@@ -84,9 +83,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         const [assetProfile] = await fetch(
           `${this.URL}/profile/${symbol}?apikey=${this.apiKey}`,
           {
-            signal: AbortSignal.timeout(
-              this.configurationService.get('REQUEST_TIMEOUT')
-            )
+            signal: AbortSignal.timeout(requestTimeout)
           }
         ).then((res) => res.json());
 
@@ -100,9 +97,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           const etfCountryWeightings = await fetch(
             `${this.URL}/etf-country-weightings/${symbol}?apikey=${this.apiKey}`,
             {
-              signal: AbortSignal.timeout(
-                this.configurationService.get('REQUEST_TIMEOUT')
-              )
+              signal: AbortSignal.timeout(requestTimeout)
             }
           ).then((res) => res.json());
 
@@ -127,9 +122,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           const [etfInformation] = await fetch(
             `${this.getUrl({ version: 4 })}/etf-info?symbol=${symbol}&apikey=${this.apiKey}`,
             {
-              signal: AbortSignal.timeout(
-                this.configurationService.get('REQUEST_TIMEOUT')
-              )
+              signal: AbortSignal.timeout(requestTimeout)
             }
           ).then((res) => res.json());
 
@@ -140,9 +133,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           const [portfolioDate] = await fetch(
             `${this.getUrl({ version: 4 })}/etf-holdings/portfolio-date?symbol=${symbol}&apikey=${this.apiKey}`,
             {
-              signal: AbortSignal.timeout(
-                this.configurationService.get('REQUEST_TIMEOUT')
-              )
+              signal: AbortSignal.timeout(requestTimeout)
             }
           ).then((res) => res.json());
 
@@ -150,9 +141,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             const etfHoldings = await fetch(
               `${this.getUrl({ version: 4 })}/etf-holdings?date=${portfolioDate.date}&symbol=${symbol}&apikey=${this.apiKey}`,
               {
-                signal: AbortSignal.timeout(
-                  this.configurationService.get('REQUEST_TIMEOUT')
-                )
+                signal: AbortSignal.timeout(requestTimeout)
               }
             ).then((res) => res.json());
 
@@ -170,9 +159,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           const etfSectorWeightings = await fetch(
             `${this.URL}/etf-sector-weightings/${symbol}?apikey=${this.apiKey}`,
             {
-              signal: AbortSignal.timeout(
-                this.configurationService.get('REQUEST_TIMEOUT')
-              )
+              signal: AbortSignal.timeout(requestTimeout)
             }
           ).then((res) => res.json());
 
@@ -200,7 +187,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           response.isin = assetProfile.isin;
         }
 
-        response.name = assetProfile.companyName;
+        response.name = this.formatName({ name: assetProfile.companyName });
 
         if (assetProfile.website) {
           response.url = assetProfile.website;
@@ -211,7 +198,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       if (error?.name === 'AbortError') {
         message = `RequestError: The operation to get the asset profile for ${symbol} was aborted because the request to the data provider took more than ${(
-          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+          requestTimeout / 1000
         ).toFixed(3)} seconds`;
       }
 
@@ -244,7 +231,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         [date: string]: IDataProviderHistoricalResponse;
       } = {};
 
-      const { historical } = await fetch(
+      const { historical = [] } = await fetch(
         `${this.URL}/historical-price-full/stock_dividend/${symbol}?apikey=${this.apiKey}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
@@ -305,7 +292,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           ? addYears(currentFrom, MAX_YEARS_PER_REQUEST)
           : to;
 
-        const { historical } = await fetch(
+        const { historical = [] } = await fetch(
           `${this.URL}/historical-price-full/${symbol}?apikey=${this.apiKey}&from=${format(currentFrom, DATE_FORMAT)}&to=${format(currentTo, DATE_FORMAT)}`,
           {
             signal: AbortSignal.timeout(requestTimeout)
@@ -376,7 +363,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
       if (error?.name === 'AbortError') {
         message = `RequestError: The operation to get the quotes was aborted because the request to the data provider took more than ${(
-          this.configurationService.get('REQUEST_TIMEOUT') / 1000
+          requestTimeout / 1000
         ).toFixed(3)} seconds`;
       }
 
@@ -412,7 +399,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
             assetSubClass: undefined, // TODO
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: this.getName(),
-            name: companyName
+            name: this.formatName({ name: companyName })
           };
         });
       } else {
@@ -428,12 +415,12 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         items = result.map(({ currency, name, symbol }) => {
           return {
             currency,
-            name,
             symbol,
             assetClass: undefined, // TODO
             assetSubClass: undefined, // TODO
             dataProviderInfo: this.getDataProviderInfo(),
-            dataSource: this.getName()
+            dataSource: this.getName(),
+            name: this.formatName({ name })
           };
         });
       }
@@ -450,6 +437,18 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     return { items };
+  }
+
+  private formatName({ name }: { name: string }) {
+    if (name) {
+      for (const part of REPLACE_NAME_PARTS) {
+        name = name.replace(part, '');
+      }
+
+      name = name.trim();
+    }
+
+    return name;
   }
 
   private getUrl({ version }: { version: number }) {

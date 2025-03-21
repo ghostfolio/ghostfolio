@@ -153,6 +153,8 @@ export const REPLACE_NAME_PARTS = [
   'Xtrackers (IE) Plc -'
 ];
 
+export const STORYBOOK_PATH = '/development/storybook';
+
 export const SUPPORTED_LANGUAGE_CODES = [
   'ca',
   'de',

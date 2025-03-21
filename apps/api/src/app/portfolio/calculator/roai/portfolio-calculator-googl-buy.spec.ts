@@ -96,47 +96,31 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  // TODO
-  describe.skip('get current positions', () => {
-    it.only('with BTCUSD buy and sell partially', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2018-01-01').getTime());
+  describe('get current positions', () => {
+    it.only('with GOOGL buy', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2015-01-01'),
-          fee: 0,
-          quantity: 2,
-          SymbolProfile: {
-            ...symbolProfileDummyData,
-            currency: 'USD',
-            dataSource: 'YAHOO',
-            name: 'Bitcoin USD',
-            symbol: 'BTCUSD'
-          },
-          type: 'BUY',
-          unitPrice: 320.43
-        },
-        {
-          ...activityDummyData,
-          date: new Date('2017-12-31'),
-          fee: 0,
+          date: new Date('2023-01-03'),
+          fee: 1,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
-            name: 'Bitcoin USD',
-            symbol: 'BTCUSD'
+            name: 'Alphabet Inc.',
+            symbol: 'GOOGL'
           },
-          type: 'SELL',
-          unitPrice: 14156.4
+          type: 'BUY',
+          unitPrice: 89.12
         }
       ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
       });
@@ -151,112 +135,94 @@ describe('PortfolioCalculator', () => {
       });
 
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('13298.425356'),
+        currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
-        grossPerformanceWithCurrencyEffect: new Big('26516.208701400000064086'),
         hasErrors: false,
         positions: [
           {
-            averagePrice: new Big('320.43'),
+            averagePrice: new Big('89.12'),
             currency: 'USD',
             dataSource: 'YAHOO',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
-            fee: new Big('0'),
-            feeInBaseCurrency: new Big('0'),
-            firstBuyDate: '2015-01-01',
-            grossPerformance: new Big('27172.74').mul(0.97373),
-            grossPerformancePercentage: new Big('0.4241983590271396608571'),
+            fee: new Big('1'),
+            feeInBaseCurrency: new Big('0.9238'),
+            firstBuyDate: '2023-01-03',
+            grossPerformance: new Big('27.33').mul(0.8854),
+            grossPerformancePercentage: new Big('0.3066651705565529623'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.4164017412624815597008'
+              '0.25235044599563974109'
             ),
-            grossPerformanceWithCurrencyEffect: new Big(
-              '26516.208701400000064086'
-            ),
-            investment: new Big('320.43').mul(0.97373),
-            investmentWithCurrencyEffect: new Big('318.542667299999967957'),
-            marketPrice: 13657.2,
-            marketPriceInBaseCurrency: 13298.425356,
-            netPerformance: new Big('27172.74').mul(0.97373),
-            netPerformancePercentage: new Big('0.4241983590271396608571'),
+            grossPerformanceWithCurrencyEffect: new Big('20.775774'),
+            investment: new Big('89.12').mul(0.8854),
+            investmentWithCurrencyEffect: new Big('82.329056'),
+            netPerformance: new Big('26.33').mul(0.8854),
+            netPerformancePercentage: new Big('0.29544434470377019749'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.417188277288666871633')
+              max: new Big('0.24112962014285697628')
             },
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('26516.208701400000064086')
+              max: new Big('19.851974')
             },
+            marketPrice: 116.45,
+            marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
-            symbol: 'BTCUSD',
+            symbol: 'GOOGL',
             tags: [],
-            timeWeightedInvestment: new Big('623.73914366102470265325'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big(
-              '636.79389574611155533947'
-            ),
-            transactionCount: 2,
-            valueInBaseCurrency: new Big('13298.425356')
+            timeWeightedInvestment: new Big('89.12').mul(0.8854),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('103.10483')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('0'),
+        totalFeesWithCurrencyEffect: new Big('0.9238'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('320.43').mul(0.97373),
-        totalInvestmentWithCurrencyEffect: new Big('318.542667299999967957'),
+        totalInvestment: new Big('89.12').mul(0.8854),
+        totalInvestmentWithCurrencyEffect: new Big('82.329056'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
-          netPerformance: new Big('27172.74').mul(0.97373).toNumber(),
-          netPerformanceInPercentage: 42.41983590271396609433,
-          netPerformanceInPercentageWithCurrencyEffect: 41.64017412624815597854,
-          netPerformanceWithCurrencyEffect: 26516.208701400000064086,
-          totalInvestmentValueWithCurrencyEffect: 318.542667299999967957
+          netPerformance: new Big('26.33').mul(0.8854).toNumber(),
+          netPerformanceInPercentage: 0.29544434470377019749,
+          netPerformanceInPercentageWithCurrencyEffect: 0.24112962014285697628,
+          netPerformanceWithCurrencyEffect: 19.851974,
+          totalInvestmentValueWithCurrencyEffect: 82.329056
         })
       );
 
       expect(investments).toEqual([
-        { date: '2015-01-01', investment: new Big('640.86') },
-        { date: '2017-12-31', investment: new Big('320.43') }
+        { date: '2023-01-03', investment: new Big('89.12') }
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2015-01-01', investment: 637.0853345999999 },
-        { date: '2015-02-01', investment: 0 },
-        { date: '2015-03-01', investment: 0 },
-        { date: '2015-04-01', investment: 0 },
-        { date: '2015-05-01', investment: 0 },
-        { date: '2015-06-01', investment: 0 },
-        { date: '2015-07-01', investment: 0 },
-        { date: '2015-08-01', investment: 0 },
-        { date: '2015-09-01', investment: 0 },
-        { date: '2015-10-01', investment: 0 },
-        { date: '2015-11-01', investment: 0 },
-        { date: '2015-12-01', investment: 0 },
-        { date: '2016-01-01', investment: 0 },
-        { date: '2016-02-01', investment: 0 },
-        { date: '2016-03-01', investment: 0 },
-        { date: '2016-04-01', investment: 0 },
-        { date: '2016-05-01', investment: 0 },
-        { date: '2016-06-01', investment: 0 },
-        { date: '2016-07-01', investment: 0 },
-        { date: '2016-08-01', investment: 0 },
-        { date: '2016-09-01', investment: 0 },
-        { date: '2016-10-01', investment: 0 },
-        { date: '2016-11-01', investment: 0 },
-        { date: '2016-12-01', investment: 0 },
-        { date: '2017-01-01', investment: 0 },
-        { date: '2017-02-01', investment: 0 },
-        { date: '2017-03-01', investment: 0 },
-        { date: '2017-04-01', investment: 0 },
-        { date: '2017-05-01', investment: 0 },
-        { date: '2017-06-01', investment: 0 },
-        { date: '2017-07-01', investment: 0 },
-        { date: '2017-08-01', investment: 0 },
-        { date: '2017-09-01', investment: 0 },
-        { date: '2017-10-01', investment: 0 },
-        { date: '2017-11-01', investment: 0 },
-        { date: '2017-12-01', investment: -318.54266729999995 },
-        { date: '2018-01-01', investment: 0 }
+        { date: '2023-01-01', investment: 82.329056 },
+        {
+          date: '2023-02-01',
+          investment: 0
+        },
+        {
+          date: '2023-03-01',
+          investment: 0
+        },
+        {
+          date: '2023-04-01',
+          investment: 0
+        },
+        {
+          date: '2023-05-01',
+          investment: 0
+        },
+        {
+          date: '2023-06-01',
+          investment: 0
+        },
+        {
+          date: '2023-07-01',
+          investment: 0
+        }
       ]);
     });
   });

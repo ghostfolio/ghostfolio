@@ -5,6 +5,70 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Added support for filtering in the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
+- Added the _Storybook_ path to the `sitemap.xml` file
+
+### Changed
+
+- Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
+- Refactored `lodash.uniq` with `Array.from(new Set(...))`
+- Refreshed the cryptocurrencies list
+
+### Fixed
+
+- Fixed an issue in the activities import functionality related to the account balances
+- Changed client-side dates to be sent in UTC format to ensure date consistency
+  - Benchmark endpoint
+  - Exchange rate endpoint
+
+## 2.146.0 - 2025-03-15
+
+### Changed
+
+- Improved the usability of the user account registration
+- Improved the usability of the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
+- Formatted the name in the _Financial Modeling Prep_ service
+- Removed the exchange rates from the overview of the admin control panel
+- Improved the language localization for German (`de`)
+- Upgraded `angular` from version `19.0.5` to `19.2.1`
+- Upgraded `Nx` from version `20.3.2` to `20.5.0`
+- Upgraded `prettier` from version `3.5.1` to `3.5.3`
+- Upgraded `prisma` from version `6.4.1` to `6.5.0`
+
+### Fixed
+
+- Fixed an issue with serving _Storybook_ related to the `contentSecurityPolicy`
+
+## 2.145.1 - 2025-03-10
+
+### Added
+
+- Extended the export functionality by the account balances
+- Added a _Copy portfolio data to clipboard for AI prompt_ action to the analysis page (experimental)
+
+### Changed
+
+- Improved the style of the summary on the _X-ray_ page
+- Improved the language localization for German (`de`)
+- Upgraded `@simplewebauthn/browser` and `@simplewebauthn/server` from version `9.0` to `13.1`
+
+### Fixed
+
+- Fixed an issue to get dividends in the _Financial Modeling Prep_ service
+- Fixed an issue to get historical market data in the _Financial Modeling Prep_ service
+- Fixed an issue with serving _Storybook_
+
+## 2.144.0 - 2025-03-06
+
+### Fixed
+
+- Fixed the missing import functionality on the non-empty activities page
+- Fixed the functionality to delete an asset profile of a custom currency in the admin control panel
+
 ## 2.143.0 - 2025-03-02
 
 ### Added

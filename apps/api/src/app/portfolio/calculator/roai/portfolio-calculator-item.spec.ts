@@ -1,7 +1,12 @@
-import { userDummyData } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
+  activityDummyData,
+  symbolProfileDummyData,
+  userDummyData
+} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
+import {
+  PortfolioCalculatorFactory,
+  PerformanceCalculationType
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
@@ -78,42 +83,89 @@ describe('PortfolioCalculator', () => {
     );
   });
 
-  describe('get current positions', () => {
-    it('with no orders', async () => {
-      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+  describe('compute portfolio snapshot', () => {
+    it.only('with item activity', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2022-01-01'),
+          fee: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            name: 'Penthouse Apartment',
+            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
+          },
+          type: 'ITEM',
+          unitPrice: 500000
+        }
+      ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
-        activities: [],
-        calculationType: PerformanceCalculationType.TWR,
-        currency: 'CHF',
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const investments = portfolioCalculator.getInvestments();
-
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: portfolioSnapshot.historicalData,
-        groupBy: 'month'
-      });
-
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big(0),
-        hasErrors: false,
-        historicalData: [],
-        positions: [],
+        currentValueInBaseCurrency: new Big('0'),
+        errors: [],
+        hasErrors: true,
+        positions: [
+          {
+            averagePrice: new Big('500000'),
+            currency: 'USD',
+            dataSource: 'MANUAL',
+            dividend: new Big('0'),
+            dividendInBaseCurrency: new Big('0'),
+            fee: new Big('0'),
+            feeInBaseCurrency: new Big('0'),
+            firstBuyDate: '2022-01-01',
+            grossPerformance: null,
+            grossPerformancePercentage: null,
+            grossPerformancePercentageWithCurrencyEffect: null,
+            grossPerformanceWithCurrencyEffect: null,
+            investment: new Big('0'),
+            investmentWithCurrencyEffect: new Big('0'),
+            marketPrice: null,
+            marketPriceInBaseCurrency: 500000,
+            netPerformance: null,
+            netPerformancePercentage: null,
+            netPerformancePercentageWithCurrencyEffectMap: null,
+            netPerformanceWithCurrencyEffectMap: null,
+            quantity: new Big('0'),
+            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
+            tags: [],
+            timeWeightedInvestment: new Big('0'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('0'),
+            transactionCount: 1,
+            valueInBaseCurrency: new Big('0')
+          }
+        ],
         totalFeesWithCurrencyEffect: new Big('0'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big(0),
-        totalInvestmentWithCurrencyEffect: new Big(0),
+        totalInvestment: new Big('0'),
+        totalInvestmentWithCurrencyEffect: new Big('0'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
-      expect(investments).toEqual([]);
-
-      expect(investmentsByMonth).toEqual([]);
+      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
+        expect.objectContaining({
+          netPerformance: 0,
+          netPerformanceInPercentage: 0,
+          netPerformanceInPercentageWithCurrencyEffect: 0,
+          netPerformanceWithCurrencyEffect: 0,
+          totalInvestmentValueWithCurrencyEffect: 0
+        })
+      );
     });
   });
 });
