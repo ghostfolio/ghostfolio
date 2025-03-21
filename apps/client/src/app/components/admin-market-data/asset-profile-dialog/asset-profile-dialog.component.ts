@@ -15,6 +15,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { translate } from '@ghostfolio/ui/i18n';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -26,7 +27,13 @@ import {
   ViewChild,
   signal
 } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  ValidationErrors,
+  Validators
+} from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -63,12 +70,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public assetProfile: AdminMarketDataDetails['assetProfile'];
-  public assetProfileIdentifierForm = this.formBuilder.group({
-    editedSearchSymbol: new FormControl<AssetProfileIdentifier>(
-      { symbol: null, dataSource: null },
-      [Validators.required]
-    )
-  });
+  public assetProfileIdentifierForm = this.formBuilder.group(
+    {
+      editedSearchSymbol: new FormControl<AssetProfileIdentifier>(
+        { symbol: null, dataSource: null },
+        [Validators.required]
+      )
+    },
+    {
+      validators: (control) => this.isNewSymbolValid(control)
+    }
+  );
+
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -240,6 +253,21 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
+  private isNewSymbolValid(control: AbstractControl): ValidationErrors {
+    const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
+      control.get('editedSearchSymbol').value;
+    console.log(this.assetProfileIdentifierForm?.valid);
+
+    if (
+      currentAssetProfileIdentifier.dataSource === this.data?.dataSource &&
+      currentAssetProfileIdentifier.symbol === this.data?.symbol
+    ) {
+      return {
+        isPreviousIdentifier: true
+      };
+    }
+  }
+
   public get isSymbolEditable() {
     return !this.assetProfileForm.dirty;
   }
@@ -337,22 +365,36 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         ...assetProfileIdentifierData
       })
       .pipe(
-        catchError(() => {
-          this.snackBar.open('Conflict', undefined, {
-            duration: ms('3 seconds')
-          });
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            this.snackBar.open(
+              $localize`This symbol is already in use`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          } else {
+            this.snackBar.open(
+              $localize`An error occurred while updating the symbol`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          }
 
           return EMPTY;
         }),
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(() => {
-        this.onOpenAssetProfileDialog({
+        const newAssetProfileIdentifer = {
           dataSource: assetProfileIdentifierData.dataSource,
           symbol: assetProfileIdentifierData.symbol
-        });
+        };
 
-        this.dialogRef.close();
+        this.dialogRef.close(newAssetProfileIdentifer);
       });
   }
 
@@ -521,8 +563,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     });
   }
 
-  public triggerIdentifierSubmit() {
-    if (this.assetProfileIdentifierForm) {
+  public triggerProfileFormSubmit() {
+    if (this.assetProfileForm) {
       this.assetProfileFormElement.nativeElement.requestSubmit();
     }
   }

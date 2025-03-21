@@ -87,8 +87,9 @@
 
     <div class="row">
       @if (isEditSymbolMode) {
-        <div class="col-12 mb-3">
+        <div class="col-12 mb-4">
           <form
+            class="align-items-center d-flex"
             [formGroup]="assetProfileIdentifierForm"
             (keyup.enter)="
               assetProfileIdentifierForm.valid &&
@@ -96,7 +97,7 @@
             "
             (ngSubmit)="onSubmitAssetProfileIdentifierForm()"
           >
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="gf-spacer without-hint">
               <mat-label i18n>Name, symbol or ISIN</mat-label>
               <gf-symbol-autocomplete
                 formControlName="editedSearchSymbol"
@@ -108,7 +109,12 @@
               color="primary"
               mat-flat-button
               type="submit"
-              [disabled]="!assetProfileIdentifierForm.valid"
+              [disabled]="
+                assetProfileIdentifierForm.hasError(
+                  'invalidData',
+                  'editedSearchSymbol'
+                ) || assetProfileIdentifierForm.hasError('isPreviousIdentifier')
+              "
             >
               Apply
             </button>
@@ -128,8 +134,9 @@
             >Symbol</gf-value
           >
         </div>
-        <div class="col-4 mb-3">
+        <div class="col-6 mb-3 d-flex justify-content-between">
           <gf-value
+            class="col-11"
             i18n
             size="medium"
             [value]="
@@ -137,10 +144,8 @@
             "
             >Data Source</gf-value
           >
-        </div>
-        <div class="col-1 mb-3">
           <button
-            class="mx-1 no-min-width px-2"
+            class="col-1 mx-1 no-min-width px-2"
             mat-button
             type="button"
             [disabled]="!isSymbolEditable"
@@ -507,7 +512,7 @@
       color="primary"
       mat-flat-button
       [disabled]="!(assetProfileForm.dirty && assetProfileForm.valid)"
-      (click)="triggerIdentifierSubmit()"
+      (click)="triggerProfileFormSubmit()"
     >
       <ng-container i18n>Save</ng-container>
     </button>

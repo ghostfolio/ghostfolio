@@ -194,6 +194,9 @@ export class GfSymbolAutocompleteComponent
   }
 
   private validateRequired() {
+    console.log(`dataSource: ${super.value?.dataSource}`);
+    console.log(`symbol: ${super.value?.symbol}`);
+
     const requiredCheck = super.required
       ? !super.value?.dataSource || !super.value?.symbol
       : false;
