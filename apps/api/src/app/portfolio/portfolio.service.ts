@@ -1918,7 +1918,6 @@ export class PortfolioService {
       annualizedPerformancePercentWithCurrencyEffect,
       cash,
       excludedAccountsAndActivities,
-      firstOrderDate,
       netPerformance,
       netPerformancePercentage,
       netPerformancePercentageWithCurrencyEffect,
