@@ -692,9 +692,9 @@ export class DataService {
     return this.http.get<Tag[]>('/api/v1/tags');
   }
 
-  public generateAccessToken(aId: string) {
+  public generateAccessToken(aUserId: string) {
     return this.http.post<AccessTokenResponse>(
-      `/api/v1/user/${aId}/access-token`,
+      `/api/v1/user/${aUserId}/access-token`,
       {}
     );
   }
