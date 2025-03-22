@@ -2,7 +2,6 @@ import { environment } from '@ghostfolio/api/environments/environment';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   DEFAULT_LANGUAGE_CODE,
-  DEFAULT_ROOT_URL,
   STORYBOOK_PATH,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
@@ -126,7 +125,7 @@ export const HtmlTemplateMiddleware = async (
   }
 
   const currentDate = format(new Date(), DATE_FORMAT);
-  const rootUrl = process.env.ROOT_URL || DEFAULT_ROOT_URL;
+  const rootUrl = process.env.ROOT_URL || environment.rootUrl;
 
   if (
     path.startsWith('/api/') ||

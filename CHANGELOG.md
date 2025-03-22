@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added support for filtering in the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
+- Added an endpoint to localize the `site.webmanifest`
 - Added the _Storybook_ path to the `sitemap.xml` file
 
 ### Changed
