@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Eliminated `firstOrderDate` from the summary of the portfolio details endpoint in favor of using `dateOfFirstActivity` from the user endpoint
 - Refactored `lodash.uniq` with `Array.from(new Set(...))`
 - Refreshed the cryptocurrencies list
+- Improved the language localization for German (`de`)
 - Improved the language localization for Turkish (`tr`)
 
 ### Fixed
