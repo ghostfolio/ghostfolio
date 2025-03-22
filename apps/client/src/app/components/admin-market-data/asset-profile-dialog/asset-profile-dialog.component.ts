@@ -69,18 +69,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public assetProfile: AdminMarketDataDetails['assetProfile'];
-  public assetProfileIdentifierForm = this.formBuilder.group(
-    {
-      symbol: new FormControl<AssetProfileIdentifier>(
-        { symbol: null, dataSource: null },
-        [Validators.required]
-      )
-    },
-    {
-      validators: (control) => this.isNewSymbolValid(control)
-    }
-  );
-
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -103,6 +91,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     symbolMapping: '',
     url: ''
   });
+  public assetProfileIdentifierForm = this.formBuilder.group(
+    {
+      symbol: new FormControl<AssetProfileIdentifier>(
+        { symbol: null, dataSource: null },
+        [Validators.required]
+      )
+    },
+    {
+      validators: (control) => this.isNewSymbolValid(control)
+    }
+  );
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
   public countries: {
@@ -555,6 +554,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
+
     this.unsubscribeSubject.complete();
   }
 
