@@ -529,12 +529,6 @@ export class DataService {
       })
       .pipe(
         map((response) => {
-          if (response.summary?.firstOrderDate) {
-            response.summary.firstOrderDate = parseISO(
-              response.summary.firstOrderDate
-            );
-          }
-
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
               response.holdings[symbol].assetClassLabel = translate(
