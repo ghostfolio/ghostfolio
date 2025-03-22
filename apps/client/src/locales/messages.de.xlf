@@ -7806,7 +7806,7 @@
       </trans-unit>
       <trans-unit id="8944214829054650479" datatype="html">
         <source>Security token</source>
-        <target state="new">Security token</target>
+        <target state="translated">Sicherheits-Token</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">163</context>
@@ -7814,7 +7814,7 @@
       </trans-unit>
       <trans-unit id="6751986162338860240" datatype="html">
         <source>Do you really want to generate a new security token for this user?</source>
-        <target state="new">Do you really want to generate a new security token for this user?</target>
+        <target state="translated">Möchtest du für diesen Benutzer wirklich einen neuen Sicherheits-Token generieren?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">168</context>
@@ -7822,7 +7822,7 @@
       </trans-unit>
       <trans-unit id="bb9188e6fbfd19db7f6ba5433592beaff50da35d" datatype="html">
         <source>Generate Security Token</source>
-        <target state="new">Generate Security Token</target>
+        <target state="translated">Sicherheits-Token generieren</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">249</context>
