@@ -21,10 +21,11 @@ export class ExportController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async export(
     @Query('accounts') filterByAccounts?: string,
-    @Query('activityIds') activityIds?: string[],
+    @Query('activityIds') filterByActivityIds?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('tags') filterByTags?: string
   ): Promise<Export> {
+    const activityIds = filterByActivityIds?.split(',') ?? [];
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,

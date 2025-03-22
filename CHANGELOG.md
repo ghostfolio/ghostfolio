@@ -11,10 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for filtering in the _Copy AI prompt to clipboard_ actions on the analysis page (experimental)
 - Added support for generating a new _Security Token_ via the users table of the admin control panel
+- Added an endpoint to localize the `site.webmanifest`
+- Added the _Storybook_ path to the `sitemap.xml` file
 
 ### Changed
 
+- Improved the export functionality by applying filters on accounts and tags
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
+- Refactored `lodash.uniq` with `Array.from(new Set(...))`
 - Refreshed the cryptocurrencies list
 
 ### Fixed

@@ -20,7 +20,6 @@ import {
 } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { isISO4217CurrencyCode } from 'class-validator';
-import { uniq } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CreateAssetProfileDialogMode } from './interfaces/interfaces';
@@ -87,7 +86,9 @@ export class CreateAssetProfileDialog implements OnInit, OnDestroy {
         this.createAssetProfileForm.get('addCurrency').value as string
       ).toUpperCase();
 
-      const currencies = uniq([...this.customCurrencies, currency]).sort();
+      const currencies = Array.from(
+        new Set([...this.customCurrencies, currency])
+      ).sort();
 
       this.dataService
         .putAdminSetting(PROPERTY_CURRENCIES, {

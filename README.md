@@ -47,7 +47,7 @@ Ghostfolio is for you if you are...
 
 - ✅ Create, update and delete transactions
 - ✅ Multi account management
-- ✅ Portfolio performance: Time-weighted rate of return (TWR) for `Today`, `WTD`, `MTD`, `YTD`, `1Y`, `5Y`, `Max`
+- ✅ Portfolio performance: Return on Average Investment (ROAI) for `Today`, `WTD`, `MTD`, `YTD`, `1Y`, `5Y`, `Max`
 - ✅ Various charts
 - ✅ Static analysis to identify potential risks in your portfolio
 - ✅ Import and export transactions
