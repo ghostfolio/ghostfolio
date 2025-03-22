@@ -82,7 +82,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
-import { isEmpty, uniq } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import {
@@ -2031,14 +2031,16 @@ export class PortfolioService {
         where: { id: filters[0].id }
       });
     } else {
-      const accountIds = uniq(
-        activities
-          .filter(({ accountId }) => {
-            return accountId;
-          })
-          .map(({ accountId }) => {
-            return accountId;
-          })
+      const accountIds = Array.from(
+        new Set(
+          activities
+            .filter(({ accountId }) => {
+              return accountId;
+            })
+            .map(({ accountId }) => {
+              return accountId;
+            })
+        )
       );
 
       currentAccounts = await this.accountService.accounts({

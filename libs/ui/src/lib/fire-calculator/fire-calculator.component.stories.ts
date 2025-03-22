@@ -45,7 +45,7 @@ type Story = StoryObj<GfFireCalculatorComponent>;
 export const Simple: Story = {
   args: {
     currency: 'USD',
-    fireWealth: 0,
+    fireWealth: 50000,
     locale: locale
   }
 };
