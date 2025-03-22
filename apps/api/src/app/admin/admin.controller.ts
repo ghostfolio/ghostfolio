@@ -338,11 +338,12 @@ export class AdminController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<EnhancedSymbolProfile> {
-    return this.adminService.patchAssetProfileData({
-      ...assetProfileData,
-      dataSource,
-      symbol
-    });
+    return this.adminService.patchAssetProfileData(
+      { dataSource, symbol },
+      {
+        ...assetProfileData
+      }
+    );
   }
 
   @HasPermission(permissions.accessAdminControl)

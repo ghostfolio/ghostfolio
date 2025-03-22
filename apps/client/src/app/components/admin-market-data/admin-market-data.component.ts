@@ -389,9 +389,15 @@ export class AdminMarketDataComponent
         dialogRef
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
-          .subscribe(() => {
-            this.router.navigate(['.'], { relativeTo: this.route });
-          });
+          .subscribe(
+            (newAssetProfileIdentifer: AssetProfileIdentifier | undefined) => {
+              if (newAssetProfileIdentifer) {
+                this.onOpenAssetProfileDialog(newAssetProfileIdentifer);
+              } else {
+                this.router.navigate(['.'], { relativeTo: this.route });
+              }
+            }
+          );
       });
   }
 

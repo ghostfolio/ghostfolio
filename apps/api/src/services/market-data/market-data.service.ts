@@ -110,6 +110,28 @@ export class MarketDataService {
     });
   }
 
+  public async updateAssetProfileIdentifier(
+    oldAssetProfileIdentifier: AssetProfileIdentifier,
+    newAssetProfileIdentifier: AssetProfileIdentifier
+  ) {
+    return this.prismaService.marketData.updateMany({
+      data: {
+        dataSource: newAssetProfileIdentifier.dataSource,
+        symbol: newAssetProfileIdentifier.symbol
+      },
+      where: {
+        AND: [
+          {
+            dataSource: oldAssetProfileIdentifier.dataSource
+          },
+          {
+            symbol: oldAssetProfileIdentifier.symbol
+          }
+        ]
+      }
+    });
+  }
+
   public async updateMarketData(params: {
     data: {
       state: MarketDataState;
