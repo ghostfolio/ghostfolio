@@ -170,8 +170,6 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             symbol = quotes[0].symbol;
           }
         } catch {}
-      } else if (symbol?.includes('-')) {
-        throw new Error(`${symbol} is not valid`);
       } else {
         symbol = this.convertToYahooFinanceSymbol(symbol);
       }
