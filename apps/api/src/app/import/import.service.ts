@@ -586,7 +586,7 @@ export class ImportService {
     const assetProfiles: {
       [assetProfileIdentifier: string]: Partial<SymbolProfile>;
     } = {};
-    const dataSources = await this.dataProviderService.getDataSources();
+    const dataSources = await this.dataProviderService.getDataSources({ user });
 
     for (const [
       index,

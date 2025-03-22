@@ -40,6 +40,9 @@ export class ConfigurationService {
       DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER: json({
         default: []
       }),
+      DATA_SOURCES_LEGACY: json({
+        default: []
+      }),
       ENABLE_FEATURE_FEAR_AND_GREED_INDEX: bool({ default: false }),
       ENABLE_FEATURE_READ_ONLY_MODE: bool({ default: false }),
       ENABLE_FEATURE_SOCIAL_LOGIN: bool({ default: false }),
