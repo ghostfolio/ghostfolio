@@ -120,14 +120,8 @@ export class MarketDataService {
         symbol: newAssetProfileIdentifier.symbol
       },
       where: {
-        AND: [
-          {
-            dataSource: oldAssetProfileIdentifier.dataSource
-          },
-          {
-            symbol: oldAssetProfileIdentifier.symbol
-          }
-        ]
+        dataSource: oldAssetProfileIdentifier.dataSource,
+        symbol: oldAssetProfileIdentifier.symbol
       }
     });
   }

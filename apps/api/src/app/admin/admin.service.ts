@@ -520,14 +520,14 @@ export class AdminService {
       newDataSource &&
       (newSymbol !== symbol || newDataSource !== dataSource)
     ) {
-      const [profile] = await this.symbolProfileService.getSymbolProfiles([
+      const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
         {
           dataSource: newDataSource as DataSource,
           symbol: newSymbol as string
         }
       ]);
 
-      if (profile) {
+      if (assetProfile) {
         throw new HttpException(
           getReasonPhrase(StatusCodes.CONFLICT),
           StatusCodes.CONFLICT
@@ -535,37 +535,35 @@ export class AdminService {
       }
 
       try {
-        await this.symbolProfileService.updateAssetProfileIdentifier(
-          {
-            dataSource,
-            symbol
-          },
-          {
-            dataSource: newDataSource as DataSource,
-            symbol: newSymbol as string
-          }
-        );
-
-        await this.marketDataService.updateAssetProfileIdentifier(
-          {
-            dataSource,
-            symbol
-          },
-          {
-            dataSource: newDataSource as DataSource,
-            symbol: newSymbol as string
-          }
-        );
-
-        const [symbolProfile] =
-          await this.symbolProfileService.getSymbolProfiles([
+        Promise.all([
+          await this.symbolProfileService.updateAssetProfileIdentifier(
+            {
+              dataSource,
+              symbol
+            },
             {
               dataSource: newDataSource as DataSource,
               symbol: newSymbol as string
             }
-          ]);
+          ),
+          await this.marketDataService.updateAssetProfileIdentifier(
+            {
+              dataSource,
+              symbol
+            },
+            {
+              dataSource: newDataSource as DataSource,
+              symbol: newSymbol as string
+            }
+          )
+        ]);
 
-        return symbolProfile;
+        return this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource: newDataSource as DataSource,
+            symbol: newSymbol as string
+          }
+        ])?.[0];
       } catch {
         throw new HttpException(
           getReasonPhrase(StatusCodes.BAD_REQUEST),
@@ -610,16 +608,12 @@ export class AdminService {
         updatedSymbolProfile
       );
 
-      const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles(
-        [
-          {
-            dataSource: dataSource as DataSource,
-            symbol: symbol as string
-          }
-        ]
-      );
-
-      return symbolProfile;
+      return this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource: dataSource as DataSource,
+          symbol: symbol as string
+        }
+      ])?.[0];
     }
   }
 

@@ -390,9 +390,9 @@ export class AdminMarketDataComponent
           .afterClosed()
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe(
-            (newAssetProfileIdentifer: AssetProfileIdentifier | undefined) => {
-              if (newAssetProfileIdentifer) {
-                this.onOpenAssetProfileDialog(newAssetProfileIdentifer);
+            (newAssetProfileIdentifier: AssetProfileIdentifier | undefined) => {
+              if (newAssetProfileIdentifier) {
+                this.onOpenAssetProfileDialog(newAssetProfileIdentifier);
               } else {
                 this.router.navigate(['.'], { relativeTo: this.route });
               }
