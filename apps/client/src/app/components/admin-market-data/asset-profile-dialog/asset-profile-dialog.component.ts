@@ -43,6 +43,7 @@ import {
   SymbolProfile
 } from '@prisma/client';
 import { format } from 'date-fns';
+import { StatusCodes } from 'http-status-codes';
 import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -93,7 +94,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   });
   public assetProfileIdentifierForm = this.formBuilder.group(
     {
-      symbol: new FormControl<AssetProfileIdentifier>(
+      assetProfileIdentifier: new FormControl<AssetProfileIdentifier>(
         { symbol: null, dataSource: null },
         [Validators.required]
       )
@@ -111,7 +112,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
-  public isEditSymbolMode = false;
+  public isEditAssetProfileIdentifierMode = false;
   public marketDataItems: MarketData[] = [];
   public modeValues = [
     {
@@ -250,30 +251,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  private isNewSymbolValid(control: AbstractControl): ValidationErrors {
-    const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
-      control.get('symbol').value;
-
-    if (
-      currentAssetProfileIdentifier?.dataSource === this.data?.dataSource &&
-      currentAssetProfileIdentifier?.symbol === this.data?.symbol
-    ) {
-      return {
-        equalsPreviousSymbol: true
-      };
-    }
-  }
-
-  public get isSymbolEditable() {
+  public get isAssetProfileIdentifierEditable() {
     return !this.assetProfileForm.dirty;
   }
 
-  public get isSymbolEditButtonInvisible() {
-    return this.assetProfile?.dataSource === 'MANUAL';
+  public get isAssetProfileIdentifierEditButtonVisible() {
+    return this.assetProfile?.dataSource !== 'MANUAL';
   }
 
-  public onCancelEditSymboleMode() {
-    this.isEditSymbolMode = false;
+  public onCancelEditAssetProfileIdentifierMode() {
+    this.isEditAssetProfileIdentifierMode = false;
 
     this.assetProfileForm.enable();
 
@@ -328,8 +315,8 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onSetEditSymboleMode() {
-    this.isEditSymbolMode = true;
+  public onSetEditAssetProfileIdentifierMode() {
+    this.isEditAssetProfileIdentifierMode = true;
 
     this.assetProfileForm.disable();
 
@@ -337,17 +324,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   }
 
   public async onSubmitAssetProfileIdentifierForm() {
-    const assetProfileIdentifierData: UpdateAssetProfileDto = {
-      dataSource:
-        this.assetProfileIdentifierForm.get('symbol').value.dataSource,
-      symbol: this.assetProfileIdentifierForm.get('symbol').value.symbol
+    const assetProfileIdentifier: UpdateAssetProfileDto = {
+      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.dataSource,
+      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.symbol
     };
 
     try {
       await validateObjectForForm({
         classDto: UpdateAssetProfileDto,
         form: this.assetProfileIdentifierForm,
-        object: assetProfileIdentifierData
+        object: assetProfileIdentifier
       });
     } catch (error) {
       console.error(error);
@@ -362,14 +350,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           symbol: this.data.symbol
         },
         {
-          ...assetProfileIdentifierData
+          ...assetProfileIdentifier
         }
       )
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 409) {
+          if (error.status === StatusCodes.CONFLICT) {
             this.snackBar.open(
-              $localize`This symbol is already in use.`,
+              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
               undefined,
               {
                 duration: ms('3 seconds')
@@ -377,7 +365,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             );
           } else {
             this.snackBar.open(
-              $localize`An error occurred while updating the symbol.`,
+              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
               undefined,
               {
                 duration: ms('3 seconds')
@@ -390,12 +378,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         takeUntil(this.unsubscribeSubject)
       )
       .subscribe(() => {
-        const newAssetProfileIdentifer = {
-          dataSource: assetProfileIdentifierData.dataSource,
-          symbol: assetProfileIdentifierData.symbol
+        const newAssetProfileIdentifier = {
+          dataSource: assetProfileIdentifier.dataSource,
+          symbol: assetProfileIdentifier.symbol
         };
 
-        this.dialogRef.close(newAssetProfileIdentifer);
+        this.dialogRef.close(newAssetProfileIdentifier);
       });
   }
 
@@ -554,13 +542,26 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
-
     this.unsubscribeSubject.complete();
   }
 
   public onTriggerSubmitAssetProfileForm() {
     if (this.assetProfileForm) {
       this.assetProfileFormElement.nativeElement.requestSubmit();
+    }
+  }
+
+  private isNewSymbolValid(control: AbstractControl): ValidationErrors {
+    const currentAssetProfileIdentifier: AssetProfileIdentifier | undefined =
+      control.get('assetProfileIdentifier').value;
+
+    if (
+      currentAssetProfileIdentifier?.dataSource === this.data?.dataSource &&
+      currentAssetProfileIdentifier?.symbol === this.data?.symbol
+    ) {
+      return {
+        equalsPreviousProfileIdentifier: true
+      };
     }
   }
 }

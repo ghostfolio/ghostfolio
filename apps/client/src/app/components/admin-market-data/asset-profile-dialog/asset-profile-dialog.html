@@ -86,7 +86,7 @@
     />
 
     <div class="row">
-      @if (isEditSymbolMode) {
+      @if (isEditAssetProfileIdentifierMode) {
         <div class="col-12 mb-4">
           <form
             class="align-items-center d-flex"
@@ -100,7 +100,7 @@
             <mat-form-field appearance="outline" class="gf-spacer without-hint">
               <mat-label i18n>Name, symbol or ISIN</mat-label>
               <gf-symbol-autocomplete
-                formControlName="symbol"
+                formControlName="assetProfileIdentifier"
                 [includeIndices]="true"
               />
             </mat-form-field>
@@ -110,19 +110,24 @@
               mat-flat-button
               type="submit"
               [disabled]="
-                assetProfileIdentifierForm.hasError('invalidData', 'symbol') ||
-                assetProfileIdentifierForm.hasError('equalsPreviousSymbol')
+                assetProfileIdentifierForm.hasError(
+                  'invalidData',
+                  'assetProfileIdentifier'
+                ) ||
+                assetProfileIdentifierForm.hasError(
+                  'equalsPreviousProfileIdentifier'
+                )
               "
             >
-              Apply
+              <ng-container i18n>Apply</ng-container>
             </button>
             <button
               class="mx-1 no-min-width px-2"
               mat-button
               type="button"
-              (click)="onCancelEditSymboleMode()"
+              (click)="onCancelEditAssetProfileIdentifierMode()"
             >
-              Cancel
+              <ng-container i18n>Cancel</ng-container>
             </button>
           </form>
         </div>
@@ -132,7 +137,7 @@
             >Symbol</gf-value
           >
         </div>
-        <div class="col-6 mb-3 d-flex justify-content-between">
+        <div class="col-6 d-flex justify-content-between mb-3">
           <gf-value
             class="col-11"
             i18n
@@ -146,11 +151,11 @@
             class="col-1 mx-1 no-min-width px-2"
             mat-button
             type="button"
-            [disabled]="!isSymbolEditable"
+            [disabled]="!isAssetProfileIdentifierEditable"
             [ngClass]="{
-              'd-none': isSymbolEditButtonInvisible
+              'd-none': !isAssetProfileIdentifierEditButtonVisible
             }"
-            (click)="onSetEditSymboleMode()"
+            (click)="onSetEditAssetProfileIdentifierMode()"
           >
             <ion-icon name="create-outline"></ion-icon>
           </button>
@@ -307,7 +312,7 @@
             color="primary"
             i18n
             [checked]="isBenchmark"
-            [disabled]="isEditSymbolMode"
+            [disabled]="isEditAssetProfileIdentifierMode"
             (change)="
               isBenchmark
                 ? onUnsetBenchmark({

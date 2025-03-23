@@ -334,14 +334,14 @@ export class AdminController {
   @Patch('profile-data/:dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async patchAssetProfileData(
-    @Body() assetProfileData: UpdateAssetProfileDto,
+    @Body() assetProfile: UpdateAssetProfileDto,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<EnhancedSymbolProfile> {
     return this.adminService.patchAssetProfileData(
       { dataSource, symbol },
       {
-        ...assetProfileData
+        ...assetProfile
       }
     );
   }
