@@ -159,6 +159,14 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Do money better with Copilot'
   },
   {
+    founded: 2023,
+    hasFreePlan: false,
+    key: 'danti',
+    name: 'Danti',
+    origin: 'United Kingdom',
+    slogan: 'Digitising Generational Wealth'
+  },
+  {
     founded: 2020,
     key: 'de.fi',
     languages: ['English'],
