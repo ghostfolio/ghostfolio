@@ -45,6 +45,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Analyze and track your portfolio.'
   },
   {
+    founded: 2022,
+    hasFreePlan: false,
+    key: 'asseta',
+    languages: ['English'],
+    name: 'Asseta',
+    origin: 'United States',
+    slogan: 'The Intelligent Family Office Suite'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'banktivity',
