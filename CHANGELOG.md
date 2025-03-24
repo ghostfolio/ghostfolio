@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the `isActive` flag to the asset profile model
+
 ### Changed
 
 - Improved the language localization for German (`de`)
