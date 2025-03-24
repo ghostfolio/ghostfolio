@@ -7830,7 +7830,7 @@
       </trans-unit>
       <trans-unit id="7303091661854783304" datatype="html">
         <source>United Kingdom</source>
-        <target state="new">United Kingdom</target>
+        <target state="translated">Vereinigtes Königreich</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">96</context>
