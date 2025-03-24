@@ -522,7 +522,7 @@ export class AdminService {
     ) {
       const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
         {
-          dataSource: newDataSource as DataSource,
+          dataSource: newDataSource as keyof typeof DataSource,
           symbol: newSymbol as string
         }
       ]);
@@ -542,7 +542,7 @@ export class AdminService {
               symbol
             },
             {
-              dataSource: newDataSource as DataSource,
+              dataSource: newDataSource as keyof typeof DataSource,
               symbol: newSymbol as string
             }
           ),
@@ -552,7 +552,7 @@ export class AdminService {
               symbol
             },
             {
-              dataSource: newDataSource as DataSource,
+              dataSource: newDataSource as keyof typeof DataSource,
               symbol: newSymbol as string
             }
           )
@@ -560,7 +560,7 @@ export class AdminService {
 
         return this.symbolProfileService.getSymbolProfiles([
           {
-            dataSource: newDataSource as DataSource,
+            dataSource: newDataSource as keyof typeof DataSource,
             symbol: newSymbol as string
           }
         ])?.[0];
@@ -610,7 +610,7 @@ export class AdminService {
 
       return this.symbolProfileService.getSymbolProfiles([
         {
-          dataSource: dataSource as DataSource,
+          dataSource: dataSource as keyof typeof DataSource,
           symbol: symbol as string
         }
       ])?.[0];
