@@ -200,6 +200,7 @@ model SymbolProfile {
   @@index([currency])
   @@index([cusip])
   @@index([dataSource])
+  @@index([isActive])
   @@index([isin])
   @@index([name])
   @@index([symbol])
