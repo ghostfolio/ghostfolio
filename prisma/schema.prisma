@@ -181,6 +181,7 @@ model SymbolProfile {
   figiShareClass         String?
   holdings               Json?                   @default("[]")
   id                     String                  @id @default(uuid())
+  isActive               Boolean                 @default(true)
   isin                   String?
   name                   String?
   updatedAt              DateTime                @updatedAt
