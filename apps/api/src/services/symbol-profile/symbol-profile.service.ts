@@ -106,6 +106,7 @@ export class SymbolProfileService {
       },
       orderBy: [{ symbol: 'asc' }],
       where: {
+        isActive: true,
         Order: withUserSubscription
           ? {
               some: {
@@ -133,6 +134,7 @@ export class SymbolProfileService {
     currency,
     dataSource,
     holdings,
+    isActive,
     name,
     scraperConfiguration,
     sectors,
@@ -149,6 +151,7 @@ export class SymbolProfileService {
         countries,
         currency,
         holdings,
+        isActive,
         name,
         scraperConfiguration,
         sectors,

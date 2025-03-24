@@ -300,7 +300,10 @@ export class DataGatheringService {
     AssetProfileIdentifier[]
   > {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }]
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true
+      }
     });
 
     return symbolProfiles
@@ -436,6 +439,9 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          isActive: true
         }
       })
     )
