@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the `isActive` flag to the asset profile model
 
+### Changed
+
+- Upgraded `ngx-skeleton-loader` from version `9.0.0` to `10.0.0`
+
 ## 2.147.0 - 2025-03-22
 
 ### Added
