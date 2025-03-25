@@ -1,6 +1,6 @@
 {
   "name": "ghostfolio",
-  "version": "2.147.0",
+  "version": "2.148.0",
   "homepage": "https://ghostfol.io",
   "license": "AGPL-3.0",
   "repository": "https://github.com/ghostfolio/ghostfolio",
@@ -122,7 +122,7 @@
     "ng-extract-i18n-merge": "2.14.1",
     "ngx-device-detector": "9.0.0",
     "ngx-markdown": "19.0.0",
-    "ngx-skeleton-loader": "9.0.0",
+    "ngx-skeleton-loader": "10.0.0",
     "ngx-stripe": "19.0.0",
     "open-color": "1.9.1",
     "papaparse": "5.3.1",

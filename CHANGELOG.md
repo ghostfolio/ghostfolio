@@ -10,6 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
+- Restricted the historical market data gathering to active asset profiles
+
+## 2.148.0 - 2025-03-24
+
+### Added
+
+- Added the `isActive` flag to the asset profile model
+
+### Changed
+
+- Improved the language localization for German (`de`)
+- Upgraded `ngx-skeleton-loader` from version `9.0.0` to `10.0.0`
 
 ## 2.147.0 - 2025-03-22
 
