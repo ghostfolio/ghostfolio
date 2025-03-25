@@ -35,6 +35,41 @@ export class SymbolProfileService {
     });
   }
 
+  public async getActiveSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
+    return this.prismaService.symbolProfile.findMany({
+      include: {
+        Order: {
+          include: {
+            User: true
+          }
+        }
+      },
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true,
+        Order: withUserSubscription
+          ? {
+              some: {
+                User: {
+                  Subscription: { some: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+          : {
+              every: {
+                User: {
+                  Subscription: { none: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+      }
+    });
+  }
+
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedSymbolProfile[]> {
@@ -89,41 +124,6 @@ export class SymbolProfileService {
       .then((symbolProfiles) => {
         return this.enhanceSymbolProfiles(symbolProfiles);
       });
-  }
-
-  public async getSymbolProfilesByUserSubscription({
-    withUserSubscription = false
-  }: {
-    withUserSubscription?: boolean;
-  }) {
-    return this.prismaService.symbolProfile.findMany({
-      include: {
-        Order: {
-          include: {
-            User: true
-          }
-        }
-      },
-      orderBy: [{ symbol: 'asc' }],
-      where: {
-        isActive: true,
-        Order: withUserSubscription
-          ? {
-              some: {
-                User: {
-                  Subscription: { some: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-          : {
-              every: {
-                User: {
-                  Subscription: { none: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-      }
-    });
   }
 
   public updateSymbolProfile({
