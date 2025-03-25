@@ -569,7 +569,7 @@ export class PortfolioService {
 
       const emergencyFundInCash = emergencyFund
         .minus(
-          this.getEmergencyFundPositionsValueInBaseCurrency({
+          this.getEmergencyFundHoldingsValueInBaseCurrency({
             holdings
           })
         )
@@ -608,8 +608,8 @@ export class PortfolioService {
         userCurrency,
         userId,
         balanceInBaseCurrency: cashDetails.balanceInBaseCurrency,
-        emergencyFundPositionsValueInBaseCurrency:
-          this.getEmergencyFundPositionsValueInBaseCurrency({
+        emergencyFundHoldingsValueInBaseCurrency:
+          this.getEmergencyFundHoldingsValueInBaseCurrency({
             holdings
           })
       });
@@ -1263,7 +1263,11 @@ export class PortfolioService {
         [
           new EmergencyFundSetup(
             this.exchangeRateDataService,
-            userSettings.emergencyFund
+            this.getTotalEmergencyFund({
+              userSettings,
+              emergencyFundHoldingsValueInBaseCurrency:
+                this.getEmergencyFundHoldingsValueInBaseCurrency({ holdings })
+            }).toNumber()
           )
         ],
         userSettings
@@ -1585,7 +1589,7 @@ export class PortfolioService {
     return dividendsByGroup;
   }
 
-  private getEmergencyFundPositionsValueInBaseCurrency({
+  private getEmergencyFundHoldingsValueInBaseCurrency({
     holdings
   }: {
     holdings: PortfolioDetails['holdings'];
@@ -1600,14 +1604,14 @@ export class PortfolioService {
       );
     });
 
-    let valueInBaseCurrencyOfEmergencyFundPositions = new Big(0);
+    let valueInBaseCurrencyOfEmergencyFundHoldings = new Big(0);
 
     for (const { valueInBaseCurrency } of emergencyFundHoldings) {
-      valueInBaseCurrencyOfEmergencyFundPositions =
-        valueInBaseCurrencyOfEmergencyFundPositions.plus(valueInBaseCurrency);
+      valueInBaseCurrencyOfEmergencyFundHoldings =
+        valueInBaseCurrencyOfEmergencyFundHoldings.plus(valueInBaseCurrency);
     }
 
-    return valueInBaseCurrencyOfEmergencyFundPositions.toNumber();
+    return valueInBaseCurrencyOfEmergencyFundHoldings.toNumber();
   }
 
   private getInitialCashPosition({
@@ -1774,7 +1778,7 @@ export class PortfolioService {
 
   private async getSummary({
     balanceInBaseCurrency,
-    emergencyFundPositionsValueInBaseCurrency,
+    emergencyFundHoldingsValueInBaseCurrency,
     filteredValueInBaseCurrency,
     impersonationId,
     portfolioCalculator,
@@ -1782,7 +1786,7 @@ export class PortfolioService {
     userId
   }: {
     balanceInBaseCurrency: number;
-    emergencyFundPositionsValueInBaseCurrency: number;
+    emergencyFundHoldingsValueInBaseCurrency: number;
     filteredValueInBaseCurrency: Big;
     impersonationId: string;
     portfolioCalculator: PortfolioCalculator;
@@ -1827,12 +1831,10 @@ export class PortfolioService {
     const dividendInBaseCurrency =
       await portfolioCalculator.getDividendInBaseCurrency();
 
-    const emergencyFund = new Big(
-      Math.max(
-        emergencyFundPositionsValueInBaseCurrency,
-        (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
-      )
-    );
+    const totalEmergencyFund = this.getTotalEmergencyFund({
+      emergencyFundHoldingsValueInBaseCurrency,
+      userSettings: user.Settings?.settings as UserSettings
+    });
 
     const fees = await portfolioCalculator.getFeesInBaseCurrency();
 
@@ -1858,8 +1860,8 @@ export class PortfolioService {
     }).toNumber();
 
     const cash = new Big(balanceInBaseCurrency)
-      .minus(emergencyFund)
-      .plus(emergencyFundPositionsValueInBaseCurrency)
+      .minus(totalEmergencyFund)
+      .plus(emergencyFundHoldingsValueInBaseCurrency)
       .toNumber();
 
     const committedFunds = new Big(totalBuy).minus(totalSell);
@@ -1928,11 +1930,11 @@ export class PortfolioService {
       currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
       emergencyFund: {
-        assets: emergencyFundPositionsValueInBaseCurrency,
-        cash: emergencyFund
-          .minus(emergencyFundPositionsValueInBaseCurrency)
+        assets: emergencyFundHoldingsValueInBaseCurrency,
+        cash: totalEmergencyFund
+          .minus(emergencyFundHoldingsValueInBaseCurrency)
           .toNumber(),
-        total: emergencyFund.toNumber()
+        total: totalEmergencyFund.toNumber()
       },
       fees: fees.toNumber(),
       filteredValueInBaseCurrency: filteredValueInBaseCurrency.toNumber(),
@@ -1940,7 +1942,7 @@ export class PortfolioService {
         ? filteredValueInBaseCurrency.div(netWorth).toNumber()
         : undefined,
       fireWealth: new Big(currentValueInBaseCurrency)
-        .minus(emergencyFundPositionsValueInBaseCurrency)
+        .minus(emergencyFundHoldingsValueInBaseCurrency)
         .toNumber(),
       grossPerformance: new Big(netPerformance).plus(fees).toNumber(),
       grossPerformanceWithCurrencyEffect: new Big(
@@ -1982,6 +1984,21 @@ export class PortfolioService {
             )
           );
         })
+    );
+  }
+
+  private getTotalEmergencyFund({
+    emergencyFundHoldingsValueInBaseCurrency,
+    userSettings
+  }: {
+    emergencyFundHoldingsValueInBaseCurrency: number;
+    userSettings: UserSettings;
+  }) {
+    return new Big(
+      Math.max(
+        emergencyFundHoldingsValueInBaseCurrency,
+        userSettings?.emergencyFund ?? 0
+      )
     );
   }
 

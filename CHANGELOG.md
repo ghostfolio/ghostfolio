@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
 - Restricted the historical market data gathering to active asset profiles
 
 ## 2.148.0 - 2025-03-24
