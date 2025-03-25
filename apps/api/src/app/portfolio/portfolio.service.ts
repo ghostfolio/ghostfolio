@@ -1263,7 +1263,8 @@ export class PortfolioService {
         [
           new EmergencyFundSetup(
             this.exchangeRateDataService,
-            userSettings.emergencyFund
+            userSettings.emergencyFund ||
+              this.getEmergencyFundPositionsValueInBaseCurrency({ holdings })
           )
         ],
         userSettings
