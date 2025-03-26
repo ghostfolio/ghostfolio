@@ -349,9 +349,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           dataSource: this.data.dataSource,
           symbol: this.data.symbol
         },
-        {
-          ...assetProfileIdentifier
-        }
+        assetProfileIdentifier
       )
       .pipe(
         catchError((error: HttpErrorResponse) => {
@@ -435,7 +433,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       );
     } catch {}
 
-    const assetProfileData: UpdateAssetProfileDto = {
+    const assetProfile: UpdateAssetProfileDto = {
       countries,
       scraperConfiguration,
       sectors,
@@ -452,7 +450,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       await validateObjectForForm({
         classDto: UpdateAssetProfileDto,
         form: this.assetProfileForm,
-        object: assetProfileData
+        object: assetProfile
       });
     } catch (error) {
       console.error(error);
@@ -465,9 +463,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           dataSource: this.data.dataSource,
           symbol: this.data.symbol
         },
-        {
-          ...assetProfileData
-        }
+        assetProfile
       )
       .subscribe(() => {
         this.initialize();
