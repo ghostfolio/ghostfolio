@@ -340,9 +340,7 @@ export class AdminController {
   ): Promise<EnhancedSymbolProfile> {
     return this.adminService.patchAssetProfileData(
       { dataSource, symbol },
-      {
-        ...assetProfile
-      }
+      assetProfile
     );
   }
 
