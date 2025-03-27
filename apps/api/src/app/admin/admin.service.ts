@@ -41,6 +41,7 @@ import {
 import {
   AssetClass,
   AssetSubClass,
+  DataSource,
   Prisma,
   PrismaClient,
   Property,
