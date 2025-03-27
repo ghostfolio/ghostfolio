@@ -120,6 +120,7 @@ export class ExportService {
         ({
           accountId,
           comment,
+          currency,
           date,
           fee,
           id,
@@ -137,7 +138,7 @@ export class ExportService {
             quantity,
             type,
             unitPrice,
-            currency: SymbolProfile.currency,
+            currency: currency ?? SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
             symbol: ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
