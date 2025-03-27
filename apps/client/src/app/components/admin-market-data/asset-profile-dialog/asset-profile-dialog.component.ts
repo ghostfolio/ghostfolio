@@ -34,6 +34,7 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
@@ -79,6 +80,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
+    isActive: [false],
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
       defaultMarketPrice: null,
@@ -227,6 +229,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
+          isActive: this.assetProfile?.isActive,
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
@@ -442,6 +445,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       assetSubClass: this.assetProfileForm.get('assetSubClass').value,
       comment: this.assetProfileForm.get('comment').value || null,
       currency: this.assetProfileForm.get('currency').value,
+      isActive: this.assetProfileForm.get('isActive').value,
       name: this.assetProfileForm.get('name').value,
       url: this.assetProfileForm.get('url').value || null
     };
@@ -521,6 +525,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfileForm.get('currency').value
         });
       });
+  }
+
+  public onToggleIsActive(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.assetProfileForm.get('isActive')?.setValue(true);
+    } else {
+      this.assetProfileForm.get('isActive')?.setValue(false);
+    }
+
+    event.checked === this.assetProfile.isActive
+      ? this.assetProfileForm.get('isActive')?.markAsPristine()
+      : this.assetProfileForm.get('isActive')?.markAsDirty();
+
+    this.changeDetectorRef.detectChanges();
   }
 
   public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {

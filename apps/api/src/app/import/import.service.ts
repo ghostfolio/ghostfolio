@@ -546,6 +546,7 @@ export class ImportService {
           SymbolProfile: {
             currency,
             dataSource,
+            isActive: false,
             symbol,
             activitiesCount: undefined,
             assetClass: undefined,

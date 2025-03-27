@@ -509,7 +509,16 @@
     </form>
   </div>
 
-  <div class="d-flex justify-content-end" mat-dialog-actions>
+  <div class="d-flex" mat-dialog-actions>
+    <mat-checkbox
+      class="gf-spacer"
+      color="primary"
+      [checked]="assetProfile?.isActive ?? false"
+      [disabled]="isEditAssetProfileIdentifierMode"
+      (change)="onToggleIsActive($event)"
+    >
+      <ng-container i18n>Active</ng-container>
+    </mat-checkbox>
     <button i18n mat-button type="button" (click)="onClose()">Cancel</button>
     <button
       color="primary"
