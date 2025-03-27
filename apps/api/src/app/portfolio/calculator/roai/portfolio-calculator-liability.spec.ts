@@ -91,7 +91,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2023-01-01'), // Date in future
-          fee: 0,
+          feeInBaseCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,7 +101,7 @@ describe('PortfolioCalculator', () => {
             symbol: '55196015-1365-4560-aa60-8751ae6d18f8'
           },
           type: 'LIABILITY',
-          unitPrice: 3000
+          unitPriceInBaseCurrency: 3000
         }
       ];
 

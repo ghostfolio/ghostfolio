@@ -91,7 +91,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2022-01-01'),
-          fee: 0,
+          feeInBaseCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,7 +101,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
           },
           type: 'ITEM',
-          unitPrice: 500000
+          unitPriceInBaseCurrency: 500000
         }
       ];
 
