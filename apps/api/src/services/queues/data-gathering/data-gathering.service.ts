@@ -159,7 +159,8 @@ export class DataGatheringService {
     );
 
     if (!assetProfileIdentifiers) {
-      assetProfileIdentifiers = await this.getAllAssetProfileIdentifiers();
+      assetProfileIdentifiers =
+        await this.getAllActiveAssetProfileIdentifiers();
     }
 
     if (assetProfileIdentifiers.length <= 0) {
@@ -296,11 +297,14 @@ export class DataGatheringService {
     );
   }
 
-  public async getAllAssetProfileIdentifiers(): Promise<
+  public async getAllActiveAssetProfileIdentifiers(): Promise<
     AssetProfileIdentifier[]
   > {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }]
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true
+      }
     });
 
     return symbolProfiles
@@ -370,9 +374,11 @@ export class DataGatheringService {
     withUserSubscription?: boolean;
   }): Promise<IDataGatheringItem[]> {
     const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByUserSubscription({
-        withUserSubscription
-      });
+      await this.symbolProfileService.getActiveSymbolProfilesByUserSubscription(
+        {
+          withUserSubscription
+        }
+      );
 
     const assetProfileIdentifiersWithCompleteMarketData =
       await this.getAssetProfileIdentifiersWithCompleteMarketData();
@@ -436,6 +442,9 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          isActive: true
         }
       })
     )

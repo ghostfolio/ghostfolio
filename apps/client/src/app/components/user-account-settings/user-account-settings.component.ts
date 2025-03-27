@@ -24,7 +24,6 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
-import { uniq } from 'lodash';
 import ms from 'ms';
 import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -108,7 +107,7 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
           );
 
           this.locales.push(this.user.settings.locale);
-          this.locales = uniq(this.locales.sort());
+          this.locales = Array.from(new Set(this.locales)).sort();
 
           this.changeDetectorRef.markForCheck();
         }

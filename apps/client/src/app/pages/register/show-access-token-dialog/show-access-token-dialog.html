@@ -5,7 +5,7 @@
   }
 </h1>
 <div class="px-0" mat-dialog-content>
-  <mat-stepper #stepper animationDuration="0ms" linear>
+  <mat-stepper #stepper animationDuration="0ms" [linear]="true">
     <mat-step editable="false" [completed]="isDisclaimerChecked">
       <ng-template i18n matStepLabel>Terms and Conditions</ng-template>
       <div class="pt-2">

@@ -67,11 +67,31 @@ export class UserService {
     return this.prismaService.user.count(args);
   }
 
-  public createAccessToken(password: string, salt: string): string {
+  public createAccessToken({
+    password,
+    salt
+  }: {
+    password: string;
+    salt: string;
+  }): string {
     const hash = createHmac('sha512', salt);
     hash.update(password);
 
     return hash.digest('hex');
+  }
+
+  public generateAccessToken({ userId }: { userId: string }) {
+    const accessToken = this.createAccessToken({
+      password: userId,
+      salt: getRandomString(10)
+    });
+
+    const hashedAccessToken = this.createAccessToken({
+      password: accessToken,
+      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
+    });
+
+    return { accessToken, hashedAccessToken };
   }
 
   public async getUser(
@@ -433,7 +453,7 @@ export class UserService {
       data.provider = 'ANONYMOUS';
     }
 
-    let user = await this.prismaService.user.create({
+    const user = await this.prismaService.user.create({
       data: {
         ...data,
         Account: {
@@ -464,14 +484,11 @@ export class UserService {
     }
 
     if (data.provider === 'ANONYMOUS') {
-      const accessToken = this.createAccessToken(user.id, getRandomString(10));
+      const { accessToken, hashedAccessToken } = this.generateAccessToken({
+        userId: user.id
+      });
 
-      const hashedAccessToken = this.createAccessToken(
-        accessToken,
-        this.configurationService.get('ACCESS_TOKEN_SALT')
-      );
-
-      user = await this.prismaService.user.update({
+      await this.prismaService.user.update({
         data: { accessToken: hashedAccessToken },
         where: { id: user.id }
       });

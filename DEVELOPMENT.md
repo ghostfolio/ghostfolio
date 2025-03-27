@@ -60,6 +60,10 @@ Remove permission in `UserService` using `without()`
 
 Use `@if (user?.settings?.isExperimentalFeatures) {}` in HTML template
 
+## Component Library (_Storybook_)
+
+https://ghostfol.io/development/storybook
+
 ## Git
 
 ### Rebase
