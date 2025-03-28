@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the symbol validation in the _Yahoo Finance_ service (get asset profiles)
 - Refactored `lodash.uniq` with `Array.from(new Set(...))`
 - Refreshed the cryptocurrencies list
+- Upgraded `nestjs` from version `10.4.15` to `11.0.12`
 
 ### Fixed
 
