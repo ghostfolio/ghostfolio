@@ -83,7 +83,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMax(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {
@@ -110,7 +110,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherProfileData(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
     await this.dataGatheringService.addJobsToQueue(
       assetProfileIdentifiers.map(({ dataSource, symbol }) => {

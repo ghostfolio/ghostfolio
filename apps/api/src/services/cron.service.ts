@@ -57,7 +57,7 @@ export class CronService {
   public async runEverySundayAtTwelvePm() {
     if (await this.isDataGatheringEnabled()) {
       const assetProfileIdentifiers =
-        await this.dataGatheringService.getAllAssetProfileIdentifiers();
+        await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
       await this.dataGatheringService.addJobsToQueue(
         assetProfileIdentifiers.map(({ dataSource, symbol }) => {

@@ -239,8 +239,17 @@
                       <span i18n>Impersonate User</span>
                     </span>
                   </button>
-                  <hr class="m-0" />
                 }
+                <button
+                  mat-menu-item
+                  (click)="onGenerateAccessToken(element.id)"
+                >
+                  <span class="align-items-center d-flex">
+                    <ion-icon class="mr-2" name="key-outline" />
+                    <span i18n>Generate Security Token</span>
+                  </span>
+                </button>
+                <hr class="m-0" />
                 <button
                   mat-menu-item
                   [disabled]="element.id === user?.id"

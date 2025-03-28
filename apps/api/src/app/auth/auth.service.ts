@@ -20,10 +20,10 @@ export class AuthService {
   public async validateAnonymousLogin(accessToken: string): Promise<string> {
     return new Promise(async (resolve, reject) => {
       try {
-        const hashedAccessToken = this.userService.createAccessToken(
-          accessToken,
-          this.configurationService.get('ACCESS_TOKEN_SALT')
-        );
+        const hashedAccessToken = this.userService.createAccessToken({
+          password: accessToken,
+          salt: this.configurationService.get('ACCESS_TOKEN_SALT')
+        });
 
         const [user] = await this.userService.users({
           where: { accessToken: hashedAccessToken }

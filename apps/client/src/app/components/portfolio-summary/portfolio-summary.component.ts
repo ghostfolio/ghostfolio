@@ -40,8 +40,8 @@ export class PortfolioSummaryComponent implements OnChanges {
 
   public ngOnChanges() {
     if (this.summary) {
-      if (this.summary.firstOrderDate) {
-        this.timeInMarket = formatDistanceToNow(this.summary.firstOrderDate, {
+      if (this.user.dateOfFirstActivity) {
+        this.timeInMarket = formatDistanceToNow(this.user.dateOfFirstActivity, {
           locale: getDateFnsLocale(this.language)
         });
       } else {

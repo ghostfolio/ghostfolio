@@ -28,6 +28,22 @@ export class ExportService {
   }): Promise<Export> {
     const platformsMap: { [platformId: string]: Platform } = {};
 
+    let { activities } = await this.orderService.getOrders({
+      filters,
+      userCurrency,
+      userId,
+      includeDrafts: true,
+      sortColumn: 'date',
+      sortDirection: 'asc',
+      withExcludedAccounts: true
+    });
+
+    if (activityIds?.length > 0) {
+      activities = activities.filter(({ id }) => {
+        return activityIds.includes(id);
+      });
+    }
+
     const accounts = (
       await this.accountService.accounts({
         include: {
@@ -39,57 +55,55 @@ export class ExportService {
         },
         where: { userId }
       })
-    ).map(
-      ({
-        balance,
-        balances,
-        comment,
-        currency,
-        id,
-        isExcluded,
-        name,
-        Platform: platform,
-        platformId
-      }) => {
-        if (platformId) {
-          platformsMap[platformId] = platform;
-        }
-
-        return {
+    )
+      .filter(({ id }) => {
+        return activities.length > 0
+          ? activities.some(({ accountId }) => {
+              return accountId === id;
+            })
+          : true;
+      })
+      .map(
+        ({
           balance,
-          balances: balances.map(({ date, value }) => {
-            return { date: date.toISOString(), value };
-          }),
+          balances,
           comment,
           currency,
           id,
           isExcluded,
           name,
+          Platform: platform,
           platformId
-        };
-      }
-    );
+        }) => {
+          if (platformId) {
+            platformsMap[platformId] = platform;
+          }
 
-    let { activities } = await this.orderService.getOrders({
-      filters,
-      userCurrency,
-      userId,
-      includeDrafts: true,
-      sortColumn: 'date',
-      sortDirection: 'asc',
-      withExcludedAccounts: true
-    });
-
-    if (activityIds) {
-      activities = activities.filter((activity) => {
-        return activityIds.includes(activity.id);
-      });
-    }
+          return {
+            balance,
+            balances: balances.map(({ date, value }) => {
+              return { date: date.toISOString(), value };
+            }),
+            comment,
+            currency,
+            id,
+            isExcluded,
+            name,
+            platformId
+          };
+        }
+      );
 
     const tags = (await this.tagService.getTagsForUser(userId))
-      .filter(({ isUsed }) => {
-        return isUsed;
-      })
+      .filter(
+        ({ id, isUsed }) =>
+          isUsed &&
+          activities.some((activity) => {
+            return activity.tags.some(({ id: tagId }) => {
+              return tagId === id;
+            });
+          })
+      )
       .map(({ id, name }) => {
         return {
           id,

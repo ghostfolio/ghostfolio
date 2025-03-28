@@ -22,6 +22,7 @@ import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   Access,
+  AccessTokenResponse,
   AccountBalancesResponse,
   Accounts,
   AiPromptResponse,
@@ -529,12 +530,6 @@ export class DataService {
       })
       .pipe(
         map((response) => {
-          if (response.summary?.firstOrderDate) {
-            response.summary.firstOrderDate = parseISO(
-              response.summary.firstOrderDate
-            );
-          }
-
           if (response.holdings) {
             for (const symbol of Object.keys(response.holdings)) {
               response.holdings[symbol].assetClassLabel = translate(
@@ -689,6 +684,13 @@ export class DataService {
 
   public fetchTags() {
     return this.http.get<Tag[]>('/api/v1/tags');
+  }
+
+  public generateAccessToken(aUserId: string) {
+    return this.http.post<AccessTokenResponse>(
+      `/api/v1/user/${aUserId}/access-token`,
+      {}
+    );
   }
 
   public loginAnonymous(accessToken: string) {

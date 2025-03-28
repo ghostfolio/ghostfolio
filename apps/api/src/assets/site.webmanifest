@@ -25,7 +25,7 @@
   "name": "Ghostfolio",
   "orientation": "portrait",
   "short_name": "Ghostfolio",
-  "start_url": "/en/",
+  "start_url": "/${languageCode}/",
   "theme_color": "#FFFFFF",
-  "url": "https://ghostfol.io"
+  "url": "${rootUrl}"
 }
