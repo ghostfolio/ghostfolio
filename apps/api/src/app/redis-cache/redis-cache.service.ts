@@ -19,16 +19,16 @@ export class RedisCacheService {
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
+    const keys = [];
     const prefix = aPrefix;
-    const keyList = [];
 
     this.cache.stores[0].iterator((key) => {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
-        keyList.push(key);
+        keys.push(key);
       }
     });
 
-    return keyList;
+    return keys;
   }
 
   public getPortfolioSnapshotKey({
