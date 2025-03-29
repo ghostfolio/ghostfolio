@@ -1,5 +1,3 @@
-Last updated: June 18, 2022
-
 This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
 
 We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy.
@@ -16,7 +14,7 @@ For the purposes of this Privacy Policy:
 
 - **Account** means a unique account created for You to access our Service or parts of our Service.
 - **Application** means the software program provided by the Company downloaded by You on any electronic device, named Ghostfolio App.
-- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Ghostfolio.
+- **Company** (referred to as either "the Company", "We", "Us" or "Our" in this Agreement) refers to Ghostfolio LLC.
 - **Country** refers to: Switzerland
 - **Device** means any device that can access the Service such as a computer, a cellphone or a digital tablet.
 - **Personal Data** is any information that relates to an identified or identifiable individual.
@@ -78,3 +76,5 @@ You are advised to review this Privacy Policy periodically for any changes. Chan
 ## Contact Us
 
 If you have any questions about this Privacy Policy, You can contact us [here](https://ghostfol.io/en/about).
+
+Date of Last Revision: March 29, 2025

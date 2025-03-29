@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the terms of service for the _Ghostfolio_ SaaS (cloud)
+
 ### Changed
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets

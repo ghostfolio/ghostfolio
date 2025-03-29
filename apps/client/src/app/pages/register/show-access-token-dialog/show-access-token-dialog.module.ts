@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatStepperModule } from '@angular/material/stepper';
+import { RouterModule } from '@angular/router';
 
 import { ShowAccessTokenDialog } from './show-access-token-dialog.component';
 
@@ -25,6 +26,7 @@ import { ShowAccessTokenDialog } from './show-access-token-dialog.component';
     MatInputModule,
     MatStepperModule,
     ReactiveFormsModule,
+    RouterModule,
     TextFieldModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
