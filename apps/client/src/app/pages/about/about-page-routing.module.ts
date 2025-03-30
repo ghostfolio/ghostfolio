@@ -44,6 +44,13 @@ const routes: Routes = [
           import('./privacy-policy/privacy-policy-page.module').then(
             (m) => m.PrivacyPolicyPageModule
           )
+      },
+      {
+        path: paths.termsOfService,
+        loadChildren: () =>
+          import('./terms-of-service/terms-of-service-page.module').then(
+            (m) => m.TermsOfServicePageModule
+          )
       }
     ],
     component: AboutPageComponent,
