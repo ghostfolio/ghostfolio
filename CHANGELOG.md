@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support for changing the asset profile identifier (`dataSource` and `symbol`) in the asset profile details dialog of the admin control panel (experimental)
+
 ### Changed
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
