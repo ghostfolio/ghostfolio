@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
 - Restricted the historical market data gathering to active asset profiles
+- Upgraded `Nx` from version `20.5.0` to `20.6.4`
 
 ## 2.148.0 - 2025-03-24
 
