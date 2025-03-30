@@ -7,5 +7,6 @@ export const paths = {
   pricing: $localize`pricing`,
   privacyPolicy: $localize`privacy-policy`,
   register: $localize`register`,
-  resources: $localize`resources`
+  resources: $localize`resources`,
+  termsOfService: $localize`terms-of-service`
 };

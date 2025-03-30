@@ -60,17 +60,26 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   standalone: false
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
+
   @ViewChild('assetProfileFormElement')
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
   public assetProfileClass: string;
+
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };
   });
+
   public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
+
   public assetProfile: AdminMarketDataDetails['assetProfile'];
+
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -94,6 +103,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     symbolMapping: '',
     url: ''
   });
+
   public assetProfileIdentifierForm = this.formBuilder.group(
     {
       assetProfileIdentifier: new FormControl<AssetProfileIdentifier>(
@@ -102,20 +112,26 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       )
     },
     {
-      validators: (control) => this.isNewSymbolValid(control)
+      validators: (control) => {
+        return this.isNewSymbolValid(control);
+      }
     }
   );
+
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
+
   public countries: {
     [code: string]: { name: string; value: number };
   };
+
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
   public isEditAssetProfileIdentifierMode = false;
   public marketDataItems: MarketData[] = [];
+
   public modeValues = [
     {
       value: 'lazy',
@@ -126,16 +142,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
     }
   ];
+
   public scraperConfiguationIsExpanded = signal(false);
+
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+
   public user: User;
 
-  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
-    new Date(),
-    DATE_FORMAT
-  )};123.45`;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -150,6 +165,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {}
+
+  public get canEditAssetProfileIdentifier() {
+    return (
+      this.assetProfile?.assetClass &&
+      !['MANUAL'].includes(this.assetProfile?.dataSource) &&
+      this.user?.settings?.isExperimentalFeatures
+    );
+  }
+
+  public get canSaveAssetProfileIdentifier() {
+    return !this.assetProfileForm.dirty;
+  }
 
   public ngOnInit() {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
@@ -254,22 +281,12 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public get isAssetProfileIdentifierEditable() {
-    return !this.assetProfileForm.dirty;
-  }
-
-  public get isAssetProfileIdentifierEditButtonVisible() {
-    return this.assetProfile?.dataSource !== 'MANUAL';
-  }
-
   public onCancelEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = false;
 
     this.assetProfileForm.enable();
 
     this.assetProfileIdentifierForm.reset();
-
-    this.changeDetectorRef.markForCheck();
   }
 
   public onClose() {
@@ -322,70 +339,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.isEditAssetProfileIdentifierMode = true;
 
     this.assetProfileForm.disable();
-
-    this.changeDetectorRef.markForCheck();
-  }
-
-  public async onSubmitAssetProfileIdentifierForm() {
-    const assetProfileIdentifier: UpdateAssetProfileDto = {
-      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        .value.dataSource,
-      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        .value.symbol
-    };
-
-    try {
-      await validateObjectForForm({
-        classDto: UpdateAssetProfileDto,
-        form: this.assetProfileIdentifierForm,
-        object: assetProfileIdentifier
-      });
-    } catch (error) {
-      console.error(error);
-
-      return;
-    }
-
-    this.adminService
-      .patchAssetProfile(
-        {
-          dataSource: this.data.dataSource,
-          symbol: this.data.symbol
-        },
-        assetProfileIdentifier
-      )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === StatusCodes.CONFLICT) {
-            this.snackBar.open(
-              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
-          } else {
-            this.snackBar.open(
-              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
-          }
-
-          return EMPTY;
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe(() => {
-        const newAssetProfileIdentifier = {
-          dataSource: assetProfileIdentifier.dataSource,
-          symbol: assetProfileIdentifier.symbol
-        };
-
-        this.dialogRef.close(newAssetProfileIdentifier);
-      });
   }
 
   public async onSubmitAssetProfileForm() {
@@ -471,6 +424,68 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       )
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public async onSubmitAssetProfileIdentifierForm() {
+    const assetProfileIdentifier: UpdateAssetProfileDto = {
+      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.dataSource,
+      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.symbol
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileIdentifierForm,
+        object: assetProfileIdentifier
+      });
+    } catch (error) {
+      console.error(error);
+
+      return;
+    }
+
+    this.adminService
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        assetProfileIdentifier
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === StatusCodes.CONFLICT) {
+            this.snackBar.open(
+              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          } else {
+            this.snackBar.open(
+              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          }
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(() => {
+        const newAssetProfileIdentifier = {
+          dataSource: assetProfileIdentifier.dataSource,
+          symbol: assetProfileIdentifier.symbol
+        };
+
+        this.dialogRef.close(newAssetProfileIdentifier);
       });
   }
 

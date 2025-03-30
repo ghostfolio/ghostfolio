@@ -5,12 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.149.0 - 2025-03-30
+
+### Added
+
+- Added support for changing the asset profile identifier (`dataSource` and `symbol`) in the asset profile details dialog of the admin control panel (experimental)
+- Set up the terms of service for the _Ghostfolio_ SaaS (cloud)
 
 ### Changed
 
 - Improved the static portfolio analysis rule: Emergency fund setup by supporting assets
 - Restricted the historical market data gathering to active asset profiles
+- Improved the language localization for German (`de`)
+- Upgraded `Nx` from version `20.5.0` to `20.6.4`
 
 ## 2.148.0 - 2025-03-24
 
