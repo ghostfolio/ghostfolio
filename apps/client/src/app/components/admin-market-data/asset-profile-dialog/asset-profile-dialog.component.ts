@@ -59,6 +59,11 @@ import { AssetProfileDialogParams } from './interfaces/interfaces';
   standalone: false
 })
 export class AssetProfileDialog implements OnDestroy, OnInit {
+  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
+    new Date(),
+    DATE_FORMAT
+  )};123.45`;
+
   @ViewChild('assetProfileFormElement')
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
@@ -130,10 +135,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   };
   public user: User;
 
-  private static readonly HISTORICAL_DATA_TEMPLATE = `date;marketPrice\n${format(
-    new Date(),
-    DATE_FORMAT
-  )};123.45`;
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
@@ -148,6 +149,18 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private snackBar: MatSnackBar,
     private userService: UserService
   ) {}
+
+  public get canEditAssetProfileIdentifier() {
+    return (
+      this.assetProfile?.assetClass &&
+      !['MANUAL'].includes(this.assetProfile?.dataSource) &&
+      this.user?.settings?.isExperimentalFeatures
+    );
+  }
+
+  public get canSaveAssetProfileIdentifier() {
+    return !this.assetProfileForm.dirty;
+  }
 
   public ngOnInit() {
     const { benchmarks, currencies } = this.dataService.fetchInfo();
@@ -251,14 +264,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public get isAssetProfileIdentifierEditable() {
-    return !this.assetProfileForm.dirty;
-  }
-
-  public get isAssetProfileIdentifierEditButtonVisible() {
-    return this.assetProfile?.dataSource !== 'MANUAL';
-  }
-
   public onCancelEditAssetProfileIdentifierMode() {
     this.isEditAssetProfileIdentifierMode = false;
 
@@ -321,68 +326,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.assetProfileForm.disable();
 
     this.changeDetectorRef.markForCheck();
-  }
-
-  public async onSubmitAssetProfileIdentifierForm() {
-    const assetProfileIdentifier: UpdateAssetProfileDto = {
-      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        .value.dataSource,
-      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
-        .value.symbol
-    };
-
-    try {
-      await validateObjectForForm({
-        classDto: UpdateAssetProfileDto,
-        form: this.assetProfileIdentifierForm,
-        object: assetProfileIdentifier
-      });
-    } catch (error) {
-      console.error(error);
-
-      return;
-    }
-
-    this.adminService
-      .patchAssetProfile(
-        {
-          dataSource: this.data.dataSource,
-          symbol: this.data.symbol
-        },
-        assetProfileIdentifier
-      )
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === StatusCodes.CONFLICT) {
-            this.snackBar.open(
-              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
-          } else {
-            this.snackBar.open(
-              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
-              undefined,
-              {
-                duration: ms('3 seconds')
-              }
-            );
-          }
-
-          return EMPTY;
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe(() => {
-        const newAssetProfileIdentifier = {
-          dataSource: assetProfileIdentifier.dataSource,
-          symbol: assetProfileIdentifier.symbol
-        };
-
-        this.dialogRef.close(newAssetProfileIdentifier);
-      });
   }
 
   public async onSubmitAssetProfileForm() {
@@ -467,6 +410,68 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       )
       .subscribe(() => {
         this.initialize();
+      });
+  }
+
+  public async onSubmitAssetProfileIdentifierForm() {
+    const assetProfileIdentifier: UpdateAssetProfileDto = {
+      dataSource: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.dataSource,
+      symbol: this.assetProfileIdentifierForm.get('assetProfileIdentifier')
+        .value.symbol
+    };
+
+    try {
+      await validateObjectForForm({
+        classDto: UpdateAssetProfileDto,
+        form: this.assetProfileIdentifierForm,
+        object: assetProfileIdentifier
+      });
+    } catch (error) {
+      console.error(error);
+
+      return;
+    }
+
+    this.adminService
+      .patchAssetProfile(
+        {
+          dataSource: this.data.dataSource,
+          symbol: this.data.symbol
+        },
+        assetProfileIdentifier
+      )
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === StatusCodes.CONFLICT) {
+            this.snackBar.open(
+              $localize`${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}) is already in use.`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          } else {
+            this.snackBar.open(
+              $localize`An error occurred while updating to ${assetProfileIdentifier.symbol} (${assetProfileIdentifier.dataSource}).`,
+              undefined,
+              {
+                duration: ms('3 seconds')
+              }
+            );
+          }
+
+          return EMPTY;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      )
+      .subscribe(() => {
+        const newAssetProfileIdentifier = {
+          dataSource: assetProfileIdentifier.dataSource,
+          symbol: assetProfileIdentifier.symbol
+        };
+
+        this.dialogRef.close(newAssetProfileIdentifier);
       });
   }
 

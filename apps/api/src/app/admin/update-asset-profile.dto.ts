@@ -19,8 +19,8 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   comment?: string;
 
   @IsArray()
@@ -35,8 +35,8 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   dataSource?: DataSource;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   name?: string;
 
   @IsObject()
@@ -47,8 +47,8 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   sectors?: Prisma.InputJsonArray;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   symbol?: string;
 
   @IsObject()
