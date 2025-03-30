@@ -5,7 +5,12 @@
   }
 </h1>
 <div class="px-0" mat-dialog-content>
-  <mat-stepper #stepper animationDuration="0ms" [linear]="true">
+  <mat-stepper
+    #stepper
+    animationDuration="0ms"
+    [linear]="true"
+    [orientation]="data.deviceType === 'mobile' ? 'vertical' : 'horizontal'"
+  >
     <mat-step editable="false" [completed]="isDisclaimerChecked">
       <ng-template i18n matStepLabel>Terms and Conditions</ng-template>
       <div class="pt-2">
@@ -15,14 +20,28 @@
         >
       </div>
       <mat-checkbox
-        class="pt-2"
+        class="mt-2"
         color="primary"
         (change)="onChangeDislaimerChecked()"
       >
         <ng-container i18n
           >I understand that if I lose my security token, I cannot recover my
-          account.</ng-container
+          account</ng-container
         >
+        @if (data.needsToAcceptTermsOfService) {
+          <ng-container>&nbsp;</ng-container>
+          <ng-container i18n
+            >and I agree to the
+            <a
+              class="font-weight-bold"
+              target="_blank"
+              [routerLink]="routerLinkAboutTermsOfService"
+              >Terms of Service</a
+            >.</ng-container
+          >
+        } @else {
+          <ng-container>.</ng-container>
+        }
       </mat-checkbox>
       <div class="mt-3" mat-dialog-actions>
         <div class="flex-grow-1">
@@ -35,7 +54,8 @@
             [disabled]="!isDisclaimerChecked"
             (click)="createAccount()"
           >
-            <ng-container i18n>Continue</ng-container>
+            <span i18n>Continue</span>
+            <ion-icon class="ml-1" name="arrow-forward-outline" />
           </button>
         </div>
       </div>
@@ -78,8 +98,7 @@
             [disabled]="isCreateAccountButtonDisabled"
             [mat-dialog-close]="authToken"
           >
-            <span i18n>Create Account</span>
-            <ion-icon class="ml-1" name="arrow-forward-outline" />
+            <ng-container i18n>Create Account</ng-container>
           </button>
         </div>
       </div>
