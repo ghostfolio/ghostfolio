@@ -41,7 +41,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         this.tabs = [
           {
-            iconName: 'reader-outline',
+            iconName: 'information-circle-outline',
             label: $localize`About`,
             path: ['/' + $localize`about`]
           },
@@ -53,7 +53,8 @@ export class AboutPageComponent implements OnDestroy, OnInit {
           {
             iconName: 'ribbon-outline',
             label: $localize`License`,
-            path: ['/' + $localize`about`, $localize`license`]
+            path: ['/' + $localize`about`, $localize`license`],
+            showCondition: !this.hasPermissionForSubscription
           }
         ];
 
@@ -64,6 +65,14 @@ export class AboutPageComponent implements OnDestroy, OnInit {
             path: ['/' + $localize`about`, $localize`privacy-policy`],
             showCondition: this.hasPermissionForSubscription
           });
+
+          this.tabs.push({
+            iconName: 'document-text-outline',
+            label: $localize`Terms of Service`,
+            path: ['/' + $localize`about`, $localize`terms-of-service`],
+            showCondition: this.hasPermissionForSubscription
+          });
+
           this.user = state.user;
 
           this.changeDetectorRef.markForCheck();

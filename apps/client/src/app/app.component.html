@@ -84,9 +84,11 @@
                 >
               </li>
             }
-            <li>
-              <a i18n [routerLink]="routerLinkAboutLicense">License</a>
-            </li>
+            @if (!hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="routerLinkAboutLicense">License</a>
+              </li>
+            }
             @if (hasPermissionForStatistics) {
               <li>
                 <a [routerLink]="['/open']">Open Startup</a>
@@ -101,6 +103,13 @@
               <li>
                 <a i18n [routerLink]="routerLinkAboutPrivacyPolicy"
                   >Privacy Policy</a
+                >
+              </li>
+            }
+            @if (hasPermissionForSubscription) {
+              <li>
+                <a i18n [routerLink]="routerLinkAboutTermsOfService"
+                  >Terms of Service</a
                 >
               </li>
             }
