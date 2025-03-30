@@ -1,7 +1,7 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
-import KeyvRedis, { Keyv } from '@keyv/redis';
+import { createKeyv } from '@keyv/redis';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 
@@ -10,7 +10,7 @@ import { RedisCacheService } from './redis-cache.service';
 @Module({
   exports: [RedisCacheService],
   imports: [
-    CacheModule.registerAsync<Keyv>({
+    CacheModule.registerAsync({
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: async (configurationService: ConfigurationService) => {
@@ -19,14 +19,12 @@ import { RedisCacheService } from './redis-cache.service';
         );
 
         return {
-          store: new Keyv({
-            store: new KeyvRedis(
+          stores: [
+            createKeyv(
               `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
-            ),
-            ttl: configurationService.get('CACHE_TTL'),
-            useKeyPrefix: false
-          })
-        } as Keyv;
+            )
+          ]
+        };
       }
     }),
     ConfigurationModule

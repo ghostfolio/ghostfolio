@@ -22,11 +22,11 @@ export class RedisCacheService {
     const keys = [];
     const prefix = aPrefix;
 
-    this.cache.stores[0].iterator((key) => {
+    for await (const [key] of this.cache.stores[0].iterator({})) {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
         keys.push(key);
       }
-    });
+    }
 
     return keys;
   }
