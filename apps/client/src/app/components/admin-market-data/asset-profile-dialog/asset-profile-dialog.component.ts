@@ -68,13 +68,17 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   assetProfileFormElement: ElementRef<HTMLFormElement>;
 
   public assetProfileClass: string;
+
   public assetClasses = Object.keys(AssetClass).map((assetClass) => {
     return { id: assetClass, label: translate(assetClass) };
   });
+
   public assetSubClasses = Object.keys(AssetSubClass).map((assetSubClass) => {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
+
   public assetProfile: AdminMarketDataDetails['assetProfile'];
+
   public assetProfileForm = this.formBuilder.group({
     assetClass: new FormControl<AssetClass>(undefined),
     assetSubClass: new FormControl<AssetSubClass>(undefined),
@@ -97,6 +101,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     symbolMapping: '',
     url: ''
   });
+
   public assetProfileIdentifierForm = this.formBuilder.group(
     {
       assetProfileIdentifier: new FormControl<AssetProfileIdentifier>(
@@ -105,20 +110,26 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       )
     },
     {
-      validators: (control) => this.isNewSymbolValid(control)
+      validators: (control) => {
+        return this.isNewSymbolValid(control);
+      }
     }
   );
+
   public assetProfileSubClass: string;
   public benchmarks: Partial<SymbolProfile>[];
+
   public countries: {
     [code: string]: { name: string; value: number };
   };
+
   public currencies: string[] = [];
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
   public isEditAssetProfileIdentifierMode = false;
   public marketDataItems: MarketData[] = [];
+
   public modeValues = [
     {
       value: 'lazy',
@@ -129,10 +140,13 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       viewValue: $localize`Instant` + ' (' + $localize`real-time` + ')'
     }
   ];
+
   public scraperConfiguationIsExpanded = signal(false);
+
   public sectors: {
     [name: string]: { name: string; value: number };
   };
+
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
@@ -270,8 +284,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.assetProfileForm.enable();
 
     this.assetProfileIdentifierForm.reset();
-
-    this.changeDetectorRef.markForCheck();
   }
 
   public onClose() {
@@ -324,8 +336,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     this.isEditAssetProfileIdentifierMode = true;
 
     this.assetProfileForm.disable();
-
-    this.changeDetectorRef.markForCheck();
   }
 
   public async onSubmitAssetProfileForm() {
