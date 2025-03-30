@@ -554,8 +554,6 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     } else {
       this.assetProfileForm.get('isActive')?.markAsDirty();
     }
-
-    this.changeDetectorRef.detectChanges();
   }
 
   public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {
