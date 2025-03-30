@@ -534,9 +534,11 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       this.assetProfileForm.get('isActive')?.setValue(false);
     }
 
-    event.checked === this.assetProfile.isActive
-      ? this.assetProfileForm.get('isActive')?.markAsPristine()
-      : this.assetProfileForm.get('isActive')?.markAsDirty();
+    if (event.checked === this.assetProfile.isActive) {
+      this.assetProfileForm.get('isActive')?.markAsPristine();
+    } else {
+      this.assetProfileForm.get('isActive')?.markAsDirty();
+    }
 
     this.changeDetectorRef.detectChanges();
   }
