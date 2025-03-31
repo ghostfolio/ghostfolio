@@ -27,12 +27,12 @@ export class CreateOrderDto {
   @IsString()
   accountId?: string;
 
-  @IsOptional()
   @IsEnum(AssetClass, { each: true })
+  @IsOptional()
   assetClass?: AssetClass;
 
-  @IsOptional()
   @IsEnum(AssetSubClass, { each: true })
+  @IsOptional()
   assetSubClass?: AssetSubClass;
 
   @IsOptional()
@@ -49,8 +49,8 @@ export class CreateOrderDto {
   @IsOptional()
   customCurrency?: string;
 
-  @IsOptional()
   @IsEnum(DataSource, { each: true })
+  @IsOptional()
   dataSource?: DataSource;
 
   @IsISO8601()
@@ -60,6 +60,9 @@ export class CreateOrderDto {
   @IsNumber()
   @Min(0)
   fee: number;
+
+  @IsBoolean()
+  isActive: boolean;
 
   @IsNumber()
   @Min(0)
