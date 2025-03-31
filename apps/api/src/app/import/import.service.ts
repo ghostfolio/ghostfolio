@@ -526,7 +526,8 @@ export class ImportService {
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === symbol &&
             activity.type === type &&
-            activity.unitPrice === unitPrice
+            activity.unitPrice === unitPrice &&
+            activity.comment === comment
           );
         });
 
