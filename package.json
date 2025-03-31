@@ -176,7 +176,7 @@
     "@types/cache-manager": "4.0.6",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.5.13",
-    "@types/lodash": "4.17.7",
+    "@types/lodash": "4.17.16",
     "@types/node": "20.14.10",
     "@types/papaparse": "5.3.7",
     "@types/passport-google-oauth20": "2.0.16",
