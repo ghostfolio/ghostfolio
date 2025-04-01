@@ -89,7 +89,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
-    isActive: [false],
+    isActive: [true],
     name: ['', Validators.required],
     scraperConfiguration: this.formBuilder.group({
       defaultMarketPrice: null,
@@ -542,14 +542,14 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       });
   }
 
-  public onToggleIsActive(event: MatCheckboxChange) {
-    if (event.checked) {
+  public onToggleIsActive({ checked }: MatCheckboxChange) {
+    if (checked) {
       this.assetProfileForm.get('isActive')?.setValue(true);
     } else {
       this.assetProfileForm.get('isActive')?.setValue(false);
     }
 
-    if (event.checked === this.assetProfile.isActive) {
+    if (checked === this.assetProfile.isActive) {
       this.assetProfileForm.get('isActive')?.markAsPristine();
     } else {
       this.assetProfileForm.get('isActive')?.markAsDirty();
