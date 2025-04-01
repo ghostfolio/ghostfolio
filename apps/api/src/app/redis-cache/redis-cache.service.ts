@@ -19,7 +19,7 @@ export class RedisCacheService {
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
-    const keys = [];
+    const keys: string[] = [];
     const prefix = aPrefix;
 
     for await (const [key] of this.cache.stores[0].iterator({})) {

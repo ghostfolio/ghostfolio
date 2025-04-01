@@ -23,7 +23,8 @@ import { RedisCacheService } from './redis-cache.service';
             createKeyv(
               `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
             )
-          ]
+          ],
+          ttl: configurationService.get('CACHE_TTL')
         };
       }
     }),
