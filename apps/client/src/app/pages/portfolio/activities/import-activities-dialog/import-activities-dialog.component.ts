@@ -271,6 +271,8 @@ export class ImportActivitiesDialog implements OnDestroy {
           }
 
           content.activities = content.activities.map((activity) => {
+            activity.isActive = true;
+
             if (activity.id) {
               delete activity.id;
             }
