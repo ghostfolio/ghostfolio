@@ -85,7 +85,8 @@ export class RedisCacheService {
     const keys = await this.getKeys(
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
-    this.cache.mdel(keys);
+
+    return this.cache.mdel(keys);
   }
 
   public async reset() {
