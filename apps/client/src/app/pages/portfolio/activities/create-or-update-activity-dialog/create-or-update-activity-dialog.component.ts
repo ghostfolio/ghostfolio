@@ -437,6 +437,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       date: this.activityForm.get('date').value,
       dataSource: this.activityForm.get('dataSource').value,
       fee: this.activityForm.get('fee').value,
+      isActive: true,
       quantity: this.activityForm.get('quantity').value,
       symbol:
         (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(
