@@ -199,10 +199,7 @@ export abstract class PortfolioCalculator {
     for (const { currency, dataSource, symbol } of transactionPoints[
       firstIndex - 1
     ].items) {
-      dataGatheringItems.push({
-        dataSource,
-        symbol
-      });
+      dataGatheringItems.push({ dataSource, symbol });
 
       currencies[symbol] = currency;
     }
@@ -231,17 +228,12 @@ export abstract class PortfolioCalculator {
       values: marketSymbols
     } = await this.currentRateService.getValues({
       dataGatheringItems,
-      dateQuery: {
-        gte: this.startDate,
-        lt: this.endDate
-      }
+      dateQuery: { gte: this.startDate, lt: this.endDate }
     });
 
     this.dataProviderInfos = dataProviderInfos;
 
-    const marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    } = {};
+    const marketSymbolMap: { [date: string]: { [symbol: string]: Big } } = {};
 
     for (const marketSymbol of marketSymbols) {
       const date = format(marketSymbol.date, DATE_FORMAT);
@@ -1111,9 +1103,7 @@ export abstract class PortfolioCalculator {
     chartDateMap: { [date: string]: boolean };
     end: Date;
     exchangeRates: { [dateString: string]: number };
-    marketSymbolMap: {
-      [date: string]: { [symbol: string]: Big };
-    };
+    marketSymbolMap: { [date: string]: { [symbol: string]: Big } };
     start: Date;
   } & AssetProfileIdentifier): SymbolMetrics;
 
