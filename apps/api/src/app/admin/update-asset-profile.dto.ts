@@ -1,6 +1,12 @@
 import { IsCurrencyCode } from '@ghostfolio/api/validators/is-currency-code';
 
-import { AssetClass, AssetSubClass, Prisma, Tag } from '@prisma/client';
+import {
+  AssetClass,
+  AssetSubClass,
+  DataSource,
+  Prisma,
+  Tag
+} from '@prisma/client';
 import {
   IsArray,
   IsEnum,
@@ -19,8 +25,8 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   assetSubClass?: AssetSubClass;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   comment?: string;
 
   @IsArray()
@@ -31,8 +37,12 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   currency?: string;
 
-  @IsString()
+  @IsEnum(DataSource, { each: true })
   @IsOptional()
+  dataSource?: DataSource;
+
+  @IsOptional()
+  @IsString()
   name?: string;
 
   @IsArray()
@@ -50,6 +60,10 @@ export class UpdateAssetProfileDto {
   @IsArray()
   @IsOptional()
   sectors?: Prisma.InputJsonArray;
+
+  @IsOptional()
+  @IsString()
+  symbol?: string;
 
   @IsObject()
   @IsOptional()

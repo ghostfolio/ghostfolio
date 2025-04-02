@@ -11,11 +11,14 @@ import { Injectable } from '@nestjs/common';
 
 import { OrderService } from '../../order/order.service';
 import { CPRPortfolioCalculator } from './constantPortfolioReturn/portfolio-calculator';
-import { MWRPortfolioCalculator } from './mwr/portfolio-calculator';
+import { MwrPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
+import { RoaiPortfolioCalculator } from './roai/portfolio-calculator';
+import { TwrPortfolioCalculator } from './twr/portfolio-calculator';
 
 export enum PerformanceCalculationType {
   MWR = 'MWR', // Money-Weighted Rate of Return
+  ROAI = 'ROAI', // Return on Average Investment
   TWR = 'TWR', // Time-Weighted Rate of Return
   CPR = 'CPR' // Constant Portfolio Rate of Return
 }
@@ -49,7 +52,20 @@ export class PortfolioCalculatorFactory {
   }): PortfolioCalculator {
     switch (calculationType) {
       case PerformanceCalculationType.MWR:
-        return new MWRPortfolioCalculator({
+        return new MwrPortfolioCalculator({
+          accountBalanceItems,
+          activities,
+          currency,
+          filters,
+          userId,
+          configurationService: this.configurationService,
+          currentRateService: this.currentRateService,
+          exchangeRateDataService: this.exchangeRateDataService,
+          portfolioSnapshotService: this.portfolioSnapshotService,
+          redisCacheService: this.redisCacheService
+        });
+      case PerformanceCalculationType.ROAI:
+        return new RoaiPortfolioCalculator({
           accountBalanceItems,
           activities,
           currency,

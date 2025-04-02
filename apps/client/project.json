@@ -193,9 +193,6 @@
             "command": "shx cp apps/client/src/assets/robots.txt dist/apps/client"
           },
           {
-            "command": "shx cp apps/client/src/assets/site.webmanifest dist/apps/client"
-          },
-          {
             "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
           },
           {

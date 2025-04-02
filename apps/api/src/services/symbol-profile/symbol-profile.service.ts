@@ -41,6 +41,77 @@ export class SymbolProfileService {
     });
   }
 
+  public async getActiveSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
+    return this.prismaService.symbolProfile.findMany({
+      include: {
+        Order: {
+          include: {
+            User: true
+          }
+        }
+      },
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true,
+        Order: withUserSubscription
+          ? {
+              some: {
+                User: {
+                  Subscription: { some: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+          : {
+              every: {
+                User: {
+                  Subscription: { none: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+      }
+    });
+  }
+
+  @LogPerformance
+  public async getActiveSymbolProfilesByUserSubscription({
+    withUserSubscription = false
+  }: {
+    withUserSubscription?: boolean;
+  }) {
+    return this.prismaService.symbolProfile.findMany({
+      include: {
+        Order: {
+          include: {
+            User: true
+          }
+        }
+      },
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true,
+        Order: withUserSubscription
+          ? {
+              some: {
+                User: {
+                  Subscription: { some: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+          : {
+              every: {
+                User: {
+                  Subscription: { none: { expiresAt: { gt: new Date() } } }
+                }
+              }
+            }
+      }
+    });
+  }
+
   @LogPerformance
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
@@ -100,57 +171,43 @@ export class SymbolProfileService {
       });
   }
 
-  public async getSymbolProfilesByUserSubscription({
-    withUserSubscription = false
-  }: {
-    withUserSubscription?: boolean;
-  }) {
-    return this.prismaService.symbolProfile.findMany({
-      include: {
-        Order: {
-          include: {
-            User: true
-          }
-        }
+  public updateAssetProfileIdentifier(
+    oldAssetProfileIdentifier: AssetProfileIdentifier,
+    newAssetProfileIdentifier: AssetProfileIdentifier
+  ) {
+    return this.prismaService.symbolProfile.update({
+      data: {
+        dataSource: newAssetProfileIdentifier.dataSource,
+        symbol: newAssetProfileIdentifier.symbol
       },
-      orderBy: [{ symbol: 'asc' }],
       where: {
-        Order: withUserSubscription
-          ? {
-              some: {
-                User: {
-                  Subscription: { some: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-          : {
-              every: {
-                User: {
-                  Subscription: { none: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
+        dataSource_symbol: {
+          dataSource: oldAssetProfileIdentifier.dataSource,
+          symbol: oldAssetProfileIdentifier.symbol
+        }
       }
     });
   }
 
-  public updateSymbolProfile({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    holdings,
-    name,
-    tags,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    SymbolProfileOverrides,
-    url
-  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
+  public updateSymbolProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
+      comment,
+      countries,
+      currency,
+      holdings,
+      isActive,
+      name,
+      tags,
+      scraperConfiguration,
+      sectors,
+      symbolMapping,
+      SymbolProfileOverrides,
+      url
+    }: Prisma.SymbolProfileUpdateInput
+  ) {
     return this.prismaService.symbolProfile.update({
       data: {
         assetClass,
@@ -159,6 +216,7 @@ export class SymbolProfileService {
         countries,
         currency,
         holdings,
+        isActive,
         name,
         tags,
         scraperConfiguration,

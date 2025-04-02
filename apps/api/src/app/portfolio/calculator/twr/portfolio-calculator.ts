@@ -1,133 +1,23 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
-import { PortfolioOrderItem } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-order-item.interface';
-import { getFactor } from '@ghostfolio/api/helper/portfolio.helper';
-import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
-import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
-import { DateRange } from '@ghostfolio/common/types';
+import { PortfolioSnapshot } from '@ghostfolio/common/models';
 
-import { Logger } from '@nestjs/common';
-import { Big } from 'big.js';
-import { addMilliseconds, differenceInDays, format, isBefore } from 'date-fns';
-import { cloneDeep, sortBy } from 'lodash';
-
-export class TWRPortfolioCalculator extends PortfolioCalculator {
-  private chartDates: string[];
-
-  protected calculateOverallPerformance(
-    positions: TimelinePosition[]
-  ): PortfolioSnapshot {
-    let currentValueInBaseCurrency = new Big(0);
-    let grossPerformance = new Big(0);
-    let grossPerformanceWithCurrencyEffect = new Big(0);
-    let hasErrors = false;
-    let netPerformance = new Big(0);
-    let totalFeesWithCurrencyEffect = new Big(0);
-    const totalInterestWithCurrencyEffect = new Big(0);
-    let totalInvestment = new Big(0);
-    let totalInvestmentWithCurrencyEffect = new Big(0);
-    let totalTimeWeightedInvestment = new Big(0);
-    let totalTimeWeightedInvestmentWithCurrencyEffect = new Big(0);
-
-    for (const currentPosition of positions) {
-      if (currentPosition.feeInBaseCurrency) {
-        totalFeesWithCurrencyEffect = totalFeesWithCurrencyEffect.plus(
-          currentPosition.feeInBaseCurrency
-        );
-      }
-
-      if (currentPosition.valueInBaseCurrency) {
-        currentValueInBaseCurrency = currentValueInBaseCurrency.plus(
-          currentPosition.valueInBaseCurrency
-        );
-      } else {
-        hasErrors = true;
-      }
-
-      if (currentPosition.investment) {
-        totalInvestment = totalInvestment.plus(currentPosition.investment);
-
-        totalInvestmentWithCurrencyEffect =
-          totalInvestmentWithCurrencyEffect.plus(
-            currentPosition.investmentWithCurrencyEffect
-          );
-      } else {
-        hasErrors = true;
-      }
-
-      if (currentPosition.grossPerformance) {
-        grossPerformance = grossPerformance.plus(
-          currentPosition.grossPerformance
-        );
-
-        grossPerformanceWithCurrencyEffect =
-          grossPerformanceWithCurrencyEffect.plus(
-            currentPosition.grossPerformanceWithCurrencyEffect
-          );
-
-        netPerformance = netPerformance.plus(currentPosition.netPerformance);
-      } else if (!currentPosition.quantity.eq(0)) {
-        hasErrors = true;
-      }
-
-      if (currentPosition.timeWeightedInvestment) {
-        totalTimeWeightedInvestment = totalTimeWeightedInvestment.plus(
-          currentPosition.timeWeightedInvestment
-        );
-
-        totalTimeWeightedInvestmentWithCurrencyEffect =
-          totalTimeWeightedInvestmentWithCurrencyEffect.plus(
-            currentPosition.timeWeightedInvestmentWithCurrencyEffect
-          );
-      } else if (!currentPosition.quantity.eq(0)) {
-        Logger.warn(
-          `Missing historical market data for ${currentPosition.symbol} (${currentPosition.dataSource})`,
-          'PortfolioCalculator'
-        );
-
-        hasErrors = true;
-      }
-    }
-
-    return {
-      currentValueInBaseCurrency,
-      hasErrors,
-      positions,
-      totalFeesWithCurrencyEffect,
-      totalInterestWithCurrencyEffect,
-      totalInvestment,
-      totalInvestmentWithCurrencyEffect,
-      activitiesCount: this.activities.filter(({ type }) => {
-        return ['BUY', 'SELL'].includes(type);
-      }).length,
-      createdAt: new Date(),
-      errors: [],
-      historicalData: [],
-      totalLiabilitiesWithCurrencyEffect: new Big(0),
-      totalValuablesWithCurrencyEffect: new Big(0)
-    };
+export class TwrPortfolioCalculator extends PortfolioCalculator {
+  protected calculateOverallPerformance(): PortfolioSnapshot {
+    throw new Error('Method not implemented.');
   }
 
-  protected getSymbolMetrics({
-    chartDateMap,
-    dataSource,
-    end,
-    exchangeRates,
-    marketSymbolMap,
-    start,
-    symbol
-  }: {
-    chartDateMap?: { [date: string]: boolean };
+  protected getSymbolMetrics({}: {
     end: Date;
     exchangeRates: { [dateString: string]: number };
     marketSymbolMap: {
       [date: string]: { [symbol: string]: Big };
     };
     start: Date;
+    step?: number;
   } & AssetProfileIdentifier): SymbolMetrics {
     const currentExchangeRate = exchangeRates[format(new Date(), DATE_FORMAT)];
     const currentValues: { [date: string]: Big } = {};

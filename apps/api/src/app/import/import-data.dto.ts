@@ -1,15 +1,16 @@
-import { CreateAccountDto } from '@ghostfolio/api/app/account/create-account.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 
+import { CreateAccountWithBalancesDto } from './create-account-with-balances.dto';
+
 export class ImportDataDto {
   @IsOptional()
   @IsArray()
-  @Type(() => CreateAccountDto)
+  @Type(() => CreateAccountWithBalancesDto)
   @ValidateNested({ each: true })
-  accounts: CreateAccountDto[];
+  accounts: CreateAccountWithBalancesDto[];
 
   @IsArray()
   @Type(() => CreateOrderDto)

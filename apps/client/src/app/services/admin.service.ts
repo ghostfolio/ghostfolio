@@ -8,7 +8,6 @@ import {
   PROPERTY_API_KEY_GHOSTFOLIO
 } from '@ghostfolio/common/config';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
-import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
   AdminData,
@@ -25,7 +24,6 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
-import { format } from 'date-fns';
 import { switchMap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -190,14 +188,19 @@ export class AdminService {
     );
   }
 
-  public gatherSymbol({
+  public gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
+    const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
+    return this.http.post<MarketData | void>(url, {});
+  }
+
+  public gatherSymbolMissingOnly({
     dataSource,
     date,
     symbol
   }: AssetProfileIdentifier & {
     date?: Date;
   }) {
-    let url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
+    let url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
 
     if (date) {
       url = `${url}/${format(date, DATE_FORMAT)}`;
@@ -236,22 +239,25 @@ export class AdminService {
     return this.http.get<IDataProviderHistoricalResponse>(url);
   }
 
-  public patchAssetProfile({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    name,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    tags,
-    tagsDisconnected,
-    url
-  }: AssetProfileIdentifier & UpdateAssetProfileDto) {
+  public patchAssetProfile(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
+      comment,
+      countries,
+      currency,
+      dataSource: newDataSource,
+      name,
+      scraperConfiguration,
+      sectors,
+      symbol: newSymbol,
+      symbolMapping,
+      tags,
+      tagsDisconnected,
+      url
+    }: UpdateAssetProfileDto
+  ) {
     return this.http.patch<EnhancedSymbolProfile>(
       `/api/v1/admin/profile-data/${dataSource}/${symbol}`,
       {
@@ -260,9 +266,11 @@ export class AdminService {
         comment,
         countries,
         currency,
+        dataSource: newDataSource,
         name,
         scraperConfiguration,
         sectors,
+        symbol: newSymbol,
         symbolMapping,
         tags,
         tagsDisconnected,

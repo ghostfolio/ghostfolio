@@ -48,13 +48,14 @@ export const PORTFOLIO_SNAPSHOT_COMPUTATION_QUEUE_PRIORITY_LOW =
 
 export const DEFAULT_CURRENCY = 'USD';
 export const DEFAULT_DATE_FORMAT_MONTH_YEAR = 'MMM yyyy';
+export const DEFAULT_HOST = '0.0.0.0';
 export const DEFAULT_LANGUAGE_CODE = 'en';
 export const DEFAULT_PAGE_SIZE = 50;
+export const DEFAULT_PORT = 3333;
 export const DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_GATHER_HISTORICAL_MARKET_DATA_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_CONCURRENCY = 1;
 export const DEFAULT_PROCESSOR_PORTFOLIO_SNAPSHOT_COMPUTATION_TIMEOUT = 30000;
-export const DEFAULT_ROOT_URL = 'https://localhost:4200';
 
 // USX is handled separately
 export const DERIVED_CURRENCIES = [
@@ -164,6 +165,8 @@ export const REPLACE_NAME_PARTS = [
   'Vanguard Index Funds -',
   'Xtrackers (IE) Plc -'
 ];
+
+export const STORYBOOK_PATH = '/development/storybook';
 
 export const SUPPORTED_LANGUAGE_CODES = [
   'ca',

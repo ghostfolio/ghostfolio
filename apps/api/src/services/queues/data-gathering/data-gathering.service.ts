@@ -179,7 +179,8 @@ export class DataGatheringService {
     );
 
     if (!assetProfileIdentifiers) {
-      assetProfileIdentifiers = await this.getAllAssetProfileIdentifiers();
+      assetProfileIdentifiers =
+        await this.getAllActiveAssetProfileIdentifiers();
     }
 
     if (assetProfileIdentifiers.length <= 0) {
@@ -345,6 +346,35 @@ export class DataGatheringService {
     );
   }
 
+  public async gatherMissingDataSymbols({
+    dataGatheringItems,
+    priority
+  }: {
+    dataGatheringItems: IDataGatheringItem[];
+    priority: number;
+  }) {
+    await this.addJobsToQueue(
+      dataGatheringItems.map(({ dataSource, date, symbol }) => {
+        return {
+          data: {
+            dataSource,
+            date,
+            symbol
+          },
+          name: GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
+          opts: {
+            ...GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
+            priority,
+            jobId: `${getAssetProfileIdentifier({
+              dataSource,
+              symbol
+            })}-missing-${format(date, DATE_FORMAT)}`
+          }
+        };
+      })
+    );
+  }
+
   public async getAllAssetProfileIdentifiers(): Promise<
     AssetProfileIdentifier[]
   > {
@@ -419,9 +449,11 @@ export class DataGatheringService {
     withUserSubscription?: boolean;
   }): Promise<IDataGatheringItem[]> {
     const symbolProfiles =
-      await this.symbolProfileService.getSymbolProfilesByUserSubscription({
-        withUserSubscription
-      });
+      await this.symbolProfileService.getActiveSymbolProfilesByUserSubscription(
+        {
+          withUserSubscription
+        }
+      );
 
     const assetProfileIdentifiersWithCompleteMarketData =
       await this.getAssetProfileIdentifiersWithCompleteMarketData();
@@ -485,6 +517,9 @@ export class DataGatheringService {
           },
           scraperConfiguration: true,
           symbol: true
+        },
+        where: {
+          isActive: true
         }
       })
     )

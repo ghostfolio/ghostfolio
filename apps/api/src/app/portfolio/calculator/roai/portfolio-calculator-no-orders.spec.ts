@@ -85,7 +85,7 @@ describe('PortfolioCalculator', () => {
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities: [],
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
       });
