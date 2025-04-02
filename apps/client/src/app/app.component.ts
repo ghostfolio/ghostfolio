@@ -75,6 +75,10 @@ export class AppComponent implements OnDestroy, OnInit {
     '/' + $localize`:snake-case:about`,
     $localize`:snake-case:privacy-policy`
   ];
+  public routerLinkAboutTermsOfService = [
+    '/' + $localize`:snake-case:about`,
+    $localize`:snake-case:terms-of-service`
+  ];
   public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
   public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];

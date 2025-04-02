@@ -26,7 +26,7 @@ export class TransformDataSourceInRequestInterceptor<T>
     const request = http.getRequest();
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      if (request.body.activities) {
+      if (request.body?.activities) {
         request.body.activities = request.body.activities.map((activity) => {
           if (DataSource[activity.dataSource]) {
             return activity;

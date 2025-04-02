@@ -45,6 +45,15 @@ export const personalFinanceTools: Product[] = [
     slogan: 'Analyze and track your portfolio.'
   },
   {
+    founded: 2022,
+    hasFreePlan: false,
+    key: 'asseta',
+    languages: ['English'],
+    name: 'Asseta',
+    origin: 'United States',
+    slogan: 'The Intelligent Family Office Suite'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'banktivity',
@@ -148,6 +157,14 @@ export const personalFinanceTools: Product[] = [
     origin: 'United States',
     pricingPerYear: '$70',
     slogan: 'Do money better with Copilot'
+  },
+  {
+    founded: 2023,
+    hasFreePlan: false,
+    key: 'danti',
+    name: 'Danti',
+    origin: 'United Kingdom',
+    slogan: 'Digitising Generational Wealth'
   },
   {
     founded: 2020,

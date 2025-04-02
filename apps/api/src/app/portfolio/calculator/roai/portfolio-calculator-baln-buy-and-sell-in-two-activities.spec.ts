@@ -79,8 +79,7 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService,
-      null
+      redisCacheService
     );
   });
 
@@ -138,7 +137,7 @@ describe('PortfolioCalculator', () => {
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
+        calculationType: PerformanceCalculationType.ROAI,
         currency: 'CHF',
         userId: userDummyData.id
       });
@@ -177,9 +176,7 @@ describe('PortfolioCalculator', () => {
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('-0.0552834149755073478')
             },
-            netPerformanceWithCurrencyEffectMap: {
-              max: new Big('-15.8')
-            },
+            netPerformanceWithCurrencyEffectMap: { max: new Big('-15.8') },
             marketPrice: 148.9,
             marketPriceInBaseCurrency: 148.9,
             quantity: new Big('0'),

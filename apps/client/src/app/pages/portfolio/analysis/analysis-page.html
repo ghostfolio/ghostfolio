@@ -5,6 +5,7 @@
       <div class="col-lg">
         <div class="d-flex justify-content-end">
           <button
+            #actionsMenuButton
             class="mx-1 no-min-width px-2"
             mat-stroked-button
             [matMenuTriggerFor]="actionsMenu"
@@ -12,39 +13,62 @@
           >
             <ion-icon name="ellipsis-vertical" />
           </button>
-          <mat-menu #actionsMenu="matMenu" xPosition="before">
-            <button
-              mat-menu-item
-              [disabled]="!hasPermissionToReadAiPrompt"
-              (click)="onCopyPromptToClipboard('portfolio')"
-            >
-              <span class="align-items-center d-flex">
-                @if (user?.subscription?.type === 'Basic') {
-                  <gf-premium-indicator class="mr-2" />
-                } @else {
-                  <ion-icon class="mr-2" name="copy-outline" />
-                }
-                <ng-container i18n
-                  >Copy portfolio data to clipboard for AI prompt</ng-container
-                >
-              </span>
-            </button>
-            <button
-              mat-menu-item
-              [disabled]="!hasPermissionToReadAiPrompt"
-              (click)="onCopyPromptToClipboard('analysis')"
-            >
-              <span class="align-items-center d-flex">
-                @if (user?.subscription?.type === 'Basic') {
-                  <gf-premium-indicator class="mr-2" />
-                } @else {
-                  <ion-icon class="mr-2" name="copy-outline" />
-                }
-                <ng-container i18n
-                  >Copy AI prompt to clipboard for analysis</ng-container
-                >
-              </span>
-            </button>
+          <mat-menu
+            #actionsMenu="matMenu"
+            class="no-max-width"
+            xPosition="before"
+          >
+            <div (click)="$event.stopPropagation()">
+              <button
+                mat-menu-item
+                [disabled]="!hasPermissionToReadAiPrompt"
+                (click)="onCopyPromptToClipboard('portfolio')"
+              >
+                <span class="align-items-center d-flex">
+                  @if (user?.subscription?.type === 'Basic') {
+                    <gf-premium-indicator class="mr-2" />
+                  } @else {
+                    @if (isLoadingPortfolioPrompt) {
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
+                  }
+                  <ng-container i18n
+                    >Copy portfolio data to clipboard for AI
+                    prompt</ng-container
+                  >
+                </span>
+              </button>
+              <button
+                mat-menu-item
+                [disabled]="!hasPermissionToReadAiPrompt"
+                (click)="onCopyPromptToClipboard('analysis')"
+              >
+                <span class="align-items-center d-flex">
+                  @if (user?.subscription?.type === 'Basic') {
+                    <gf-premium-indicator class="mr-2" />
+                  } @else {
+                    @if (isLoadingAnalysisPrompt) {
+                      <mat-spinner
+                        class="mr-2"
+                        color="accent"
+                        [diameter]="16"
+                      />
+                    } @else {
+                      <ion-icon class="mr-2" name="copy-outline" />
+                    }
+                  }
+                  <ng-container i18n
+                    >Copy AI prompt to clipboard for analysis</ng-container
+                  >
+                </span>
+              </button>
+            </div>
           </mat-menu>
         </div>
       </div>

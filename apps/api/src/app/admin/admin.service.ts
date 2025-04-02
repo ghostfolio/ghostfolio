@@ -10,7 +10,6 @@ import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { PropertyService } from '@ghostfolio/api/services/property/property.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
-  DEFAULT_CURRENCY,
   PROPERTY_CURRENCIES,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_IS_USER_SIGNUP_ENABLED
@@ -33,7 +32,12 @@ import {
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 import { MarketDataPreset } from '@ghostfolio/common/types';
 
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  Logger
+} from '@nestjs/common';
 import {
   AssetClass,
   AssetSubClass,
@@ -44,6 +48,7 @@ import {
   DataSource
 } from '@prisma/client';
 import { differenceInDays } from 'date-fns';
+import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { groupBy } from 'lodash';
 
 @Injectable()
@@ -132,31 +137,6 @@ export class AdminService {
   }
 
   public async get(): Promise<AdminData> {
-    const exchangeRates = this.exchangeRateDataService
-      .getCurrencies()
-      .filter((currency) => {
-        return currency !== DEFAULT_CURRENCY;
-      })
-      .map((currency) => {
-        const label1 = DEFAULT_CURRENCY;
-        const label2 = currency;
-
-        return {
-          label1,
-          label2,
-          dataSource:
-            DataSource[
-              this.configurationService.get('DATA_SOURCE_EXCHANGE_RATES')
-            ],
-          symbol: `${label1}${label2}`,
-          value: this.exchangeRateDataService.toCurrency(
-            1,
-            DEFAULT_CURRENCY,
-            currency
-          )
-        };
-      });
-
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
@@ -164,7 +144,6 @@ export class AdminService {
     ]);
 
     return {
-      exchangeRates,
       settings,
       transactionCount,
       userCount,
@@ -495,63 +474,126 @@ export class AdminService {
     return { count, users };
   }
 
-  public async patchAssetProfileData({
-    assetClass,
-    assetSubClass,
-    comment,
-    countries,
-    currency,
-    dataSource,
-    holdings,
-    name,
-    tags,
-    scraperConfiguration,
-    sectors,
-    symbol,
-    symbolMapping,
-    url
-  }: AssetProfileIdentifier & Prisma.SymbolProfileUpdateInput) {
-    const symbolProfileOverrides = {
-      assetClass: assetClass as AssetClass,
-      assetSubClass: assetSubClass as AssetSubClass,
-      name: name as string,
-      url: url as string
-    };
-
-    const updatedSymbolProfile: AssetProfileIdentifier &
-      Prisma.SymbolProfileUpdateInput = {
+  public async patchAssetProfileData(
+    { dataSource, symbol }: AssetProfileIdentifier,
+    {
+      assetClass,
+      assetSubClass,
       comment,
       countries,
       currency,
-      dataSource,
+      dataSource: newDataSource,
       holdings,
+      name,
+      tags,
       scraperConfiguration,
       sectors,
-      symbol,
+      symbol: newSymbol,
       symbolMapping,
-      tags,
-      ...(dataSource === 'MANUAL'
-        ? { assetClass, assetSubClass, name, url }
-        : {
-            SymbolProfileOverrides: {
-              upsert: {
-                create: symbolProfileOverrides,
-                update: symbolProfileOverrides
-              }
-            }
-          })
-    };
+      url
+    }: Prisma.SymbolProfileUpdateInput
+  ) {
+    if (
+      newSymbol &&
+      newDataSource &&
+      (newSymbol !== symbol || newDataSource !== dataSource)
+    ) {
+      const [assetProfile] = await this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource: DataSource[newDataSource.toString()],
+          symbol: newSymbol as string
+        }
+      ]);
 
-    await this.symbolProfileService.updateSymbolProfile(updatedSymbolProfile);
-
-    const [symbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      {
-        dataSource,
-        symbol
+      if (assetProfile) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.CONFLICT),
+          StatusCodes.CONFLICT
+        );
       }
-    ]);
 
-    return symbolProfile;
+      try {
+        Promise.all([
+          await this.symbolProfileService.updateAssetProfileIdentifier(
+            {
+              dataSource,
+              symbol
+            },
+            {
+              dataSource: DataSource[newDataSource.toString()],
+              symbol: newSymbol as string
+            }
+          ),
+          await this.marketDataService.updateAssetProfileIdentifier(
+            {
+              dataSource,
+              symbol
+            },
+            {
+              dataSource: DataSource[newDataSource.toString()],
+              symbol: newSymbol as string
+            }
+          )
+        ]);
+
+        return this.symbolProfileService.getSymbolProfiles([
+          {
+            dataSource: DataSource[newDataSource.toString()],
+            symbol: newSymbol as string
+          }
+        ])?.[0];
+      } catch {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.BAD_REQUEST),
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    } else {
+      const symbolProfileOverrides = {
+        assetClass: assetClass as AssetClass,
+        assetSubClass: assetSubClass as AssetSubClass,
+        name: name as string,
+        url: url as string
+      };
+
+      const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
+        comment,
+        countries,
+        currency,
+        dataSource,
+        holdings,
+        scraperConfiguration,
+        sectors,
+        symbol,
+        symbolMapping,
+        tags,
+        ...(dataSource === 'MANUAL'
+          ? { assetClass, assetSubClass, name, url }
+          : {
+              SymbolProfileOverrides: {
+                upsert: {
+                  create: symbolProfileOverrides,
+                  update: symbolProfileOverrides
+                }
+              }
+            })
+      };
+
+      await this.symbolProfileService.updateSymbolProfile(
+        {
+          dataSource,
+          symbol
+        },
+        updatedSymbolProfile
+      );
+
+      return this.symbolProfileService.getSymbolProfiles([
+        {
+          dataSource: dataSource as DataSource,
+          symbol: symbol as string
+        }
+      ])?.[0];
+    }
   }
 
   public async putSetting(key: string, value: string) {

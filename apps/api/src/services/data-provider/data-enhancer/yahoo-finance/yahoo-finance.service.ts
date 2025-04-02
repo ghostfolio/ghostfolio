@@ -170,6 +170,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
             symbol = quotes[0].symbol;
           }
         } catch {}
+      } else if (symbol?.endsWith(`-${DEFAULT_CURRENCY}`)) {
+        throw new Error(`${symbol} is not valid`);
       } else {
         symbol = this.convertToYahooFinanceSymbol(symbol);
       }

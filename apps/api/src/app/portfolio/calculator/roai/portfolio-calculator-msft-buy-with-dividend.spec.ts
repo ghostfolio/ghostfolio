@@ -5,8 +5,8 @@ import {
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
 import {
-  PortfolioCalculatorFactory,
-  PerformanceCalculationType
+  PerformanceCalculationType,
+  PortfolioCalculatorFactory
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
@@ -92,139 +92,108 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService,
-      null
+      redisCacheService
     );
   });
 
   describe('get current positions', () => {
-    it.only('with GOOGL buy', async () => {
+    it.only('with MSFT buy', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2023-07-10').getTime());
 
       const activities: Activity[] = [
         {
           ...activityDummyData,
-          date: new Date('2023-01-03'),
-          fee: 1,
+          date: new Date('2021-09-16'),
+          fee: 19,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
             currency: 'USD',
             dataSource: 'YAHOO',
-            name: 'Alphabet Inc.',
-            symbol: 'GOOGL'
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
           },
           type: 'BUY',
-          unitPrice: 89.12
+          unitPrice: 298.58
+        },
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-16'),
+          fee: 0,
+          quantity: 1,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'USD',
+            dataSource: 'YAHOO',
+            name: 'Microsoft Inc.',
+            symbol: 'MSFT'
+          },
+          type: 'DIVIDEND',
+          unitPrice: 0.62
         }
       ];
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.TWR,
-        currency: 'CHF',
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'USD',
         userId: userDummyData.id
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
-      const investments = portfolioCalculator.getInvestments();
-
-      const investmentsByMonth = portfolioCalculator.getInvestmentsByGroup({
-        data: portfolioSnapshot.historicalData,
-        groupBy: 'month'
-      });
-
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('103.10483'),
         errors: [],
         hasErrors: false,
         positions: [
           {
-            averagePrice: new Big('89.12'),
+            averagePrice: new Big('298.58'),
             currency: 'USD',
             dataSource: 'YAHOO',
-            dividend: new Big('0'),
-            dividendInBaseCurrency: new Big('0'),
-            fee: new Big('1'),
-            feeInBaseCurrency: new Big('0.9238'),
-            firstBuyDate: '2023-01-03',
-            grossPerformance: new Big('27.33').mul(0.8854),
-            grossPerformancePercentage: new Big('0.3066651705565529623'),
+            dividend: new Big('0.62'),
+            dividendInBaseCurrency: new Big('0.62'),
+            fee: new Big('19'),
+            firstBuyDate: '2021-09-16',
+            grossPerformance: new Big('33.25'),
+            grossPerformancePercentage: new Big('0.11136043941322258691'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.25235044599563974109'
+              '0.11136043941322258691'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('20.775774'),
-            investment: new Big('89.12').mul(0.8854),
-            investmentWithCurrencyEffect: new Big('82.329056'),
-            netPerformance: new Big('26.33').mul(0.8854),
-            netPerformancePercentage: new Big('0.29544434470377019749'),
+            grossPerformanceWithCurrencyEffect: new Big('33.25'),
+            investment: new Big('298.58'),
+            investmentWithCurrencyEffect: new Big('298.58'),
+            marketPrice: 331.83,
+            marketPriceInBaseCurrency: 331.83,
+            netPerformance: new Big('14.25'),
+            netPerformancePercentage: new Big('0.04772590260566682296'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.24112962014285697628')
+              max: new Big('0.04772590260566682296')
             },
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('19.851974')
+              '1d': new Big('-5.39'),
+              '5y': new Big('14.25'),
+              max: new Big('14.25'),
+              wtd: new Big('-5.39')
             },
-            marketPrice: 116.45,
-            marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
-            symbol: 'GOOGL',
+            symbol: 'MSFT',
             tags: [],
-            timeWeightedInvestment: new Big('89.12').mul(0.8854),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('82.329056'),
-            transactionCount: 1,
-            valueInBaseCurrency: new Big('103.10483')
+            transactionCount: 2
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('0.9238'),
+        totalFeesWithCurrencyEffect: new Big('19'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('89.12').mul(0.8854),
-        totalInvestmentWithCurrencyEffect: new Big('82.329056'),
+        totalInvestment: new Big('298.58'),
+        totalInvestmentWithCurrencyEffect: new Big('298.58'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
-          netPerformance: new Big('26.33').mul(0.8854).toNumber(),
-          netPerformanceInPercentage: 0.29544434470377019749,
-          netPerformanceInPercentageWithCurrencyEffect: 0.24112962014285697628,
-          netPerformanceWithCurrencyEffect: 19.851974,
-          totalInvestmentValueWithCurrencyEffect: 82.329056
+          totalInvestmentValueWithCurrencyEffect: 298.58
         })
       );
-
-      expect(investments).toEqual([
-        { date: '2023-01-03', investment: new Big('89.12') }
-      ]);
-
-      expect(investmentsByMonth).toEqual([
-        { date: '2023-01-01', investment: 82.329056 },
-        {
-          date: '2023-02-01',
-          investment: 0
-        },
-        {
-          date: '2023-03-01',
-          investment: 0
-        },
-        {
-          date: '2023-04-01',
-          investment: 0
-        },
-        {
-          date: '2023-05-01',
-          investment: 0
-        },
-        {
-          date: '2023-06-01',
-          investment: 0
-        },
-        {
-          date: '2023-07-01',
-          investment: 0
-        }
-      ]);
     });
   });
 });
