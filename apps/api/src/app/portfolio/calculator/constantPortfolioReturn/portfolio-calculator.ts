@@ -25,9 +25,9 @@ import {
 import { CurrentRateService } from '../../current-rate.service';
 import { DateQuery } from '../../interfaces/date-query.interface';
 import { PortfolioOrder } from '../../interfaces/portfolio-order.interface';
-import { TWRPortfolioCalculator } from '../twr/portfolio-calculator';
+import { RoaiPortfolioCalculator } from '../roai/portfolio-calculator';
 
-export class CPRPortfolioCalculator extends TWRPortfolioCalculator {
+export class CPRPortfolioCalculator extends RoaiPortfolioCalculator {
   private holdings: { [date: string]: { [symbol: string]: Big } } = {};
   private holdingCurrencies: { [symbol: string]: string } = {};
 

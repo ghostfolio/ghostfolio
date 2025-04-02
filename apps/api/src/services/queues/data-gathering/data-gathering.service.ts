@@ -346,40 +346,14 @@ export class DataGatheringService {
     );
   }
 
-  public async gatherMissingDataSymbols({
-    dataGatheringItems,
-    priority
-  }: {
-    dataGatheringItems: IDataGatheringItem[];
-    priority: number;
-  }) {
-    await this.addJobsToQueue(
-      dataGatheringItems.map(({ dataSource, date, symbol }) => {
-        return {
-          data: {
-            dataSource,
-            date,
-            symbol
-          },
-          name: GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME,
-          opts: {
-            ...GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_OPTIONS,
-            priority,
-            jobId: `${getAssetProfileIdentifier({
-              dataSource,
-              symbol
-            })}-missing-${format(date, DATE_FORMAT)}`
-          }
-        };
-      })
-    );
-  }
-
-  public async getAllAssetProfileIdentifiers(): Promise<
+  public async getAllActiveAssetProfileIdentifiers(): Promise<
     AssetProfileIdentifier[]
   > {
     const symbolProfiles = await this.prismaService.symbolProfile.findMany({
-      orderBy: [{ symbol: 'asc' }]
+      orderBy: [{ symbol: 'asc' }],
+      where: {
+        isActive: true
+      }
     });
 
     return symbolProfiles

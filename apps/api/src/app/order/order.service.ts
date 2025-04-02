@@ -60,43 +60,46 @@ export class OrderService {
       }
     ]);
     const symbolProfile: EnhancedSymbolProfile = promis[0];
-    const result = await this.symbolProfileService.updateSymbolProfile({
-      assetClass: symbolProfile.assetClass,
-      assetSubClass: symbolProfile.assetSubClass,
-      countries: symbolProfile.countries.reduce(
-        (all, v) => [...all, { code: v.code, weight: v.weight }],
-        []
-      ),
-      currency: symbolProfile.currency,
-      dataSource,
-      holdings: symbolProfile.holdings.reduce(
-        (all, v) => [
-          ...all,
-          { name: v.name, weight: v.allocationInPercentage }
-        ],
-        []
-      ),
-      name: symbolProfile.name,
-      sectors: symbolProfile.sectors.reduce(
-        (all, v) => [...all, { name: v.name, weight: v.weight }],
-        []
-      ),
-      symbol,
-      tags: {
-        connectOrCreate: tags.map(({ id, name }) => {
-          return {
-            create: {
-              id,
-              name
-            },
-            where: {
-              id
-            }
-          };
-        })
-      },
-      url: symbolProfile.url
-    });
+    const result = await this.symbolProfileService.updateSymbolProfile(
+      { dataSource, symbol },
+      {
+        assetClass: symbolProfile.assetClass,
+        assetSubClass: symbolProfile.assetSubClass,
+        countries: symbolProfile.countries.reduce(
+          (all, v) => [...all, { code: v.code, weight: v.weight }],
+          []
+        ),
+        currency: symbolProfile.currency,
+        dataSource,
+        holdings: symbolProfile.holdings.reduce(
+          (all, v) => [
+            ...all,
+            { name: v.name, weight: v.allocationInPercentage }
+          ],
+          []
+        ),
+        name: symbolProfile.name,
+        sectors: symbolProfile.sectors.reduce(
+          (all, v) => [...all, { name: v.name, weight: v.weight }],
+          []
+        ),
+        symbol,
+        tags: {
+          connectOrCreate: tags.map(({ id, name }) => {
+            return {
+              create: {
+                id,
+                name
+              },
+              where: {
+                id
+              }
+            };
+          })
+        },
+        url: symbolProfile.url
+      }
+    );
 
     this.eventEmitter.emit(
       PortfolioChangedEvent.getName(),

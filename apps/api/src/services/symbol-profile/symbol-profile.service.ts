@@ -23,59 +23,6 @@ import { continents, countries } from 'countries-list';
 export class SymbolProfileService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async add(
-    assetProfile: Prisma.SymbolProfileCreateInput
-  ): Promise<SymbolProfile | never> {
-    return this.prismaService.symbolProfile.create({ data: assetProfile });
-  }
-
-  public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.prismaService.symbolProfile.delete({
-      where: { dataSource_symbol: { dataSource, symbol } }
-    });
-  }
-
-  public async deleteById(id: string) {
-    return this.prismaService.symbolProfile.delete({
-      where: { id }
-    });
-  }
-
-  public async getActiveSymbolProfilesByUserSubscription({
-    withUserSubscription = false
-  }: {
-    withUserSubscription?: boolean;
-  }) {
-    return this.prismaService.symbolProfile.findMany({
-      include: {
-        Order: {
-          include: {
-            User: true
-          }
-        }
-      },
-      orderBy: [{ symbol: 'asc' }],
-      where: {
-        isActive: true,
-        Order: withUserSubscription
-          ? {
-              some: {
-                User: {
-                  Subscription: { some: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-          : {
-              every: {
-                User: {
-                  Subscription: { none: { expiresAt: { gt: new Date() } } }
-                }
-              }
-            }
-      }
-    });
-  }
-
   @LogPerformance
   public async getActiveSymbolProfilesByUserSubscription({
     withUserSubscription = false
@@ -144,6 +91,24 @@ export class SymbolProfileService {
       .then((symbolProfiles) => {
         return this.enhanceSymbolProfiles(symbolProfiles);
       });
+  }
+
+  public async add(
+    assetProfile: Prisma.SymbolProfileCreateInput
+  ): Promise<SymbolProfile | never> {
+    return this.prismaService.symbolProfile.create({ data: assetProfile });
+  }
+
+  public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
+    return this.prismaService.symbolProfile.delete({
+      where: { dataSource_symbol: { dataSource, symbol } }
+    });
+  }
+
+  public async deleteById(id: string) {
+    return this.prismaService.symbolProfile.delete({
+      where: { id }
+    });
   }
 
   public async getSymbolProfilesByIds(

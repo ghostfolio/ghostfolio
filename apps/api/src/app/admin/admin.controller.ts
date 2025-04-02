@@ -110,7 +110,7 @@ export class AdminController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async gatherMissing(): Promise<void> {
     const assetProfileIdentifiers =
-      await this.dataGatheringService.getAllAssetProfileIdentifiers();
+      await this.dataGatheringService.getAllActiveAssetProfileIdentifiers();
 
     const promises = assetProfileIdentifiers.map(({ dataSource, symbol }) => {
       return this.dataGatheringService.gatherSymbolMissingOnly({
@@ -372,12 +372,16 @@ export class AdminController {
   ): Promise<EnhancedSymbolProfile> {
     return this.adminService.patchAssetProfileData(
       { dataSource, symbol },
-      assetProfile,
-      tags: {
-        connect: assetProfileData.tags?.map(({ id }) => {
-          return { id };
-        }),
-        disconnect: assetProfileData.tagsDisconnected?.map(({ id }) => ({ id }))
+      {
+        ...assetProfile,
+        tags: {
+          connect: assetProfile.tags?.map(({ id }) => {
+            return { id };
+          }),
+          disconnect: assetProfile.tagsDisconnected?.map(({ id }) => ({
+            id
+          }))
+        }
       }
     );
   }

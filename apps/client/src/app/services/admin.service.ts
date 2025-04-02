@@ -195,32 +195,11 @@ export class AdminService {
 
   public gatherSymbolMissingOnly({
     dataSource,
-    date,
     symbol
   }: AssetProfileIdentifier & {
     date?: Date;
   }) {
-    let url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
-
-    if (date) {
-      url = `${url}/${format(date, DATE_FORMAT)}`;
-    }
-
-    return this.http.post<MarketData | void>(url, {});
-  }
-
-  public gatherSymbolMissingOnly({
-    dataSource,
-    date,
-    symbol
-  }: AssetProfileIdentifier & {
-    date?: Date;
-  }) {
-    let url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
-
-    if (date) {
-      url = `${url}/${format(date, DATE_FORMAT)}`;
-    }
+    const url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
 
     return this.http.post<MarketData | void>(url, {});
   }
