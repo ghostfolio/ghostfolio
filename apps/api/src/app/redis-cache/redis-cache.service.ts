@@ -2,38 +2,33 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Milliseconds } from 'cache-manager';
-import { RedisCache } from 'cache-manager-redis-yet';
+import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import ms from 'ms';
 
 @Injectable()
 export class RedisCacheService {
   public constructor(
-    @Inject(CACHE_MANAGER) private readonly cache: RedisCache,
+    @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly configurationService: ConfigurationService
-  ) {
-    const client = cache.store.client;
-
-    client.on('error', (error) => {
-      Logger.error(error, 'RedisCacheService');
-    });
-  }
+  ) {}
 
   public async get(key: string): Promise<string> {
     return this.cache.get(key);
   }
 
   public async getKeys(aPrefix?: string): Promise<string[]> {
-    let prefix = aPrefix;
+    const keys: string[] = [];
+    const prefix = aPrefix;
 
-    if (prefix) {
-      prefix = `${prefix}*`;
+    for await (const [key] of this.cache.stores[0].iterator({})) {
+      if ((prefix && key.startsWith(prefix)) || !prefix) {
+        keys.push(key);
+      }
     }
 
-    return this.cache.store.keys(prefix);
+    return keys;
   }
 
   public getPortfolioSnapshotKey({
@@ -62,10 +57,8 @@ export class RedisCacheService {
 
   public async isHealthy() {
     try {
-      const client = this.cache.store.client;
-
       const isHealthy = await Promise.race([
-        client.ping(),
+        this.getKeys(),
         new Promise((_, reject) =>
           setTimeout(
             () => reject(new Error('Redis health check timeout')),
@@ -93,16 +86,14 @@ export class RedisCacheService {
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
 
-    for (const key of keys) {
-      await this.remove(key);
-    }
+    return this.cache.mdel(keys);
   }
 
   public async reset() {
-    return this.cache.reset();
+    return this.cache.clear();
   }
 
-  public async set(key: string, value: string, ttl?: Milliseconds) {
+  public async set(key: string, value: string, ttl?: number) {
     return this.cache.set(
       key,
       value,
