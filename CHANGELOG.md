@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the check for duplicates in the preview step of the activities import (allow different comments)
 - Improved the language localization for German (`fr`)
 - Upgraded `ng-extract-i18n-merge` from version `2.14.1` to `2.14.3`
 
