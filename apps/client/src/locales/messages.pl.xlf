@@ -2248,7 +2248,7 @@
       </trans-unit>
       <trans-unit id="90d136a4e1f551f5de5340d443e0c95e49e95e1c" datatype="html">
         <source>My Ghostfolio</source>
-        <target state="translated">Ustawienia Ghostofolio</target>
+        <target state="translated">Moje Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">270</context>
