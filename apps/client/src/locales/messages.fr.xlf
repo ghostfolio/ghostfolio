@@ -7316,7 +7316,7 @@
       </trans-unit>
       <trans-unit id="2fcf96765ae87821e12fe4f6900ba1a218742cfc" datatype="html">
         <source> Want to stay updated? Click below to get notified as soon as it’s available. </source>
-        <target state="translated"> Vous souhaitez rester informé ? Cliquez ci-dessous pour être informé dès qu'il sera disponible. </target>
+        <target state="translated"> Vous souhaitez rester informé ? Cliquez ci-dessous pour être informé dès qu’il sera disponible. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.html</context>
           <context context-type="linenumber">23</context>
@@ -7414,7 +7414,7 @@
       </trans-unit>
       <trans-unit id="f907cfe9cf0c373052ff3964f941a5b784c57f06" datatype="html">
         <source> Ghostfolio X-ray uses static analysis to uncover potential issues and risks in your portfolio. Adjust the rules below and set custom thresholds to align with your personal investment strategy. </source>
-        <target state="translated"> Ghostfolio X-ray utilise l’analyse statique pour détecter d'éventuels problèmes et risques dans votre portefeuille. Ajustez les règles ci-dessous et définissez des seuils personnalisés afin de les adapter à votre stratégie d'investissement. </target>
+        <target state="translated"> Ghostfolio X-ray utilise l’analyse statique pour détecter d’éventuels problèmes et risques dans votre portefeuille. Ajustez les règles ci-dessous et définissez des seuils personnalisés afin de les adapter à votre stratégie d’investissement. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">5</context>
