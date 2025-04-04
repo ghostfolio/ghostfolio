@@ -18,17 +18,17 @@ export class ResourcesPageComponent implements OnInit {
       iconName: 'reader-outline'
     },
     {
-      path: $localize`:snake-case:guides`,
+      path: 'guides',
       label: $localize`Guides`,
       iconName: 'book-outline'
     },
     {
-      path: $localize`:snake-case:markets`,
+      path: 'markets',
       label: $localize`Markets`,
       iconName: 'newspaper-outline'
     },
     {
-      path: $localize`:snake-case:glossary`,
+      path: 'glossary',
       label: $localize`Glossary`,
       iconName: 'library-outline'
     }
