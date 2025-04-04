@@ -519,6 +519,7 @@ export class ImportService {
         const isDuplicate = existingActivities.some((activity) => {
           return (
             activity.accountId === accountId &&
+            activity.comment === comment &&
             activity.SymbolProfile.currency === currency &&
             activity.SymbolProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
@@ -526,8 +527,7 @@ export class ImportService {
             activity.quantity === quantity &&
             activity.SymbolProfile.symbol === symbol &&
             activity.type === type &&
-            activity.unitPrice === unitPrice &&
-            activity.comment === comment
+            activity.unitPrice === unitPrice
           );
         });
 
