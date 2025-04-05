@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "date": "2021-12-12T00:00:00.000Z",
+    "version": "dev"
+  },
+  "accounts": [],
+  "platforms": [],
+  "tags": [],
+  "activities": [
+    {
+      "accountId": null,
+      "comment": null,
+      "fee": 0,
+      "quantity": 1,
+      "type": "BUY",
+      "unitPrice": 44558.42,
+      "currency": "USD",
+      "dataSource": "YAHOO",
+      "date": "2021-12-12T00:00:00.000Z",
+      "symbol": "BTCUSD",
+      "tags": []
+    }
+  ],
+  "user": {
+    "settings": {
+      "currency": "USD"
+    }
+  }
+}

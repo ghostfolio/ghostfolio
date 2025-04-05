@@ -128,6 +128,13 @@ export class ImportService {
             symbolProfileId: assetProfile.id,
             type: 'DIVIDEND',
             unitPrice: marketPrice,
+            unitPriceInBaseCurrency:
+              await this.exchangeRateDataService.toCurrencyAtDate(
+                marketPrice,
+                assetProfile.currency,
+                userCurrency,
+                date
+              ),
             updatedAt: undefined,
             userId: Account?.userId,
             valueInBaseCurrency:
