@@ -61,9 +61,6 @@ export class CreateOrderDto {
   @Min(0)
   fee: number;
 
-  @IsBoolean()
-  isActive: boolean;
-
   @IsNumber()
   @Min(0)
   quantity: number;

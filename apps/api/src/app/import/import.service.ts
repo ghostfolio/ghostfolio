@@ -510,7 +510,6 @@ export class ImportService {
         dataSource,
         date: dateString,
         fee,
-        isActive,
         quantity,
         symbol,
         type,
@@ -547,7 +546,6 @@ export class ImportService {
           SymbolProfile: {
             currency,
             dataSource,
-            isActive,
             symbol,
             activitiesCount: undefined,
             assetClass: undefined,
@@ -556,6 +554,7 @@ export class ImportService {
             createdAt: undefined,
             holdings: undefined,
             id: undefined,
+            isActive: true,
             sectors: undefined,
             updatedAt: undefined
           }
