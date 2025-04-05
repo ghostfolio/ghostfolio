@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Upgraded `eslint` dependencies
+- Upgraded `Nx` from version `20.6.4` to `20.7.1`
 
 ## 2.150.0 - 2025-04-05
 
