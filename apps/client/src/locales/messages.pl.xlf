@@ -1359,7 +1359,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
-          <context context-type="linenumber">516</context>
+          <context context-type="linenumber">526</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/create-asset-profile-dialog/create-asset-profile-dialog.html</context>
@@ -1403,7 +1403,7 @@
         <target state="translated">Zapisz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
-          <context context-type="linenumber">523</context>
+          <context context-type="linenumber">533</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/create-asset-profile-dialog/create-asset-profile-dialog.html</context>
@@ -6203,7 +6203,7 @@
         <target state="translated">Obecna cena rynkowa wynosi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">532</context>
+          <context context-type="linenumber">536</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a79d938b5ed20249b4ab6bef86c12633d2f346a0" datatype="html">
@@ -6449,6 +6449,10 @@
       <trans-unit id="4f986b5ab20fe31ca54d7345a73b6b2402ddd350" datatype="html">
         <source>Data Gathering</source>
         <target state="translated">Gromadzenie Danych</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
+          <context context-type="linenumber">523</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">60</context>
@@ -6999,7 +7003,7 @@
         <target state="translated">Błąd</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">523</context>
+          <context context-type="linenumber">527</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c95505b5a74151a0c235b19b9c41db7983205ba7" datatype="html">
@@ -7641,7 +7645,7 @@
         <target state="new">Lazy</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6882618704933649036" datatype="html">
@@ -7649,7 +7653,7 @@
         <target state="new">Instant</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="47969a4a0916bea5385b42c18749e32a35f07bd7" datatype="html">
@@ -7689,7 +7693,7 @@
         <target state="new">end of day</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">138</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4547068148181074902" datatype="html">
@@ -7697,7 +7701,7 @@
         <target state="new">real-time</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">140</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7109040016560023658" datatype="html">
@@ -7918,7 +7922,7 @@
         <target state="translated"><x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>) jest już w użyciu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">458</context>
+          <context context-type="linenumber">462</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5612909502553004436" datatype="html">
@@ -7926,7 +7930,7 @@
         <target state="translated">Wystąpił błąd podczas aktualizacji do <x id="PH" equiv-text="assetProfileIdentifier.symbol"/> (<x id="PH_1" equiv-text="assetProfileIdentifier.dataSource"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
-          <context context-type="linenumber">466</context>
+          <context context-type="linenumber">470</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c2d0ac9f528bbd5f53fd34269fde8b59e029621b" datatype="html">
