@@ -1123,7 +1123,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">231</context>
+          <context context-type="linenumber">235</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
@@ -1147,7 +1147,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">253</context>
+          <context context-type="linenumber">257</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1586,28 +1586,12 @@
           <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5067ede95804e0e0e2b078747848367a7373cc9b" datatype="html">
-        <source>Gather Recent Data</source>
-        <target state="translated">Zbierz Najnowsze Dane</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">192</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="27e27f3f7338baefacfd5668bad03ece9c5955df" datatype="html">
-        <source>Gather All Data</source>
-        <target state="translated">Zbierz Wszystkie Dane</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">195</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="cc65b67b46b69cf06ff1f16a909e61612c9d57b8" datatype="html">
         <source>Gather Profile Data</source>
         <target state="translated">Zbierz Dane Profilu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">198</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1628,14 +1612,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="af22005ceeded8dba7571d8b93a3e06bd674c488" datatype="html">
-        <source>Gather Historical Data</source>
-        <target state="translated">Zbierz Dane Historyczne</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
-          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a059709f71aa4c0ac219e160e78a738682ca6a36" datatype="html">
@@ -6699,7 +6675,7 @@
         <target state="translated">Usuń Profile</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">206</context>
+          <context context-type="linenumber">210</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3514960995395821133" datatype="html">
@@ -7947,6 +7923,30 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">266</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d59937471dbd9dee61cfd6402c3963bbfccc7b2b" datatype="html">
+        <source>Gather Recent Historical Market Data</source>
+        <target state="new">Gather Recent Historical Market Data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
+          <context context-type="linenumber">193</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7faff7a8ef4065b33ebb2e88a54183bf1b124525" datatype="html">
+        <source>Gather All Historical Market Data</source>
+        <target state="new">Gather All Historical Market Data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="bae25a98c71215c0151c0bf199277457bb14e856" datatype="html">
+        <source>Gather Historical Market Dataa</source>
+        <target state="new">Gather Historical Market Dataa</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
     </body>
