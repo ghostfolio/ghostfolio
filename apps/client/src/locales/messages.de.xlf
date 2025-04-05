@@ -7939,7 +7939,7 @@
       </trans-unit>
       <trans-unit id="f60c9276bebb4445596e3864f2f825c95b154ada" datatype="html">
         <source>with API access for</source>
-        <target state="new">with API access for</target>
+        <target state="translated">inklusive API-Zugriff für</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">266</context>
