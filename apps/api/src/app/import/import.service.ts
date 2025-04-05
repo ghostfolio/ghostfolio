@@ -555,6 +555,7 @@ export class ImportService {
             createdAt: undefined,
             holdings: undefined,
             id: undefined,
+            isActive: true,
             sectors: undefined,
             updatedAt: undefined
           }

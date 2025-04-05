@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to toggle the data gathering for individual asset profiles in the asset profile details dialog of the admin control panel
+
 ### Changed
 
 - Improved the check for duplicates in the preview step of the activities import (allow different comments)
