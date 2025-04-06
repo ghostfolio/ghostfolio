@@ -3,7 +3,7 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'crypto';
 import ms from 'ms';
 
@@ -12,7 +12,14 @@ export class RedisCacheService {
   public constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly configurationService: ConfigurationService
-  ) {}
+  ) {
+    const client = cache.stores[0];
+
+    client.deserialize = undefined;
+    client.on('error', (error) => {
+      Logger.error(error, 'RedisCacheService');
+    });
+  }
 
   public async get(key: string): Promise<string> {
     return this.cache.get(key);
@@ -21,7 +28,6 @@ export class RedisCacheService {
   public async getKeys(aPrefix?: string): Promise<string[]> {
     const keys: string[] = [];
     const prefix = aPrefix;
-
     for await (const [key] of this.cache.stores[0].iterator({})) {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
         keys.push(key);
@@ -85,7 +91,8 @@ export class RedisCacheService {
     const keys = await this.getKeys(
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
-
+    console.log('keys is ');
+    console.log(keys);
     return this.cache.mdel(keys);
   }
 
