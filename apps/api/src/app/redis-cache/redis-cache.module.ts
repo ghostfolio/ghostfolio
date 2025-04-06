@@ -1,17 +1,16 @@
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 
+import { createKeyv } from '@keyv/redis';
 import { CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
-import { redisStore } from 'cache-manager-redis-yet';
-import type { RedisClientOptions } from 'redis';
 
 import { RedisCacheService } from './redis-cache.service';
 
 @Module({
   exports: [RedisCacheService],
   imports: [
-    CacheModule.registerAsync<RedisClientOptions>({
+    CacheModule.registerAsync({
       imports: [ConfigurationModule],
       inject: [ConfigurationService],
       useFactory: async (configurationService: ConfigurationService) => {
@@ -20,10 +19,13 @@ import { RedisCacheService } from './redis-cache.service';
         );
 
         return {
-          store: redisStore,
-          ttl: configurationService.get('CACHE_TTL'),
-          url: `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
-        } as RedisClientOptions;
+          stores: [
+            createKeyv(
+              `redis://${redisPassword ? `:${redisPassword}` : ''}@${configurationService.get('REDIS_HOST')}:${configurationService.get('REDIS_PORT')}/${configurationService.get('REDIS_DB')}`
+            )
+          ],
+          ttl: configurationService.get('CACHE_TTL')
+        };
       }
     }),
     ConfigurationModule
