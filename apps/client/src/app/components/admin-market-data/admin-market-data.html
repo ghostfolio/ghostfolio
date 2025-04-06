@@ -189,10 +189,14 @@
               </button>
               <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
                 <button mat-menu-item (click)="onGather7Days()">
-                  <ng-container i18n>Gather Recent Data</ng-container>
+                  <ng-container i18n
+                    >Gather Recent Historical Market Data</ng-container
+                  >
                 </button>
                 <button mat-menu-item (click)="onGatherMax()">
-                  <ng-container i18n>Gather All Data</ng-container>
+                  <ng-container i18n
+                    >Gather All Historical Market Data</ng-container
+                  >
                 </button>
                 <button mat-menu-item (click)="onGatherProfileData()">
                   <ng-container i18n>Gather Profile Data</ng-container>

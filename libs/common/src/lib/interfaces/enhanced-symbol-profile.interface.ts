@@ -22,6 +22,7 @@ export interface EnhancedSymbolProfile {
   figiShareClass?: string;
   holdings: Holding[];
   id: string;
+  isActive: boolean;
   isin?: string;
   name?: string;
   scraperConfiguration?: ScraperConfiguration;

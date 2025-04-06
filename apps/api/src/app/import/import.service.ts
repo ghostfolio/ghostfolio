@@ -519,6 +519,7 @@ export class ImportService {
         const isDuplicate = existingActivities.some((activity) => {
           return (
             activity.accountId === accountId &&
+            activity.comment === comment &&
             activity.SymbolProfile.currency === currency &&
             activity.SymbolProfile.dataSource === dataSource &&
             isSameSecond(activity.date, date) &&
@@ -554,6 +555,7 @@ export class ImportService {
             createdAt: undefined,
             holdings: undefined,
             id: undefined,
+            isActive: true,
             sectors: undefined,
             updatedAt: undefined
           }
