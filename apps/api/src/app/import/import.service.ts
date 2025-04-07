@@ -121,7 +121,6 @@ export class ImportService {
             currency: undefined,
             createdAt: undefined,
             fee: 0,
-            feeInBaseCurrency: 0,
             feeInSymbolCurrency: 0,
             id: assetProfile.id,
             isDraft: false,
@@ -129,13 +128,6 @@ export class ImportService {
             symbolProfileId: assetProfile.id,
             type: 'DIVIDEND',
             unitPrice: marketPrice,
-            unitPriceInBaseCurrency:
-              await this.exchangeRateDataService.toCurrencyAtDate(
-                marketPrice,
-                assetProfile.currency,
-                userCurrency,
-                date
-              ),
             unitPriceInSymbolCurrency: marketPrice,
             updatedAt: undefined,
             userId: Account?.userId,
@@ -448,12 +440,6 @@ export class ImportService {
         ...order,
         error,
         value,
-        feeInBaseCurrency: await this.exchangeRateDataService.toCurrencyAtDate(
-          fee,
-          assetProfile.currency,
-          userCurrency,
-          date
-        ),
         // @ts-ignore
         SymbolProfile: assetProfile,
         valueInBaseCurrency:
