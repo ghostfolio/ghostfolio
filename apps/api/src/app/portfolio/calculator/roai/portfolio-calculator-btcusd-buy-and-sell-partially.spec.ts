@@ -105,7 +105,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2015-01-01'),
-          feeInBaseCurrency: 0,
+          feeInSymbolCurrency: 0,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -115,12 +115,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BTCUSD'
           },
           type: 'BUY',
-          unitPriceInBaseCurrency: 320.43
+          unitPriceInSymbolCurrency: 320.43
         },
         {
           ...activityDummyData,
           date: new Date('2017-12-31'),
-          feeInBaseCurrency: 0,
+          feeInSymbolCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -130,7 +130,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'BTCUSD'
           },
           type: 'SELL',
-          unitPriceInBaseCurrency: 14156.4
+          unitPriceInSymbolCurrency: 14156.4
         }
       ];
 
