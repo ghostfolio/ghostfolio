@@ -101,7 +101,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
         this.data.activity?.SymbolProfile?.currency,
         Validators.required
       ],
-      currencyOfUnitPrice: [this.data.activity?.currency, Validators.required],
+      currencyOfUnitPrice: [
+        this.data.activity?.currency ??
+          this.data.activity?.SymbolProfile?.currency,
+        Validators.required
+      ],
       dataSource: [
         this.data.activity?.SymbolProfile?.dataSource,
         Validators.required
