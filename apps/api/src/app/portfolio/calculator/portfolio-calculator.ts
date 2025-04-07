@@ -112,12 +112,12 @@ export abstract class PortfolioCalculator {
       .map(
         ({
           date,
-          feeInBaseCurrency,
+          feeInSymbolCurrency,
           quantity,
           SymbolProfile,
           tags = [],
           type,
-          unitPriceInBaseCurrency
+          unitPriceInSymbolCurrency
         }) => {
           if (isBefore(date, dateOfFirstActivity)) {
             dateOfFirstActivity = date;
@@ -134,9 +134,9 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(feeInBaseCurrency),
+            fee: new Big(feeInSymbolCurrency),
             quantity: new Big(quantity),
-            unitPrice: new Big(unitPriceInBaseCurrency)
+            unitPrice: new Big(unitPriceInSymbolCurrency)
           };
         }
       )

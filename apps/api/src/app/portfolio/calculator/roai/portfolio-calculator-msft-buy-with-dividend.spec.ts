@@ -104,7 +104,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2021-09-16'),
-          feeInBaseCurrency: 19,
+          feeInSymbolCurrency: 19,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -114,12 +114,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'MSFT'
           },
           type: 'BUY',
-          unitPriceInBaseCurrency: 298.58
+          unitPriceInSymbolCurrency: 298.58
         },
         {
           ...activityDummyData,
           date: new Date('2021-11-16'),
-          feeInBaseCurrency: 0,
+          feeInSymbolCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -129,7 +129,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'MSFT'
           },
           type: 'DIVIDEND',
-          unitPriceInBaseCurrency: 0.62
+          unitPriceInSymbolCurrency: 0.62
         }
       ];
 

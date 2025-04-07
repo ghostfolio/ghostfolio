@@ -122,6 +122,7 @@ export class ImportService {
             createdAt: undefined,
             fee: 0,
             feeInBaseCurrency: 0,
+            feeInSymbolCurrency: 0,
             id: assetProfile.id,
             isDraft: false,
             SymbolProfile: assetProfile,
@@ -135,6 +136,7 @@ export class ImportService {
                 userCurrency,
                 date
               ),
+            unitPriceInSymbolCurrency: marketPrice,
             updatedAt: undefined,
             userId: Account?.userId,
             valueInBaseCurrency:

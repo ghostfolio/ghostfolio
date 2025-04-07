@@ -91,7 +91,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2021-11-22'),
-          feeInBaseCurrency: 1.55,
+          feeInSymbolCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,12 +101,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'BUY',
-          unitPriceInBaseCurrency: 142.9
+          unitPriceInSymbolCurrency: 142.9
         },
         {
           ...activityDummyData,
           date: new Date('2021-11-30'),
-          feeInBaseCurrency: 1.65,
+          feeInSymbolCurrency: 1.65,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -116,12 +116,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'SELL',
-          unitPriceInBaseCurrency: 136.6
+          unitPriceInSymbolCurrency: 136.6
         },
         {
           ...activityDummyData,
           date: new Date('2021-11-30'),
-          feeInBaseCurrency: 0,
+          feeInSymbolCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -131,7 +131,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'SELL',
-          unitPriceInBaseCurrency: 136.6
+          unitPriceInSymbolCurrency: 136.6
         }
       ];
 
