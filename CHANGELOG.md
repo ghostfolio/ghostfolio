@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for Enlish (`en`)
 - Upgraded `eslint` dependencies
 
 ## 2.150.0 - 2025-04-05
