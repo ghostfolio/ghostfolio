@@ -14,8 +14,6 @@ export class RedisCacheService {
     private readonly configurationService: ConfigurationService
   ) {
     const client = cache.stores[0];
-
-    client.deserialize = undefined;
     client.on('error', (error) => {
       Logger.error(error, 'RedisCacheService');
     });
@@ -28,6 +26,8 @@ export class RedisCacheService {
   public async getKeys(aPrefix?: string): Promise<string[]> {
     const keys: string[] = [];
     const prefix = aPrefix;
+    this.cache.stores[0].deserialize = undefined;
+
     for await (const [key] of this.cache.stores[0].iterator({})) {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
         keys.push(key);
@@ -91,8 +91,6 @@ export class RedisCacheService {
     const keys = await this.getKeys(
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
-    console.log('keys is ');
-    console.log(keys);
     return this.cache.mdel(keys);
   }
 
