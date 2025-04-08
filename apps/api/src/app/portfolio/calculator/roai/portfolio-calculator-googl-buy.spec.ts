@@ -161,9 +161,7 @@ describe('PortfolioCalculator', () => {
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('0.24112962014285697628')
             },
-            netPerformanceWithCurrencyEffectMap: {
-              max: new Big('19.851974')
-            },
+            netPerformanceWithCurrencyEffectMap: { max: new Big('19.851974') },
             marketPrice: 116.45,
             marketPriceInBaseCurrency: 103.10483,
             quantity: new Big('1'),
@@ -199,30 +197,12 @@ describe('PortfolioCalculator', () => {
 
       expect(investmentsByMonth).toEqual([
         { date: '2023-01-01', investment: 82.329056 },
-        {
-          date: '2023-02-01',
-          investment: 0
-        },
-        {
-          date: '2023-03-01',
-          investment: 0
-        },
-        {
-          date: '2023-04-01',
-          investment: 0
-        },
-        {
-          date: '2023-05-01',
-          investment: 0
-        },
-        {
-          date: '2023-06-01',
-          investment: 0
-        },
-        {
-          date: '2023-07-01',
-          investment: 0
-        }
+        { date: '2023-02-01', investment: 0 },
+        { date: '2023-03-01', investment: 0 },
+        { date: '2023-04-01', investment: 0 },
+        { date: '2023-05-01', investment: 0 },
+        { date: '2023-06-01', investment: 0 },
+        { date: '2023-07-01', investment: 0 }
       ]);
     });
   });

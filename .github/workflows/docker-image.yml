@@ -4,9 +4,6 @@ on:
   push:
     tags:
       - '*.*.*'
-  pull_request:
-    branches:
-      - 'main'
 
 jobs:
   build_and_push:
@@ -19,7 +16,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghostfolio/ghostfolio
+          images: dandevaud/ghostfolio
           tags: |
             type=semver,pattern={{major}}
             type=semver,pattern={{version}}

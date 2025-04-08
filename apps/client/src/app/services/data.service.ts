@@ -513,15 +513,18 @@ export class DataService {
 
   public fetchPortfolioDetails({
     filters,
+    parameters,
     withMarkets = false
   }: {
     filters?: Filter[];
+    parameters?: any;
     withMarkets?: boolean;
   } = {}): Observable<PortfolioDetails> {
     let params = this.buildFiltersAsQueryParams({ filters });
 
     if (withMarkets) {
       params = params.append('withMarkets', withMarkets);
+      params = parameters ? params.appendAll(parameters) : params;
     }
 
     return this.http
@@ -611,11 +614,13 @@ export class DataService {
     filters,
     range,
     withExcludedAccounts = false,
+    timeWeightedPerformance = false,
     withItems = false
   }: {
     filters?: Filter[];
     range: DateRange;
     withExcludedAccounts?: boolean;
+    timeWeightedPerformance?: boolean;
     withItems?: boolean;
   }): Observable<PortfolioPerformanceResponse> {
     let params = this.buildFiltersAsQueryParams({ filters });
@@ -623,6 +628,12 @@ export class DataService {
 
     if (withExcludedAccounts) {
       params = params.append('withExcludedAccounts', withExcludedAccounts);
+    }
+    if (timeWeightedPerformance) {
+      params = params.append(
+        'timeWeightedPerformance',
+        timeWeightedPerformance
+      );
     }
 
     if (withItems) {

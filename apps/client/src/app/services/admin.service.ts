@@ -170,6 +170,10 @@ export class AdminService {
     return this.http.post<void>('/api/v1/admin/gather/max', {});
   }
 
+  public gatherMissingOnly() {
+    return this.http.post<void>('/api/v1/admin/gather/missing', {});
+  }
+
   public gatherProfileData() {
     return this.http.post<void>('/api/v1/admin/gather/profile-data', {});
   }
@@ -186,6 +190,17 @@ export class AdminService {
 
   public gatherSymbol({ dataSource, symbol }: AssetProfileIdentifier) {
     const url = `/api/v1/admin/gather/${dataSource}/${symbol}`;
+    return this.http.post<MarketData | void>(url, {});
+  }
+
+  public gatherSymbolMissingOnly({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier & {
+    date?: Date;
+  }) {
+    const url = `/api/v1/admin/gatherMissing/${dataSource}/${symbol}`;
+
     return this.http.post<MarketData | void>(url, {});
   }
 
@@ -218,6 +233,8 @@ export class AdminService {
       sectors,
       symbol: newSymbol,
       symbolMapping,
+      tags,
+      tagsDisconnected,
       url
     }: UpdateAssetProfileDto
   ) {
@@ -236,6 +253,8 @@ export class AdminService {
         sectors,
         symbol: newSymbol,
         symbolMapping,
+        tags,
+        tagsDisconnected,
         url
       }
     );

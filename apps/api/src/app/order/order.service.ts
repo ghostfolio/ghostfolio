@@ -50,33 +50,55 @@ export class OrderService {
   public async assignTags({
     dataSource,
     symbol,
-    tags,
-    userId
+    userId,
+    tags
   }: { tags: Tag[]; userId: string } & AssetProfileIdentifier) {
-    const orders = await this.prismaService.order.findMany({
-      where: {
-        userId,
-        SymbolProfile: {
-          dataSource,
-          symbol
-        }
+    const promis = await this.symbolProfileService.getSymbolProfiles([
+      {
+        dataSource,
+        symbol
       }
-    });
-
-    await Promise.all(
-      orders.map(({ id }) =>
-        this.prismaService.order.update({
-          data: {
-            tags: {
-              // The set operation replaces all existing connections with the provided ones
-              set: tags.map((tag) => {
-                return { id: tag.id };
-              })
-            }
-          },
-          where: { id }
-        })
-      )
+    ]);
+    const symbolProfile: EnhancedSymbolProfile = promis[0];
+    const result = await this.symbolProfileService.updateSymbolProfile(
+      { dataSource, symbol },
+      {
+        assetClass: symbolProfile.assetClass,
+        assetSubClass: symbolProfile.assetSubClass,
+        countries: symbolProfile.countries.reduce(
+          (all, v) => [...all, { code: v.code, weight: v.weight }],
+          []
+        ),
+        currency: symbolProfile.currency,
+        dataSource,
+        holdings: symbolProfile.holdings.reduce(
+          (all, v) => [
+            ...all,
+            { name: v.name, weight: v.allocationInPercentage }
+          ],
+          []
+        ),
+        name: symbolProfile.name,
+        sectors: symbolProfile.sectors.reduce(
+          (all, v) => [...all, { name: v.name, weight: v.weight }],
+          []
+        ),
+        symbol,
+        tags: {
+          connectOrCreate: tags.map(({ id, name }) => {
+            return {
+              create: {
+                id,
+                name
+              },
+              where: {
+                id
+              }
+            };
+          })
+        },
+        url: symbolProfile.url
+      }
     );
 
     this.eventEmitter.emit(
@@ -85,6 +107,8 @@ export class OrderService {
         userId
       })
     );
+
+    return result;
   }
 
   public async createOrder(
@@ -302,6 +326,7 @@ export class OrderService {
     });
   }
 
+  @LogPerformance
   public async getOrders({
     endDate,
     filters,
@@ -456,13 +481,34 @@ export class OrderService {
     }
 
     if (filtersByTag?.length > 0) {
-      where.tags = {
-        some: {
-          OR: filtersByTag.map(({ id }) => {
-            return { id };
-          })
+      where.AND = [
+        {
+          OR: [
+            {
+              tags: {
+                some: {
+                  OR: filtersByTag.map(({ id }) => {
+                    return {
+                      id: id
+                    };
+                  })
+                }
+              }
+            },
+            {
+              SymbolProfile: {
+                tags: {
+                  some: {
+                    OR: filtersByTag.map(({ id }) => {
+                      return { id };
+                    })
+                  }
+                }
+              }
+            }
+          ]
         }
-      };
+      ];
     }
 
     if (sortColumn) {
@@ -494,7 +540,11 @@ export class OrderService {
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          SymbolProfile: true,
+          SymbolProfile: {
+            include: {
+              tags: true
+            }
+          },
           tags: true
         }
       }),

@@ -4,6 +4,7 @@
   "sourceRoot": "apps/api/src",
   "projectType": "application",
   "prefix": "api",
+  "tags": [],
   "generators": {},
   "targets": {
     "build": {
@@ -60,6 +61,13 @@
         "buildTarget": "api:build"
       }
     },
+    "profile": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "api:build",
+        "runtimeArgs": ["--perf-basic-prof-only-functions"]
+      }
+    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
@@ -73,6 +81,5 @@
       },
       "outputs": ["{workspaceRoot}/coverage/apps/api"]
     }
-  },
-  "tags": []
+  }
 }

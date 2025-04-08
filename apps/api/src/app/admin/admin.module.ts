@@ -10,6 +10,7 @@ import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-da
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
+import { SymbolProfileOverwriteModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile-overwrite.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
 import { Module } from '@nestjs/common';
@@ -33,6 +34,7 @@ import { QueueModule } from './queue/queue.module';
     QueueModule,
     SubscriptionModule,
     SymbolProfileModule,
+    SymbolProfileOverwriteModule,
     TransformDataSourceInRequestModule
   ],
   controllers: [AdminController],

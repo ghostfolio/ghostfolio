@@ -183,6 +183,12 @@ export class UserController {
       }
     }
 
+    for (const key in data) {
+      if (data[key] !== false && data[key] !== null) {
+        userSettings[key] = data[key];
+      }
+    }
+
     return this.userService.updateUserSetting({
       emitPortfolioChangedEvent,
       userSettings,

@@ -12,7 +12,11 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
+import type {
+  AiPromptMode,
+  DateRange,
+  GroupBy
+} from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -46,6 +50,13 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public benchmarks: Partial<SymbolProfile>[];
   public bottom3: PortfolioPosition[];
   public dateRangeOptions = ToggleComponent.DEFAULT_DATE_RANGE_OPTIONS;
+  public timeWeightedPerformanceOptions = [
+    { label: $localize`No`, value: 'N' },
+    { label: $localize`Both`, value: 'B' },
+    { label: $localize`Only`, value: 'O' }
+  ];
+  public selectedTimeWeightedPerformanceOption: string;
+  public daysInMarket: number;
   public deviceType: string;
   public dividendsByGroup: InvestmentItem[];
   public dividendTimelineDataLabel = $localize`Dividend`;
@@ -69,6 +80,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public performance: PortfolioPerformance;
   public performanceDataItems: HistoricalDataItem[];
   public performanceDataItemsInPercentage: HistoricalDataItem[];
+  public performanceDataItemsTimeWeightedInPercentage: HistoricalDataItem[] =
+    [];
   public portfolioEvolutionDataLabel = $localize`Investment`;
   public streaks: PortfolioInvestments['streaks'];
   public top3: PortfolioPosition[];
@@ -139,6 +152,24 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.userService
           .get(true)
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((user) => {
+            this.user = user;
+
+            this.changeDetectorRef.markForCheck();
+          });
+      });
+  }
+
+  public onChangeDateRange(dateRange: DateRange) {
+    this.dataService
+      .putUserSetting({ dateRange })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        this.userService.remove();
+
+        this.userService
+          .get()
           .pipe(takeUntil(this.unsubscribeSubject))
           .subscribe((user) => {
             this.user = user;
@@ -267,6 +298,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         this.performance = performance;
         this.performanceDataItems = [];
         this.performanceDataItemsInPercentage = [];
+        this.performanceDataItemsTimeWeightedInPercentage = [];
 
         for (const [
           index,

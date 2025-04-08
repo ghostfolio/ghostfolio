@@ -61,6 +61,19 @@
             {{ element.activityCount }}
           </td>
         </ng-container>
+        <ng-container matColumnDef="holdings">
+          <th
+            *matHeaderCellDef
+            class="px-1"
+            mat-header-cell
+            mat-sort-header="holdingCount"
+          >
+            <ng-container i18n>Holdings</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
+            {{ element.holdingCount }}
+          </td>
+        </ng-container>
 
         <ng-container matColumnDef="actions" stickyEnd>
           <th

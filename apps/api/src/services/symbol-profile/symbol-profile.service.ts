@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { UNKNOWN_KEY } from '@ghostfolio/common/config';
 import {
@@ -10,31 +11,19 @@ import { Country } from '@ghostfolio/common/interfaces/country.interface';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
 
 import { Injectable } from '@nestjs/common';
-import { Prisma, SymbolProfile, SymbolProfileOverrides } from '@prisma/client';
+import {
+  Prisma,
+  SymbolProfile,
+  SymbolProfileOverrides,
+  Tag
+} from '@prisma/client';
 import { continents, countries } from 'countries-list';
 
 @Injectable()
 export class SymbolProfileService {
   public constructor(private readonly prismaService: PrismaService) {}
 
-  public async add(
-    assetProfile: Prisma.SymbolProfileCreateInput
-  ): Promise<SymbolProfile | never> {
-    return this.prismaService.symbolProfile.create({ data: assetProfile });
-  }
-
-  public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
-    return this.prismaService.symbolProfile.delete({
-      where: { dataSource_symbol: { dataSource, symbol } }
-    });
-  }
-
-  public async deleteById(id: string) {
-    return this.prismaService.symbolProfile.delete({
-      where: { id }
-    });
-  }
-
+  @LogPerformance
   public async getActiveSymbolProfilesByUserSubscription({
     withUserSubscription = false
   }: {
@@ -70,6 +59,7 @@ export class SymbolProfileService {
     });
   }
 
+  @LogPerformance
   public async getSymbolProfiles(
     aAssetProfileIdentifiers: AssetProfileIdentifier[]
   ): Promise<EnhancedSymbolProfile[]> {
@@ -86,6 +76,7 @@ export class SymbolProfileService {
             select: { date: true },
             take: 1
           },
+          tags: true,
           SymbolProfileOverrides: true
         },
         where: {
@@ -102,6 +93,24 @@ export class SymbolProfileService {
       });
   }
 
+  public async add(
+    assetProfile: Prisma.SymbolProfileCreateInput
+  ): Promise<SymbolProfile | never> {
+    return this.prismaService.symbolProfile.create({ data: assetProfile });
+  }
+
+  public async delete({ dataSource, symbol }: AssetProfileIdentifier) {
+    return this.prismaService.symbolProfile.delete({
+      where: { dataSource_symbol: { dataSource, symbol } }
+    });
+  }
+
+  public async deleteById(id: string) {
+    return this.prismaService.symbolProfile.delete({
+      where: { id }
+    });
+  }
+
   public async getSymbolProfilesByIds(
     symbolProfileIds: string[]
   ): Promise<EnhancedSymbolProfile[]> {
@@ -111,7 +120,8 @@ export class SymbolProfileService {
           _count: {
             select: { Order: true }
           },
-          SymbolProfileOverrides: true
+          SymbolProfileOverrides: true,
+          tags: true
         },
         where: {
           id: {
@@ -155,6 +165,7 @@ export class SymbolProfileService {
       holdings,
       isActive,
       name,
+      tags,
       scraperConfiguration,
       sectors,
       symbolMapping,
@@ -172,6 +183,7 @@ export class SymbolProfileService {
         holdings,
         isActive,
         name,
+        tags,
         scraperConfiguration,
         sectors,
         symbolMapping,
@@ -188,6 +200,7 @@ export class SymbolProfileService {
       Order?: {
         date: Date;
       }[];
+      tags?: Tag[];
       SymbolProfileOverrides: SymbolProfileOverrides;
     })[]
   ): EnhancedSymbolProfile[] {
@@ -206,7 +219,8 @@ export class SymbolProfileService {
         sectors: this.getSectors(
           symbolProfile?.sectors as unknown as Prisma.JsonArray
         ),
-        symbolMapping: this.getSymbolMapping(symbolProfile)
+        symbolMapping: this.getSymbolMapping(symbolProfile),
+        tags: symbolProfile?.tags
       };
 
       item.activitiesCount = symbolProfile._count.Order;

@@ -11,6 +11,7 @@ export interface PortfolioHoldingDetail {
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;
+  stakeRewards: number;
   dividendYieldPercent: number;
   dividendYieldPercentWithCurrencyEffect: number;
   feeInBaseCurrency: number;
