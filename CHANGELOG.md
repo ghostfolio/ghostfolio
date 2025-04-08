@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added status column to market data table in admin control panel
+
 ### Changed
 
 - Improved the language localization for Enlish (`en`)
