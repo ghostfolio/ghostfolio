@@ -24,6 +24,7 @@ export const symbolProfileDummyData = {
   createdAt: undefined,
   holdings: [],
   id: undefined,
+  isActive: true,
   sectors: [],
   updatedAt: undefined
 };

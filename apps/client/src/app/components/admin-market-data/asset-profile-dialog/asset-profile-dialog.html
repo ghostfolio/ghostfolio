@@ -24,7 +24,7 @@
           onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
         "
       >
-        <ng-container i18n>Gather Historical Data</ng-container>
+        <ng-container i18n>Gather Historical Market Dataa</ng-container>
       </button>
       <button
         mat-menu-item
@@ -556,7 +556,17 @@
     </form>
   </div>
 
-  <div class="d-flex justify-content-end" mat-dialog-actions>
+  <div class="d-flex" mat-dialog-actions>
+    <div class="gf-spacer">
+      <mat-checkbox
+        color="primary"
+        [checked]="assetProfile?.isActive ?? false"
+        [disabled]="isEditAssetProfileIdentifierMode"
+        (change)="onToggleIsActive($event)"
+      >
+        <ng-container i18n>Data Gathering</ng-container>
+      </mat-checkbox>
+    </div>
     <button i18n mat-button type="button" (click)="onClose()">Cancel</button>
     <button
       color="primary"

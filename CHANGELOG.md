@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Upgraded `eslint` dependencies
+
+## 2.150.0 - 2025-04-05
+
+### Added
+
+- Added support to toggle the data gathering for individual asset profiles in the asset profile details dialog of the admin control panel
+
+### Changed
+
+- Improved the check for duplicates in the preview step of the activities import (allow different comments)
+- Improved the language localization for Français (`fr`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Polish (`pl`)
+- Upgraded `ng-extract-i18n-merge` from version `2.14.1` to `2.14.3`
+
 ## 2.149.0 - 2025-03-30
 
 ### Changed

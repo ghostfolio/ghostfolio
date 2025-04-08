@@ -9,6 +9,7 @@ import {
 } from '@prisma/client';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
   IsObject,
   IsOptional,
@@ -40,6 +41,10 @@ export class UpdateAssetProfileDto {
   @IsEnum(DataSource, { each: true })
   @IsOptional()
   dataSource?: DataSource;
+
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 
   @IsOptional()
   @IsString()

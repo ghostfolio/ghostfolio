@@ -35,6 +35,7 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -93,6 +94,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     historicalData: this.formBuilder.group({
       csvString: ''
     }),
+    isActive: [true],
     name: ['', Validators.required],
     tags: new FormControl<Tag[]>(undefined),
     tagsDisconnected: new FormControl<Tag[]>(undefined),
@@ -277,6 +279,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
           historicalData: {
             csvString: AssetProfileDialog.HISTORICAL_DATA_TEMPLATE
           },
+          isActive: this.assetProfile?.isActive,
           name: this.assetProfile.name ?? this.assetProfile.symbol,
           scraperConfiguration: {
             defaultMarketPrice:
@@ -430,6 +433,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
       tags: this.assetProfileForm.get('tags').value,
       tagsDisconnected: this.assetProfileForm.get('tagsDisconnected').value,
       currency: this.assetProfileForm.get('currency').value,
+      isActive: this.assetProfileForm.get('isActive').value,
       name: this.assetProfileForm.get('name').value,
       url: this.assetProfileForm.get('url').value
     };
@@ -571,6 +575,20 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
             this.assetProfileForm.get('currency').value
         });
       });
+  }
+
+  public onToggleIsActive({ checked }: MatCheckboxChange) {
+    if (checked) {
+      this.assetProfileForm.get('isActive')?.setValue(true);
+    } else {
+      this.assetProfileForm.get('isActive')?.setValue(false);
+    }
+
+    if (checked === this.assetProfile.isActive) {
+      this.assetProfileForm.get('isActive')?.markAsPristine();
+    } else {
+      this.assetProfileForm.get('isActive')?.markAsDirty();
+    }
   }
 
   public onUnsetBenchmark({ dataSource, symbol }: AssetProfileIdentifier) {

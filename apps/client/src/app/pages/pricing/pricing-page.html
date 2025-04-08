@@ -240,7 +240,12 @@
                       <ion-icon name="information-circle-outline" />
                     </span>
                   </li>
-                  <li class="align-items-center d-flex mb-1">
+                  <li
+                    class="align-items-center d-flex"
+                    [ngClass]="{
+                      'mb-1': !user?.settings?.isExperimentalFeatures
+                    }"
+                  >
                     <ion-icon class="mr-1" name="checkmark-circle-outline" />
                     <span i18n>Professional Data Provider</span>
                     <span
@@ -251,6 +256,18 @@
                       <ion-icon name="information-circle-outline" />
                     </span>
                   </li>
+                  @if (user?.settings?.isExperimentalFeatures) {
+                    <li class="align-items-center d-flex line-height-1 mb-1">
+                      <ion-icon
+                        class="hidden mr-1"
+                        name="checkmark-circle-outline"
+                      />
+                      <small class="text-muted"
+                        ><ng-container i18n>with API access for</ng-container>
+                        Open Source</small
+                      >
+                    </li>
+                  }
                   <li class="align-items-center d-flex mb-1">
                     <ion-icon class="mr-1" name="checkmark-circle-outline" />
                     <a i18n [routerLink]="routerLinkFeatures"
