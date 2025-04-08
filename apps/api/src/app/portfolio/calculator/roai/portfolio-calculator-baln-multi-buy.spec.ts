@@ -166,13 +166,19 @@ describe('PortfolioCalculator', () => {
             feeInBaseCurrency: new Big('0'),
             firstBuyDate: '2021-11-30',
             grossPerformance: new Big('45.2'), // (148.9 - 141.36666666666666666666666666667) * 6
-            grossPerformancePercentage: new Big('0.05328931855694411695354869134638'),
-            grossPerformancePercentageWithCurrencyEffect: new Big('0.05328931855694411695354869134638'),
+            grossPerformancePercentage: new Big(
+              '0.05328931855694411695354869134638'
+            ),
+            grossPerformancePercentageWithCurrencyEffect: new Big(
+              '0.05328931855694411695354869134638'
+            ),
             grossPerformanceWithCurrencyEffect: new Big('45.2'),
             investment: new Big('848.2'), // Total investment
             investmentWithCurrencyEffect: new Big('848.2'),
             netPerformance: new Big('45.2'), // Gross performance - fees
-            netPerformancePercentage: new Big('0.05328931855694411695354869134638'),
+            netPerformancePercentage: new Big(
+              '0.05328931855694411695354869134638'
+            ),
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('0.05328931855694411695354869134638')
             },
