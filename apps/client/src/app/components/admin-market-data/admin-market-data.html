@@ -20,6 +20,30 @@
           matSortDirection="asc"
           [dataSource]="dataSource"
         >
+          <ng-container matColumnDef="status">
+            <th
+              *matHeaderCellDef
+              class="d-none d-lg-table-cell px-1"
+              mat-header-cell
+            ></th>
+            <td
+              *matCellDef="let element"
+              class="d-none d-lg-table-cell px-1"
+              mat-cell
+            >
+              <div class="d-flex justify-content-center">
+                @if (!element.isActive) {
+                  <ion-icon name="ban-outline" />
+                }
+              </div>
+            </td>
+            <td
+              *matFooterCellDef
+              class="d-none d-lg-table-cell px-1"
+              mat-footer-cell
+            ></td>
+          </ng-container>
+
           <ng-container matColumnDef="select">
             <th *matHeaderCellDef class="px-1" mat-header-cell></th>
             <td *matCellDef="let element" class="px-1" mat-cell>
