@@ -249,6 +249,7 @@ export class AdminService {
             currency: true,
             dataSource: true,
             id: true,
+            isActive: true,
             isUsedByUsersWithSubscription: true,
             name: true,
             Order: {
@@ -309,6 +310,7 @@ export class AdminService {
             currency,
             dataSource,
             id,
+            isActive,
             isUsedByUsersWithSubscription,
             name,
             Order,
@@ -367,6 +369,7 @@ export class AdminService {
               countriesCount,
               dataSource,
               id,
+              isActive,
               lastMarketPrice,
               name,
               symbol,
@@ -748,6 +751,7 @@ export class AdminService {
           countriesCount: 0,
           date: dateOfFirstActivity,
           id: undefined,
+          isActive: true,
           name: symbol,
           sectorsCount: 0
         };

@@ -20,6 +20,34 @@
           matSortDirection="asc"
           [dataSource]="dataSource"
         >
+          <ng-container matColumnDef="status">
+            <th
+              *matHeaderCellDef
+              class="d-none d-lg-table-cell px-1"
+              mat-header-cell
+            ></th>
+            <td
+              *matCellDef="let element"
+              class="d-none d-lg-table-cell px-1"
+              mat-cell
+            >
+              @if (!element.isActive) {
+                <div
+                  class="d-flex justify-content-center"
+                  i18n-title
+                  title="Data Gathering is off"
+                >
+                  <ion-icon name="ban-outline" />
+                </div>
+              }
+            </td>
+            <td
+              *matFooterCellDef
+              class="d-none d-lg-table-cell px-1"
+              mat-footer-cell
+            ></td>
+          </ng-container>
+
           <ng-container matColumnDef="select">
             <th *matHeaderCellDef class="px-1" mat-header-cell></th>
             <td *matCellDef="let element" class="px-1" mat-cell>
