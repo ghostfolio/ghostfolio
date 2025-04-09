@@ -1,6 +1,8 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/yahoo-finance/asset-profile-delisted.error';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE,
   DEFAULT_PROCESSOR_GATHER_ASSET_PROFILE_CONCURRENCY,
@@ -33,7 +35,8 @@ export class DataGatheringProcessor {
   public constructor(
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly marketDataService: MarketDataService
+    private readonly marketDataService: MarketDataService,
+    private readonly symbolProfileService: SymbolProfileService
   ) {}
 
   @Process({
@@ -76,8 +79,9 @@ export class DataGatheringProcessor {
     name: GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
   })
   public async gatherHistoricalMarketData(job: Job<IDataGatheringItem>) {
+    const { dataSource, date, symbol } = job.data;
+
     try {
-      const { dataSource, date, symbol } = job.data;
       let currentDate = parseISO(date as unknown as string);
 
       Logger.log(
@@ -142,12 +146,26 @@ export class DataGatheringProcessor {
         `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
     } catch (error) {
+      if (error instanceof AssetProfileDelistedError) {
+        const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
+          isActive: false
+        };
+
+        await this.symbolProfileService.updateSymbolProfile(
+          {
+            dataSource,
+            symbol
+          },
+          updatedSymbolProfile
+        );
+      }
+
       Logger.error(
         error,
         `DataGatheringProcessor (${GATHER_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME})`
       );
 
-      throw new Error(error);
+      throw error;
     }
   }
 }

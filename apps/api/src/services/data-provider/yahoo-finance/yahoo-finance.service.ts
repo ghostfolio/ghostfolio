@@ -31,6 +31,8 @@ import {
 } from 'yahoo-finance2/dist/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
 
+import { AssetProfileDelistedError } from './asset-profile-delisted.error';
+
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
   public constructor(
@@ -143,12 +145,16 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      throw new Error(
-        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
-          from,
-          DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
-      );
+      if (error.message === 'No data found, symbol may be delisted') {
+        throw new AssetProfileDelistedError(error.message);
+      } else {
+        throw new Error(
+          `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
+            from,
+            DATE_FORMAT
+          )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+        );
+      }
     }
   }
 
