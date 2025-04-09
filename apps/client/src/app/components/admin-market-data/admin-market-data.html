@@ -31,11 +31,15 @@
               class="d-none d-lg-table-cell px-1"
               mat-cell
             >
-              <div class="d-flex justify-content-center">
-                @if (!element.isActive) {
+              @if (!element.isActive) {
+                <div
+                  class="d-flex justify-content-center"
+                  i18n-title
+                  title="Data Gathering is off"
+                >
                   <ion-icon name="ban-outline" />
-                }
-              </div>
+                </div>
+              }
             </td>
             <td
               *matFooterCellDef
