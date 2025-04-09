@@ -17,4 +17,6 @@ import { RouterModule } from '@angular/router';
 })
 export class GfPremiumIndicatorComponent {
   @Input() enableLink = true;
+
+  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
 }
