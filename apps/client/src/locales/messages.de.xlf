@@ -7951,7 +7951,7 @@
       </trans-unit>
       <trans-unit id="82dddef5b7b438a8292c0ab4c0cf2955ef95fdda" datatype="html">
         <source>Data Gathering is off</source>
-        <target state="new">Data Gathering is off</target>
+        <target state="translated">Finanzmarktdaten synchronisieren ist deaktiviert</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">38</context>
