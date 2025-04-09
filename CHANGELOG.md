@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added status column to market data table in admin control panel
+- Added the data gathering status column to the historical market data table of the admin control
 
 ### Changed
 
