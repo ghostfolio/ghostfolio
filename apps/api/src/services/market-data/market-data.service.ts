@@ -75,17 +75,13 @@ export class MarketDataService {
         }
       ],
       where: {
-        dataSource: {
-          in: assetProfileIdentifiers.map(({ dataSource }) => {
-            return dataSource;
-          })
-        },
         date: dateQuery,
-        symbol: {
-          in: assetProfileIdentifiers.map(({ symbol }) => {
-            return symbol;
-          })
-        }
+        OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
+          return {
+            dataSource,
+            symbol
+          };
+        })
       }
     });
   }
