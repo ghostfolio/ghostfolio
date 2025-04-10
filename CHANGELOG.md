@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Set the maximum number of symbols per request in the _Financial Modeling Prep_ service
+- Migrated the get quotes functionality of the _Financial Modeling Prep_ service to its stable API version
 - Improved the language localization for Enlish (`en`)
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `20.6.4` to `20.7.1`
