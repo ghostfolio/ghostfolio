@@ -5,11 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 2.152.0-beta.3 - 2025-04-15
+## 2.152.0-beta.4 - 2025-04-15
 
 ### Changed
 
 - Disabled the extended prisma client in the admin service
+- Optimized the query of the data range functionality (`getRange()`) in the market data service
 
 ## 2.151.0 - 2025-04-11
 
