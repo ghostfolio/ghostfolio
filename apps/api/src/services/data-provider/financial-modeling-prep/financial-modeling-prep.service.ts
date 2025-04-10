@@ -325,6 +325,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
   }
 
+  public getMaxNumberOfSymbolsPerRequest() {
+    return 20;
+  }
+
   public getName(): DataSource {
     return DataSource.FINANCIAL_MODELING_PREP;
   }
@@ -341,7 +345,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
     try {
       const quotes = await fetch(
-        `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
+        `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
@@ -451,8 +455,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return name;
   }
 
-  private getUrl({ version }: { version: number }) {
-    return `https://financialmodelingprep.com/api/v${version}`;
+  private getUrl({ version }: { version: number | 'stable' }) {
+    const baseUrl = 'https://financialmodelingprep.com';
+
+    if (version === 'stable') {
+      return `${baseUrl}/stable`;
+    }
+
+    return `${baseUrl}/api/v${version}`;
   }
 
   private parseAssetClass(profile: any): {
