@@ -1,5 +1,6 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import {
   DataProviderInterface,
   GetAssetProfileParams,
@@ -30,8 +31,6 @@ import {
   HistoricalHistoryResult
 } from 'yahoo-finance2/dist/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/dist/esm/src/modules/quote';
-
-import { AssetProfileDelistedError } from './asset-profile-delisted.error';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {

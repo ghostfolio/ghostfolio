@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the data gathering status column to the historical market data table of the admin control
-- Deactivated asset profile on delisting (Yahoo Finance)
+- Deactivated asset profiles automatically on delisting in the _Yahoo Finance_ service
 
 ### Changed
 
