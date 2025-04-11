@@ -333,6 +333,10 @@
           <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.ts</context>
           <context context-type="linenumber">30</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/premium-indicator/premium-indicator.component.ts</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6948811958230386934" datatype="html">
         <source>privacy-policy</source>
