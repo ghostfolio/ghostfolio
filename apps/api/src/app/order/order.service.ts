@@ -534,18 +534,25 @@ export class OrderService {
         return {
           ...order,
           value,
-          feeInBaseCurrency:
+          feeInAssetProfileCurrency:
             await this.exchangeRateDataService.toCurrencyAtDate(
               order.fee,
+              order.currency ?? order.SymbolProfile.currency,
               order.SymbolProfile.currency,
-              userCurrency,
               order.date
             ),
           SymbolProfile: assetProfile,
+          unitPriceInAssetProfileCurrency:
+            await this.exchangeRateDataService.toCurrencyAtDate(
+              order.unitPrice,
+              order.currency ?? order.SymbolProfile.currency,
+              order.SymbolProfile.currency,
+              order.date
+            ),
           valueInBaseCurrency:
             await this.exchangeRateDataService.toCurrencyAtDate(
               value,
-              order.SymbolProfile.currency,
+              order.currency ?? order.SymbolProfile.currency,
               userCurrency,
               order.date
             )

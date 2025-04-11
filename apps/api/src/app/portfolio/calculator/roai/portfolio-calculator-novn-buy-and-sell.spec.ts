@@ -105,13 +105,15 @@ describe('PortfolioCalculator', () => {
         ...activityDummyData,
         ...activity,
         date: parseDate(activity.date),
+        feeInAssetProfileCurrency: activity.fee,
         SymbolProfile: {
           ...symbolProfileDummyData,
           currency: activity.currency,
           dataSource: activity.dataSource,
           name: 'Novartis AG',
           symbol: activity.symbol
-        }
+        },
+        unitPriceInAssetProfileCurrency: activity.unitPrice
       }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
