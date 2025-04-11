@@ -1,5 +1,6 @@
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import {
   DataProviderInterface,
   GetAssetProfileParams,
@@ -143,12 +144,16 @@ export class YahooFinanceService implements DataProviderInterface {
 
       return response;
     } catch (error) {
-      throw new Error(
-        `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
-          from,
-          DATE_FORMAT
-        )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
-      );
+      if (error.message === 'No data found, symbol may be delisted') {
+        throw new AssetProfileDelistedError(error.message);
+      } else {
+        throw new Error(
+          `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(
+            from,
+            DATE_FORMAT
+          )} to ${format(to, DATE_FORMAT)}: [${error.name}] ${error.message}`
+        );
+      }
     }
   }
 
