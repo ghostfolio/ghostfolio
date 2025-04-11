@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `20.6.4` to `20.7.1`
 
+### Fixed
+
+- Fixed the link to the pricing page in the premium indicator component
+
 ## 2.150.0 - 2025-04-05
 
 ### Added
