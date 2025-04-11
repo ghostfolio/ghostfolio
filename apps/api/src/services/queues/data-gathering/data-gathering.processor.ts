@@ -1,5 +1,5 @@
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/yahoo-finance/asset-profile-delisted.error';
+import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import { IDataGatheringItem } from '@ghostfolio/api/services/interfaces/interfaces';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
@@ -147,17 +147,17 @@ export class DataGatheringProcessor {
       );
     } catch (error) {
       if (error instanceof AssetProfileDelistedError) {
-        const updatedSymbolProfile: Prisma.SymbolProfileUpdateInput = {
-          isActive: false
-        };
-
         await this.symbolProfileService.updateSymbolProfile(
           {
             dataSource,
             symbol
           },
-          updatedSymbolProfile
+          {
+            isActive: false
+          }
         );
+
+        await job.discard();
       }
 
       Logger.error(
