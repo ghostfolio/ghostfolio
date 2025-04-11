@@ -91,7 +91,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2021-11-30'),
-          feeInSymbolCurrency: 1.55,
+          feeInAssetProfileCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,7 +101,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'BUY',
-          unitPriceInSymbolCurrency: 136.6
+          unitPriceInAssetProfileCurrency: 136.6
         }
       ];
 

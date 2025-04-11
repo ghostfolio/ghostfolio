@@ -104,7 +104,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2023-01-03'),
-          feeInSymbolCurrency: 1,
+          feeInAssetProfileCurrency: 1,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -114,7 +114,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'GOOGL'
           },
           type: 'BUY',
-          unitPriceInSymbolCurrency: 89.12
+          unitPriceInAssetProfileCurrency: 89.12
         }
       ];
 

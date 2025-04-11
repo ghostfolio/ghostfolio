@@ -91,7 +91,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2021-09-01'),
-          feeInSymbolCurrency: 49,
+          feeInAssetProfileCurrency: 49,
           quantity: 0,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,7 +101,7 @@ describe('PortfolioCalculator', () => {
             symbol: '2c463fb3-af07-486e-adb0-8301b3d72141'
           },
           type: 'FEE',
-          unitPriceInSymbolCurrency: 0
+          unitPriceInAssetProfileCurrency: 0
         }
       ];
 
