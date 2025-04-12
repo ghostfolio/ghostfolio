@@ -512,7 +512,6 @@ export class ImportService {
           type,
           unitPrice,
           SymbolProfile: {
-            currency: undefined,
             dataSource,
             symbol,
             activitiesCount: undefined,
@@ -520,6 +519,7 @@ export class ImportService {
             assetSubClass: undefined,
             countries: undefined,
             createdAt: undefined,
+            currency: undefined,
             holdings: undefined,
             id: undefined,
             isActive: true,
