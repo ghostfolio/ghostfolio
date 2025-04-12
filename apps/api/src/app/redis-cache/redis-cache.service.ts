@@ -14,6 +14,7 @@ export class RedisCacheService {
     private readonly configurationService: ConfigurationService
   ) {
     const client = cache.stores[0];
+
     client.on('error', (error) => {
       Logger.error(error, 'RedisCacheService');
     });
