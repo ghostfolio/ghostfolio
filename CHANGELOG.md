@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Added the data gathering status column to the historical market data table of the admin control
-- Added support to activity in custom currency
+- Added support for activities in a custom currency
 
 ### Changed
 
