@@ -7,16 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Optimized the query of the data range functionality (`getRange()`) in the market data service
+
+## 2.151.0 - 2025-04-11
+
 ### Added
 
 - Added the data gathering status column to the historical market data table of the admin control
 
 ### Changed
 
-- Optimized the query of the data range functionality (`getRange()`) in the market data service
+- Set the maximum number of symbols per request in the _Financial Modeling Prep_ service
+- Migrated the get quotes functionality of the _Financial Modeling Prep_ service to its stable API version
 - Improved the language localization for Enlish (`en`)
 - Upgraded `eslint` dependencies
 - Upgraded `Nx` from version `20.6.4` to `20.7.1`
+
+### Fixed
+
+- Fixed the link to the pricing page in the premium indicator component
 
 ## 2.150.0 - 2025-04-05
 
