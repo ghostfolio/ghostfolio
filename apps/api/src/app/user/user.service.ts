@@ -339,7 +339,7 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription = this.subscriptionService.getSubscription({
+      user.subscription = await this.subscriptionService.getSubscription({
         createdAt: user.createdAt,
         subscriptions: Subscription
       });

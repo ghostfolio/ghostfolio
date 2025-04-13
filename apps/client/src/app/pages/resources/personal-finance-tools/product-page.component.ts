@@ -1,11 +1,13 @@
-import { DataService } from '@ghostfolio/client/services/data.service';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Product } from '@ghostfolio/common/interfaces';
+import { User } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -26,17 +28,16 @@ export class GfProductPageComponent implements OnInit {
     'personal-finance-tools'
   ];
   public tags: string[];
+  public user: User;
+
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private dataService: DataService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private userService: UserService
   ) {}
 
   public ngOnInit() {
-    const { subscriptionOffers } = this.dataService.fetchInfo();
-
-    this.price = subscriptionOffers?.default?.price;
-
     this.product1 = {
       founded: 2021,
       hasFreePlan: true,
@@ -100,5 +101,20 @@ export class GfProductPageComponent implements OnInit {
     ].sort((a, b) => {
       return a.localeCompare(b, undefined, { sensitivity: 'base' });
     });
+
+    this.userService.stateChanged
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe((state) => {
+        if (state?.user) {
+          this.user = state.user;
+
+          this.price = this.user?.subscription?.offer?.price;
+        }
+      });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }
