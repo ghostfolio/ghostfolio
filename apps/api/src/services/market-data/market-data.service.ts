@@ -60,12 +60,18 @@ export class MarketDataService {
 
   public async getRange({
     assetProfileIdentifiers,
-    dateQuery
+    dateQuery,
+    skip,
+    take
   }: {
     assetProfileIdentifiers: AssetProfileIdentifier[];
     dateQuery: DateQuery;
+    skip?: number;
+    take?: number;
   }): Promise<MarketData[]> {
     return this.prismaService.marketData.findMany({
+      skip,
+      take,
       orderBy: [
         {
           date: 'asc'
@@ -74,6 +80,26 @@ export class MarketDataService {
           symbol: 'asc'
         }
       ],
+      where: {
+        date: dateQuery,
+        OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
+          return {
+            dataSource,
+            symbol
+          };
+        })
+      }
+    });
+  }
+
+  public async getRangeCount({
+    assetProfileIdentifiers,
+    dateQuery
+  }: {
+    assetProfileIdentifiers: AssetProfileIdentifier[];
+    dateQuery: DateQuery;
+  }): Promise<number> {
+    return this.prismaService.marketData.count({
       where: {
         date: dateQuery,
         OR: assetProfileIdentifiers.map(({ dataSource, symbol }) => {
