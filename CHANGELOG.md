@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Deactivated asset profiles automatically on delisting in the _Yahoo Finance_ service
+- Moved the subscription offer from the info to the user service
 - Upgraded `prisma` from version `6.5.0` to `6.6.0`
 
 ## 2.151.0 - 2025-04-11
