@@ -10,7 +10,6 @@ import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
@@ -39,7 +38,6 @@ export class ImportService {
     private readonly configurationService: ConfigurationService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
-    private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
@@ -48,9 +46,8 @@ export class ImportService {
 
   public async getDividends({
     dataSource,
-    symbol,
-    userCurrency
-  }: AssetProfileIdentifier & { userCurrency: string }): Promise<Activity[]> {
+    symbol
+  }: AssetProfileIdentifier): Promise<Activity[]> {
     try {
       const { firstBuyDate, historicalData, orders } =
         await this.portfolioService.getPosition(dataSource, undefined, symbol);
@@ -130,13 +127,7 @@ export class ImportService {
             unitPriceInAssetProfileCurrency: marketPrice,
             updatedAt: undefined,
             userId: Account?.userId,
-            valueInBaseCurrency:
-              await this.exchangeRateDataService.toCurrencyAtDate(
-                value,
-                assetProfile.currency,
-                userCurrency,
-                date
-              )
+            valueInBaseCurrency: 0
           };
         })
       );
@@ -411,14 +402,7 @@ export class ImportService {
         error,
         value,
         // @ts-ignore
-        SymbolProfile: assetProfile,
-        valueInBaseCurrency:
-          await this.exchangeRateDataService.toCurrencyAtDate(
-            value,
-            currency ?? assetProfile.currency,
-            userCurrency,
-            date
-          )
+        SymbolProfile: assetProfile
       });
     }
 
