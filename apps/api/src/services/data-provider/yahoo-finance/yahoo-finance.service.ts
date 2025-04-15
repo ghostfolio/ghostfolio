@@ -145,7 +145,9 @@ export class YahooFinanceService implements DataProviderInterface {
       return response;
     } catch (error) {
       if (error.message === 'No data found, symbol may be delisted') {
-        throw new AssetProfileDelistedError(error.message);
+        throw new AssetProfileDelistedError(
+          `No data found, ${symbol} (${this.getName()}) may be delisted`
+        );
       } else {
         throw new Error(
           `Could not get historical market data for ${symbol} (${this.getName()}) from ${format(

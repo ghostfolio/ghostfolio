@@ -1,8 +1,8 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
-  GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
   PROPERTY_IS_DATA_GATHERING_ENABLED
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
@@ -66,9 +66,9 @@ export class CronService {
               dataSource,
               symbol
             },
-            name: GATHER_ASSET_PROFILE_PROCESS,
+            name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
             opts: {
-              ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+              ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
               jobId: getAssetProfileIdentifier({ dataSource, symbol }),
               priority: DATA_GATHERING_QUEUE_PRIORITY_LOW
             }

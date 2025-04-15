@@ -9,8 +9,8 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
   DATA_GATHERING_QUEUE_PRIORITY_MEDIUM,
-  GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+  GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
@@ -92,9 +92,9 @@ export class AdminController {
             dataSource,
             symbol
           },
-          name: GATHER_ASSET_PROFILE_PROCESS,
+          name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
           opts: {
-            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
             jobId: getAssetProfileIdentifier({ dataSource, symbol }),
             priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
@@ -119,9 +119,9 @@ export class AdminController {
             dataSource,
             symbol
           },
-          name: GATHER_ASSET_PROFILE_PROCESS,
+          name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
           opts: {
-            ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+            ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
             jobId: getAssetProfileIdentifier({ dataSource, symbol }),
             priority: DATA_GATHERING_QUEUE_PRIORITY_MEDIUM
           }
@@ -142,9 +142,9 @@ export class AdminController {
         dataSource,
         symbol
       },
-      name: GATHER_ASSET_PROFILE_PROCESS,
+      name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
       opts: {
-        ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+        ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
         jobId: getAssetProfileIdentifier({ dataSource, symbol }),
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       }
