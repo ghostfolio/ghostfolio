@@ -1,13 +1,11 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
-import { User } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -28,9 +26,6 @@ export class GfProductPageComponent implements OnInit {
     'personal-finance-tools'
   ];
   public tags: string[];
-  public user: User;
-
-  private unsubscribeSubject = new Subject<void>();
 
   public constructor(
     private dataService: DataService,
@@ -105,10 +100,5 @@ export class GfProductPageComponent implements OnInit {
     ].sort((a, b) => {
       return a.localeCompare(b, undefined, { sensitivity: 'base' });
     });
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeSubject.next();
-    this.unsubscribeSubject.complete();
   }
 }

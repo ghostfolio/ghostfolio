@@ -142,6 +142,10 @@ export class AppComponent implements OnDestroy, OnInit {
       permissions.enableFearAndGreedIndex
     );
 
+    this.hasPromotion =
+      !!this.info?.subscriptionOffer?.coupon ||
+      !!this.info?.subscriptionOffer?.durationExtension;
+
     this.impersonationStorageService
       .onChangeHasImpersonation()
       .pipe(takeUntil(this.unsubscribeSubject))
