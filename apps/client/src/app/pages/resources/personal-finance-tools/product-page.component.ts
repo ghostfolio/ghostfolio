@@ -1,4 +1,4 @@
-import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
 import { User } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
@@ -7,7 +7,7 @@ import { translate } from '@ghostfolio/ui/i18n';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   host: { class: 'page' },
@@ -33,11 +33,15 @@ export class GfProductPageComponent implements OnInit {
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    private route: ActivatedRoute,
-    private userService: UserService
+    private dataService: DataService,
+    private route: ActivatedRoute
   ) {}
 
   public ngOnInit() {
+    const { subscriptionOffer } = this.dataService.fetchInfo();
+
+    this.price = subscriptionOffer?.price;
+
     this.product1 = {
       founded: 2021,
       hasFreePlan: true,
@@ -101,16 +105,6 @@ export class GfProductPageComponent implements OnInit {
     ].sort((a, b) => {
       return a.localeCompare(b, undefined, { sensitivity: 'base' });
     });
-
-    this.userService.stateChanged
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((state) => {
-        if (state?.user) {
-          this.user = state.user;
-
-          this.price = this.user?.subscription?.offer?.price;
-        }
-      });
   }
 
   public ngOnDestroy() {
