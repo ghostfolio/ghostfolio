@@ -339,7 +339,7 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription = this.subscriptionService.getSubscription({
+      user.subscription = await this.subscriptionService.getSubscription({
         createdAt: user.createdAt,
         subscriptions: Subscription
       });
@@ -392,6 +392,12 @@ export class UserService {
           currentPermissions,
           permissions.deleteOwnUser
         );
+
+        // Reset offer
+        user.subscription.offer.coupon = undefined;
+        user.subscription.offer.couponId = undefined;
+        user.subscription.offer.durationExtension = undefined;
+        user.subscription.offer.label = undefined;
       }
     }
 
