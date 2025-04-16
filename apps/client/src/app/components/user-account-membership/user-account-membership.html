@@ -4,10 +4,7 @@
       <div class="align-items-center d-flex flex-column">
         <gf-membership-card
           [expiresAt]="user?.subscription?.expiresAt | date: defaultDateFormat"
-          [hasPermissionToCreateApiKey]="
-            hasPermissionToCreateApiKey &&
-            user?.settings?.isExperimentalFeatures
-          "
+          [hasPermissionToCreateApiKey]="hasPermissionToCreateApiKey"
           [name]="user?.subscription?.type"
           (generateApiKeyClicked)="onGenerateApiKey()"
         />
