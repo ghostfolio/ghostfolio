@@ -114,7 +114,13 @@ export class DataProviderService {
       }
     }
 
-    await Promise.all(promises);
+    try {
+      await Promise.all(promises);
+    } catch (error) {
+      Logger.error(error, 'DataProviderService');
+
+      throw error;
+    }
 
     return response;
   }
