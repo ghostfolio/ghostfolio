@@ -7,8 +7,8 @@ import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathe
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_HIGH,
-  GATHER_ASSET_PROFILE_PROCESS,
-  GATHER_ASSET_PROFILE_PROCESS_OPTIONS
+  GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
+  GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS
 } from '@ghostfolio/common/config';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
@@ -144,9 +144,9 @@ export class OrderService {
           dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
           symbol: data.SymbolProfile.connectOrCreate.create.symbol
         },
-        name: GATHER_ASSET_PROFILE_PROCESS,
+        name: GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
         opts: {
-          ...GATHER_ASSET_PROFILE_PROCESS_OPTIONS,
+          ...GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS,
           jobId: getAssetProfileIdentifier({
             dataSource: data.SymbolProfile.connectOrCreate.create.dataSource,
             symbol: data.SymbolProfile.connectOrCreate.create.symbol

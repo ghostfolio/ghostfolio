@@ -78,8 +78,8 @@ export const DERIVED_CURRENCIES = [
 
 export const EMERGENCY_FUND_TAG_ID = '4452656d-9fa4-4bd0-ba38-70492e31d180';
 
-export const GATHER_ASSET_PROFILE_PROCESS = 'GATHER_ASSET_PROFILE';
-export const GATHER_ASSET_PROFILE_PROCESS_OPTIONS: JobOptions = {
+export const GATHER_ASSET_PROFILE_PROCESS_JOB_NAME = 'GATHER_ASSET_PROFILE';
+export const GATHER_ASSET_PROFILE_PROCESS_JOB_OPTIONS: JobOptions = {
   attempts: 12,
   backoff: {
     delay: ms('1 minute'),
