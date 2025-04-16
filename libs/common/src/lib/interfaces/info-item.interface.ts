@@ -1,6 +1,7 @@
 import { Platform, SymbolProfile } from '@prisma/client';
 
 import { Statistics } from './statistics.interface';
+import { SubscriptionOffer } from './subscription-offer.interface';
 
 export interface InfoItem {
   baseCurrency: string;
@@ -15,4 +16,5 @@ export interface InfoItem {
   platforms: Platform[];
   statistics: Statistics;
   stripePublicKey?: string;
+  subscriptionOffer?: SubscriptionOffer;
 }

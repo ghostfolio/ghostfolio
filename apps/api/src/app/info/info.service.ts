@@ -13,6 +13,7 @@ import {
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
+  PROPERTY_STRIPE_CONFIG,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -20,7 +21,11 @@ import {
   encodeDataSource,
   extractNumberFromString
 } from '@ghostfolio/common/helper';
-import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
+import {
+  InfoItem,
+  Statistics,
+  SubscriptionOffer
+} from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -94,7 +99,8 @@ export class InfoService {
       demoAuthToken,
       isUserSignupEnabled,
       platforms,
-      statistics
+      statistics,
+      subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
@@ -102,7 +108,8 @@ export class InfoService {
       this.platformService.getPlatforms({
         orderBy: { name: 'asc' }
       }),
-      this.getStatistics()
+      this.getStatistics(),
+      this.getDefaultSubscriptionOffer()
     ]);
 
     if (isUserSignupEnabled) {
@@ -117,6 +124,7 @@ export class InfoService {
       isReadOnlyMode,
       platforms,
       statistics,
+      subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };
@@ -228,6 +236,16 @@ export class InfoService {
     return (await this.propertyService.getByKey(
       PROPERTY_SLACK_COMMUNITY_USERS
     )) as string;
+  }
+
+  private async getDefaultSubscriptionOffer(): Promise<SubscriptionOffer> {
+    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      return undefined;
+    }
+
+    return (await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG))?.[
+      'default'
+    ] as SubscriptionOffer;
   }
 
   private async getDemoAuthToken() {

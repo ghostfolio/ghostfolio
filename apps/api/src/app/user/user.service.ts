@@ -392,6 +392,12 @@ export class UserService {
           currentPermissions,
           permissions.deleteOwnUser
         );
+
+        // Reset offer
+        user.subscription.offer.coupon = undefined;
+        user.subscription.offer.couponId = undefined;
+        user.subscription.offer.durationExtension = undefined;
+        user.subscription.offer.label = undefined;
       }
     }
 
