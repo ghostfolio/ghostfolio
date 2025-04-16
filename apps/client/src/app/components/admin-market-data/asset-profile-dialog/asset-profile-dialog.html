@@ -19,7 +19,9 @@
       <button
         mat-menu-item
         type="button"
-        [disabled]="assetProfileForm.dirty"
+        [disabled]="
+          assetProfileForm.dirty || !assetProfileForm.controls.isActive.value
+        "
         (click)="
           onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
         "
@@ -29,7 +31,9 @@
       <button
         mat-menu-item
         type="button"
-        [disabled]="assetProfileForm.dirty"
+        [disabled]="
+          assetProfileForm.dirty || !assetProfileForm.controls.isActive.value
+        "
         (click)="
           onGatherProfileDataBySymbol({
             dataSource: data.dataSource,

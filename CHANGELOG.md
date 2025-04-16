@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Deactivated asset profiles automatically on delisting in the _Yahoo Finance_ service
 - Upgraded `Nx` from version `20.7.1` to `20.8.0`
 - Upgraded `storybook` from version `8.4.7` to `8.6.12`
 
