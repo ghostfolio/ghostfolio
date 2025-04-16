@@ -1,5 +1,6 @@
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,7 +14,6 @@ import {
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  PROPERTY_STRIPE_CONFIG,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -21,11 +21,7 @@ import {
   encodeDataSource,
   extractNumberFromString
 } from '@ghostfolio/common/helper';
-import {
-  InfoItem,
-  Statistics,
-  SubscriptionOffer
-} from '@ghostfolio/common/interfaces';
+import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -45,6 +41,7 @@ export class InfoService {
     private readonly platformService: PlatformService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
+    private readonly subscriptionService: SubscriptionService,
     private readonly userService: UserService
   ) {}
 
@@ -109,7 +106,7 @@ export class InfoService {
         orderBy: { name: 'asc' }
       }),
       this.getStatistics(),
-      this.getDefaultSubscriptionOffer()
+      this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
 
     if (isUserSignupEnabled) {
@@ -236,16 +233,6 @@ export class InfoService {
     return (await this.propertyService.getByKey(
       PROPERTY_SLACK_COMMUNITY_USERS
     )) as string;
-  }
-
-  private async getDefaultSubscriptionOffer(): Promise<SubscriptionOffer> {
-    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      return undefined;
-    }
-
-    return (await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG))?.[
-      'default'
-    ] as SubscriptionOffer;
   }
 
   private async getDemoAuthToken() {

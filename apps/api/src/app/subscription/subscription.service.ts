@@ -201,7 +201,7 @@ export class SubscriptionService {
     }
   }
 
-  private async getSubscriptionOffer({
+  public async getSubscriptionOffer({
     key
   }: {
     key: SubscriptionOfferKey;

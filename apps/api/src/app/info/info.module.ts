@@ -1,5 +1,6 @@
 import { PlatformModule } from '@ghostfolio/api/app/platform/platform.module';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
+import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -31,6 +32,7 @@ import { InfoService } from './info.service';
     PlatformModule,
     PropertyModule,
     RedisCacheModule,
+    SubscriptionModule,
     SymbolProfileModule,
     TransformDataSourceInResponseModule,
     UserModule
