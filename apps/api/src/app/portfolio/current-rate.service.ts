@@ -21,6 +21,8 @@ import { GetValuesParams } from './interfaces/get-values-params.interface';
 
 @Injectable()
 export class CurrentRateService {
+  private static readonly MARKET_DATA_PAGE_SIZE = 50000;
+
   public constructor(
     private readonly dataProviderService: DataProviderService,
     private readonly marketDataService: MarketDataService,
@@ -41,42 +43,37 @@ export class CurrentRateService {
       (!dateQuery.gte || isBefore(dateQuery.gte, new Date())) &&
       (!dateQuery.in || this.containsToday(dateQuery.in));
 
-    const promises: Promise<GetValueObject[]>[] = [];
     const quoteErrors: ResponseError['errors'] = [];
     const today = resetHours(new Date());
+    const values: GetValueObject[] = [];
 
     if (includesToday) {
-      promises.push(
-        this.dataProviderService
-          .getQuotes({ items: dataGatheringItems, user: this.request?.user })
-          .then((dataResultProvider) => {
-            const result: GetValueObject[] = [];
+      const quotesBySymbol = await this.dataProviderService.getQuotes({
+        items: dataGatheringItems,
+        user: this.request?.user
+      });
 
-            for (const { dataSource, symbol } of dataGatheringItems) {
-              if (dataResultProvider?.[symbol]?.dataProviderInfo) {
-                dataProviderInfos.push(
-                  dataResultProvider[symbol].dataProviderInfo
-                );
-              }
+      for (const { dataSource, symbol } of dataGatheringItems) {
+        const quote = quotesBySymbol[symbol];
 
-              if (dataResultProvider?.[symbol]?.marketPrice) {
-                result.push({
-                  dataSource,
-                  symbol,
-                  date: today,
-                  marketPrice: dataResultProvider?.[symbol]?.marketPrice
-                });
-              } else {
-                quoteErrors.push({
-                  dataSource,
-                  symbol
-                });
-              }
-            }
+        if (quote?.dataProviderInfo) {
+          dataProviderInfos.push(quote.dataProviderInfo);
+        }
 
-            return result;
-          })
-      );
+        if (quote?.marketPrice) {
+          values.push({
+            dataSource,
+            symbol,
+            date: today,
+            marketPrice: quote.marketPrice
+          });
+        } else {
+          quoteErrors.push({
+            dataSource,
+            symbol
+          });
+        }
+      }
     }
 
     const assetProfileIdentifiers: AssetProfileIdentifier[] =
@@ -84,34 +81,42 @@ export class CurrentRateService {
         return { dataSource, symbol };
       });
 
-    promises.push(
-      this.marketDataService
-        .getRange({
-          assetProfileIdentifiers,
-          dateQuery
-        })
-        .then((data) => {
-          return data.map(({ dataSource, date, marketPrice, symbol }) => {
-            return {
-              dataSource,
-              date,
-              marketPrice,
-              symbol
-            };
-          });
-        })
-    );
-
-    const values = await Promise.all(promises).then((array) => {
-      return array.flat();
+    const marketDataCount = await this.marketDataService.getRangeCount({
+      assetProfileIdentifiers,
+      dateQuery
     });
+
+    for (
+      let i = 0;
+      i < marketDataCount;
+      i += CurrentRateService.MARKET_DATA_PAGE_SIZE
+    ) {
+      // Use page size to limit the number of records fetched at once
+      const data = await this.marketDataService.getRange({
+        assetProfileIdentifiers,
+        dateQuery,
+        skip: i,
+        take: CurrentRateService.MARKET_DATA_PAGE_SIZE
+      });
+
+      values.push(
+        ...data.map(({ dataSource, date, marketPrice, symbol }) => ({
+          dataSource,
+          date,
+          marketPrice,
+          symbol
+        }))
+      );
+    }
 
     const response: GetValuesObject = {
       dataProviderInfos,
       errors: quoteErrors.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
       }),
-      values: uniqBy(values, ({ date, symbol }) => `${date}-${symbol}`)
+      values: uniqBy(values, ({ date, symbol }) => {
+        return `${date}-${symbol}`;
+      })
     };
 
     if (!isEmpty(quoteErrors)) {
