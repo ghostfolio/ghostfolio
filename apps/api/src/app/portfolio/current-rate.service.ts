@@ -91,7 +91,7 @@ export class CurrentRateService {
       i < marketDataCount;
       i += CurrentRateService.MARKET_DATA_PAGE_SIZE
     ) {
-      // Use pageSize to limit the number of records fetched at once
+      // Use page size to limit the number of records fetched at once
       const data = await this.marketDataService.getRange({
         assetProfileIdentifiers,
         dateQuery,
