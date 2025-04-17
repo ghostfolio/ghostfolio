@@ -183,8 +183,8 @@ export class SubscriptionService {
       });
 
       return {
-        expiresAt,
         offer,
+        expiresAt: isBefore(new Date(), expiresAt) ? expiresAt : undefined,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
@@ -210,10 +210,15 @@ export class SubscriptionService {
       return undefined;
     }
 
-    const offers =
+    const offers: {
+      [offer in SubscriptionOfferKey]: SubscriptionOffer;
+    } =
       ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
       {};
 
-    return offers[key];
+    return {
+      ...offers[key],
+      isRenewal: key.startsWith('renewal')
+    };
   }
 }
