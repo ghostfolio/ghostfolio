@@ -77,17 +77,27 @@
       [showYAxis]="true"
       [symbol]="data.symbol"
     />
-    <gf-historical-market-data-editor
-      class="mb-3"
-      [currency]="assetProfile?.currency"
-      [dataSource]="data.dataSource"
-      [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
-      [locale]="data.locale"
-      [marketData]="marketDataItems"
-      [symbol]="data.symbol"
-      [user]="user"
-      (marketDataChanged)="onMarketDataChanged($event)"
-    />
+    <div class="mb-3">
+      <mat-accordion class="my-3">
+        <mat-expansion-panel class="shadow-none">
+          <mat-expansion-panel-header class="p-0">
+            <mat-panel-title i18n>Historical Market Data</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <gf-historical-market-data-editor
+            class="mb-3"
+            [currency]="assetProfile?.currency"
+            [dataSource]="data.dataSource"
+            [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
+            [locale]="data.locale"
+            [marketData]="marketDataItems"
+            [symbol]="data.symbol"
+            [user]="user"
+            (marketDataChanged)="onMarketDataChanged($event)"
+          />
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
 
     <div class="row">
       @if (isEditAssetProfileIdentifierMode) {
