@@ -8,6 +8,17 @@
 
 <div class="flex-grow-1" mat-dialog-content>
   <div class="container p-0">
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center mb-3">
+        <gf-value
+          size="large"
+          [locale]="data.locale"
+          [precision]="2"
+          [value]="value"
+        />
+      </div>
+    </div>
+
     <gf-line-chart
       benchmarkLabel="Average Unit Price"
       class="mb-4"

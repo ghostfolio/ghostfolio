@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the benchmark detail dialog by the current market price
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
 ## 2.153.0 - 2025-04-18
