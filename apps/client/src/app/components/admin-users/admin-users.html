@@ -49,7 +49,7 @@
                   }"
                   >{{ (element.id | slice: 0 : 5) + '...' }}</span
                 >
-                @if (element?.subscription?.type === 'Premium') {
+                @if (element.subscription?.expiresAt) {
                   <gf-premium-indicator
                     class="ml-1"
                     [enableLink]="false"
