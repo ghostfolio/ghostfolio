@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the functionality to open an asset profile of a custom currency in the admin control panel
+- Fixed the asset class parsing in the _Financial Modeling Prep_ service for exchange rates
 
 ## 2.152.1 - 2025-04-17
 
