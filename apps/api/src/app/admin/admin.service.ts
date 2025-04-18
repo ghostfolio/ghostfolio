@@ -451,7 +451,8 @@ export class AdminService {
         currency,
         dataSource,
         dateOfFirstActivity,
-        symbol
+        symbol,
+        isActive: true
       }
     };
   }
