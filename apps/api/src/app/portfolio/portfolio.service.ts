@@ -246,10 +246,14 @@ export class PortfolioService {
     activities: Activity[];
     groupBy?: GroupBy;
   }): Promise<InvestmentItem[]> {
-    let dividends = activities.map(({ date, valueInBaseCurrency }) => {
+    let dividends = activities.map(({ currency, date, value }) => {
       return {
         date: format(date, DATE_FORMAT),
-        investment: valueInBaseCurrency
+        investment: this.exchangeRateDataService.toCurrency(
+          value,
+          currency,
+          this.getUserCurrency()
+        )
       };
     });
 

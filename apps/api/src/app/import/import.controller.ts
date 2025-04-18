@@ -98,12 +98,9 @@ export class ImportController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<ImportResponse> {
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
-
     const activities = await this.importService.getDividends({
       dataSource,
-      symbol,
-      userCurrency
+      symbol
     });
 
     return { activities };
