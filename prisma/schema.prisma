@@ -191,6 +191,7 @@ model SymbolProfile {
   symbolMapping          Json?
   url                    String?
   userId                 String?
+  watchedBy              User[]                  @relation("UserWatchlist")
   Order                  Order[]
   SymbolProfileOverrides SymbolProfileOverrides?
   User                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
@@ -251,6 +252,7 @@ model User {
   role          Role            @default(USER)
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
+  watchlist     SymbolProfile[] @relation("UserWatchlist")
   Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
   Account       Account[]

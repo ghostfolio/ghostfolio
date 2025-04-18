@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added `watchlist` to the `User` database schema as a preparation for watching assets
+
 ### Fixed
 
 - Fixed the word wrap in the menu of the historical market data table in the admin control panel
