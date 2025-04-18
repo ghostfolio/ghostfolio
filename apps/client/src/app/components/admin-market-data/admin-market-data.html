@@ -215,7 +215,11 @@
               >
                 <ion-icon name="ellipsis-vertical" />
               </button>
-              <mat-menu #assetProfilesActionsMenu="matMenu" xPosition="before">
+              <mat-menu
+                #assetProfilesActionsMenu="matMenu"
+                class="no-max-width"
+                xPosition="before"
+              >
                 <button mat-menu-item (click)="onGather7Days()">
                   <ng-container i18n
                     >Gather Recent Historical Market Data</ng-container
