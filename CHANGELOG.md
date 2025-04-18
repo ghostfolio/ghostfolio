@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added support for activities in a custom currency
+- Upgraded `chart.js` from version `4.4.7` to `4.4.9`
 
 ## 2.152.1 - 2025-04-17
 
