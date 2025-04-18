@@ -23,7 +23,6 @@ import {
   ReactiveFormsModule
 } from '@angular/forms';
 import {
-  MatAutocomplete,
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent
 } from '@angular/material/autocomplete';
@@ -33,6 +32,7 @@ import {
 } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { isString } from 'lodash';
 import { Subject, tap } from 'rxjs';
 import {
@@ -59,6 +59,7 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     ReactiveFormsModule
   ],
   providers: [
@@ -76,14 +77,15 @@ export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {
-  @Input() private includeIndices = false;
   @Input() public isLoading = false;
+  @Input() public isAutocomplete = false;
+  @Input() public defaultLookupItems: LookupItem[] = [];
 
   @ViewChild(MatInput) private input: MatInput;
 
-  @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
+  public selectControl = new FormControl();
+  public inputControl = new FormControl();
 
-  public control = new FormControl();
   public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
     [];
 
@@ -103,10 +105,11 @@ export class GfSymbolAutocompleteComponent
 
   public ngOnInit() {
     if (this.disabled) {
-      this.control.disable();
+      this.selectControl.disable();
+      this.inputControl.disable();
     }
 
-    this.control.valueChanges
+    this.inputControl.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
         if (super.value) {
@@ -114,7 +117,7 @@ export class GfSymbolAutocompleteComponent
         }
       });
 
-    this.control.valueChanges
+    this.inputControl.valueChanges
       .pipe(
         filter((query) => {
           return isString(query) && query.length > 1;
@@ -129,8 +132,7 @@ export class GfSymbolAutocompleteComponent
         takeUntil(this.unsubscribeSubject),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
-            query,
-            includeIndices: this.includeIndices
+            query
           });
         })
       )
@@ -174,7 +176,23 @@ export class GfSymbolAutocompleteComponent
     }
   }
 
-  public onUpdateSymbol(event: MatAutocompleteSelectedEvent) {
+  public onShowAutocomplete(event: KeyboardEvent) {
+    if (event.key.length === 1) {
+      this.inputControl.setValue(event.key);
+      this.isAutocomplete = true;
+
+      this.changeDetectorRef.markForCheck();
+    }
+  }
+
+  public onSelectUpdateSymbol(event: MatSelectChange) {
+    super.value = {
+      dataSource: event.source.value.dataSource,
+      symbol: event.source.value.symbol
+    } as LookupItem;
+  }
+
+  public onAutocompleteUpdateSymbol(event: MatAutocompleteSelectedEvent) {
     super.value = {
       dataSource: event.option.value.dataSource,
       symbol: event.option.value.symbol
@@ -182,7 +200,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public set value(value: LookupItem) {
-    this.control.setValue(value);
+    this.inputControl.setValue(value);
     super.value = value;
   }
 
