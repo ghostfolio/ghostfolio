@@ -17,7 +17,6 @@ export interface Activity extends Order {
   unitPriceInAssetProfileCurrency: number;
   updateAccountBalance?: boolean;
   value: number;
-  valueInBaseCurrency: number;
 }
 
 export interface ActivityError {

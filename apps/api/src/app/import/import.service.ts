@@ -126,8 +126,7 @@ export class ImportService {
             unitPrice: marketPrice,
             unitPriceInAssetProfileCurrency: marketPrice,
             updatedAt: undefined,
-            userId: Account?.userId,
-            valueInBaseCurrency: 0
+            userId: Account?.userId
           };
         })
       );
@@ -419,43 +418,14 @@ export class ImportService {
         });
       });
 
-      const dataGatheringItems = uniqueActivities.flatMap(
-        ({ currency, date, SymbolProfile }) => {
-          const activityDataGatheringItems = [
-            {
-              date,
-              dataSource: SymbolProfile.dataSource,
-              symbol: SymbolProfile.symbol
-            }
-          ];
-
-          if (currency !== SymbolProfile.currency) {
-            activityDataGatheringItems.push({
-              date,
-              dataSource:
-                this.dataProviderService.getDataSourceForExchangeRates(),
-              symbol: `${currency}${SymbolProfile.currency}`
-            });
-          }
-
-          if (
-            (currency ?? SymbolProfile.currency) !==
-            user.Settings.settings.baseCurrency
-          ) {
-            activityDataGatheringItems.push({
-              date,
-              dataSource:
-                this.dataProviderService.getDataSourceForExchangeRates(),
-              symbol: `${currency ?? SymbolProfile.currency}${user.Settings.settings.baseCurrency}`
-            });
-          }
-
-          return activityDataGatheringItems;
-        }
-      );
-
       this.dataGatheringService.gatherSymbols({
-        dataGatheringItems,
+        dataGatheringItems: uniqueActivities.map(({ date, SymbolProfile }) => {
+          return {
+            date,
+            dataSource: SymbolProfile.dataSource,
+            symbol: SymbolProfile.symbol
+          };
+        }),
         priority: DATA_GATHERING_QUEUE_PRIORITY_HIGH
       });
     }
