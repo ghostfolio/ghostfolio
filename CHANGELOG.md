@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chart.js` from version `4.4.7` to `4.4.9`
 - Upgraded `uuid` from version `11.0.5` to `11.1.0`
 
+### Fixed
+
+- Fixed the functionality to open an asset profile of a custom currency in the admin control panel
+
 ## 2.152.1 - 2025-04-17
 
 ### Changed
