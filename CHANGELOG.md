@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `chart.js` from version `4.4.7` to `4.4.9`
 - Upgraded `uuid` from version `11.0.5` to `11.1.0`
 
+### Fixed
+
+- Fixed the asset class parsing in the _Financial Modeling Prep_ service for exchange rates
+
 ## 2.152.1 - 2025-04-17
 
 ### Changed
