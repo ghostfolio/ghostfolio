@@ -214,11 +214,7 @@
               }
             }
           </mat-label>
-          <input
-            formControlName="unitPriceInCustomCurrency"
-            matInput
-            type="number"
-          />
+          <input formControlName="unitPrice" matInput type="number" />
           <div
             class="ml-2"
             matTextSuffix
@@ -232,19 +228,6 @@
               }
             </mat-select>
           </div>
-          @if (
-            activityForm.get('unitPriceInCustomCurrency').hasError('invalid')
-          ) {
-            <mat-error
-              ><ng-container i18n
-                >Oops! Could not get the historical exchange rate
-                from</ng-container
-              >
-              {{
-                activityForm.get('date')?.value | date: defaultDateFormat
-              }}</mat-error
-            >
-          }
         </mat-form-field>
         @if (
           currentMarketPrice &&
@@ -263,36 +246,6 @@
         }
       </div>
     </div>
-    <div class="d-none">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>
-          @switch (activityForm.get('type')?.value) {
-            @case ('DIVIDEND') {
-              <ng-container i18n>Dividend</ng-container>
-            }
-            @case ('FEE') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('INTEREST') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('ITEM') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @case ('LIABILITY') {
-              <ng-container i18n>Value</ng-container>
-            }
-            @default {
-              <ng-container i18n>Unit Price</ng-container>
-            }
-          }
-        </mat-label>
-        <input formControlName="unitPrice" matInput type="number" />
-        <span class="ml-2" matTextSuffix>{{
-          activityForm.get('currency').value
-        }}</span>
-      </mat-form-field>
-    </div>
     <div
       class="mb-3"
       [ngClass]="{
@@ -304,7 +257,7 @@
     >
       <mat-form-field appearance="outline" class="w-100">
         <mat-label i18n>Fee</mat-label>
-        <input formControlName="feeInCustomCurrency" matInput type="number" />
+        <input formControlName="fee" matInput type="number" />
         <div
           class="ml-2"
           matTextSuffix
@@ -312,26 +265,6 @@
         >
           {{ activityForm.get('currencyOfUnitPrice').value }}
         </div>
-        @if (activityForm.get('feeInCustomCurrency').hasError('invalid')) {
-          <mat-error
-            ><ng-container i18n
-              >Oops! Could not get the historical exchange rate
-              from</ng-container
-            >
-            {{
-              activityForm.get('date')?.value | date: defaultDateFormat
-            }}</mat-error
-          >
-        }
-      </mat-form-field>
-    </div>
-    <div class="d-none">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label i18n>Fee</mat-label>
-        <input formControlName="fee" matInput type="number" />
-        <span class="ml-2" matTextSuffix>{{
-          activityForm.get('currency').value
-        }}</span>
       </mat-form-field>
     </div>
     <div class="mb-3">
@@ -392,7 +325,8 @@
       [isCurrency]="true"
       [locale]="data.user?.settings?.locale"
       [unit]="
-        activityForm.get('currency')?.value ?? data.user?.settings?.baseCurrency
+        activityForm.get('currencyOfUnitPrice')?.value ??
+        data.user?.settings?.baseCurrency
       "
       [value]="total"
     />
