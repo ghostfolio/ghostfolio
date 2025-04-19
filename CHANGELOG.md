@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the benchmark detail dialog by the current market price
+- Added the performance calculation type to the user settings (experimental)
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
 ### Changed
