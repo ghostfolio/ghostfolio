@@ -1,9 +1,6 @@
 import { AccountBalanceService } from '@ghostfolio/api/app/account-balance/account-balance.service';
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { PortfolioSnapshotValue } from '@ghostfolio/api/app/portfolio/interfaces/snapshot-value.interface';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -68,7 +65,7 @@ export class PortfolioSnapshotProcessor {
       const portfolioCalculator = this.calculatorFactory.createCalculator({
         accountBalanceItems,
         activities,
-        calculationType: PerformanceCalculationType.ROAI,
+        calculationType: job.data.calculationType,
         currency: job.data.userCurrency,
         filters: job.data.filters,
         userId: job.data.userId

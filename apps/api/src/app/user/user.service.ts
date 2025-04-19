@@ -41,6 +41,7 @@ import {
   permissions
 } from '@ghostfolio/common/permissions';
 import { UserWithSettings } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -245,6 +246,12 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
         : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
+
+    // Set default value for performance calculation type
+    if (!(user.Settings.settings as UserSettings)?.performanceCalculationType) {
+      (user.Settings.settings as UserSettings).performanceCalculationType =
+        PerformanceCalculationType.ROAI;
+    }
 
     // Set default value for view mode
     if (!(user.Settings.settings as UserSettings).viewMode) {

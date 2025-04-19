@@ -35,6 +35,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
@@ -57,6 +58,7 @@ export abstract class PortfolioCalculator {
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
 
+  private calculationType: PerformanceCalculationType;
   private configurationService: ConfigurationService;
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -75,6 +77,7 @@ export abstract class PortfolioCalculator {
   public constructor({
     accountBalanceItems,
     activities,
+    calculationType,
     configurationService,
     currency,
     currentRateService,
@@ -86,6 +89,7 @@ export abstract class PortfolioCalculator {
   }: {
     accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
+    calculationType: PerformanceCalculationType;
     configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;
@@ -96,6 +100,7 @@ export abstract class PortfolioCalculator {
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
+    this.calculationType = calculationType;
     this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
@@ -1073,6 +1078,7 @@ export abstract class PortfolioCalculator {
         // Compute in the background
         this.portfolioSnapshotService.addJobToQueue({
           data: {
+            calculationType: this.calculationType,
             filters: this.filters,
             userCurrency: this.currency,
             userId: this.userId
@@ -1089,6 +1095,7 @@ export abstract class PortfolioCalculator {
       // Wait for computation
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
+          calculationType: this.calculationType,
           filters: this.filters,
           userCurrency: this.currency,
           userId: this.userId
