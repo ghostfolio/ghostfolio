@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
+### Changed
+
+- Parallelized the requests in the get quotes functionality of the _Financial Modeling Prep_ service
+
 ### Fixed
 
 - Fixed the word wrap in the menu of the historical market data table in the admin control panel

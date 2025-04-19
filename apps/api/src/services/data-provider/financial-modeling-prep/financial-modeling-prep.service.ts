@@ -357,6 +357,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
+      const currencyBySymbolMap: {
+        [symbol: string]: Pick<SymbolProfile, 'currency'>;
+      } = {};
+
       const quotes = await fetch(
         `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
         {
@@ -364,11 +368,17 @@ export class FinancialModelingPrepService implements DataProviderInterface {
         }
       ).then((res) => res.json());
 
-      for (const { price, symbol } of quotes) {
-        const { currency } = await this.getAssetProfile({ symbol });
+      await Promise.all(
+        quotes.map(({ symbol }) => {
+          return this.getAssetProfile({ symbol }).then(({ currency }) => {
+            currencyBySymbolMap[symbol] = { currency };
+          });
+        })
+      );
 
+      for (const { price, symbol } of quotes) {
         response[symbol] = {
-          currency,
+          currency: currencyBySymbolMap[symbol]?.currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
           marketPrice: price,
