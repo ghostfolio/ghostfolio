@@ -5,19 +5,15 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { Filter, HistoricalDataItem } from '@ghostfolio/common/interfaces';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Injectable } from '@nestjs/common';
 
 import { MwrPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RoaiPortfolioCalculator } from './roai/portfolio-calculator';
+import { RoiPortfolioCalculator } from './roi/portfolio-calculator';
 import { TwrPortfolioCalculator } from './twr/portfolio-calculator';
-
-export enum PerformanceCalculationType {
-  MWR = 'MWR', // Money-Weighted Rate of Return
-  ROAI = 'ROAI', // Return on Average Investment
-  TWR = 'TWR' // Time-Weighted Rate of Return
-}
 
 @Injectable()
 export class PortfolioCalculatorFactory {
@@ -49,6 +45,7 @@ export class PortfolioCalculatorFactory {
         return new MwrPortfolioCalculator({
           accountBalanceItems,
           activities,
+          calculationType,
           currency,
           filters,
           userId,
@@ -58,10 +55,12 @@ export class PortfolioCalculatorFactory {
           portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService
         });
+
       case PerformanceCalculationType.ROAI:
         return new RoaiPortfolioCalculator({
           accountBalanceItems,
           activities,
+          calculationType,
           currency,
           filters,
           userId,
@@ -71,10 +70,27 @@ export class PortfolioCalculatorFactory {
           portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService
         });
+
+      case PerformanceCalculationType.ROI:
+        return new RoiPortfolioCalculator({
+          accountBalanceItems,
+          activities,
+          calculationType,
+          currency,
+          filters,
+          userId,
+          configurationService: this.configurationService,
+          currentRateService: this.currentRateService,
+          exchangeRateDataService: this.exchangeRateDataService,
+          portfolioSnapshotService: this.portfolioSnapshotService,
+          redisCacheService: this.redisCacheService
+        });
+
       case PerformanceCalculationType.TWR:
         return new TwrPortfolioCalculator({
           accountBalanceItems,
           activities,
+          calculationType,
           currency,
           filters,
           userId,
@@ -84,6 +100,7 @@ export class PortfolioCalculatorFactory {
           portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService
         });
+
       default:
         throw new Error('Invalid calculation type');
     }
