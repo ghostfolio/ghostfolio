@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Made the historical market data editor expandable in the admin control panel
 - Migrated the lookup functionality by `isin` of the _Financial Modeling Prep_ service to its stable API version
 
 ### Fixed
