@@ -226,8 +226,8 @@ model Subscription {
   id        String   @id @default(uuid())
   price     Float?
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId    String
-  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }
