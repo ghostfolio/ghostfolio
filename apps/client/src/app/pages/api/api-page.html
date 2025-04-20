@@ -3,10 +3,21 @@
     <h2 class="text-center">Status</h2>
     <div>{{ status$ | async | json }}</div>
   </div>
-  <div class="mb-3">
+  <div>
     <h2 class="text-center">Lookup</h2>
-    @if (symbols$) {
-      @let symbols = symbols$ | async;
+    @if (lookupItems$) {
+      @let symbols = lookupItems$ | async;
+      <ul>
+        @for (item of symbols; track item.symbol) {
+          <li>{{ item.name }} ({{ item.symbol }})</li>
+        }
+      </ul>
+    }
+  </div>
+  <div>
+    <h2 class="text-center">Lookup (ISIN)</h2>
+    @if (isinItems$) {
+      @let symbols = isinItems$ | async;
       <ul>
         @for (item of symbols; track item.symbol) {
           <li>{{ item.name }} ({{ item.symbol }})</li>

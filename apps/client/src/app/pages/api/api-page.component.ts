@@ -27,9 +27,10 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
 export class GfApiPageComponent implements OnInit {
   public dividends$: Observable<DividendsResponse['dividends']>;
   public historicalData$: Observable<HistoricalResponse['historicalData']>;
+  public isinItems$: Observable<LookupResponse['items']>;
+  public lookupItems$: Observable<LookupResponse['items']>;
   public quotes$: Observable<QuotesResponse['quotes']>;
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
-  public symbols$: Observable<LookupResponse['items']>;
 
   private apiKey: string;
   private unsubscribeSubject = new Subject<void>();
@@ -41,9 +42,10 @@ export class GfApiPageComponent implements OnInit {
 
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
+    this.isinItems$ = this.fetchLookupItems({ query: 'US0378331005' });
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO.US'] });
     this.status$ = this.fetchStatus();
-    this.symbols$ = this.fetchSymbols({ query: 'apple' });
+    this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
   }
 
   public ngOnDestroy() {
@@ -93,32 +95,7 @@ export class GfApiPageComponent implements OnInit {
       );
   }
 
-  private fetchQuotes({ symbols }: { symbols: string[] }) {
-    const params = new HttpParams().set('symbols', symbols.join(','));
-
-    return this.http
-      .get<QuotesResponse>('/api/v2/data-providers/ghostfolio/quotes', {
-        params,
-        headers: this.getHeaders()
-      })
-      .pipe(
-        map(({ quotes }) => {
-          return quotes;
-        }),
-        takeUntil(this.unsubscribeSubject)
-      );
-  }
-
-  private fetchStatus() {
-    return this.http
-      .get<DataProviderGhostfolioStatusResponse>(
-        '/api/v2/data-providers/ghostfolio/status',
-        { headers: this.getHeaders() }
-      )
-      .pipe(takeUntil(this.unsubscribeSubject));
-  }
-
-  private fetchSymbols({
+  private fetchLookupItems({
     includeIndices = false,
     query
   }: {
@@ -142,6 +119,31 @@ export class GfApiPageComponent implements OnInit {
         }),
         takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  private fetchQuotes({ symbols }: { symbols: string[] }) {
+    const params = new HttpParams().set('symbols', symbols.join(','));
+
+    return this.http
+      .get<QuotesResponse>('/api/v2/data-providers/ghostfolio/quotes', {
+        params,
+        headers: this.getHeaders()
+      })
+      .pipe(
+        map(({ quotes }) => {
+          return quotes;
+        }),
+        takeUntil(this.unsubscribeSubject)
+      );
+  }
+
+  private fetchStatus() {
+    return this.http
+      .get<DataProviderGhostfolioStatusResponse>(
+        '/api/v2/data-providers/ghostfolio/status',
+        { headers: this.getHeaders() }
+      )
+      .pipe(takeUntil(this.unsubscribeSubject));
   }
 
   private getHeaders() {
