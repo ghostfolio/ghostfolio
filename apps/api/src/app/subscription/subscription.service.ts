@@ -122,7 +122,7 @@ export class SubscriptionService {
       data: {
         expiresAt,
         price,
-        User: {
+        user: {
           connect: {
             id: userId
           }
