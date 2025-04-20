@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the benchmark detail dialog by the current market price
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
+### Changed
+
+- Migrated the lookup functionality by `isin` of the _Financial Modeling Prep_ service to its stable API version
+
 ### Fixed
 
 - Fixed the word wrap in the menu of the historical market data table in the admin control panel
