@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Made the historical market data editor expandable in the admin control panel
 - Renamed `Subscription` to `subscriptions` in the `User` database schema
+- Renamed `User` to `user` in the `Subscription` database schema
 
 ### Fixed
 
