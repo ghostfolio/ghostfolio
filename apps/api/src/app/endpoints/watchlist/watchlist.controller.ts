@@ -70,7 +70,7 @@ export class WatchlistController {
   }
 
   @Get()
-  @HasPermission(permissions.readWatchlistItems)
+  @HasPermission(permissions.readWatchlist)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getWatchlistItems(): Promise<AssetProfileIdentifier[]> {
     return this.watchlistService.getWatchlistItems(this.request.user.id);
