@@ -57,17 +57,17 @@ export class AccountController {
   @HasPermission(permissions.deleteAccount)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
-    const account = await this.accountService.accountWithOrders(
+    const account = await this.accountService.accountWithActivities(
       {
         id_userId: {
           id,
           userId: this.request.user.id
         }
       },
-      { Order: true }
+      { activities: true }
     );
 
-    if (!account || account?.Order.length > 0) {
+    if (!account || account?.activities.length > 0) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN

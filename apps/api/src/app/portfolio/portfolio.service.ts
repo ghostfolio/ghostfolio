@@ -139,7 +139,7 @@ export class PortfolioService {
     }
 
     if (filterByDataSource && filterBySymbol) {
-      where.Order = {
+      where.activities = {
         some: {
           SymbolProfile: {
             AND: [
@@ -154,7 +154,7 @@ export class PortfolioService {
     const [accounts, details] = await Promise.all([
       this.accountService.accounts({
         where,
-        include: { Order: true, Platform: true },
+        include: { activities: true, Platform: true },
         orderBy: { name: 'asc' }
       }),
       this.getDetails({
@@ -170,8 +170,8 @@ export class PortfolioService {
     return accounts.map((account) => {
       let transactionCount = 0;
 
-      for (const order of account.Order) {
-        if (!order.isDraft) {
+      for (const { isDraft } of account.activities) {
+        if (!isDraft) {
           transactionCount += 1;
         }
       }
@@ -195,7 +195,7 @@ export class PortfolioService {
         )
       };
 
-      delete result.Order;
+      delete result.activities;
 
       return result;
     });

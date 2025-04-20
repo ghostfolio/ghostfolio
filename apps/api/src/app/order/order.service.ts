@@ -100,7 +100,7 @@ export class OrderService {
       userId: string;
     }
   ): Promise<Order> {
-    let Account: Prisma.AccountCreateNestedOneWithoutOrderInput;
+    let Account: Prisma.AccountCreateNestedOneWithoutActivitiesInput;
 
     if (data.accountId) {
       Account = {
