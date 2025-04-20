@@ -29,13 +29,6 @@ export class WatchlistController {
     private readonly watchlistService: WatchlistService
   ) {}
 
-  @Get()
-  @HasPermission(permissions.readWatchlistItems)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getWatchlistItems(): Promise<AssetProfileIdentifier[]> {
-    return this.watchlistService.getWatchlistItems(this.request.user.id);
-  }
-
   @Post()
   @HasPermission(permissions.createWatchlistItem)
   @UseGuards(AuthGuard('jwt'))
@@ -70,9 +63,16 @@ export class WatchlistController {
     }
 
     return this.watchlistService.deleteWatchlistItem({
-      dataSource: watchlistItem.dataSource,
       symbol,
+      dataSource: watchlistItem.dataSource,
       userId: this.request.user.id
     });
+  }
+
+  @Get()
+  @HasPermission(permissions.readWatchlistItems)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getWatchlistItems(): Promise<AssetProfileIdentifier[]> {
+    return this.watchlistService.getWatchlistItems(this.request.user.id);
   }
 }

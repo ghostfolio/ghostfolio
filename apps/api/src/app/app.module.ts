@@ -38,7 +38,7 @@ import { GhostfolioModule } from './endpoints/data-providers/ghostfolio/ghostfol
 import { MarketDataModule } from './endpoints/market-data/market-data.module';
 import { PublicModule } from './endpoints/public/public.module';
 import { TagsModule } from './endpoints/tags/tags.module';
-import { WatchlistModule } from './endpoints/watchlists/watchlist.module';
+import { WatchlistModule } from './endpoints/watchlist/watchlist.module';
 import { ExchangeRateModule } from './exchange-rate/exchange-rate.module';
 import { ExportModule } from './export/export.module';
 import { HealthModule } from './health/health.module';
