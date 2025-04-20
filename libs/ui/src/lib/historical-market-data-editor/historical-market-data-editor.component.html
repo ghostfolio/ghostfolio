@@ -1,7 +1,7 @@
 <div>
   @for (itemByMonth of marketDataByMonth | keyvalue; track itemByMonth) {
     <div class="d-flex">
-      <div class="date px-1 text-nowrap">{{ itemByMonth.key }}</div>
+      <div class="date mr-1 text-nowrap">{{ itemByMonth.key }}</div>
       <div class="align-items-center d-flex flex-grow-1 px-1">
         @for (dayItem of days; track dayItem; let i = $index) {
           <div

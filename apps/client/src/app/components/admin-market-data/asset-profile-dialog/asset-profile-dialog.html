@@ -80,8 +80,10 @@
     <div class="mb-3">
       <mat-accordion class="my-3">
         <mat-expansion-panel class="shadow-none">
-          <mat-expansion-panel-header class="mr-3 p-0">
-            <mat-panel-title i18n>Historical Market Data</mat-panel-title>
+          <mat-expansion-panel-header class="p-0 pr-3">
+            <mat-panel-title class="font-weight-bold" i18n
+              >Historical Market Data</mat-panel-title
+            >
           </mat-expansion-panel-header>
 
           <gf-historical-market-data-editor
@@ -370,8 +372,10 @@
               (closed)="scraperConfiguationIsExpanded.set(false)"
               (opened)="scraperConfiguationIsExpanded.set(true)"
             >
-              <mat-expansion-panel-header class="mr-3 p-0">
-                <mat-panel-title i18n>Scraper Configuration</mat-panel-title>
+              <mat-expansion-panel-header class="p-0 pr-3">
+                <mat-panel-title class="font-weight-bold" i18n
+                  >Scraper Configuration</mat-panel-title
+                >
               </mat-expansion-panel-header>
               <div formGroupName="scraperConfiguration">
                 <div class="mt-3">
