@@ -7,6 +7,7 @@ import {
   LineChartItem
 } from '@ghostfolio/common/interfaces';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -35,6 +36,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
     GfDialogFooterModule,
     GfDialogHeaderModule,
     GfLineChartComponent,
+    GfValueComponent,
     MatDialogModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -45,6 +47,7 @@ import { BenchmarkDetailDialogParams } from './interfaces/interfaces';
 export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
   public assetProfile: AdminMarketDataDetails['assetProfile'];
   public historicalDataItems: LineChartItem[];
+  public value: number;
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -65,9 +68,18 @@ export class GfBenchmarkDetailDialogComponent implements OnDestroy, OnInit {
       .subscribe(({ assetProfile, marketData }) => {
         this.assetProfile = assetProfile;
 
-        this.historicalDataItems = marketData.map(({ date, marketPrice }) => {
-          return { date: format(date, DATE_FORMAT), value: marketPrice };
-        });
+        this.historicalDataItems = marketData.map(
+          ({ date, marketPrice }, index) => {
+            if (marketData.length - 1 === index) {
+              this.value = marketPrice;
+            }
+
+            return {
+              date: format(date, DATE_FORMAT),
+              value: marketPrice
+            };
+          }
+        );
 
         this.changeDetectorRef.markForCheck();
       });
