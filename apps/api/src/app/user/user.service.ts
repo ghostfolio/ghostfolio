@@ -189,7 +189,7 @@ export class UserService {
       provider,
       role,
       Settings,
-      Subscription,
+      subscriptions,
       thirdPartyId,
       updatedAt
     } = await this.prismaService.user.findUnique({
@@ -200,7 +200,7 @@ export class UserService {
         },
         Analytics: true,
         Settings: true,
-        Subscription: true
+        subscriptions: true
       },
       where: userWhereUniqueInput
     });
@@ -340,8 +340,8 @@ export class UserService {
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       user.subscription = await this.subscriptionService.getSubscription({
-        createdAt: user.createdAt,
-        subscriptions: Subscription
+        subscriptions,
+        createdAt: user.createdAt
       });
 
       if (user.subscription?.type === 'Basic') {

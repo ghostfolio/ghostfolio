@@ -645,7 +645,7 @@ export class AdminService {
                           Order: {
                             where: {
                               User: {
-                                Subscription: {
+                                subscriptions: {
                                   some: {
                                     expiresAt: {
                                       gt: new Date()
@@ -806,7 +806,7 @@ export class AdminService {
         createdAt: true,
         id: true,
         role: true,
-        Subscription: {
+        subscriptions: {
           orderBy: {
             expiresAt: 'desc'
           },
@@ -821,7 +821,7 @@ export class AdminService {
     });
 
     return usersWithAnalytics.map(
-      ({ _count, Analytics, createdAt, id, role, Subscription }) => {
+      ({ _count, Analytics, createdAt, id, role, subscriptions }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = Analytics
@@ -830,8 +830,8 @@ export class AdminService {
 
         const subscription =
           this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-          Subscription?.length > 0
-            ? Subscription[0]
+          subscriptions?.length > 0
+            ? subscriptions[0]
             : undefined;
 
         return {
