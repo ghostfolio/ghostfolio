@@ -9,10 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Extended the benchmark detail dialog by the current market price
 - Added `watchlist` to the `User` database schema as a preparation for watching assets
 
 ### Changed
 
+- Made the historical market data editor expandable in the admin control panel
 - Parallelized the requests in the get quotes functionality of the _Financial Modeling Prep_ service
 
 ### Fixed
