@@ -106,7 +106,8 @@ export function getPermissions(aRole: Role): string[] {
         permissions.accessAssistant,
         permissions.accessHoldingsChart,
         permissions.createUserAccount,
-        permissions.readAiPrompt
+        permissions.readAiPrompt,
+        permissions.readWatchlist
       ];
 
     case 'USER':

@@ -25,7 +25,7 @@ export class WatchlistService {
 
     if (!symbolProfile) {
       throw new NotFoundException(
-        `Asset profile not found for ${symbol} (${dataSource}).`
+        `Asset profile not found for ${symbol} (${dataSource})`
       );
     }
 
