@@ -27,7 +27,7 @@ import { map, Observable, Subject, takeUntil } from 'rxjs';
 export class GfApiPageComponent implements OnInit {
   public dividends$: Observable<DividendsResponse['dividends']>;
   public historicalData$: Observable<HistoricalResponse['historicalData']>;
-  public isinItems$: Observable<LookupResponse['items']>;
+  public isinLookupItems$: Observable<LookupResponse['items']>;
   public lookupItems$: Observable<LookupResponse['items']>;
   public quotes$: Observable<QuotesResponse['quotes']>;
   public status$: Observable<DataProviderGhostfolioStatusResponse>;
@@ -42,7 +42,7 @@ export class GfApiPageComponent implements OnInit {
 
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
-    this.isinItems$ = this.fetchLookupItems({ query: 'US0378331005' });
+    this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO.US'] });
     this.status$ = this.fetchStatus();
     this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });

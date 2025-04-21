@@ -16,8 +16,8 @@
   </div>
   <div>
     <h2 class="text-center">Lookup (ISIN)</h2>
-    @if (isinItems$) {
-      @let symbols = isinItems$ | async;
+    @if (isinLookupItems$) {
+      @let symbols = isinLookupItems$ | async;
       <ul>
         @for (item of symbols; track item.symbol) {
           <li>{{ item.name }} ({{ item.symbol }})</li>
