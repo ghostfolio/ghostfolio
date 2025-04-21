@@ -4,10 +4,15 @@ import {
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 export class TwrPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(): PortfolioSnapshot {
     throw new Error('Method not implemented.');
+  }
+
+  protected getPerformanceCalculationType() {
+    return PerformanceCalculationType.TWR;
   }
 
   protected getSymbolMetrics({}: {

@@ -58,7 +58,6 @@ export abstract class PortfolioCalculator {
   protected accountBalanceItems: HistoricalDataItem[];
   protected activities: PortfolioOrder[];
 
-  private calculationType: PerformanceCalculationType;
   private configurationService: ConfigurationService;
   private currency: string;
   private currentRateService: CurrentRateService;
@@ -77,7 +76,6 @@ export abstract class PortfolioCalculator {
   public constructor({
     accountBalanceItems,
     activities,
-    calculationType,
     configurationService,
     currency,
     currentRateService,
@@ -89,7 +87,6 @@ export abstract class PortfolioCalculator {
   }: {
     accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
-    calculationType: PerformanceCalculationType;
     configurationService: ConfigurationService;
     currency: string;
     currentRateService: CurrentRateService;
@@ -100,7 +97,6 @@ export abstract class PortfolioCalculator {
     userId: string;
   }) {
     this.accountBalanceItems = accountBalanceItems;
-    this.calculationType = calculationType;
     this.configurationService = configurationService;
     this.currency = currency;
     this.currentRateService = currentRateService;
@@ -628,6 +624,8 @@ export abstract class PortfolioCalculator {
     };
   }
 
+  protected abstract getPerformanceCalculationType(): PerformanceCalculationType;
+
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
@@ -1078,7 +1076,7 @@ export abstract class PortfolioCalculator {
         // Compute in the background
         this.portfolioSnapshotService.addJobToQueue({
           data: {
-            calculationType: this.calculationType,
+            calculationType: this.getPerformanceCalculationType(),
             filters: this.filters,
             userCurrency: this.currency,
             userId: this.userId
@@ -1095,7 +1093,7 @@ export abstract class PortfolioCalculator {
       // Wait for computation
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
-          calculationType: this.calculationType,
+          calculationType: this.getPerformanceCalculationType(),
           filters: this.filters,
           userCurrency: this.currency,
           userId: this.userId

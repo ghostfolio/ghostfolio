@@ -45,7 +45,6 @@ export class PortfolioCalculatorFactory {
         return new MwrPortfolioCalculator({
           accountBalanceItems,
           activities,
-          calculationType,
           currency,
           filters,
           userId,
@@ -60,7 +59,6 @@ export class PortfolioCalculatorFactory {
         return new RoaiPortfolioCalculator({
           accountBalanceItems,
           activities,
-          calculationType,
           currency,
           filters,
           userId,
@@ -75,7 +73,6 @@ export class PortfolioCalculatorFactory {
         return new RoiPortfolioCalculator({
           accountBalanceItems,
           activities,
-          calculationType,
           currency,
           filters,
           userId,
@@ -90,7 +87,6 @@ export class PortfolioCalculatorFactory {
         return new TwrPortfolioCalculator({
           accountBalanceItems,
           activities,
-          calculationType,
           currency,
           filters,
           userId,
