@@ -405,12 +405,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async search({ query }: GetSearchParams): Promise<LookupResponse> {
+    const assetProfileBySymbolMap: {
+      [symbol: string]: Partial<SymbolProfile>;
+    } = {};
     let items: LookupItem[] = [];
 
     try {
-      if (isISIN(query)) {
+      if (isISIN(query?.toUpperCase())) {
         const result = await fetch(
-          `${this.getUrl({ version: 4 })}/search/isin?isin=${query}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/search-isin?isin=${query.toUpperCase()}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(
               this.configurationService.get('REQUEST_TIMEOUT')
@@ -418,15 +421,23 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
         ).then((res) => res.json());
 
-        items = result.map(({ companyName, currency, symbol }) => {
+        await Promise.all(
+          result.map(({ symbol }) => {
+            return this.getAssetProfile({ symbol }).then((assetProfile) => {
+              assetProfileBySymbolMap[symbol] = assetProfile;
+            });
+          })
+        );
+
+        items = result.map(({ assetClass, assetSubClass, name, symbol }) => {
           return {
-            currency,
+            assetClass,
+            assetSubClass,
             symbol,
-            assetClass: undefined, // TODO
-            assetSubClass: undefined, // TODO
+            currency: assetProfileBySymbolMap[symbol]?.currency,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: this.getName(),
-            name: this.formatName({ name: companyName })
+            name: this.formatName({ name })
           };
         });
       } else {
