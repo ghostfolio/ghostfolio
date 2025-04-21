@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Subscription` to `subscriptions` in the `User` database schema
 - Parallelized the requests in the get quotes functionality of the _Financial Modeling Prep_ service
 - Migrated the lookup functionality by `isin` of the _Financial Modeling Prep_ service to its stable API version
+- Improved the language localization for German (`de`)
 
 ### Fixed
 
