@@ -43,9 +43,9 @@ export class GfApiPageComponent implements OnInit {
     this.dividends$ = this.fetchDividends({ symbol: 'KO' });
     this.historicalData$ = this.fetchHistoricalData({ symbol: 'AAPL' });
     this.isinLookupItems$ = this.fetchLookupItems({ query: 'US0378331005' });
+    this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
     this.quotes$ = this.fetchQuotes({ symbols: ['AAPL', 'VOO.US'] });
     this.status$ = this.fetchStatus();
-    this.lookupItems$ = this.fetchLookupItems({ query: 'apple' });
   }
 
   public ngOnDestroy() {
