@@ -25,7 +25,7 @@
               </mat-form-field>
             </div>
           </div>
-          @if (user?.settings?.isExperimentalFeatures && !!user?.subscription) {
+          @if (user?.settings?.isExperimentalFeatures && !user?.subscription) {
             <div class="d-flex mb-2">
               <div class="align-items-center d-flex pt-1 pt-1 w-50">
                 <ng-container i18n>Performance Calculation</ng-container>

@@ -284,8 +284,8 @@ export class PortfolioService {
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -940,8 +940,8 @@ export class PortfolioService {
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -2025,10 +2025,7 @@ export class PortfolioService {
   private getUserPerformanceCalculationType(
     aUser: UserWithSettings
   ): PerformanceCalculationType {
-    return (
-      aUser?.Settings?.settings.performanceCalculationType ??
-      PerformanceCalculationType.ROI
-    );
+    return aUser?.Settings?.settings.performanceCalculationType;
   }
 
   private async getValueOfAccountsAndPlatforms({
