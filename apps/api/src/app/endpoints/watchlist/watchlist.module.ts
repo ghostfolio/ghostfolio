@@ -10,9 +10,9 @@ import { WatchlistService } from './watchlist.service';
 @Module({
   controllers: [WatchlistController],
   imports: [
+    PrismaModule,
     TransformDataSourceInRequestModule,
-    TransformDataSourceInResponseModule,
-    PrismaModule
+    TransformDataSourceInResponseModule
   ],
   providers: [WatchlistService]
 })
