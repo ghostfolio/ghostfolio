@@ -6703,7 +6703,7 @@
         <source>Please enter your Ghostfolio API key:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/api/api-page.component.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="169eed2bc3e08e1bea977bcc5d799379f6b8a758" datatype="html">
