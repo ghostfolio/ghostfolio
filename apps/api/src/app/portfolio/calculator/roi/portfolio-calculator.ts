@@ -6,13 +6,13 @@ import {
 import { PortfolioSnapshot } from '@ghostfolio/common/models';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
-export class MwrPortfolioCalculator extends PortfolioCalculator {
+export class RoiPortfolioCalculator extends PortfolioCalculator {
   protected calculateOverallPerformance(): PortfolioSnapshot {
     throw new Error('Method not implemented.');
   }
 
   protected getPerformanceCalculationType() {
-    return PerformanceCalculationType.MWR;
+    return PerformanceCalculationType.ROI;
   }
 
   protected getSymbolMetrics({}: {

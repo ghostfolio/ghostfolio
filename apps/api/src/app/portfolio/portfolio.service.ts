@@ -50,13 +50,14 @@ import {
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
-import type {
+import {
   AccountWithValue,
   DateRange,
   GroupBy,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -85,10 +86,7 @@ import {
 import { isEmpty } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from './calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { RulesService } from './rules.service';
 
@@ -278,14 +276,16 @@ export class PortfolioService {
     savingsRate: number;
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency: this.getUserCurrency()
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -299,8 +299,8 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
-      currency: this.request.user.Settings.settings.baseCurrency
+      calculationType: this.getUserPerformanceCalculationType(user),
+      currency: userCurrency
     });
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
@@ -376,7 +376,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
@@ -684,7 +684,7 @@ export class PortfolioService {
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
@@ -935,12 +935,13 @@ export class PortfolioService {
     })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency: this.getUserCurrency()
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -954,8 +955,8 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
-      currency: this.request.user.Settings.settings.baseCurrency
+      calculationType: this.getUserPerformanceCalculationType(user),
+      currency: userCurrency
     });
 
     const portfolioSnapshot = await portfolioCalculator.getSnapshot();
@@ -1120,7 +1121,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
@@ -2019,6 +2020,12 @@ export class PortfolioService {
       await this.impersonationService.validateImpersonationId(aImpersonationId);
 
     return impersonationUserId || aUserId;
+  }
+
+  private getUserPerformanceCalculationType(
+    aUser: UserWithSettings
+  ): PerformanceCalculationType {
+    return aUser?.Settings?.settings.performanceCalculationType;
   }
 
   private async getValueOfAccountsAndPlatforms({
