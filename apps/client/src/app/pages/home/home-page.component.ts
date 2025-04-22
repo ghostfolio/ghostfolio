@@ -52,6 +52,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
               path: ['/home', 'market']
+            },
+            {
+              iconName: 'star-outline',
+              label: $localize`Watchlist`,
+              path: ['/home', 'watchlist']
             }
           ];
           this.user = state.user;
