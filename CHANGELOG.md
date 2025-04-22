@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the endpoints (`DELETE`, `GET` and `POST`) for the watchlist
 
+### Changed
+
+- Renamed `User` to `user` in the `Subscription` database schema
+
 ## 2.154.0 - 2025-04-21
 
 ### Added
