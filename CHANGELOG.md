@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the endpoints (`DELETE`, `GET` and `POST`) for the watchlist
 
+### Changed
+
+- Renamed `User` to `user` in the `Subscription` database schema
+
 ### Fixed
 
 - Fixed an issue in the settings dialog to customize the rule thresholds of the _X-ray_ page (experimental)
