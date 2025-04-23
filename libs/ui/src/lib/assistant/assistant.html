@@ -15,28 +15,26 @@
         [formControl]="searchFormControl"
         [placeholder]="placeholder"
       />
-      <div
-        *ngIf="deviceType !== 'mobile' && !searchFormControl.value"
-        class="hot-key-hint mx-1 px-1"
-      >
-        /
-      </div>
-      <button
-        *ngIf="searchFormControl.value"
-        class="h-100 no-min-width px-3 rounded-0"
-        mat-button
-        (click)="initialize()"
-      >
-        <ion-icon class="m-0" name="close-circle-outline" />
-      </button>
-      <button
-        *ngIf="!searchFormControl.value"
-        class="h-100 no-min-width px-3 rounded-0"
-        mat-button
-        (click)="onCloseAssistant()"
-      >
-        <ion-icon class="m-0" name="close-outline" />
-      </button>
+      @if (deviceType !== 'mobile' && !searchFormControl.value) {
+        <div class="hot-key-hint mx-1 px-1">/</div>
+      }
+      @if (searchFormControl.value) {
+        <button
+          class="h-100 no-min-width px-3 rounded-0"
+          mat-button
+          (click)="initialize()"
+        >
+          <ion-icon class="m-0" name="close-circle-outline" />
+        </button>
+      } @else {
+        <button
+          class="h-100 no-min-width px-3 rounded-0"
+          mat-button
+          (click)="onCloseAssistant()"
+        >
+          <ion-icon class="m-0" name="close-outline" />
+        </button>
+      }
     </div>
     <div
       *ngIf="isLoading || searchFormControl.value"
@@ -51,16 +49,18 @@
           (clicked)="onCloseAssistant()"
         />
         <ng-container *ngIf="searchResults?.holdings?.length === 0">
-          <ngx-skeleton-loader
-            *ngIf="isLoading"
-            animation="pulse"
-            class="mx-2"
-            [theme]="{
-              height: '1.5rem',
-              width: '100%'
-            }"
-          />
-          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+          @if (isLoading) {
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mx-2"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            />
+          } @else {
+            <div class="px-2 py-1" i18n>No entries...</div>
+          }
         </ng-container>
       </div>
       <div *ngIf="hasPermissionToAccessAdminControl" class="mt-3">
@@ -72,16 +72,18 @@
           (clicked)="onCloseAssistant()"
         />
         <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
-          <ngx-skeleton-loader
-            *ngIf="isLoading"
-            animation="pulse"
-            class="mx-2"
-            [theme]="{
-              height: '1.5rem',
-              width: '100%'
-            }"
-          />
-          <div *ngIf="!isLoading" class="px-2 py-1" i18n>No entries...</div>
+          @if (isLoading) {
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mx-2"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            />
+          } @else {
+            <div class="px-2 py-1" i18n>No entries...</div>
+          }
         </ng-container>
       </div>
     </div>
