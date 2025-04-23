@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Simplified the data source check in the DTO of the activity creation
+- Simplified the data source check in the DTO of the asset profile update
 - Renamed `User` to `user` in the `Subscription` database schema
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow

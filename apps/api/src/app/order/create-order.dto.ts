@@ -49,7 +49,7 @@ export class CreateOrderDto {
   @IsOptional()
   customCurrency?: string;
 
-  @IsEnum(DataSource, { each: true })
+  @IsEnum(DataSource)
   @IsOptional()
   dataSource?: DataSource;
 
