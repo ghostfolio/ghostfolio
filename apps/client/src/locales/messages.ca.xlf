@@ -1003,7 +1003,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="06c32fe06e23571d90965046809c0e29b37a6ef3" datatype="html">
@@ -1603,7 +1603,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="27fe3d097c64eaec7ff564358f80fb7ba795f484" datatype="html">
@@ -4639,7 +4639,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f4e44195c1fc545934be51e9abfba1202911462a" datatype="html">
@@ -4739,7 +4739,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">129</context>
         </context-group>
       </trans-unit>
       <trans-unit id="050be0e7937dec05c8c8ded71cebc0bb027b38f6" datatype="html">
@@ -6035,11 +6035,11 @@
         <target state="new">No entries...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
@@ -6055,7 +6055,7 @@
         <target state="new">Date Range</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="327159ba32f365c6c3ffc8507308808dd149394e" datatype="html">
@@ -6063,7 +6063,7 @@
         <target state="new"> Reset Filters </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">185</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="73864299814955e733ade6e3e7204548b7b9adae" datatype="html">
@@ -6071,7 +6071,7 @@
         <target state="new"> Apply Filters </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">195</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="170f7de02b14690fb9c1999a16926c0044bfd5c1" datatype="html">
@@ -7473,7 +7473,7 @@
         <target state="new">Tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="258c041e93862316871096965e2d70579282fb1a" datatype="html">
