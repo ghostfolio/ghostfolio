@@ -18,6 +18,7 @@ import {
   DATE_FORMAT,
   getCurrencyFromSymbol,
   getStartOfUtcDate,
+  isCurrency,
   isDerivedCurrency
 } from '@ghostfolio/common/helper';
 import {
@@ -468,17 +469,21 @@ export class DataProviderService {
     )) {
       const dataProvider = this.getDataProvider(DataSource[dataSource]);
 
-      if (
-        dataProvider.getDataProviderInfo().isPremium &&
-        this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
-        user?.subscription.type === 'Basic'
-      ) {
-        continue;
-      }
-
       const symbols = assetProfileIdentifiers
         .filter(({ symbol }) => {
-          return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+          if (isCurrency(getCurrencyFromSymbol(symbol))) {
+            // Keep non-derived currencies
+            return !isDerivedCurrency(getCurrencyFromSymbol(symbol));
+          } else if (
+            dataProvider.getDataProviderInfo().isPremium &&
+            this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+            user?.subscription.type === 'Basic'
+          ) {
+            // Skip symbols of Premium data providers for users without subscription
+            return false;
+          }
+
+          return true;
         })
         .map(({ symbol }) => {
           return symbol;
