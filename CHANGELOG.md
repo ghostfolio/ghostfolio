@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed `User` to `user` in the `Subscription` database schema
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
 
 ### Fixed
 
