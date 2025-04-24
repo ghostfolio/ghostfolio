@@ -25,19 +25,20 @@ export class IsExtendedCurrencyConstraint
   implements ValidatorConstraintInterface
 {
   public defaultMessage() {
-    return '$value must be a valid ISO4217 currency code';
+    return '$property must be a valid ISO4217 currency code';
   }
 
   public validate(currency: any) {
     // Return true if currency is a standard ISO 4217 code or a derived currency
     return (
-      isISO4217CurrencyCode(currency) ||
-      [
-        ...DERIVED_CURRENCIES.map((derivedCurrency) => {
-          return derivedCurrency.currency;
-        }),
-        'USX'
-      ].includes(currency)
+      /^[A-Z]+$/.test(currency) &&
+      (isISO4217CurrencyCode(currency) ||
+        [
+          ...DERIVED_CURRENCIES.map((derivedCurrency) => {
+            return derivedCurrency.currency;
+          }),
+          'USX'
+        ].includes(currency))
     );
   }
 }
