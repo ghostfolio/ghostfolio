@@ -748,8 +748,14 @@ export class PortfolioService {
       );
 
       const historicalDataArray: HistoricalDataItem[] = [];
-      let maxPrice = Math.max(activitiesOfPosition[0].unitPrice, marketPrice);
-      let minPrice = Math.min(activitiesOfPosition[0].unitPrice, marketPrice);
+      let maxPrice = Math.max(
+        activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
+        marketPrice
+      );
+      let minPrice = Math.min(
+        activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
+        marketPrice
+      );
 
       if (historicalData[aSymbol]) {
         let j = -1;
@@ -793,9 +799,9 @@ export class PortfolioService {
       } else {
         // Add historical entry for buy date, if no historical data available
         historicalDataArray.push({
-          averagePrice: activitiesOfPosition[0].unitPrice,
+          averagePrice: activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
           date: firstBuyDate,
-          marketPrice: activitiesOfPosition[0].unitPrice,
+          marketPrice: activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
           quantity: activitiesOfPosition[0].quantity
         });
       }
