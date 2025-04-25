@@ -11,6 +11,7 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
+import { DEFAULT_CURRENCY } from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -72,7 +73,9 @@ export class AlphaVantageService implements DataProviderInterface {
       const historicalData: {
         [symbol: string]: IAlphaVantageHistoricalResponse[];
       } = await this.alphaVantage.crypto.daily(
-        symbol.substring(0, symbol.length - 3).toLowerCase(),
+        symbol
+          .substring(0, symbol.length - DEFAULT_CURRENCY.length)
+          .toLowerCase(),
         'usd'
       );
 

@@ -191,6 +191,7 @@ model SymbolProfile {
   symbolMapping          Json?
   url                    String?
   userId                 String?
+  watchedBy              User[]                  @relation("UserWatchlist")
   Order                  Order[]
   tags                   Tag[]
   SymbolProfileOverrides SymbolProfileOverrides?
@@ -226,8 +227,8 @@ model Subscription {
   id        String   @id @default(uuid())
   price     Float?
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId    String
-  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }
@@ -251,8 +252,10 @@ model User {
   id            String          @id @default(uuid())
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
+  subscriptions Subscription[]
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
+  watchlist     SymbolProfile[] @relation("UserWatchlist")
   Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
   Account       Account[]
@@ -261,7 +264,6 @@ model User {
   AuthDevice    AuthDevice[]
   Order         Order[]
   Settings      Settings?
-  Subscription  Subscription[]
   SymbolProfile SymbolProfile[]
   Tag           Tag[]
 

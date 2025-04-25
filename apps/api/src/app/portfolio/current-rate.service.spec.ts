@@ -6,6 +6,7 @@ import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { DataSource, MarketData } from '@prisma/client';
 
 import { CurrentRateService } from './current-rate.service';
+import { DateQuery } from './interfaces/date-query.interface';
 import { GetValuesObject } from './interfaces/get-values-object.interface';
 
 jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
@@ -25,33 +26,40 @@ jest.mock('@ghostfolio/api/services/market-data/market-data.service', () => {
         },
         getRange: ({
           assetProfileIdentifiers,
-          dateRangeEnd,
-          dateRangeStart
+          dateQuery
         }: {
           assetProfileIdentifiers: AssetProfileIdentifier[];
-          dateRangeEnd: Date;
-          dateRangeStart: Date;
+          dateQuery: DateQuery;
+          skip?: number;
+          take?: number;
         }) => {
           return Promise.resolve<MarketData[]>([
             {
-              createdAt: dateRangeStart,
+              createdAt: dateQuery.gte,
               dataSource: assetProfileIdentifiers[0].dataSource,
-              date: dateRangeStart,
+              date: dateQuery.gte,
               id: '8fa48fde-f397-4b0d-adbc-fb940e830e6d',
               marketPrice: 1841.823902,
               state: 'CLOSE',
               symbol: assetProfileIdentifiers[0].symbol
             },
             {
-              createdAt: dateRangeEnd,
+              createdAt: dateQuery.lt,
               dataSource: assetProfileIdentifiers[0].dataSource,
-              date: dateRangeEnd,
+              date: dateQuery.lt,
               id: '082d6893-df27-4c91-8a5d-092e84315b56',
               marketPrice: 1847.839966,
               state: 'CLOSE',
               symbol: assetProfileIdentifiers[0].symbol
             }
           ]);
+        },
+        getRangeCount: ({}: {
+          assetProfileIdentifiers: AssetProfileIdentifier[];
+          dateRangeEnd: Date;
+          dateRangeStart: Date;
+        }) => {
+          return Promise.resolve<number>(2);
         }
       };
     })
@@ -128,8 +136,14 @@ describe('CurrentRateService', () => {
       values: [
         {
           dataSource: 'YAHOO',
-          date: undefined,
+          date: new Date('2020-01-01T00:00:00.000Z'),
           marketPrice: 1841.823902,
+          symbol: 'AMZN'
+        },
+        {
+          dataSource: 'YAHOO',
+          date: new Date('2020-01-02T00:00:00.000Z'),
+          marketPrice: 1847.839966,
           symbol: 'AMZN'
         }
       ]

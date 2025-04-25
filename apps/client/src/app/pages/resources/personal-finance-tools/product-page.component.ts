@@ -33,9 +33,9 @@ export class GfProductPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    const { subscriptionOffers } = this.dataService.fetchInfo();
+    const { subscriptionOffer } = this.dataService.fetchInfo();
 
-    this.price = subscriptionOffers?.default?.price;
+    this.price = subscriptionOffer?.price;
 
     this.product1 = {
       founded: 2021,

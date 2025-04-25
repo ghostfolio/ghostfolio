@@ -9,6 +9,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { DateRange } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
@@ -110,6 +111,10 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       totalLiabilitiesWithCurrencyEffect: new Big(0),
       totalValuablesWithCurrencyEffect: new Big(0)
     };
+  }
+
+  protected getPerformanceCalculationType() {
+    return PerformanceCalculationType.ROAI;
   }
 
   protected getSymbolMetrics({

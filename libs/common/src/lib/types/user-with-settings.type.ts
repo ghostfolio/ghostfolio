@@ -1,6 +1,5 @@
-import { UserSettings } from '@ghostfolio/common/interfaces';
-import { SubscriptionOfferKey } from '@ghostfolio/common/types';
-import { SubscriptionType } from '@ghostfolio/common/types/subscription-type.type';
+import { SubscriptionOffer, UserSettings } from '@ghostfolio/common/interfaces';
+import { SubscriptionType } from '@ghostfolio/common/types';
 
 import { Access, Account, Settings, User } from '@prisma/client';
 
@@ -14,7 +13,7 @@ export type UserWithSettings = User & {
   Settings: Settings & { settings: UserSettings };
   subscription?: {
     expiresAt?: Date;
-    offer: SubscriptionOfferKey;
+    offer: SubscriptionOffer;
     type: SubscriptionType;
   };
 };

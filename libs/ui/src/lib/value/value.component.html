@@ -13,42 +13,45 @@
           <div *ngIf="+value > 0" class="mr-1 text-success">+</div>
           <div *ngIf="+value < 0" class="mr-1 text-danger">-</div>
         </ng-container>
-        <div
-          *ngIf="isPercent"
-          class="mb-0 value"
-          [ngClass]="{
-            'font-weight-bold h2': size === 'large',
-            h4: size === 'medium'
-          }"
-        >
-          @if (value === null) {
-            <span class="text-monospace text-muted">*****</span>%
-          } @else {
-            {{ formattedValue }}%
-          }
-        </div>
-        <div
-          *ngIf="!isPercent"
-          class="mb-0 value"
-          [ngClass]="{
-            'font-weight-bold h2': size === 'large',
-            h4: size === 'medium'
-          }"
-        >
-          @if (value === null) {
-            <span class="text-monospace text-muted">*****</span>
-          } @else {
-            {{ formattedValue }}
-          }
-        </div>
-        <small *ngIf="unit && size === 'medium'" class="ml-1">
-          {{ unit }}
-        </small>
-        <div *ngIf="unit && size !== 'medium'" class="ml-1">
-          {{ unit }}
-        </div>
+        @if (isPercent) {
+          <div
+            class="mb-0 value"
+            [ngClass]="{
+              'font-weight-bold h2': size === 'large',
+              h4: size === 'medium'
+            }"
+          >
+            @if (value === null) {
+              <span class="text-monospace text-muted">*****</span>%
+            } @else {
+              {{ formattedValue }}%
+            }
+          </div>
+        } @else {
+          <div
+            class="mb-0 value"
+            [ngClass]="{
+              'font-weight-bold h2': size === 'large',
+              h4: size === 'medium'
+            }"
+          >
+            @if (value === null) {
+              <span class="text-monospace text-muted">*****</span>
+            } @else {
+              {{ formattedValue }}
+            }
+          </div>
+        }
+        @if (unit) {
+          <small *ngIf="size === 'medium'" class="ml-1">
+            {{ unit }}
+          </small>
+          <div *ngIf="size !== 'medium'" class="ml-1">
+            {{ unit }}
+          </div>
+        }
       </ng-container>
-      <ng-container *ngIf="isString">
+      @if (isString) {
         <div
           class="mb-0 text-truncate value"
           [ngClass]="{
@@ -58,19 +61,20 @@
         >
           {{ formattedValue }}
         </div>
-      </ng-container>
+      }
     </div>
   </ng-container>
 
-  <ngx-skeleton-loader
-    *ngIf="value === undefined"
-    animation="pulse"
-    [theme]="{
-      height:
-        size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
-      width: '5rem'
-    }"
-  />
+  @if (value === undefined) {
+    <ngx-skeleton-loader
+      animation="pulse"
+      [theme]="{
+        height:
+          size === 'large' ? '2rem' : size === 'medium' ? '1.8rem' : '1.5rem',
+        width: '5rem'
+      }"
+    />
+  }
 
   <ng-container>
     <div *ngIf="size === 'large'" class="text-truncate">

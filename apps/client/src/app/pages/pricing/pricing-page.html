@@ -306,14 +306,10 @@
                     mat-flat-button
                     (click)="onCheckout()"
                   >
-                    @if (user.subscription.offer === 'default') {
-                      <ng-container i18n>Upgrade Plan</ng-container>
-                    } @else if (
-                      user.subscription.offer === 'renewal' ||
-                      user.subscription.offer === 'renewal-early-bird-2023' ||
-                      user.subscription.offer === 'renewal-early-bird-2024'
-                    ) {
+                    @if (user.subscription.offer.isRenewal) {
                       <ng-container i18n>Renew Plan</ng-container>
+                    } @else {
+                      <ng-container i18n>Upgrade Plan</ng-container>
                     }
                   </button>
                   <p class="m-0 text-muted">

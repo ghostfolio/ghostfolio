@@ -24,6 +24,7 @@ import {
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { isISIN } from 'class-validator';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 import { GetDividendsDto } from './get-dividends.dto';
@@ -301,7 +302,9 @@ export class GhostfolioController {
     try {
       const result = await this.ghostfolioService.lookup({
         includeIndices,
-        query: query.toLowerCase()
+        query: isISIN(query.toUpperCase())
+          ? query.toUpperCase()
+          : query.toLowerCase()
       });
 
       await this.ghostfolioService.incrementDailyRequests({

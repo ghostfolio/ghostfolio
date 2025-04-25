@@ -12,8 +12,11 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { REPLACE_NAME_PARTS } from '@ghostfolio/common/config';
-import { DATE_FORMAT, parseDate } from '@ghostfolio/common/helper';
+import {
+  DEFAULT_CURRENCY,
+  REPLACE_NAME_PARTS
+} from '@ghostfolio/common/config';
+import { DATE_FORMAT, isCurrency, parseDate } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
   LookupItem,
@@ -67,7 +70,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     };
 
     try {
-      if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
+      if (
+        isCurrency(symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length))
+      ) {
+        response.assetClass = AssetClass.LIQUIDITY;
+        response.assetSubClass = AssetSubClass.CASH;
+        response.currency = symbol.substring(
+          symbol.length - DEFAULT_CURRENCY.length
+        );
+      } else if (this.cryptocurrencyService.isCryptocurrency(symbol)) {
         const [quote] = await fetch(
           `${this.URL}/quote/${symbol}?apikey=${this.apiKey}`,
           {
@@ -77,7 +88,9 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
         response.assetClass = AssetClass.LIQUIDITY;
         response.assetSubClass = AssetSubClass.CRYPTOCURRENCY;
-        response.currency = symbol.substring(symbol.length - 3);
+        response.currency = symbol.substring(
+          symbol.length - DEFAULT_CURRENCY.length
+        );
         response.name = quote.name;
       } else {
         const [assetProfile] = await fetch(
@@ -325,6 +338,10 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
   }
 
+  public getMaxNumberOfSymbolsPerRequest() {
+    return 20;
+  }
+
   public getName(): DataSource {
     return DataSource.FINANCIAL_MODELING_PREP;
   }
@@ -340,18 +357,28 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     }
 
     try {
+      const currencyBySymbolMap: {
+        [symbol: string]: Pick<SymbolProfile, 'currency'>;
+      } = {};
+
       const quotes = await fetch(
-        `${this.URL}/quote/${symbols.join(',')}?apikey=${this.apiKey}`,
+        `${this.getUrl({ version: 'stable' })}/batch-quote-short?symbols=${symbols.join(',')}&apikey=${this.apiKey}`,
         {
           signal: AbortSignal.timeout(requestTimeout)
         }
       ).then((res) => res.json());
 
-      for (const { price, symbol } of quotes) {
-        const { currency } = await this.getAssetProfile({ symbol });
+      await Promise.all(
+        quotes.map(({ symbol }) => {
+          return this.getAssetProfile({ symbol }).then(({ currency }) => {
+            currencyBySymbolMap[symbol] = { currency };
+          });
+        })
+      );
 
+      for (const { price, symbol } of quotes) {
         response[symbol] = {
-          currency,
+          currency: currencyBySymbolMap[symbol]?.currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
           marketPrice: price,
@@ -378,12 +405,15 @@ export class FinancialModelingPrepService implements DataProviderInterface {
   }
 
   public async search({ query }: GetSearchParams): Promise<LookupResponse> {
+    const assetProfileBySymbolMap: {
+      [symbol: string]: Partial<SymbolProfile>;
+    } = {};
     let items: LookupItem[] = [];
 
     try {
-      if (isISIN(query)) {
+      if (isISIN(query?.toUpperCase())) {
         const result = await fetch(
-          `${this.getUrl({ version: 4 })}/search/isin?isin=${query}&apikey=${this.apiKey}`,
+          `${this.getUrl({ version: 'stable' })}/search-isin?isin=${query.toUpperCase()}&apikey=${this.apiKey}`,
           {
             signal: AbortSignal.timeout(
               this.configurationService.get('REQUEST_TIMEOUT')
@@ -391,15 +421,23 @@ export class FinancialModelingPrepService implements DataProviderInterface {
           }
         ).then((res) => res.json());
 
-        items = result.map(({ companyName, currency, symbol }) => {
+        await Promise.all(
+          result.map(({ symbol }) => {
+            return this.getAssetProfile({ symbol }).then((assetProfile) => {
+              assetProfileBySymbolMap[symbol] = assetProfile;
+            });
+          })
+        );
+
+        items = result.map(({ assetClass, assetSubClass, name, symbol }) => {
           return {
-            currency,
+            assetClass,
+            assetSubClass,
             symbol,
-            assetClass: undefined, // TODO
-            assetSubClass: undefined, // TODO
+            currency: assetProfileBySymbolMap[symbol]?.currency,
             dataProviderInfo: this.getDataProviderInfo(),
             dataSource: this.getName(),
-            name: this.formatName({ name: companyName })
+            name: this.formatName({ name })
           };
         });
       } else {
@@ -451,8 +489,14 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     return name;
   }
 
-  private getUrl({ version }: { version: number }) {
-    return `https://financialmodelingprep.com/api/v${version}`;
+  private getUrl({ version }: { version: number | 'stable' }) {
+    const baseUrl = 'https://financialmodelingprep.com';
+
+    if (version === 'stable') {
+      return `${baseUrl}/stable`;
+    }
+
+    return `${baseUrl}/api/v${version}`;
   }
 
   private parseAssetClass(profile: any): {
@@ -462,15 +506,17 @@ export class FinancialModelingPrepService implements DataProviderInterface {
     let assetClass: AssetClass;
     let assetSubClass: AssetSubClass;
 
-    if (profile.isEtf) {
-      assetClass = AssetClass.EQUITY;
-      assetSubClass = AssetSubClass.ETF;
-    } else if (profile.isFund) {
-      assetClass = AssetClass.EQUITY;
-      assetSubClass = AssetSubClass.MUTUALFUND;
-    } else {
-      assetClass = AssetClass.EQUITY;
-      assetSubClass = AssetSubClass.STOCK;
+    if (profile) {
+      if (profile.isEtf) {
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.ETF;
+      } else if (profile.isFund) {
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.MUTUALFUND;
+      } else {
+        assetClass = AssetClass.EQUITY;
+        assetSubClass = AssetSubClass.STOCK;
+      }
     }
 
     return { assetClass, assetSubClass };

@@ -38,7 +38,7 @@ export class UpdateAssetProfileDto {
   @IsOptional()
   currency?: string;
 
-  @IsEnum(DataSource, { each: true })
+  @IsEnum(DataSource)
   @IsOptional()
   dataSource?: DataSource;
 
