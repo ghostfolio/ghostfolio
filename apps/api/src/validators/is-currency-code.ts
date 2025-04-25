@@ -31,7 +31,7 @@ export class IsExtendedCurrencyConstraint
   public validate(currency: any) {
     // Return true if currency is a standard ISO 4217 code or a derived currency
     return (
-      /^[A-Z]+$/.test(currency) &&
+      this.isUpperCase(currency) &&
       (isISO4217CurrencyCode(currency) ||
         [
           ...DERIVED_CURRENCIES.map((derivedCurrency) => {
@@ -40,5 +40,9 @@ export class IsExtendedCurrencyConstraint
           'USX'
         ].includes(currency))
     );
+  }
+
+  private isUpperCase(aString: string) {
+    return aString === aString?.toUpperCase();
   }
 }
