@@ -210,9 +210,8 @@ export class DataGatheringProcessor {
     name: GATHER_MISSING_HISTORICAL_MARKET_DATA_PROCESS_JOB_NAME
   })
   public async gatherMissingHistoricalMarketData(job: Job<IDataGatheringItem>) {
+    const { dataSource, date, symbol } = job.data;
     try {
-      const { dataSource, date, symbol } = job.data;
-
       Logger.log(
         `Historical market data gathering for missing values has been started for ${symbol} (${dataSource}) at ${format(
           date,

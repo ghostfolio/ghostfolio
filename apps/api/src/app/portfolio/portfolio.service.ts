@@ -86,7 +86,6 @@ import {
 } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash';
 
-import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
@@ -1102,15 +1101,13 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    userId,
-    calculateTimeWeightedPerformance = false
+    userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    calculateTimeWeightedPerformance?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1158,11 +1155,7 @@ export class PortfolioService {
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
     const range = { end: endDate, start: startDate };
 
-    const { chart } = await (calculateTimeWeightedPerformance
-      ? (
-          portfolioCalculator as CPRPortfolioCalculator
-        ).getPerformanceWithTimeWeightedReturn(range)
-      : portfolioCalculator.getPerformance(range));
+    const { chart } = await portfolioCalculator.getPerformance(range);
 
     const {
       netPerformance,
@@ -1932,17 +1925,9 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth =
-      portfolioCalculator instanceof CPRPortfolioCalculator
-        ? await (portfolioCalculator as CPRPortfolioCalculator)
-            .getUnfilteredNetWorth(this.getUserCurrency())
-            .then((value) => value.toNumber())
-        : new Big(balanceInBaseCurrency)
-            .plus(currentValueInBaseCurrency)
-            .plus(valuables)
-            .plus(excludedAccountsAndActivities)
-            .minus(liabilities)
-            .toNumber();
+    const netWorth = await portfolioCalculator
+      .getUnfilteredNetWorth(this.getUserCurrency())
+      .then((value) => value.toNumber());
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 

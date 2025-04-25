@@ -10,18 +10,12 @@ import { PerformanceCalculationType } from '@ghostfolio/common/types/performance
 
 import { Injectable } from '@nestjs/common';
 
+import { OrderService } from '../../order/order.service';
 import { MwrPortfolioCalculator } from './mwr/portfolio-calculator';
 import { PortfolioCalculator } from './portfolio-calculator';
 import { RoaiPortfolioCalculator } from './roai/portfolio-calculator';
 import { RoiPortfolioCalculator } from './roi/portfolio-calculator';
 import { TwrPortfolioCalculator } from './twr/portfolio-calculator';
-
-export enum PerformanceCalculationType {
-  MWR = 'MWR', // Money-Weighted Rate of Return
-  ROAI = 'ROAI', // Return on Average Investment
-  TWR = 'TWR', // Time-Weighted Rate of Return
-  CPR = 'CPR' // Constant Portfolio Rate of Return
-}
 
 @Injectable()
 export class PortfolioCalculatorFactory {
@@ -30,7 +24,8 @@ export class PortfolioCalculatorFactory {
     private readonly currentRateService: CurrentRateService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly portfolioSnapshotService: PortfolioSnapshotService,
-    private readonly redisCacheService: RedisCacheService
+    private readonly redisCacheService: RedisCacheService,
+    private readonly orderService: OrderService
   ) {}
 
   @LogPerformance
@@ -61,7 +56,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          orderService: this.orderService
         });
 
       case PerformanceCalculationType.ROAI:
@@ -75,7 +71,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          orderService: this.orderService
         });
 
       case PerformanceCalculationType.ROI:
@@ -89,7 +86,8 @@ export class PortfolioCalculatorFactory {
           currentRateService: this.currentRateService,
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService
+          redisCacheService: this.redisCacheService,
+          orderService: this.orderService
         });
 
       case PerformanceCalculationType.TWR:
@@ -103,19 +101,7 @@ export class PortfolioCalculatorFactory {
           exchangeRateDataService: this.exchangeRateDataService,
           portfolioSnapshotService: this.portfolioSnapshotService,
           redisCacheService: this.redisCacheService,
-          filters
-        });
-      case PerformanceCalculationType.CPR:
-        return new RoaiPortfolioCalculator({
-          accountBalanceItems,
-          activities,
-          currency,
-          currentRateService: this.currentRateService,
-          userId,
-          configurationService: this.configurationService,
-          exchangeRateDataService: this.exchangeRateDataService,
-          portfolioSnapshotService: this.portfolioSnapshotService,
-          redisCacheService: this.redisCacheService,
+          orderService: this.orderService,
           filters
         });
 
