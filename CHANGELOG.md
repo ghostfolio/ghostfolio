@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Improved the error message of the currency code validation
+- Tightened the currency code validation by requiring uppercase letters
+
 ### Fixed
 
 - Improved the file selector of the activities import functionality to accept case-insensitive file extensions (`.CSV` and `.JSON`)
