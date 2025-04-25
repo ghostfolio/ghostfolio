@@ -1,4 +1,5 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import {
   activityDummyData,
   symbolProfileDummyData,
@@ -55,6 +56,7 @@ describe('PortfolioCalculator', () => {
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
+  let orderServiceMock: OrderService;
 
   beforeEach(() => {
     configurationService = new ConfigurationService();
@@ -72,12 +74,15 @@ describe('PortfolioCalculator', () => {
 
     redisCacheService = new RedisCacheService(null, null);
 
+    orderServiceMock = new OrderService(null, null, null, null, null, null);
+
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      orderServiceMock
     );
   });
 
