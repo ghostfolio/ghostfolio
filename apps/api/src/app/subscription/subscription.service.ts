@@ -122,7 +122,7 @@ export class SubscriptionService {
       data: {
         expiresAt,
         price,
-        User: {
+        user: {
           connect: {
             id: userId
           }
@@ -158,38 +158,67 @@ export class SubscriptionService {
     }
   }
 
-  public getSubscription({
+  public async getSubscription({
     createdAt,
     subscriptions
   }: {
     createdAt: UserWithSettings['createdAt'];
     subscriptions: Subscription[];
-  }): UserWithSettings['subscription'] {
+  }): Promise<UserWithSettings['subscription']> {
     if (subscriptions.length > 0) {
       const { expiresAt, price } = subscriptions.reduce((a, b) => {
         return new Date(a.expiresAt) > new Date(b.expiresAt) ? a : b;
       });
 
-      let offer: SubscriptionOfferKey = price ? 'renewal' : 'default';
+      let offerKey: SubscriptionOfferKey = price ? 'renewal' : 'default';
 
       if (isBefore(createdAt, parseDate('2023-01-01'))) {
-        offer = 'renewal-early-bird-2023';
+        offerKey = 'renewal-early-bird-2023';
       } else if (isBefore(createdAt, parseDate('2024-01-01'))) {
-        offer = 'renewal-early-bird-2024';
+        offerKey = 'renewal-early-bird-2024';
       }
 
+      const offer = await this.getSubscriptionOffer({
+        key: offerKey
+      });
+
       return {
-        expiresAt,
         offer,
+        expiresAt: isBefore(new Date(), expiresAt) ? expiresAt : undefined,
         type: isBefore(new Date(), expiresAt)
           ? SubscriptionType.Premium
           : SubscriptionType.Basic
       };
     } else {
+      const offer = await this.getSubscriptionOffer({
+        key: 'default'
+      });
+
       return {
-        offer: 'default',
+        offer,
         type: SubscriptionType.Basic
       };
     }
+  }
+
+  public async getSubscriptionOffer({
+    key
+  }: {
+    key: SubscriptionOfferKey;
+  }): Promise<SubscriptionOffer> {
+    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      return undefined;
+    }
+
+    const offers: {
+      [offer in SubscriptionOfferKey]: SubscriptionOffer;
+    } =
+      ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
+      {};
+
+    return {
+      ...offers[key],
+      isRenewal: key.startsWith('renewal')
+    };
   }
 }

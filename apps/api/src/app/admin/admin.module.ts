@@ -1,5 +1,4 @@
 import { OrderModule } from '@ghostfolio/api/app/order/order.module';
-import { SubscriptionModule } from '@ghostfolio/api/app/subscription/subscription.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
@@ -32,7 +31,6 @@ import { QueueModule } from './queue/queue.module';
     PrismaModule,
     PropertyModule,
     QueueModule,
-    SubscriptionModule,
     SymbolProfileModule,
     SymbolProfileOverwriteModule,
     TransformDataSourceInRequestModule

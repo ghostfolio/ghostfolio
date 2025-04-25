@@ -51,13 +51,14 @@ import {
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
-import type {
+import {
   AccountWithValue,
   DateRange,
   GroupBy,
   RequestWithUser,
   UserWithSettings
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -85,12 +86,8 @@ import {
 } from 'date-fns';
 import { isEmpty, uniqBy } from 'lodash';
 
-import { CPRPortfolioCalculator } from './calculator/constantPortfolioReturn/portfolio-calculator';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
-import {
-  PerformanceCalculationType,
-  PortfolioCalculatorFactory
-} from './calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { RulesService } from './rules.service';
 
@@ -251,10 +248,14 @@ export class PortfolioService {
     activities: Activity[];
     groupBy?: GroupBy;
   }): Promise<InvestmentItem[]> {
-    let dividends = activities.map(({ date, valueInBaseCurrency }) => {
+    let dividends = activities.map(({ currency, date, value }) => {
       return {
         date: format(date, DATE_FORMAT),
-        investment: valueInBaseCurrency
+        investment: this.exchangeRateDataService.toCurrency(
+          value,
+          currency,
+          this.getUserCurrency()
+        )
       };
     });
 
@@ -280,14 +281,16 @@ export class PortfolioService {
     savingsRate: number;
   }): Promise<PortfolioInvestments> {
     const userId = await this.getUserId(impersonationId, this.request.user.id);
+    const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency: this.getUserCurrency()
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -301,8 +304,8 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
-      currency: this.request.user.Settings.settings.baseCurrency
+      calculationType: this.getUserPerformanceCalculationType(user),
+      currency: userCurrency
     });
 
     const { historicalData } = await portfolioCalculator.getSnapshot();
@@ -379,7 +382,7 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
@@ -693,7 +696,7 @@ export class PortfolioService {
     const portfolioCalculator = this.calculatorFactory.createCalculator({
       activities,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
@@ -957,12 +960,13 @@ export class PortfolioService {
     })?.id;
     const userId = await this.getUserId(impersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
+    const userCurrency = this.getUserCurrency(user);
 
     const { activities } =
       await this.orderService.getOrdersForPortfolioCalculator({
         filters,
-        userId,
-        userCurrency: this.getUserCurrency()
+        userCurrency,
+        userId
       });
 
     if (activities.length === 0) {
@@ -976,8 +980,8 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
-      currency: this.request.user.Settings.settings.baseCurrency
+      calculationType: this.getUserPerformanceCalculationType(user),
+      currency: userCurrency
     });
 
     const portfolioSnapshot = await portfolioCalculator.getSnapshot();
@@ -1097,15 +1101,13 @@ export class PortfolioService {
     dateRange = 'max',
     filters,
     impersonationId,
-    userId,
-    calculateTimeWeightedPerformance = false
+    userId
   }: {
     dateRange?: DateRange;
     filters?: Filter[];
     impersonationId: string;
     userId: string;
     withExcludedAccounts?: boolean;
-    calculateTimeWeightedPerformance?: boolean;
   }): Promise<PortfolioPerformanceResponse> {
     userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
@@ -1146,18 +1148,14 @@ export class PortfolioService {
       activities,
       filters,
       userId,
-      calculationType: PerformanceCalculationType.ROAI,
+      calculationType: this.getUserPerformanceCalculationType(user),
       currency: userCurrency
     });
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
     const range = { end: endDate, start: startDate };
 
-    const { chart } = await (calculateTimeWeightedPerformance
-      ? (
-          portfolioCalculator as CPRPortfolioCalculator
-        ).getPerformanceWithTimeWeightedReturn(range)
-      : portfolioCalculator.getPerformance(range));
+    const { chart } = await portfolioCalculator.getPerformance(range);
 
     const {
       netPerformance,
@@ -1927,17 +1925,9 @@ export class PortfolioService {
       .plus(totalOfExcludedActivities)
       .toNumber();
 
-    const netWorth =
-      portfolioCalculator instanceof CPRPortfolioCalculator
-        ? await (portfolioCalculator as CPRPortfolioCalculator)
-            .getUnfilteredNetWorth(this.getUserCurrency())
-            .then((value) => value.toNumber())
-        : new Big(balanceInBaseCurrency)
-            .plus(currentValueInBaseCurrency)
-            .plus(valuables)
-            .plus(excludedAccountsAndActivities)
-            .minus(liabilities)
-            .toNumber();
+    const netWorth = await portfolioCalculator
+      .getUnfilteredNetWorth(this.getUserCurrency())
+      .then((value) => value.toNumber());
 
     const daysInMarket = differenceInDays(new Date(), firstOrderDate);
 
@@ -2055,6 +2045,12 @@ export class PortfolioService {
       await this.impersonationService.validateImpersonationId(aImpersonationId);
 
     return impersonationUserId || aUserId;
+  }
+
+  private getUserPerformanceCalculationType(
+    aUser: UserWithSettings
+  ): PerformanceCalculationType {
+    return aUser?.Settings?.settings.performanceCalculationType;
   }
 
   @LogPerformance

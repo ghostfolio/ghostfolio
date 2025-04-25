@@ -35,8 +35,8 @@ import {
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {

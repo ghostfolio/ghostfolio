@@ -1,5 +1,6 @@
 import { PlatformService } from '@ghostfolio/api/app/platform/platform.service';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
+import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -13,7 +14,6 @@ import {
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  PROPERTY_STRIPE_CONFIG,
   ghostfolioFearAndGreedIndexDataSource
 } from '@ghostfolio/common/config';
 import {
@@ -21,13 +21,8 @@ import {
   encodeDataSource,
   extractNumberFromString
 } from '@ghostfolio/common/helper';
-import {
-  InfoItem,
-  Statistics,
-  SubscriptionOffer
-} from '@ghostfolio/common/interfaces';
+import { InfoItem, Statistics } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
-import { SubscriptionOfferKey } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -46,6 +41,7 @@ export class InfoService {
     private readonly platformService: PlatformService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService,
+    private readonly subscriptionService: SubscriptionService,
     private readonly userService: UserService
   ) {}
 
@@ -101,7 +97,7 @@ export class InfoService {
       isUserSignupEnabled,
       platforms,
       statistics,
-      subscriptionOffers
+      subscriptionOffer
     ] = await Promise.all([
       this.benchmarkService.getBenchmarkAssetProfiles(),
       this.getDemoAuthToken(),
@@ -110,7 +106,7 @@ export class InfoService {
         orderBy: { name: 'asc' }
       }),
       this.getStatistics(),
-      this.getSubscriptionOffers()
+      this.subscriptionService.getSubscriptionOffer({ key: 'default' })
     ]);
 
     if (isUserSignupEnabled) {
@@ -125,7 +121,7 @@ export class InfoService {
       isReadOnlyMode,
       platforms,
       statistics,
-      subscriptionOffers,
+      subscriptionOffer,
       baseCurrency: DEFAULT_CURRENCY,
       currencies: this.exchangeRateDataService.getCurrencies()
     };
@@ -297,19 +293,6 @@ export class InfoService {
     );
 
     return statistics;
-  }
-
-  private async getSubscriptionOffers(): Promise<{
-    [offer in SubscriptionOfferKey]: SubscriptionOffer;
-  }> {
-    if (!this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      return undefined;
-    }
-
-    return (
-      ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
-      {}
-    );
   }
 
   private async getUptime(): Promise<number> {

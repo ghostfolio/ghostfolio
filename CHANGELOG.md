@@ -9,7 +9,93 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the error message of the currency code validation
+- Tightened the currency code validation by requiring uppercase letters
+
+### Fixed
+
+- Improved the file selector of the activities import functionality to accept case-insensitive file extensions (`.CSV` and `.JSON`)
+
+## 2.155.0 - 2025-04-23
+
+### Added
+
+- Added the endpoints (`DELETE`, `GET` and `POST`) for the watchlist
+
+### Changed
+
+- Simplified the data source check in the DTO of the activity creation
+- Simplified the data source check in the DTO of the asset profile update
+- Renamed `User` to `user` in the `Subscription` database schema
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
+
+### Fixed
+
+- Fixed an issue in the settings dialog to customize the rule thresholds of the _X-ray_ page (experimental)
+
+## 2.154.0 - 2025-04-21
+
+### Added
+
+- Extended the benchmark detail dialog by the current market price
+- Added the performance calculation type to the user settings (experimental)
+- Added `watchlist` to the `User` database schema as a preparation for watching assets
+
+### Changed
+
+- Made the historical market data editor expandable in the admin control panel
+- Renamed `Subscription` to `subscriptions` in the `User` database schema
+- Parallelized the requests in the get quotes functionality of the _Financial Modeling Prep_ service
+- Migrated the lookup functionality by `isin` of the _Financial Modeling Prep_ service to its stable API version
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed the word wrap in the menu of the historical market data table in the admin control panel
+
+## 2.153.0 - 2025-04-18
+
+### Changed
+
+- Added support for activities in a custom currency
+- Refreshed the cryptocurrencies list
+- Upgraded `chart.js` from version `4.4.7` to `4.4.9`
+- Upgraded `uuid` from version `11.0.5` to `11.1.0`
+
+### Fixed
+
+- Fixed the functionality to open an asset profile of a custom currency in the admin control panel
+- Fixed the asset class parsing in the _Financial Modeling Prep_ service for exchange rates
+
+## 2.152.1 - 2025-04-17
+
+### Changed
+
+- Deactivated asset profiles automatically on delisting in the _Yahoo Finance_ service
+- Optimized the query of the data range functionality (`getRange()`) in the market data service
+- Moved the subscription offer from the info to the user service
+- Upgraded `Nx` from version `20.7.1` to `20.8.0`
+- Upgraded `prisma` from version `6.5.0` to `6.6.0`
+- Upgraded `storybook` from version `8.4.7` to `8.6.12`
+
+## 2.151.0 - 2025-04-11
+
+### Added
+
+- Added the data gathering status column to the historical market data table of the admin control
+
+### Changed
+
+- Set the maximum number of symbols per request in the _Financial Modeling Prep_ service
+- Migrated the get quotes functionality of the _Financial Modeling Prep_ service to its stable API version
+- Improved the language localization for Enlish (`en`)
 - Upgraded `eslint` dependencies
+- Upgraded `Nx` from version `20.6.4` to `20.7.1`
+
+### Fixed
+
+- Fixed the link to the pricing page in the premium indicator component
 
 ## 2.150.0 - 2025-04-05
 

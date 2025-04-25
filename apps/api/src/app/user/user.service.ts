@@ -41,6 +41,7 @@ import {
   permissions
 } from '@ghostfolio/common/permissions';
 import { UserWithSettings } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -189,7 +190,7 @@ export class UserService {
       provider,
       role,
       Settings,
-      Subscription,
+      subscriptions,
       thirdPartyId,
       updatedAt
     } = await this.prismaService.user.findUnique({
@@ -200,7 +201,7 @@ export class UserService {
         },
         Analytics: true,
         Settings: true,
-        Subscription: true
+        subscriptions: true
       },
       where: userWhereUniqueInput
     });
@@ -245,6 +246,12 @@ export class UserService {
       (user.Settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
         : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
+
+    // Set default value for performance calculation type
+    if (!(user.Settings.settings as UserSettings)?.performanceCalculationType) {
+      (user.Settings.settings as UserSettings).performanceCalculationType =
+        PerformanceCalculationType.ROAI;
+    }
 
     // Set default value for view mode
     if (!(user.Settings.settings as UserSettings).viewMode) {
@@ -339,9 +346,9 @@ export class UserService {
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-      user.subscription = this.subscriptionService.getSubscription({
-        createdAt: user.createdAt,
-        subscriptions: Subscription
+      user.subscription = await this.subscriptionService.getSubscription({
+        subscriptions,
+        createdAt: user.createdAt
       });
 
       if (user.subscription?.type === 'Basic') {
@@ -392,6 +399,12 @@ export class UserService {
           currentPermissions,
           permissions.deleteOwnUser
         );
+
+        // Reset offer
+        user.subscription.offer.coupon = undefined;
+        user.subscription.offer.couponId = undefined;
+        user.subscription.offer.durationExtension = undefined;
+        user.subscription.offer.label = undefined;
       }
     }
 

@@ -247,9 +247,10 @@ export class ImportActivitiesDialog implements OnDestroy {
 
     reader.onload = async (readerEvent) => {
       const fileContent = readerEvent.target.result as string;
+      const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
       try {
-        if (file.name.endsWith('.json')) {
+        if (fileExtension === 'json') {
           const content = JSON.parse(fileContent);
 
           this.accounts = content.accounts;
@@ -294,7 +295,7 @@ export class ImportActivitiesDialog implements OnDestroy {
           }
 
           return;
-        } else if (file.name.endsWith('.csv')) {
+        } else if (fileExtension === 'csv') {
           const content = fileContent.split('\n').slice(1);
 
           try {

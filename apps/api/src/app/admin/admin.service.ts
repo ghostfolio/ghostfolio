@@ -1,5 +1,4 @@
 import { OrderService } from '@ghostfolio/api/app/order/order.service';
-import { SubscriptionService } from '@ghostfolio/api/app/subscription/subscription.service';
 import { environment } from '@ghostfolio/api/environments/environment';
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
@@ -62,7 +61,6 @@ export class AdminService {
     private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
-    private readonly subscriptionService: SubscriptionService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
 
@@ -249,6 +247,7 @@ export class AdminService {
             currency: true,
             dataSource: true,
             id: true,
+            isActive: true,
             isUsedByUsersWithSubscription: true,
             name: true,
             Order: {
@@ -310,6 +309,7 @@ export class AdminService {
             currency,
             dataSource,
             id,
+            isActive,
             isUsedByUsersWithSubscription,
             name,
             Order,
@@ -369,6 +369,7 @@ export class AdminService {
               countriesCount,
               dataSource,
               id,
+              isActive,
               lastMarketPrice,
               name,
               symbol,
@@ -454,7 +455,8 @@ export class AdminService {
         currency,
         dataSource,
         dateOfFirstActivity,
-        symbol
+        symbol,
+        isActive: true
       }
     };
   }
@@ -649,7 +651,7 @@ export class AdminService {
                           Order: {
                             where: {
                               User: {
-                                Subscription: {
+                                subscriptions: {
                                   some: {
                                     expiresAt: {
                                       gt: new Date()
@@ -754,6 +756,7 @@ export class AdminService {
           countriesCount: 0,
           date: dateOfFirstActivity,
           id: undefined,
+          isActive: true,
           name: symbol,
           sectorsCount: 0,
           tags: []
@@ -810,26 +813,33 @@ export class AdminService {
         createdAt: true,
         id: true,
         role: true,
-        Subscription: true
+        subscriptions: {
+          orderBy: {
+            expiresAt: 'desc'
+          },
+          take: 1,
+          where: {
+            expiresAt: {
+              gt: new Date()
+            }
+          }
+        }
       }
     });
 
     return usersWithAnalytics.map(
-      ({ _count, Analytics, createdAt, id, role, Subscription }) => {
+      ({ _count, Analytics, createdAt, id, role, subscriptions }) => {
         const daysSinceRegistration =
           differenceInDays(new Date(), createdAt) + 1;
         const engagement = Analytics
           ? Analytics.activityCount / daysSinceRegistration
           : undefined;
 
-        const subscription = this.configurationService.get(
-          'ENABLE_FEATURE_SUBSCRIPTION'
-        )
-          ? this.subscriptionService.getSubscription({
-              createdAt,
-              subscriptions: Subscription
-            })
-          : undefined;
+        const subscription =
+          this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION') &&
+          subscriptions?.length > 0
+            ? subscriptions[0]
+            : undefined;
 
         return {
           createdAt,

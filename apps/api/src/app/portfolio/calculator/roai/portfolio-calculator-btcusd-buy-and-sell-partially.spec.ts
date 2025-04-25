@@ -4,10 +4,7 @@ import {
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
-import {
-  PortfolioCalculatorFactory,
-  PerformanceCalculationType
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
@@ -18,6 +15,7 @@ import { ExchangeRateDataServiceMock } from '@ghostfolio/api/services/exchange-r
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
 
@@ -92,7 +90,8 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 
@@ -105,7 +104,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2015-01-01'),
-          fee: 0,
+          feeInAssetProfileCurrency: 0,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -115,12 +114,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BTCUSD'
           },
           type: 'BUY',
-          unitPrice: 320.43
+          unitPriceInAssetProfileCurrency: 320.43
         },
         {
           ...activityDummyData,
           date: new Date('2017-12-31'),
-          fee: 0,
+          feeInAssetProfileCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -130,7 +129,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'BTCUSD'
           },
           type: 'SELL',
-          unitPrice: 14156.4
+          unitPriceInAssetProfileCurrency: 14156.4
         }
       ];
 

@@ -35,11 +35,13 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
 import { Big } from 'big.js';
 import { plainToClass } from 'class-transformer';
 import {
+  addDays,
   differenceInDays,
   eachDayOfInterval,
   endOfDay,
@@ -50,6 +52,8 @@ import {
   subDays
 } from 'date-fns';
 import { isNumber, sortBy, sum, uniqBy } from 'lodash';
+
+import { OrderService } from '../../order/order.service';
 
 export abstract class PortfolioCalculator {
   protected static readonly ENABLE_LOGGING = false;
@@ -63,6 +67,7 @@ export abstract class PortfolioCalculator {
   private dataProviderInfos: DataProviderInfo[];
   private endDate: Date;
   protected exchangeRateDataService: ExchangeRateDataService;
+  protected orderService: OrderService;
   private filters: Filter[];
   private portfolioSnapshotService: PortfolioSnapshotService;
   private redisCacheService: RedisCacheService;
@@ -72,6 +77,8 @@ export abstract class PortfolioCalculator {
   private transactionPoints: TransactionPoint[];
   protected userId: string;
   protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
+  private holdings: { [date: string]: { [symbol: string]: Big } } = {};
+  private holdingCurrencies: { [symbol: string]: string } = {};
 
   public constructor({
     accountBalanceItems,
@@ -83,7 +90,8 @@ export abstract class PortfolioCalculator {
     filters,
     portfolioSnapshotService,
     redisCacheService,
-    userId
+    userId,
+    orderService
   }: {
     accountBalanceItems: HistoricalDataItem[];
     activities: Activity[];
@@ -95,6 +103,7 @@ export abstract class PortfolioCalculator {
     portfolioSnapshotService: PortfolioSnapshotService;
     redisCacheService: RedisCacheService;
     userId: string;
+    orderService: OrderService;
   }) {
     this.accountBalanceItems = accountBalanceItems;
     this.configurationService = configurationService;
@@ -102,6 +111,7 @@ export abstract class PortfolioCalculator {
     this.currentRateService = currentRateService;
     this.exchangeRateDataService = exchangeRateDataService;
     this.filters = filters;
+    this.orderService = orderService;
 
     let dateOfFirstActivity = new Date();
 
@@ -113,12 +123,12 @@ export abstract class PortfolioCalculator {
       .map(
         ({
           date,
-          fee,
+          feeInAssetProfileCurrency,
           quantity,
           SymbolProfile,
           tags = [],
           type,
-          unitPrice
+          unitPriceInAssetProfileCurrency
         }) => {
           if (isBefore(date, dateOfFirstActivity)) {
             dateOfFirstActivity = date;
@@ -135,9 +145,9 @@ export abstract class PortfolioCalculator {
             tags,
             type,
             date: format(date, DATE_FORMAT),
-            fee: new Big(fee),
+            fee: new Big(feeInAssetProfileCurrency),
             quantity: new Big(quantity),
-            unitPrice: new Big(unitPrice)
+            unitPrice: new Big(unitPriceInAssetProfileCurrency)
           };
         }
       )
@@ -613,6 +623,78 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
+  public async getUnfilteredNetWorth(currency: string): Promise<Big> {
+    const activities = await this.orderService.getOrders({
+      userId: this.userId,
+      userCurrency: currency,
+      types: ['BUY', 'SELL', 'STAKE'],
+      withExcludedAccounts: true
+    });
+    const orders = this.activitiesToPortfolioOrder(activities.activities);
+    const start = orders.reduce(
+      (date, order) =>
+        parseDate(date.date).getTime() < parseDate(order.date).getTime()
+          ? date
+          : order,
+      { date: orders[0].date }
+    ).date;
+
+    const end = new Date(Date.now());
+
+    const holdings = await this.getHoldings(orders, parseDate(start), end);
+    const marketMap = await this.currentRateService.getValues({
+      dataGatheringItems: this.mapToDataGatheringItems(orders),
+      dateQuery: { in: [end] }
+    });
+    const endString = format(end, DATE_FORMAT);
+    const exchangeRates = await Promise.all(
+      Object.keys(holdings[endString]).map(async (holding) => {
+        const symbolCurrency = this.getCurrencyFromActivities(orders, holding);
+        const exchangeRate =
+          await this.exchangeRateDataService.toCurrencyAtDate(
+            1,
+            symbolCurrency,
+            this.currency,
+            end
+          );
+        return { symbolCurrency, exchangeRate };
+      })
+    );
+    const currencyRates = exchangeRates.reduce<{ [currency: string]: number }>(
+      (all, currency): { [currency: string]: number } => {
+        all[currency.symbolCurrency] ??= currency.exchangeRate;
+        return all;
+      },
+      {}
+    );
+
+    const totalInvestment = await Object.keys(holdings[endString]).reduce(
+      (sum, holding) => {
+        if (!holdings[endString][holding].toNumber()) {
+          return sum;
+        }
+        const symbol = marketMap.values.find((m) => m.symbol === holding);
+
+        if (symbol?.marketPrice === undefined) {
+          Logger.warn(
+            `Missing historical market data for ${holding} (${end})`,
+            'PortfolioCalculator'
+          );
+          return sum;
+        } else {
+          const symbolCurrency = this.getCurrency(holding);
+          const price = new Big(currencyRates[symbolCurrency]).mul(
+            symbol.marketPrice
+          );
+          return sum.plus(new Big(price).mul(holdings[endString][holding]));
+        }
+      },
+      new Big(0)
+    );
+    return totalInvestment;
+  }
+
+  @LogPerformance
   public getDataProviderInfos() {
     return this.dataProviderInfos;
   }
@@ -803,6 +885,25 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
+  protected getCurrency(symbol: string) {
+    return this.getCurrencyFromActivities(this.activities, symbol);
+  }
+
+  @LogPerformance
+  protected getCurrencyFromActivities(
+    activities: PortfolioOrder[],
+    symbol: string
+  ) {
+    if (!this.holdingCurrencies[symbol]) {
+      this.holdingCurrencies[symbol] = activities.find(
+        (a) => a.SymbolProfile.symbol === symbol
+      ).SymbolProfile.currency;
+    }
+
+    return this.holdingCurrencies[symbol];
+  }
+
+  @LogPerformance
   protected computeTransactionPoints() {
     this.transactionPoints = [];
     const symbols: { [symbol: string]: TransactionPointSymbol } = {};
@@ -985,6 +1086,7 @@ export abstract class PortfolioCalculator {
         // Compute in the background
         this.portfolioSnapshotService.addJobToQueue({
           data: {
+            calculationType: this.getPerformanceCalculationType(),
             filters: this.filters,
             userCurrency: this.currency,
             userId: this.userId
@@ -1001,6 +1103,7 @@ export abstract class PortfolioCalculator {
       // Wait for computation
       await this.portfolioSnapshotService.addJobToQueue({
         data: {
+          calculationType: this.getPerformanceCalculationType(),
           filters: this.filters,
           userCurrency: this.currency,
           userId: this.userId
@@ -1021,6 +1124,173 @@ export abstract class PortfolioCalculator {
 
       await this.initialize();
     }
+  }
+
+  @LogPerformance
+  protected activitiesToPortfolioOrder(
+    activities: Activity[]
+  ): PortfolioOrder[] {
+    return activities
+      .map(
+        ({
+          date,
+          fee,
+          quantity,
+          SymbolProfile,
+          tags = [],
+          type,
+          unitPrice
+        }) => {
+          if (isAfter(date, new Date(Date.now()))) {
+            // Adapt date to today if activity is in future (e.g. liability)
+            // to include it in the interval
+            date = endOfDay(new Date(Date.now()));
+          }
+
+          return {
+            SymbolProfile,
+            tags,
+            type,
+            date: format(date, DATE_FORMAT),
+            fee: new Big(fee),
+            quantity: new Big(quantity),
+            unitPrice: new Big(unitPrice)
+          };
+        }
+      )
+      .sort((a, b) => {
+        return a.date?.localeCompare(b.date);
+      });
+  }
+
+  @LogPerformance
+  protected async getHoldings(
+    activities: PortfolioOrder[],
+    start: Date,
+    end: Date
+  ) {
+    if (
+      this.holdings &&
+      Object.keys(this.holdings).some((h) =>
+        isAfter(parseDate(h), subDays(end, 1))
+      ) &&
+      Object.keys(this.holdings).some((h) =>
+        isBefore(parseDate(h), addDays(start, 1))
+      )
+    ) {
+      return this.holdings;
+    }
+
+    this.computeHoldings(activities, start, end);
+    return this.holdings;
+  }
+
+  @LogPerformance
+  protected async computeHoldings(
+    activities: PortfolioOrder[],
+    start: Date,
+    end: Date
+  ) {
+    const investmentByDate = this.getInvestmentByDate(activities);
+    this.calculateHoldings(investmentByDate, start, end);
+  }
+
+  @LogPerformance
+  protected calculateInitialHoldings(
+    investmentByDate: { [date: string]: PortfolioOrder[] },
+    start: Date,
+    currentHoldings: { [date: string]: { [symbol: string]: Big } }
+  ) {
+    const preRangeTrades = Object.keys(investmentByDate)
+      .filter((date) => resetHours(new Date(date)) <= start)
+      .map((date) => investmentByDate[date])
+      .reduce((a, b) => a.concat(b), [])
+      .reduce((groupBySymbol, trade) => {
+        if (!groupBySymbol[trade.SymbolProfile.symbol]) {
+          groupBySymbol[trade.SymbolProfile.symbol] = [];
+        }
+
+        groupBySymbol[trade.SymbolProfile.symbol].push(trade);
+
+        return groupBySymbol;
+      }, {});
+
+    currentHoldings[format(start, DATE_FORMAT)] = {};
+
+    for (const symbol of Object.keys(preRangeTrades)) {
+      const trades: PortfolioOrder[] = preRangeTrades[symbol];
+      const startQuantity = trades.reduce((sum, trade) => {
+        return sum.plus(trade.quantity.mul(getFactor(trade.type)));
+      }, new Big(0));
+      currentHoldings[format(start, DATE_FORMAT)][symbol] = startQuantity;
+    }
+  }
+
+  @LogPerformance
+  protected getInvestmentByDate(activities: PortfolioOrder[]): {
+    [date: string]: PortfolioOrder[];
+  } {
+    return activities.reduce((groupedByDate, order) => {
+      if (!groupedByDate[order.date]) {
+        groupedByDate[order.date] = [];
+      }
+
+      groupedByDate[order.date].push(order);
+
+      return groupedByDate;
+    }, {});
+  }
+
+  @LogPerformance
+  protected mapToDataGatheringItems(
+    orders: PortfolioOrder[]
+  ): IDataGatheringItem[] {
+    return orders
+      .map((activity) => {
+        return {
+          symbol: activity.SymbolProfile.symbol,
+          dataSource: activity.SymbolProfile.dataSource
+        };
+      })
+      .filter(
+        (gathering, i, arr) =>
+          arr.findIndex((t) => t.symbol === gathering.symbol) === i
+      );
+  }
+
+  private calculateHoldings(
+    investmentByDate: { [date: string]: PortfolioOrder[] },
+    start: Date,
+    end: Date
+  ) {
+    const transactionDates = Object.keys(investmentByDate).sort();
+    const dates = eachDayOfInterval({ start, end }, { step: 1 })
+      .map((date) => {
+        return resetHours(date);
+      })
+      .sort((a, b) => a.getTime() - b.getTime());
+    const currentHoldings: { [date: string]: { [symbol: string]: Big } } = {};
+
+    this.calculateInitialHoldings(investmentByDate, start, currentHoldings);
+
+    for (let i = 1; i < dates.length; i++) {
+      const dateString = format(dates[i], DATE_FORMAT);
+      const previousDateString = format(dates[i - 1], DATE_FORMAT);
+      if (transactionDates.some((d) => d === dateString)) {
+        const holdings = { ...currentHoldings[previousDateString] };
+        investmentByDate[dateString].forEach((trade) => {
+          holdings[trade.SymbolProfile.symbol] ??= new Big(0);
+          holdings[trade.SymbolProfile.symbol] = holdings[
+            trade.SymbolProfile.symbol
+          ].plus(trade.quantity.mul(getFactor(trade.type)));
+        });
+        currentHoldings[dateString] = holdings;
+      } else {
+        currentHoldings[dateString] = currentHoldings[previousDateString];
+      }
+    }
+
+    this.holdings = currentHoldings;
   }
 
   private getChartDateMap({
@@ -1110,4 +1380,6 @@ export abstract class PortfolioCalculator {
   protected abstract calculateOverallPerformance(
     positions: TimelinePosition[]
   ): PortfolioSnapshot;
+
+  protected abstract getPerformanceCalculationType(): PerformanceCalculationType;
 }

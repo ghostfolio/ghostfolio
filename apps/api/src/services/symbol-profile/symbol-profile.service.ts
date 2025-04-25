@@ -44,14 +44,14 @@ export class SymbolProfileService {
           ? {
               some: {
                 User: {
-                  Subscription: { some: { expiresAt: { gt: new Date() } } }
+                  subscriptions: { some: { expiresAt: { gt: new Date() } } }
                 }
               }
             }
           : {
               every: {
                 User: {
-                  Subscription: { none: { expiresAt: { gt: new Date() } } }
+                  subscriptions: { none: { expiresAt: { gt: new Date() } } }
                 }
               }
             }

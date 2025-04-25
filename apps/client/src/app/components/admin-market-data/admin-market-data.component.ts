@@ -137,6 +137,7 @@ export class AdminMarketDataComponent
     );
 
     this.displayedColumns = [
+      'status',
       'select',
       'nameWithSymbol',
       'dataSource',

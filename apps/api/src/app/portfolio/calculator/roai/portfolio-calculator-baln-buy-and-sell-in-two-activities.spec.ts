@@ -4,10 +4,7 @@ import {
   symbolProfileDummyData,
   userDummyData
 } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator-test-utils';
-import {
-  PortfolioCalculatorFactory,
-  PerformanceCalculationType
-} from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
+import { PortfolioCalculatorFactory } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator.factory';
 import { CurrentRateService } from '@ghostfolio/api/app/portfolio/current-rate.service';
 import { CurrentRateServiceMock } from '@ghostfolio/api/app/portfolio/current-rate.service.mock';
 import { RedisCacheService } from '@ghostfolio/api/app/redis-cache/redis-cache.service';
@@ -17,6 +14,7 @@ import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-
 import { PortfolioSnapshotService } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service';
 import { PortfolioSnapshotServiceMock } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.service.mock';
 import { parseDate } from '@ghostfolio/common/helper';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Big } from 'big.js';
 
@@ -79,7 +77,8 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 
@@ -91,7 +90,7 @@ describe('PortfolioCalculator', () => {
         {
           ...activityDummyData,
           date: new Date('2021-11-22'),
-          fee: 1.55,
+          feeInAssetProfileCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -101,12 +100,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'BUY',
-          unitPrice: 142.9
+          unitPriceInAssetProfileCurrency: 142.9
         },
         {
           ...activityDummyData,
           date: new Date('2021-11-30'),
-          fee: 1.65,
+          feeInAssetProfileCurrency: 1.65,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -116,12 +115,12 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'SELL',
-          unitPrice: 136.6
+          unitPriceInAssetProfileCurrency: 136.6
         },
         {
           ...activityDummyData,
           date: new Date('2021-11-30'),
-          fee: 0,
+          feeInAssetProfileCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -131,7 +130,7 @@ describe('PortfolioCalculator', () => {
             symbol: 'BALN.SW'
           },
           type: 'SELL',
-          unitPrice: 136.6
+          unitPriceInAssetProfileCurrency: 136.6
         }
       ];
 

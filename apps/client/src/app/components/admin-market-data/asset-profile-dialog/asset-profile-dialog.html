@@ -19,17 +19,21 @@
       <button
         mat-menu-item
         type="button"
-        [disabled]="assetProfileForm.dirty"
+        [disabled]="
+          assetProfileForm.dirty || !assetProfileForm.controls.isActive.value
+        "
         (click)="
           onGatherSymbol({ dataSource: data.dataSource, symbol: data.symbol })
         "
       >
-        <ng-container i18n>Gather Historical Market Dataa</ng-container>
+        <ng-container i18n>Gather Historical Market Data</ng-container>
       </button>
       <button
         mat-menu-item
         type="button"
-        [disabled]="assetProfileForm.dirty"
+        [disabled]="
+          assetProfileForm.dirty || !assetProfileForm.controls.isActive.value
+        "
         (click)="
           onGatherSymbolMissingOnly({
             dataSource: data.dataSource,
@@ -86,17 +90,29 @@
       [showYAxis]="true"
       [symbol]="data.symbol"
     />
-    <gf-historical-market-data-editor
-      class="mb-3"
-      [currency]="assetProfile?.currency"
-      [dataSource]="data.dataSource"
-      [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
-      [locale]="data.locale"
-      [marketData]="marketDataItems"
-      [symbol]="data.symbol"
-      [user]="user"
-      (marketDataChanged)="onMarketDataChanged($event)"
-    />
+    <div class="mb-3">
+      <mat-accordion class="my-3">
+        <mat-expansion-panel class="shadow-none">
+          <mat-expansion-panel-header class="p-0 pr-3">
+            <mat-panel-title class="font-weight-bold" i18n
+              >Historical Market Data</mat-panel-title
+            >
+          </mat-expansion-panel-header>
+
+          <gf-historical-market-data-editor
+            class="mb-3"
+            [currency]="assetProfile?.currency"
+            [dataSource]="data.dataSource"
+            [dateOfFirstActivity]="assetProfile?.dateOfFirstActivity"
+            [locale]="data.locale"
+            [marketData]="marketDataItems"
+            [symbol]="data.symbol"
+            [user]="user"
+            (marketDataChanged)="onMarketDataChanged($event)"
+          />
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
 
     <div class="row">
       @if (isEditAssetProfileIdentifierMode) {
@@ -400,8 +416,10 @@
               (closed)="scraperConfiguationIsExpanded.set(false)"
               (opened)="scraperConfiguationIsExpanded.set(true)"
             >
-              <mat-expansion-panel-header class="p-0">
-                <mat-panel-title i18n>Scraper Configuration</mat-panel-title>
+              <mat-expansion-panel-header class="p-0 pr-3">
+                <mat-panel-title class="font-weight-bold" i18n
+                  >Scraper Configuration</mat-panel-title
+                >
               </mat-expansion-panel-header>
               <div formGroupName="scraperConfiguration">
                 <div class="mt-3">

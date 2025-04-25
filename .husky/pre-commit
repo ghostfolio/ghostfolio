@@ -1,0 +1,2 @@
+# Check formatting on modified and uncommitted files, stop the commit if issues are found
+npm run format:write --uncommitted || exit 1
