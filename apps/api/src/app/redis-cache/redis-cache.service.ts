@@ -27,7 +27,25 @@ export class RedisCacheService {
   public async getKeys(aPrefix?: string): Promise<string[]> {
     const keys: string[] = [];
     const prefix = aPrefix;
-    this.cache.stores[0].deserialize = undefined;
+
+    this.cache.stores[0].deserialize = (value) => {
+      try {
+
+        return JSON.parse(value);
+      } catch (error: any) {
+        if (error instanceof SyntaxError) {
+          Logger.warn(
+            `Failed to parse json, so returning the value as String :${value}`,
+            'RedisCacheService'
+          );
+
+          return value;
+        } else {
+
+          throw error;
+        }
+      };
+    }
 
     for await (const [key] of this.cache.stores[0].iterator({})) {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
