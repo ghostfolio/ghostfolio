@@ -30,7 +30,6 @@ export class RedisCacheService {
 
     this.cache.stores[0].deserialize = (value) => {
       try {
-
         return JSON.parse(value);
       } catch (error: any) {
         if (error instanceof SyntaxError) {
@@ -41,11 +40,10 @@ export class RedisCacheService {
 
           return value;
         } else {
-
           throw error;
         }
-      };
-    }
+      }
+    };
 
     for await (const [key] of this.cache.stores[0].iterator({})) {
       if ((prefix && key.startsWith(prefix)) || !prefix) {
