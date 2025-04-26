@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
 - Renamed `Order` to `activities` in the `Account` database schema
+- Improved the language localization for Français (`fr`)
+- Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
 ### Fixed
 

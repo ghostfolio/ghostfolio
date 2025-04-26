@@ -380,6 +380,7 @@ export class UserService {
           permissions.createAccess,
           permissions.createMarketDataOfOwnAssetProfile,
           permissions.createOwnTag,
+          permissions.createWatchlistItem,
           permissions.readAiPrompt,
           permissions.readMarketDataOfOwnAssetProfile,
           permissions.updateMarketDataOfOwnAssetProfile
