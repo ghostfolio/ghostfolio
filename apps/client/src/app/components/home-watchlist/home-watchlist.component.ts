@@ -12,8 +12,8 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { forkJoin, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 
 import { CreateWatchlistItemDialog } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
 import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/interfaces/interfaces';
@@ -72,26 +72,28 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
   }
 
   private loadWatchlistData() {
-    this.dataService
-      .fetchWatchlist()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe((watchlist) => {
-        this.watchlist = watchlist.map((item) => ({
-          dataSource: item.dataSource,
-          symbol: item.symbol,
-          name: item.symbol,
-          marketCondition: 'NEUTRAL_MARKET',
-          performances: {
-            allTimeHigh: {
-              date: new Date(),
-              performancePercent: 0
-            }
-          },
-          trend200d: 'UNKNOWN',
-          trend50d: 'UNKNOWN'
-        }));
-
-        this.changeDetectorRef.markForCheck();
+    forkJoin({
+      watchlistItems: this.dataService.fetchWatchlist(),
+      allBenchmarks: this.dataService
+        .fetchBenchmarks()
+        .pipe(map((response) => response.benchmarks))
+    })
+      .pipe(
+        takeUntil(this.unsubscribeSubject),
+        map(({ watchlistItems, allBenchmarks }) => {
+          const watchlistLookup = new Set(
+            watchlistItems.map((item) => `${item.dataSource}:${item.symbol}`)
+          );
+          return allBenchmarks.filter((benchmark) =>
+            watchlistLookup.has(`${benchmark.dataSource}:${benchmark.symbol}`)
+          );
+        })
+      )
+      .subscribe({
+        next: (filteredBenchmarks) => {
+          this.watchlist = filteredBenchmarks;
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 
