@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
+- Improved the language localization for Français (`fr`)
 
 ### Fixed
 
