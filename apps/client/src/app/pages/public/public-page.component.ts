@@ -30,7 +30,7 @@ export class PublicPageComponent implements OnInit {
   public countries: {
     [code: string]: { name: string; value: number };
   };
-  public defaultAliasLocale = $localize`someone`;
+  public defaultAlias = $localize`someone`;
   public deviceType: string;
   public holdings: PublicPortfolioResponse['holdings'][string][];
   public markets: {
