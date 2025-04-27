@@ -767,19 +767,14 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           )
         : new Big(0);
 
-    const grossPerformancePercentage =
-      timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
-        ? totalGrossPerformance.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDate
-          )
-        : new Big(0);
+    const grossPerformancePercentage = totalInvestment.gt(0)
+      ? totalGrossPerformance.div(totalInvestment)
+      : new Big(0);
 
     const grossPerformancePercentageWithCurrencyEffect =
-      timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect.gt(
-        0
-      )
+      totalInvestmentWithCurrencyEffect.gt(0)
         ? totalGrossPerformanceWithCurrencyEffect.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDateWithCurrencyEffect
+            totalInvestmentWithCurrencyEffect
           )
         : new Big(0);
 
@@ -793,12 +788,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           .div(totalUnits)
       : new Big(0);
 
-    const netPerformancePercentage =
-      timeWeightedAverageInvestmentBetweenStartAndEndDate.gt(0)
-        ? totalNetPerformance.div(
-            timeWeightedAverageInvestmentBetweenStartAndEndDate
-          )
-        : new Big(0);
+    const netPerformancePercentage = totalInvestment.gt(0)
+      ? totalNetPerformance.div(totalInvestment)
+      : new Big(0);
 
     const netPerformancePercentageWithCurrencyEffectMap: {
       [key: DateRange]: Big;
@@ -810,6 +802,9 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
     for (const dateRange of [
       '1d',
+      '1w',
+      '1m',
+      '3m',
       '1y',
       '5y',
       'max',
@@ -836,48 +831,6 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
       const rangeEndDateString = format(endDate, DATE_FORMAT);
       const rangeStartDateString = format(startDate, DATE_FORMAT);
 
-      const currentValuesAtDateRangeStartWithCurrencyEffect =
-        currentValuesWithCurrencyEffect[rangeStartDateString] ?? new Big(0);
-
-      const investmentValuesAccumulatedAtStartDateWithCurrencyEffect =
-        investmentValuesAccumulatedWithCurrencyEffect[rangeStartDateString] ??
-        new Big(0);
-
-      const grossPerformanceAtDateRangeStartWithCurrencyEffect =
-        currentValuesAtDateRangeStartWithCurrencyEffect.minus(
-          investmentValuesAccumulatedAtStartDateWithCurrencyEffect
-        );
-
-      let average = new Big(0);
-      let dayCount = 0;
-
-      for (let i = this.chartDates.length - 1; i >= 0; i -= 1) {
-        const date = this.chartDates[i];
-
-        if (date > rangeEndDateString) {
-          continue;
-        } else if (date < rangeStartDateString) {
-          break;
-        }
-
-        if (
-          investmentValuesAccumulatedWithCurrencyEffect[date] instanceof Big &&
-          investmentValuesAccumulatedWithCurrencyEffect[date].gt(0)
-        ) {
-          average = average.add(
-            investmentValuesAccumulatedWithCurrencyEffect[date].add(
-              grossPerformanceAtDateRangeStartWithCurrencyEffect
-            )
-          );
-
-          dayCount++;
-        }
-      }
-
-      if (dayCount > 0) {
-        average = average.div(dayCount);
-      }
-
       netPerformanceWithCurrencyEffectMap[dateRange] =
         netPerformanceValuesWithCurrencyEffect[rangeEndDateString]?.minus(
           // If the date range is 'max', take 0 as a start value. Otherwise,
@@ -889,9 +842,12 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
                 new Big(0))
         ) ?? new Big(0);
 
-      netPerformancePercentageWithCurrencyEffectMap[dateRange] = average.gt(0)
-        ? netPerformanceWithCurrencyEffectMap[dateRange].div(average)
-        : new Big(0);
+      netPerformancePercentageWithCurrencyEffectMap[dateRange] =
+        investmentValuesAccumulatedWithCurrencyEffect[rangeEndDateString]?.gt(0)
+          ? netPerformanceWithCurrencyEffectMap[dateRange].div(
+              investmentValuesAccumulatedWithCurrencyEffect[rangeEndDateString]
+            )
+          : new Big(0);
     }
 
     if (PortfolioCalculator.ENABLE_LOGGING) {
