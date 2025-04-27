@@ -47,6 +47,10 @@ function mockGetValue(symbol: string, date: Date) {
         return { marketPrice: 14156.4 };
       } else if (isSameDay(parseDate('2018-01-01'), date)) {
         return { marketPrice: 13657.2 };
+      } else if (isSameDay(parseDate('2021-12-12'), date)) {
+        return { marketPrice: 50098.3 };
+      } else if (isSameDay(parseDate('2022-01-14'), date)) {
+        return { marketPrice: 43099.7 };
       }
 
       return { marketPrice: 0 };
