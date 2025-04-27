@@ -1,3 +1,6 @@
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,27 +12,39 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidationErrors,
   Validators
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'h-100' },
+  imports: [
+    CommonModule,
+    FormsModule,
+    GfSymbolAutocompleteComponent,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-watchlist-item-dialog',
   styleUrls: ['./create-watchlist-item-dialog.component.scss'],
-  templateUrl: 'create-watchlist-item-dialog.html',
-  standalone: false
+  templateUrl: 'create-watchlist-item-dialog.html'
 })
-export class CreateWatchlistItemDialog implements OnInit, OnDestroy {
+export class CreateWatchlistItemDialogComponent implements OnInit, OnDestroy {
   public createWatchlistItemForm: FormGroup;
 
   private unsubscribeSubject = new Subject<void>();
 
   public constructor(
-    public readonly dialogRef: MatDialogRef<CreateWatchlistItemDialog>,
+    public readonly dialogRef: MatDialogRef<CreateWatchlistItemDialogComponent>,
     public readonly formBuilder: FormBuilder
   ) {}
 

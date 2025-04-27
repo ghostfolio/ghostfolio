@@ -688,7 +688,9 @@ export class DataService {
   }
 
   public fetchWatchlist() {
-    return this.http.get<AssetProfileIdentifier[]>('/api/v1/watchlist');
+    return this.http.get<{ watchlist: AssetProfileIdentifier[] }>(
+      '/api/v1/watchlist'
+    );
   }
 
   public generateAccessToken(aUserId: string) {
@@ -753,7 +755,7 @@ export class DataService {
     return this.http.post<UserItem>('/api/v1/user', {});
   }
 
-  public postWatchlist(watchlistItem: CreateWatchlistItemDto) {
+  public postWatchlistItem(watchlistItem: CreateWatchlistItemDto) {
     return this.http.post('/api/v1/watchlist', watchlistItem);
   }
 

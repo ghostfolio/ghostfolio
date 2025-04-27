@@ -64,7 +64,7 @@ export class WatchlistService {
 
   public async getWatchlistItems(
     userId: string
-  ): Promise<AssetProfileIdentifier[]> {
+  ): Promise<{ watchlist: AssetProfileIdentifier[] }> {
     const user = await this.prismaService.user.findUnique({
       select: {
         watchlist: {
@@ -74,6 +74,6 @@ export class WatchlistService {
       where: { id: userId }
     });
 
-    return user.watchlist ?? [];
+    return { watchlist: user.watchlist ?? [] };
   }
 }

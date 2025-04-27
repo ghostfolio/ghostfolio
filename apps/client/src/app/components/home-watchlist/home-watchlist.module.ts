@@ -5,7 +5,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 
-import { GfCreateWatchlistItemDialogModule } from './create-watchlist-item-dialog/create-watchlist-item-dialog.module';
+import { CreateWatchlistItemDialogComponent } from './create-watchlist-item-dialog/create-watchlist-item-dialog.component';
 import { HomeWatchlistComponent } from './home-watchlist.component';
 
 @NgModule({
@@ -14,7 +14,7 @@ import { HomeWatchlistComponent } from './home-watchlist.component';
   imports: [
     CommonModule,
     GfBenchmarkComponent,
-    GfCreateWatchlistItemDialogModule,
+    CreateWatchlistItemDialogComponent,
     MatButtonModule,
     RouterModule
   ],
