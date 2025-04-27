@@ -26,6 +26,7 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import { hasRole } from '@ghostfolio/common/permissions';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
 import { Inject, Injectable, Logger } from '@nestjs/common';
@@ -169,6 +170,7 @@ export class DataProviderService {
     let dataSourcesKey: 'DATA_SOURCES' | 'DATA_SOURCES_LEGACY' = 'DATA_SOURCES';
 
     if (
+      !hasRole(user, 'ADMIN') &&
       isBefore(user.createdAt, new Date('2025-03-23')) &&
       this.configurationService.get('DATA_SOURCES_LEGACY')?.length > 0
     ) {
@@ -185,7 +187,7 @@ export class DataProviderService {
       PROPERTY_API_KEY_GHOSTFOLIO
     )) as string;
 
-    if (ghostfolioApiKey) {
+    if (ghostfolioApiKey || hasRole(user, 'ADMIN')) {
       dataSources.push('GHOSTFOLIO');
     }
 

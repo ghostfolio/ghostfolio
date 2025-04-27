@@ -25,12 +25,11 @@ import {
   AdminMarketDataItem,
   AdminUsers,
   AssetProfileIdentifier,
-  DataProviderInfo,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-import { MarketDataPreset } from '@ghostfolio/common/types';
+import { MarketDataPreset, UserWithSettings } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
@@ -135,7 +134,9 @@ export class AdminService {
     }
   }
 
-  public async get(): Promise<AdminData> {
+  public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
+    const dataSources = await this.dataProviderService.getDataSources({ user });
+
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
@@ -146,7 +147,11 @@ export class AdminService {
       settings,
       transactionCount,
       userCount,
-      dataProviders: this.getDataProviders(),
+      dataProviders: dataSources.map((dataSource) => {
+        return this.dataProviderService
+          .getDataProvider(dataSource)
+          .getDataProviderInfo();
+      }),
       version: environment.version
     };
   }
@@ -633,18 +638,6 @@ export class AdminService {
     return this.prismaService.user.count({
       where
     });
-  }
-
-  private getDataProviders(): DataProviderInfo[] {
-    return this.configurationService
-      .get('DATA_SOURCES')
-      .concat('GHOSTFOLIO')
-      .sort()
-      .map((dataSource) => {
-        return this.dataProviderService
-          .getDataProvider(DataSource[dataSource])
-          .getDataProviderInfo();
-      });
   }
 
   private getExtendedPrismaClient() {
