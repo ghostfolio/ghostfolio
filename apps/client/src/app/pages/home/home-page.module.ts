@@ -2,7 +2,7 @@ import { GfHomeHoldingsModule } from '@ghostfolio/client/components/home-holding
 import { GfHomeMarketModule } from '@ghostfolio/client/components/home-market/home-market.module';
 import { GfHomeOverviewModule } from '@ghostfolio/client/components/home-overview/home-overview.module';
 import { GfHomeSummaryModule } from '@ghostfolio/client/components/home-summary/home-summary.module';
-import { GfHomeWatchlistModule } from '@ghostfolio/client/components/home-watchlist/home-watchlist.module';
+import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -20,8 +20,8 @@ import { HomePageComponent } from './home-page.component';
     GfHomeMarketModule,
     GfHomeOverviewModule,
     GfHomeSummaryModule,
-    GfHomeWatchlistModule,
     HomePageRoutingModule,
+    HomeWatchlistComponent,
     MatTabsModule,
     RouterModule
   ],

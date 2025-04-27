@@ -1,16 +1,20 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  CUSTOM_ELEMENTS_SCHEMA,
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -20,10 +24,11 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, GfBenchmarkComponent, MatButtonModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-watchlist',
   styleUrls: ['./home-watchlist.scss'],
-  templateUrl: './home-watchlist.html',
-  standalone: false
+  templateUrl: './home-watchlist.html'
 })
 export class HomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
