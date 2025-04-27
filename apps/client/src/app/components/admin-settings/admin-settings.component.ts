@@ -10,6 +10,7 @@ import {
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
+  DataProviderInfo,
   User
 } from '@ghostfolio/common/interfaces';
 
@@ -35,6 +36,7 @@ import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialo
   standalone: false
 })
 export class AdminSettingsComponent implements OnDestroy, OnInit {
+  public dataProviders: DataProviderInfo[];
   public defaultDateFormat: string;
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
@@ -124,23 +126,36 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
   private initialize() {
     this.adminService
-      .fetchGhostfolioDataProviderStatus()
-      .pipe(
-        catchError(() => {
-          this.isGhostfolioApiKeyValid = false;
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ dataProviders, settings }) => {
+        this.dataProviders = dataProviders.filter(({ dataSource }) => {
+          return dataSource !== 'MANUAL';
+        });
 
-          this.changeDetectorRef.markForCheck();
+        this.adminService
+          .fetchGhostfolioDataProviderStatus(
+            settings[PROPERTY_API_KEY_GHOSTFOLIO] as string
+          )
+          .pipe(
+            catchError(() => {
+              this.isGhostfolioApiKeyValid = false;
 
-          return of(null);
-        }),
-        filter((status) => {
-          return status !== null;
-        }),
-        takeUntil(this.unsubscribeSubject)
-      )
-      .subscribe((status) => {
-        this.ghostfolioApiStatus = status;
-        this.isGhostfolioApiKeyValid = true;
+              this.changeDetectorRef.markForCheck();
+
+              return of(null);
+            }),
+            filter((status) => {
+              return status !== null;
+            }),
+            takeUntil(this.unsubscribeSubject)
+          )
+          .subscribe((status) => {
+            this.ghostfolioApiStatus = status;
+            this.isGhostfolioApiKeyValid = true;
+
+            this.changeDetectorRef.markForCheck();
+          });
 
         this.changeDetectorRef.markForCheck();
       });

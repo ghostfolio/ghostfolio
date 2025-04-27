@@ -328,6 +328,7 @@ export class GhostfolioService {
 
   private getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.GHOSTFOLIO,
       isPremium: false,
       name: 'Ghostfolio Premium',
       url: 'https://ghostfol.io'

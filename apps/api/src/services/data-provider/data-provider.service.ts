@@ -670,6 +670,7 @@ export class DataProviderService {
             lookupItem.dataProviderInfo.isPremium = false;
           }
 
+          lookupItem.dataProviderInfo.dataSource = undefined;
           lookupItem.dataProviderInfo.name = undefined;
           lookupItem.dataProviderInfo.url = undefined;
         } else {

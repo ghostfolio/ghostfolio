@@ -25,6 +25,7 @@ import {
   AdminMarketDataItem,
   AdminUsers,
   AssetProfileIdentifier,
+  DataProviderInfo,
   EnhancedSymbolProfile,
   Filter
 } from '@ghostfolio/common/interfaces';
@@ -145,6 +146,7 @@ export class AdminService {
       settings,
       transactionCount,
       userCount,
+      dataProviders: this.getDataProviders(),
       version: environment.version
     };
   }
@@ -631,6 +633,18 @@ export class AdminService {
     return this.prismaService.user.count({
       where
     });
+  }
+
+  private getDataProviders(): DataProviderInfo[] {
+    return this.configurationService
+      .get('DATA_SOURCES')
+      .concat('GHOSTFOLIO')
+      .sort()
+      .map((dataSource) => {
+        return this.dataProviderService
+          .getDataProvider(DataSource[dataSource])
+          .getDataProviderInfo();
+      });
   }
 
   private getExtendedPrismaClient() {
