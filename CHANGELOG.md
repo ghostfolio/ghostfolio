@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
 - Improved the language localization for Français (`fr`)
+- Upgraded `ngx-skeleton-loader` from version `10.0.0` to `11.0.0`
 - Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
 ### Fixed
