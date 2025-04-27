@@ -935,7 +935,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1079,7 +1079,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">267</context>
+          <context context-type="linenumber">268</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
@@ -1102,7 +1102,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">290</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1162,7 +1162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1185,7 +1185,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">106</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1282,7 +1282,7 @@
         <source>Market Price</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">133</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
@@ -1418,7 +1418,7 @@
         <source>Asset Class</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">115</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1445,7 +1445,7 @@
         <source>Asset Sub Class</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1468,7 +1468,7 @@
         <source>First Activity</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">148</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -1487,14 +1487,14 @@
         <source>Activities Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">156</context>
+          <context context-type="linenumber">157</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5eebcc824c2d34b17abba8c9ef718c5ce118a5c8" datatype="html">
         <source>Historical Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">166</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/historical-market-data-editor/historical-market-data-editor.component.html</context>
@@ -1505,35 +1505,35 @@
         <source>Sectors Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">174</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit id="aad5320acd7453f912bc8714e72c2fa71e8ab18e" datatype="html">
         <source>Countries Count</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">184</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d59937471dbd9dee61cfd6402c3963bbfccc7b2b" datatype="html">
         <source>Gather Recent Historical Market Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">225</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7faff7a8ef4065b33ebb2e88a54183bf1b124525" datatype="html">
         <source>Gather All Historical Market Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">230</context>
+          <context context-type="linenumber">231</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cc65b67b46b69cf06ff1f16a909e61612c9d57b8" datatype="html">
         <source>Gather Profile Data</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">234</context>
+          <context context-type="linenumber">235</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
@@ -6055,7 +6055,7 @@
         <source>Delete Profiles</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
-          <context context-type="linenumber">242</context>
+          <context context-type="linenumber">243</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8127349194179456616" datatype="html">
