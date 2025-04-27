@@ -93,7 +93,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with BTCUSD buy', async () => {
+    it.only('with BTCUSD buy (in USD)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-14').getTime());
 
       const activities: Activity[] = activityDtos.map((activity) => ({
