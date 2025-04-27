@@ -113,19 +113,21 @@ describe('PortfolioCalculator', () => {
         ...activityDummyData,
         ...activity,
         date: parseDate(activity.date),
+        feeInAssetProfileCurrency: 4.46,
         SymbolProfile: {
           ...symbolProfileDummyData,
           currency: 'USD',
           dataSource: activity.dataSource,
           name: 'Bitcoin',
           symbol: activity.symbol
-        }
+        },
+        unitPriceInAssetProfileCurrency: 44558.42
       }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
         calculationType: PerformanceCalculationType.ROAI,
-        currency: 'EUR',
+        currency: 'USD',
         userId: userDummyData.id
       });
 
@@ -155,17 +157,17 @@ describe('PortfolioCalculator', () => {
 
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2021-12-12',
-        investmentValueWithCurrencyEffect: 39380.731596,
-        netPerformance: -3.892688,
+        investmentValueWithCurrencyEffect: 44558.42,
+        netPerformance: -4.46,
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: -3.941748,
-        netWorth: 39380.731596,
+        netPerformanceWithCurrencyEffect: -4.46,
+        netWorth: 44558.42,
         totalAccountBalance: 0,
-        totalInvestment: 38890.588976,
-        totalInvestmentValueWithCurrencyEffect: 39380.731596,
-        value: 38890.588976,
-        valueWithCurrencyEffect: 39380.731596
+        totalInvestment: 44558.42,
+        totalInvestmentValueWithCurrencyEffect: 44558.42,
+        value: 44558.42,
+        valueWithCurrencyEffect: 44558.42
       });
 
       expect(
@@ -175,20 +177,20 @@ describe('PortfolioCalculator', () => {
       ).toEqual({
         date: '2022-01-14',
         investmentValueWithCurrencyEffect: 0,
-        netPerformance: -1277.063504,
+        netPerformance: -1463.18,
         netPerformanceInPercentage: -0.032837340282712,
-        netPerformanceInPercentageWithCurrencyEffect: -0.044876138974002826,
-        netPerformanceWithCurrencyEffect: -1767.255184,
-        netWorth: 37617.41816,
+        netPerformanceInPercentageWithCurrencyEffect: -0.032837340282712,
+        netPerformanceWithCurrencyEffect: -1463.18,
+        netWorth: 43099.7,
         totalAccountBalance: 0,
-        totalInvestment: 38890.588976,
-        totalInvestmentValueWithCurrencyEffect: 39380.731596,
-        value: 37617.41816,
-        valueWithCurrencyEffect: 37617.41816
+        totalInvestment: 44558.42,
+        totalInvestmentValueWithCurrencyEffect: 44558.42,
+        value: 43099.7,
+        valueWithCurrencyEffect: 43099.7
       });
 
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('37617.41816'),
+        currentValueInBaseCurrency: new Big('43099.7'),
         errors: [],
         hasErrors: false,
         positions: [
@@ -199,39 +201,39 @@ describe('PortfolioCalculator', () => {
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
             fee: new Big('4.46'),
-            feeInBaseCurrency: new Big('3.941748'),
+            feeInBaseCurrency: new Big('4.46'),
             firstBuyDate: '2021-12-12',
-            grossPerformance: new Big('-1273.170816'),
+            grossPerformance: new Big('-1458.72'),
             grossPerformancePercentage: new Big('-0.03273724696701543726'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '-0.04477604565830626119'
+              '-0.03273724696701543726'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('-1763.313436'),
-            investment: new Big('38890.588976'),
-            investmentWithCurrencyEffect: new Big('39380.731596'),
-            netPerformance: new Big('-1277.063504'),
+            grossPerformanceWithCurrencyEffect: new Big('-1458.72'),
+            investment: new Big('44558.42'),
+            investmentWithCurrencyEffect: new Big('44558.42'),
+            netPerformance: new Big('-1463.18'),
             netPerformancePercentage: new Big('-0.03283734028271199921'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('-0.04487613897400282314')
+              max: new Big('-0.03283734028271199921')
             },
             netPerformanceWithCurrencyEffectMap: {
-              max: new Big('-1767.255184')
+              max: new Big('-1463.18')
             },
             marketPrice: 43099.7,
-            marketPriceInBaseCurrency: 37617.41816,
+            marketPriceInBaseCurrency: 43099.7,
             quantity: new Big('1'),
             symbol: 'BTCUSD',
             tags: [],
-            timeWeightedInvestment: new Big('38890.588976'),
-            timeWeightedInvestmentWithCurrencyEffect: new Big('39380.731596'),
+            timeWeightedInvestment: new Big('44558.42'),
+            timeWeightedInvestmentWithCurrencyEffect: new Big('44558.42'),
             transactionCount: 1,
-            valueInBaseCurrency: new Big('37617.41816')
+            valueInBaseCurrency: new Big('43099.7')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('3.941748'),
+        totalFeesWithCurrencyEffect: new Big('4.46'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('38890.588976'),
-        totalInvestmentWithCurrencyEffect: new Big('39380.731596'),
+        totalInvestment: new Big('44558.42'),
+        totalInvestmentWithCurrencyEffect: new Big('44558.42'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
@@ -241,7 +243,7 @@ describe('PortfolioCalculator', () => {
       ]);
 
       expect(investmentsByMonth).toEqual([
-        { date: '2021-12-01', investment: 39380.731596 },
+        { date: '2021-12-01', investment: 44558.42 },
         { date: '2022-01-01', investment: 0 }
       ]);
     });

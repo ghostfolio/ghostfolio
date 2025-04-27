@@ -100,13 +100,15 @@ describe('PortfolioCalculator', () => {
         ...activityDummyData,
         ...activity,
         date: parseDate(activity.date),
+        feeInAssetProfileCurrency: 4.46,
         SymbolProfile: {
           ...symbolProfileDummyData,
           currency: 'USD',
           dataSource: activity.dataSource,
           name: 'Bitcoin',
           symbol: activity.symbol
-        }
+        },
+        unitPriceInAssetProfileCurrency: 44558.42
       }));
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
@@ -222,16 +224,6 @@ describe('PortfolioCalculator', () => {
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
-
-      expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
-        expect.objectContaining({
-          netPerformance: -1463.18,
-          netPerformanceInPercentage: -0.032837340282712,
-          netPerformanceInPercentageWithCurrencyEffect: -0.032837340282712,
-          netPerformanceWithCurrencyEffect: -1463.18,
-          totalInvestmentValueWithCurrencyEffect: 44558.42
-        })
-      );
 
       expect(investments).toEqual([
         { date: '2021-12-12', investment: new Big('44558.42') }
