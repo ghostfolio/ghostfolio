@@ -2811,7 +2811,7 @@
       </trans-unit>
       <trans-unit id="a4a68fbb5bf56e4bccaf5e73ba2d9567f754e7ca" datatype="html">
         <source> Hello, <x id="INTERPOLATION" equiv-text="{{ publicPortfolioDetails?.alias ?? defaultAlias }}"/> has shared a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with you! </source>
-        <target state="new"> Bonjour, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? &apos;quelqu’un&apos; }}"/> a partagé un <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> avec vous ! </target>
+        <target state="new"> Bonjour, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? defaultAlias }}"/> a partagé un <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> avec vous ! </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">4</context>
@@ -7927,7 +7927,7 @@
       </trans-unit>
       <trans-unit id="322229249598827754" datatype="html">
         <source>someone</source>
-        <target state="new">someone</target>
+        <target state="translated">quelqu’un</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.component.ts</context>
           <context context-type="linenumber">33</context>
