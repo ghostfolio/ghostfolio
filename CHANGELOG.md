@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed an issue with the investment calculation for activities in a custom currency
 - Improved the file selector of the activities import functionality to accept case-insensitive file extensions (`.CSV` and `.JSON`)
 - Fixed the missing localization for "someone" on the public page
 
