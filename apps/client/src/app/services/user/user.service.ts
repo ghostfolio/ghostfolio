@@ -121,6 +121,7 @@ export class UserService extends ObservableStore<UserStoreState> {
             data: {
               user
             } as SubscriptionInterstitialDialogParams,
+            disableClose: true,
             height: this.deviceType === 'mobile' ? '98vh' : '80vh',
             width: this.deviceType === 'mobile' ? '100vw' : '50rem'
           });

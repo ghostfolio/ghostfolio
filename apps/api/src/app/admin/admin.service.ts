@@ -238,7 +238,10 @@ export class AdminService {
           where,
           select: {
             _count: {
-              select: { Order: true }
+              select: {
+                Order: true,
+                watchedBy: true
+              }
             },
             assetClass: true,
             assetSubClass: true,
@@ -375,7 +378,9 @@ export class AdminService {
               sectorsCount,
               activitiesCount: _count.Order,
               date: Order?.[0]?.date,
-              isUsedByUsersWithSubscription: await isUsedByUsersWithSubscription
+              isUsedByUsersWithSubscription:
+                await isUsedByUsersWithSubscription,
+              watchedByCount: _count.watchedBy
             };
           }
         )
@@ -752,7 +757,8 @@ export class AdminService {
           id: undefined,
           isActive: true,
           name: symbol,
-          sectorsCount: 0
+          sectorsCount: 0,
+          watchedByCount: 0
         };
       }
     );

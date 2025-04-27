@@ -72,14 +72,19 @@ export class AdminMarketDataService {
   public hasPermissionToDeleteAssetProfile({
     activitiesCount,
     isBenchmark,
-    symbol
-  }: Pick<AdminMarketDataItem, 'activitiesCount' | 'isBenchmark' | 'symbol'>) {
+    symbol,
+    watchedByCount
+  }: Pick<
+    AdminMarketDataItem,
+    'activitiesCount' | 'isBenchmark' | 'symbol' | 'watchedByCount'
+  >) {
     return (
       activitiesCount === 0 &&
       !isBenchmark &&
       !isDerivedCurrency(getCurrencyFromSymbol(symbol)) &&
       !isRootCurrency(getCurrencyFromSymbol(symbol)) &&
-      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix)
+      !symbol.startsWith(ghostfolioScraperApiSymbolPrefix) &&
+      watchedByCount === 0
     );
   }
 }

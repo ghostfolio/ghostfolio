@@ -5,16 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.156.0 - 2025-04-27
 
 ### Changed
 
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
+- Respected the watcher count for the delete asset profiles checkbox in the historical market data table of the admin control panel
+- Improved the language localization for Français (`fr`)
+- Upgraded `ngx-skeleton-loader` from version `10.0.0` to `11.0.0`
+- Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
 ### Fixed
 
+- Fixed an issue with the investment calculation for activities in a custom currency
 - Improved the file selector of the activities import functionality to accept case-insensitive file extensions (`.CSV` and `.JSON`)
+- Fixed the missing localization for "someone" on the public page
 
 ## 2.155.0 - 2025-04-23
 
