@@ -7,8 +7,8 @@
 />
 
 <div class="text-center" mat-dialog-content>
-  <p class="gf-text-wrap-balance mb-1">
-    The official
+  <p class="gf-text-wrap-balance">
+    Early access to the official
     <a
       class="align-items-center d-inline-flex"
       target="_blank"
@@ -18,32 +18,27 @@
     </a>
     data provider <strong>for self-hosters</strong>, offering
     <strong>80’000+ tickers</strong> from over <strong>50 exchanges</strong>, is
-    coming soon!
-  </p>
-  <p i18n>
-    Want to stay updated? Click below to get notified as soon as it’s available.
+    ready now!
   </p>
   <div>
     <a
       color="primary"
-      href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello%0D%0DPlease notify me as soon as the Ghostfolio Premium Data Provider is available.%0D%0DKind regards"
+      href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello%0D%0DI am interested in the Ghostfolio Premium data provider. Could you please give me early access so I can try it for some time?%0D%0DKind regards"
       i18n
       mat-flat-button
-      >Notify me</a
+      >Get Early Access</a
     >
-    @if (data.user?.settings?.isExperimentalFeatures) {
-      <div>
-        <small class="text-muted" i18n>or</small>
-      </div>
-      <button
-        color="accent"
-        i18n
-        mat-stroked-button
-        (click)="onSetGhostfolioApiKey()"
-      >
-        I have an API key
-      </button>
-    }
+    <div>
+      <small class="text-muted" i18n>or</small>
+    </div>
+    <button
+      color="accent"
+      i18n
+      mat-stroked-button
+      (click)="onSetGhostfolioApiKey()"
+    >
+      I have an API key
+    </button>
   </div>
 </div>
 

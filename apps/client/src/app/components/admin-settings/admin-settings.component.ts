@@ -25,6 +25,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 
 import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.component';
+import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,9 +102,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         autoFocus: false,
         data: {
           deviceType: this.deviceType,
-          pricingUrl: this.pricingUrl,
-          user: this.user
-        },
+          pricingUrl: this.pricingUrl
+        } as GhostfolioPremiumApiDialogParams,
         height: this.deviceType === 'mobile' ? '98vh' : undefined,
         width: this.deviceType === 'mobile' ? '100vw' : '50rem'
       }
