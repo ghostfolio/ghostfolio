@@ -2,7 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -53,13 +53,13 @@ export class WatchlistController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    const watchlistItem = await this.watchlistService
-      .getWatchlistItems(this.request.user.id)
-      .then((items) => {
-        return items.find((item) => {
-          return item.dataSource === dataSource && item.symbol === symbol;
-        });
-      });
+    const watchlistItems = await this.watchlistService.getWatchlistItems(
+      this.request.user.id
+    );
+
+    const watchlistItem = watchlistItems.find((item) => {
+      return item.dataSource === dataSource && item.symbol === symbol;
+    });
 
     if (!watchlistItem) {
       throw new HttpException(
@@ -79,7 +79,13 @@ export class WatchlistController {
   @HasPermission(permissions.readWatchlist)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getWatchlistItems(): Promise<AssetProfileIdentifier[]> {
-    return this.watchlistService.getWatchlistItems(this.request.user.id);
+  public async getWatchlistItems(): Promise<WatchlistResponse> {
+    const watchlist = await this.watchlistService.getWatchlistItems(
+      this.request.user.id
+    );
+
+    return {
+      watchlist
+    };
   }
 }

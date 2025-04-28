@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Introduced a watchlist to follow assets (experimental)
+
 ### Changed
 
 - Changed the column label from _Index_ to _Name_ in the benchmark component
