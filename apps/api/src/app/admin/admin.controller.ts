@@ -68,7 +68,7 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
-    return this.adminService.get();
+    return this.adminService.get({ user: this.request.user });
   }
 
   @HasPermission(permissions.accessAdminControl)

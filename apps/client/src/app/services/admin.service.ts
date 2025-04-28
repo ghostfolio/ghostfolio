@@ -4,8 +4,7 @@ import { UpdatePlatformDto } from '@ghostfolio/api/app/platform/update-platform.
 import { IDataProviderHistoricalResponse } from '@ghostfolio/api/services/interfaces/interfaces';
 import {
   HEADER_KEY_SKIP_INTERCEPTOR,
-  HEADER_KEY_TOKEN,
-  PROPERTY_API_KEY_GHOSTFOLIO
+  HEADER_KEY_TOKEN
 } from '@ghostfolio/common/config';
 import { DEFAULT_PAGE_SIZE } from '@ghostfolio/common/config';
 import {
@@ -24,7 +23,6 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { DataSource, MarketData, Platform } from '@prisma/client';
 import { JobStatus } from 'bull';
-import { switchMap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { DataService } from './data.service';
@@ -115,19 +113,15 @@ export class AdminService {
     });
   }
 
-  public fetchGhostfolioDataProviderStatus() {
-    return this.fetchAdminData().pipe(
-      switchMap(({ settings }) => {
-        const headers = new HttpHeaders({
-          [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
-          [HEADER_KEY_TOKEN]: `Api-Key ${settings[PROPERTY_API_KEY_GHOSTFOLIO]}`
-        });
+  public fetchGhostfolioDataProviderStatus(aApiKey: string) {
+    const headers = new HttpHeaders({
+      [HEADER_KEY_SKIP_INTERCEPTOR]: 'true',
+      [HEADER_KEY_TOKEN]: `Api-Key ${aApiKey}`
+    });
 
-        return this.http.get<DataProviderGhostfolioStatusResponse>(
-          `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
-          { headers }
-        );
-      })
+    return this.http.get<DataProviderGhostfolioStatusResponse>(
+      `${environment.production ? 'https://ghostfol.io' : ''}/api/v2/data-providers/ghostfolio/status`,
+      { headers }
     );
   }
 

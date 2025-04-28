@@ -68,6 +68,7 @@ export class EodHistoricalDataService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.EOD_HISTORICAL_DATA,
       isPremium: true,
       name: 'EOD Historical Data',
       url: 'https://eodhd.com'

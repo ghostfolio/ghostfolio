@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Changed the column label from _Index_ to _Name_ in the benchmark component
+- Extended the data providers management of the admin control panel
 - Improved the language localization for German (`de`)
 
 ## 2.156.0 - 2025-04-27
