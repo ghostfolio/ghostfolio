@@ -7947,7 +7947,7 @@
       </trans-unit>
       <trans-unit id="1efa64b89c9852e7099159ab06af9dcf49870438" datatype="html">
         <source>Add asset to watchlist</source>
-        <target state="new">Add asset to watchlist</target>
+        <target state="translated">Anlage zur Beobachtungsliste hinzufügen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-watchlist/create-watchlist-item-dialog/create-watchlist-item-dialog.html</context>
           <context context-type="linenumber">7</context>
@@ -7955,7 +7955,7 @@
       </trans-unit>
       <trans-unit id="7a6d28bd1c36c8298c95b7965abf226b218be50d" datatype="html">
         <source>Watchlist</source>
-        <target state="new">Watchlist</target>
+        <target state="translated">Beobachtungsliste</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-watchlist/home-watchlist.html</context>
           <context context-type="linenumber">4</context>
@@ -7963,7 +7963,7 @@
       </trans-unit>
       <trans-unit id="4558213855845176930" datatype="html">
         <source>Watchlist</source>
-        <target state="new">Watchlist</target>
+        <target state="translated">Beobachtungsliste</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">44</context>
