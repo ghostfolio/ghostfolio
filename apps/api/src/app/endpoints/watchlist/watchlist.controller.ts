@@ -2,6 +2,7 @@ import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorat
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { TransformDataSourceInResponseInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.interceptor';
+import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -54,7 +55,7 @@ export class WatchlistController {
   ) {
     const watchlistItem = await this.watchlistService
       .getWatchlistItems(this.request.user.id)
-      .then(({ watchlist }) => {
+      .then((watchlist) => {
         return watchlist.find((item) => {
           return item.dataSource === dataSource && item.symbol === symbol;
         });
@@ -78,7 +79,13 @@ export class WatchlistController {
   @HasPermission(permissions.readWatchlist)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
-  public async getWatchlistItems() {
-    return this.watchlistService.getWatchlistItems(this.request.user.id);
+  public async getWatchlistItems(): Promise<WatchlistResponse> {
+    const watchlist = await this.watchlistService.getWatchlistItems(
+      this.request.user.id
+    );
+
+    return {
+      watchlist
+    };
   }
 }

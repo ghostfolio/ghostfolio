@@ -45,7 +45,8 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
-  User
+  User,
+  WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
@@ -688,9 +689,7 @@ export class DataService {
   }
 
   public fetchWatchlist() {
-    return this.http.get<{ watchlist: AssetProfileIdentifier[] }>(
-      '/api/v1/watchlist'
-    );
+    return this.http.get<WatchlistResponse>('/api/v1/watchlist');
   }
 
   public generateAccessToken(aUserId: string) {

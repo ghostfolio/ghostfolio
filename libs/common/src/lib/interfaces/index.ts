@@ -57,6 +57,7 @@ import type { PortfolioPerformanceResponse } from './responses/portfolio-perform
 import type { PortfolioReportResponse } from './responses/portfolio-report.interface';
 import type { PublicPortfolioResponse } from './responses/public-portfolio-response.interface';
 import type { QuotesResponse } from './responses/quotes-response.interface';
+import type { WatchlistResponse } from './responses/watchlist-response.interface';
 import type { ScraperConfiguration } from './scraper-configuration.interface';
 import type { Statistics } from './statistics.interface';
 import type { SubscriptionOffer } from './subscription-offer.interface';
@@ -135,5 +136,6 @@ export {
   ToggleOption,
   User,
   UserSettings,
+  WatchlistResponse,
   XRayRulesSettings
 };
