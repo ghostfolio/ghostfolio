@@ -166,6 +166,10 @@
           <context context-type="linenumber">138</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/holdings-table/holdings-table.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
@@ -2516,14 +2520,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.ts</context>
           <context context-type="linenumber">229</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="170f7de02b14690fb9c1999a16926c0044bfd5c1" datatype="html">
-        <source>Index</source>
-        <target state="translated">Indice</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c81076431c2d98928ac370ca3e57092ae77366d7" datatype="html">
