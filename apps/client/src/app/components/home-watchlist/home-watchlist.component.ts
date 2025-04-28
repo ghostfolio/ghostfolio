@@ -87,8 +87,8 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
           marketCondition: null,
           name: symbol,
           performances: null,
-          trend200d: 'UNKNOWN',
-          trend50d: 'UNKNOWN'
+          trend50d: 'UNKNOWN',
+          trend200d: 'UNKNOWN'
         }));
 
         this.changeDetectorRef.markForCheck();
