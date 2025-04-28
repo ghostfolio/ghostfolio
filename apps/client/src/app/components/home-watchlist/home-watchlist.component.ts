@@ -1,7 +1,9 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -24,7 +26,13 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GfBenchmarkComponent, MatButtonModule, RouterModule],
+  imports: [
+    CommonModule,
+    GfBenchmarkComponent,
+    GfPremiumIndicatorComponent,
+    MatButtonModule,
+    RouterModule
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-home-watchlist',
   styleUrls: ['./home-watchlist.scss'],
@@ -32,6 +40,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
 })
 export class HomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
+  public hasPermissionToCreateWatchlistItem: boolean;
   public user: User;
   public watchlist: Benchmark[];
 
@@ -61,6 +70,11 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
+
+          this.hasPermissionToCreateWatchlistItem = hasPermission(
+            this.user.permissions,
+            permissions.createWatchlistItem
+          );
 
           this.changeDetectorRef.markForCheck();
         }
