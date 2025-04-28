@@ -7959,7 +7959,7 @@
       </trans-unit>
       <trans-unit id="e9d59bb8bf6c08243d5411c55ddbdf925c7c799c" datatype="html">
         <source>Get Early Access</source>
-        <target state="new">Get Early Access</target>
+        <target state="translated">Early Access erhalten</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.html</context>
           <context context-type="linenumber">29</context>
