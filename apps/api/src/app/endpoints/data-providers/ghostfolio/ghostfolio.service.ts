@@ -1,5 +1,6 @@
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { GhostfolioService as GhostfolioDataProviderService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
 import {
   GetAssetProfileParams,
   GetDividendsParams,
@@ -327,11 +328,15 @@ export class GhostfolioService {
   }
 
   private getDataProviderInfo(): DataProviderInfo {
+    const ghostfolioDataProviderService = new GhostfolioDataProviderService(
+      this.configurationService,
+      this.propertyService
+    );
+
     return {
-      dataSource: DataSource.GHOSTFOLIO,
+      ...ghostfolioDataProviderService.getDataProviderInfo(),
       isPremium: false,
-      name: 'Ghostfolio Premium',
-      url: 'https://ghostfol.io'
+      name: 'Ghostfolio Premium'
     };
   }
 
