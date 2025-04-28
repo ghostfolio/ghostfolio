@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced a watchlist to follow assets (experimental)
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.156.0 - 2025-04-27
 
 ### Changed
