@@ -81,11 +81,11 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .fetchWatchlist()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ watchlist }) => {
-        this.watchlist = watchlist.map((item) => ({
-          dataSource: item.dataSource,
-          symbol: item.symbol,
-          name: item.symbol,
+        this.watchlist = watchlist.map(({ dataSource, symbol }) => ({
+          dataSource,
+          symbol,
           marketCondition: null,
+          name: symbol,
           performances: null,
           trend200d: 'UNKNOWN',
           trend50d: 'UNKNOWN'
@@ -123,6 +123,7 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
                   next: () => this.loadWatchlistData()
                 });
             }
+
             this.router.navigate(['.'], { relativeTo: this.route });
           });
       });

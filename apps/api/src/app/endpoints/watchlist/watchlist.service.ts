@@ -74,6 +74,6 @@ export class WatchlistService {
       where: { id: userId }
     });
 
-    return user?.watchlist ?? [];
+    return user.watchlist ?? [];
   }
 }
