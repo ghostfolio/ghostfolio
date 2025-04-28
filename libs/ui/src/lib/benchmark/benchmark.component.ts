@@ -20,6 +20,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -49,6 +50,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
 
   public displayedColumns = ['name', 'date', 'change', 'marketCondition'];
   public isLoading = true;
+  public isNumber = isNumber;
   public resolveMarketCondition = resolveMarketCondition;
   public translate = translate;
 
