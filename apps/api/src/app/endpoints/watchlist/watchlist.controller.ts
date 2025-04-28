@@ -53,13 +53,13 @@ export class WatchlistController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ) {
-    const watchlistItem = await this.watchlistService
-      .getWatchlistItems(this.request.user.id)
-      .then((watchlist) => {
-        return watchlist.find((item) => {
-          return item.dataSource === dataSource && item.symbol === symbol;
-        });
-      });
+    const watchlistItems = await this.watchlistService.getWatchlistItems(
+      this.request.user.id
+    );
+
+    const watchlistItem = watchlistItems.find((item) => {
+      return item.dataSource === dataSource && item.symbol === symbol;
+    });
 
     if (!watchlistItem) {
       throw new HttpException(
