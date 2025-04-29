@@ -41,6 +41,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
 export class HomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionToCreateWatchlistItem: boolean;
+  public hasPermissionToDeleteWatchlistItem: boolean;
   public user: User;
   public watchlist: Benchmark[];
 
@@ -75,6 +76,10 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createWatchlistItem
           );
+          this.hasPermissionToDeleteWatchlistItem = hasPermission(
+            this.user.permissions,
+            permissions.deleteWatchlistItem
+          );
 
           this.changeDetectorRef.markForCheck();
         }
@@ -88,6 +93,15 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  public onWatchlistItemDeleted(item: Benchmark) {
+    this.dataService
+      .deleteWatchlistItem(item)
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => this.loadWatchlistData()
+      });
   }
 
   private loadWatchlistData() {
