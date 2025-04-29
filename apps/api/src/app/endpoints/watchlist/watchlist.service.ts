@@ -1,12 +1,20 @@
+import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { DataSource } from '@prisma/client';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { DataSource, Prisma } from '@prisma/client';
 
 @Injectable()
 export class WatchlistService {
-  public constructor(private readonly prismaService: PrismaService) {}
+  public constructor(
+    private readonly dataGatheringService: DataGatheringService,
+    private readonly dataProviderService: DataProviderService,
+    private readonly prismaService: PrismaService,
+    private readonly symbolProfileService: SymbolProfileService
+  ) {}
 
   public async createWatchlistItem({
     dataSource,
@@ -24,10 +32,25 @@ export class WatchlistService {
     });
 
     if (!symbolProfile) {
-      throw new NotFoundException(
-        `Asset profile not found for ${symbol} (${dataSource})`
+      const assetProfiles = await this.dataProviderService.getAssetProfiles([
+        { dataSource, symbol }
+      ]);
+
+      if (!assetProfiles[symbol]?.currency) {
+        throw new BadRequestException(
+          `Asset profile not found for ${symbol} (${dataSource})`
+        );
+      }
+
+      await this.symbolProfileService.add(
+        assetProfiles[symbol] as Prisma.SymbolProfileCreateInput
       );
     }
+
+    await this.dataGatheringService.gatherSymbol({
+      dataSource,
+      symbol
+    });
 
     await this.prismaService.user.update({
       data: {
