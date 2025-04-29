@@ -1,6 +1,10 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Benchmark,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -95,7 +99,7 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
     this.unsubscribeSubject.complete();
   }
 
-  public onWatchlistItemDeleted(item: Benchmark) {
+  public onWatchlistItemDeleted(item: AssetProfileIdentifier) {
     this.dataService
       .deleteWatchlistItem(item)
       .pipe(takeUntil(this.unsubscribeSubject))

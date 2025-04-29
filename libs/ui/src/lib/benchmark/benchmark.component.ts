@@ -113,7 +113,7 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onDeleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
+  public onDeleteWatchlistItem({ dataSource, symbol }: Benchmark) {
     this.notificationService.confirm({
       confirmFn: () => this.watchlistItemDeleted.emit({ dataSource, symbol }),
       confirmType: ConfirmationDialogType.Warn,
