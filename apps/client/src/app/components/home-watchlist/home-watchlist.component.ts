@@ -1,6 +1,10 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { Benchmark, User } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Benchmark,
+  User
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
@@ -41,6 +45,7 @@ import { CreateWatchlistItemDialogParams } from './create-watchlist-item-dialog/
 export class HomeWatchlistComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionToCreateWatchlistItem: boolean;
+  public hasPermissionToDeleteWatchlistItem: boolean;
   public user: User;
   public watchlist: Benchmark[];
 
@@ -75,6 +80,10 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
             this.user.permissions,
             permissions.createWatchlistItem
           );
+          this.hasPermissionToDeleteWatchlistItem = hasPermission(
+            this.user.permissions,
+            permissions.deleteWatchlistItem
+          );
 
           this.changeDetectorRef.markForCheck();
         }
@@ -83,6 +92,20 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
 
   public ngOnInit() {
     this.loadWatchlistData();
+  }
+
+  public onWatchlistItemDeleted({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.dataService
+      .deleteWatchlistItem({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          return this.loadWatchlistData();
+        }
+      });
   }
 
   public ngOnDestroy() {

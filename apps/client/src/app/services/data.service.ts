@@ -327,6 +327,10 @@ export class DataService {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
   }
 
+  public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
+    return this.http.delete<any>(`/api/v1/watchlist/${dataSource}/${symbol}`);
+  }
+
   public fetchAccesses() {
     return this.http.get<Access[]>('/api/v1/access');
   }
