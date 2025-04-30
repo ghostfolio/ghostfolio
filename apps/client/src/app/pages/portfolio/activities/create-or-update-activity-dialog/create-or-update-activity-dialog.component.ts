@@ -238,7 +238,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .get('dataSource')
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('fee').reset();
+          this.activityForm.get('fee').setValue(0);
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
           this.activityForm.get('quantity').setValue(1);
@@ -271,12 +271,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
 
-          if (
-            (type === 'FEE' && this.activityForm.get('fee').value === 0) ||
-            type === 'INTEREST' ||
-            type === 'LIABILITY'
-          ) {
-            this.activityForm.get('fee').reset();
+          if (type === 'INTEREST' || type === 'LIABILITY') {
+            this.activityForm.get('fee').setValue(0);
           }
 
           this.activityForm.get('name').setValidators(Validators.required);
