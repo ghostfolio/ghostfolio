@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `Order` to `activities` in the `Account` database schema
 - Improved the language localization for German (`de`)
 
 ## 2.157.1 - 2025-04-29
