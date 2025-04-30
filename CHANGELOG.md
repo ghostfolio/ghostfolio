@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to delete an asset from the watchlist (experimental)
+
 ### Changed
 
 - Fixed the issue of saving valuable, interest and liability
