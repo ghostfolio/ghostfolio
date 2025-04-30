@@ -220,7 +220,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
-        if (type === 'ITEM') {
+        if (['ITEM'].includes(type)) {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
@@ -248,11 +248,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('searchSymbol').updateValueAndValidity();
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
-        } else if (
-          type === 'FEE' ||
-          type === 'INTEREST' ||
-          type === 'LIABILITY'
-        ) {
+        } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
@@ -271,16 +267,16 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
 
-          if (type === 'INTEREST' || type === 'LIABILITY') {
+          if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('fee').setValue(0);
           }
 
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
 
-          if (type === 'FEE') {
+          if (['FEE'].includes(type)) {
             this.activityForm.get('quantity').setValue(0);
-          } else if (type === 'INTEREST' || type === 'LIABILITY') {
+          } else if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity').setValue(1);
           }
 
@@ -289,7 +285,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('searchSymbol').updateValueAndValidity();
 
-          if (type === 'FEE') {
+          if (['FEE'].includes(type)) {
             this.activityForm.get('unitPrice').setValue(0);
           }
 
