@@ -53,11 +53,11 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
 export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() benchmarks: Benchmark[];
   @Input() deviceType: string;
-  @Input() hasPermissionToDeleteWatchlistItem: boolean;
+  @Input() hasPermissionToDeleteItem: boolean;
   @Input() locale = getLocale();
   @Input() user: User;
 
-  @Output() watchlistItemDeleted = new EventEmitter<AssetProfileIdentifier>();
+  @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
   public displayedColumns = [
     'name',
@@ -113,9 +113,11 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public onDeleteWatchlistItem({ dataSource, symbol }: Benchmark) {
+  public onDeleteItem({ dataSource, symbol }: AssetProfileIdentifier) {
     this.notificationService.confirm({
-      confirmFn: () => this.watchlistItemDeleted.emit({ dataSource, symbol }),
+      confirmFn: () => {
+        this.itemDeleted.emit({ dataSource, symbol });
+      },
       confirmType: ConfirmationDialogType.Warn,
       title: $localize`Do you really want to delete this item?`
     });

@@ -12,12 +12,10 @@
       <gf-benchmark
         [benchmarks]="watchlist"
         [deviceType]="deviceType"
-        [hasPermissionToDeleteWatchlistItem]="
-          hasPermissionToDeleteWatchlistItem
-        "
+        [hasPermissionToDeleteItem]="hasPermissionToDeleteWatchlistItem"
         [locale]="user?.settings?.locale || undefined"
         [user]="user"
-        (watchlistItemDeleted)="onWatchlistItemDeleted($event)"
+        (itemDeleted)="onWatchlistItemDeleted($event)"
       />
     </div>
   </div>

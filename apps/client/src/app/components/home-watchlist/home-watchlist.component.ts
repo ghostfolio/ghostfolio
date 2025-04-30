@@ -94,18 +94,23 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
     this.loadWatchlistData();
   }
 
+  public onWatchlistItemDeleted({
+    dataSource,
+    symbol
+  }: AssetProfileIdentifier) {
+    this.dataService
+      .deleteWatchlistItem({ dataSource, symbol })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe({
+        next: () => {
+          return this.loadWatchlistData();
+        }
+      });
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  public onWatchlistItemDeleted(item: AssetProfileIdentifier) {
-    this.dataService
-      .deleteWatchlistItem(item)
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe({
-        next: () => this.loadWatchlistData()
-      });
   }
 
   private loadWatchlistData() {
