@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to delete an asset from the watchlist (experimental)
 
-### Changed
+### Fixed
 
-- Fixed the issue of saving valuable, interest and liability
+- Fixed an issue with the saving of activities with type `INTEREST`, `ITEM` and `LIABILITY`
 
 ## 2.157.1 - 2025-04-29
 
