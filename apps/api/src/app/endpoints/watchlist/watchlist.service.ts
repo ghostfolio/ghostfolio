@@ -120,13 +120,13 @@ export class WatchlistService {
           );
         return {
           dataSource,
-          symbol,
           performances: {
             allTimeHigh: {
               date: ath?.date,
               performancePercent
             }
-          }
+          },
+          symbol
         };
       })
     );

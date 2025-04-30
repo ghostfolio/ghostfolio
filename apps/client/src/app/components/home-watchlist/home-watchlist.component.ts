@@ -6,6 +6,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { BenchmarkTrend } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
@@ -118,17 +119,17 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .fetchWatchlist()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ watchlist }) => {
-        this.watchlist = watchlist.map(
-          ({ dataSource, performances, symbol }) => ({
+        this.watchlist = watchlist
+          .map(({ dataSource, performances, symbol }) => ({
             dataSource,
             performances,
             symbol,
             marketCondition: null,
             name: symbol,
-            trend50d: 'UNKNOWN',
-            trend200d: 'UNKNOWN'
-          })
-        );
+            trend50d: 'UNKNOWN' as BenchmarkTrend,
+            trend200d: 'UNKNOWN' as BenchmarkTrend
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
 
         this.changeDetectorRef.markForCheck();
       });
