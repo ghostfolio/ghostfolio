@@ -1,17 +1,22 @@
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, Prisma } from '@prisma/client';
+import ms from 'ms';
 
 @Injectable()
 export class WatchlistService {
   public constructor(
+    private readonly benchmarkService: BenchmarkService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly dataProviderService: DataProviderService,
+    private readonly marketDataService: MarketDataService,
     private readonly prismaService: PrismaService,
     private readonly symbolProfileService: SymbolProfileService
   ) {}
@@ -87,7 +92,7 @@ export class WatchlistService {
 
   public async getWatchlistItems(
     userId: string
-  ): Promise<AssetProfileIdentifier[]> {
+  ): Promise<WatchlistResponse['watchlist']> {
     const user = await this.prismaService.user.findUnique({
       select: {
         watchlist: {
@@ -97,6 +102,35 @@ export class WatchlistService {
       where: { id: userId }
     });
 
-    return user.watchlist ?? [];
+    const quotes = await this.dataProviderService.getQuotes({
+      items: user.watchlist.map(({ dataSource, symbol }) => {
+        return { dataSource, symbol };
+      }),
+      requestTimeout: ms('30 seconds'),
+      useCache: false
+    });
+
+    const watchlist = await Promise.all(
+      user.watchlist.map(async ({ dataSource, symbol }) => {
+        const ath = await this.marketDataService.getMax({ dataSource, symbol });
+        const performancePercent =
+          this.benchmarkService.calculateChangeInPercentage(
+            ath.marketPrice,
+            quotes[symbol]?.marketPrice
+          );
+        return {
+          dataSource,
+          symbol,
+          performances: {
+            allTimeHigh: {
+              date: ath?.date,
+              performancePercent
+            }
+          }
+        };
+      })
+    );
+
+    return watchlist;
   }
 }
