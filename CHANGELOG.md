@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support to delete an asset from the watchlist (experimental)
 
+### Changed
+
+- Improved the language localization for German (`de`)
+
 ## 2.157.1 - 2025-04-29
 
 ### Added
