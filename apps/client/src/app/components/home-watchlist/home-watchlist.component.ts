@@ -118,15 +118,17 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .fetchWatchlist()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ watchlist }) => {
-        this.watchlist = watchlist.map(({ dataSource, symbol }) => ({
-          dataSource,
-          symbol,
-          marketCondition: null,
-          name: symbol,
-          performances: null,
-          trend50d: 'UNKNOWN',
-          trend200d: 'UNKNOWN'
-        }));
+        this.watchlist = watchlist.map(
+          ({ dataSource, performances, symbol }) => ({
+            dataSource,
+            performances,
+            symbol,
+            marketCondition: null,
+            name: symbol,
+            trend50d: 'UNKNOWN',
+            trend200d: 'UNKNOWN'
+          })
+        );
 
         this.changeDetectorRef.markForCheck();
       });
