@@ -238,7 +238,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .get('dataSource')
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('fee').reset();
+          this.activityForm.get('fee').setValue(0);
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
           this.activityForm.get('quantity').setValue(1);
@@ -248,11 +248,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('searchSymbol').updateValueAndValidity();
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
-        } else if (
-          type === 'FEE' ||
-          type === 'INTEREST' ||
-          type === 'LIABILITY'
-        ) {
+        } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
@@ -271,12 +267,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
 
-          if (
-            (type === 'FEE' && this.activityForm.get('fee').value === 0) ||
-            type === 'INTEREST' ||
-            type === 'LIABILITY'
-          ) {
-            this.activityForm.get('fee').reset();
+          if (['INTEREST', 'LIABILITY'].includes(type)) {
+            this.activityForm.get('fee').setValue(0);
           }
 
           this.activityForm.get('name').setValidators(Validators.required);
@@ -284,7 +276,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
           if (type === 'FEE') {
             this.activityForm.get('quantity').setValue(0);
-          } else if (type === 'INTEREST' || type === 'LIABILITY') {
+          } else if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity').setValue(1);
           }
 

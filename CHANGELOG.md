@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Order` to `activities` in the `Account` database schema
 - Improved the language localization for German (`de`)
 
+### Fixed
+
+- Fixed an issue with the saving of activities with type `INTEREST`, `ITEM` and `LIABILITY`
+
 ## 2.157.1 - 2025-04-29
 
 ### Added
