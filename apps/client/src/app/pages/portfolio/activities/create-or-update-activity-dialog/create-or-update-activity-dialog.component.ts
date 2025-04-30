@@ -220,7 +220,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
-        if (['ITEM'].includes(type)) {
+        if (type === 'ITEM') {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
@@ -274,7 +274,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
 
-          if (['FEE'].includes(type)) {
+          if (type === 'FEE') {
             this.activityForm.get('quantity').setValue(0);
           } else if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity').setValue(1);
@@ -285,7 +285,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('searchSymbol').updateValueAndValidity();
 
-          if (['FEE'].includes(type)) {
+          if (type === 'FEE') {
             this.activityForm.get('unitPrice').setValue(0);
           }
 
