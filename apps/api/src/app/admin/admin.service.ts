@@ -29,7 +29,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-import { MarketDataPreset } from '@ghostfolio/common/types';
+import { MarketDataPreset, UserWithSettings } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
@@ -134,7 +134,9 @@ export class AdminService {
     }
   }
 
-  public async get(): Promise<AdminData> {
+  public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
+    const dataSources = await this.dataProviderService.getDataSources({ user });
+
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
@@ -145,6 +147,11 @@ export class AdminService {
       settings,
       transactionCount,
       userCount,
+      dataProviders: dataSources.map((dataSource) => {
+        return this.dataProviderService
+          .getDataProvider(dataSource)
+          .getDataProviderInfo();
+      }),
       version: environment.version
     };
   }

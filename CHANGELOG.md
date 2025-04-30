@@ -7,9 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to delete an asset from the watchlist (experimental)
+
 ### Changed
 
 - Renamed `Order` to `activities` in the `Account` database schema
+
+## 2.157.1 - 2025-04-29
+
+### Added
+
+- Introduced a watchlist to follow assets (experimental)
+
+### Changed
+
+- Changed the column label from _Index_ to _Name_ in the benchmark component
+- Extended the data providers management of the admin control panel
+- Improved the language localization for German (`de`)
 
 ## 2.156.0 - 2025-04-27
 

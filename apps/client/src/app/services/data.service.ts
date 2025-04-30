@@ -6,6 +6,7 @@ import { UpdateAccountDto } from '@ghostfolio/api/app/account/update-account.dto
 import { UpdateBulkMarketDataDto } from '@ghostfolio/api/app/admin/update-bulk-market-data.dto';
 import { CreateTagDto } from '@ghostfolio/api/app/endpoints/tags/create-tag.dto';
 import { UpdateTagDto } from '@ghostfolio/api/app/endpoints/tags/update-tag.dto';
+import { CreateWatchlistItemDto } from '@ghostfolio/api/app/endpoints/watchlist/create-watchlist-item.dto';
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import {
   Activities,
@@ -44,7 +45,8 @@ import {
   PortfolioPerformanceResponse,
   PortfolioReportResponse,
   PublicPortfolioResponse,
-  User
+  User,
+  WatchlistResponse
 } from '@ghostfolio/common/interfaces';
 import { filterGlobalPermissions } from '@ghostfolio/common/permissions';
 import type {
@@ -323,6 +325,10 @@ export class DataService {
 
   public deleteUser(aId: string) {
     return this.http.delete<any>(`/api/v1/user/${aId}`);
+  }
+
+  public deleteWatchlistItem({ dataSource, symbol }: AssetProfileIdentifier) {
+    return this.http.delete<any>(`/api/v1/watchlist/${dataSource}/${symbol}`);
   }
 
   public fetchAccesses() {
@@ -686,6 +692,10 @@ export class DataService {
     return this.http.get<Tag[]>('/api/v1/tags');
   }
 
+  public fetchWatchlist() {
+    return this.http.get<WatchlistResponse>('/api/v1/watchlist');
+  }
+
   public generateAccessToken(aUserId: string) {
     return this.http.post<AccessTokenResponse>(
       `/api/v1/user/${aUserId}/access-token`,
@@ -746,6 +756,10 @@ export class DataService {
 
   public postUser() {
     return this.http.post<UserItem>('/api/v1/user', {});
+  }
+
+  public postWatchlistItem(watchlistItem: CreateWatchlistItemDto) {
+    return this.http.post('/api/v1/watchlist', watchlistItem);
   }
 
   public putAccount(aAccount: UpdateAccountDto) {

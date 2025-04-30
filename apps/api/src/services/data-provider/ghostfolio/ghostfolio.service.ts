@@ -92,9 +92,10 @@ export class GhostfolioService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.GHOSTFOLIO,
       isPremium: true,
       name: 'Ghostfolio',
-      url: 'https://ghostfo.io'
+      url: 'https://ghostfol.io'
     };
   }
 

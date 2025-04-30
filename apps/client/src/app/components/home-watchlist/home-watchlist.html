@@ -1,0 +1,35 @@
+<div class="container">
+  <h1 class="d-none d-sm-block h3 mb-4">
+    <span class="align-items-center d-flex justify-content-center">
+      <span i18n>Watchlist</span>
+      @if (user?.subscription?.type === 'Basic') {
+        <gf-premium-indicator class="ml-1" />
+      }
+    </span>
+  </h1>
+  <div class="mb-3 row">
+    <div class="col-xs-12 col-md-8 offset-md-2">
+      <gf-benchmark
+        [benchmarks]="watchlist"
+        [deviceType]="deviceType"
+        [hasPermissionToDeleteItem]="hasPermissionToDeleteWatchlistItem"
+        [locale]="user?.settings?.locale || undefined"
+        [user]="user"
+        (itemDeleted)="onWatchlistItemDeleted($event)"
+      />
+    </div>
+  </div>
+</div>
+@if (hasPermissionToCreateWatchlistItem) {
+  <div class="fab-container">
+    <a
+      class="align-items-center d-flex justify-content-center"
+      color="primary"
+      mat-fab
+      [queryParams]="{ createWatchlistItemDialog: true }"
+      [routerLink]="[]"
+    >
+      <ion-icon name="add-outline" size="large" />
+    </a>
+  </div>
+}

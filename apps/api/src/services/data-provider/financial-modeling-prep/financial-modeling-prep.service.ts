@@ -223,6 +223,7 @@ export class FinancialModelingPrepService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.FINANCIAL_MODELING_PREP,
       isPremium: true,
       name: 'Financial Modeling Prep',
       url: 'https://financialmodelingprep.com/developer/docs'
