@@ -8,7 +8,6 @@ import { WatchlistResponse } from '@ghostfolio/common/interfaces';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DataSource, Prisma } from '@prisma/client';
-import ms from 'ms';
 
 @Injectable()
 export class WatchlistService {
@@ -105,32 +104,41 @@ export class WatchlistService {
     const quotes = await this.dataProviderService.getQuotes({
       items: user.watchlist.map(({ dataSource, symbol }) => {
         return { dataSource, symbol };
-      }),
-      requestTimeout: ms('30 seconds'),
-      useCache: false
+      })
     });
+    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+      user.watchlist
+    );
 
     const watchlist = await Promise.all(
       user.watchlist.map(async ({ dataSource, symbol }) => {
-        const ath = await this.marketDataService.getMax({ dataSource, symbol });
+        const allTimeHigh = await this.marketDataService.getMax({
+          dataSource,
+          symbol
+        });
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
-            ath.marketPrice,
+            allTimeHigh?.marketPrice,
             quotes[symbol]?.marketPrice
           );
+        const symbolProfile = symbolProfiles.find((profile) => {
+          return profile.dataSource === dataSource && profile.symbol === symbol;
+        });
+
         return {
           dataSource,
+          symbol,
+          name: symbolProfile?.name,
           performances: {
             allTimeHigh: {
-              date: ath?.date,
+              date: allTimeHigh?.date,
               performancePercent
             }
-          },
-          symbol
+          }
         };
       })
     );
 
-    return watchlist;
+    return watchlist.sort((a, b) => a.name.localeCompare(b.name));
   }
 }

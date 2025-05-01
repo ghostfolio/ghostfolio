@@ -119,17 +119,17 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .fetchWatchlist()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ watchlist }) => {
-        this.watchlist = watchlist
-          .map(({ dataSource, performances, symbol }) => ({
+        this.watchlist = watchlist.map(
+          ({ dataSource, name, performances, symbol }) => ({
             dataSource,
+            name,
             performances,
             symbol,
             marketCondition: null,
-            name: symbol,
             trend50d: 'UNKNOWN' as BenchmarkTrend,
             trend200d: 'UNKNOWN' as BenchmarkTrend
-          }))
-          .sort((a, b) => a.name.localeCompare(b.name));
+          })
+        );
 
         this.changeDetectorRef.markForCheck();
       });

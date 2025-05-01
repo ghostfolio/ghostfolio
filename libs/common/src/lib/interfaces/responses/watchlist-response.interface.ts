@@ -5,6 +5,7 @@ import {
 
 export interface WatchlistResponse {
   watchlist: (AssetProfileIdentifier & {
+    name: string;
     performances: Benchmark['performances'];
   })[];
 }
