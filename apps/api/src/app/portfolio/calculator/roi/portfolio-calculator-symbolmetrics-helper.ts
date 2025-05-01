@@ -121,7 +121,6 @@ export class RoiPortfolioCalculatorSymbolMetricsHelper {
     }
   }
 
-  @LogPerformance
   public processOrderMetrics(
     orders: PortfolioOrderItem[],
     i: number,

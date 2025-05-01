@@ -52,11 +52,34 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     let netPerformanceWithCurrencyEffect: number;
     let netPerformanceInPercentageWithCurrencyEffect: number;
 
+    const totalInvestments = positions.reduce(
+      (total, position) => {
+        return {
+          total: total.total.plus(position.investment),
+          totalWithCurrencyEffect: total.totalWithCurrencyEffect.plus(
+            position.investmentWithCurrencyEffect
+          )
+        };
+      },
+      { total: new Big(0), totalWithCurrencyEffect: new Big(0) }
+    );
     for (const position of positions) {
       netPerformance = netPerformance + position.netPerformance.toNumber();
+      // TODO GET Net performance with currency effect
       netPerformanceInPercentage =
-        netPerformanceInPercentage *
-        position.valueInBaseCurrency.div(netWorth).toNumber();
+        netPerformanceInPercentage +
+        position.netPerformancePercentage
+          .mul(position.investment.div(totalInvestments.total))
+          .toNumber();
+      netPerformanceInPercentageWithCurrencyEffect =
+        netPerformanceInPercentageWithCurrencyEffect +
+        position.netPerformancePercentage
+          .mul(
+            position.investmentWithCurrencyEffect.div(
+              totalInvestments.totalWithCurrencyEffect
+            )
+          )
+          .toNumber();
 
       //TODO Calculate performance values not using chart
     }
