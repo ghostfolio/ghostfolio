@@ -774,7 +774,16 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
-  public async getPerformance({ end, start }) {
+  public async getPerformance({ end, start }): Promise<{
+    chart: HistoricalDataItem[];
+    netPerformance: number;
+    netPerformanceInPercentage: number;
+    netPerformanceWithCurrencyEffect: number;
+    netPerformanceInPercentageWithCurrencyEffect: number;
+    netWorth: number;
+    totalInvestment: number;
+    valueWithCurrencyEffect: number;
+  }> {
     await this.snapshotPromise;
 
     const { historicalData } = this.snapshot;
@@ -815,6 +824,7 @@ export abstract class PortfolioCalculator {
               totalInvestmentValuesWithCurrencyEffect.length
             : 0;
 
+        //TODO : Extract in abstractFunction and use timeweighted for ROI + Handle total values separately
         chart.push({
           ...historicalDataItem,
           netPerformance:
@@ -839,7 +849,20 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    return { chart };
+    const last = chart.at(-1);
+
+    return {
+      chart,
+      netPerformance: last?.netPerformance ?? 0,
+      netPerformanceInPercentage: last?.netPerformanceInPercentage ?? 0,
+      netPerformanceWithCurrencyEffect:
+        last?.netPerformanceWithCurrencyEffect ?? 0,
+      netPerformanceInPercentageWithCurrencyEffect:
+        last?.netPerformanceInPercentageWithCurrencyEffect ?? 0,
+      netWorth: last?.netWorth ?? 0,
+      totalInvestment: last?.totalInvestment ?? 0,
+      valueWithCurrencyEffect: last?.valueWithCurrencyEffect ?? 0
+    };
   }
 
   public getStartDate() {

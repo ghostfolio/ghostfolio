@@ -1155,9 +1155,8 @@ export class PortfolioService {
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
     const range = { end: endDate, start: startDate };
 
-    const { chart } = await portfolioCalculator.getPerformance(range);
-
     const {
+      chart,
       netPerformance,
       netPerformanceInPercentage,
       netPerformanceInPercentageWithCurrencyEffect,
@@ -1165,15 +1164,7 @@ export class PortfolioService {
       netWorth,
       totalInvestment,
       valueWithCurrencyEffect
-    } = chart?.at(-1) ?? {
-      netPerformance: 0,
-      netPerformanceInPercentage: 0,
-      netPerformanceInPercentageWithCurrencyEffect: 0,
-      netPerformanceWithCurrencyEffect: 0,
-      netWorth: 0,
-      totalInvestment: 0,
-      valueWithCurrencyEffect: 0
-    };
+    } = await portfolioCalculator.getPerformance(range);
 
     return {
       chart,
