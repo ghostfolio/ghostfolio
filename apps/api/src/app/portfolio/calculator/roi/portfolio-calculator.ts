@@ -1,6 +1,8 @@
 import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/portfolio-calculator';
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import {
   AssetProfileIdentifier,
+  HistoricalDataItem,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
@@ -15,6 +17,63 @@ import { RoiPortfolioCalculatorSymbolMetricsHelper } from './portfolio-calculato
 
 export class RoiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
+
+  //TODO Overwrite historicalData creation for ROI --> Use TimeWeighted as used for chart
+
+  @LogPerformance
+  public override async getPerformance({
+    end,
+    start
+  }: {
+    end: string | number | Date;
+    start: string | number | Date;
+  }): Promise<{
+    chart: HistoricalDataItem[];
+    netPerformance: number;
+    netPerformanceInPercentage: number;
+    netPerformanceWithCurrencyEffect: number;
+    netPerformanceInPercentageWithCurrencyEffect: number;
+    netWorth: number;
+    totalInvestment: number;
+    valueWithCurrencyEffect: number;
+  }> {
+    await this.snapshotPromise;
+    const { positions } = this.snapshot;
+
+    const { chart } = await super.getPerformance({ start, end });
+
+    const last = chart.at(-1);
+    const netWorth = last.netWorth;
+    const totalInvestment = last.totalInvestment;
+    const valueWithCurrencyEffect = last.valueWithCurrencyEffect;
+
+    let netPerformance: number;
+    let netPerformanceInPercentage: number;
+    let netPerformanceWithCurrencyEffect: number;
+    let netPerformanceInPercentageWithCurrencyEffect: number;
+
+    for (const position of positions) {
+      netPerformance = netPerformance + position.netPerformance.toNumber();
+      netPerformanceInPercentage =
+        netPerformanceInPercentage *
+        position.valueInBaseCurrency.div(netWorth).toNumber();
+
+      //TODO Calculate performance values not using chart
+    }
+
+    return {
+      chart,
+      netPerformance,
+      netPerformanceInPercentage,
+      netPerformanceWithCurrencyEffect,
+      netPerformanceInPercentageWithCurrencyEffect,
+      netWorth,
+      totalInvestment,
+      valueWithCurrencyEffect
+    };
+  }
+
+  @LogPerformance
   protected calculateOverallPerformance(
     positions: TimelinePosition[]
   ): PortfolioSnapshot {
@@ -76,10 +135,7 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     };
   }
 
-  protected getPerformanceCalculationType() {
-    return PerformanceCalculationType.ROI;
-  }
-
+  @LogPerformance
   protected getSymbolMetrics({
     chartDateMap,
     dataSource,
@@ -181,6 +237,10 @@ export class RoiPortfolioCalculator extends PortfolioCalculator {
     );
 
     return symbolMetricsHelper.symbolMetrics;
+  }
+
+  protected getPerformanceCalculationType() {
+    return PerformanceCalculationType.ROI;
   }
 
   private calculatePositionMetrics(

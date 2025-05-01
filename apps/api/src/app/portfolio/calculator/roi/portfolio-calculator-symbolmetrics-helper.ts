@@ -1,3 +1,4 @@
+import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import { getIntervalFromDateRange } from '@ghostfolio/common/calculation-helper';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import { SymbolMetrics } from '@ghostfolio/common/interfaces';
@@ -27,6 +28,7 @@ export class RoiPortfolioCalculatorSymbolMetricsHelper {
     this.chartDates = chartDates;
   }
 
+  @LogPerformance
   public calculateNetPerformanceByDateRange(
     start: Date,
     symbolMetricsHelper: PortfolioCalculatorSymbolMetricsHelperObject
@@ -119,6 +121,7 @@ export class RoiPortfolioCalculatorSymbolMetricsHelper {
     }
   }
 
+  @LogPerformance
   public processOrderMetrics(
     orders: PortfolioOrderItem[],
     i: number,
