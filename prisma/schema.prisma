@@ -26,6 +26,7 @@ model Access {
 }
 
 model Account {
+  activities Order[]
   balance    Float            @default(0)
   balances   AccountBalance[]
   comment    String?
@@ -39,7 +40,6 @@ model Account {
   userId     String
   Platform   Platform?        @relation(fields: [platformId], references: [id])
   User       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
-  Order      Order[]
 
   @@id([id, userId])
   @@index([currency])

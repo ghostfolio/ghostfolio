@@ -39,12 +39,12 @@ export class AccountService {
     return account;
   }
 
-  public async accountWithOrders(
+  public async accountWithActivities(
     accountWhereUniqueInput: Prisma.AccountWhereUniqueInput,
     accountInclude: Prisma.AccountInclude
   ): Promise<
     Account & {
-      Order?: Order[];
+      activities?: Order[];
     }
   > {
     return this.prismaService.account.findUnique({
@@ -62,8 +62,8 @@ export class AccountService {
     orderBy?: Prisma.AccountOrderByWithRelationInput;
   }): Promise<
     (Account & {
+      activities?: Order[];
       balances?: AccountBalance[];
-      Order?: Order[];
       Platform?: Platform;
     })[]
   > {
@@ -140,7 +140,7 @@ export class AccountService {
 
   public async getAccounts(aUserId: string): Promise<Account[]> {
     const accounts = await this.accounts({
-      include: { Order: true, Platform: true },
+      include: { activities: true, Platform: true },
       orderBy: { name: 'asc' },
       where: { userId: aUserId }
     });
@@ -148,15 +148,15 @@ export class AccountService {
     return accounts.map((account) => {
       let transactionCount = 0;
 
-      for (const order of account.Order) {
-        if (!order.isDraft) {
+      for (const { isDraft } of account.activities) {
+        if (!isDraft) {
           transactionCount += 1;
         }
       }
 
       const result = { ...account, transactionCount };
 
-      delete result.Order;
+      delete result.activities;
 
       return result;
     });
