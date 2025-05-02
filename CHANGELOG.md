@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Extended the watchlist by the date of the last all time high, the current change to the all time high and the current market condition (experimental)
+- Added support for the impersonation mode in the watchlist (experimental)
 
 ### Changed
 

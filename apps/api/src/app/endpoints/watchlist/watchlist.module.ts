@@ -2,6 +2,7 @@ import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
+import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
@@ -18,6 +19,7 @@ import { WatchlistService } from './watchlist.service';
     BenchmarkModule,
     DataGatheringModule,
     DataProviderModule,
+    ImpersonationModule,
     MarketDataModule,
     PrismaModule,
     SymbolProfileModule,

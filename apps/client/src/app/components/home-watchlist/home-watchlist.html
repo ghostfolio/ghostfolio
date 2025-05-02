@@ -20,7 +20,7 @@
     </div>
   </div>
 </div>
-@if (hasPermissionToCreateWatchlistItem) {
+@if (!hasImpersonationId && hasPermissionToCreateWatchlistItem) {
   <div class="fab-container">
     <a
       class="align-items-center d-flex justify-content-center"
