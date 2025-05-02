@@ -349,7 +349,7 @@ export function isDerivedCurrency(aCurrency: string) {
     return true;
   }
 
-  return DERIVED_CURRENCIES.find(({ currency }) => {
+  return DERIVED_CURRENCIES.some(({ currency }) => {
     return currency === aCurrency;
   });
 }

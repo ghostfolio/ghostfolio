@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Français (`fr`)
 
+### Fixed
+
+- Fixed the currency code validation by allowing `GBp`
+
 ## 2.158.0 - 2025-04-30
 
 ### Added
