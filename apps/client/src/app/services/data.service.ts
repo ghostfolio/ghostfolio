@@ -25,7 +25,7 @@ import {
   Access,
   AccessTokenResponse,
   AccountBalancesResponse,
-  Accounts,
+  AccountsResponse,
   AiPromptResponse,
   ApiKeyResponse,
   AssetProfileIdentifier,
@@ -191,7 +191,7 @@ export class DataService {
   public fetchAccounts({ filters }: { filters?: Filter[] } = {}) {
     const params = this.buildFiltersAsQueryParams({ filters });
 
-    return this.http.get<Accounts>('/api/v1/account', { params });
+    return this.http.get<AccountsResponse>('/api/v1/account', { params });
   }
 
   public fetchActivities({
