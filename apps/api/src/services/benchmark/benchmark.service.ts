@@ -212,6 +212,18 @@ export class BenchmarkService {
     };
   }
 
+  public getMarketCondition(
+    aPerformanceInPercent: number
+  ): Benchmark['marketCondition'] {
+    if (aPerformanceInPercent >= 0) {
+      return 'ALL_TIME_HIGH';
+    } else if (aPerformanceInPercent <= -0.2) {
+      return 'BEAR_MARKET';
+    } else {
+      return 'NEUTRAL_MARKET';
+    }
+  }
+
   private async calculateAndCacheBenchmarks({
     enableSharing = false
   }): Promise<BenchmarkResponse['benchmarks']> {
@@ -301,17 +313,5 @@ export class BenchmarkService {
     }
 
     return benchmarks;
-  }
-
-  private getMarketCondition(
-    aPerformanceInPercent: number
-  ): Benchmark['marketCondition'] {
-    if (aPerformanceInPercent >= 0) {
-      return 'ALL_TIME_HIGH';
-    } else if (aPerformanceInPercent <= -0.2) {
-      return 'BEAR_MARKET';
-    } else {
-      return 'NEUTRAL_MARKET';
-    }
   }
 }
