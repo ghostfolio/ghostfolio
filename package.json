@@ -93,7 +93,7 @@
     "@stripe/stripe-js": "5.4.0",
     "alphavantage": "2.2.0",
     "big.js": "6.2.2",
-    "bootstrap": "4.6.0",
+    "bootstrap": "4.6.2",
     "bull": "4.16.5",
     "cache-manager": "5.7.6",
     "cache-manager-redis-yet": "5.1.4",
