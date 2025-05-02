@@ -2831,7 +2831,7 @@
       </trans-unit>
       <trans-unit id="a4a68fbb5bf56e4bccaf5e73ba2d9567f754e7ca" datatype="html">
         <source> Hello, <x id="INTERPOLATION" equiv-text="{{ publicPortfolioDetails?.alias ?? defaultAlias }}"/> has shared a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with you! </source>
-        <target state="new"> Bonjour, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? defaultAlias }}"/> a partagé un <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> avec vous ! </target>
+        <target state="translated"> Bonjour, <x id="INTERPOLATION" equiv-text="{{ portfolioPublicDetails?.alias ?? defaultAlias }}"/> a partagé un <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Portefeuille<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> avec vous ! </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">4</context>
@@ -7931,7 +7931,7 @@
       </trans-unit>
       <trans-unit id="1efa64b89c9852e7099159ab06af9dcf49870438" datatype="html">
         <source>Add asset to watchlist</source>
-        <target state="new">Add asset to watchlist</target>
+        <target state="translated">Ajouter un actif à la liste de suivi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-watchlist/create-watchlist-item-dialog/create-watchlist-item-dialog.html</context>
           <context context-type="linenumber">7</context>
@@ -7939,7 +7939,7 @@
       </trans-unit>
       <trans-unit id="7a6d28bd1c36c8298c95b7965abf226b218be50d" datatype="html">
         <source>Watchlist</source>
-        <target state="new">Watchlist</target>
+        <target state="translated">Liste de suivi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-watchlist/home-watchlist.html</context>
           <context context-type="linenumber">4</context>
@@ -7947,7 +7947,7 @@
       </trans-unit>
       <trans-unit id="4558213855845176930" datatype="html">
         <source>Watchlist</source>
-        <target state="new">Watchlist</target>
+        <target state="translated">Liste de suivi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">44</context>
@@ -7959,7 +7959,7 @@
       </trans-unit>
       <trans-unit id="e9d59bb8bf6c08243d5411c55ddbdf925c7c799c" datatype="html">
         <source>Get Early Access</source>
-        <target state="new">Get Early Access</target>
+        <target state="translated">Obtenir un accès anticipé</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.html</context>
           <context context-type="linenumber">29</context>
@@ -7967,7 +7967,7 @@
       </trans-unit>
       <trans-unit id="627795342008207050" datatype="html">
         <source>Do you really want to delete this item?</source>
-        <target state="new">Do you really want to delete this item?</target>
+        <target state="translated">Voulez-vous vraiment supprimer cet élément?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.ts</context>
           <context context-type="linenumber">122</context>

@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the watchlist by the date of the last all time high, the current change to the all time high and the current market condition (experimental)
 
+### Changed
+
+- Improved the language localization for Français (`fr`)
+
 ## 2.158.0 - 2025-04-30
 
 ### Added
