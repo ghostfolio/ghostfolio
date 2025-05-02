@@ -112,6 +112,10 @@ export class WatchlistService {
 
     const watchlist = await Promise.all(
       user.watchlist.map(async ({ dataSource, symbol }) => {
+        const assetProfile = assetProfiles.find((profile) => {
+          return profile.dataSource === dataSource && profile.symbol === symbol;
+        });
+
         const allTimeHigh = await this.marketDataService.getMax({
           dataSource,
           symbol
@@ -123,10 +127,6 @@ export class WatchlistService {
             quotes[symbol]?.marketPrice
           );
 
-        const assetProfile = assetProfiles.find((profile) => {
-          return profile.dataSource === dataSource && profile.symbol === symbol;
-        });
-
         return {
           dataSource,
           symbol,
@@ -135,8 +135,8 @@ export class WatchlistService {
           name: assetProfile?.name,
           performances: {
             allTimeHigh: {
-              date: allTimeHigh?.date,
-              performancePercent
+              performancePercent,
+              date: allTimeHigh?.date
             }
           }
         };
