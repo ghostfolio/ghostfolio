@@ -1,6 +1,5 @@
 import type { Access } from './access.interface';
 import type { AccountBalance } from './account-balance.interface';
-import type { Accounts } from './accounts.interface';
 import type { AdminData } from './admin-data.interface';
 import type { AdminJobs } from './admin-jobs.interface';
 import type { AdminMarketDataDetails } from './admin-market-data-details.interface';
@@ -40,6 +39,7 @@ import type { Position } from './position.interface';
 import type { Product } from './product';
 import type { AccessTokenResponse } from './responses/access-token-response.interface';
 import type { AccountBalancesResponse } from './responses/account-balances-response.interface';
+import type { AccountsResponse } from './responses/accounts-response.interface';
 import type { AiPromptResponse } from './responses/ai-prompt-response.interface';
 import type { ApiKeyResponse } from './responses/api-key-response.interface';
 import type { BenchmarkResponse } from './responses/benchmark-response.interface';
@@ -74,7 +74,7 @@ export {
   AccessTokenResponse,
   AccountBalance,
   AccountBalancesResponse,
-  Accounts,
+  AccountsResponse,
   AdminData,
   AdminJobs,
   AdminMarketData,

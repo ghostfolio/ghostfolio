@@ -1,6 +1,6 @@
 import { AccountWithValue } from '@ghostfolio/common/types';
 
-export interface Accounts {
+export interface AccountsResponse {
   accounts: AccountWithValue[];
   totalBalanceInBaseCurrency: number;
   totalValueInBaseCurrency: number;

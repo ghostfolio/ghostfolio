@@ -35,7 +35,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
 import {
-  Accounts,
+  AccountsResponse,
   EnhancedSymbolProfile,
   Filter,
   HistoricalDataItem,
@@ -209,7 +209,7 @@ export class PortfolioService {
     filters?: Filter[];
     userId: string;
     withExcludedAccounts?: boolean;
-  }): Promise<Accounts> {
+  }): Promise<AccountsResponse> {
     const accounts = await this.getAccounts({
       filters,
       userId,

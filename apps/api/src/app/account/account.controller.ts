@@ -9,7 +9,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   AccountBalancesResponse,
-  Accounts
+  AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
@@ -90,7 +90,7 @@ export class AccountController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string
-  ): Promise<Accounts> {
+  ): Promise<AccountsResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 
