@@ -1,5 +1,12 @@
-import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import {
+  AssetProfileIdentifier,
+  Benchmark
+} from '@ghostfolio/common/interfaces';
 
 export interface WatchlistResponse {
-  watchlist: AssetProfileIdentifier[];
+  watchlist: (AssetProfileIdentifier & {
+    marketCondition: Benchmark['marketCondition'];
+    name: string;
+    performances: Benchmark['performances'];
+  })[];
 }
