@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Français (`fr`)
+- Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
 
 ### Fixed
 
@@ -29,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed `Order` to `activities` in the `Account` database schema
 - Improved the language localization for German (`de`)
-- Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
 
 ### Fixed
 
