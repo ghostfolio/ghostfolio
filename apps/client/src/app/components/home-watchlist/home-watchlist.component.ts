@@ -120,12 +120,12 @@ export class HomeWatchlistComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ watchlist }) => {
         this.watchlist = watchlist.map(
-          ({ dataSource, name, performances, symbol }) => ({
+          ({ dataSource, marketCondition, name, performances, symbol }) => ({
             dataSource,
+            marketCondition,
             name,
             performances,
             symbol,
-            marketCondition: null,
             trend50d: 'UNKNOWN' as BenchmarkTrend,
             trend200d: 'UNKNOWN' as BenchmarkTrend
           })

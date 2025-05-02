@@ -106,7 +106,8 @@ export class WatchlistService {
         return { dataSource, symbol };
       })
     });
-    const symbolProfiles = await this.symbolProfileService.getSymbolProfiles(
+
+    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
       user.watchlist
     );
 
@@ -116,19 +117,23 @@ export class WatchlistService {
           dataSource,
           symbol
         });
+
         const performancePercent =
           this.benchmarkService.calculateChangeInPercentage(
             allTimeHigh?.marketPrice,
             quotes[symbol]?.marketPrice
           );
-        const symbolProfile = symbolProfiles.find((profile) => {
+
+        const assetProfile = assetProfiles.find((profile) => {
           return profile.dataSource === dataSource && profile.symbol === symbol;
         });
 
         return {
           dataSource,
           symbol,
-          name: symbolProfile?.name,
+          marketCondition:
+            this.benchmarkService.getMarketCondition(performancePercent),
+          name: assetProfile?.name,
           performances: {
             allTimeHigh: {
               date: allTimeHigh?.date,
@@ -139,6 +144,8 @@ export class WatchlistService {
       })
     );
 
-    return watchlist.sort((a, b) => a.name.localeCompare(b.name));
+    return watchlist.sort((a, b) => {
+      return a.name.localeCompare(b.name);
+    });
   }
 }
