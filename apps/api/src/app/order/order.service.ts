@@ -531,38 +531,46 @@ export class OrderService {
 
         const value = new Big(order.quantity).mul(order.unitPrice).toNumber();
 
+        const [
+          feeInAssetProfileCurrency,
+          feeInBaseCurrency,
+          unitPriceInAssetProfileCurrency,
+          valueInBaseCurrency
+        ] = await Promise.all([
+          this.exchangeRateDataService.toCurrencyAtDate(
+            order.fee,
+            order.currency ?? order.SymbolProfile.currency,
+            order.SymbolProfile.currency,
+            order.date
+          ),
+          this.exchangeRateDataService.toCurrencyAtDate(
+            order.fee,
+            order.currency ?? order.SymbolProfile.currency,
+            userCurrency,
+            order.date
+          ),
+          this.exchangeRateDataService.toCurrencyAtDate(
+            order.unitPrice,
+            order.currency ?? order.SymbolProfile.currency,
+            order.SymbolProfile.currency,
+            order.date
+          ),
+          this.exchangeRateDataService.toCurrencyAtDate(
+            value,
+            order.currency ?? order.SymbolProfile.currency,
+            userCurrency,
+            order.date
+          )
+        ]);
+
         return {
           ...order,
           value,
-          feeInAssetProfileCurrency:
-            await this.exchangeRateDataService.toCurrencyAtDate(
-              order.fee,
-              order.currency ?? order.SymbolProfile.currency,
-              order.SymbolProfile.currency,
-              order.date
-            ),
-          feeInBaseCurrency:
-            await this.exchangeRateDataService.toCurrencyAtDate(
-              order.fee,
-              order.currency ?? order.SymbolProfile.currency,
-              userCurrency,
-              order.date
-            ),
+          feeInAssetProfileCurrency,
+          feeInBaseCurrency,
           SymbolProfile: assetProfile,
-          unitPriceInAssetProfileCurrency:
-            await this.exchangeRateDataService.toCurrencyAtDate(
-              order.unitPrice,
-              order.currency ?? order.SymbolProfile.currency,
-              order.SymbolProfile.currency,
-              order.date
-            ),
-          valueInBaseCurrency:
-            await this.exchangeRateDataService.toCurrencyAtDate(
-              value,
-              order.currency ?? order.SymbolProfile.currency,
-              userCurrency,
-              order.date
-            )
+          unitPriceInAssetProfileCurrency,
+          valueInBaseCurrency
         };
       })
     );
