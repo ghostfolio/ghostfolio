@@ -101,15 +101,14 @@ export class WatchlistService {
       where: { id: userId }
     });
 
-    const quotes = await this.dataProviderService.getQuotes({
-      items: user.watchlist.map(({ dataSource, symbol }) => {
-        return { dataSource, symbol };
+    const [assetProfiles, quotes] = await Promise.all([
+      this.symbolProfileService.getSymbolProfiles(user.watchlist),
+      this.dataProviderService.getQuotes({
+        items: user.watchlist.map(({ dataSource, symbol }) => {
+          return { dataSource, symbol };
+        })
       })
-    });
-
-    const assetProfiles = await this.symbolProfileService.getSymbolProfiles(
-      user.watchlist
-    );
+    ]);
 
     const watchlist = await Promise.all(
       user.watchlist.map(async ({ dataSource, symbol }) => {
