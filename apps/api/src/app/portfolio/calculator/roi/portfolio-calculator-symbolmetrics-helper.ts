@@ -59,20 +59,11 @@ export class RoiPortfolioCalculatorSymbolMetricsHelper {
                 new Big(0))
         ) ?? new Big(0);
 
-      let investmentBasis =
-        symbolMetricsHelper.symbolMetrics.currentValuesWithCurrencyEffect[
-          rangeStartDateString
-        ];
-
-      if (
-        !symbolMetricsHelper.symbolMetrics.currentValuesWithCurrencyEffect[
-          rangeStartDateString
-        ]?.gt(0)
-      ) {
-        investmentBasis =
-          symbolMetricsHelper.symbolMetrics
-            .timeWeightedInvestmentValuesWithCurrencyEffect[rangeEndDateString];
-      }
+      const investmentBasis = this.calculateInvestmentBasis(
+        symbolMetricsHelper,
+        rangeStartDateString,
+        rangeEndDateString
+      );
 
       symbolMetricsHelper.symbolMetrics.netPerformancePercentageWithCurrencyEffectMap[
         dateRange
@@ -864,5 +855,40 @@ export class RoiPortfolioCalculatorSymbolMetricsHelper {
     ]?.[order.SymbolProfile.symbol].mul(
       symbolMetricsHelper.exchangeRateAtOrderDate
     );
+  }
+
+  private calculateInvestmentBasis(
+    symbolMetricsHelper: PortfolioCalculatorSymbolMetricsHelperObject,
+    rangeStartDateString: string,
+    rangeEndDateString: string
+  ) {
+    let investmentBasis = this.getValueOrZero(
+      symbolMetricsHelper.symbolMetrics.currentValuesWithCurrencyEffect[
+        rangeStartDateString
+      ]
+    ).plus(
+      this.getValueOrZero(
+        symbolMetricsHelper.symbolMetrics
+          .timeWeightedInvestmentValuesWithCurrencyEffect[rangeEndDateString]
+      )?.minus(
+        this.getValueOrZero(
+          symbolMetricsHelper.symbolMetrics
+            .timeWeightedInvestmentValuesWithCurrencyEffect[
+            rangeStartDateString
+          ]
+        )
+      )
+    );
+
+    if (!investmentBasis.gt(0)) {
+      investmentBasis =
+        symbolMetricsHelper.symbolMetrics
+          .timeWeightedInvestmentValuesWithCurrencyEffect[rangeEndDateString];
+    }
+    return investmentBasis;
+  }
+
+  private getValueOrZero(value: Big | undefined) {
+    return value ?? new Big(0);
   }
 }
