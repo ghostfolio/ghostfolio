@@ -20,6 +20,7 @@ import {
 import {
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -56,7 +57,6 @@ import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
 import { Big } from 'big.js';
 import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
-import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { PortfolioService } from './portfolio.service';
 import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
@@ -374,8 +374,8 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<PortfolioHoldingDetail> {
-    const holding = await this.portfolioService.getPosition(
+  ): Promise<PortfolioHoldingResponse> {
+    const holding = await this.portfolioService.getHolding(
       dataSource,
       impersonationId,
       symbol
@@ -621,8 +621,8 @@ export class PortfolioController {
     @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
-  ): Promise<PortfolioHoldingDetail> {
-    const holding = await this.portfolioService.getPosition(
+  ): Promise<PortfolioHoldingResponse> {
+    const holding = await this.portfolioService.getHolding(
       dataSource,
       impersonationId,
       symbol
@@ -672,7 +672,7 @@ export class PortfolioController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    const holding = await this.portfolioService.getPosition(
+    const holding = await this.portfolioService.getHolding(
       dataSource,
       impersonationId,
       symbol
@@ -707,7 +707,7 @@ export class PortfolioController {
     @Param('dataSource') dataSource: DataSource,
     @Param('symbol') symbol: string
   ): Promise<void> {
-    const holding = await this.portfolioService.getPosition(
+    const holding = await this.portfolioService.getHolding(
       dataSource,
       impersonationId,
       symbol

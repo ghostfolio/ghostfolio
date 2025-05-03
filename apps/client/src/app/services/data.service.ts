@@ -13,7 +13,6 @@ import {
   Activity
 } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -40,6 +39,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -406,7 +406,7 @@ export class DataService {
     symbol: string;
   }) {
     return this.http
-      .get<PortfolioHoldingDetail>(
+      .get<PortfolioHoldingResponse>(
         `/api/v1/portfolio/holding/${dataSource}/${symbol}`
       )
       .pipe(
