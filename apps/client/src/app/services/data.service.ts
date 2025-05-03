@@ -407,7 +407,7 @@ export class DataService {
   }) {
     return this.http
       .get<PortfolioHoldingDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
       )
       .pipe(
         map((data) => {
@@ -776,7 +776,7 @@ export class DataService {
     tags
   }: { tags: Tag[] } & AssetProfileIdentifier) {
     return this.http.put<void>(
-      `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
+      `/api/v1/portfolio/holding/${dataSource}/${symbol}/tags`,
       { tags }
     );
   }
