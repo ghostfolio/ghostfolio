@@ -567,9 +567,9 @@ export class OrderService {
           ...order,
           value,
           feeInAssetProfileCurrency,
-          feeInBaseCurrency,
           SymbolProfile: assetProfile,
           unitPriceInAssetProfileCurrency,
+          feeInBaseCurrency,
           valueInBaseCurrency
         };
       })
