@@ -106,11 +106,11 @@
           [locale]="data.locale"
           [ngClass]="{
             'text-danger':
-              minPrice?.toFixed(2) === marketPrice?.toFixed(2) &&
-              maxPrice?.toFixed(2) !== minPrice?.toFixed(2)
+              marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
+              marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
           }"
           [unit]="SymbolProfile?.currency"
-          [value]="minPrice"
+          [value]="marketPriceMin"
           >Minimum Price</gf-value
         >
       </div>
@@ -122,11 +122,11 @@
           [locale]="data.locale"
           [ngClass]="{
             'text-success':
-              maxPrice?.toFixed(2) === marketPrice?.toFixed(2) &&
-              maxPrice?.toFixed(2) !== minPrice?.toFixed(2)
+              marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
+              marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
           }"
           [unit]="SymbolProfile?.currency"
-          [value]="maxPrice"
+          [value]="marketPriceMax"
           >Maximum Price</gf-value
         >
       </div>
