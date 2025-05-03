@@ -2,7 +2,6 @@ import { PortfolioCalculator } from '@ghostfolio/api/app/portfolio/calculator/po
 import { LogPerformance } from '@ghostfolio/api/interceptors/performance-logging/performance-logging.interceptor';
 import {
   AssetProfileIdentifier,
-  HistoricalDataItem,
   SymbolMetrics
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
@@ -17,84 +16,6 @@ import { RoiPortfolioCalculatorSymbolMetricsHelper } from './portfolio-calculato
 
 export class RoiPortfolioCalculator extends PortfolioCalculator {
   private chartDates: string[];
-
-  //TODO Overwrite historicalData creation for ROI --> Use TimeWeighted as used for chart
-
-  @LogPerformance
-  public override async getPerformance({
-    end,
-    start
-  }: {
-    end: string | number | Date;
-    start: string | number | Date;
-  }): Promise<{
-    chart: HistoricalDataItem[];
-    netPerformance: number;
-    netPerformanceInPercentage: number;
-    netPerformanceWithCurrencyEffect: number;
-    netPerformanceInPercentageWithCurrencyEffect: number;
-    netWorth: number;
-    totalInvestment: number;
-    valueWithCurrencyEffect: number;
-  }> {
-    await this.snapshotPromise;
-    const { positions } = this.snapshot;
-
-    const { chart } = await super.getPerformance({ start, end });
-
-    const last = chart.at(-1);
-    const netWorth = last.netWorth;
-    const totalInvestment = last.totalInvestment;
-    const valueWithCurrencyEffect = last.valueWithCurrencyEffect;
-
-    let netPerformance: number;
-    let netPerformanceInPercentage: number;
-    let netPerformanceWithCurrencyEffect: number;
-    let netPerformanceInPercentageWithCurrencyEffect: number;
-
-    const totalInvestments = positions.reduce(
-      (total, position) => {
-        return {
-          total: total.total.plus(position.investment),
-          totalWithCurrencyEffect: total.totalWithCurrencyEffect.plus(
-            position.investmentWithCurrencyEffect
-          )
-        };
-      },
-      { total: new Big(0), totalWithCurrencyEffect: new Big(0) }
-    );
-    for (const position of positions) {
-      netPerformance = netPerformance + position.netPerformance.toNumber();
-      // TODO GET Net performance with currency effect
-      netPerformanceInPercentage =
-        netPerformanceInPercentage +
-        position.netPerformancePercentage
-          .mul(position.investment.div(totalInvestments.total))
-          .toNumber();
-      netPerformanceInPercentageWithCurrencyEffect =
-        netPerformanceInPercentageWithCurrencyEffect +
-        position.netPerformancePercentage
-          .mul(
-            position.investmentWithCurrencyEffect.div(
-              totalInvestments.totalWithCurrencyEffect
-            )
-          )
-          .toNumber();
-
-      //TODO Calculate performance values not using chart
-    }
-
-    return {
-      chart,
-      netPerformance,
-      netPerformanceInPercentage,
-      netPerformanceWithCurrencyEffect,
-      netPerformanceInPercentageWithCurrencyEffect,
-      netWorth,
-      totalInvestment,
-      valueWithCurrencyEffect
-    };
-  }
 
   @LogPerformance
   protected calculateOverallPerformance(
