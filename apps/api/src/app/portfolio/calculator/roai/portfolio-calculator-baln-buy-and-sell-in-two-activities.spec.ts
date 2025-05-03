@@ -90,6 +90,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-22'),
           feeInAssetProfileCurrency: 1.55,
+          feeInBaseCurrency: 1.55,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -105,6 +106,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-30'),
           feeInAssetProfileCurrency: 1.65,
+          feeInBaseCurrency: 1.65,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -120,6 +122,7 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2021-11-30'),
           feeInAssetProfileCurrency: 0,
+          feeInBaseCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
