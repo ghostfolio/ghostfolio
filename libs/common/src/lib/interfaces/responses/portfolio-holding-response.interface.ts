@@ -7,7 +7,7 @@ import {
 
 import { Tag } from '@prisma/client';
 
-export interface PortfolioHoldingDetail {
+export interface PortfolioHoldingResponse {
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;

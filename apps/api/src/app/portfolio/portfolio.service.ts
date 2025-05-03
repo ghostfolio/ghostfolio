@@ -41,6 +41,7 @@ import {
   HistoricalDataItem,
   InvestmentItem,
   PortfolioDetails,
+  PortfolioHoldingResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
   PortfolioPosition,
@@ -87,7 +88,6 @@ import { isEmpty } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
-import { PortfolioHoldingDetail } from './interfaces/portfolio-holding-detail.interface';
 import { RulesService } from './rules.service';
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
@@ -631,11 +631,11 @@ export class PortfolioService {
     };
   }
 
-  public async getPosition(
+  public async getHolding(
     aDataSource: DataSource,
     aImpersonationId: string,
     aSymbol: string
-  ): Promise<PortfolioHoldingDetail> {
+  ): Promise<PortfolioHoldingResponse> {
     const userId = await this.getUserId(aImpersonationId, this.request.user.id);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
@@ -927,7 +927,7 @@ export class PortfolioService {
     }
   }
 
-  public async getPositions({
+  public async getHoldings({
     dateRange = 'max',
     filters,
     impersonationId

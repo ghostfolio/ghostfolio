@@ -50,7 +50,7 @@ export class ImportService {
   }: AssetProfileIdentifier): Promise<Activity[]> {
     try {
       const { firstBuyDate, historicalData, orders } =
-        await this.portfolioService.getPosition(dataSource, undefined, symbol);
+        await this.portfolioService.getHolding(dataSource, undefined, symbol);
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
