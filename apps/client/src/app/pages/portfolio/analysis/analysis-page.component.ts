@@ -17,6 +17,7 @@ import type {
   DateRange,
   GroupBy
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -305,6 +306,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           {
             date,
             netPerformanceInPercentageWithCurrencyEffect,
+            timeWeightedPerformanceInPercentageWithCurrencyEffect,
             totalInvestmentValueWithCurrencyEffect,
             valueInPercentage,
             valueWithCurrencyEffect
@@ -325,7 +327,11 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           }
           this.performanceDataItemsInPercentage.push({
             date,
-            value: netPerformanceInPercentageWithCurrencyEffect
+            value:
+              this.user?.settings?.performanceCalculationType ===
+              PerformanceCalculationType.ROI
+                ? timeWeightedPerformanceInPercentageWithCurrencyEffect
+                : netPerformanceInPercentageWithCurrencyEffect
           });
         }
 
