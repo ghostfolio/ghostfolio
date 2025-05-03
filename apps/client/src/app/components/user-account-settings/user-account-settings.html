@@ -34,7 +34,6 @@
                 <mat-form-field appearance="outline" class="w-100 without-hint">
                   <mat-select
                     name="performanceCalculationType"
-                    [disabled]="true"
                     [value]="user.settings.performanceCalculationType"
                     (selectionChange)="
                       onChangeUserSetting(
@@ -45,6 +44,9 @@
                   >
                     <mat-option value="ROAI"
                       >Return on Average Investment (ROAI)</mat-option
+                    >
+                    <mat-option value="ROI"
+                      >Return on Investment (ROI)</mat-option
                     >
                   </mat-select>
                 </mat-form-field>

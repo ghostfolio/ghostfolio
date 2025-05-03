@@ -3,7 +3,8 @@ import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  PortfolioPosition
+  PortfolioPosition,
+  PortfolioPerformance
 } from '@ghostfolio/common/interfaces';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -55,6 +56,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() holdings: PortfolioPosition[];
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
+  @Input() performance: PortfolioPerformance;
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
@@ -94,16 +96,10 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.dataSource = new MatTableDataSource(this.holdings);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.totalValue = this.dataSource.data.reduce(
-      (sum, current) => (sum += current.valueInBaseCurrency),
-      0
-    );
-    this.totalChange = this.dataSource.data.reduce(
-      (sum, current) => (sum += current.netPerformanceWithCurrencyEffect),
-      0
-    );
+    this.totalValue = this.performance.currentValueInBaseCurrency;
+    this.totalChange = this.performance.netPerformanceWithCurrencyEffect;
     this.totalChangePercentage =
-      this.totalChange / (this.totalValue - this.totalChange);
+      this.performance.netPerformancePercentageWithCurrencyEffect;
 
     if (this.holdings) {
       this.isLoading = false;

@@ -117,7 +117,7 @@ describe('PortfolioCalculator', () => {
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.ROAI,
+        calculationType: PerformanceCalculationType.ROI,
         currency: 'CHF',
         userId: userDummyData.id
       });
@@ -175,9 +175,9 @@ describe('PortfolioCalculator', () => {
         netPerformance: 19.86,
         netPerformanceInPercentage: 0.13100263852242744,
         netPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
-        netPerformanceWithCurrencyEffect: 19.86,
         timeWeightedPerformanceInPercentage: 0.13100263852242744,
         timeWeightedPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
+        netPerformanceWithCurrencyEffect: 19.86,
         netWorth: 0,
         totalAccountBalance: 0,
         totalInvestment: 0,

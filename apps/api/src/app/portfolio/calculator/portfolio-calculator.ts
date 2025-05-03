@@ -64,19 +64,19 @@ export abstract class PortfolioCalculator {
   protected configurationService: ConfigurationService;
   protected currency: string;
   protected currentRateService: CurrentRateService;
-  private dataProviderInfos: DataProviderInfo[];
-  private endDate: Date;
   protected exchangeRateDataService: ExchangeRateDataService;
   protected orderService: OrderService;
+  protected snapshot: PortfolioSnapshot;
+  protected snapshotPromise: Promise<void>;
+  protected userId: string;
+  protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
+  private dataProviderInfos: DataProviderInfo[];
+  private endDate: Date;
   private filters: Filter[];
   private portfolioSnapshotService: PortfolioSnapshotService;
   private redisCacheService: RedisCacheService;
-  private snapshot: PortfolioSnapshot;
-  private snapshotPromise: Promise<void>;
   private startDate: Date;
   private transactionPoints: TransactionPoint[];
-  protected userId: string;
-  protected marketMap: { [date: string]: { [symbol: string]: Big } } = {};
   private holdings: { [date: string]: { [symbol: string]: Big } } = {};
   private holdingCurrencies: { [symbol: string]: string } = {};
 
@@ -557,56 +557,9 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    const historicalData: HistoricalDataItem[] = Object.entries(
+    const historicalData: HistoricalDataItem[] = this.getHistoricalDataItems(
       accumulatedValuesByDate
-    ).map(([date, values]) => {
-      const {
-        investmentValueWithCurrencyEffect,
-        totalAccountBalanceWithCurrencyEffect,
-        totalCurrentValue,
-        totalCurrentValueWithCurrencyEffect,
-        totalInvestmentValue,
-        totalInvestmentValueWithCurrencyEffect,
-        totalNetPerformanceValue,
-        totalNetPerformanceValueWithCurrencyEffect,
-        totalTimeWeightedInvestmentValue,
-        totalTimeWeightedInvestmentValueWithCurrencyEffect
-      } = values;
-
-      const netPerformanceInPercentage = totalTimeWeightedInvestmentValue.eq(0)
-        ? 0
-        : totalNetPerformanceValue
-            .div(totalTimeWeightedInvestmentValue)
-            .toNumber();
-
-      const netPerformanceInPercentageWithCurrencyEffect =
-        totalTimeWeightedInvestmentValueWithCurrencyEffect.eq(0)
-          ? 0
-          : totalNetPerformanceValueWithCurrencyEffect
-              .div(totalTimeWeightedInvestmentValueWithCurrencyEffect)
-              .toNumber();
-
-      return {
-        date,
-        netPerformanceInPercentage,
-        netPerformanceInPercentageWithCurrencyEffect,
-        investmentValueWithCurrencyEffect:
-          investmentValueWithCurrencyEffect.toNumber(),
-        netPerformance: totalNetPerformanceValue.toNumber(),
-        netPerformanceWithCurrencyEffect:
-          totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        // TODO: Add valuables
-        netWorth: totalCurrentValueWithCurrencyEffect
-          .plus(totalAccountBalanceWithCurrencyEffect)
-          .toNumber(),
-        totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
-        totalInvestment: totalInvestmentValue.toNumber(),
-        totalInvestmentValueWithCurrencyEffect:
-          totalInvestmentValueWithCurrencyEffect.toNumber(),
-        value: totalCurrentValue.toNumber(),
-        valueWithCurrencyEffect: totalCurrentValueWithCurrencyEffect.toNumber()
-      };
-    });
+    );
 
     const overall = this.calculateOverallPerformance(positions);
 
@@ -668,30 +621,26 @@ export abstract class PortfolioCalculator {
       {}
     );
 
-    const totalInvestment = await Object.keys(holdings[endString]).reduce(
-      (sum, holding) => {
-        if (!holdings[endString][holding].toNumber()) {
-          return sum;
-        }
-        const symbol = marketMap.values.find((m) => m.symbol === holding);
+    return Object.keys(holdings[endString]).reduce((sum, holding) => {
+      if (!holdings[endString][holding].toNumber()) {
+        return sum;
+      }
+      const symbol = marketMap.values.find((m) => m.symbol === holding);
 
-        if (symbol?.marketPrice === undefined) {
-          Logger.warn(
-            `Missing historical market data for ${holding} (${end})`,
-            'PortfolioCalculator'
-          );
-          return sum;
-        } else {
-          const symbolCurrency = this.getCurrency(holding);
-          const price = new Big(currencyRates[symbolCurrency]).mul(
-            symbol.marketPrice
-          );
-          return sum.plus(new Big(price).mul(holdings[endString][holding]));
-        }
-      },
-      new Big(0)
-    );
-    return totalInvestment;
+      if (symbol?.marketPrice === undefined) {
+        Logger.warn(
+          `Missing historical market data for ${holding} (${end})`,
+          'PortfolioCalculator'
+        );
+        return sum;
+      } else {
+        const symbolCurrency = this.getCurrency(holding);
+        const price = new Big(currencyRates[symbolCurrency]).mul(
+          symbol.marketPrice
+        );
+        return sum.plus(new Big(price).mul(holdings[endString][holding]));
+      }
+    }, new Big(0));
   }
 
   @LogPerformance
@@ -774,7 +723,16 @@ export abstract class PortfolioCalculator {
   }
 
   @LogPerformance
-  public async getPerformance({ end, start }) {
+  public async getPerformance({ end, start }): Promise<{
+    chart: HistoricalDataItem[];
+    netPerformance: number;
+    netPerformanceInPercentage: number;
+    netPerformanceWithCurrencyEffect: number;
+    netPerformanceInPercentageWithCurrencyEffect: number;
+    netWorth: number;
+    totalInvestment: number;
+    valueWithCurrencyEffect: number;
+  }> {
     await this.snapshotPromise;
 
     const { historicalData } = this.snapshot;
@@ -783,6 +741,10 @@ export abstract class PortfolioCalculator {
 
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
+    let lastTimeWeightedPerformancePercentage: number;
+    let lastTimeWeightedPerformancePercentageWithCurrencyEffect: number;
+    let timeWeightedPerformanceInPercentage: number;
+    let timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
     const totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (const historicalDataItem of historicalData) {
@@ -815,6 +777,19 @@ export abstract class PortfolioCalculator {
               totalInvestmentValuesWithCurrencyEffect.length
             : 0;
 
+        ({
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect,
+          lastTimeWeightedPerformancePercentage,
+          lastTimeWeightedPerformancePercentageWithCurrencyEffect
+        } = this.calculateTimeWeightedPerformance(
+          lastTimeWeightedPerformancePercentage,
+          historicalDataItem,
+          lastTimeWeightedPerformancePercentageWithCurrencyEffect,
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect
+        ));
+
         chart.push({
           ...historicalDataItem,
           netPerformance:
@@ -829,7 +804,9 @@ export abstract class PortfolioCalculator {
             timeWeightedInvestmentValue === 0
               ? 0
               : netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue
+                timeWeightedInvestmentValue,
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect
           // TODO: Add net worth with valuables
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)
@@ -839,42 +816,108 @@ export abstract class PortfolioCalculator {
       }
     }
 
-    return { chart };
+    const last = chart.at(-1);
+
+    return {
+      chart,
+      netPerformance: last?.netPerformance ?? 0,
+      netPerformanceInPercentage: last?.netPerformanceInPercentage ?? 0,
+      netPerformanceWithCurrencyEffect:
+        last?.netPerformanceWithCurrencyEffect ?? 0,
+      netPerformanceInPercentageWithCurrencyEffect:
+        last?.netPerformanceInPercentageWithCurrencyEffect ?? 0,
+      netWorth: last?.netWorth ?? 0,
+      totalInvestment: last?.totalInvestment ?? 0,
+      valueWithCurrencyEffect: last?.valueWithCurrencyEffect ?? 0
+    };
   }
 
-  public getStartDate() {
-    let firstAccountBalanceDate: Date;
-    let firstActivityDate: Date;
+  @LogPerformance
+  protected getHistoricalDataItems(accumulatedValuesByDate: {
+    [date: string]: {
+      investmentValueWithCurrencyEffect: Big;
+      totalAccountBalanceWithCurrencyEffect: Big;
+      totalCurrentValue: Big;
+      totalCurrentValueWithCurrencyEffect: Big;
+      totalInvestmentValue: Big;
+      totalInvestmentValueWithCurrencyEffect: Big;
+      totalNetPerformanceValue: Big;
+      totalNetPerformanceValueWithCurrencyEffect: Big;
+      totalTimeWeightedInvestmentValue: Big;
+      totalTimeWeightedInvestmentValueWithCurrencyEffect: Big;
+    };
+  }): HistoricalDataItem[] {
+    let previousDateString = '';
+    let timeWeightedPerformancePreviousPeriod = new Big(0);
+    let timeWeightedPerformancePreviousPeriodWithCurrencyEffect = new Big(0);
+    return Object.entries(accumulatedValuesByDate).map(([date, values]) => {
+      const {
+        investmentValueWithCurrencyEffect,
+        totalAccountBalanceWithCurrencyEffect,
+        totalCurrentValue,
+        totalCurrentValueWithCurrencyEffect,
+        totalInvestmentValue,
+        totalInvestmentValueWithCurrencyEffect,
+        totalNetPerformanceValue,
+        totalNetPerformanceValueWithCurrencyEffect,
+        totalTimeWeightedInvestmentValue,
+        totalTimeWeightedInvestmentValueWithCurrencyEffect
+      } = values;
 
-    try {
-      const firstAccountBalanceDateString = this.accountBalanceItems[0]?.date;
-      firstAccountBalanceDate = firstAccountBalanceDateString
-        ? parseDate(firstAccountBalanceDateString)
-        : new Date();
-    } catch (error) {
-      firstAccountBalanceDate = new Date();
-    }
+      const netPerformanceInPercentage = totalTimeWeightedInvestmentValue.eq(0)
+        ? 0
+        : totalNetPerformanceValue
+            .div(totalTimeWeightedInvestmentValue)
+            .toNumber();
 
-    try {
-      const firstActivityDateString = this.transactionPoints[0].date;
-      firstActivityDate = firstActivityDateString
-        ? parseDate(firstActivityDateString)
-        : new Date();
-    } catch (error) {
-      firstActivityDate = new Date();
-    }
+      const netPerformanceInPercentageWithCurrencyEffect =
+        totalTimeWeightedInvestmentValueWithCurrencyEffect.eq(0)
+          ? 0
+          : totalNetPerformanceValueWithCurrencyEffect
+              .div(totalTimeWeightedInvestmentValueWithCurrencyEffect)
+              .toNumber();
 
-    return min([firstAccountBalanceDate, firstActivityDate]);
-  }
+      let timeWeightedPerformanceInPercentage: number;
+      let timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
+      ({
+        timeWeightedPerformanceInPercentage,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect,
+        previousDateString,
+        timeWeightedPerformancePreviousPeriod,
+        timeWeightedPerformancePreviousPeriodWithCurrencyEffect
+      } = this.handleTimeWeightedPerformance(
+        accumulatedValuesByDate,
+        previousDateString,
+        totalNetPerformanceValue,
+        totalNetPerformanceValueWithCurrencyEffect,
+        timeWeightedPerformancePreviousPeriod,
+        timeWeightedPerformancePreviousPeriodWithCurrencyEffect,
+        date
+      ));
 
-  public getTransactionPoints() {
-    return this.transactionPoints;
-  }
-
-  public async getValuablesInBaseCurrency() {
-    await this.snapshotPromise;
-
-    return this.snapshot.totalValuablesWithCurrencyEffect;
+      return {
+        date,
+        netPerformanceInPercentage,
+        netPerformanceInPercentageWithCurrencyEffect,
+        investmentValueWithCurrencyEffect:
+          investmentValueWithCurrencyEffect.toNumber(),
+        netPerformance: totalNetPerformanceValue.toNumber(),
+        netPerformanceWithCurrencyEffect:
+          totalNetPerformanceValueWithCurrencyEffect.toNumber(),
+        // TODO: Add valuables
+        netWorth: totalCurrentValueWithCurrencyEffect
+          .plus(totalAccountBalanceWithCurrencyEffect)
+          .toNumber(),
+        totalAccountBalance: totalAccountBalanceWithCurrencyEffect.toNumber(),
+        totalInvestment: totalInvestmentValue.toNumber(),
+        totalInvestmentValueWithCurrencyEffect:
+          totalInvestmentValueWithCurrencyEffect.toNumber(),
+        value: totalCurrentValue.toNumber(),
+        valueWithCurrencyEffect: totalCurrentValueWithCurrencyEffect.toNumber(),
+        timeWeightedPerformanceInPercentage,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect
+      };
+    });
   }
 
   @LogPerformance
@@ -1258,6 +1301,76 @@ export abstract class PortfolioCalculator {
       );
   }
 
+  public getStartDate() {
+    let firstAccountBalanceDate: Date;
+    let firstActivityDate: Date;
+
+    try {
+      const firstAccountBalanceDateString = this.accountBalanceItems[0]?.date;
+      firstAccountBalanceDate = firstAccountBalanceDateString
+        ? parseDate(firstAccountBalanceDateString)
+        : new Date();
+    } catch (error) {
+      firstAccountBalanceDate = new Date();
+    }
+
+    try {
+      const firstActivityDateString = this.transactionPoints[0].date;
+      firstActivityDate = firstActivityDateString
+        ? parseDate(firstActivityDateString)
+        : new Date();
+    } catch (error) {
+      firstActivityDate = new Date();
+    }
+
+    return min([firstAccountBalanceDate, firstActivityDate]);
+  }
+
+  public getTransactionPoints() {
+    return this.transactionPoints;
+  }
+
+  public async getValuablesInBaseCurrency() {
+    await this.snapshotPromise;
+
+    return this.snapshot.totalValuablesWithCurrencyEffect;
+  }
+  private calculateTimeWeightedPerformance(
+    lastTimeWeightedPerformancePercentage: number,
+    historicalDataItem: HistoricalDataItem,
+    lastTimeWeightedPerformancePercentageWithCurrencyEffect: number,
+    timeWeightedPerformanceInPercentage: number,
+    timeWeightedPerformanceInPercentageWithCurrencyEffect: number
+  ): {
+    timeWeightedPerformanceInPercentage: number;
+    timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
+    lastTimeWeightedPerformancePercentage: number;
+    lastTimeWeightedPerformancePercentageWithCurrencyEffect: number;
+  } {
+    timeWeightedPerformanceInPercentage = lastTimeWeightedPerformancePercentage
+      ? (1 + timeWeightedPerformanceInPercentage) *
+          ((1 + historicalDataItem.timeWeightedPerformanceInPercentage) /
+            (1 + lastTimeWeightedPerformancePercentage)) -
+        1
+      : 0;
+    timeWeightedPerformanceInPercentageWithCurrencyEffect =
+      lastTimeWeightedPerformancePercentageWithCurrencyEffect
+        ? (1 + timeWeightedPerformanceInPercentageWithCurrencyEffect) *
+            ((1 +
+              historicalDataItem.timeWeightedPerformanceInPercentageWithCurrencyEffect) /
+              (1 + lastTimeWeightedPerformancePercentageWithCurrencyEffect)) -
+          1
+        : 0;
+    return {
+      timeWeightedPerformanceInPercentage,
+      timeWeightedPerformanceInPercentageWithCurrencyEffect,
+      lastTimeWeightedPerformancePercentage:
+        historicalDataItem.timeWeightedPerformanceInPercentage,
+      lastTimeWeightedPerformancePercentageWithCurrencyEffect:
+        historicalDataItem.timeWeightedPerformanceInPercentageWithCurrencyEffect
+    };
+  }
+
   private calculateHoldings(
     investmentByDate: { [date: string]: PortfolioOrder[] },
     start: Date,
@@ -1359,6 +1472,91 @@ export abstract class PortfolioCalculator {
     }
 
     return chartDateMap;
+  }
+
+  private handleTimeWeightedPerformance(
+    accumulatedValuesByDate: {
+      [date: string]: {
+        investmentValueWithCurrencyEffect: Big;
+        totalAccountBalanceWithCurrencyEffect: Big;
+        totalCurrentValue: Big;
+        totalCurrentValueWithCurrencyEffect: Big;
+        totalInvestmentValue: Big;
+        totalInvestmentValueWithCurrencyEffect: Big;
+        totalNetPerformanceValue: Big;
+        totalNetPerformanceValueWithCurrencyEffect: Big;
+        totalTimeWeightedInvestmentValue: Big;
+        totalTimeWeightedInvestmentValueWithCurrencyEffect: Big;
+      };
+    },
+    previousDateString: string,
+    totalNetPerformanceValue: Big,
+    totalNetPerformanceValueWithCurrencyEffect: Big,
+    timeWeightedPerformancePreviousPeriod: Big,
+    timeWeightedPerformancePreviousPeriodWithCurrencyEffect: Big,
+    date: string
+  ): {
+    timeWeightedPerformanceInPercentage: number;
+    timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
+    previousDateString: string;
+    timeWeightedPerformancePreviousPeriod: Big;
+    timeWeightedPerformancePreviousPeriodWithCurrencyEffect: Big;
+  } {
+    const previousValues = accumulatedValuesByDate[previousDateString] ?? {
+      totalNetPerformanceValue: new Big(0),
+      totalNetPerformanceValueWithCurrencyEffect: new Big(0),
+      totalTimeWeightedInvestmentValue: new Big(0),
+      totalTimeWeightedInvestmentValueWithCurrencyEffect: new Big(0),
+      totalCurrentValue: new Big(0),
+      totalCurrentValueWithCurrencyEffect: new Big(0)
+    };
+
+    const timeWeightedPerformanceCurrentPeriod = this.divideByOrZero(
+      (div) =>
+        totalNetPerformanceValue
+          .minus(previousValues.totalNetPerformanceValue)
+          .div(div),
+      previousValues.totalCurrentValue
+    );
+    const timeWeightedPerformanceCurrentPeriodWithCurrencyEffect =
+      this.divideByOrZero(
+        (div) =>
+          totalNetPerformanceValueWithCurrencyEffect
+            .minus(previousValues.totalNetPerformanceValueWithCurrencyEffect)
+            .div(div),
+        previousValues.totalCurrentValueWithCurrencyEffect
+      );
+
+    const timeWeightedPerformanceInPercentage = new Big(1)
+      .plus(timeWeightedPerformancePreviousPeriod)
+      .mul(new Big(1).plus(timeWeightedPerformanceCurrentPeriod))
+      .minus(1);
+    const timeWeightedPerformanceInPercentageWithCurrencyEffect = new Big(1)
+      .plus(timeWeightedPerformancePreviousPeriodWithCurrencyEffect)
+      .mul(
+        new Big(1).plus(timeWeightedPerformanceCurrentPeriodWithCurrencyEffect)
+      )
+      .minus(1);
+
+    return {
+      timeWeightedPerformanceInPercentage:
+        timeWeightedPerformanceInPercentage.toNumber(),
+      timeWeightedPerformanceInPercentageWithCurrencyEffect:
+        timeWeightedPerformanceInPercentageWithCurrencyEffect.toNumber(),
+      previousDateString: date,
+      timeWeightedPerformancePreviousPeriod:
+        timeWeightedPerformanceInPercentage,
+      timeWeightedPerformancePreviousPeriodWithCurrencyEffect:
+        timeWeightedPerformanceInPercentageWithCurrencyEffect
+    };
+  }
+
+  private divideByOrZero(fn: (big: Big) => Big, divisor: Big): Big {
+    if (divisor.eq(0)) {
+      return new Big(0);
+    } else {
+      return fn(divisor);
+    }
   }
 
   protected abstract getSymbolMetrics({

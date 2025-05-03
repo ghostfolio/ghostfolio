@@ -65,7 +65,7 @@ describe('PortfolioCalculator', () => {
     activityDtos = loadActivityExportFile(
       join(
         __dirname,
-        '../../../../../../../test/import/ok-novn-buy-and-sell.json'
+        '../../../../../../../test/import/ok-novn-buy-and-sell-partially.json'
       )
     );
   });
@@ -97,7 +97,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('get current positions', () => {
-    it.only('with NOVN.SW buy and sell', async () => {
+    it.only('with NOVN.SW buy and sell partially', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-04-11').getTime());
 
       const activities: Activity[] = activityDtos.map((activity) => ({
@@ -117,7 +117,7 @@ describe('PortfolioCalculator', () => {
 
       const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
         activities,
-        calculationType: PerformanceCalculationType.ROAI,
+        calculationType: PerformanceCalculationType.ROI,
         currency: 'CHF',
         userId: userDummyData.id
       });
@@ -131,128 +131,71 @@ describe('PortfolioCalculator', () => {
         groupBy: 'month'
       });
 
-      expect(portfolioSnapshot.historicalData[0]).toEqual({
-        date: '2022-03-06',
-        investmentValueWithCurrencyEffect: 0,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: 0,
-        netWorth: 0,
-        timeWeightedPerformanceInPercentage: 0,
-        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
-        totalAccountBalance: 0,
-        totalInvestment: 0,
-        totalInvestmentValueWithCurrencyEffect: 0,
-        value: 0,
-        valueWithCurrencyEffect: 0
-      });
-
-      expect(portfolioSnapshot.historicalData[1]).toEqual({
-        date: '2022-03-07',
-        investmentValueWithCurrencyEffect: 151.6,
-        netPerformance: 0,
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: 0,
-        timeWeightedPerformanceInPercentage: 0,
-        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
-        netWorth: 151.6,
-        totalAccountBalance: 0,
-        totalInvestment: 151.6,
-        totalInvestmentValueWithCurrencyEffect: 151.6,
-        value: 151.6,
-        valueWithCurrencyEffect: 151.6
-      });
-
-      expect(
-        portfolioSnapshot.historicalData[
-          portfolioSnapshot.historicalData.length - 1
-        ]
-      ).toEqual({
-        date: '2022-04-11',
-        investmentValueWithCurrencyEffect: 0,
-        netPerformance: 19.86,
-        netPerformanceInPercentage: 0.13100263852242744,
-        netPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
-        netPerformanceWithCurrencyEffect: 19.86,
-        timeWeightedPerformanceInPercentage: 0.13100263852242744,
-        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744,
-        netWorth: 0,
-        totalAccountBalance: 0,
-        totalInvestment: 0,
-        totalInvestmentValueWithCurrencyEffect: 0,
-        value: 0,
-        valueWithCurrencyEffect: 0
-      });
-
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('0'),
+        currentValueInBaseCurrency: new Big('87.8'),
         errors: [],
         hasErrors: false,
         positions: [
           {
-            averagePrice: new Big('0'),
+            averagePrice: new Big('75.80'),
             currency: 'CHF',
             dataSource: 'YAHOO',
             dividend: new Big('0'),
             dividendInBaseCurrency: new Big('0'),
-            fee: new Big('0'),
-            feeInBaseCurrency: new Big('0'),
+            fee: new Big('4.25'),
+            feeInBaseCurrency: new Big('4.25'),
             firstBuyDate: '2022-03-07',
-            grossPerformance: new Big('19.86'),
-            grossPerformancePercentage: new Big('0.13100263852242744063'),
+            grossPerformance: new Big('21.93'),
+            grossPerformancePercentage: new Big('0.14465699208443271768'),
             grossPerformancePercentageWithCurrencyEffect: new Big(
-              '0.13100263852242744063'
+              '0.14465699208443271768'
             ),
-            grossPerformanceWithCurrencyEffect: new Big('19.86'),
-            investment: new Big('0'),
-            investmentWithCurrencyEffect: new Big('0'),
-            netPerformance: new Big('19.86'),
-            netPerformancePercentage: new Big('0.13100263852242744063'),
+            grossPerformanceWithCurrencyEffect: new Big('21.93'),
+            investment: new Big('75.80'),
+            investmentWithCurrencyEffect: new Big('75.80'),
+            netPerformance: new Big('17.68'),
+            netPerformancePercentage: new Big('0.11662269129287598945'),
             netPerformancePercentageWithCurrencyEffectMap: {
-              max: new Big('0.13100263852242744063')
+              max: new Big('0.11662269129287598945')
             },
-            netPerformanceWithCurrencyEffectMap: {
-              max: new Big('19.86')
-            },
+            netPerformanceWithCurrencyEffectMap: { max: new Big('17.68') },
             marketPrice: 87.8,
             marketPriceInBaseCurrency: 87.8,
-            quantity: new Big('0'),
+            quantity: new Big('1'),
             symbol: 'NOVN.SW',
             tags: [],
             timeWeightedInvestment: new Big('151.6'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('151.6'),
             transactionCount: 2,
-            valueInBaseCurrency: new Big('0')
+            valueInBaseCurrency: new Big('87.8')
           }
         ],
-        totalFeesWithCurrencyEffect: new Big('0'),
+        totalFeesWithCurrencyEffect: new Big('4.25'),
         totalInterestWithCurrencyEffect: new Big('0'),
-        totalInvestment: new Big('0'),
-        totalInvestmentWithCurrencyEffect: new Big('0'),
+        totalInvestment: new Big('75.80'),
+        totalInvestmentWithCurrencyEffect: new Big('75.80'),
         totalLiabilitiesWithCurrencyEffect: new Big('0'),
         totalValuablesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(
         expect.objectContaining({
-          netPerformance: 19.86,
-          netPerformanceInPercentage: 0.13100263852242744063,
-          netPerformanceInPercentageWithCurrencyEffect: 0.13100263852242744063,
-          netPerformanceWithCurrencyEffect: 19.86,
-          totalInvestmentValueWithCurrencyEffect: 0
+          netPerformance: 17.68,
+          netPerformanceInPercentage: 0.11662269129287598945,
+          netPerformanceInPercentageWithCurrencyEffect: 0.11662269129287598945,
+          netPerformanceWithCurrencyEffect: 17.68,
+          totalInvestmentValueWithCurrencyEffect: 75.8
         })
       );
 
       expect(investments).toEqual([
         { date: '2022-03-07', investment: new Big('151.6') },
-        { date: '2022-04-08', investment: new Big('0') }
+        { date: '2022-04-08', investment: new Big('75.8') }
       ]);
 
       expect(investmentsByMonth).toEqual([
         { date: '2022-03-01', investment: 151.6 },
-        { date: '2022-04-01', investment: -151.6 }
+        { date: '2022-04-01', investment: -75.8 }
       ]);
     });
   });
