@@ -745,6 +745,10 @@ export abstract class PortfolioCalculator {
 
     let netPerformanceAtStartDate: number;
     let netPerformanceWithCurrencyEffectAtStartDate: number;
+    let lastTimeWeightedPerformancePercentage: number;
+    let lastTimeWeightedPerformancePercentageWithCurrencyEffect: number;
+    let timeWeightedPerformanceInPercentage: number;
+    let timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
     const totalInvestmentValuesWithCurrencyEffect: number[] = [];
 
     for (const historicalDataItem of historicalData) {
@@ -777,7 +781,19 @@ export abstract class PortfolioCalculator {
               totalInvestmentValuesWithCurrencyEffect.length
             : 0;
 
-        //TODO : Extract in abstractFunction and use timeweighted for ROI + Handle total values separately
+        ({
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect,
+          lastTimeWeightedPerformancePercentage,
+          lastTimeWeightedPerformancePercentageWithCurrencyEffect
+        } = this.calculateTimeWeightedPerformance(
+          lastTimeWeightedPerformancePercentage,
+          historicalDataItem,
+          lastTimeWeightedPerformancePercentageWithCurrencyEffect,
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect
+        ));
+
         chart.push({
           ...historicalDataItem,
           netPerformance:
@@ -792,7 +808,9 @@ export abstract class PortfolioCalculator {
             timeWeightedInvestmentValue === 0
               ? 0
               : netPerformanceWithCurrencyEffectSinceStartDate /
-                timeWeightedInvestmentValue
+                timeWeightedInvestmentValue,
+          timeWeightedPerformanceInPercentage,
+          timeWeightedPerformanceInPercentageWithCurrencyEffect
           // TODO: Add net worth with valuables
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)
@@ -815,6 +833,42 @@ export abstract class PortfolioCalculator {
       netWorth: last?.netWorth ?? 0,
       totalInvestment: last?.totalInvestment ?? 0,
       valueWithCurrencyEffect: last?.valueWithCurrencyEffect ?? 0
+    };
+  }
+
+  private calculateTimeWeightedPerformance(
+    lastTimeWeightedPerformancePercentage: number,
+    historicalDataItem: HistoricalDataItem,
+    lastTimeWeightedPerformancePercentageWithCurrencyEffect: number,
+    timeWeightedPerformanceInPercentage: number,
+    timeWeightedPerformanceInPercentageWithCurrencyEffect: number
+  ): {
+    timeWeightedPerformanceInPercentage: number;
+    timeWeightedPerformanceInPercentageWithCurrencyEffect: number;
+    lastTimeWeightedPerformancePercentage: number;
+    lastTimeWeightedPerformancePercentageWithCurrencyEffect: number;
+  } {
+    timeWeightedPerformanceInPercentage = lastTimeWeightedPerformancePercentage
+      ? (1 + timeWeightedPerformanceInPercentage) *
+          ((1 + historicalDataItem.timeWeightedPerformanceInPercentage) /
+            (1 + lastTimeWeightedPerformancePercentage)) -
+        1
+      : 0;
+    timeWeightedPerformanceInPercentageWithCurrencyEffect =
+      lastTimeWeightedPerformancePercentageWithCurrencyEffect
+        ? (1 + timeWeightedPerformanceInPercentageWithCurrencyEffect) *
+            ((1 +
+              historicalDataItem.timeWeightedPerformanceInPercentageWithCurrencyEffect) /
+              (1 + lastTimeWeightedPerformancePercentageWithCurrencyEffect)) -
+          1
+        : 0;
+    return {
+      timeWeightedPerformanceInPercentage,
+      timeWeightedPerformanceInPercentageWithCurrencyEffect,
+      lastTimeWeightedPerformancePercentage:
+        historicalDataItem.timeWeightedPerformanceInPercentage,
+      lastTimeWeightedPerformancePercentageWithCurrencyEffect:
+        historicalDataItem.timeWeightedPerformanceInPercentageWithCurrencyEffect
     };
   }
 
