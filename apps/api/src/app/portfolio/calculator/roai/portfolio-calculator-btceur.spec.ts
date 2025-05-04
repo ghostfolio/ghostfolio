@@ -141,6 +141,7 @@ describe('PortfolioCalculator', () => {
         value: 0,
         valueWithCurrencyEffect: 0
       });
+
       /**
        * Closing price on 2021-12-12: 50098.3
        */
