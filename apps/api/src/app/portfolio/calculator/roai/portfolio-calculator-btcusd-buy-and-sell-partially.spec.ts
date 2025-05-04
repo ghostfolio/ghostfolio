@@ -104,7 +104,6 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2015-01-01'),
           feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
           quantity: 2,
           SymbolProfile: {
             ...symbolProfileDummyData,
@@ -120,7 +119,6 @@ describe('PortfolioCalculator', () => {
           ...activityDummyData,
           date: new Date('2017-12-31'),
           feeInAssetProfileCurrency: 0,
-          feeInBaseCurrency: 0,
           quantity: 1,
           SymbolProfile: {
             ...symbolProfileDummyData,
