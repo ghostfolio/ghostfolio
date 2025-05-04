@@ -8,6 +8,7 @@ import { RulesService } from '@ghostfolio/api/app/portfolio/rules.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -27,6 +28,7 @@ import { AiService } from './ai.service';
   controllers: [AiController],
   imports: [
     ApiModule,
+    BenchmarkModule,
     ConfigurationModule,
     DataProviderModule,
     ExchangeRateDataModule,
