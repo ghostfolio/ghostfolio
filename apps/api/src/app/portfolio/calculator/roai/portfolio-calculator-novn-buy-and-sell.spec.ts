@@ -153,8 +153,8 @@ describe('PortfolioCalculator', () => {
         date: '2022-03-07',
         investmentValueWithCurrencyEffect: 151.6,
         netPerformance: 24, // 2 * (87.8 - 75.8) = 24
-        netPerformanceInPercentage: 0,
-        netPerformanceInPercentageWithCurrencyEffect: 0,
+        netPerformanceInPercentage: 0.158311345646438, // 24 ÷ 151.6 = 0.158311345646438
+        netPerformanceInPercentageWithCurrencyEffect: 0.158311345646438, // 24 ÷ 151.6 = 0.158311345646438
         netPerformanceWithCurrencyEffect: 24,
         netWorth: 175.6, // 2 * 87.8 = 175.6
         totalAccountBalance: 0,

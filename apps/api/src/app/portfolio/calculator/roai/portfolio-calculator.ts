@@ -708,17 +708,23 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
           investmentValuesWithCurrencyEffect[order.date] ?? new Big(0)
         ).add(transactionInvestmentWithCurrencyEffect);
 
+        // If duration is effectively zero (first day), use the actual investment as the base.
+        // Otherwise, use the calculated time-weighted average.
         timeWeightedInvestmentValues[order.date] =
-          totalInvestmentDays > 0
+          totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestments.div(totalInvestmentDays)
-            : new Big(0);
+            : totalInvestment.gt(0)
+              ? totalInvestment
+              : new Big(0);
 
         timeWeightedInvestmentValuesWithCurrencyEffect[order.date] =
-          totalInvestmentDays > 0
+          totalInvestmentDays > Number.EPSILON
             ? sumOfTimeWeightedInvestmentsWithCurrencyEffect.div(
                 totalInvestmentDays
               )
-            : new Big(0);
+            : totalInvestmentWithCurrencyEffect.gt(0)
+              ? totalInvestmentWithCurrencyEffect
+              : new Big(0);
       }
 
       if (PortfolioCalculator.ENABLE_LOGGING) {
