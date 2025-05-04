@@ -223,12 +223,14 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-      const snapshotOnTheDate = portfolioSnapshot.historicalData.find(
-        (snapshot) => snapshot.date === '2021-11-30'
+      const snapshotOnBuyDate = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2021-11-30';
+        }
       );
 
       // Closing price on 2021-11-30: 136.6
-      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
+      expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
     });
 
     it.only('with BALN.SW buy (with unit price lower than closing price), calculated on buy date', async () => {
@@ -260,12 +262,14 @@ describe('PortfolioCalculator', () => {
       });
 
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
-      const snapshotOnTheDate = portfolioSnapshot.historicalData.find(
-        (snapshot) => snapshot.date === '2021-11-30'
+      const snapshotOnBuyDate = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2021-11-30';
+        }
       );
 
       // Closing price on 2021-11-30: 136.6
-      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
+      expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
     });
   });
 });
