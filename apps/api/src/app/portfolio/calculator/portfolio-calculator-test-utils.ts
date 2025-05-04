@@ -8,6 +8,7 @@ export const activityDummyData = {
   currency: undefined,
   fee: undefined,
   feeInAssetProfileCurrency: undefined,
+  feeInBaseCurrency: undefined,
   id: undefined,
   isDraft: false,
   symbolProfileId: undefined,

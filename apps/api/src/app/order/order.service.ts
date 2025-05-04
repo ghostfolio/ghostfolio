@@ -565,12 +565,12 @@ export class OrderService {
 
         return {
           ...order,
-          value,
           feeInAssetProfileCurrency,
-          SymbolProfile: assetProfile,
-          unitPriceInAssetProfileCurrency,
           feeInBaseCurrency,
-          valueInBaseCurrency
+          unitPriceInAssetProfileCurrency,
+          value,
+          valueInBaseCurrency,
+          SymbolProfile: assetProfile
         };
       })
     );
