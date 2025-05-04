@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Account` to `accounts` in the `Platform` database schema
 - Upgraded `prisma` from version `6.6.0` to `6.7.0`
 
+### Fixed
+
+- Fixed an issue with the fee calculations related to activities in a custom currency
+
 ## 2.159.0 - 2025-05-02
 
 ### Added
