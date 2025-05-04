@@ -194,7 +194,7 @@ describe('PortfolioCalculator', () => {
       ]);
     });
 
-    it.only('with BALN.SW buy lower than closing price, calculation after buy date', async () => {
+    it.only('with BALN.SW buy (with unit price lower than closing price)', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
 
       const activities: Activity[] = [
@@ -227,18 +227,11 @@ describe('PortfolioCalculator', () => {
         (snapshot) => snapshot.date === '2021-11-30'
       );
 
-      /**
-       * Closing price on 2021-11-30: 136.6
-       * Correct calculation: 2 * (136.6 - 135.0) - 1.55 = 1.65
-       * Current calculation: 2 * (135.0 - 135.0) - 1.55 = -1.55
-       *
-       * The performance should be calculated based on the closing price of the day,
-       * not the buy price.
-       */
-      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65);
+      // Closing price on 2021-11-30: 136.6
+      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
     });
 
-    it.only('with BALN.SW buy lower than closing price, calculation on buy date', async () => {
+    it.only('with BALN.SW buy (with unit price lower than closing price), calculated on buy date', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2021-11-30').getTime());
 
       const activities: Activity[] = [
@@ -271,15 +264,8 @@ describe('PortfolioCalculator', () => {
         (snapshot) => snapshot.date === '2021-11-30'
       );
 
-      /**
-       * Closing price on 2021-11-30: 136.6
-       * Correct calculation: 2 * (136.6 - 135.0) - 1.55 = 1.65
-       * Current calculation: 2 * (135.0 - 135.0) - 1.55 = -1.55
-       *
-       * The performance should be calculated based on the closing price of the day,
-       * not the buy price.
-       */
-      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65);
+      // Closing price on 2021-11-30: 136.6
+      expect(snapshotOnTheDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
     });
   });
 });

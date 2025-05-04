@@ -152,27 +152,15 @@ describe('PortfolioCalculator', () => {
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2022-03-07',
         investmentValueWithCurrencyEffect: 151.6,
-        /**
-         * Correct calculation: 2 * (87.8 - 75.8) = 24
-         * Current calculation: 2 * (75.8 - 75.8) = 0
-         */
-        netPerformance: 24,
+        netPerformance: 24, // 2 * (87.8 - 75.8) = 24
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 24,
-        /**
-         * Correct calculation: 2 * 87.8 = 175.6
-         * Current calculation: 2 * 75.8 = 151.6
-         */
-        netWorth: 175.6,
+        netWorth: 175.6, // 2 * 87.8 = 175.6
         totalAccountBalance: 0,
         totalInvestment: 151.6,
         totalInvestmentValueWithCurrencyEffect: 151.6,
-        /**
-         * Correct calculation: 2 * 87.8 = 175.6
-         * Current calculation: 2 * 75.8 = 151.6
-         */
-        value: 175.6,
+        value: 175.6, // 2 * 87.8 = 175.6
         valueWithCurrencyEffect: 175.6
       });
 
