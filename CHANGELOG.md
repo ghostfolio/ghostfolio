@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Dutch (`nl`)
+- Upgraded the _Stripe_ dependencies
 
 ## 2.164.0 - 2025-05-28
 
