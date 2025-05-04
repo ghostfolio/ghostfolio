@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Deprecated the endpoint to get a portfolio position in favor of get a holding
 - Deprecated the endpoint to update portfolio position tags in favor of update holding tags
+- Upgraded `prisma` from version `6.6.0` to `6.7.0`
 
 ## 2.159.0 - 2025-05-02
 
