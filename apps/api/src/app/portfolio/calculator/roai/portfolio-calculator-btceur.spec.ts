@@ -141,20 +141,34 @@ describe('PortfolioCalculator', () => {
         value: 0,
         valueWithCurrencyEffect: 0
       });
-
+      /**
+       * Closing price on 2021-12-12: 50098.3
+       */
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2021-12-12',
         investmentValueWithCurrencyEffect: 44558.42,
-        netPerformance: -4.46,
+        /**
+         * Correct calculation: 1 * (50098.3 - 44558.42) - 4.46 = 5535.42
+         * Current calculation: 1 * (44558.42 - 44558.42) - 4.46 = -4.46
+         */
+        netPerformance: 5535.42,
         netPerformanceInPercentage: 0,
         netPerformanceInPercentageWithCurrencyEffect: 0,
-        netPerformanceWithCurrencyEffect: -4.46,
-        netWorth: 44558.42,
+        netPerformanceWithCurrencyEffect: 5535.42,
+        /**
+         * Correct calculation: 1 * 50098.3 = 50098.3
+         * Current calculation: 1 * 44558.42 = 44558.42
+         */
+        netWorth: 50098.3,
         totalAccountBalance: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
-        value: 44558.42,
-        valueWithCurrencyEffect: 44558.42
+        /**
+         * Correct calculation: 1 * 50098.3 = 50098.3
+         * Current calculation: 1 * 44558.42 = 44558.42
+         */
+        value: 50098.3,
+        valueWithCurrencyEffect: 50098.3
       });
 
       expect(
