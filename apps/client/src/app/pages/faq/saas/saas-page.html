@@ -14,11 +14,11 @@
           <mat-card-title>How do I start?</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          You can sign up via the “<a [routerLink]="routerLinkRegister"
-            >Get Started</a
-          >” button at the top of the page. You have multiple options to join
-          Ghostfolio: Create an account with a security token or
-          <i>Google Sign</i>. We will guide you to set up your portfolio.
+          You can sign up via the
+          <a [routerLink]="routerLinkRegister">Get Started</a> button at the top
+          of the page. You have multiple options to join Ghostfolio: Create an
+          account with a security token or <i>Google Sign</i>. We will guide you
+          to set up your portfolio.
         </mat-card-content>
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -38,8 +38,8 @@
         >
         <mat-card-content
           >Yes, it is! Our
-          <a [routerLink]="routerLinkPricing">pricing page</a> details
-          everything you get for free.</mat-card-content
+          <a target="_blank" [href]="pricingUrl">pricing page</a>
+          details everything you get for free.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -49,12 +49,20 @@
           ></mat-card-header
         >
         <mat-card-content
-          ><a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> is a fully
-          managed Ghostfolio cloud offering for ambitious investors. Revenue is
-          used to cover the costs of the hosting infrastructure and to fund
-          ongoing development. It is the Open Source code base with some extras
-          like the <a [routerLink]="routerLinkMarkets">markets overview</a> and
-          a professional data provider.</mat-card-content
+          ><a
+            class="align-items-center d-inline-flex"
+            target="_blank"
+            [href]="pricingUrl"
+            >Ghostfolio Premium<gf-premium-indicator
+              class="d-inline-block ml-1"
+              [enableLink]="false"
+          /></a>
+          is a fully managed Ghostfolio cloud offering for ambitious investors.
+          Revenue is used to cover the costs of the hosting infrastructure and
+          to fund ongoing development. It is the Open Source code base with some
+          extras like the
+          <a [routerLink]="routerLinkMarkets">markets overview</a> and a
+          professional data provider.</mat-card-content
         >
       </mat-card>
       <mat-card appearance="outlined" class="mb-3">
@@ -65,8 +73,15 @@
         >
         <mat-card-content
           >Yes, you can try
-          <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> by signing
-          up for Ghostfolio and applying for a trial (see
+          <a
+            class="align-items-center d-inline-flex"
+            target="_blank"
+            [href]="pricingUrl"
+            >Ghostfolio Premium<gf-premium-indicator
+              class="d-inline-block ml-1"
+              [enableLink]="false"
+          /></a>
+          by signing up for Ghostfolio and applying for a trial (see
           <a [routerLink]="['/account', 'membership']">Membership</a>). It is
           easy, free and there is no commitment. You can stop using it at any
           time.</mat-card-content
@@ -93,9 +108,17 @@
           >
         </mat-card-header>
         <mat-card-content
-          >No, <a [routerLink]="routerLinkPricing">Ghostfolio Premium</a> does
-          not include auto-renewal. Upon expiration, you can choose whether to
-          start a new subscription.</mat-card-content
+          >No,
+          <a
+            class="align-items-center d-inline-flex"
+            target="_blank"
+            [href]="pricingUrl"
+            >Ghostfolio Premium<gf-premium-indicator
+              class="d-inline-block ml-1"
+              [enableLink]="false"
+          /></a>
+          does not include auto-renewal. Upon expiration, you can choose whether
+          to start a new subscription.</mat-card-content
         >
       </mat-card>
       @if (user?.subscription?.type === 'Premium') {
