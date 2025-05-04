@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the watchlist to the features page
+
 ### Changed
 
+- Moved the watchlist from experimental to general availability
 - Deprecated the endpoint to get a portfolio position in favor of get a holding
 - Deprecated the endpoint to update portfolio position tags in favor of update holding tags
 
