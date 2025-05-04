@@ -39,7 +39,7 @@
           <small class="text-muted">{{ element.symbol }}</small>
         </div>
       </td>
-      <td *matFooterCellDef class="px-1" mat-footer-cell>Total</td>
+      <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
     </ng-container>
 
     <ng-container matColumnDef="dateOfFirstActivity">
@@ -95,11 +95,7 @@
       </td>
 
       <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
-        <gf-value
-          [isCurrency]="true"
-          [locale]="locale"
-          [value]="totalValue"
-        ></gf-value>
+        <gf-value [isCurrency]="true" [locale]="locale" [value]="totalValue" />
       </td>
     </ng-container>
 
@@ -153,7 +149,7 @@
             [isCurrency]="true"
             [locale]="locale"
             [value]="totalChange"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -189,7 +185,7 @@
             [isPercent]="true"
             [locale]="locale"
             [value]="totalChangePercentage"
-          ></gf-value>
+          />
         </div>
       </td>
     </ng-container>
@@ -214,7 +210,7 @@
     <tr
       *matFooterRowDef="displayedColumns"
       mat-footer-row
-      [ngClass]="{ hidden: isLoading }"
+      [ngClass]="{ 'd-none': isLoading }"
     ></tr>
   </table>
 </div>

@@ -51,6 +51,7 @@
           [hasPermissionToCreateActivity]="hasPermissionToCreateOrder"
           [holdings]="holdings"
           [locale]="user?.settings?.locale"
+          [performance]="performance"
           (holdingClicked)="onHoldingClicked($event)"
         />
         @if (hasPermissionToCreateOrder && holdings?.length > 0) {

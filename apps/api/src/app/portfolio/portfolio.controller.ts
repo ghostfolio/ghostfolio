@@ -389,6 +389,14 @@ export class PortfolioController {
       filterByTags
     });
 
+    const { performance } = await this.portfolioService.getPerformance({
+      dateRange,
+      filters,
+      impersonationId,
+      userId: this.request.user.id,
+      withExcludedAccounts: false
+    });
+
     const { holdings } = await this.portfolioService.getDetails({
       dateRange,
       filters,
@@ -396,7 +404,7 @@ export class PortfolioController {
       userId: this.request.user.id
     });
 
-    return { holdings: Object.values(holdings) };
+    return { holdings: Object.values(holdings), performance };
   }
 
   @Get('investments')
