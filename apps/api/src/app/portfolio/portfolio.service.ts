@@ -20,9 +20,11 @@ import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
 import { RegionalMarketClusterRiskJapan } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/japan';
 import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
+import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -100,10 +102,12 @@ export class PortfolioService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly benchmarkService: BenchmarkService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
+    private readonly marketDataService: MarketDataService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
@@ -669,6 +673,7 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
+        performances: undefined,
         quantity: undefined,
         SymbolProfile: undefined,
         tags: [],
@@ -676,6 +681,11 @@ export class PortfolioService {
         value: undefined
       };
     }
+
+    const allTimeHigh = await this.marketDataService.getMax({
+      dataSource: aDataSource,
+      symbol: aSymbol
+    });
 
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource: aDataSource, symbol: aSymbol }
@@ -809,6 +819,12 @@ export class PortfolioService {
         });
       }
 
+      const performancePercent =
+        this.benchmarkService.calculateChangeInPercentage(
+          allTimeHigh?.marketPrice,
+          marketPrice
+        );
+
       return {
         firstBuyDate,
         marketPrice,
@@ -846,6 +862,12 @@ export class PortfolioService {
           ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
           position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+        performances: {
+          allTimeHigh: {
+            performancePercent,
+            date: allTimeHigh?.date
+          }
+        },
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -902,6 +924,12 @@ export class PortfolioService {
         );
       }
 
+      const performancePercent =
+        this.benchmarkService.calculateChangeInPercentage(
+          allTimeHigh?.marketPrice,
+          marketPrice
+        );
+
       return {
         marketPrice,
         marketPriceMax,
@@ -925,6 +953,12 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
+        performances: {
+          allTimeHigh: {
+            performancePercent,
+            date: allTimeHigh?.date
+          }
+        },
         quantity: 0,
         tags: [],
         transactionCount: undefined,
