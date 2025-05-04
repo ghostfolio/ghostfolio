@@ -147,10 +147,10 @@ model Order {
 }
 
 model Platform {
-  id      String    @id @default(uuid())
-  name    String?
-  url     String    @unique
-  Account Account[]
+  accounts Account[]
+  id       String    @id @default(uuid())
+  name     String?
+  url      String    @unique
 
   @@index([name])
 }

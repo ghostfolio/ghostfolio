@@ -13,7 +13,6 @@ import {
   Activity
 } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
-import { PortfolioHoldingDetail } from '@ghostfolio/api/app/portfolio/interfaces/portfolio-holding-detail.interface';
 import { SymbolItem } from '@ghostfolio/api/app/symbol/interfaces/symbol-item.interface';
 import { DeleteOwnUserDto } from '@ghostfolio/api/app/user/delete-own-user.dto';
 import { UserItem } from '@ghostfolio/api/app/user/interfaces/user-item.interface';
@@ -40,6 +39,7 @@ import {
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
+  PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
   PortfolioPerformanceResponse,
@@ -406,13 +406,13 @@ export class DataService {
     symbol: string;
   }) {
     return this.http
-      .get<PortfolioHoldingDetail>(
-        `/api/v1/portfolio/position/${dataSource}/${symbol}`
+      .get<PortfolioHoldingResponse>(
+        `/api/v1/portfolio/holding/${dataSource}/${symbol}`
       )
       .pipe(
         map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
+          if (data.activities) {
+            for (const order of data.activities) {
               order.createdAt = parseISO(order.createdAt as unknown as string);
               order.date = parseISO(order.date as unknown as string);
             }
@@ -776,7 +776,7 @@ export class DataService {
     tags
   }: { tags: Tag[] } & AssetProfileIdentifier) {
     return this.http.put<void>(
-      `/api/v1/portfolio/position/${dataSource}/${symbol}/tags`,
+      `/api/v1/portfolio/holding/${dataSource}/${symbol}/tags`,
       { tags }
     );
   }

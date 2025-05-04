@@ -7,7 +7,8 @@ import {
 
 import { Tag } from '@prisma/client';
 
-export interface PortfolioHoldingDetail {
+export interface PortfolioHoldingResponse {
+  activities: Activity[];
   averagePrice: number;
   dataProviderInfo: DataProviderInfo;
   dividendInBaseCurrency: number;
@@ -22,13 +23,12 @@ export interface PortfolioHoldingDetail {
   historicalData: HistoricalDataItem[];
   investment: number;
   marketPrice: number;
-  maxPrice: number;
-  minPrice: number;
+  marketPriceMax: number;
+  marketPriceMin: number;
   netPerformance: number;
   netPerformancePercent: number;
   netPerformancePercentWithCurrencyEffect: number;
   netPerformanceWithCurrencyEffect: number;
-  orders: Activity[];
   quantity: number;
   SymbolProfile: EnhancedSymbolProfile;
   tags: Tag[];

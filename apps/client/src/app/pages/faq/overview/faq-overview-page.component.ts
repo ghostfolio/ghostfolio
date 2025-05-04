@@ -12,6 +12,9 @@ import { Subject, takeUntil } from 'rxjs';
   standalone: false
 })
 export class FaqOverviewPageComponent implements OnDestroy {
+  public pricingUrl =
+    `https://ghostfol.io/${document.documentElement.lang}/` +
+    $localize`:snake-case:pricing`;
   public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
   public user: User;
 

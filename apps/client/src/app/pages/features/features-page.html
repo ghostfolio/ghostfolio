@@ -175,10 +175,15 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex" i18n>Dark Mode</h4>
+                <h4 class="align-items-center d-flex">
+                  <span i18n>Static Analysis</span>
+                  @if (hasPermissionForSubscription) {
+                    <gf-premium-indicator class="ml-1" />
+                  }
+                </h4>
                 <p class="m-0">
-                  Ghostfolio automatically switches to a dark color theme based
-                  on your operating system's preferences.
+                  Identify potential risks in your portfolio with Ghostfolio
+                  X-ray, the static portfolio analysis.
                 </p>
               </div>
             </mat-card-content>
@@ -188,10 +193,14 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex" i18n>Zen Mode</h4>
+                <h4 class="align-items-center d-flex">
+                  <span i18n>Watchlist</span>
+                  @if (hasPermissionForSubscription) {
+                    <gf-premium-indicator class="ml-1" />
+                  }
+                </h4>
                 <p class="m-0">
-                  Keep calm and activate Zen Mode if the markets are going
-                  crazy.
+                  Follow assets you are interested in closely on your watchlist.
                 </p>
               </div>
             </mat-card-content>
@@ -221,15 +230,23 @@
           <mat-card appearance="outlined" class="d-flex flex-column h-100">
             <mat-card-content>
               <div class="flex-grow-1">
-                <h4 class="align-items-center d-flex">
-                  <span i18n>Static Analysis</span>
-                  @if (hasPermissionForSubscription) {
-                    <gf-premium-indicator class="ml-1" />
-                  }
-                </h4>
+                <h4 class="align-items-center d-flex" i18n>Dark Mode</h4>
                 <p class="m-0">
-                  Identify potential risks in your portfolio with Ghostfolio
-                  X-ray, the static portfolio analysis.
+                  Ghostfolio automatically switches to a dark color theme based
+                  on your operating system's preferences.
+                </p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="col-xs-12 col-md-4 mb-3">
+          <mat-card appearance="outlined" class="d-flex flex-column h-100">
+            <mat-card-content>
+              <div class="flex-grow-1">
+                <h4 class="align-items-center d-flex" i18n>Zen Mode</h4>
+                <p class="m-0">
+                  Keep calm and activate Zen Mode if the markets are going
+                  crazy.
                 </p>
               </div>
             </mat-card-content>
