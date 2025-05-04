@@ -105,8 +105,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public investmentPrecision = 2;
   public marketDataItems: MarketData[] = [];
   public marketPrice: number;
-  public maxPrice: number;
-  public minPrice: number;
+  public marketPriceMax: number;
+  public marketPriceMin: number;
   public netPerformance: number;
   public netPerformancePrecision = 2;
   public netPerformancePercent: number;
@@ -234,8 +234,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           historicalData,
           investment,
           marketPrice,
-          maxPrice,
-          minPrice,
+          marketPriceMax,
+          marketPriceMin,
           netPerformance,
           netPerformancePercent,
           netPerformancePercentWithCurrencyEffect,
@@ -297,8 +297,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           }
 
           this.marketPrice = marketPrice;
-          this.maxPrice = maxPrice;
-          this.minPrice = minPrice;
+          this.marketPriceMax = marketPriceMax;
+          this.marketPriceMin = marketPriceMin;
           this.netPerformance = netPerformance;
 
           if (

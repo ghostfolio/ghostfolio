@@ -648,6 +648,7 @@ export class PortfolioService {
 
     if (activities.length === 0) {
       return {
+        activities: [],
         averagePrice: undefined,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: undefined,
@@ -662,13 +663,12 @@ export class PortfolioService {
         historicalData: [],
         investment: undefined,
         marketPrice: undefined,
-        maxPrice: undefined,
-        minPrice: undefined,
+        marketPriceMax: undefined,
+        marketPriceMin: undefined,
         netPerformance: undefined,
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
-        orders: [],
         quantity: undefined,
         SymbolProfile: undefined,
         tags: [],
@@ -714,7 +714,7 @@ export class PortfolioService {
         transactionCount
       } = position;
 
-      const activitiesOfPosition = activities.filter(({ SymbolProfile }) => {
+      const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
         return (
           SymbolProfile.dataSource === dataSource &&
           SymbolProfile.symbol === symbol
@@ -748,12 +748,12 @@ export class PortfolioService {
       );
 
       const historicalDataArray: HistoricalDataItem[] = [];
-      let maxPrice = Math.max(
-        activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
+      let marketPriceMax = Math.max(
+        activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
       );
-      let minPrice = Math.min(
-        activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
+      let marketPriceMin = Math.min(
+        activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
       );
 
@@ -793,27 +793,31 @@ export class PortfolioService {
             quantity: currentQuantity
           });
 
-          maxPrice = Math.max(marketPrice ?? 0, maxPrice);
-          minPrice = Math.min(marketPrice ?? Number.MAX_SAFE_INTEGER, minPrice);
+          marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+          marketPriceMin = Math.min(
+            marketPrice ?? Number.MAX_SAFE_INTEGER,
+            marketPriceMin
+          );
         }
       } else {
         // Add historical entry for buy date, if no historical data available
         historicalDataArray.push({
-          averagePrice: activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
+          averagePrice: activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
           date: firstBuyDate,
-          marketPrice: activitiesOfPosition[0].unitPriceInAssetProfileCurrency,
-          quantity: activitiesOfPosition[0].quantity
+          marketPrice: activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
+          quantity: activitiesOfHolding[0].quantity
         });
       }
 
       return {
         firstBuyDate,
         marketPrice,
-        maxPrice,
-        minPrice,
+        marketPriceMax,
+        marketPriceMin,
         SymbolProfile,
         tags,
         transactionCount,
+        activities: activitiesOfHolding,
         averagePrice: averagePrice.toNumber(),
         dataProviderInfo: portfolioCalculator.getDataProviderInfos()?.[0],
         dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
@@ -842,7 +846,6 @@ export class PortfolioService {
           ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
           position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
-        orders: activitiesOfPosition,
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -881,8 +884,8 @@ export class PortfolioService {
       }
 
       const historicalDataArray: HistoricalDataItem[] = [];
-      let maxPrice = marketPrice;
-      let minPrice = marketPrice;
+      let marketPriceMax = marketPrice;
+      let marketPriceMin = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
         historicalData[aSymbol]
@@ -892,15 +895,19 @@ export class PortfolioService {
           value: marketPrice
         });
 
-        maxPrice = Math.max(marketPrice ?? 0, maxPrice);
-        minPrice = Math.min(marketPrice ?? Number.MAX_SAFE_INTEGER, minPrice);
+        marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+        marketPriceMin = Math.min(
+          marketPrice ?? Number.MAX_SAFE_INTEGER,
+          marketPriceMin
+        );
       }
 
       return {
         marketPrice,
-        maxPrice,
-        minPrice,
+        marketPriceMax,
+        marketPriceMin,
         SymbolProfile,
+        activities: [],
         averagePrice: 0,
         dataProviderInfo: undefined,
         dividendInBaseCurrency: 0,
@@ -918,7 +925,6 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
-        orders: [],
         quantity: 0,
         tags: [],
         transactionCount: undefined,

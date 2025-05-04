@@ -49,7 +49,7 @@ export class ImportService {
     symbol
   }: AssetProfileIdentifier): Promise<Activity[]> {
     try {
-      const { firstBuyDate, historicalData, orders } =
+      const { activities, firstBuyDate, historicalData } =
         await this.portfolioService.getHolding(dataSource, undefined, symbol);
 
       const [[assetProfile], dividends] = await Promise.all([
@@ -68,7 +68,7 @@ export class ImportService {
         })
       ]);
 
-      const accounts = orders
+      const accounts = activities
         .filter(({ Account }) => {
           return !!Account;
         })
@@ -88,7 +88,7 @@ export class ImportService {
           const value = new Big(quantity).mul(marketPrice).toNumber();
 
           const date = parseDate(dateString);
-          const isDuplicate = orders.some((activity) => {
+          const isDuplicate = activities.some((activity) => {
             return (
               activity.accountId === Account?.id &&
               activity.SymbolProfile.currency === assetProfile.currency &&

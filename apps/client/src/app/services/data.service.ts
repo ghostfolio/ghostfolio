@@ -411,8 +411,8 @@ export class DataService {
       )
       .pipe(
         map((data) => {
-          if (data.orders) {
-            for (const order of data.orders) {
+          if (data.activities) {
+            for (const order of data.activities) {
               order.createdAt = parseISO(order.createdAt as unknown as string);
               order.date = parseISO(order.date as unknown as string);
             }
