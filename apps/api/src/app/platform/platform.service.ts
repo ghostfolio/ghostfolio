@@ -54,7 +54,7 @@ export class PlatformService {
       await this.prismaService.platform.findMany({
         include: {
           _count: {
-            select: { Account: true }
+            select: { accounts: true }
           }
         }
       });
@@ -64,7 +64,7 @@ export class PlatformService {
         id,
         name,
         url,
-        accountCount: _count.Account
+        accountCount: _count.accounts
       };
     });
   }
