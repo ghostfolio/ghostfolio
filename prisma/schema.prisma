@@ -131,6 +131,7 @@ model Order {
   isDraft         Boolean       @default(false)
   quantity        Float
   symbolProfileId String
+  tags            Tag[]
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
@@ -138,7 +139,6 @@ model Order {
   Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
   User            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
-  tags            Tag[]
 
   @@index([accountId])
   @@index([date])
@@ -168,6 +168,7 @@ model Settings {
 }
 
 model SymbolProfile {
+  activities             Order[]
   assetClass             AssetClass?
   assetSubClass          AssetSubClass?
   comment                String?
@@ -192,7 +193,6 @@ model SymbolProfile {
   url                    String?
   userId                 String?
   watchedBy              User[]                  @relation("UserWatchlist")
-  Order                  Order[]
   SymbolProfileOverrides SymbolProfileOverrides?
   User                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
 

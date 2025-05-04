@@ -433,13 +433,13 @@ export class DataGatheringService {
       await this.prismaService.symbolProfile.findMany({
         orderBy: [{ symbol: 'asc' }],
         select: {
-          dataSource: true,
-          id: true,
-          Order: {
+          activities: {
             orderBy: [{ date: 'asc' }],
             select: { date: true },
             take: 1
           },
+          dataSource: true,
+          id: true,
           scraperConfiguration: true,
           symbol: true
         },
@@ -459,7 +459,7 @@ export class DataGatheringService {
         );
       })
       .map((symbolProfile) => {
-        let date = symbolProfile.Order?.[0]?.date ?? startDate;
+        let date = symbolProfile.activities?.[0]?.date ?? startDate;
 
         if (benchmarkAssetProfileIdMap[symbolProfile.id]) {
           date = this.getEarliestDate(startDate);
