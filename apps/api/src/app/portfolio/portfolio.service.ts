@@ -24,7 +24,6 @@ import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.s
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   getAnnualizedPerformancePercent,
@@ -107,7 +106,6 @@ export class PortfolioService {
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
     private readonly impersonationService: ImpersonationService,
-    private readonly marketDataService: MarketDataService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
@@ -682,11 +680,6 @@ export class PortfolioService {
       };
     }
 
-    const allTimeHigh = await this.marketDataService.getMax({
-      dataSource: aDataSource,
-      symbol: aSymbol
-    });
-
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
       { dataSource: aDataSource, symbol: aSymbol }
     ]);
@@ -762,6 +755,10 @@ export class PortfolioService {
         activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
       );
+      let marketPriceMaxDate =
+        marketPrice > activitiesOfHolding[0].unitPriceInAssetProfileCurrency
+          ? new Date()
+          : activitiesOfHolding[0].date;
       let marketPriceMin = Math.min(
         activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
@@ -803,7 +800,10 @@ export class PortfolioService {
             quantity: currentQuantity
           });
 
-          marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+          if (marketPrice > marketPriceMax) {
+            marketPriceMax = marketPrice;
+            marketPriceMaxDate = parseISO(date);
+          }
           marketPriceMin = Math.min(
             marketPrice ?? Number.MAX_SAFE_INTEGER,
             marketPriceMin
@@ -821,7 +821,7 @@ export class PortfolioService {
 
       const performancePercent =
         this.benchmarkService.calculateChangeInPercentage(
-          allTimeHigh?.marketPrice,
+          marketPriceMax,
           marketPrice
         );
 
@@ -865,7 +865,7 @@ export class PortfolioService {
         performances: {
           allTimeHigh: {
             performancePercent,
-            date: allTimeHigh?.date
+            date: marketPriceMaxDate
           }
         },
         quantity: quantity.toNumber(),
@@ -907,6 +907,7 @@ export class PortfolioService {
 
       const historicalDataArray: HistoricalDataItem[] = [];
       let marketPriceMax = marketPrice;
+      let marketPriceMaxDate = new Date();
       let marketPriceMin = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
@@ -917,7 +918,10 @@ export class PortfolioService {
           value: marketPrice
         });
 
-        marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+        if (marketPrice > marketPriceMax) {
+          marketPriceMax = marketPrice;
+          marketPriceMaxDate = parseISO(date);
+        }
         marketPriceMin = Math.min(
           marketPrice ?? Number.MAX_SAFE_INTEGER,
           marketPriceMin
@@ -926,7 +930,7 @@ export class PortfolioService {
 
       const performancePercent =
         this.benchmarkService.calculateChangeInPercentage(
-          allTimeHigh?.marketPrice,
+          marketPriceMax,
           marketPrice
         );
 
@@ -956,7 +960,7 @@ export class PortfolioService {
         performances: {
           allTimeHigh: {
             performancePercent,
-            date: allTimeHigh?.date
+            date: marketPriceMaxDate
           }
         },
         quantity: 0,
