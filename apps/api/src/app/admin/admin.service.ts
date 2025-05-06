@@ -227,7 +227,7 @@ export class AdminService {
 
       if (sortColumn === 'activitiesCount') {
         orderBy = {
-          Order: {
+          activities: {
             _count: sortDirection
           }
         };
@@ -246,9 +246,14 @@ export class AdminService {
           select: {
             _count: {
               select: {
-                Order: true,
+                activities: true,
                 watchedBy: true
               }
+            },
+            activities: {
+              orderBy: [{ date: 'asc' }],
+              select: { date: true },
+              take: 1
             },
             assetClass: true,
             assetSubClass: true,
@@ -260,11 +265,6 @@ export class AdminService {
             isActive: true,
             isUsedByUsersWithSubscription: true,
             name: true,
-            Order: {
-              orderBy: [{ date: 'asc' }],
-              select: { date: true },
-              take: 1
-            },
             scraperConfiguration: true,
             sectors: true,
             symbol: true,
@@ -311,6 +311,7 @@ export class AdminService {
         assetProfiles.map(
           async ({
             _count,
+            activities,
             assetClass,
             assetSubClass,
             comment,
@@ -321,7 +322,6 @@ export class AdminService {
             isActive,
             isUsedByUsersWithSubscription,
             name,
-            Order,
             sectors,
             symbol,
             SymbolProfileOverrides
@@ -383,8 +383,8 @@ export class AdminService {
               symbol,
               marketDataItemCount,
               sectorsCount,
-              activitiesCount: _count.Order,
-              date: Order?.[0]?.date,
+              activitiesCount: _count.activities,
+              date: activities?.[0]?.date,
               isUsedByUsersWithSubscription:
                 await isUsedByUsersWithSubscription,
               watchedByCount: _count.watchedBy
@@ -654,7 +654,7 @@ export class AdminService {
                     select: {
                       _count: {
                         select: {
-                          Order: {
+                          activities: {
                             where: {
                               User: {
                                 subscriptions: {
@@ -675,7 +675,7 @@ export class AdminService {
                     }
                   });
 
-                return _count.Order > 0;
+                return _count.activities > 0;
               }
             }
           }
