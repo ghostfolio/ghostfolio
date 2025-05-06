@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Turkish (`tr`)
 
+### Fixed
+
+- Fixed an issue in the performance calculation on the date of an activity when the unit price differs from the market price
+
 ## 2.160.0 - 2025-05-04
 
 ### Added
