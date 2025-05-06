@@ -4604,7 +4604,7 @@
       </trans-unit>
       <trans-unit id="6264b47d8cbc74a3a411c1910964285bb0c8cc5e" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </source>
-        <target state="translated"> için Açık Kaynak Alternatifi <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/>  </target>
+        <target state="translated"> için Açık Kaynak Alternatifi <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">42</context>
