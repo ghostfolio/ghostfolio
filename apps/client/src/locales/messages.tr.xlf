@@ -3588,7 +3588,7 @@
       </trans-unit>
       <trans-unit id="fb9e3bfd7030894a15bebdb45e9502469d7b44b1" datatype="html">
         <source> How does <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> work? </source>
-        <target state="translated"> Nasıl<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>  çalışır? </target>
+        <target state="translated"> Nasıl<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> çalışır? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">383</context>
@@ -5384,7 +5384,7 @@
       </trans-unit>
       <trans-unit id="3298117765569632011" datatype="html">
         <source>Switch to Ghostfolio Premium or Ghostfolio Open Source easily</source>
-        <target state="translated">Ghostfolio Premium veya Ghostfolio Open Source'a kolayca geçin</target>
+        <target state="translated">Ghostfolio Premium veya Ghostfolio Open Source&apos;a kolayca geçin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">12</context>
@@ -5392,7 +5392,7 @@
       </trans-unit>
       <trans-unit id="1631940846690193897" datatype="html">
         <source>Switch to Ghostfolio Premium easily</source>
-        <target state="translated">Ghostfolio Premium'a kolayca geçin</target>
+        <target state="translated">Ghostfolio Premium&apos;a kolayca geçin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">13</context>
@@ -5400,7 +5400,7 @@
       </trans-unit>
       <trans-unit id="1921273115613254799" datatype="html">
         <source>Switch to Ghostfolio Open Source or Ghostfolio Basic easily</source>
-        <target state="translated">Ghostfolio Açık Kaynak veya Ghostfolio Temel'e kolayca geçin.</target>
+        <target state="translated">Ghostfolio Açık Kaynak veya Ghostfolio Temel&apos;e kolayca geçin.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">14</context>
@@ -6372,7 +6372,7 @@
       </trans-unit>
       <trans-unit id="f42ea256db85ae2dba48b04a7bf0eb1614abac2f" datatype="html">
         <source> If you retire today, you would be able to withdraw <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per year<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> or <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> per month<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, based on your total assets of <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> and a withdrawal rate of 4%. </source>
-        <target state="translated"> Eğer bugün emekli olursanız, toplam <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> tutarındaki varlıklarınız ve %4'lük bir çekilme oranına dayanarak yıllık <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> veya aylık <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> çekebilirsiniz. </target>
+        <target state="translated"> Eğer bugün emekli olursanız, toplam <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_2" ctype="x-gf_value_2" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> tutarındaki varlıklarınız ve %4&apos;lük bir çekilme oranına dayanarak yıllık <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerYear?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/> veya aylık <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;font-weight-bold&quot; &gt;"/><x id="START_TAG_GF_VALUE_1" ctype="x-gf_value_1" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;withdrawalRatePerMonth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_GF_VALUE" ctype="x-gf_value" equiv-text="&lt;gf-value class=&quot;d-inline-block&quot; [isCurrency]=&quot;true&quot; [locale]=&quot;user?.settings?.locale&quot; [unit]=&quot;user?.settings?.baseCurrency&quot; [value]=&quot;fireWealth?.toNumber()&quot; /&gt;"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/> çekebilirsiniz. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/fire/fire-page.html</context>
           <context context-type="linenumber">67</context>
@@ -6620,7 +6620,7 @@
       </trans-unit>
       <trans-unit id="3d30a34e40fd0afa4f0233005752e4ab615e83a0" datatype="html">
         <source>Approximation based on the top holdings of each ETF</source>
-        <target state="translated">Her ETF'nin en üst tutarlarına dayalı yaklaşım</target>
+        <target state="translated">Her ETF&apos;nin en üst tutarlarına dayalı yaklaşım</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">340</context>
