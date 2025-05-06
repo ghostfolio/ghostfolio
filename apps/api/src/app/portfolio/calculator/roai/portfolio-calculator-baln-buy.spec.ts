@@ -193,5 +193,83 @@ describe('PortfolioCalculator', () => {
         { date: '2021-12-01', investment: 0 }
       ]);
     });
+
+    it.only('with BALN.SW buy (with unit price lower than closing price)', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-12-18').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 1.55,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 135.0
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const snapshotOnBuyDate = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2021-11-30';
+        }
+      );
+
+      // Closing price on 2021-11-30: 136.6
+      expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
+    });
+
+    it.only('with BALN.SW buy (with unit price lower than closing price), calculated on buy date', async () => {
+      jest.useFakeTimers().setSystemTime(parseDate('2021-11-30').getTime());
+
+      const activities: Activity[] = [
+        {
+          ...activityDummyData,
+          date: new Date('2021-11-30'),
+          feeInAssetProfileCurrency: 1.55,
+          quantity: 2,
+          SymbolProfile: {
+            ...symbolProfileDummyData,
+            currency: 'CHF',
+            dataSource: 'YAHOO',
+            name: 'Bâloise Holding AG',
+            symbol: 'BALN.SW'
+          },
+          type: 'BUY',
+          unitPriceInAssetProfileCurrency: 135.0
+        }
+      ];
+
+      const portfolioCalculator = portfolioCalculatorFactory.createCalculator({
+        activities,
+        calculationType: PerformanceCalculationType.ROAI,
+        currency: 'CHF',
+        userId: userDummyData.id
+      });
+
+      const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
+      const snapshotOnBuyDate = portfolioSnapshot.historicalData.find(
+        ({ date }) => {
+          return date === '2021-11-30';
+        }
+      );
+
+      // Closing price on 2021-11-30: 136.6
+      expect(snapshotOnBuyDate?.netPerformanceWithCurrencyEffect).toEqual(1.65); // 2 * (136.6 - 135.0) - 1.55 = 1.65
+    });
   });
 });
