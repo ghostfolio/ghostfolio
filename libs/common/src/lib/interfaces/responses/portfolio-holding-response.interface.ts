@@ -1,5 +1,6 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
 import {
+  Benchmark,
   DataProviderInfo,
   EnhancedSymbolProfile,
   HistoricalDataItem
@@ -29,6 +30,7 @@ export interface PortfolioHoldingResponse {
   netPerformancePercent: number;
   netPerformancePercentWithCurrencyEffect: number;
   netPerformanceWithCurrencyEffect: number;
+  performances: Benchmark['performances'];
   quantity: number;
   SymbolProfile: EnhancedSymbolProfile;
   tags: Tag[];

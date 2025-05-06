@@ -9,6 +9,7 @@ import { RulesService } from '@ghostfolio/api/app/portfolio/rules.service';
 import { RedisCacheModule } from '@ghostfolio/api/app/redis-cache/redis-cache.module';
 import { UserModule } from '@ghostfolio/api/app/user/user.module';
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
+import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
@@ -25,6 +26,7 @@ import { PublicController } from './public.controller';
   controllers: [PublicController],
   imports: [
     AccessModule,
+    BenchmarkModule,
     DataProviderModule,
     ExchangeRateDataModule,
     ImpersonationModule,

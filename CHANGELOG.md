@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the endpoint to get a holding by the date of the last all time high and the current change to the all time high
+
 ### Changed
 
 - Improved the language localization for Turkish (`tr`)

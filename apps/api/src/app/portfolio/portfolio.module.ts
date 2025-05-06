@@ -9,6 +9,7 @@ import { RedactValuesInResponseModule } from '@ghostfolio/api/interceptors/redac
 import { TransformDataSourceInRequestModule } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.module';
 import { TransformDataSourceInResponseModule } from '@ghostfolio/api/interceptors/transform-data-source-in-response/transform-data-source-in-response.module';
 import { ApiModule } from '@ghostfolio/api/services/api/api.module';
+import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
@@ -33,6 +34,7 @@ import { RulesService } from './rules.service';
   imports: [
     AccessModule,
     ApiModule,
+    BenchmarkModule,
     ConfigurationModule,
     DataGatheringModule,
     DataProviderModule,

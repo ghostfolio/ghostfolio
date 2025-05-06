@@ -20,6 +20,7 @@ import { RegionalMarketClusterRiskEmergingMarkets } from '@ghostfolio/api/models
 import { RegionalMarketClusterRiskEurope } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/europe';
 import { RegionalMarketClusterRiskJapan } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/japan';
 import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/rules/regional-market-cluster-risk/north-america';
+import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
@@ -100,6 +101,7 @@ export class PortfolioService {
   public constructor(
     private readonly accountBalanceService: AccountBalanceService,
     private readonly accountService: AccountService,
+    private readonly benchmarkService: BenchmarkService,
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
@@ -669,6 +671,7 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
+        performances: undefined,
         quantity: undefined,
         SymbolProfile: undefined,
         tags: [],
@@ -752,6 +755,10 @@ export class PortfolioService {
         activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
       );
+      let marketPriceMaxDate =
+        marketPrice > activitiesOfHolding[0].unitPriceInAssetProfileCurrency
+          ? new Date()
+          : activitiesOfHolding[0].date;
       let marketPriceMin = Math.min(
         activitiesOfHolding[0].unitPriceInAssetProfileCurrency,
         marketPrice
@@ -793,7 +800,10 @@ export class PortfolioService {
             quantity: currentQuantity
           });
 
-          marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+          if (marketPrice > marketPriceMax) {
+            marketPriceMax = marketPrice;
+            marketPriceMaxDate = parseISO(date);
+          }
           marketPriceMin = Math.min(
             marketPrice ?? Number.MAX_SAFE_INTEGER,
             marketPriceMin
@@ -808,6 +818,12 @@ export class PortfolioService {
           quantity: activitiesOfHolding[0].quantity
         });
       }
+
+      const performancePercent =
+        this.benchmarkService.calculateChangeInPercentage(
+          marketPriceMax,
+          marketPrice
+        );
 
       return {
         firstBuyDate,
@@ -846,6 +862,12 @@ export class PortfolioService {
           ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
           position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+        performances: {
+          allTimeHigh: {
+            performancePercent,
+            date: marketPriceMaxDate
+          }
+        },
         quantity: quantity.toNumber(),
         value: this.exchangeRateDataService.toCurrency(
           quantity.mul(marketPrice ?? 0).toNumber(),
@@ -885,6 +907,7 @@ export class PortfolioService {
 
       const historicalDataArray: HistoricalDataItem[] = [];
       let marketPriceMax = marketPrice;
+      let marketPriceMaxDate = new Date();
       let marketPriceMin = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
@@ -895,12 +918,21 @@ export class PortfolioService {
           value: marketPrice
         });
 
-        marketPriceMax = Math.max(marketPrice ?? 0, marketPriceMax);
+        if (marketPrice > marketPriceMax) {
+          marketPriceMax = marketPrice;
+          marketPriceMaxDate = parseISO(date);
+        }
         marketPriceMin = Math.min(
           marketPrice ?? Number.MAX_SAFE_INTEGER,
           marketPriceMin
         );
       }
+
+      const performancePercent =
+        this.benchmarkService.calculateChangeInPercentage(
+          marketPriceMax,
+          marketPrice
+        );
 
       return {
         marketPrice,
@@ -925,6 +957,12 @@ export class PortfolioService {
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
         netPerformanceWithCurrencyEffect: undefined,
+        performances: {
+          allTimeHigh: {
+            performancePercent,
+            date: marketPriceMaxDate
+          }
+        },
         quantity: 0,
         tags: [],
         transactionCount: undefined,
