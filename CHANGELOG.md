@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed `Order` to `activities` in the `SymbolProfile` database schema
+- Improved the language localization for Turkish (`tr`)
 
 ## 2.160.0 - 2025-05-04
 
