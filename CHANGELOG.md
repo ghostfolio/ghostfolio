@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Turkish (`tr`)
 
+### Fixed
+
+- Fixed the horizontal overflow in the table of the benchmark component
+
 ## 2.160.0 - 2025-05-04
 
 ### Added
