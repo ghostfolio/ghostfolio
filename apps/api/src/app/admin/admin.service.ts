@@ -163,10 +163,10 @@ export class AdminService {
     );
 
     return {
+      dataProviders,
       settings,
       transactionCount,
       userCount,
-      dataProviders,
       version: environment.version
     };
   }
