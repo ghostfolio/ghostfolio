@@ -143,15 +143,30 @@ export class AdminService {
       this.countUsersWithAnalytics()
     ]);
 
+    const dataProviders = await Promise.all(
+      dataSources.map(async (dataSource) => {
+        const dataProviderInfo = this.dataProviderService
+          .getDataProvider(dataSource)
+          .getDataProviderInfo();
+
+        const assetProfileCount = await this.prismaService.symbolProfile.count({
+          where: {
+            dataSource
+          }
+        });
+
+        return {
+          ...dataProviderInfo,
+          assetProfileCount
+        };
+      })
+    );
+
     return {
       settings,
       transactionCount,
       userCount,
-      dataProviders: dataSources.map((dataSource) => {
-        return this.dataProviderService
-          .getDataProvider(dataSource)
-          .getDataProviderInfo();
-      }),
+      dataProviders,
       version: environment.version
     };
   }
