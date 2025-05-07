@@ -4316,8 +4316,9 @@
       </trans-unit>
       <trans-unit id="3756fe4769648222e9a3143d6a140e55afd7424b" datatype="html">
         <source> Benefit from continuous improvements through a strong community. </source>
-        <target state="translated">Beneficia’t de millores contínues gràcies a una comunitat forta.</target><context-group purpose="location">
-        <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
+        <target state="translated">Beneficia’t de millores contínues gràcies a una comunitat forta.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
