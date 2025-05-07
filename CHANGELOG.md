@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added the asset profile count per data provider to the endpoint `GET api/v1/admin`
 
+### Changed
+
+- Upgraded `nestjs` from version `10.4.15` to `11.0.12`
+
 ## 2.161.0 - 2025-05-06
 
 ### Added
