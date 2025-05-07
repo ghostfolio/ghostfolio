@@ -2716,7 +2716,8 @@
       </trans-unit>
       <trans-unit id="2f13d7cb644a3f330e3dd3613be87f2ea57c44a1" datatype="html">
         <source>Get a comprehensive financial overview by adding your bank and brokerage accounts.</source>
-         <target state="translated">Obtingueu una visió financera completa afegint els vostres comptes bancaris i de corredoria.</target>        <context-group purpose="location">
+         <target state="translated">Obtingueu una visió financera completa afegint els vostres comptes bancaris i de corredoria.</target>
+         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
@@ -2731,7 +2732,8 @@
       </trans-unit>
       <trans-unit id="80c8f0ef9eb8f28bdb327674ce54dfc2431d3959" datatype="html">
         <source>Record your investment activities to keep your portfolio up to date.</source>
-         <target state="translated">Registra les teves activitats d'inversió per mantenir la teva cartera actualitzada.</target>        <context-group purpose="location">
+         <target state="translated">Registra les teves activitats d’inversió per mantenir la teva cartera actualitzada.</target>
+         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
@@ -2746,7 +2748,8 @@
       </trans-unit>
       <trans-unit id="77393329771af93886e87ee2f3fcd29a4c8d8763" datatype="html">
         <source>Track your progress in real-time with comprehensive analysis and insights.</source>
-        <target state="translated">Segueix el teu progrés en temps real amb anàlisis i informació exhaustiva.</target>        <context-group purpose="location">
+        <target state="translated">Segueix el teu progrés en temps real amb anàlisis i informació exhaustiva.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
@@ -2789,7 +2792,7 @@
       </trans-unit>
       <trans-unit id="8192718423057883427" datatype="html">
         <source>Savings Rate</source>
-        <target state="translated">Taxa d'estalvi</target>
+        <target state="translated">Taxa d’estalvi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/investment-chart/investment-chart.component.ts</context>
           <context context-type="linenumber">200</context>
@@ -2849,7 +2852,7 @@
       </trans-unit>
       <trans-unit id="06ce3d665f2d87f69884667d21699ab1cc6fa585" datatype="html">
         <source>Sign in with Internet Identity</source>
-        <target state="translated">Inicieu la sessió amb la identitat d'Internet</target>
+        <target state="translated">Inicieu la sessió amb la identitat d’Internet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/login-with-access-token-dialog/login-with-access-token-dialog.html</context>
           <context context-type="linenumber">42</context>
@@ -2873,14 +2876,15 @@
       </trans-unit>
       <trans-unit id="051f7201e65df238102b8f33aeb2f993bba280bb" datatype="html">
         <source>Oops! A data provider is experiencing the hiccups.</source>
-        <target state="translated">Ups! Un proveïdor de dades està tenint problemes.</target>        <context-group purpose="location">
+        <target state="translated">Ups! Un proveïdor de dades està tenint problemes.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7754789218064641822" datatype="html">
         <source>Market data is delayed for</source>
-        <target state="translated">Les dades del mercat s'han retardat</target>
+        <target state="translated">Les dades del mercat s’han retardat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-performance/portfolio-performance.component.ts</context>
           <context context-type="linenumber">87</context>
@@ -2960,7 +2964,7 @@
       </trans-unit>
       <trans-unit id="2201b2004bc4997a66f6f8ea2511a4e1311f3de1" datatype="html">
         <source>Emergency Fund</source>
-        <target state="translated">Fons d'emergència</target>
+        <target state="translated">Fons d’emergència</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">168</context>
@@ -3044,7 +3048,7 @@
       </trans-unit>
       <trans-unit id="5403336912114537863" datatype="html">
         <source>Please set the amount of your emergency fund.</source>
-        <target state="translated">Definiu l'import del vostre fons d'emergència.</target>
+        <target state="translated">Definiu l’import del vostre fons d’emergència.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.ts</context>
           <context context-type="linenumber">64</context>
@@ -3052,14 +3056,16 @@
       </trans-unit>
       <trans-unit id="2573979fd7d8602db44b7b4ad493428bc354d2f5" datatype="html">
         <source> Are you an ambitious investor who needs the full picture? </source>
-        <target state="translated">Ets un inversor ambiciós que necessita la imatge completa?</target>        <context-group purpose="location">
+        <target state="translated">Ets un inversor ambiciós que necessita la imatge completa?</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="116d408fbd27095f120cd387d203f049665c04ca" datatype="html">
         <source> Upgrade to Ghostfolio Premium today and gain access to exclusive features to enhance your investment experience: </source>
-        <target state="translated">Actualitza a Ghostfolio Premium avui mateix i obtén accés a funcions exclusives per millorar la teva experiència d'inversió:</target>        <context-group purpose="location">
+        <target state="translated">Actualitza a Ghostfolio Premium avui mateix i obtén accés a funcions exclusives per millorar la teva experiència d’inversió:</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
@@ -3162,7 +3168,8 @@
       </trans-unit>
       <trans-unit id="c17879880ae3c30ccda3f03beb636a7fc55c38fa" datatype="html">
         <source> Get the tools to effectively manage your finances and refine your personal investment strategy. </source>
-        <target state="translated">Aconsegueix les eines per gestionar eficaçment les teves finances i refinar la teva estratègia d'inversió personal.</target>        <context-group purpose="location">
+        <target state="translated">Aconsegueix les eines per gestionar eficaçment les teves finances i refinar la teva estratègia d’inversió personal.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/subscription-interstitial-dialog/subscription-interstitial-dialog.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
@@ -3241,7 +3248,7 @@
       </trans-unit>
       <trans-unit id="2570446216260149991" datatype="html">
         <source>Oops! Could not grant access.</source>
-        <target state="translated">Vaja! No s'ha pogut concedir l'accés.</target>
+        <target state="translated">Vaja! No s’ha pogut concedir l’accés.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -3273,7 +3280,7 @@
       </trans-unit>
       <trans-unit id="83c4d4d764d2e2725ab8e919ec16ac400e1f290a" datatype="html">
         <source>User ID</source>
-        <target state="translated">ID d'usuari</target>
+        <target state="translated">ID d’usuari</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/create-or-update-access-dialog/create-or-update-access-dialog.html</context>
           <context context-type="linenumber">45</context>
@@ -3301,7 +3308,7 @@
       </trans-unit>
       <trans-unit id="4420880039966769543" datatype="html">
         <source>Could not redeem coupon code</source>
-        <target state="translated">No s'ha pogut bescanviar el codi de cupó</target>
+        <target state="translated">No s’ha pogut bescanviar el codi de cupó</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">165</context>
@@ -3309,7 +3316,7 @@
       </trans-unit>
       <trans-unit id="4819099731531004979" datatype="html">
         <source>Coupon code has been redeemed</source>
-        <target state="translated">El codi del cupó s'ha bescanviat</target>
+        <target state="translated">El codi del cupó s’ha bescanviat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">178</context>
@@ -3361,21 +3368,24 @@
       </trans-unit>
       <trans-unit id="4941836956820527118" datatype="html">
         <source>Do you really want to close your Ghostfolio account?</source>
-        <target state="translated">De debò vols tancar el teu compte de Ghostfolio?</target>        <context-group purpose="location">
+        <target state="translated">De debò vols tancar el teu compte de Ghostfolio?</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7963559562180316948" datatype="html">
         <source>Do you really want to remove this sign in method?</source>
-        <target state="translated">De debò vols eliminar aquest mètode d'inici de sessió?</target>        <context-group purpose="location">
+        <target state="translated">De debò vols eliminar aquest mètode d’inici de sessió?</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">248</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5724720497710437101" datatype="html">
         <source>Oops! There was an error setting up biometric authentication.</source>
-        <target state="translated">Ups! Hi ha hagut un error en configurar l'autenticació biomètrica.</target>        <context-group purpose="location">
+        <target state="translated">Ups! Hi ha hagut un error en configurar l’autenticació biomètrica.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">302</context>
         </context-group>
@@ -3398,7 +3408,8 @@
       </trans-unit>
       <trans-unit id="9f81affcfbf06f94f1dd5219e3388c1b7e196a0b" datatype="html">
         <source> Protection for sensitive information like absolute performances and quantity values </source>
-        <target state="translated">Protecció per a informació sensible com ara rendiments absoluts i valors de quantitat</target>        <context-group purpose="location">
+        <target state="translated">Protecció per a informació sensible com ara rendiments absoluts i valors de quantitat</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">186</context>
         </context-group>
@@ -3421,7 +3432,8 @@
       </trans-unit>
       <trans-unit id="62c28ddba8fedb2ae7b0fff9a641778b59791aa2" datatype="html">
         <source> If a translation is missing, kindly support us in extending it <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. </source>
-        <target state="translated">Si falta alguna traducció, si us plau, ajudeu-nos a ampliar-la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>aquí<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</target>        <context-group purpose="location">
+        <target state="translated">Si falta alguna traducció, si us plau, ajudeu-nos a ampliar-la <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>aquí<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
@@ -3492,7 +3504,8 @@
       </trans-unit>
       <trans-unit id="071f26a758dfeaed37626c8758754707c35e3915" datatype="html">
         <source> Distraction-free experience for turbulent times </source>
-        <target state="translated">Experiència sense distraccions per a temps turbulents</target>        <context-group purpose="location">
+        <target state="translated">Experiència sense distraccions per a temps turbulents</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">204</context>
         </context-group>
@@ -3507,7 +3520,7 @@
       </trans-unit>
       <trans-unit id="9ae348ee3a7319c2fc4794fa8bc425999d355f8f" datatype="html">
         <source>Sign in with fingerprint</source>
-        <target state="translated">Inicieu la sessió amb l'empremta digital</target>
+        <target state="translated">Inicieu la sessió amb l’empremta digital</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">221</context>
@@ -3523,7 +3536,7 @@
       </trans-unit>
       <trans-unit id="7f44fdbb881db76676fff811a21dc3eadcf11a33" datatype="html">
         <source> Sneak peek at upcoming functionality </source>
-        <target state="translated"> Doneu un cop d'ull a les properes funcionalitats </target>
+        <target state="translated"> Doneu un cop d’ull a les properes funcionalitats </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">238</context>
@@ -3599,7 +3612,7 @@
       </trans-unit>
       <trans-unit id="1579692722565712588" datatype="html">
         <source>Okay</source>
-        <target state="translated">D'acord</target>
+        <target state="translated">D’acord</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-membership/user-account-membership.component.ts</context>
           <context context-type="linenumber">140</context>
@@ -3615,7 +3628,8 @@
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
         <source>Oops! It looks like you’re making too many requests. Please slow down a bit.</source>
-        <target state="translated">Ups! Sembla que esteu fent massa sol·licituds. Si us plau, aneu una mica més lent.</target>        <context-group purpose="location">
+        <target state="translated">Ups! Sembla que esteu fent massa sol·licituds. Si us plau, aneu una mica més lent.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
           <context context-type="linenumber">103</context>
         </context-group>
@@ -3682,7 +3696,8 @@
       </trans-unit>
       <trans-unit id="84e1290e06dcaba8e890116cd795d79ef89ccc90" datatype="html">
         <source>Discover other exciting Open Source Software projects</source>
-        <target state="translated">Descobriu altres projectes de programari de codi obert emocionants</target>        <context-group purpose="location">
+        <target state="translated">Descobriu altres projectes de programari de codi obert emocionants</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
@@ -3761,7 +3776,7 @@
       </trans-unit>
       <trans-unit id="4979019387603946865" datatype="html">
         <source>Admin Control</source>
-        <target state="translated">Control d'administració</target>
+        <target state="translated">Control d’administració</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">20</context>
@@ -3857,14 +3872,16 @@
       </trans-unit>
       <trans-unit id="6b49028880d0af1ba78f1c4b8fdc601e23f061fb" datatype="html">
         <source>Discover the latest Ghostfolio updates and insights on personal finance</source>
-        <target state="translated">Descobriu les últimes actualitzacions i perspectives de Ghostfolio sobre finances personals</target>        <context-group purpose="location">
+        <target state="translated">Descobriu les últimes actualitzacions i perspectives de Ghostfolio sobre finances personals</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7407412980480383749" datatype="html">
         <source>As you are already logged in, you cannot access the demo account.</source>
-        <target state="translated">Com que ja has iniciat sessió, no pots accedir al compte de demostració.</target>        <context-group purpose="location">
+        <target state="translated">Com que ja has iniciat sessió, no pots accedir al compte de demostració.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/demo/demo-page.component.ts</context>
           <context context-type="linenumber">35</context>
         </context-group>
@@ -3951,7 +3968,8 @@
       </trans-unit>
       <trans-unit id="b942ec19956854206b38d6bbd66eddb69f09c135" datatype="html">
         <source> Check out the numerous features of Ghostfolio to manage your wealth </source>
-        <target state="translated">Fes una ullada a les nombroses funcions de Ghostfolio per gestionar el teu patrimoni</target>        <context-group purpose="location">
+        <target state="translated">Fes una ullada a les nombroses funcions de Ghostfolio per gestionar el teu patrimoni</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
@@ -4030,7 +4048,7 @@
       </trans-unit>
       <trans-unit id="dbf8136366f55644df4ce493c233c74c12d79257" datatype="html">
         <source>Market Mood</source>
-        <target state="translated">Estat d'ànim del mercat</target>
+        <target state="translated">Estat d’ànim del mercat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">215</context>
@@ -4130,14 +4148,16 @@
       </trans-unit>
       <trans-unit id="metaDescription" datatype="html">
         <source> Ghostfolio is a personal finance dashboard to keep track of your net worth including cash, stocks, ETFs and cryptocurrencies across multiple platforms. </source>
-        <target state="translated">Ghostfolio és un tauler de control de finances personals per fer un seguiment del teu patrimoni net, incloent-hi efectiu, accions, ETF i criptomonedes en múltiples plataformes.</target>        <context-group purpose="location">
+        <target state="translated">Ghostfolio és un tauler de control de finances personals per fer un seguiment del teu patrimoni net, incloent-hi efectiu, accions, ETF i criptomonedes en múltiples plataformes.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">
         <source> app, asset, cryptocurrency, dashboard, etf, finance, management, performance, portfolio, software, stock, trading, wealth, web3 </source>
-        <target state="translated">aplicació, actiu, criptomoneda, tauler de control, ETF, finances, gestió, rendiment, cartera, programari, acció, negociació, riquesa, web3</target>        <context-group purpose="location">
+        <target state="translated">aplicació, actiu, criptomoneda, tauler de control, ETF, finances, gestió, rendiment, cartera, programari, acció, negociació, riquesa, web3</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
@@ -4168,7 +4188,8 @@
       </trans-unit>
       <trans-unit id="f251aca95a00756de48b14172b02d33f175661fc" datatype="html">
         <source> Ghostfolio is a privacy-first, open source dashboard for your personal finances. Break down your asset allocation, know your net worth and make solid, data-driven investment decisions. </source>
-        <target state="translated">Ghostfolio és un tauler de control de codi obert i amb privacitat per a les teves finances personals. Analitza la distribució dels teus actius, coneix el teu patrimoni net i pren decisions d'inversió sòlides i basades en dades.</target>        <context-group purpose="location">
+        <target state="translated">Ghostfolio és un tauler de control de codi obert i amb privacitat per a les teves finances personals. Analitza la distribució dels teus actius, coneix el teu patrimoni net i pren decisions d’inversió sòlides i basades en dades.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
@@ -4239,14 +4260,16 @@
       </trans-unit>
       <trans-unit id="c8ef12032b654cfd51b9ae1082fde84247945e03" datatype="html">
         <source> Protect your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>assets<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refine your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </source>
-        <target state="translated">Protegeix els teus <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>actius<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refina la teva <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>estratègia d'inversió personal<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.</target>        <context-group purpose="location">
+        <target state="translated">Protegeix els teus <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>actius<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refina la teva <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>estratègia d’inversió personal<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">225</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9dd7364c5dcf1b010bfa80e824ba80eb67cc2b57" datatype="html">
         <source> Ghostfolio empowers busy people to keep track of stocks, ETFs or cryptocurrencies without being tracked. </source>
-        <target state="translated">Ghostfolio permet a la gent ocupada fer un seguiment d'accions, ETF o criptomonedes sense ser rastrejada.</target>        <context-group purpose="location">
+        <target state="translated">Ghostfolio permet a la gent ocupada fer un seguiment d’accions, ETF o criptomonedes sense ser rastrejada.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">229</context>
         </context-group>
@@ -4261,7 +4284,8 @@
       </trans-unit>
       <trans-unit id="dbe66b4824faaff93249a96c9ce23c237b446ed5" datatype="html">
         <source> Get the full picture of your personal finances across multiple platforms. </source>
-        <target state="translated">Obtingueu la imatge completa de les vostres finances personals en múltiples plataformes.</target>        <context-group purpose="location">
+        <target state="translated">Obtingueu la imatge completa de les vostres finances personals en múltiples plataformes.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">242</context>
         </context-group>
@@ -4276,7 +4300,8 @@
       </trans-unit>
       <trans-unit id="0a82bf107b3693ed6bdba551a97ce92494921513" datatype="html">
         <source> Use Ghostfolio anonymously and own your financial data. </source>
-        <target state="translated">Utilitza Ghostfolio de manera anònima i sigues propietari de les teves dades financeres.</target>        <context-group purpose="location">
+        <target state="translated">Utilitza Ghostfolio de manera anònima i sigues propietari de les teves dades financeres.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">253</context>
         </context-group>
@@ -4291,8 +4316,8 @@
       </trans-unit>
       <trans-unit id="3756fe4769648222e9a3143d6a140e55afd7424b" datatype="html">
         <source> Benefit from continuous improvements through a strong community. </source>
-        <target state="translated">Beneficia't de millores contínues gràcies a una comunitat forta.</target><context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
+        <target state="translated">Beneficia’t de millores contínues gràcies a una comunitat forta.</target><context-group purpose="location">
+        <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">263</context>
         </context-group>
       </trans-unit>
