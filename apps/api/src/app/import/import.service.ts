@@ -187,7 +187,13 @@ export class ImportService {
 
           let accountObject: Prisma.AccountCreateInput = {
             ...account,
-            User: { connect: { id: user.id } }
+            User: { connect: { id: user.id } },
+            balances: {
+              create: {
+                value: account.balance ?? 0,
+                date: new Date()
+              }
+            }
           };
 
           if (
