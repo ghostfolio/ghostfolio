@@ -33,8 +33,8 @@ export class RedisCacheService {
         return JSON.parse(value);
       } catch (error: any) {
         if (error instanceof SyntaxError) {
-          Logger.warn(
-            `Failed to parse json, so returning the value as String :${value}`,
+          Logger.debug(
+            `Failed to parse json, returning the value as String: ${value}`,
             'RedisCacheService'
           );
 
@@ -108,6 +108,7 @@ export class RedisCacheService {
     const keys = await this.getKeys(
       `${this.getPortfolioSnapshotKey({ userId })}`
     );
+
     return this.cache.mdel(keys);
   }
 
