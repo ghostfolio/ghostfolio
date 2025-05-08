@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the asset profile count per data provider to the endpoint `GET api/v1/admin`
+
 ### Changed
 
 - Improved the language localization for Catalan (`ca`)
