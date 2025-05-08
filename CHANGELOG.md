@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed `Order` to `activities` in the `User` database schema
+- Improved the language localization for Catalan (`ca`)
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
 
 ## 2.161.0 - 2025-05-06
