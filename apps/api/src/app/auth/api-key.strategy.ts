@@ -21,13 +21,10 @@ export class ApiKeyStrategy extends PassportStrategy(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
-    super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, true);
+    super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, false);
   }
 
-  public async validate(
-    apiKey: string,
-    done: (error: any, user?: any) => void
-  ) {
+  public async validate(apiKey: string): Promise<any> {
     try {
       const user = await this.validateApiKey(apiKey);
 
@@ -49,9 +46,9 @@ export class ApiKeyStrategy extends PassportStrategy(
         });
       }
 
-      done(null, user);
+      return user;
     } catch (error) {
-      done(error, null);
+      throw error;
     }
   }
 
