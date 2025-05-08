@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Catalan (`ca`)
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
+- Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
 
 ## 2.161.0 - 2025-05-06
 
