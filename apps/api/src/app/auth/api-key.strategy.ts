@@ -24,32 +24,28 @@ export class ApiKeyStrategy extends PassportStrategy(
     super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, false);
   }
 
-  public async validate(apiKey: string): Promise<any> {
-    try {
-      const user = await this.validateApiKey(apiKey);
+  public async validate(apiKey: string) {
+    const user = await this.validateApiKey(apiKey);
 
-      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-        if (hasRole(user, 'INACTIVE')) {
-          throw new HttpException(
-            getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
-            StatusCodes.TOO_MANY_REQUESTS
-          );
-        }
-
-        await this.prismaService.analytics.upsert({
-          create: { User: { connect: { id: user.id } } },
-          update: {
-            activityCount: { increment: 1 },
-            lastRequestAt: new Date()
-          },
-          where: { userId: user.id }
-        });
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      if (hasRole(user, 'INACTIVE')) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+          StatusCodes.TOO_MANY_REQUESTS
+        );
       }
 
-      return user;
-    } catch (error) {
-      throw error;
+      await this.prismaService.analytics.upsert({
+        create: { User: { connect: { id: user.id } } },
+        update: {
+          activityCount: { increment: 1 },
+          lastRequestAt: new Date()
+        },
+        where: { userId: user.id }
+      });
     }
+
+    return user;
   }
 
   private async validateApiKey(apiKey: string) {
