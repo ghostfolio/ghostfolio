@@ -29,7 +29,6 @@ import type { PortfolioChart } from './portfolio-chart.interface';
 import type { PortfolioDetails } from './portfolio-details.interface';
 import type { PortfolioDividends } from './portfolio-dividends.interface';
 import type { PortfolioInvestments } from './portfolio-investments.interface';
-import type { PortfolioItem } from './portfolio-item.interface';
 import type { PortfolioOverview } from './portfolio-overview.interface';
 import type { PortfolioPerformance } from './portfolio-performance.interface';
 import type { PortfolioPosition } from './portfolio-position.interface';
@@ -116,7 +115,6 @@ export {
   PortfolioHoldingResponse,
   PortfolioHoldingsResponse,
   PortfolioInvestments,
-  PortfolioItem,
   PortfolioOverview,
   PortfolioPerformance,
   PortfolioPerformanceResponse,
