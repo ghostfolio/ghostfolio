@@ -2716,8 +2716,8 @@
       </trans-unit>
       <trans-unit id="2f13d7cb644a3f330e3dd3613be87f2ea57c44a1" datatype="html">
         <source>Get a comprehensive financial overview by adding your bank and brokerage accounts.</source>
-         <target state="translated">Obtingueu una visió financera completa afegint els vostres comptes bancaris i de corredoria.</target>
-         <context-group purpose="location">
+        <target state="translated">Obtingueu una visió financera completa afegint els vostres comptes bancaris i de corredoria.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
@@ -2732,8 +2732,8 @@
       </trans-unit>
       <trans-unit id="80c8f0ef9eb8f28bdb327674ce54dfc2431d3959" datatype="html">
         <source>Record your investment activities to keep your portfolio up to date.</source>
-         <target state="translated">Registra les teves activitats d’inversió per mantenir la teva cartera actualitzada.</target>
-         <context-group purpose="location">
+        <target state="translated">Registra les teves activitats d’inversió per mantenir la teva cartera actualitzada.</target>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
@@ -3004,7 +3004,7 @@
       </trans-unit>
       <trans-unit id="98fc3013bfcbf452b9f37bbfcdb77b9b882866e3" datatype="html">
         <source>Excluded from Analysis</source>
-        <target state="translated">Exclòs de l'anàlisi</target>
+        <target state="translated">Exclòs de l’anàlisi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">240</context>
