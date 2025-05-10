@@ -145,6 +145,10 @@
           <context context-type="linenumber">15</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
@@ -1330,7 +1334,7 @@
         <target state="translated">Tags</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">117</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/tags-selector/tags-selector.component.html</context>
@@ -3402,7 +3406,7 @@
         <target state="translated">Gültig bis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.html</context>
@@ -3962,7 +3966,7 @@
         <target state="translated">Plattformen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">111</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f4e44195c1fc545934be51e9abfba1202911462a" datatype="html">
@@ -5453,7 +5457,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.ts</context>
@@ -7303,7 +7307,7 @@
         <target state="translated">API-Schlüssel setzen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">87</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6973601224334878334" datatype="html">
@@ -7409,7 +7413,7 @@
         <target state="translated">von</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d666fa5e7e930b82f6c790ccdfe03526664229de" datatype="html">
@@ -7417,7 +7421,7 @@
         <target state="translated">täglichen Anfragen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="ab92acbb19a07fb231c67bb8b89c5840087570aa" datatype="html">
@@ -7425,7 +7429,7 @@
         <target state="translated">API-Schlüssel löschen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5649402767950535555" datatype="html">
@@ -7433,7 +7437,7 @@
         <target state="translated">Möchtest du den API-Schlüssel wirklich löschen?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">103</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1486033335993102285" datatype="html">
@@ -7593,7 +7597,7 @@
         <target state="translated">Early Access</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit id="189ecd7821c0e70fd7b29d9255600d3157865b3b" datatype="html">
