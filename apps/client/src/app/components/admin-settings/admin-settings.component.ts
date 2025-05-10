@@ -86,6 +86,10 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
     this.initialize();
   }
 
+  public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
+    return provider.dataSource === 'GHOSTFOLIO';
+  }
+
   public onRemoveGhostfolioApiKey() {
     this.notificationService.confirm({
       confirmFn: () => {
@@ -120,10 +124,6 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.initialize();
       });
-  }
-
-  public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
-    return provider.dataSource === 'GHOSTFOLIO';
   }
 
   public ngOnDestroy() {
