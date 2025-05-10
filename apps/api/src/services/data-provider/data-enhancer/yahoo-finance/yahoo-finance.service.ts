@@ -18,11 +18,13 @@ import {
 } from '@prisma/client';
 import { isISIN } from 'class-validator';
 import { countries } from 'countries-list';
-import yahooFinance from 'yahoo-finance2';
-import type { Price } from 'yahoo-finance2/dist/esm/src/modules/quoteSummary-iface';
+import YahooFinance from 'yahoo-finance2';
+import type { Price } from 'yahoo-finance2/esm/src/modules/quoteSummary-iface';
 
 @Injectable()
 export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
+  private readonly yahooFinance = new YahooFinance();
+
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService
   ) {}
@@ -99,8 +101,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
       if (response.dataSource === 'YAHOO') {
         yahooSymbol = symbol;
       } else {
-        const { quotes } = await yahooFinance.search(response.isin);
-        yahooSymbol = quotes[0].symbol;
+        const { quotes } = await this.yahooFinance.search(response.isin);
+        yahooSymbol = quotes[0].symbol as string;
       }
 
       const { countries, sectors, url } =
@@ -165,10 +167,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
       if (isISIN(symbol)) {
         try {
-          const { quotes } = await yahooFinance.search(symbol);
+          const { quotes } = await this.yahooFinance.search(symbol);
 
           if (quotes?.[0]?.symbol) {
-            symbol = quotes[0].symbol;
+            symbol = quotes[0].symbol as string;
           }
         } catch {}
       } else if (symbol?.endsWith(`-${DEFAULT_CURRENCY}`)) {
@@ -177,7 +179,7 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         symbol = this.convertToYahooFinanceSymbol(symbol);
       }
 
-      const assetProfile = await yahooFinance.quoteSummary(symbol, {
+      const assetProfile = await this.yahooFinance.quoteSummary(symbol, {
         modules: ['price', 'summaryProfile', 'topHoldings']
       });
 
@@ -206,7 +208,10 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         for (const sectorWeighting of assetProfile.topHoldings
           ?.sectorWeightings ?? []) {
           for (const [sector, weight] of Object.entries(sectorWeighting)) {
-            response.sectors.push({ weight, name: this.parseSector(sector) });
+            response.sectors.push({
+              name: this.parseSector(sector),
+              weight: weight as number
+            });
           }
         }
       } else if (
