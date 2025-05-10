@@ -889,7 +889,7 @@
       </trans-unit>
       <trans-unit id="5289fe3f4bde49c4ee4107d14e4be491f2c4246d" datatype="html">
         <source>Equity</source>
-        <target state="translated">公平</target>
+        <target state="translated">股权</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">58</context>
@@ -1557,7 +1557,7 @@
       </trans-unit>
       <trans-unit id="86c6e9437398addbc04b6570de19b2cb4afe6084" datatype="html">
         <source>First Activity</source>
-        <target state="translated">第一个活动</target>
+        <target state="translated">首笔交易</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">148</context>
@@ -2165,7 +2165,7 @@
       </trans-unit>
       <trans-unit id="9201103587777813545" datatype="html">
         <source>Portfolio</source>
-        <target state="translated">文件夹</target>
+        <target state="translated">投资组合</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/benchmark-comparator/benchmark-comparator.component.ts</context>
           <context context-type="linenumber">117</context>
@@ -2209,7 +2209,7 @@
       </trans-unit>
       <trans-unit id="323af13292ecc714ab3848b9dff48f923893be32" datatype="html">
         <source>Portfolio</source>
-        <target state="translated">文件夹</target>
+        <target state="translated">投资组合</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">41</context>
@@ -5329,7 +5329,7 @@
       </trans-unit>
       <trans-unit id="986ed5a2e3edee8d10d65a7c087b226879ebaecc" datatype="html">
         <source> Please note that the information provided in the Ghostfolio vs <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> comparison table is based on our independent research and analysis. This website is not affiliated with <x id="INTERPOLATION" equiv-text="{{ product2.name }}"/> or any other product mentioned in the comparison. As the landscape of personal finance tools evolves, it is essential to verify any specific details or changes directly from the respective product page. Data needs a refresh? Help us maintain accurate data on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
-        <target state="translated">请注意，Ghostfolio 与 Ghostfolio 中提供的信息<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>比较表基于我们的独立研究和分析。该网站不隶属于<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>或比较中提到的任何其他产品。随着个人理财工具格局的不断发展，直接从相应的产品页面验证任何具体的细节或变化至关重要。数据需要刷新吗？帮助我们维护准确的数据<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 。</target>
+        <target state="translated">请注意，在 Ghostfolio 与<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>的比较表中提供的信息基于我们的独立研究和分析。该网站不隶属于<x id="INTERPOLATION" equiv-text="{{ product2.name }}"/>或比较中提到的任何其他产品。随着个人理财工具格局的不断发展，直接从相应的产品页面验证任何具体的细节或变化至关重要。数据需要刷新吗？帮助我们在<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 上维护准确的数据。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">311</context>
@@ -5337,7 +5337,7 @@
       </trans-unit>
       <trans-unit id="c02f31906b9a50d3d126db14c2cbc2079d4ab499" datatype="html">
         <source> Ready to take your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>investments<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to the <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>next level<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>? </source>
-        <target state="translated">准备好带走你的<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>投资<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>到<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>下一级<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>？</target>
+        <target state="translated">准备好将您的<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>投资<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>提升到<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>新的高度<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>了吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">324</context>
@@ -6029,7 +6029,7 @@
       </trans-unit>
       <trans-unit id="1346519036036997811" datatype="html">
         <source>Private Equity</source>
-        <target state="translated">私人产权</target>
+        <target state="translated">私募股权</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">57</context>
@@ -6037,7 +6037,7 @@
       </trans-unit>
       <trans-unit id="4613338085351943838" datatype="html">
         <source>Stock</source>
-        <target state="translated">库存</target>
+        <target state="translated">股票</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">58</context>
