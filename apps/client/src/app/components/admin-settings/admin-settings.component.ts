@@ -156,6 +156,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
               this.isGhostfolioApiKeyValid = false;
 
               this.changeDetectorRef.markForCheck();
+
               return of(null);
             }),
             filter((status) => {
