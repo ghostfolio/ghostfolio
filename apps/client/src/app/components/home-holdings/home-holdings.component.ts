@@ -3,6 +3,7 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
+  PortfolioPerformance,
   PortfolioPosition,
   ToggleOption,
   User
@@ -36,6 +37,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
+  public performance: PortfolioPerformance;
   public user: User;
   public viewModeFormControl = new FormControl<HoldingsViewMode>(
     HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
@@ -162,8 +164,9 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
     this.fetchHoldings()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
+      .subscribe(({ holdings, performance }) => {
         this.holdings = holdings;
+        this.performance = performance;
 
         this.changeDetectorRef.markForCheck();
       });

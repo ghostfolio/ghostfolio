@@ -16,6 +16,7 @@
           [tooltip]="element.name"
         />
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
     <ng-container matColumnDef="nameWithSymbol">
@@ -38,6 +39,7 @@
           <small class="text-muted">{{ element.symbol }}</small>
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" i18n mat-footer-cell>Total</td>
     </ng-container>
 
     <ng-container matColumnDef="dateOfFirstActivity">
@@ -62,6 +64,11 @@
           />
         </div>
       </td>
+      <td
+        *matFooterCellDef
+        class="d-none d-lg-table-cell justify-content-end px-1"
+        mat-footer-cell
+      ></td>
     </ng-container>
 
     <ng-container matColumnDef="valueInBaseCurrency">
@@ -86,6 +93,10 @@
           />
         </div>
       </td>
+
+      <td *matFooterCellDef class="d-none d-lg-table-cell px-1" mat-footer-cell>
+        <gf-value [isCurrency]="true" [locale]="locale" [value]="totalValue" />
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="allocationInPercentage">
@@ -107,6 +118,7 @@
           />
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell></td>
     </ng-container>
 
     <ng-container matColumnDef="performance">
@@ -127,6 +139,16 @@
             [value]="
               isLoading ? undefined : element.netPerformanceWithCurrencyEffect
             "
+          />
+        </div>
+      </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [colorizeSign]="true"
+            [isCurrency]="true"
+            [locale]="locale"
+            [value]="totalChange"
           />
         </div>
       </td>
@@ -156,6 +178,16 @@
           />
         </div>
       </td>
+      <td *matFooterCellDef class="px-1" mat-footer-cell>
+        <div class="d-flex justify-content-end">
+          <gf-value
+            [colorizeSign]="true"
+            [isPercent]="true"
+            [locale]="locale"
+            [value]="totalChangePercentage"
+          />
+        </div>
+      </td>
     </ng-container>
 
     <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
@@ -174,6 +206,11 @@
             symbol: row.symbol
           })
       "
+    ></tr>
+    <tr
+      *matFooterRowDef="displayedColumns"
+      mat-footer-row
+      [ngClass]="{ 'd-none': isLoading }"
     ></tr>
   </table>
 </div>
