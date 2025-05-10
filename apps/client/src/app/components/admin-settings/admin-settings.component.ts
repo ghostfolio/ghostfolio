@@ -145,7 +145,6 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         });
 
         this.dataSource = new MatTableDataSource(filteredProviders);
-        this.isLoading = false;
 
         this.adminService
           .fetchGhostfolioDataProviderStatus(
@@ -170,6 +169,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
             this.changeDetectorRef.markForCheck();
           });
+
+        this.isLoading = false;
 
         this.changeDetectorRef.markForCheck();
       });
