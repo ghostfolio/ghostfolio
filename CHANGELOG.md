@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Restricted the permissions of the demo user
 - Renamed `Order` to `activities` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Italian (`it`)
