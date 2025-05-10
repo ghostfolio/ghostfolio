@@ -60,18 +60,18 @@ export class GfPortfolioProportionChartComponent
   @Input() baseCurrency: string;
   @Input() colorScheme: ColorScheme;
   @Input() cursor: string;
-  @Input() isInPercent = false;
-  @Input() keys: string[] = [];
-  @Input() locale = getLocale();
-  @Input() maxItems?: number;
-  @Input() showLabels = false;
-  @Input() positions: {
+  @Input() data: {
     [symbol: string]: Pick<PortfolioPosition, 'type'> & {
       dataSource?: DataSource;
       name: string;
       value: number;
     };
   } = {};
+  @Input() isInPercent = false;
+  @Input() keys: string[] = [];
+  @Input() locale = getLocale();
+  @Input() maxItems?: number;
+  @Input() showLabels = false;
 
   @Output() proportionChartClicked = new EventEmitter<AssetProfileIdentifier>();
 
@@ -91,13 +91,13 @@ export class GfPortfolioProportionChartComponent
   }
 
   public ngAfterViewInit() {
-    if (this.positions) {
+    if (this.data) {
       this.initialize();
     }
   }
 
   public ngOnChanges() {
-    if (this.positions) {
+    if (this.data) {
       this.initialize();
     }
   }
@@ -122,47 +122,45 @@ export class GfPortfolioProportionChartComponent
     };
 
     if (this.keys.length > 0) {
-      Object.keys(this.positions).forEach((symbol) => {
-        if (this.positions[symbol][this.keys[0]]?.toUpperCase()) {
-          if (chartData[this.positions[symbol][this.keys[0]].toUpperCase()]) {
-            chartData[
-              this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value = chartData[
-              this.positions[symbol][this.keys[0]].toUpperCase()
-            ].value.plus(this.positions[symbol].value || 0);
+      Object.keys(this.data).forEach((symbol) => {
+        if (this.data[symbol][this.keys[0]]?.toUpperCase()) {
+          if (chartData[this.data[symbol][this.keys[0]].toUpperCase()]) {
+            chartData[this.data[symbol][this.keys[0]].toUpperCase()].value =
+              chartData[
+                this.data[symbol][this.keys[0]].toUpperCase()
+              ].value.plus(this.data[symbol].value || 0);
 
             if (
-              chartData[this.positions[symbol][this.keys[0]].toUpperCase()]
-                .subCategory[this.positions[symbol][this.keys[1]]]
+              chartData[this.data[symbol][this.keys[0]].toUpperCase()]
+                .subCategory[this.data[symbol][this.keys[1]]]
             ) {
               chartData[
-                this.positions[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[this.positions[symbol][this.keys[1]]].value =
-                chartData[
-                  this.positions[symbol][this.keys[0]].toUpperCase()
-                ].subCategory[this.positions[symbol][this.keys[1]]].value.plus(
-                  this.positions[symbol].value || 0
-                );
+                this.data[symbol][this.keys[0]].toUpperCase()
+              ].subCategory[this.data[symbol][this.keys[1]]].value = chartData[
+                this.data[symbol][this.keys[0]].toUpperCase()
+              ].subCategory[this.data[symbol][this.keys[1]]].value.plus(
+                this.data[symbol].value || 0
+              );
             } else {
               chartData[
-                this.positions[symbol][this.keys[0]].toUpperCase()
-              ].subCategory[
-                this.positions[symbol][this.keys[1]] ?? UNKNOWN_KEY
-              ] = { value: new Big(this.positions[symbol].value || 0) };
+                this.data[symbol][this.keys[0]].toUpperCase()
+              ].subCategory[this.data[symbol][this.keys[1]] ?? UNKNOWN_KEY] = {
+                value: new Big(this.data[symbol].value || 0)
+              };
             }
           } else {
-            chartData[this.positions[symbol][this.keys[0]].toUpperCase()] = {
-              name: this.positions[symbol][this.keys[0]],
+            chartData[this.data[symbol][this.keys[0]].toUpperCase()] = {
+              name: this.data[symbol][this.keys[0]],
               subCategory: {},
-              value: new Big(this.positions[symbol].value || 0)
+              value: new Big(this.data[symbol].value || 0)
             };
 
-            if (this.positions[symbol][this.keys[1]]) {
+            if (this.data[symbol][this.keys[1]]) {
               chartData[
-                this.positions[symbol][this.keys[0]].toUpperCase()
+                this.data[symbol][this.keys[0]].toUpperCase()
               ].subCategory = {
-                [this.positions[symbol][this.keys[1]]]: {
-                  value: new Big(this.positions[symbol].value || 0)
+                [this.data[symbol][this.keys[1]]]: {
+                  value: new Big(this.data[symbol].value || 0)
                 }
               };
             }
@@ -170,24 +168,24 @@ export class GfPortfolioProportionChartComponent
         } else {
           if (chartData[UNKNOWN_KEY]) {
             chartData[UNKNOWN_KEY].value = chartData[UNKNOWN_KEY].value.plus(
-              this.positions[symbol].value || 0
+              this.data[symbol].value || 0
             );
           } else {
             chartData[UNKNOWN_KEY] = {
-              name: this.positions[symbol].name,
+              name: this.data[symbol].name,
               subCategory: this.keys[1]
                 ? { [this.keys[1]]: { value: new Big(0) } }
                 : undefined,
-              value: new Big(this.positions[symbol].value || 0)
+              value: new Big(this.data[symbol].value || 0)
             };
           }
         }
       });
     } else {
-      Object.keys(this.positions).forEach((symbol) => {
+      Object.keys(this.data).forEach((symbol) => {
         chartData[symbol] = {
-          name: this.positions[symbol].name,
-          value: new Big(this.positions[symbol].value || 0)
+          name: this.data[symbol].name,
+          value: new Big(this.data[symbol].value || 0)
         };
       });
     }
@@ -321,7 +319,7 @@ export class GfPortfolioProportionChartComponent
                 const dataIndex = activeElements[0].index;
                 const symbol: string = event.chart.data.labels[dataIndex];
 
-                const dataSource = this.positions[symbol]?.dataSource;
+                const dataSource = this.data[symbol]?.dataSource;
 
                 this.proportionChartClicked.emit({ dataSource, symbol });
               } catch {}
@@ -404,7 +402,7 @@ export class GfPortfolioProportionChartComponent
             symbol = $localize`No data available`;
           }
 
-          const name = translate(this.positions[symbol as string]?.name);
+          const name = translate(this.data[symbol as string]?.name);
 
           let sum = 0;
           for (const item of context.dataset.data) {

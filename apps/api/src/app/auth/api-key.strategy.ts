@@ -21,38 +21,31 @@ export class ApiKeyStrategy extends PassportStrategy(
     private readonly prismaService: PrismaService,
     private readonly userService: UserService
   ) {
-    super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, true);
+    super({ header: HEADER_KEY_TOKEN, prefix: 'Api-Key ' }, false);
   }
 
-  public async validate(
-    apiKey: string,
-    done: (error: any, user?: any) => void
-  ) {
-    try {
-      const user = await this.validateApiKey(apiKey);
+  public async validate(apiKey: string) {
+    const user = await this.validateApiKey(apiKey);
 
-      if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
-        if (hasRole(user, 'INACTIVE')) {
-          throw new HttpException(
-            getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
-            StatusCodes.TOO_MANY_REQUESTS
-          );
-        }
-
-        await this.prismaService.analytics.upsert({
-          create: { User: { connect: { id: user.id } } },
-          update: {
-            activityCount: { increment: 1 },
-            lastRequestAt: new Date()
-          },
-          where: { userId: user.id }
-        });
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      if (hasRole(user, 'INACTIVE')) {
+        throw new HttpException(
+          getReasonPhrase(StatusCodes.TOO_MANY_REQUESTS),
+          StatusCodes.TOO_MANY_REQUESTS
+        );
       }
 
-      done(null, user);
-    } catch (error) {
-      done(error, null);
+      await this.prismaService.analytics.upsert({
+        create: { User: { connect: { id: user.id } } },
+        update: {
+          activityCount: { increment: 1 },
+          lastRequestAt: new Date()
+        },
+        where: { userId: user.id }
+      });
     }
+
+    return user;
   }
 
   private async validateApiKey(apiKey: string) {

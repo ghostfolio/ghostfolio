@@ -25,15 +25,15 @@ type Story = StoryObj<GfPortfolioProportionChartComponent>;
 export const Simple: Story = {
   args: {
     baseCurrency: 'USD',
-    keys: ['name'],
-    locale: 'en-US',
-    positions: {
+    data: {
       Africa: { name: 'Africa', value: 983.22461479889288 },
       Asia: { name: 'Asia', value: 12074.754633964973 },
       Europe: { name: 'Europe', value: 34432.837085290535 },
       'North America': { name: 'North America', value: 26539.89987780503 },
       Oceania: { name: 'Oceania', value: 1402.220605072031 },
       'South America': { name: 'South America', value: 4938.25202180719859 }
-    }
+    },
+    keys: ['name'],
+    locale: 'en-US'
   }
 };

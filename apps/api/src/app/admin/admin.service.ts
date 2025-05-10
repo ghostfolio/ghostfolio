@@ -821,7 +821,7 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, Order: true }
+          select: { Account: true, activities: true }
         },
         Analytics: {
           select: {
@@ -869,10 +869,10 @@ export class AdminService {
           role,
           subscription,
           accountCount: _count.Account || 0,
+          activityCount: _count.activities || 0,
           country: Analytics?.country,
           dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: Analytics?.updatedAt,
-          transactionCount: _count.Order || 0
+          lastActivity: Analytics?.updatedAt
         };
       }
     );

@@ -39,7 +39,7 @@ export class WatchlistController {
 
   @Post()
   @HasPermission(permissions.createWatchlistItem)
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async createWatchlistItem(@Body() data: CreateWatchlistItemDto) {
     return this.watchlistService.createWatchlistItem({

@@ -54,6 +54,16 @@ export const personalFinanceTools: Product[] = [
     slogan: 'The Intelligent Family Office Suite'
   },
   {
+    founded: 2020,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'balance-pro',
+    name: 'Balance Pro',
+    origin: 'United States',
+    pricingPerYear: '$47.99',
+    slogan: 'The Smarter Way to Track Your Finances'
+  },
+  {
     hasFreePlan: false,
     hasSelfHostingAbility: true,
     key: 'banktivity',
@@ -570,6 +580,16 @@ export const personalFinanceTools: Product[] = [
     name: 'Peek',
     origin: 'Singapore',
     slogan: 'Feel in control of your money without spreadsheets or shame'
+  },
+  {
+    founded: 2022,
+    hasFreePlan: true,
+    hasSelfHostingAbility: false,
+    key: 'pinklion',
+    name: 'PinkLion',
+    origin: 'Germany',
+    pricingPerYear: '€50',
+    slogan: 'Invest smarter, not harder'
   },
   {
     founded: 2023,
