@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the symbol lookup results by removing the currency from the name of cryptocurrencies (experimental)
 - Renamed `Order` to `activities` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Italian (`it`)
