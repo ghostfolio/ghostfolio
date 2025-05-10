@@ -22,6 +22,7 @@ import {
   OnInit
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 
@@ -36,10 +37,12 @@ import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialo
   standalone: false
 })
 export class AdminSettingsComponent implements OnDestroy, OnInit {
-  public dataProviders: DataProviderInfo[];
+  public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
+  public displayedColumns = ['name', 'actions'];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
+  public isLoading = false;
   public pricingUrl: string;
 
   private deviceType: string;
@@ -119,19 +122,29 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
+  public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
+    return provider.name === 'GHOSTFOLIO';
+  }
+
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
   }
 
   private initialize() {
+    this.isLoading = true;
+    this.dataSource = new MatTableDataSource();
+
     this.adminService
       .fetchAdminData()
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(({ dataProviders, settings }) => {
-        this.dataProviders = dataProviders.filter(({ dataSource }) => {
+        const filteredProviders = dataProviders.filter(({ dataSource }) => {
           return dataSource !== 'MANUAL';
         });
+
+        this.dataSource = new MatTableDataSource(filteredProviders);
+        this.isLoading = false;
 
         this.adminService
           .fetchGhostfolioDataProviderStatus(
@@ -140,9 +153,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .pipe(
             catchError(() => {
               this.isGhostfolioApiKeyValid = false;
-
               this.changeDetectorRef.markForCheck();
-
               return of(null);
             }),
             filter((status) => {
@@ -153,7 +164,6 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .subscribe((status) => {
             this.ghostfolioApiStatus = status;
             this.isGhostfolioApiKeyValid = true;
-
             this.changeDetectorRef.markForCheck();
           });
 
