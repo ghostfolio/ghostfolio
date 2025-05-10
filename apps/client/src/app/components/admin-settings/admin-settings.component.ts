@@ -123,7 +123,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
   }
 
   public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
-    return provider.name === 'GHOSTFOLIO';
+    return provider.dataSource === 'GHOSTFOLIO';
   }
 
   public ngOnDestroy() {
@@ -133,6 +133,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
   private initialize() {
     this.isLoading = true;
+
     this.dataSource = new MatTableDataSource();
 
     this.adminService
@@ -153,6 +154,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .pipe(
             catchError(() => {
               this.isGhostfolioApiKeyValid = false;
+
               this.changeDetectorRef.markForCheck();
               return of(null);
             }),
@@ -164,6 +166,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .subscribe((status) => {
             this.ghostfolioApiStatus = status;
             this.isGhostfolioApiKeyValid = true;
+
             this.changeDetectorRef.markForCheck();
           });
 
