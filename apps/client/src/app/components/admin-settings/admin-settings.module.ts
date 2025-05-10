@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AdminSettingsComponent } from './admin-settings.component';
 
@@ -24,8 +25,9 @@ import { AdminSettingsComponent } from './admin-settings.component';
     MatButtonModule,
     MatCardModule,
     MatMenuModule,
-    RouterModule,
-    MatTableModule
+    MatTableModule,
+    NgxSkeletonLoaderModule,
+    RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

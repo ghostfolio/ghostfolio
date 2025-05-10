@@ -39,11 +39,11 @@ import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialo
 export class AdminSettingsComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
+  public displayedColumns = ['name', 'actions'];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
-  public pricingUrl: string;
-  public displayedColumns = ['name', 'actions'];
   public isLoading = false;
+  public pricingUrl: string;
 
   private deviceType: string;
   private unsubscribeSubject = new Subject<void>();
@@ -122,8 +122,8 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
       });
   }
 
-  public isGhostfolioProvider(provider: DataProviderInfo): boolean {
-    return provider.name === 'Ghostfolio';
+  public isGhostfolioDataProvider(provider: DataProviderInfo): boolean {
+    return provider.name === 'GHOSTFOLIO';
   }
 
   public ngOnDestroy() {
@@ -133,6 +133,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
   private initialize() {
     this.isLoading = true;
+    this.dataSource = new MatTableDataSource();
 
     this.adminService
       .fetchAdminData()
@@ -143,6 +144,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
         });
 
         this.dataSource = new MatTableDataSource(filteredProviders);
+        this.isLoading = false;
 
         this.adminService
           .fetchGhostfolioDataProviderStatus(
@@ -151,9 +153,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .pipe(
             catchError(() => {
               this.isGhostfolioApiKeyValid = false;
-              this.isLoading = false;
               this.changeDetectorRef.markForCheck();
-
               return of(null);
             }),
             filter((status) => {
@@ -164,7 +164,6 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           .subscribe((status) => {
             this.ghostfolioApiStatus = status;
             this.isGhostfolioApiKeyValid = true;
-            this.isLoading = false;
             this.changeDetectorRef.markForCheck();
           });
 

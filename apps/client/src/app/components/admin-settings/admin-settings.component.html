@@ -11,7 +11,7 @@
             <div class="d-flex align-items-center">
               <gf-asset-profile-icon class="mr-1" [url]="element.url" />
               <div>
-                @if (isGhostfolioProvider(element)) {
+                @if (isGhostfolioDataProvider(element)) {
                   <a
                     class="align-items-center d-inline-flex"
                     target="_blank"
@@ -59,7 +59,7 @@
           <th *matHeaderCellDef class="px-1 py-2" mat-header-cell></th>
 
           <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
-            @if (isGhostfolioProvider(element)) {
+            @if (isGhostfolioDataProvider(element)) {
               @if (isGhostfolioApiKeyValid === true) {
                 <button
                   class="mx-1 no-min-width px-2"
