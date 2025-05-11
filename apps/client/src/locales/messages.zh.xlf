@@ -207,7 +207,7 @@
       </trans-unit>
       <trans-unit id="6099902667884446960" datatype="html">
         <source>license</source>
-        <target state="translated">许可</target>
+        <target state="translated">许可证</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.ts</context>
@@ -701,7 +701,7 @@
       </trans-unit>
       <trans-unit id="15bdfa7e753e80e9f158a0d23194cb33eb63088f" datatype="html">
         <source>License</source>
-        <target state="translated">许可</target>
+        <target state="translated">许可证</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/app.component.html</context>
           <context context-type="linenumber">89</context>
@@ -1265,7 +1265,7 @@
       </trans-unit>
       <trans-unit id="3bb2d877ef3ef7a032ff8b84147cd4fefbdde1e9" datatype="html">
         <source>Attempts</source>
-        <target state="translated">尝试</target>
+        <target state="translated">尝试次数</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">83</context>
@@ -1281,7 +1281,7 @@
       </trans-unit>
       <trans-unit id="edcc19a49c950289ffe5d38be4843cdf194e5622" datatype="html">
         <source>Finished</source>
-        <target state="translated">完成的</target>
+        <target state="translated">完成</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">101</context>
@@ -1289,7 +1289,7 @@
       </trans-unit>
       <trans-unit id="81b97b8ea996ad1e4f9fca8415021850214884b1" datatype="html">
         <source>Status</source>
-        <target state="translated">状况</target>
+        <target state="translated">状态</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">110</context>
@@ -2445,7 +2445,7 @@
       </trans-unit>
       <trans-unit id="a8233de047500bf0f0d9f9f1712ddb071501a283" datatype="html">
         <source>Summary</source>
-        <target state="translated">概括</target>
+        <target state="translated">汇总</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-summary/home-summary.html</context>
           <context context-type="linenumber">2</context>
@@ -3361,7 +3361,7 @@
       </trans-unit>
       <trans-unit id="6877113876835666202" datatype="html">
         <source>License</source>
-        <target state="translated">许可</target>
+        <target state="translated">许可证</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/about-page.component.ts</context>
           <context context-type="linenumber">55</context>
@@ -3733,7 +3733,7 @@
       </trans-unit>
       <trans-unit id="803941175683258052" datatype="html">
         <source>Holdings</source>
-        <target state="translated">控股</target>
+        <target state="translated">持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">24</context>
@@ -3753,7 +3753,7 @@
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
         <source>Summary</source>
-        <target state="translated">概括</target>
+        <target state="translated">汇总</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/home/home-page-routing.module.ts</context>
           <context context-type="linenumber">34</context>
@@ -4333,7 +4333,7 @@
       </trans-unit>
       <trans-unit id="1817902710689724227" datatype="html">
         <source>Import Activities</source>
-        <target state="translated">导入活动</target>
+        <target state="translated">导入活动记录</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">47</context>
@@ -4373,7 +4373,7 @@
       </trans-unit>
       <trans-unit id="4de7b521c9a386fa682d6c995b30f6bc2d6c14b8" datatype="html">
         <source>Select Holding</source>
-        <target state="translated">选择控股</target>
+        <target state="translated">选择持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">20</context>
@@ -4389,7 +4389,7 @@
       </trans-unit>
       <trans-unit id="0f845001c88b82c18535e6d44f5597061f506e42" datatype="html">
         <source>Holding</source>
-        <target state="translated">保持</target>
+        <target state="translated">持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">32</context>
@@ -4781,7 +4781,7 @@
       </trans-unit>
       <trans-unit id="4945c8e3bbf650f8dc6d03b16553f2c0bac42b11" datatype="html">
         <source>Holdings</source>
-        <target state="translated">控股</target>
+        <target state="translated">持仓</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/account-detail-dialog/account-detail-dialog.html</context>
           <context context-type="linenumber">79</context>
@@ -5485,7 +5485,7 @@
       </trans-unit>
       <trans-unit id="ed1d0d3031aba025b9bf280c1d7c54f44982ed46" datatype="html">
         <source>Import Activities</source>
-        <target state="translated">进口活动</target>
+        <target state="translated">导入活动记录</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">9</context>
@@ -5509,7 +5509,7 @@
       </trans-unit>
       <trans-unit id="446d1376bd7f6cf33d75d7a6022c33d2910327a2" datatype="html">
         <source>Export Activities</source>
-        <target state="translated">出口活动</target>
+        <target state="translated">导出活动记录</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/activities-table/activities-table.component.html</context>
           <context context-type="linenumber">41</context>
@@ -5929,7 +5929,7 @@
       </trans-unit>
       <trans-unit id="7025236479211408772" datatype="html">
         <source>Valuable</source>
-        <target state="translated">有价值的</target>
+        <target state="translated">贵重物品</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">39</context>
@@ -6161,7 +6161,7 @@
       </trans-unit>
       <trans-unit id="62c28ddba8fedb2ae7b0fff9a641778b59791aa2" datatype="html">
         <source> If a translation is missing, kindly support us in extending it <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>here<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>. </source>
-        <target state="translated">如果翻译缺失，请支持我们进行扩展<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>这里<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>。</target>
+        <target state="translated">如果翻译缺失，欢迎在<x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio/blob/main/apps/client/src/locales/messages.{{ language }}.xlf&quot; target=&quot;_blank&quot; &gt;"/>这里<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/>进行扩展。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">58</context>
@@ -6213,7 +6213,7 @@
       </trans-unit>
       <trans-unit id="d1b8990332af18f1c5159a6061ca889bcbb28432" datatype="html">
         <source>Permission</source>
-        <target state="translated">允许</target>
+        <target state="translated">权限</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">18</context>
@@ -6365,7 +6365,7 @@
       </trans-unit>
       <trans-unit id="6829218544e108e152f5fa72cb79c4ccb82e0d06" datatype="html">
         <source>View</source>
-        <target state="translated">看法</target>
+        <target state="translated">查看</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.html</context>
           <context context-type="linenumber">23</context>
@@ -6529,7 +6529,7 @@
       </trans-unit>
       <trans-unit id="c356d831858fd8fed753c149088c800e36b36d84" datatype="html">
         <source>Execute Job</source>
-        <target state="translated">执行任务</target>
+        <target state="translated">执行作业</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">176</context>
