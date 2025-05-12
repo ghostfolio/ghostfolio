@@ -2,6 +2,7 @@ import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setti
 import { LoginWithAccessTokenDialog } from '@ghostfolio/client/components/login-with-access-token-dialog/login-with-access-token-dialog.component';
 import { LayoutService } from '@ghostfolio/client/core/layout.service';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import {
@@ -79,17 +80,17 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`:snake-case:about`;
-  public routeFeatures = $localize`:snake-case:features`;
-  public routeMarkets = $localize`:snake-case:markets`;
-  public routePricing = $localize`:snake-case:pricing`;
-  public routeResources = $localize`:snake-case:resources`;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routeAbout = paths.about;
+  public routeFeatures = paths.features;
+  public routeMarkets = paths.markets;
+  public routePricing = paths.pricing;
+  public routeResources = paths.resources;
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkMarkets = ['/' + paths.markets];
+  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkRegister = ['/' + paths.register];
+  public routerLinkResources = ['/' + paths.resources];
 
   private unsubscribeSubject = new Subject<void>();
 

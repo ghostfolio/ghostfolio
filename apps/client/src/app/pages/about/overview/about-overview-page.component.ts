@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
@@ -17,8 +18,8 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
-  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkFaq = ['/' + paths.faq];
+  public routerLinkFeatures = ['/' + paths.features];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

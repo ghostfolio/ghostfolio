@@ -18,7 +18,7 @@ const routes: Routes = [
           )
       },
       {
-        path: 'changelog',
+        path: paths.changelog,
         loadChildren: () =>
           import('./changelog/changelog-page.module').then(
             (m) => m.ChangelogPageModule
@@ -32,7 +32,7 @@ const routes: Routes = [
           )
       },
       {
-        path: 'oss-friends',
+        path: paths.ossFriends,
         loadChildren: () =>
           import('./oss-friends/oss-friends-page.module').then(
             (m) => m.OpenSourceSoftwareFriendsPageModule
