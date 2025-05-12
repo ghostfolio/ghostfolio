@@ -5856,7 +5856,7 @@
       </trans-unit>
       <trans-unit id="50760c2140335b2324deaee120f40d9aa64b3238" datatype="html">
         <source>Currency Cluster Risks</source>
-        <target state="translated">Valuta Cluster Risico's</target>
+        <target state="translated">Valuta Cluster Risico’s</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">93</context>
@@ -5864,7 +5864,7 @@
       </trans-unit>
       <trans-unit id="c7b797e5df289241021db16010efb6ac3c6cfb86" datatype="html">
         <source>Account Cluster Risks</source>
-        <target state="translated">Account Cluster Risco's</target>
+        <target state="translated">Account Cluster Risco’s</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">141</context>
@@ -7370,7 +7370,7 @@
       </trans-unit>
       <trans-unit id="f907cfe9cf0c373052ff3964f941a5b784c57f06" datatype="html">
         <source> Ghostfolio X-ray uses static analysis to uncover potential issues and risks in your portfolio. Adjust the rules below and set custom thresholds to align with your personal investment strategy. </source>
-        <target state="translated"> Ghostfolio X-ray gebruikt statische analyse om potentiële problemen en risico's in uw portefeuille te ontdekken. Pas de onderstaande regels aan en stel aangepaste drempelwaarden in die aansluiten bij uw persoonlijke beleggingsstrategie. </target>
+        <target state="translated"> Ghostfolio X-ray gebruikt statische analyse om potentiële problemen en risico’s in uw portefeuille te ontdekken. Pas de onderstaande regels aan en stel aangepaste drempelwaarden in die aansluiten bij uw persoonlijke beleggingsstrategie. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">5</context>
@@ -7378,7 +7378,7 @@
       </trans-unit>
       <trans-unit id="d3e4b4ce50139bdb8e2ba2703e5e3b2417c0c832" datatype="html">
         <source>Economic Market Cluster Risks</source>
-        <target state="translated">Risico's van Economische Marktclusters</target>
+        <target state="translated">Risico’s van Economische Marktclusters</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">165</context>
@@ -7522,7 +7522,7 @@
       </trans-unit>
       <trans-unit id="c8b54fb8af53c13793e37377e06bbcd3c7dc2c7d" datatype="html">
         <source>Asset Class Cluster Risks</source>
-        <target state="translated">Activa Klasse Cluster Risico's</target>
+        <target state="translated">Activa Klasse Cluster Risico’s</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">117</context>
@@ -7578,7 +7578,7 @@
       </trans-unit>
       <trans-unit id="189ecd7821c0e70fd7b29d9255600d3157865b3b" datatype="html">
         <source>Regional Market Cluster Risks</source>
-        <target state="translated">Regionale Markt Clusterrisico's</target>
+        <target state="translated">Regionale Markt Clusterrisico’s</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">189</context>
