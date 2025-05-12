@@ -28,7 +28,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'admin',
+    path: paths.admin,
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
@@ -107,7 +107,7 @@ const routes: Routes = [
       )
   },
   {
-    path: 'portfolio',
+    path: paths.portfolio,
     loadChildren: () =>
       import('./pages/portfolio/portfolio-page.module').then(
         (m) => m.PortfolioPageModule

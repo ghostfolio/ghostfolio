@@ -1,16 +1,26 @@
 export const paths = {
   about: $localize`:snake-case:about`,
+  activities: 'activities',
+  admin: 'admin',
+  allocations: 'allocations',
   changelog: $localize`:snake-case:changelog`,
   faq: $localize`:snake-case:faq`,
   features: $localize`:snake-case:features`,
+  fire: 'fire',
   guides: $localize`:snake-case:guides`,
   glossary: $localize`:snake-case:glossary`,
+  jobs: 'jobs',
   license: $localize`:snake-case:license`,
+  marketData: 'market-data',
   markets: $localize`:snake-case:markets`,
   ossFriends: $localize`:snake-case:oss-friends`,
+  portfolio: 'portfolio',
   pricing: $localize`:snake-case:pricing`,
   privacyPolicy: $localize`:snake-case:privacy-policy`,
   register: $localize`:snake-case:register`,
   resources: $localize`:snake-case:resources`,
-  termsOfService: $localize`:snake-case:terms-of-service`
+  settings: 'settings',
+  termsOfService: $localize`:snake-case:terms-of-service`,
+  users: 'users',
+  xRay: 'x-ray'
 };

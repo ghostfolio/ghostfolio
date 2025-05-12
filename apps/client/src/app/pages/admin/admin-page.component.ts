@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -26,27 +27,27 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`Overview`,
-        path: ['/admin']
+        path: ['/' + paths.admin]
       },
       {
         iconName: 'settings-outline',
         label: $localize`Settings`,
-        path: ['/admin', 'settings']
+        path: ['/' + paths.admin, paths.settings]
       },
       {
         iconName: 'server-outline',
         label: $localize`Market Data`,
-        path: ['/admin', 'market-data']
+        path: ['/' + paths.admin, paths.marketData]
       },
       {
         iconName: 'flash-outline',
         label: $localize`Job Queue`,
-        path: ['/admin', 'jobs']
+        path: ['/' + paths.admin, paths.jobs]
       },
       {
         iconName: 'people-outline',
         label: $localize`Users`,
-        path: ['/admin', 'users']
+        path: ['/' + paths.admin, paths.users]
       }
     ];
   }
