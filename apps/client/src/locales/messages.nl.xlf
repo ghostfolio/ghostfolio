@@ -3979,7 +3979,7 @@
       </trans-unit>
       <trans-unit id="e587f3aaad8881a0b7732fb3e86df8a4c91f25d2" datatype="html">
         <source> Add Platform </source>
-        <target state="translated"> Platform toevoegen </target>
+        <target state="translated"> Platform Toevoegen </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-platform/admin-platform.component.html</context>
           <context context-type="linenumber">11</context>
@@ -5824,7 +5824,7 @@
       </trans-unit>
       <trans-unit id="de074268d7d7d759a6ca93af78aace60e16bb671" datatype="html">
         <source> Add Tag </source>
-        <target state="translated"> Voeg Label Toe </target>
+        <target state="translated"> Label Toevoegen </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/admin-tag.component.html</context>
           <context context-type="linenumber">11</context>
