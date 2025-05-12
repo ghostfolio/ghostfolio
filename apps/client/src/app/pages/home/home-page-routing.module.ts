@@ -4,6 +4,7 @@ import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overvi
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,27 +20,22 @@ const routes: Routes = [
         component: HomeOverviewComponent
       },
       {
-        path: 'holdings',
+        path: paths.holdings,
         component: HomeHoldingsComponent,
         title: $localize`Holdings`
       },
       {
-        path: 'holdings',
-        component: HomeHoldingsComponent,
-        title: $localize`Holdings`
-      },
-      {
-        path: 'summary',
+        path: paths.summary,
         component: HomeSummaryComponent,
         title: $localize`Summary`
       },
       {
-        path: 'market',
+        path: paths.market,
         component: HomeMarketComponent,
         title: $localize`Markets`
       },
       {
-        path: 'watchlist',
+        path: paths.watchlist,
         component: HomeWatchlistComponent,
         title: $localize`Watchlist`
       }

@@ -9,8 +9,11 @@ export const paths = {
   fire: 'fire',
   guides: $localize`:snake-case:guides`,
   glossary: $localize`:snake-case:glossary`,
+  holdings: 'holdings',
+  home: 'home',
   jobs: 'jobs',
   license: $localize`:snake-case:license`,
+  market: 'market',
   marketData: 'market-data',
   markets: $localize`:snake-case:markets`,
   ossFriends: $localize`:snake-case:oss-friends`,
@@ -20,7 +23,9 @@ export const paths = {
   register: $localize`:snake-case:register`,
   resources: $localize`:snake-case:resources`,
   settings: 'settings',
+  summary: 'summary',
   termsOfService: $localize`:snake-case:terms-of-service`,
   users: 'users',
+  watchlist: 'watchlist',
   xRay: 'x-ray'
 };

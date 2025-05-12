@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
@@ -36,27 +37,27 @@ export class HomePageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Overview`,
-              path: ['/home']
+              path: ['/' + paths.home]
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: ['/home', 'holdings']
+              path: ['/' + paths.home, paths.holdings]
             },
             {
               iconName: 'reader-outline',
               label: $localize`Summary`,
-              path: ['/home', 'summary']
+              path: ['/' + paths.home, paths.summary]
             },
             {
               iconName: 'bookmark-outline',
               label: $localize`Watchlist`,
-              path: ['/home', 'watchlist']
+              path: ['/' + paths.home, paths.watchlist]
             },
             {
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
-              path: ['/home', 'market']
+              path: ['/' + paths.home, paths.market]
             }
           ];
 
