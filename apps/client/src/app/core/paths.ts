@@ -29,5 +29,6 @@ export const paths = {
   termsOfService: $localize`:snake-case:terms-of-service`,
   users: 'users',
   watchlist: 'watchlist',
-  xRay: 'x-ray'
+  xRay: 'x-ray',
+  zen: 'zen'
 };

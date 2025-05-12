@@ -1,6 +1,7 @@
 import { HomeHoldingsComponent } from '@ghostfolio/client/components/home-holdings/home-holdings.component';
 import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -12,7 +13,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeOverviewComponent },
-      { path: 'holdings', component: HomeHoldingsComponent }
+      { path: paths.holdings, component: HomeHoldingsComponent }
     ],
     component: ZenPageComponent,
     path: '',
