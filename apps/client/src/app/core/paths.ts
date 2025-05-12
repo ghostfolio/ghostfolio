@@ -21,6 +21,7 @@ export const paths = {
   p: 'p',
   personalFinanceTools: 'personal-finance-tools',
   portfolio: 'portfolio',
+  saas: 'saas',
   settings: 'settings',
   start: 'start',
   summary: 'summary',
@@ -35,8 +36,8 @@ export const paths = {
   changelog: $localize`:snake-case:changelog`,
   faq: $localize`:snake-case:faq`,
   features: $localize`:snake-case:features`,
-  guides: $localize`:snake-case:guides`,
   glossary: $localize`:snake-case:glossary`,
+  guides: $localize`:snake-case:guides`,
   license: $localize`:snake-case:license`,
   markets: $localize`:snake-case:markets`,
   openSourceAlternativeTo: $localize`:snake-case:open-source-alternative-to`,
@@ -45,7 +46,6 @@ export const paths = {
   privacyPolicy: $localize`:snake-case:privacy-policy`,
   register: $localize`:snake-case:register`,
   resources: $localize`:snake-case:resources`,
-  saas: $localize`:snake-case:saas`,
   selfHosting: $localize`:snake-case:self-hosting`,
   termsOfService: $localize`:snake-case:terms-of-service`
 };
