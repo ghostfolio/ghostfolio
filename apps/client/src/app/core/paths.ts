@@ -1,5 +1,7 @@
 export const paths = {
   about: $localize`:snake-case:about`,
+  access: 'access',
+  account: 'account',
   activities: 'activities',
   admin: 'admin',
   allocations: 'allocations',
@@ -16,6 +18,7 @@ export const paths = {
   market: 'market',
   marketData: 'market-data',
   markets: $localize`:snake-case:markets`,
+  membership: 'membership',
   ossFriends: $localize`:snake-case:oss-friends`,
   portfolio: 'portfolio',
   pricing: $localize`:snake-case:pricing`,
