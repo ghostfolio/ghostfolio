@@ -44,10 +44,7 @@
       </trans-unit>
       <trans-unit id="9167640275204796639" datatype="html">
         <source>pricing</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
+        <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
           <context context-type="linenumber">44</context>
@@ -2690,18 +2687,18 @@
         <source>This feature is currently unavailable.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8947585964755853889" datatype="html">
         <source>Please try again later.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2712,7 +2709,7 @@
         <source>Oops! Something went wrong.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2727,7 +2724,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -5540,7 +5537,7 @@
         <source>Oops! It looks like you’re making too many requests. Please slow down a bit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="myAccount" datatype="html">
@@ -5589,7 +5586,7 @@
         <source>This action is not allowed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b74af38005e8a8914e45af2ec412e11ceafef8b6" datatype="html">

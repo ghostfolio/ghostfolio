@@ -49,7 +49,7 @@ export class AuthGuard {
         .pipe(
           catchError(() => {
             if (utmSource === 'ios') {
-              this.router.navigate(['/demo']);
+              this.router.navigate(['/' + paths.demo]);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
               this.router.navigate(['/' + paths.register]);
@@ -63,7 +63,7 @@ export class AuthGuard {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {
-              this.router.navigate(['/start']);
+              this.router.navigate(['/' + paths.start]);
               resolve(false);
               return EMPTY;
             }
@@ -92,14 +92,14 @@ export class AuthGuard {
             state.url.startsWith('/home') &&
             user.settings.viewMode === 'ZEN'
           ) {
-            this.router.navigate(['/zen']);
+            this.router.navigate(['/' + paths.zen]);
             resolve(false);
             return;
           } else if (state.url.startsWith('/start')) {
             if (user.settings.viewMode === 'ZEN') {
-              this.router.navigate(['/zen']);
+              this.router.navigate(['/' + paths.zen]);
             } else {
-              this.router.navigate(['/home']);
+              this.router.navigate(['/' + paths.home]);
             }
 
             resolve(false);
@@ -108,7 +108,7 @@ export class AuthGuard {
             state.url.startsWith('/zen') &&
             user.settings.viewMode === 'DEFAULT'
           ) {
-            this.router.navigate(['/home']);
+            this.router.navigate(['/' + paths.home]);
             resolve(false);
             return;
           }

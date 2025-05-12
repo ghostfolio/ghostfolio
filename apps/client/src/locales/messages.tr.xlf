@@ -49,10 +49,7 @@
       <trans-unit id="9167640275204796639" datatype="html">
         <source>pricing</source>
         <target state="translated">fiyatlandirma</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
+        <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
           <context context-type="linenumber">44</context>
@@ -2474,7 +2471,7 @@
         <target state="translated">Bu özellik şu an için mevcut değil.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8947585964755853889" datatype="html">
@@ -2482,11 +2479,11 @@
         <target state="translated">Daha sonra tekrar deneyiniz.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2498,7 +2495,7 @@
         <target state="translated">Hay Allah! Bir şeyler yanlış gitti.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2514,7 +2511,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -6100,7 +6097,7 @@
         <target state="translated">Oops! Görünüşe göre çok fazla istekte bulunuyorsunuz. Lütfen biraz yavaşlayın.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit id="myAccount" datatype="html">
@@ -6164,7 +6161,7 @@
         <target state="translated">Bu işlem izin verilmiyor.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="67933701892581429" datatype="html">
