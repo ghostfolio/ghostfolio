@@ -1,4 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,21 +19,21 @@ const routes: Routes = [
           )
       },
       {
-        path: $localize`:snake-case:glossary`,
+        path: paths.glossary,
         loadChildren: () =>
           import('./glossary/resources-glossary.module').then(
             (m) => m.ResourcesGlossaryPageModule
           )
       },
       {
-        path: $localize`:snake-case:guides`,
+        path: paths.guides,
         loadChildren: () =>
           import('./guides/resources-guides.module').then(
             (m) => m.ResourcesGuidesModule
           )
       },
       {
-        path: $localize`:snake-case:markets`,
+        path: paths.markets,
         loadChildren: () =>
           import('./markets/resources-markets.module').then(
             (m) => m.ResourcesMarketsModule
