@@ -17,13 +17,13 @@ import { paths } from './paths';
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
     `/${paths.about}`,
-    '/blog',
-    '/demo',
+    `/${paths.blog}`,
+    `/${paths.demo}`,
     `/${paths.faq}`,
     `/${paths.features}`,
     `/${paths.markets}`,
-    '/open',
-    '/p',
+    `/${paths.open}`,
+    `/${paths.p}`,
     `/${paths.pricing}`,
     `/${paths.register}`,
     `/${paths.resources}`
@@ -49,21 +49,21 @@ export class AuthGuard {
         .pipe(
           catchError(() => {
             if (utmSource === 'ios') {
-              this.router.navigate(['/demo']);
+              this.router.navigate(['/' + paths.demo]);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/' + $localize`register`]);
+              this.router.navigate(['/' + paths.register]);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) => {
-                const [, url] = state.url.split('/');
+              AuthGuard.PUBLIC_PAGE_ROUTES.some((publicPageRoute) => {
+                const [, url] = decodeURIComponent(state.url).split('/');
                 return `/${url}` === publicPageRoute;
-              })?.length > 0
+              })
             ) {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {
-              this.router.navigate(['/start']);
+              this.router.navigate(['/' + paths.start]);
               resolve(false);
               return EMPTY;
             }
@@ -92,14 +92,14 @@ export class AuthGuard {
             state.url.startsWith('/home') &&
             user.settings.viewMode === 'ZEN'
           ) {
-            this.router.navigate(['/zen']);
+            this.router.navigate(['/' + paths.zen]);
             resolve(false);
             return;
           } else if (state.url.startsWith('/start')) {
             if (user.settings.viewMode === 'ZEN') {
-              this.router.navigate(['/zen']);
+              this.router.navigate(['/' + paths.zen]);
             } else {
-              this.router.navigate(['/home']);
+              this.router.navigate(['/' + paths.home]);
             }
 
             resolve(false);
@@ -108,7 +108,7 @@ export class AuthGuard {
             state.url.startsWith('/zen') &&
             user.settings.viewMode === 'DEFAULT'
           ) {
-            this.router.navigate(['/home']);
+            this.router.navigate(['/' + paths.home]);
             resolve(false);
             return;
           }

@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -14,8 +15,8 @@ export class ResourcesGlossaryPageComponent implements OnInit {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
   public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`:snake-case:resources`,
-    'personal-finance-tools'
+    '/' + paths.resources,
+    paths.personalFinanceTools
   ];
 
   public constructor(private dataService: DataService) {

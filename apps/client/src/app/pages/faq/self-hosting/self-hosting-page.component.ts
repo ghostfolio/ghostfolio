@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/client/core/paths';
+
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -10,8 +12,7 @@ import { Subject } from 'rxjs';
 })
 export class SelfHostingPageComponent implements OnDestroy {
   public pricingUrl =
-    `https://ghostfol.io/${document.documentElement.lang}/` +
-    $localize`:snake-case:pricing`;
+    `https://ghostfol.io/${document.documentElement.lang}/` + paths.pricing;
 
   private unsubscribeSubject = new Subject<void>();
 

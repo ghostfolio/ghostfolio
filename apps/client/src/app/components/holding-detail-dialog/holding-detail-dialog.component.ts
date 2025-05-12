@@ -2,6 +2,7 @@ import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interf
 import { GfAccountsTableModule } from '@ghostfolio/client/components/accounts-table/accounts-table.module';
 import { GfDialogFooterModule } from '@ghostfolio/client/components/dialog-footer/dialog-footer.module';
 import { GfDialogHeaderModule } from '@ghostfolio/client/components/dialog-header/dialog-header.module';
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { NUMERICAL_PRECISION_THRESHOLD } from '@ghostfolio/common/config';
@@ -468,7 +469,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, createDialog: true }
     });
 
@@ -510,7 +511,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, editDialog: true }
     });
 

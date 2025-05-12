@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
@@ -33,12 +34,12 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Overview`,
-              path: ['/zen']
+              path: ['/' + paths.zen]
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: ['/zen', 'holdings']
+              path: ['/' + paths.zen, paths.holdings]
             }
           ];
           this.user = state.user;

@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/client/core/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,5 +11,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './exploring-the-path-to-fire-page.html'
 })
 export class ExploringThePathToFirePageComponent {
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkFeatures = ['/' + paths.features];
 }

@@ -1,5 +1,6 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
+import { paths } from '@ghostfolio/client/core/paths';
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -76,8 +77,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
             this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
 
           this.pricingUrl =
-            `https://ghostfol.io/${languageCode}/` +
-            $localize`:snake-case:pricing`;
+            `https://ghostfol.io/${languageCode}/` + paths.pricing;
 
           this.changeDetectorRef.markForCheck();
         }

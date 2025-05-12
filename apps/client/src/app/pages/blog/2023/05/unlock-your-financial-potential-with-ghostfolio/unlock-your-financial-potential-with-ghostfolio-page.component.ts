@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/client/core/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,6 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './unlock-your-financial-potential-with-ghostfolio-page.html'
 })
 export class UnlockYourFinancialPotentialWithGhostfolioPageComponent {
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkResources = ['/' + paths.resources];
 }

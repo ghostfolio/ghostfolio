@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
@@ -34,18 +35,18 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'settings-outline',
               label: $localize`Settings`,
-              path: ['/account']
+              path: ['/' + paths.account]
             },
             {
               iconName: 'diamond-outline',
               label: $localize`Membership`,
-              path: ['/account/membership'],
+              path: ['/' + paths.account, paths.membership],
               showCondition: !!this.user?.subscription
             },
             {
               iconName: 'key-outline',
               label: $localize`Access`,
-              path: ['/account', 'access']
+              path: ['/' + paths.account, paths.access]
             }
           ];
 

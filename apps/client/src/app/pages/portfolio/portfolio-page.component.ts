@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 
@@ -33,27 +34,27 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Analysis`,
-              path: ['/portfolio']
+              path: ['/' + paths.portfolio]
             },
             {
               iconName: 'swap-vertical-outline',
               label: $localize`Activities`,
-              path: ['/portfolio', 'activities']
+              path: ['/' + paths.portfolio, paths.activities]
             },
             {
               iconName: 'pie-chart-outline',
               label: $localize`Allocations`,
-              path: ['/portfolio', 'allocations']
+              path: ['/' + paths.portfolio, paths.allocations]
             },
             {
               iconName: 'calculator-outline',
               label: 'FIRE ',
-              path: ['/portfolio', 'fire']
+              path: ['/' + paths.portfolio, paths.fire]
             },
             {
               iconName: 'scan-outline',
               label: 'X-ray',
-              path: ['/portfolio', 'x-ray']
+              path: ['/' + paths.portfolio, paths.xRay]
             }
           ];
           this.user = state.user;

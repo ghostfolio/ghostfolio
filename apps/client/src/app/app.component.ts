@@ -29,6 +29,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { NotificationService } from './core/notification/notification.service';
+import { paths } from './core/paths';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';
@@ -62,29 +63,23 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkAboutChangelog = [
-    '/' + $localize`:snake-case:about`,
-    'changelog'
-  ];
-  public routerLinkAboutLicense = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:license`
-  ];
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkAboutChangelog = ['/' + paths.about, paths.changelog];
+  public routerLinkAboutLicense = ['/' + paths.about, paths.license];
   public routerLinkAboutPrivacyPolicy = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:privacy-policy`
+    '/' + paths.about,
+    paths.privacyPolicy
   ];
   public routerLinkAboutTermsOfService = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:terms-of-service`
+    '/' + paths.about,
+    paths.termsOfService
   ];
-  public routerLinkFaq = ['/' + $localize`:snake-case:faq`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routerLinkFaq = ['/' + paths.faq];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkMarkets = ['/' + paths.markets];
+  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkRegister = ['/' + paths.register];
+  public routerLinkResources = ['/' + paths.resources];
   public showFooter = false;
   public user: User;
 

@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
@@ -25,8 +26,8 @@ import { Subject, takeUntil } from 'rxjs';
 export class GfFeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routerLinkRegister = ['/' + paths.register];
+  public routerLinkResources = ['/' + paths.resources];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

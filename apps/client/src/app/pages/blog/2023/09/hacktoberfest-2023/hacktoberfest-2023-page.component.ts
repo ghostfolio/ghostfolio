@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/client/core/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,5 +11,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './hacktoberfest-2023-page.html'
 })
 export class Hacktoberfest2023PageComponent {
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkAbout = ['/' + paths.about];
 }

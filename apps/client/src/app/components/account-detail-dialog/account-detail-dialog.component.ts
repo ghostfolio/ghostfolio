@@ -1,5 +1,6 @@
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -92,7 +93,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, createDialog: true }
     });
 
@@ -151,7 +152,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
   }
 
   public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, editDialog: true }
     });
 

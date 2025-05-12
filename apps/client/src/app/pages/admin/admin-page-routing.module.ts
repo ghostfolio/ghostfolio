@@ -4,6 +4,7 @@ import { AdminOverviewComponent } from '@ghostfolio/client/components/admin-over
 import { AdminSettingsComponent } from '@ghostfolio/client/components/admin-settings/admin-settings.component';
 import { AdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/client/core/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -20,22 +21,22 @@ const routes: Routes = [
         title: $localize`Admin Control`
       },
       {
-        path: 'jobs',
+        path: paths.jobs,
         component: AdminJobsComponent,
         title: $localize`Job Queue`
       },
       {
-        path: 'market-data',
+        path: paths.marketData,
         component: AdminMarketDataComponent,
         title: $localize`Market Data`
       },
       {
-        path: 'settings',
+        path: paths.settings,
         component: AdminSettingsComponent,
         title: $localize`Settings`
       },
       {
-        path: 'users',
+        path: paths.users,
         component: AdminUsersComponent,
         title: $localize`Users`
       }

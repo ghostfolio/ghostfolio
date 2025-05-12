@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -24,8 +25,8 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkRegister = ['/' + paths.register];
   public statistics: Statistics;
   public testimonials = [
     {
