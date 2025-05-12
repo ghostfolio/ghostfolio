@@ -4319,7 +4319,7 @@
         <target state="new">Personal Finance Tools</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d1db8b2ae4504dc216afb401317392fa0fca7d63" datatype="html">
@@ -5175,7 +5175,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6099902667884446960" datatype="html">
@@ -5205,7 +5205,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.ts</context>
@@ -5222,7 +5222,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4002166200801232073" datatype="html">
@@ -5231,11 +5231,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a92a0e8a2e70e4a0735b714680629187d2b6f23e" datatype="html">
@@ -5267,7 +5263,7 @@
         <target state="translated">Alternativa de software libre a <x id="PH" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="59aece48b4cff51f656b88e8f6c4061bb03410dc" datatype="html">
@@ -5305,13 +5301,10 @@
       <trans-unit id="5827613432388799534" datatype="html">
         <source>open-source-alternative-to</source>
         <target state="translated">alternativa-de-software-libre-a</target>
+        <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page-routing.module.ts</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.component.ts</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="986ed5a2e3edee8d10d65a7c087b226879ebaecc" datatype="html">
@@ -6088,7 +6081,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2806917038528218276" datatype="html">
@@ -7435,7 +7428,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2029980907058777630" datatype="html">
@@ -7617,7 +7610,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7038199246848048519" datatype="html">
@@ -7626,7 +7619,7 @@
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
     </body>

@@ -12,8 +12,8 @@ import { Subject } from 'rxjs';
   standalone: false
 })
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
-  public pathAlternativeTo = $localize`open-source-alternative-to` + '-';
-  public pathResources = '/' + $localize`resources`;
+  public pathAlternativeTo = paths.openSourceAlternativeTo + '-';
+  public pathResources = '/' + paths.resources;
   public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
