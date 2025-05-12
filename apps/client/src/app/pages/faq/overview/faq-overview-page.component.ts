@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 
@@ -13,9 +14,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class FaqOverviewPageComponent implements OnDestroy {
   public pricingUrl =
-    `https://ghostfol.io/${document.documentElement.lang}/` +
-    $localize`:snake-case:pricing`;
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+    `https://ghostfol.io/${document.documentElement.lang}/` + paths.pricing;
+  public routerLinkFeatures = ['/' + paths.features];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

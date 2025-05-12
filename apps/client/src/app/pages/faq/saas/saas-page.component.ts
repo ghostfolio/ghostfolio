@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 
@@ -13,10 +14,9 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SaasPageComponent implements OnDestroy {
   public pricingUrl =
-    `https://ghostfol.io/${document.documentElement.lang}/` +
-    $localize`:snake-case:pricing`;
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+    `https://ghostfol.io/${document.documentElement.lang}/` + paths.pricing;
+  public routerLinkMarkets = ['/' + paths.markets];
+  public routerLinkRegister = ['/' + paths.register];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

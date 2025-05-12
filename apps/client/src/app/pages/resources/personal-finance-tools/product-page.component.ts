@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
@@ -19,11 +20,11 @@ export class GfProductPageComponent implements OnInit {
   public price: number;
   public product1: Product;
   public product2: Product;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkFeatures = ['/' + paths.features];
   public routerLinkResourcesPersonalFinanceTools = [
-    '/' + $localize`:snake-case:resources`,
-    'personal-finance-tools'
+    '/' + paths.resources,
+    paths.personalFinanceTools
   ];
   public tags: string[];
 

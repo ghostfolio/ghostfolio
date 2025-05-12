@@ -39,7 +39,7 @@ const routes: Routes = [
             (m) => m.ResourcesMarketsModule
           )
       },
-      ...['personal-finance-tools'].map((path) => ({
+      ...[paths.personalFinanceTools].map((path) => ({
         path,
         loadChildren: () =>
           import(

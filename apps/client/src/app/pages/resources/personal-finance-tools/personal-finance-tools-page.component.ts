@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { Component, OnDestroy } from '@angular/core';
@@ -16,7 +17,7 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
+  public routerLinkAbout = ['/' + paths.about];
 
   private unsubscribeSubject = new Subject<void>();
 

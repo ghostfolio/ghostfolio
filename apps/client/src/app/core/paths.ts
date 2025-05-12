@@ -19,6 +19,7 @@ export const paths = {
   membership: 'membership',
   open: 'open',
   p: 'p',
+  personalFinanceTools: 'personal-finance-tools',
   portfolio: 'portfolio',
   settings: 'settings',
   start: 'start',
