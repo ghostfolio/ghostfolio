@@ -1,3 +1,4 @@
+import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
@@ -35,18 +36,18 @@ export class FaqPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`General`,
-        path: ['/' + $localize`faq`]
+        path: ['/' + paths.faq]
       },
       {
         iconName: 'cloudy-outline',
         label: $localize`Cloud` + ' (SaaS)',
-        path: ['/' + $localize`faq`, 'saas'],
+        path: ['/' + paths.faq, paths.saas],
         showCondition: this.hasPermissionForSubscription
       },
       {
         iconName: 'server-outline',
         label: $localize`Self-Hosting`,
-        path: ['/' + $localize`faq`, $localize`self-hosting`]
+        path: ['/' + paths.faq, paths.selfHosting]
       }
     ];
   }

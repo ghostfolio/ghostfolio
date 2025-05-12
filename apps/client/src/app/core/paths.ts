@@ -22,6 +22,8 @@ export const paths = {
   privacyPolicy: $localize`:snake-case:privacy-policy`,
   register: $localize`:snake-case:register`,
   resources: $localize`:snake-case:resources`,
+  saas: $localize`:snake-case:saas`,
+  selfHosting: $localize`:snake-case:self-hosting`,
   settings: 'settings',
   summary: 'summary',
   termsOfService: $localize`:snake-case:terms-of-service`,
