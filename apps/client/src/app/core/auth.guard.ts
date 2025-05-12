@@ -17,13 +17,13 @@ import { paths } from './paths';
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
     `/${paths.about}`,
-    '/blog',
-    '/demo',
+    `/${paths.blog}`,
+    `/${paths.demo}`,
     `/${paths.faq}`,
     `/${paths.features}`,
     `/${paths.markets}`,
-    '/open',
-    '/p',
+    `/${paths.open}`,
+    `/${paths.p}`,
     `/${paths.pricing}`,
     `/${paths.register}`,
     `/${paths.resources}`
@@ -52,13 +52,13 @@ export class AuthGuard {
               this.router.navigate(['/demo']);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/' + $localize`register`]);
+              this.router.navigate(['/' + paths.register]);
               resolve(false);
             } else if (
-              AuthGuard.PUBLIC_PAGE_ROUTES.filter((publicPageRoute) => {
-                const [, url] = state.url.split('/');
+              AuthGuard.PUBLIC_PAGE_ROUTES.some((publicPageRoute) => {
+                const [, url] = decodeURIComponent(state.url).split('/');
                 return `/${url}` === publicPageRoute;
-              })?.length > 0
+              })
             ) {
               resolve(true);
               return EMPTY;
