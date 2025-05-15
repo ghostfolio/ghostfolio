@@ -231,6 +231,36 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="allocations">
+      <th
+        *matHeaderCellDef
+        class="px-1 text-right"
+        mat-header-cell
+        mat-sort-header="allocationInPercentage"
+      >
+        <ng-container i18n>Allocations</ng-container>
+      </th>
+      <td
+        *matCellDef="let element"
+        class="px-1 text-right"
+        mat-cell
+      >
+        <gf-value
+          class="d-inline-block justify-content-end"
+          [isPercent]="true"
+          [locale]="locale"
+          [value]="element.allocationInPercentage / 100"
+        />
+      </td>
+      <td
+        *matFooterCellDef
+        class="px-1 text-right"
+        mat-footer-cell
+      >
+        100%
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="comment">
       <th
         *matHeaderCellDef
