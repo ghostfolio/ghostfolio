@@ -87,7 +87,7 @@ export class AccountController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string
   ): Promise<AccountsResponse> {
@@ -110,7 +110,7 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<AccountWithValue> {
     const impersonationUserId =
