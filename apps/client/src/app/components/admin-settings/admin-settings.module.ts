@@ -6,9 +6,10 @@ import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AdminSettingsComponent } from './admin-settings.component';
 
@@ -21,8 +22,9 @@ import { AdminSettingsComponent } from './admin-settings.component';
     GfAssetProfileIconComponent,
     GfPremiumIndicatorComponent,
     MatButtonModule,
-    MatCardModule,
     MatMenuModule,
+    MatTableModule,
+    NgxSkeletonLoaderModule,
     RouterModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
