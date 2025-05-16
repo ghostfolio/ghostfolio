@@ -1,3 +1,15 @@
 :host {
   display: block;
+
+  .mat-mdc-progress-bar {
+    --mdc-linear-progress-active-indicator-height: 0.5rem;
+    --mdc-linear-progress-track-height: 0.5rem;
+    border-radius: 0.25rem;
+
+    ::ng-deep {
+      .mdc-linear-progress__buffer-bar {
+        background-color: rgb(var(--palette-background-unselected-chip));
+      }
+    }
+  }
 }
