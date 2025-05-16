@@ -281,6 +281,10 @@ export class YahooFinanceService implements DataProviderInterface {
           return true;
         });
 
+      if (quotes.length === 0) {
+        return { items: [] };
+      }
+
       const marketData = await this.yahooFinance.quote(
         quotes.map(({ symbol }) => {
           return symbol;
@@ -320,6 +324,7 @@ export class YahooFinanceService implements DataProviderInterface {
       }
     } catch (error) {
       Logger.error(error, 'YahooFinanceService');
+      return { items: [] };
     }
 
     return { items };
