@@ -6,4 +6,5 @@ export type AccountWithValue = AccountModel & {
   transactionCount: number;
   value: number;
   valueInBaseCurrency: number;
+  allocationInPercentage: number;
 };

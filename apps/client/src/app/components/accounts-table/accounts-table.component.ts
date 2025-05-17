@@ -80,6 +80,8 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
     if (this.showValueInBaseCurrency) {
       this.displayedColumns.push('valueInBaseCurrency');
     }
+    
+    this.displayedColumns.push('allocations');
 
     this.displayedColumns.push('comment');
 
