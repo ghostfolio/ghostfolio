@@ -4352,7 +4352,7 @@
       </trans-unit>
       <trans-unit id="fe71658bf131fad393a7ce618908e246617ded26" datatype="html">
         <source>pursuing a buy &amp; hold strategy</source>
-        <target state="translated">perseguint una compra &amp; mantenir l'estratègia</target>
+        <target state="translated">perseguint una compra &amp; mantenir l’estratègia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">286</context>
@@ -4496,7 +4496,7 @@
       </trans-unit>
       <trans-unit id="8289b77182a57fbf7ebe3bfd506b85e3fdd9e537" datatype="html">
         <source> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></source>
-        <target state="translated"> Uneix-te ara <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> o consulteu el compte d'exemple <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
+        <target state="translated"> Uneix-te ara <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> o consulteu el compte d’exemple <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">434</context>
@@ -4604,7 +4604,7 @@
       </trans-unit>
       <trans-unit id="72ba3bcdd8350cb8bf462e217a28ec7f7a48bb44" datatype="html">
         <source>Update activity</source>
-        <target state="translated">Activitat d'actualització</target>
+        <target state="translated">Activitat d’actualització</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">10</context>
