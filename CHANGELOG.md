@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Harmonized the data providers management style of the admin control panel
+- Restricted the permissions of the demo user
 - Renamed `Order` to `activities` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
