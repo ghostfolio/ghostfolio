@@ -13,10 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Harmonized the data providers management style of the admin control panel
+- Extended the data providers management of the admin control panel by the asset profile count
+- Restricted the permissions of the demo user
 - Renamed `Order` to `activities` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
+- Upgraded `countup.js` from version `2.8.0` to `2.8.2`
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
+- Upgraded `yahoo-finance2` from version `2.11.3` to `3.3.1`
 
 ### Fixed
 
