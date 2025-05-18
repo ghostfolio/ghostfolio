@@ -8,6 +8,7 @@ import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-prov
 import { GhostfolioService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
+import { MoexService } from '@ghostfolio/api/services/data-provider/moex/moex.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
@@ -43,6 +44,7 @@ import { DataProviderService } from './data-provider.service';
     ManualService,
     RapidApiService,
     YahooFinanceService,
+    MoexService,
     {
       inject: [
         AlphaVantageService,
@@ -53,7 +55,8 @@ import { DataProviderService } from './data-provider.service';
         GoogleSheetsService,
         ManualService,
         RapidApiService,
-        YahooFinanceService
+        YahooFinanceService,
+        MoexService
       ],
       provide: 'DataProviderInterfaces',
       useFactory: (
@@ -65,7 +68,8 @@ import { DataProviderService } from './data-provider.service';
         googleSheetsService,
         manualService,
         rapidApiService,
-        yahooFinanceService
+        yahooFinanceService,
+        moexService
       ) => [
         alphaVantageService,
         coinGeckoService,
@@ -75,11 +79,17 @@ import { DataProviderService } from './data-provider.service';
         googleSheetsService,
         manualService,
         rapidApiService,
-        yahooFinanceService
+        yahooFinanceService,
+        moexService
       ]
     },
     YahooFinanceDataEnhancerService
   ],
-  exports: [DataProviderService, ManualService, YahooFinanceService]
+  exports: [
+    DataProviderService,
+    ManualService,
+    YahooFinanceService,
+    MoexService
+  ]
 })
 export class DataProviderModule {}
