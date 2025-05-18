@@ -183,6 +183,20 @@ function getYahooSymbolFromMoex(symbol: string): string {
   return `${symbol}.ME`;
 }
 
+async function getAssetUrlFromYahoo(
+  yahooFinanceService: YahooFinanceService,
+  symbol: string
+): Promise<string> {
+  try {
+    const profile = await yahooFinanceService.getAssetProfile({
+      symbol: getYahooSymbolFromMoex(symbol)
+    });
+    return profile?.url;
+  } catch (e) {
+    Logger.warn(`Can't get url for symbol ${symbol} from YAHOO, error is ${e}`);
+    return null;
+  }
+}
 
 async function getSecuritySpecification(
   symbol: string,
@@ -366,7 +380,8 @@ export class MoexService implements DataProviderInterface {
               weight: 1
             }
           ]
-        : null
+        : null,
+      url: await getAssetUrlFromYahoo(this.yahooFinanceService, symbol)
     };
   }
 
