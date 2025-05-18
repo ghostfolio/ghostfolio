@@ -17,6 +17,7 @@ import {
 
 import { Injectable, Logger } from '@nestjs/common';
 import { $Enums, SymbolProfile } from '@prisma/client';
+import { isISO4217CurrencyCode } from 'class-validator';
 import {
   subYears,
   format,
@@ -182,6 +183,26 @@ function getYahooSymbolFromMoex(symbol: string): string {
   return `${symbol}.ME`;
 }
 
+
+async function getSecuritySpecification(
+  symbol: string,
+  dataSectionName: string,
+  key: string
+): Promise<Map<string | number, Map<string, string | number>>> {
+  const securitySpecificationResponse =
+    await moexClient.security.getSecuritySpecification({ security: symbol });
+  const errorMessage = securitySpecificationResponse.issError;
+  if (errorMessage) {
+    Logger.warn(errorMessage, 'MoexService.getAssetProfile');
+    return new Map<string | number, Map<string, string | number>>();
+  }
+
+  return response_data_to_map(
+    securitySpecificationResponse.data[dataSectionName],
+    key
+  );
+}
+
 interface SecurityTypeMap {
   [key: string]: [$Enums.AssetClass?, $Enums.AssetSubClass?];
 }
@@ -302,16 +323,9 @@ export class MoexService implements DataProviderInterface {
   }: {
     symbol: string;
   }): Promise<Partial<SymbolProfile>> {
-    const securitySpecificationResponse =
-      await moexClient.security.getSecuritySpecification({ security: symbol });
-    const errorMessage = securitySpecificationResponse.issError;
-    if (errorMessage) {
-      Logger.warn(errorMessage, 'MoexService.getAssetProfile');
-      return {};
-    }
-
-    const securitySpecification = response_data_to_map(
-      securitySpecificationResponse.data.description,
+    const securitySpecification = await getSecuritySpecification(
+      symbol,
+      'description',
       'name'
     );
 
@@ -326,13 +340,19 @@ export class MoexService implements DataProviderInterface {
     const [assetClass, assetSubClass] =
       securityTypeMap[type.get('value').toString()] ?? [];
 
+    let currency = faceunit
+      ? getCurrency(faceunit.get('value').toString().toUpperCase())
+      : 'RUB';
+
+    if (!isISO4217CurrencyCode(currency)) {
+      currency = 'RUB';
+    }
+
     return {
       assetClass: assetClass,
       assetSubClass: assetSubClass,
       createdAt: issueDate ? new Date(issueDate.get('value')) : new Date(),
-      currency: faceunit
-        ? getCurrency(faceunit.get('value').toString())
-        : 'RUB',
+      currency,
       dataSource: this.getName(),
       id: symbol,
       isin: isin ? isin.get('value').toString() : null,
@@ -416,6 +436,17 @@ export class MoexService implements DataProviderInterface {
   async getHistorical({ from, symbol, to }: GetHistoricalParams): Promise<{
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
+    const securitySpecification = await getSecuritySpecification(
+      symbol,
+      'boards',
+      'is_primary'
+    );
+    const primaryBoard = securitySpecification.get(1);
+
+    const board_id = primaryBoard.get('boardid');
+    const market = primaryBoard.get('market');
+    const engine = primaryBoard.get('engine');
+
     const params: Record<string, any> = {
       sort_order: 'desc',
       marketprice_board: '1',
@@ -429,11 +460,16 @@ export class MoexService implements DataProviderInterface {
       async (x) => {
         params['start'] = x;
         return await moexClient.request(
-          `history/engines/stock/markets/shares/securities/${symbol}`,
+          `history/engines/${engine}/markets/${market}/securities/${symbol}`,
           params
         );
       },
-      (x) => x.data.history
+      (x) => {
+        return {
+          columns: x.data.history.columns,
+          data: x.data.history.data.filter((x) => x[0] === board_id)
+        };
+      }
     );
 
     const history = response_data_to_map(historyResponse, 'TRADEDATE');
@@ -444,9 +480,13 @@ export class MoexService implements DataProviderInterface {
     result[symbol] = {};
 
     for (const [key, value] of history.entries()) {
-      const price = value.get('LEGALCLOSEPRICE');
+      const price = value.get('LEGALCLOSEPRICE') ?? value.get('CLOSE');
       if (typeof price === 'number')
         result[symbol][key] = { marketPrice: price };
+      else
+        Logger.error(
+          `We have quote, but can't get price. Symbol ${symbol}, columns are [${historyResponse.columns.join(', ')}]`
+        );
     }
 
     return result;
