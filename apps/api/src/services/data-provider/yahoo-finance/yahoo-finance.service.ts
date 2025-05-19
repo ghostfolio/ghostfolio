@@ -32,7 +32,10 @@ import {
   HistoricalDividendsResult,
   HistoricalHistoryResult
 } from 'yahoo-finance2/esm/src/modules/historical';
-import { Quote } from 'yahoo-finance2/esm/src/modules/quote';
+import {
+  Quote,
+  QuoteOptionsWithReturnArray
+} from 'yahoo-finance2/esm/src/modules/quote';
 import { SearchQuoteNonYahoo } from 'yahoo-finance2/script/src/modules/search';
 
 @Injectable()
@@ -201,7 +204,13 @@ export class YahooFinanceService implements DataProviderInterface {
       >[] = [];
 
       try {
-        quotes = await this.yahooFinance.quote(yahooFinanceSymbols);
+        quotes = await this.yahooFinance.quote(
+          yahooFinanceSymbols,
+          {} as QuoteOptionsWithReturnArray,
+          {
+            validateResult: determineStockCurrency(symbols[0]) == null
+          } as ModuleOptionsWithValidateTrue
+        );
       } catch (error) {
         Logger.error(error, 'YahooFinanceService');
 
@@ -294,7 +303,11 @@ export class YahooFinanceService implements DataProviderInterface {
       const marketData = await this.yahooFinance.quote(
         quotes.map(({ symbol }) => {
           return symbol;
-        })
+        }),
+        {} as QuoteOptionsWithReturnArray,
+        {
+          validateResult: determineStockCurrency(quotes[0].symbol) == null
+        } as ModuleOptionsWithValidateTrue
       );
 
       for (const marketDataItem of marketData) {
