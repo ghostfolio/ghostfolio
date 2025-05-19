@@ -1,3 +1,4 @@
+import { determineStockCurrency } from '@ghostfolio/api/helper/market-currencies.helper';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { YahooFinanceDataEnhancerService } from '@ghostfolio/api/services/data-provider/data-enhancer/yahoo-finance/yahoo-finance.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
@@ -25,6 +26,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DataSource, SymbolProfile } from '@prisma/client';
 import { addDays, format, isSameDay } from 'date-fns';
 import YahooFinance from 'yahoo-finance2';
+import { ModuleOptionsWithValidateTrue } from 'yahoo-finance2/esm/src/lib/moduleCommon';
 import { ChartResultArray } from 'yahoo-finance2/esm/src/modules/chart';
 import {
   HistoricalDividendsResult,
@@ -81,8 +83,12 @@ export class YahooFinanceService implements DataProviderInterface {
             events: 'dividends',
             interval: granularity === 'month' ? '1mo' : '1d',
             period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
-          }
+            period2: format(to, DATE_FORMAT),
+            return: 'array'
+          },
+          {
+            validateResult: determineStockCurrency(symbol) == null
+          } as ModuleOptionsWithValidateTrue
         )
       );
       const response: {
@@ -129,8 +135,12 @@ export class YahooFinanceService implements DataProviderInterface {
           {
             interval: '1d',
             period1: format(from, DATE_FORMAT),
-            period2: format(to, DATE_FORMAT)
-          }
+            period2: format(to, DATE_FORMAT),
+            return: 'array'
+          },
+          {
+            validateResult: determineStockCurrency(symbol) == null
+          } as ModuleOptionsWithValidateTrue
         )
       );
 
@@ -211,7 +221,7 @@ export class YahooFinanceService implements DataProviderInterface {
           );
 
         response[symbol] = {
-          currency: quote.currency,
+          currency: quote.currency ?? determineStockCurrency(symbol),
           dataSource: this.getName(),
           marketState:
             quote.marketState === 'REGULAR' ||
@@ -307,7 +317,7 @@ export class YahooFinanceService implements DataProviderInterface {
           assetClass,
           assetSubClass,
           symbol,
-          currency: marketDataItem.currency,
+          currency: marketDataItem.currency ?? determineStockCurrency(symbol),
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: this.getName(),
           name: this.yahooFinanceDataEnhancerService.formatName({
