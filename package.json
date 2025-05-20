@@ -133,7 +133,7 @@
     "rxjs": "7.8.1",
     "stripe": "17.3.0",
     "svgmap": "2.12.2",
-    "twitter-api-v2": "1.14.2",
+    "twitter-api-v2": "1.23.0",
     "uuid": "11.1.0",
     "yahoo-finance2": "3.3.2",
     "zone.js": "0.15.0"
