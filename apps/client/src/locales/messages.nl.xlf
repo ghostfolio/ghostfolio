@@ -6562,7 +6562,7 @@
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ebf471e68247ca2110cdc5c98538e2e2bbf6e56e" datatype="html">
+      <trans-unit id="44268762ecf7c7d690288f763f17196216671353" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
         <target state="translated">{VAR_PLURAL, plural, =1 {activiteit} other {activiteiten}}</target>
         <context-group purpose="location">

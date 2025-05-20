@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extended the data providers management of the admin control panel by the asset profile count
 - Restricted the permissions of the demo user
 - Renamed `Order` to `activities` in the `User` database schema
+- Removed the deprecated endpoint `GET api/v1/admin/market-data/:dataSource/:symbol`
+- Removed the deprecated endpoint `POST api/v1/admin/market-data/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/admin/market-data/:dataSource/:symbol/:dateString`
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
