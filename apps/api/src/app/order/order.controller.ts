@@ -97,7 +97,7 @@ export class OrderController {
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getAllOrders(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
     @Query('dataSource') filterByDataSource?: string,
@@ -150,7 +150,7 @@ export class OrderController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInResponseInterceptor)
   public async getOrderById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<Activity> {
     const impersonationUserId =

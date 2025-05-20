@@ -1249,7 +1249,7 @@ export class PortfolioService {
 
     const rules: PortfolioReportResponse['rules'] = {
       accountClusterRisk:
-        summary.ordersCount > 0
+        summary.activityCount > 0
           ? await this.rulesService.evaluate(
               [
                 new AccountClusterRiskCurrentInvestment(
@@ -1265,7 +1265,7 @@ export class PortfolioService {
             )
           : undefined,
       assetClassClusterRisk:
-        summary.ordersCount > 0
+        summary.activityCount > 0
           ? await this.rulesService.evaluate(
               [
                 new AssetClassClusterRiskEquity(
@@ -1281,7 +1281,7 @@ export class PortfolioService {
             )
           : undefined,
       currencyClusterRisk:
-        summary.ordersCount > 0
+        summary.activityCount > 0
           ? await this.rulesService.evaluate(
               [
                 new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
@@ -1297,7 +1297,7 @@ export class PortfolioService {
             )
           : undefined,
       economicMarketClusterRisk:
-        summary.ordersCount > 0
+        summary.activityCount > 0
           ? await this.rulesService.evaluate(
               [
                 new EconomicMarketClusterRiskDevelopedMarkets(
@@ -1338,7 +1338,7 @@ export class PortfolioService {
         userSettings
       ),
       regionalMarketClusterRisk:
-        summary.ordersCount > 0
+        summary.activityCount > 0
           ? await this.rulesService.evaluate(
               [
                 new RegionalMarketClusterRiskAsiaPacific(
@@ -1981,6 +1981,9 @@ export class PortfolioService {
       netPerformanceWithCurrencyEffect,
       totalBuy,
       totalSell,
+      activityCount: activities.filter(({ type }) => {
+        return ['BUY', 'SELL'].includes(type);
+      }).length,
       committedFunds: committedFunds.toNumber(),
       currentValueInBaseCurrency: currentValueInBaseCurrency.toNumber(),
       dividendInBaseCurrency: dividendInBaseCurrency.toNumber(),
@@ -2008,9 +2011,6 @@ export class PortfolioService {
       interest: interest.toNumber(),
       items: valuables.toNumber(),
       liabilities: liabilities.toNumber(),
-      ordersCount: activities.filter(({ type }) => {
-        return ['BUY', 'SELL'].includes(type);
-      }).length,
       totalInvestment: totalInvestment.toNumber(),
       totalValueInBaseCurrency: netWorth
     };
