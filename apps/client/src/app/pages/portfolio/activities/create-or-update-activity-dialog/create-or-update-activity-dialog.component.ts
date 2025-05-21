@@ -39,6 +39,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public currencies: string[] = [];
+  public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
   public defaultDateFormat: string;
   public isLoading = false;
@@ -63,8 +64,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.mode = this.data.activity.id ? 'update' : 'create';
+    this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
     this.locale = this.data.user?.settings?.locale;
+    this.mode = this.data.activity?.id ? 'update' : 'create';
+
     this.dateAdapter.setLocale(this.locale);
 
     const { currencies, platforms } = this.dataService.fetchInfo();
@@ -210,7 +213,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('type').value
         )
       ) {
-        this.updateSymbol();
+        this.updateAssetProfile();
       }
 
       this.changeDetectorRef.markForCheck();
@@ -397,7 +400,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         this.dialogRef.close(activity);
       } else {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
+        (activity as UpdateOrderDto).id = this.data.activity?.id;
 
         await validateObjectForForm({
           classDto: UpdateOrderDto,
@@ -422,7 +425,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  private updateSymbol() {
+  private updateAssetProfile() {
     this.isLoading = true;
     this.changeDetectorRef.markForCheck();
 
@@ -450,6 +453,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('dataSource').setValue(dataSource);
         }
 
+        this.currencyOfAssetProfile = currency;
         this.currentMarketPrice = marketPrice;
 
         this.isLoading = false;

@@ -245,6 +245,7 @@ model Tag {
 
 model User {
   accessToken   String?
+  activities    Order[]
   authChallenge String?
   createdAt     DateTime        @default(now())
   id            String          @id @default(uuid())
@@ -260,7 +261,6 @@ model User {
   Analytics     Analytics?
   ApiKey        ApiKey[]
   AuthDevice    AuthDevice[]
-  Order         Order[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]
   Tag           Tag[]

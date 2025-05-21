@@ -259,11 +259,11 @@
             <gf-portfolio-proportion-chart
               [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
+              [data]="sectors"
               [isInPercent]="true"
               [keys]="['name']"
               [locale]="data.locale"
               [maxItems]="10"
-              [positions]="sectors"
             />
           </div>
           <div class="col-md-6 mb-3">
@@ -271,11 +271,11 @@
             <gf-portfolio-proportion-chart
               [baseCurrency]="data.baseCurrency"
               [colorScheme]="data.colorScheme"
+              [data]="countries"
               [isInPercent]="true"
               [keys]="['name']"
               [locale]="data.locale"
               [maxItems]="10"
-              [positions]="countries"
             />
           </div>
         }

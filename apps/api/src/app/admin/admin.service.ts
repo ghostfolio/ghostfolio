@@ -143,15 +143,30 @@ export class AdminService {
       this.countUsersWithAnalytics()
     ]);
 
+    const dataProviders = await Promise.all(
+      dataSources.map(async (dataSource) => {
+        const dataProviderInfo = this.dataProviderService
+          .getDataProvider(dataSource)
+          .getDataProviderInfo();
+
+        const assetProfileCount = await this.prismaService.symbolProfile.count({
+          where: {
+            dataSource
+          }
+        });
+
+        return {
+          ...dataProviderInfo,
+          assetProfileCount
+        };
+      })
+    );
+
     return {
+      dataProviders,
       settings,
       transactionCount,
       userCount,
-      dataProviders: dataSources.map((dataSource) => {
-        return this.dataProviderService
-          .getDataProvider(dataSource)
-          .getDataProviderInfo();
-      }),
       version: environment.version
     };
   }
@@ -806,7 +821,7 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, Order: true }
+          select: { Account: true, activities: true }
         },
         Analytics: {
           select: {
@@ -854,10 +869,10 @@ export class AdminService {
           role,
           subscription,
           accountCount: _count.Account || 0,
+          activityCount: _count.activities || 0,
           country: Analytics?.country,
           dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: Analytics?.updatedAt,
-          transactionCount: _count.Order || 0
+          lastActivity: Analytics?.updatedAt
         };
       }
     );
