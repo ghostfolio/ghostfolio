@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Upgraded `countup.js` from version `2.8.0` to `2.8.2`
