@@ -8003,7 +8003,7 @@
       </trans-unit>
       <trans-unit id="9d1266dbf13a2f77fa5746e235cb8e688a3499e8" datatype="html">
         <source> Calculations are based on delayed market data and may not be displayed in real-time.</source>
-        <target state="new"> Calculations are based on delayed market data and may not be displayed in real-time.</target>
+        <target state="translated"> Berechnungen basieren auf verzögerten Marktdaten und werden nicht in Echtzeit angezeigt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.html</context>
           <context context-type="linenumber">41</context>
