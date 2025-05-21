@@ -39,6 +39,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     return { id: assetSubClass, label: translate(assetSubClass) };
   });
   public currencies: string[] = [];
+  public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
   public defaultDateFormat: string;
   public isLoading = false;
@@ -63,8 +64,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.mode = this.data.activity.id ? 'update' : 'create';
+    this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
     this.locale = this.data.user?.settings?.locale;
+    this.mode = this.data.activity?.id ? 'update' : 'create';
+
     this.dateAdapter.setLocale(this.locale);
 
     const { currencies, platforms } = this.dataService.fetchInfo();
@@ -214,7 +217,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('type').value
         )
       ) {
-        this.updateSymbol();
+        this.updateAssetProfile();
       }
 
       this.changeDetectorRef.markForCheck();
@@ -242,7 +245,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .get('dataSource')
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
-          this.activityForm.get('fee').reset();
+          this.activityForm.get('fee').setValue(0);
           this.activityForm.get('name').setValidators(Validators.required);
           this.activityForm.get('name').updateValueAndValidity();
           this.activityForm.get('quantity').setValue(1);
@@ -252,11 +255,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('searchSymbol').updateValueAndValidity();
           this.activityForm.get('updateAccountBalance').disable();
           this.activityForm.get('updateAccountBalance').setValue(false);
-        } else if (
-          type === 'FEE' ||
-          type === 'INTEREST' ||
-          type === 'LIABILITY'
-        ) {
+        } else if (['FEE', 'INTEREST', 'LIABILITY'].includes(type)) {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
@@ -275,12 +274,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
             .removeValidators(Validators.required);
           this.activityForm.get('dataSource').updateValueAndValidity();
 
-          if (
-            (type === 'FEE' && this.activityForm.get('fee').value === 0) ||
-            type === 'INTEREST' ||
-            type === 'LIABILITY'
-          ) {
-            this.activityForm.get('fee').reset();
+          if (['INTEREST', 'LIABILITY'].includes(type)) {
+            this.activityForm.get('fee').setValue(0);
           }
 
           this.activityForm.get('name').setValidators(Validators.required);
@@ -288,7 +283,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
           if (type === 'FEE') {
             this.activityForm.get('quantity').setValue(0);
-          } else if (type === 'INTEREST' || type === 'LIABILITY') {
+          } else if (['INTEREST', 'LIABILITY'].includes(type)) {
             this.activityForm.get('quantity').setValue(1);
           }
 
@@ -409,7 +404,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
         this.dialogRef.close(activity);
       } else {
-        (activity as UpdateOrderDto).id = this.data.activity.id;
+        (activity as UpdateOrderDto).id = this.data.activity?.id;
 
         await validateObjectForForm({
           classDto: UpdateOrderDto,
@@ -434,7 +429,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.unsubscribeSubject.complete();
   }
 
-  private updateSymbol() {
+  private updateAssetProfile() {
     this.isLoading = true;
     this.changeDetectorRef.markForCheck();
 
@@ -462,6 +457,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           this.activityForm.get('dataSource').setValue(dataSource);
         }
 
+        this.currencyOfAssetProfile = currency;
         this.currentMarketPrice = marketPrice;
 
         this.isLoading = false;

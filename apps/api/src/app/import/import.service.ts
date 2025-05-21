@@ -49,8 +49,8 @@ export class ImportService {
     symbol
   }: AssetProfileIdentifier): Promise<Activity[]> {
     try {
-      const { firstBuyDate, historicalData, orders } =
-        await this.portfolioService.getPosition(dataSource, undefined, symbol);
+      const { activities, firstBuyDate, historicalData } =
+        await this.portfolioService.getHolding(dataSource, undefined, symbol);
 
       const [[assetProfile], dividends] = await Promise.all([
         this.symbolProfileService.getSymbolProfiles([
@@ -68,7 +68,7 @@ export class ImportService {
         })
       ]);
 
-      const accounts = orders
+      const accounts = activities
         .filter(({ Account }) => {
           return !!Account;
         })
@@ -88,7 +88,7 @@ export class ImportService {
           const value = new Big(quantity).mul(marketPrice).toNumber();
 
           const date = parseDate(dateString);
-          const isDuplicate = orders.some((activity) => {
+          const isDuplicate = activities.some((activity) => {
             return (
               activity.accountId === Account?.id &&
               activity.SymbolProfile.currency === assetProfile.currency &&
@@ -118,6 +118,7 @@ export class ImportService {
             createdAt: undefined,
             fee: 0,
             feeInAssetProfileCurrency: 0,
+            feeInBaseCurrency: 0,
             id: assetProfile.id,
             isDraft: false,
             SymbolProfile: assetProfile,
@@ -126,7 +127,8 @@ export class ImportService {
             unitPrice: marketPrice,
             unitPriceInAssetProfileCurrency: marketPrice,
             updatedAt: undefined,
-            userId: Account?.userId
+            userId: Account?.userId,
+            valueInBaseCurrency: value
           };
         })
       );
@@ -167,9 +169,9 @@ export class ImportService {
 
       for (const account of accountsDto) {
         // Check if there is any existing account with the same ID
-        const accountWithSameId = existingAccounts.find(
-          (existingAccount) => existingAccount.id === account.id
-        );
+        const accountWithSameId = existingAccounts.find((existingAccount) => {
+          return existingAccount.id === account.id;
+        });
 
         // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {

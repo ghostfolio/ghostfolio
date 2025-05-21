@@ -1,121 +1,100 @@
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="d-flex justify-content-end">
-        <a
-          color="primary"
-          i18n
-          mat-flat-button
-          [queryParams]="{ createTagDialog: true }"
-          [routerLink]="[]"
-        >
-          Add Tag
-        </a>
-      </div>
-      <table
-        class="gf-table w-100"
-        mat-table
-        matSort
-        matSortActive="name"
-        matSortDirection="asc"
-        [dataSource]="dataSource"
-      >
-        <ng-container matColumnDef="name">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="name"
-          >
-            <ng-container i18n>Name</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.name }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="userId">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="userId"
-          >
-            <ng-container i18n>User</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            <span class="text-monospace">{{ element.userId }}</span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="activities">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="activityCount"
-          >
-            <ng-container i18n>Activities</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.activityCount }}
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="holdings">
-          <th
-            *matHeaderCellDef
-            class="px-1"
-            mat-header-cell
-            mat-sort-header="holdingCount"
-          >
-            <ng-container i18n>Holdings</ng-container>
-          </th>
-          <td *matCellDef="let element" class="px-1" mat-cell>
-            {{ element.holdingCount }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions" stickyEnd>
-          <th
-            *matHeaderCellDef
-            class="px-1 text-center"
-            i18n
-            mat-header-cell
-          ></th>
-          <td *matCellDef="let element" class="px-1 text-center" mat-cell>
-            <button
-              class="mx-1 no-min-width px-2"
-              mat-button
-              [matMenuTriggerFor]="tagMenu"
-              (click)="$event.stopPropagation()"
-            >
-              <ion-icon name="ellipsis-horizontal" />
-            </button>
-            <mat-menu #tagMenu="matMenu" xPosition="before">
-              <button mat-menu-item (click)="onUpdateTag(element)">
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="create-outline" />
-                  <span i18n>Edit</span>
-                </span>
-              </button>
-              <hr class="m-0" />
-              <button
-                mat-menu-item
-                [disabled]="element.activityCount > 0"
-                (click)="onDeleteTag(element.id)"
-              >
-                <span class="align-items-center d-flex">
-                  <ion-icon class="mr-2" name="trash-outline" />
-                  <span i18n>Delete</span>
-                </span>
-              </button>
-            </mat-menu>
-          </td>
-        </ng-container>
-
-        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-      </table>
-    </div>
-  </div>
+<div class="d-flex justify-content-end">
+  <a
+    color="primary"
+    i18n
+    mat-flat-button
+    [queryParams]="{ createTagDialog: true }"
+    [routerLink]="[]"
+  >
+    Add Tag
+  </a>
 </div>
+<table
+  class="gf-table w-100"
+  mat-table
+  matSort
+  matSortActive="name"
+  matSortDirection="asc"
+  [dataSource]="dataSource"
+>
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="name">
+      <ng-container i18n>Name</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      {{ element.name }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="userId">
+    <th *matHeaderCellDef class="px-1" mat-header-cell mat-sort-header="userId">
+      <ng-container i18n>User</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      <span class="text-monospace">{{ element.userId }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="activities">
+    <th
+      *matHeaderCellDef
+      class="px-1"
+      mat-header-cell
+      mat-sort-header="activityCount"
+    >
+      <ng-container i18n>Activities</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1 text-right" mat-cell>
+      {{ element.activityCount }}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="holdings">
+    <th
+      *matHeaderCellDef
+      class="px-1"
+      mat-header-cell
+      mat-sort-header="holdingCount"
+    >
+      <ng-container i18n>Holdings</ng-container>
+    </th>
+    <td *matCellDef="let element" class="px-1" mat-cell>
+      {{ element.holdingCount }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions" stickyEnd>
+    <th *matHeaderCellDef class="px-1 text-center" i18n mat-header-cell></th>
+    <td *matCellDef="let element" class="px-1 text-center" mat-cell>
+      <button
+        class="mx-1 no-min-width px-2"
+        mat-button
+        [matMenuTriggerFor]="tagMenu"
+        (click)="$event.stopPropagation()"
+      >
+        <ion-icon name="ellipsis-horizontal" />
+      </button>
+      <mat-menu #tagMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="onUpdateTag(element)">
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="create-outline" />
+            <span i18n>Edit</span>
+          </span>
+        </button>
+        <hr class="m-0" />
+        <button
+          mat-menu-item
+          [disabled]="element.activityCount > 0"
+          (click)="onDeleteTag(element.id)"
+        >
+          <span class="align-items-center d-flex">
+            <ion-icon class="mr-2" name="trash-outline" />
+            <span i18n>Delete</span>
+          </span>
+        </button>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+</table>

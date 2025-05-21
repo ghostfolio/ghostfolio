@@ -3,7 +3,6 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
-import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import {
@@ -16,7 +15,6 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import {
   AdminData,
   AdminMarketData,
-  AdminMarketDataDetails,
   AdminUsers,
   EnhancedSymbolProfile
 } from '@ghostfolio/common/interfaces';
@@ -50,8 +48,6 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 
 import { AdminService } from './admin.service';
 import { UpdateAssetProfileDto } from './update-asset-profile.dto';
-import { UpdateBulkMarketDataDto } from './update-bulk-market-data.dto';
-import { UpdateMarketDataDto } from './update-market-data.dto';
 
 @Controller('admin')
 export class AdminController {
@@ -60,7 +56,6 @@ export class AdminController {
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
     private readonly manualService: ManualService,
-    private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
 
@@ -68,7 +63,7 @@ export class AdminController {
   @HasPermission(permissions.accessAdminControl)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async getAdminData(): Promise<AdminData> {
-    return this.adminService.get();
+    return this.adminService.get({ user: this.request.user });
   }
 
   @HasPermission(permissions.accessAdminControl)
@@ -246,19 +241,6 @@ export class AdminController {
     });
   }
 
-  /**
-   * @deprecated
-   */
-  @Get('market-data/:dataSource/:symbol')
-  @HasPermission(permissions.accessAdminControl)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async getMarketDataBySymbol(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ): Promise<AdminMarketDataDetails> {
-    return this.adminService.getMarketDataBySymbol({ dataSource, symbol });
-  }
-
   @HasPermission(permissions.accessAdminControl)
   @Post('market-data/:dataSource/:symbol/test')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -283,58 +265,6 @@ export class AdminController {
 
       throw new HttpException(error.message, StatusCodes.BAD_REQUEST);
     }
-  }
-
-  /**
-   * @deprecated
-   */
-  @HasPermission(permissions.accessAdminControl)
-  @Post('market-data/:dataSource/:symbol')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async updateMarketData(
-    @Body() data: UpdateBulkMarketDataDto,
-    @Param('dataSource') dataSource: DataSource,
-    @Param('symbol') symbol: string
-  ) {
-    const dataBulkUpdate: Prisma.MarketDataUpdateInput[] = data.marketData.map(
-      ({ date, marketPrice }) => ({
-        dataSource,
-        marketPrice,
-        symbol,
-        date: parseISO(date),
-        state: 'CLOSE'
-      })
-    );
-
-    return this.marketDataService.updateMany({
-      data: dataBulkUpdate
-    });
-  }
-
-  /**
-   * @deprecated
-   */
-  @HasPermission(permissions.accessAdminControl)
-  @Put('market-data/:dataSource/:symbol/:dateString')
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async update(
-    @Param('dataSource') dataSource: DataSource,
-    @Param('dateString') dateString: string,
-    @Param('symbol') symbol: string,
-    @Body() data: UpdateMarketDataDto
-  ) {
-    const date = parseISO(dateString);
-
-    return this.marketDataService.updateMarketData({
-      data: { marketPrice: data.marketPrice, state: 'CLOSE' },
-      where: {
-        dataSource_date_symbol: {
-          dataSource,
-          date,
-          symbol
-        }
-      }
-    });
   }
 
   @HasPermission(permissions.accessAdminControl)

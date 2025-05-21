@@ -29,7 +29,7 @@ import {
   Filter
 } from '@ghostfolio/common/interfaces';
 import { Sector } from '@ghostfolio/common/interfaces/sector.interface';
-import { MarketDataPreset } from '@ghostfolio/common/types';
+import { MarketDataPreset, UserWithSettings } from '@ghostfolio/common/types';
 
 import {
   BadRequestException,
@@ -134,14 +134,36 @@ export class AdminService {
     }
   }
 
-  public async get(): Promise<AdminData> {
+  public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
+    const dataSources = await this.dataProviderService.getDataSources({ user });
+
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
       this.prismaService.order.count(),
       this.countUsersWithAnalytics()
     ]);
 
+    const dataProviders = await Promise.all(
+      dataSources.map(async (dataSource) => {
+        const dataProviderInfo = this.dataProviderService
+          .getDataProvider(dataSource)
+          .getDataProviderInfo();
+
+        const assetProfileCount = await this.prismaService.symbolProfile.count({
+          where: {
+            dataSource
+          }
+        });
+
+        return {
+          ...dataProviderInfo,
+          assetProfileCount
+        };
+      })
+    );
+
     return {
+      dataProviders,
       settings,
       transactionCount,
       userCount,
@@ -220,7 +242,7 @@ export class AdminService {
 
       if (sortColumn === 'activitiesCount') {
         orderBy = {
-          Order: {
+          activities: {
             _count: sortDirection
           }
         };
@@ -238,7 +260,15 @@ export class AdminService {
           where,
           select: {
             _count: {
-              select: { Order: true }
+              select: {
+                activities: true,
+                watchedBy: true
+              }
+            },
+            activities: {
+              orderBy: [{ date: 'asc' }],
+              select: { date: true },
+              take: 1
             },
             assetClass: true,
             assetSubClass: true,
@@ -250,11 +280,6 @@ export class AdminService {
             isActive: true,
             isUsedByUsersWithSubscription: true,
             name: true,
-            Order: {
-              orderBy: [{ date: 'asc' }],
-              select: { date: true },
-              take: 1
-            },
             scraperConfiguration: true,
             sectors: true,
             symbol: true,
@@ -302,6 +327,7 @@ export class AdminService {
         assetProfiles.map(
           async ({
             _count,
+            activities,
             assetClass,
             assetSubClass,
             comment,
@@ -312,7 +338,6 @@ export class AdminService {
             isActive,
             isUsedByUsersWithSubscription,
             name,
-            Order,
             sectors,
             symbol,
             SymbolProfileOverrides,
@@ -375,10 +400,11 @@ export class AdminService {
               symbol,
               marketDataItemCount,
               sectorsCount,
-              activitiesCount: _count.Order,
-              date: Order?.[0]?.date,
+              activitiesCount: _count.activities,
+              date: activities?.[0]?.date,
               isUsedByUsersWithSubscription:
                 await isUsedByUsersWithSubscription,
+              watchedByCount: _count.watchedBy,
               tags
             };
           }
@@ -648,7 +674,7 @@ export class AdminService {
                     select: {
                       _count: {
                         select: {
-                          Order: {
+                          activities: {
                             where: {
                               User: {
                                 subscriptions: {
@@ -669,7 +695,7 @@ export class AdminService {
                     }
                   });
 
-                return _count.Order > 0;
+                return _count.activities > 0;
               }
             }
           }
@@ -759,6 +785,7 @@ export class AdminService {
           isActive: true,
           name: symbol,
           sectorsCount: 0,
+          watchedByCount: 0,
           tags: []
         };
       }
@@ -800,7 +827,7 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, Order: true }
+          select: { Account: true, activities: true }
         },
         Analytics: {
           select: {
@@ -848,10 +875,10 @@ export class AdminService {
           role,
           subscription,
           accountCount: _count.Account || 0,
+          activityCount: _count.activities || 0,
           country: Analytics?.country,
           dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,
-          lastActivity: Analytics?.updatedAt,
-          transactionCount: _count.Order || 0
+          lastActivity: Analytics?.updatedAt
         };
       }
     );

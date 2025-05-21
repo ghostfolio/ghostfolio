@@ -7,14 +7,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added a hint about delayed market data to the markets overview
+- Added the asset profile count per data provider to the endpoint `GET api/v1/admin`
+
+### Changed
+
+- Harmonized the data providers management style of the admin control panel
+- Extended the data providers management of the admin control panel by the asset profile count
+- Restricted the permissions of the demo user
+- Renamed `Order` to `activities` in the `User` database schema
+- Removed the deprecated endpoint `GET api/v1/admin/market-data/:dataSource/:symbol`
+- Removed the deprecated endpoint `POST api/v1/admin/market-data/:dataSource/:symbol`
+- Removed the deprecated endpoint `PUT api/v1/admin/market-data/:dataSource/:symbol/:dateString`
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Italian (`it`)
+- Upgraded `countup.js` from version `2.8.0` to `2.8.2`
+- Upgraded `nestjs` from version `10.4.15` to `11.0.12`
+- Upgraded `twitter-api-v2` from version `1.14.2` to `1.23.0`
+- Upgraded `yahoo-finance2` from version `2.11.3` to `3.3.2`
+
+### Fixed
+
+- Displayed the button to fetch the current market price only if the activity is not in a custom currency
+- Fixed an issue in the watchlist endpoint (`POST`) related to the `HasPermissionGuard`
+
+## 2.161.0 - 2025-05-06
+
+### Added
+
+- Extended the endpoint to get a holding by the date of the last all time high and the current change to the all time high
+
+### Changed
+
+- Renamed `Order` to `activities` in the `SymbolProfile` database schema
+- Improved the language localization for Turkish (`tr`)
+
+### Fixed
+
+- Fixed an issue in the performance calculation on the date of an activity when the unit price differs from the market price
+- Fixed the horizontal overflow in the table of the benchmark component
+
+## 2.160.0 - 2025-05-04
+
+### Added
+
+- Added the watchlist to the features page
+- Extended the content of the Frequently Asked Questions (FAQ) pages
+
+### Changed
+
+- Moved the watchlist from experimental to general availability
+- Deprecated the endpoint to get a portfolio position in favor of get a holding
+- Deprecated the endpoint to update portfolio position tags in favor of update holding tags
+- Renamed `Account` to `accounts` in the `Platform` database schema
+- Upgraded `prisma` from version `6.6.0` to `6.7.0`
+
+### Fixed
+
+- Fixed an issue with the fee calculations related to activities in a custom currency
+
+## 2.159.0 - 2025-05-02
+
+### Added
+
+- Extended the watchlist by the date of the last all time high, the current change to the all time high and the current market condition (experimental)
+- Added support for the impersonation mode in the watchlist (experimental)
+
+### Changed
+
+- Improved the language localization for Français (`fr`)
+- Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
+
+### Fixed
+
+- Fixed the currency code validation by allowing `GBp`
+
+## 2.158.0 - 2025-04-30
+
+### Added
+
+- Added support to delete an asset from the watchlist (experimental)
+
+### Changed
+
+- Renamed `Order` to `activities` in the `Account` database schema
+- Improved the language localization for German (`de`)
+
+### Fixed
+
+- Fixed an issue with the saving of activities with type `INTEREST`, `ITEM` and `LIABILITY`
+
+## 2.157.1 - 2025-04-29
+
+### Added
+
+- Introduced a watchlist to follow assets (experimental)
+
+### Changed
+
+- Changed the column label from _Index_ to _Name_ in the benchmark component
+- Extended the data providers management of the admin control panel
+- Improved the language localization for German (`de`)
+
+## 2.156.0 - 2025-04-27
+
 ### Changed
 
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
+- Respected the watcher count for the delete asset profiles checkbox in the historical market data table of the admin control panel
+- Improved the language localization for Français (`fr`)
+- Upgraded `ngx-skeleton-loader` from version `10.0.0` to `11.0.0`
+- Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
 ### Fixed
 
+- Fixed an issue with the investment calculation for activities in a custom currency
 - Improved the file selector of the activities import functionality to accept case-insensitive file extensions (`.CSV` and `.JSON`)
+- Fixed the missing localization for "someone" on the public page
 
 ## 2.155.0 - 2025-04-23
 

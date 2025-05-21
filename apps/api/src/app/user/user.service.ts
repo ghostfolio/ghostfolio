@@ -356,18 +356,20 @@ export class UserService {
           new Date(),
           user.createdAt
         );
-        let frequency = 10;
+        let frequency = 7;
 
-        if (daysSinceRegistration > 365) {
+        if (daysSinceRegistration > 720) {
+          frequency = 1;
+        } else if (daysSinceRegistration > 360) {
           frequency = 2;
         } else if (daysSinceRegistration > 180) {
           frequency = 3;
         } else if (daysSinceRegistration > 60) {
           frequency = 4;
         } else if (daysSinceRegistration > 30) {
-          frequency = 6;
+          frequency = 5;
         } else if (daysSinceRegistration > 15) {
-          frequency = 8;
+          frequency = 6;
         }
 
         if (Analytics?.activityCount % frequency === 1) {
@@ -380,6 +382,7 @@ export class UserService {
           permissions.createAccess,
           permissions.createMarketDataOfOwnAssetProfile,
           permissions.createOwnTag,
+          permissions.createWatchlistItem,
           permissions.readAiPrompt,
           permissions.readMarketDataOfOwnAssetProfile,
           permissions.updateMarketDataOfOwnAssetProfile
@@ -391,9 +394,11 @@ export class UserService {
         // Reset holdings view mode
         user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
-        currentPermissions.push(permissions.createApiKey);
-        currentPermissions.push(permissions.enableDataProviderGhostfolio);
-        currentPermissions.push(permissions.reportDataGlitch);
+        if (!hasRole(user, Role.DEMO)) {
+          currentPermissions.push(permissions.createApiKey);
+          currentPermissions.push(permissions.enableDataProviderGhostfolio);
+          currentPermissions.push(permissions.reportDataGlitch);
+        }
 
         currentPermissions = without(
           currentPermissions,

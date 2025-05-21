@@ -270,20 +270,20 @@
             <div class="h5" i18n>Sectors</div>
             <gf-portfolio-proportion-chart
               [colorScheme]="data.colorScheme"
+              [data]="sectors"
               [isInPercent]="true"
               [keys]="['name']"
               [maxItems]="10"
-              [positions]="sectors"
             />
           </div>
           <div class="col-md-6 mb-3">
             <div class="h5" i18n>Countries</div>
             <gf-portfolio-proportion-chart
               [colorScheme]="data.colorScheme"
+              [data]="countries"
               [isInPercent]="true"
               [keys]="['name']"
               [maxItems]="10"
-              [positions]="countries"
             />
           </div>
         }

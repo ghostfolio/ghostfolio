@@ -148,6 +148,10 @@ describe('PortfolioCalculator', () => {
         valueWithCurrencyEffect: 0
       });
 
+      /**
+       * Closing price on 2022-03-07 is unknown,
+       * hence it uses the last unit price (2022-04-11): 87.8
+       */
       expect(portfolioSnapshot.historicalData[1]).toEqual({
         date: '2022-03-07',
         investmentValueWithCurrencyEffect: 151.6,
@@ -161,8 +165,8 @@ describe('PortfolioCalculator', () => {
         totalAccountBalance: 0,
         totalInvestment: 151.6,
         totalInvestmentValueWithCurrencyEffect: 151.6,
-        value: 151.6,
-        valueWithCurrencyEffect: 151.6
+        value: 175.6, // 2 * 87.8 = 175.6
+        valueWithCurrencyEffect: 175.6
       });
 
       expect(

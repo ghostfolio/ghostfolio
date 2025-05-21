@@ -1515,6 +1515,7 @@ describe('redactAttributes', () => {
             }
           },
           summary: {
+            activityCount: 29,
             annualizedPerformancePercent: 0.16690880197786,
             annualizedPerformancePercentWithCurrencyEffect: 0.1694019484552876,
             cash: null,
@@ -1538,7 +1539,6 @@ describe('redactAttributes', () => {
             interest: null,
             items: null,
             liabilities: null,
-            ordersCount: 29,
             totalInvestment: null,
             totalValueInBaseCurrency: null,
             currentNetWorth: null
@@ -3018,6 +3018,7 @@ describe('redactAttributes', () => {
         }
       },
       summary: {
+        activityCount: 29,
         annualizedPerformancePercent: 0.16690880197786,
         annualizedPerformancePercentWithCurrencyEffect: 0.1694019484552876,
         cash: null,
@@ -3041,7 +3042,6 @@ describe('redactAttributes', () => {
         interest: null,
         items: null,
         liabilities: null,
-        ordersCount: 29,
         totalInvestment: null,
         totalValueInBaseCurrency: null,
         currentNetWorth: null

@@ -92,6 +92,7 @@ export class CoinGeckoService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.COINGECKO,
       isPremium: false,
       name: 'CoinGecko',
       url: 'https://coingecko.com'

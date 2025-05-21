@@ -9,7 +9,7 @@ import { ImpersonationService } from '@ghostfolio/api/services/impersonation/imp
 import { HEADER_KEY_IMPERSONATION } from '@ghostfolio/common/config';
 import {
   AccountBalancesResponse,
-  Accounts
+  AccountsResponse
 } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type {
@@ -57,17 +57,17 @@ export class AccountController {
   @HasPermission(permissions.deleteAccount)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async deleteAccount(@Param('id') id: string): Promise<AccountModel> {
-    const account = await this.accountService.accountWithOrders(
+    const account = await this.accountService.accountWithActivities(
       {
         id_userId: {
           id,
           userId: this.request.user.id
         }
       },
-      { Order: true }
+      { activities: true }
     );
 
-    if (!account || account?.Order.length > 0) {
+    if (!account || account?.activities.length > 0) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.FORBIDDEN),
         StatusCodes.FORBIDDEN
@@ -87,10 +87,10 @@ export class AccountController {
   @UseInterceptors(RedactValuesInResponseInterceptor)
   @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async getAllAccounts(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Query('dataSource') filterByDataSource?: string,
     @Query('symbol') filterBySymbol?: string
-  ): Promise<Accounts> {
+  ): Promise<AccountsResponse> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
 
@@ -110,7 +110,7 @@ export class AccountController {
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   @UseInterceptors(RedactValuesInResponseInterceptor)
   public async getAccountById(
-    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId,
+    @Headers(HEADER_KEY_IMPERSONATION.toLowerCase()) impersonationId: string,
     @Param('id') id: string
   ): Promise<AccountWithValue> {
     const impersonationUserId =
