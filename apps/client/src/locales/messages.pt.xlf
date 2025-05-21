@@ -4831,7 +4831,7 @@
       </trans-unit>
       <trans-unit id="b942ec19956854206b38d6bbd66eddb69f09c135" datatype="html">
         <source> Check out the numerous features of Ghostfolio to manage your wealth </source>
-        <target state="translated"> Confira os inúmeros recursos do Ghostfolio para gerenciar seu patrimôniotarget>
+        <target state="translated"> Confira os inúmeros recursos do Ghostfolio para gerenciar seu patrimônio </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">6</context>
