@@ -394,9 +394,11 @@ export class UserService {
         // Reset holdings view mode
         user.Settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
-        currentPermissions.push(permissions.createApiKey);
-        currentPermissions.push(permissions.enableDataProviderGhostfolio);
-        currentPermissions.push(permissions.reportDataGlitch);
+        if (!hasRole(user, Role.DEMO)) {
+          currentPermissions.push(permissions.createApiKey);
+          currentPermissions.push(permissions.enableDataProviderGhostfolio);
+          currentPermissions.push(permissions.reportDataGlitch);
+        }
 
         currentPermissions = without(
           currentPermissions,

@@ -230,8 +230,10 @@
           </div>
         </mat-form-field>
         @if (
+          currencyOfAssetProfile ===
+            activityForm.get('currencyOfUnitPrice').value &&
           currentMarketPrice &&
-          (data.activity.type === 'BUY' || data.activity.type === 'SELL') &&
+          ['BUY', 'SELL'].includes(data.activity.type) &&
           isToday(activityForm.get('date')?.value)
         ) {
           <button
