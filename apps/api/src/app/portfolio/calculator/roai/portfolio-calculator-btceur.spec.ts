@@ -88,7 +88,8 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 
@@ -135,6 +136,8 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 0,
+        timeWeightedPerformanceInPercentage: 0,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
         totalAccountBalance: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
@@ -153,6 +156,8 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.12422837255001412, // 5535.42 ÷ 44558.42 = 0.12422837255001412
         netPerformanceWithCurrencyEffect: 5535.42,
         netWorth: 50098.3, // 1 * 50098.3 = 50098.3
+        timeWeightedPerformanceInPercentage: 0,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
         totalAccountBalance: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
@@ -172,6 +177,9 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: -0.032837340282712,
         netPerformanceWithCurrencyEffect: -1463.18,
         netWorth: 43099.7,
+        timeWeightedPerformanceInPercentage: -0.13969735500006986,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect:
+          -0.13969735500006986,
         totalAccountBalance: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
