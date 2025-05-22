@@ -146,29 +146,35 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
         this.dataSource = new MatTableDataSource(filteredProviders);
 
-        this.adminService
-          .fetchGhostfolioDataProviderStatus(
-            settings[PROPERTY_API_KEY_GHOSTFOLIO] as string
-          )
-          .pipe(
-            catchError(() => {
-              this.isGhostfolioApiKeyValid = false;
+        const ghostfolioApiKey = settings[
+          PROPERTY_API_KEY_GHOSTFOLIO
+        ] as string;
+
+        if (ghostfolioApiKey) {
+          this.adminService
+            .fetchGhostfolioDataProviderStatus(ghostfolioApiKey)
+            .pipe(
+              catchError(() => {
+                this.isGhostfolioApiKeyValid = false;
+
+                this.changeDetectorRef.markForCheck();
+
+                return of(null);
+              }),
+              filter((status) => {
+                return status !== null;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe((status) => {
+              this.ghostfolioApiStatus = status;
+              this.isGhostfolioApiKeyValid = true;
 
               this.changeDetectorRef.markForCheck();
-
-              return of(null);
-            }),
-            filter((status) => {
-              return status !== null;
-            }),
-            takeUntil(this.unsubscribeSubject)
-          )
-          .subscribe((status) => {
-            this.ghostfolioApiStatus = status;
-            this.isGhostfolioApiKeyValid = true;
-
-            this.changeDetectorRef.markForCheck();
-          });
+            });
+        } else {
+          this.isGhostfolioApiKeyValid = false;
+        }
 
         this.isLoading = false;
 
