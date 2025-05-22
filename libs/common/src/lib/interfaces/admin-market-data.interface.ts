@@ -22,5 +22,6 @@ export interface AdminMarketDataItem {
   name: string;
   sectorsCount: number;
   symbol: string;
+  watchedByCount: number;
   tags: Tag[];
 }

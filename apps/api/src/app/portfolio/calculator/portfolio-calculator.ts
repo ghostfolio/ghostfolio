@@ -955,8 +955,8 @@ export abstract class PortfolioCalculator {
     let lastTransactionPoint: TransactionPoint = null;
 
     for (const {
-      fee,
       date,
+      fee,
       quantity,
       SymbolProfile,
       tags,

@@ -49,11 +49,17 @@ export class HomePageComponent implements OnDestroy, OnInit {
               path: ['/home', 'summary']
             },
             {
+              iconName: 'bookmark-outline',
+              label: $localize`Watchlist`,
+              path: ['/home', 'watchlist']
+            },
+            {
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
               path: ['/home', 'market']
             }
           ];
+
           this.user = state.user;
 
           this.changeDetectorRef.markForCheck();

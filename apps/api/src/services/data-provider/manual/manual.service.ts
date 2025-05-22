@@ -65,6 +65,7 @@ export class ManualService implements DataProviderInterface {
 
   public getDataProviderInfo(): DataProviderInfo {
     return {
+      dataSource: DataSource.MANUAL,
       isPremium: false
     };
   }

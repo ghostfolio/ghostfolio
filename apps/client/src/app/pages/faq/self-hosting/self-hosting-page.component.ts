@@ -9,6 +9,10 @@ import { Subject } from 'rxjs';
   standalone: false
 })
 export class SelfHostingPageComponent implements OnDestroy {
+  public pricingUrl =
+    `https://ghostfol.io/${document.documentElement.lang}/` +
+    $localize`:snake-case:pricing`;
+
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnDestroy() {

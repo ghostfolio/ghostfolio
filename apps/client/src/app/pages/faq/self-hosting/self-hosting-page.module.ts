@@ -1,3 +1,5 @@
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
@@ -7,7 +9,12 @@ import { SelfHostingPageComponent } from './self-hosting-page.component';
 
 @NgModule({
   declarations: [SelfHostingPageComponent],
-  imports: [CommonModule, MatCardModule, SelfHostingPageRoutingModule],
+  imports: [
+    CommonModule,
+    GfPremiumIndicatorComponent,
+    MatCardModule,
+    SelfHostingPageRoutingModule
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SelfHostingPageModule {}

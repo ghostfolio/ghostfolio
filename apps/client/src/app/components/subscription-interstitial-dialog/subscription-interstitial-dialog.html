@@ -51,7 +51,16 @@
       </div>
     </div>
     <div class="justify-content-end" mat-dialog-actions>
-      <button i18n mat-button (click)="closeDialog()">Skip</button>
+      <button
+        mat-button
+        [disabled]="remainingSkipButtonDelay > 0"
+        (click)="closeDialog()"
+      >
+        <ng-container i18n>Skip</ng-container>
+        @if (remainingSkipButtonDelay > 0) {
+          ({{ remainingSkipButtonDelay }})
+        }
+      </button>
       <a
         color="primary"
         mat-flat-button
@@ -80,8 +89,16 @@
       </div>
     </div>
     <div class="flex-column" mat-dialog-actions>
-      <button class="mb-2 py-4 w-100" i18n mat-button (click)="closeDialog()">
-        Skip
+      <button
+        class="mb-2 py-4 w-100"
+        mat-button
+        [disabled]="remainingSkipButtonDelay > 0"
+        (click)="closeDialog()"
+      >
+        <ng-container i18n>Skip</ng-container>
+        @if (remainingSkipButtonDelay > 0) {
+          ({{ remainingSkipButtonDelay }})
+        }
       </button>
       <a
         class="m-0 py-4 w-100"

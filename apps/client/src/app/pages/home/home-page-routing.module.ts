@@ -2,6 +2,7 @@ import { HomeHoldingsComponent } from '@ghostfolio/client/components/home-holdin
 import { HomeMarketComponent } from '@ghostfolio/client/components/home-market/home-market.component';
 import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
+import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 
 import { NgModule } from '@angular/core';
@@ -36,6 +37,11 @@ const routes: Routes = [
         path: 'market',
         component: HomeMarketComponent,
         title: $localize`Markets`
+      },
+      {
+        path: 'watchlist',
+        component: HomeWatchlistComponent,
+        title: $localize`Watchlist`
       }
     ],
     component: HomePageComponent,

@@ -7,11 +7,11 @@
   </div>
   <div
     class="flex-nowrap px-3 py-1 row"
-    [hidden]="summary?.ordersCount === null"
+    [hidden]="summary?.activityCount === null"
   >
     <div class="d-flex flex-grow-1 ml-3 text-truncate">
-      {{ summary?.ordersCount }}
-      <ng-container i18n>{summary?.ordersCount, plural,
+      {{ summary?.activityCount }}
+      <ng-container i18n>{summary?.activityCount, plural,
         =1 {activity}
         other {activities}
       }</ng-container>
