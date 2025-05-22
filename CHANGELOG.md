@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Displayed the button to fetch the current market price only if the activity is not in a custom currency
 - Fixed an issue in the watchlist endpoint (`POST`) related to the `HasPermissionGuard`
+- Improved the text alignment of the allocations by ETF holding on the allocations page (experimental)
 
 ## 2.161.0 - 2025-05-06
 
