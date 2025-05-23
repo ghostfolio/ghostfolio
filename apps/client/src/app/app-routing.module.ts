@@ -100,7 +100,7 @@ const routes: Routes = [
       import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
   },
   {
-    path: paths.p,
+    path: paths.public,
     loadChildren: () =>
       import('./pages/public/public-page.module').then(
         (m) => m.PublicPageModule

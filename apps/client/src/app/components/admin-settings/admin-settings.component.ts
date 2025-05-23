@@ -76,8 +76,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           const languageCode =
             this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
 
-          this.pricingUrl =
-            `https://ghostfol.io/${languageCode}/` + paths.pricing;
+          this.pricingUrl = `https://ghostfol.io/${languageCode}/${paths.pricing}`;
 
           this.changeDetectorRef.markForCheck();
         }

@@ -23,7 +23,7 @@ export class AuthGuard {
     `/${paths.features}`,
     `/${paths.markets}`,
     `/${paths.open}`,
-    `/${paths.p}`,
+    `/${paths.public}`,
     `/${paths.pricing}`,
     `/${paths.register}`,
     `/${paths.resources}`
@@ -89,13 +89,13 @@ export class AuthGuard {
             resolve(true);
             return;
           } else if (
-            state.url.startsWith('/home') &&
+            state.url.startsWith(`/${paths.home}`) &&
             user.settings.viewMode === 'ZEN'
           ) {
             this.router.navigate(['/' + paths.zen]);
             resolve(false);
             return;
-          } else if (state.url.startsWith('/start')) {
+          } else if (state.url.startsWith(`/${paths.start}`)) {
             if (user.settings.viewMode === 'ZEN') {
               this.router.navigate(['/' + paths.zen]);
             } else {
@@ -105,7 +105,7 @@ export class AuthGuard {
             resolve(false);
             return;
           } else if (
-            state.url.startsWith('/zen') &&
+            state.url.startsWith(`/${paths.zen}`) &&
             user.settings.viewMode === 'DEFAULT'
           ) {
             this.router.navigate(['/' + paths.home]);

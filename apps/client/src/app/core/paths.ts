@@ -18,7 +18,7 @@ export const paths = {
   marketData: 'market-data',
   membership: 'membership',
   open: 'open',
-  p: 'p',
+  public: 'p',
   personalFinanceTools: 'personal-finance-tools',
   portfolio: 'portfolio',
   saas: 'saas',

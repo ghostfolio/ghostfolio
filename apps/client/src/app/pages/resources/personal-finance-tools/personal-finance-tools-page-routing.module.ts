@@ -24,7 +24,7 @@ const routes: Routes = [
             return GfProductPageComponent;
           }
         ),
-      path: paths.openSourceAlternativeTo + `-${alias ?? key}`,
+      path: `${paths.openSourceAlternativeTo}-${alias ?? key}`,
       title: $localize`Open Source Alternative to ${name}`
     };
   })
