@@ -40,7 +40,7 @@ import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialo
 export class AdminSettingsComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
-  public displayedColumns = ['name', 'actions'];
+  public displayedColumns = ['name', 'assetProfileCount', 'status', 'actions'];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
