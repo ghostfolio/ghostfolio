@@ -7,8 +7,8 @@
         <target state="translated">关于</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4656883433287439415" datatype="html">
@@ -16,8 +16,8 @@
         <target state="translated">常见问题</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6703761340382395781" datatype="html">
@@ -25,8 +25,8 @@
         <target state="translated">功能</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6099902667884446960" datatype="html">
@@ -34,8 +34,8 @@
         <target state="translated">许可证</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8566970793924820888" datatype="html">
@@ -43,8 +43,8 @@
         <target state="translated">市场</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9167640275204796639" datatype="html">
@@ -52,16 +52,8 @@
         <target state="translated">价钱</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/membership-card/membership-card.component.ts</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/premium-indicator/premium-indicator.component.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6948811958230386934" datatype="html">
@@ -69,8 +61,8 @@
         <target state="translated">隐私政策</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5915338689523424386" datatype="html">
@@ -78,8 +70,8 @@
         <target state="translated">注册</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">49</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4002166200801232073" datatype="html">
@@ -87,8 +79,8 @@
         <target state="translated">资源</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1c0638816928ae45284e60504936ca985960df5c" datatype="html">
@@ -488,7 +480,7 @@
         <target state="translated">您真的要撤销此授予的访问权限吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit id="237bd6e6d07f448b7884f05f56a20e30df8622c4" datatype="html">
@@ -2904,7 +2896,7 @@
         <target state="translated">此功能目前无法使用。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8947585964755853889" datatype="html">
@@ -2912,11 +2904,11 @@
         <target state="translated">请稍后再试。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">58</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2928,7 +2920,7 @@
         <target state="translated">哎呀！出了些问题。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -2944,7 +2936,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
@@ -4700,8 +4692,8 @@
         <target state="translated">开源替代方案</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit id="824385315623644802" datatype="html">
@@ -6037,8 +6029,8 @@
         <target state="translated">自托管</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2806917038528218276" datatype="html">
@@ -6102,7 +6094,7 @@
         <target state="translated">哎呀！看来您提出了太多要求。请慢一点。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">105</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="myAccount" datatype="html">
@@ -6166,7 +6158,7 @@
         <target state="translated">不允许执行此操作。</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/core/http-response.interceptor.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit id="67933701892581429" datatype="html">
@@ -6958,8 +6950,8 @@
         <target state="translated">指南</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6255655462254999912" datatype="html">
@@ -6967,8 +6959,8 @@
         <target state="translated">词汇表</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9e4b86d0c90183298e882b02d41aab3c2017f8e8" datatype="html">
@@ -7024,7 +7016,7 @@
         <target state="translated">您确定要删除此 API 密钥吗？</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.ts</context>
-          <context context-type="linenumber">103</context>
+          <context context-type="linenumber">102</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1486033335993102285" datatype="html">
@@ -7176,7 +7168,7 @@
         <target state="translated">链接已复制到剪贴板</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/access-table/access-table.component.ts</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">66</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4499ce8c46ad55564b23a42ed752e72984c0248f" datatype="html">
@@ -7428,8 +7420,8 @@
         <target state="translated">服务条款</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2029980907058777630" datatype="html">
@@ -7609,8 +7601,8 @@
         <target state="translated">变更日志</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5929637553579019226" datatype="html">
@@ -7618,8 +7610,8 @@
         <target state="translated">开源朋友</target>
         <note priority="1" from="description">snake-case</note>
         <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/core/paths.ts</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
     </body>
