@@ -1,4 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { paths } from '@ghostfolio/common/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -17,26 +18,26 @@ const routes: Routes = [
           )
       },
       {
-        path: 'activities',
+        path: paths.activities,
         loadChildren: () =>
           import('./activities/activities-page.module').then(
             (m) => m.ActivitiesPageModule
           )
       },
       {
-        path: 'allocations',
+        path: paths.allocations,
         loadChildren: () =>
           import('./allocations/allocations-page.module').then(
             (m) => m.AllocationsPageModule
           )
       },
       {
-        path: 'fire',
+        path: paths.fire,
         loadChildren: () =>
           import('./fire/fire-page.module').then((m) => m.FirePageModule)
       },
       {
-        path: 'x-ray',
+        path: paths.xRay,
         loadChildren: () =>
           import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
       }

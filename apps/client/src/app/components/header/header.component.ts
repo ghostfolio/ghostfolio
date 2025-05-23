@@ -11,6 +11,7 @@ import {
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
@@ -79,17 +80,17 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`:snake-case:about`;
-  public routeFeatures = $localize`:snake-case:features`;
-  public routeMarkets = $localize`:snake-case:markets`;
-  public routePricing = $localize`:snake-case:pricing`;
-  public routeResources = $localize`:snake-case:resources`;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routeAbout = paths.about;
+  public routeFeatures = paths.features;
+  public routeMarkets = paths.markets;
+  public routePricing = paths.pricing;
+  public routeResources = paths.resources;
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkMarkets = ['/' + paths.markets];
+  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkRegister = ['/' + paths.register];
+  public routerLinkResources = ['/' + paths.resources];
 
   private unsubscribeSubject = new Subject<void>();
 

@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/common/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,11 +11,8 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ghostfolio-2-page.html'
 })
 export class Ghostfolio2PageComponent {
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkAboutChangelog = [
-    '/' + $localize`:snake-case:about`,
-    'changelog'
-  ];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
+  public routerLinkAbout = ['/' + paths.about];
+  public routerLinkAboutChangelog = ['/' + paths.about, paths.changelog];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkMarkets = ['/' + paths.markets];
 }

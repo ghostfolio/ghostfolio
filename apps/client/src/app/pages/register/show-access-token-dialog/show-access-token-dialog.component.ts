@@ -1,4 +1,5 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { paths } from '@ghostfolio/common/paths';
 
 import {
   ChangeDetectionStrategy,
@@ -30,8 +31,8 @@ export class ShowAccessTokenDialog {
   public isDisclaimerChecked = false;
   public role: string;
   public routerLinkAboutTermsOfService = [
-    '/' + $localize`:snake-case:about`,
-    $localize`:snake-case:terms-of-service`
+    '/' + paths.about,
+    paths.termsOfService
   ];
 
   private unsubscribeSubject = new Subject<void>();

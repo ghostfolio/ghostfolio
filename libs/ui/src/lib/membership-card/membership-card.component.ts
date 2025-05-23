@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/common/paths';
+
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -27,7 +29,7 @@ export class GfMembershipCardComponent {
 
   @Output() generateApiKeyClicked = new EventEmitter<void>();
 
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkPricing = ['/' + paths.pricing];
 
   public onGenerateApiKey(event: MouseEvent) {
     event.preventDefault();

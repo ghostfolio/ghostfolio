@@ -2,6 +2,7 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -40,8 +41,8 @@ export class PricingPageComponent implements OnDestroy, OnInit {
   public professionalDataProviderTooltipPremium = translate(
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
+  public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkRegister = ['/' + paths.register];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

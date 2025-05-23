@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/common/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,6 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './hello-ghostfolio-page.html'
 })
 export class HelloGhostfolioPageComponent {
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkResources = ['/' + paths.resources];
 }
