@@ -100,13 +100,6 @@ const routes: Routes = [
       import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
   },
   {
-    path: paths.public,
-    loadChildren: () =>
-      import('./pages/public/public-page.module').then(
-        (m) => m.PublicPageModule
-      )
-  },
-  {
     path: paths.portfolio,
     loadChildren: () =>
       import('./pages/portfolio/portfolio-page.module').then(
@@ -118,6 +111,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
+      )
+  },
+  {
+    path: paths.public,
+    loadChildren: () =>
+      import('./pages/public/public-page.module').then(
+        (m) => m.PublicPageModule
       )
   },
   {
