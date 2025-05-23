@@ -175,7 +175,7 @@
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.5.13",
     "@types/lodash": "4.17.16",
-    "@types/node": "20.14.10",
+    "@types/node": "22.15.17",
     "@types/papaparse": "5.3.7",
     "@types/passport-google-oauth20": "2.0.16",
     "@typescript-eslint/eslint-plugin": "8.29.0",
@@ -207,7 +207,7 @@
     "webpack-bundle-analyzer": "4.10.2"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "prisma": {
     "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
