@@ -1,5 +1,5 @@
-import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
+import { paths } from '@ghostfolio/common/paths';
 
 import {
   ChangeDetectionStrategy,

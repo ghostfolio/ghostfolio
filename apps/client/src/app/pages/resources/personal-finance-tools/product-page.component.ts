@@ -1,6 +1,6 @@
-import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 import { translate } from '@ghostfolio/ui/i18n';
 

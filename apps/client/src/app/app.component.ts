@@ -2,6 +2,7 @@ import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/ho
 import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -29,7 +30,6 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { NotificationService } from './core/notification/notification.service';
-import { paths } from './core/paths';
 import { DataService } from './services/data.service';
 import { ImpersonationStorageService } from './services/impersonation-storage.service';
 import { TokenStorageService } from './services/token-storage.service';

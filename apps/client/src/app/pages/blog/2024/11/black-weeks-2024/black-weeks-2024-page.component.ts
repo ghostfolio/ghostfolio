@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/client/core/paths';
+import { paths } from '@ghostfolio/common/paths';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { Component } from '@angular/core';

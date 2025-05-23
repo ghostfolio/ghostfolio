@@ -1,6 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
+import { paths } from '@ghostfolio/common/paths';
 
 import { Injectable } from '@angular/core';
 import {
@@ -10,8 +11,6 @@ import {
 } from '@angular/router';
 import { EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
-import { paths } from './paths';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {

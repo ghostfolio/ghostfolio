@@ -1,6 +1,5 @@
 import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/create-account-balance.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { paths } from '@ghostfolio/client/core/paths';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { DATE_FORMAT, downloadAsFile } from '@ghostfolio/common/helper';
@@ -10,6 +9,7 @@ import {
   PortfolioPosition,
   User
 } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 

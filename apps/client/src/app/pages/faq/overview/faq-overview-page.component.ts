@@ -1,6 +1,6 @@
-import { paths } from '@ghostfolio/client/core/paths';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';

@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/client/core/paths';
+import { paths } from '@ghostfolio/common/paths';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
 
 import { Component, OnDestroy } from '@angular/core';

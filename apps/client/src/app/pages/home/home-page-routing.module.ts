@@ -4,7 +4,7 @@ import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overvi
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/client/core/paths';
+import { paths } from '@ghostfolio/common/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

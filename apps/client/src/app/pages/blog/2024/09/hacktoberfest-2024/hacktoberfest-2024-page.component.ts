@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/client/core/paths';
+import { paths } from '@ghostfolio/common/paths';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';

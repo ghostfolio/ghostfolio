@@ -1,5 +1,5 @@
-import { paths } from '@ghostfolio/client/core/paths';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';

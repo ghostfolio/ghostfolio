@@ -4,7 +4,7 @@ import { AdminOverviewComponent } from '@ghostfolio/client/components/admin-over
 import { AdminSettingsComponent } from '@ghostfolio/client/components/admin-settings/admin-settings.component';
 import { AdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/client/core/paths';
+import { paths } from '@ghostfolio/common/paths';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

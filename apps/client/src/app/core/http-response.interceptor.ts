@@ -2,6 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 
 import {
   HTTP_INTERCEPTORS,
@@ -22,8 +23,6 @@ import { StatusCodes } from 'http-status-codes';
 import ms from 'ms';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-
-import { paths } from './paths';
 
 @Injectable()
 export class HttpResponseInterceptor implements HttpInterceptor {
