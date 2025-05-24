@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 2.162.0 - 2025-05-24
 
+### Changed
+
+- Improved the language localization for Turkish (`tr`)
+
+## 2.162.0 - 2025-05-24
+
 ### Added
 
 - Added a hint about delayed market data to the markets overview
@@ -32,7 +38,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Portuguese (`pt`)
-- Improved the language localization for Turkish (`tr`)
 - Upgraded `countup.js` from version `2.8.0` to `2.8.2`
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
 - Upgraded `prisma` from version `6.7.0` to `6.8.2`
