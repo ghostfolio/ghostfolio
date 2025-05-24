@@ -30,9 +30,11 @@ import {
   HistoricalDividendsResult,
   HistoricalHistoryResult
 } from 'yahoo-finance2/esm/src/modules/historical';
-import { Quote } from 'yahoo-finance2/esm/src/modules/quote';
-import { QuoteResponseArray } from 'yahoo-finance2/script/src/modules/quote';
-import { SearchQuoteNonYahoo } from 'yahoo-finance2/script/src/modules/search';
+import {
+  Quote,
+  QuoteResponseArray
+} from 'yahoo-finance2/esm/src/modules/quote';
+import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
