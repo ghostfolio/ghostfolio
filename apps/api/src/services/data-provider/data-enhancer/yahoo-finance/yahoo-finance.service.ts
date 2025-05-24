@@ -1,3 +1,4 @@
+import { determineStockCurrency } from '@ghostfolio/api/helper/market-currencies.helper';
 import { CryptocurrencyService } from '@ghostfolio/api/services/cryptocurrency/cryptocurrency.service';
 import { AssetProfileDelistedError } from '@ghostfolio/api/services/data-provider/errors/asset-profile-delisted.error';
 import { DataEnhancerInterface } from '@ghostfolio/api/services/data-provider/interfaces/data-enhancer.interface';
@@ -190,7 +191,8 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
 
       response.assetClass = assetClass;
       response.assetSubClass = assetSubClass;
-      response.currency = assetProfile.price.currency;
+      response.currency =
+        assetProfile.price.currency ?? determineStockCurrency(symbol);
       response.dataSource = this.getName();
       response.name = this.formatName({
         longName: assetProfile.price.longName,
