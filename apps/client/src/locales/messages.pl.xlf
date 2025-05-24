@@ -4,7 +4,7 @@
       <trans-unit id="8379314117913380516" datatype="html">
         <source>about</source>
         <target state="translated">o-ghostfolio</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">37</context>
@@ -13,7 +13,7 @@
       <trans-unit id="4656883433287439415" datatype="html">
         <source>faq</source>
         <target state="translated">faq</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">39</context>
@@ -22,7 +22,7 @@
       <trans-unit id="6703761340382395781" datatype="html">
         <source>features</source>
         <target state="translated">funkcje</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">40</context>
@@ -31,7 +31,7 @@
       <trans-unit id="6099902667884446960" datatype="html">
         <source>license</source>
         <target state="translated">licencja</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">43</context>
@@ -40,7 +40,7 @@
       <trans-unit id="8566970793924820888" datatype="html">
         <source>markets</source>
         <target state="translated">rynki</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">44</context>
@@ -49,7 +49,7 @@
       <trans-unit id="9167640275204796639" datatype="html">
         <source>pricing</source>
         <target state="translated">cennik</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">47</context>
@@ -58,7 +58,7 @@
       <trans-unit id="6948811958230386934" datatype="html">
         <source>privacy-policy</source>
         <target state="translated">polityka-prywatnosci</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">48</context>
@@ -67,7 +67,7 @@
       <trans-unit id="5915338689523424386" datatype="html">
         <source>register</source>
         <target state="translated">zarejestruj</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">49</context>
@@ -76,7 +76,7 @@
       <trans-unit id="4002166200801232073" datatype="html">
         <source>resources</source>
         <target state="translated">zasoby</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">50</context>
@@ -4681,7 +4681,7 @@
       <trans-unit id="5827613432388799534" datatype="html">
         <source>open-source-alternative-to</source>
         <target state="translated">alternatywa-open-source-dla</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">45</context>
@@ -6070,7 +6070,7 @@
       <trans-unit id="1677491810118195784" datatype="html">
         <source>self-hosting</source>
         <target state="translated">wlasny-hosting</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">51</context>
@@ -6947,7 +6947,7 @@
       <trans-unit id="7491998780064454778" datatype="html">
         <source>guides</source>
         <target state="translated">poradniki</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">42</context>
@@ -6956,7 +6956,7 @@
       <trans-unit id="6255655462254999912" datatype="html">
         <source>glossary</source>
         <target state="translated">slowniczek</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">41</context>
@@ -7417,7 +7417,7 @@
       <trans-unit id="814674835685440667" datatype="html">
         <source>terms-of-service</source>
         <target state="translated">warunki-świadczenia-usług</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">52</context>
@@ -7598,7 +7598,7 @@
       <trans-unit id="793097298820646129" datatype="html">
         <source>changelog</source>
         <target state="new">changelog</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">38</context>
@@ -7607,7 +7607,7 @@
       <trans-unit id="5929637553579019226" datatype="html">
         <source>oss-friends</source>
         <target state="new">oss-friends</target>
-        <note priority="1" from="description">snake-case</note>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">46</context>
