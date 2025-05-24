@@ -234,7 +234,7 @@
     <ng-container matColumnDef="allocations">
       <th
         *matHeaderCellDef
-        class="px-1 text-right"
+        class="d-none d-lg-table-cell justify-content-end px-1"
         mat-header-cell
         mat-sort-header="allocationInPercentage"
       >
@@ -242,7 +242,7 @@
       </th>
       <td
         *matCellDef="let element"
-        class="px-1 text-right"
+        class="d-none d-lg-table-cell px-1"
         mat-cell
       >
         <gf-value
@@ -254,10 +254,10 @@
       </td>
       <td
         *matFooterCellDef
-        class="px-1 text-right"
+        class="d-none d-lg-table-cell px-1"
         mat-footer-cell
       >
-        100%
+        <gf-value [isPercent]="true" [value]="1" />
       </td>
     </ng-container>
 
