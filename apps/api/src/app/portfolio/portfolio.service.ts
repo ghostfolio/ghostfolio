@@ -163,11 +163,15 @@ export class PortfolioService {
         filters,
         withExcludedAccounts,
         impersonationId: userId,
-        userId: this.request.user.id
+        userId: this.request.user.id,
+        withSummary: true
       })
     ]);
 
     const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    
+    // Calculate total value in base currency for allocation percentage
+    const totalValueInBaseCurrency = details.summary.totalValueInBaseCurrency;
 
     return accounts.map((account) => {
       let transactionCount = 0;
@@ -180,11 +184,17 @@ export class PortfolioService {
 
       const valueInBaseCurrency =
         details.accounts[account.id]?.valueInBaseCurrency ?? 0;
+      
+      // Calculate allocation percentage
+      const allocationInPercentage = totalValueInBaseCurrency > 0 
+        ? (valueInBaseCurrency / totalValueInBaseCurrency) 
+        : 0;
 
       const result = {
         ...account,
+        allocationInPercentage,
         transactionCount,
-        valueInBaseCurrency,
+        valueInBaseCurrency,        
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
