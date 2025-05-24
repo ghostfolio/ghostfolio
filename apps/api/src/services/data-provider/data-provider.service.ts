@@ -650,9 +650,14 @@ export class DataProviderService {
       );
     }
 
-    const searchResults = await Promise.all(promises);
+    const searchResults = await Promise.allSettled(promises);
 
-    for (const { items } of searchResults) {
+    for (const result of searchResults) {
+      if (result.status === 'rejected') {
+        Logger.warn(result.reason, 'DataProviderService');
+        continue;
+      }
+      const { items } = result.value;
       if (items?.length > 0) {
         lookupItems = lookupItems.concat(items);
       }
