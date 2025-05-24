@@ -31,6 +31,7 @@ import {
   HistoricalHistoryResult
 } from 'yahoo-finance2/esm/src/modules/historical';
 import { Quote } from 'yahoo-finance2/esm/src/modules/quote';
+import { QuoteResponseArray } from 'yahoo-finance2/script/src/modules/quote';
 import { SearchQuoteNonYahoo } from 'yahoo-finance2/script/src/modules/search';
 
 @Injectable()
@@ -281,11 +282,19 @@ export class YahooFinanceService implements DataProviderInterface {
           return true;
         });
 
-      const marketData = await this.yahooFinance.quote(
-        quotes.map(({ symbol }) => {
-          return symbol;
-        })
-      );
+      let marketData: QuoteResponseArray = [];
+
+      try {
+        marketData = await this.yahooFinance.quote(
+          quotes.map(({ symbol }) => {
+            return symbol;
+          })
+        );
+      } catch (error) {
+        if (error?.result?.length > 0) {
+          marketData = error.result;
+        }
+      }
 
       for (const marketDataItem of marketData) {
         const quote = quotes.find((currentQuote) => {
