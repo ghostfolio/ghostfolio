@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the robustness of the search in the _Yahoo Finance_ service by catching schema validation errors
 - Improved the symbol lookup results by removing the currency from the name of cryptocurrencies (experimental)
 - Harmonized the data providers management style of the admin control panel
 - Extended the data providers management of the admin control panel by the asset profile count
