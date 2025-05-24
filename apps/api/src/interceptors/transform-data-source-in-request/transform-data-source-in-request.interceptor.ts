@@ -43,7 +43,7 @@ export class TransformDataSourceInRequestInterceptor<T>
         const dataSourceValue = request[type]?.dataSource;
 
         if (dataSourceValue && !DataSource[dataSourceValue]) {
-          // In Express 5, request.query is read-only, so we cannot directly modify request[type].dataSource
+          // In Express 5, request.query is read-only, so request[type].dataSource cannot be directly modified
           Object.defineProperty(request, type, {
             configurable: true,
             enumerable: true,
