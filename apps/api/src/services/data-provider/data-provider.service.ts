@@ -163,8 +163,10 @@ export class DataProviderService {
   }
 
   public async getDataSources({
+    includeGhostfolio = false,
     user
   }: {
+    includeGhostfolio?: boolean;
     user: UserWithSettings;
   }): Promise<DataSource[]> {
     let dataSourcesKey: 'DATA_SOURCES' | 'DATA_SOURCES_LEGACY' = 'DATA_SOURCES';
@@ -187,7 +189,7 @@ export class DataProviderService {
       PROPERTY_API_KEY_GHOSTFOLIO
     )) as string;
 
-    if (ghostfolioApiKey || hasRole(user, 'ADMIN')) {
+    if (includeGhostfolio || ghostfolioApiKey) {
       dataSources.push('GHOSTFOLIO');
     }
 
