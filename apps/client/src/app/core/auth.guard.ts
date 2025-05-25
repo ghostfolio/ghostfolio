@@ -21,7 +21,7 @@ export class AuthGuard {
     `/${paths.faq}`,
     `/${paths.features}`,
     `/${paths.markets}`,
-    `/${paths.open}`,
+    `/${paths.openStartup}`,
     `/${paths.pricing}`,
     `/${paths.public}`,
     `/${paths.register}`,

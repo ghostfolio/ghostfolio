@@ -11,5 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './first-months-in-open-source-page.html'
 })
 export class FirstMonthsInOpenSourcePageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkPricing = ['/' + paths.pricing];
 }

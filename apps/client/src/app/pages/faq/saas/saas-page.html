@@ -82,7 +82,7 @@
               [enableLink]="false"
           /></a>
           by signing up for Ghostfolio and applying for a trial (see
-          <a [routerLink]="['/account', 'membership']">Membership</a>). It is
+          <a [routerLink]="routerLinkAccountMembership">Membership</a>). It is
           easy, free and there is no commitment. You can stop using it at any
           time.</mat-card-content
         >
@@ -158,7 +158,7 @@
         </mat-card-header>
         <mat-card-content
           >It is suggested to regularly back up your data via
-          <a [routerLink]="['/account']">My Ghostfolio</a> →
+          <a [routerLink]="routerLinkAccount">My Ghostfolio</a> →
           <i>Export Data</i>.</mat-card-content
         >
       </mat-card>

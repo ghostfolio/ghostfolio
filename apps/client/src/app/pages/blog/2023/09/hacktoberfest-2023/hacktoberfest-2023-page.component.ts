@@ -12,4 +12,6 @@ import { RouterModule } from '@angular/router';
 })
 export class Hacktoberfest2023PageComponent {
   public routerLinkAbout = ['/' + paths.about];
+  public routerLinkBlog = ['/' + paths.blog];
+  public routerLinkOpenStartup = ['/' + paths.openStartup];
 }

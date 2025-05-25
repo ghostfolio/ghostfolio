@@ -11,7 +11,7 @@
             class="mb-2"
             [ngClass]="{ 'text-muted': user?.accounts?.length > 1 }"
           >
-            <a class="d-block" [routerLink]="['/accounts']"
+            <a class="d-block" [routerLink]="routerLinkAccounts"
               ><span i18n>Setup your accounts</span><br />
               <span class="font-weight-normal" i18n
                 >Get a comprehensive financial overview by adding your bank and
@@ -20,7 +20,7 @@
             >
           </li>
           <li class="mb-2">
-            <a class="d-block" [routerLink]="['/portfolio', 'activities']">
+            <a class="d-block" [routerLink]="routerLinkPortfolioActivities">
               <span i18n>Capture your activities</span><br />
               <span class="font-weight-normal" i18n
                 >Record your investment activities to keep your portfolio up to
@@ -29,7 +29,7 @@
             >
           </li>
           <li class="mb-2">
-            <a class="d-block" [routerLink]="['/portfolio']">
+            <a class="d-block" [routerLink]="routerLinkPortfolio">
               <span i18n>Monitor and analyze your portfolio</span><br />
               <span class="font-weight-normal" i18n
                 >Track your progress in real-time with comprehensive analysis
@@ -40,14 +40,18 @@
         </ol>
         <div class="d-flex justify-content-center">
           @if (user?.accounts?.length === 1) {
-            <a color="primary" mat-flat-button [routerLink]="['/accounts']">
+            <a
+              color="primary"
+              mat-flat-button
+              [routerLink]="routerLinkAccounts"
+            >
               <ng-container i18n>Setup accounts</ng-container>
             </a>
           } @else if (user?.accounts?.length > 1) {
             <a
               color="primary"
               mat-flat-button
-              [routerLink]="['/portfolio', 'activities']"
+              [routerLink]="routerLinkPortfolioActivities"
             >
               <ng-container i18n>Add activity</ng-container>
             </a>

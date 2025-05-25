@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/common/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -8,4 +10,6 @@ import { RouterModule } from '@angular/router';
   selector: 'gf-the-importance-of-tracking-your-personal-finances-page',
   templateUrl: './the-importance-of-tracking-your-personal-finances-page.html'
 })
-export class TheImportanceOfTrackingYourPersonalFinancesPageComponent {}
+export class TheImportanceOfTrackingYourPersonalFinancesPageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
+}

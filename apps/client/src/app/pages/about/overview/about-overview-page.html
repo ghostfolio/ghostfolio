@@ -23,7 +23,9 @@
           >
           @if (hasPermissionForStatistics) {
             and we share aggregated
-            <a title="Open Startup" [routerLink]="['/open']">key metrics</a>
+            <a title="Open Startup" [routerLink]="routerLinkOpenStartup"
+              >key metrics</a
+            >
             of the platform’s performance
           }
           . The project has been initiated by
@@ -160,7 +162,7 @@
           class="py-4 w-100"
           color="primary"
           mat-flat-button
-          [routerLink]="['/blog']"
+          [routerLink]="routerLinkBlog"
           >Blog</a
         >
       </div>

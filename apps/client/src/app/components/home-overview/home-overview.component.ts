@@ -10,6 +10,7 @@ import {
   PortfolioPerformance,
   User
 } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -36,6 +37,12 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public precision = 2;
+  public routerLinkAccounts = ['/' + paths.accounts];
+  public routerLinkPortfolio = ['/' + paths.portfolio];
+  public routerLinkPortfolioActivities = [
+    '/' + paths.portfolio,
+    paths.activities
+  ];
   public showDetails = false;
   public unit: string;
   public user: User;

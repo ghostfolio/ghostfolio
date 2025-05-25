@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './hello-ghostfolio-page.html'
 })
 export class HelloGhostfolioPageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkPricing = ['/' + paths.pricing];
   public routerLinkResources = ['/' + paths.resources];
 }

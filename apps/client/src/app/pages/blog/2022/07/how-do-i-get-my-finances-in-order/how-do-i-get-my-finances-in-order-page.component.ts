@@ -11,5 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './how-do-i-get-my-finances-in-order-page.html'
 })
 export class HowDoIGetMyFinancesInOrderPageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkResources = ['/' + paths.resources];
 }

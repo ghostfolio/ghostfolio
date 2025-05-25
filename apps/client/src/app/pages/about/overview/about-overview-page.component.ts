@@ -18,8 +18,10 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkFaq = ['/' + paths.faq];
   public routerLinkFeatures = ['/' + paths.features];
+  public routerLinkOpenStartup = ['/' + paths.openStartup];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
