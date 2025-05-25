@@ -6,5 +6,5 @@ export type AccountWithValue = AccountModel & {
   Platform?: Platform;
   transactionCount: number;
   value: number;
-  valueInBaseCurrency: number;  
+  valueInBaseCurrency: number;
 };
