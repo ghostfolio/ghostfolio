@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Turkish (`tr`)
 
-## 2.162.0 - 2025-05-24
+## 2.162.1 - 2025-05-24
 
 ### Added
 
