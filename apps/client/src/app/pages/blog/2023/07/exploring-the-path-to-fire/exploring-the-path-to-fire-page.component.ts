@@ -11,5 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './exploring-the-path-to-fire-page.html'
 })
 export class ExploringThePathToFirePageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkFeatures = ['/' + paths.features];
 }

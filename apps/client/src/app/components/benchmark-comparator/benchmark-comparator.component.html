@@ -29,7 +29,7 @@
           }}</mat-option>
         }
         @if (hasPermissionToAccessAdminControl) {
-          <mat-option [routerLink]="['/admin', 'market-data']">
+          <mat-option [routerLink]="routerLinkAdminControlMarketData">
             <div class="align-items-center d-flex">
               <ion-icon class="mr-2 text-muted" name="arrow-forward-outline" />
               <span i18n>Manage Benchmarks</span>

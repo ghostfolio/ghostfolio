@@ -27,27 +27,27 @@ export class AdminPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`Overview`,
-        path: ['/' + paths.admin]
+        path: ['/' + paths.adminControl]
       },
       {
         iconName: 'settings-outline',
         label: $localize`Settings`,
-        path: ['/' + paths.admin, paths.settings]
+        path: ['/' + paths.adminControl, paths.settings]
       },
       {
         iconName: 'server-outline',
         label: $localize`Market Data`,
-        path: ['/' + paths.admin, paths.marketData]
+        path: ['/' + paths.adminControl, paths.marketData]
       },
       {
         iconName: 'flash-outline',
         label: $localize`Job Queue`,
-        path: ['/' + paths.admin, paths.jobs]
+        path: ['/' + paths.adminControl, paths.jobs]
       },
       {
         iconName: 'people-outline',
         label: $localize`Users`,
-        path: ['/' + paths.admin, paths.users]
+        path: ['/' + paths.adminControl, paths.users]
       }
     ];
   }

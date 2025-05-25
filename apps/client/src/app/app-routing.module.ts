@@ -28,7 +28,7 @@ const routes: Routes = [
       )
   },
   {
-    path: paths.admin,
+    path: paths.adminControl,
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
@@ -95,7 +95,7 @@ const routes: Routes = [
       )
   },
   {
-    path: paths.open,
+    path: paths.openStartup,
     loadChildren: () =>
       import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
   },

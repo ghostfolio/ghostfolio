@@ -14,6 +14,8 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class SaasPageComponent implements OnDestroy {
   public pricingUrl = `https://ghostfol.io/${document.documentElement.lang}/${paths.pricing}`;
+  public routerLinkAccount = ['/' + paths.account];
+  public routerLinkAccountMembership = ['/' + paths.account, paths.membership];
   public routerLinkMarkets = ['/' + paths.markets];
   public routerLinkRegister = ['/' + paths.register];
   public user: User;
