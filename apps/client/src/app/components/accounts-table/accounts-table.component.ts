@@ -1,6 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { getLocale } from '@ghostfolio/common/helper';
+import { User } from '@ghostfolio/common/interfaces';
 
 import {
   ChangeDetectionStrategy,
@@ -41,6 +42,7 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
   @Input() totalBalanceInBaseCurrency: number;
   @Input() totalValueInBaseCurrency: number;
   @Input() transactionCount: number;
+  @Input() user: User;
 
   @Output() accountDeleted = new EventEmitter<string>();
   @Output() accountToUpdate = new EventEmitter<AccountModel>();
@@ -80,7 +82,11 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
     if (this.showValueInBaseCurrency) {
       this.displayedColumns.push('valueInBaseCurrency');
     }
-    this.displayedColumns.push('allocations');
+
+    if (this.user?.settings?.isExperimentalFeatures) {
+      this.displayedColumns.push('allocations');
+    }
+
     this.displayedColumns.push('comment');
 
     if (this.showActions) {
