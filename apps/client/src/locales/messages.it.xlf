@@ -7590,7 +7590,7 @@
       </trans-unit>
       <trans-unit id="9d1266dbf13a2f77fa5746e235cb8e688a3499e8" datatype="html">
         <source> Calculations are based on delayed market data and may not be displayed in real-time.</source>
-        <target state="new"> Calculations are based on delayed market data and may not be displayed in real-time.</target>
+        <target state="translated"> I calcoli sono basati su dati di mercato ritardati e potrebbero non essere visualizzati in tempo reale.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.html</context>
           <context context-type="linenumber">41</context>
@@ -7598,7 +7598,7 @@
       </trans-unit>
       <trans-unit id="793097298820646129" datatype="html">
         <source>changelog</source>
-        <target state="new">changelog</target>
+        <target state="translated">registro delle modifiche</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
@@ -7607,7 +7607,7 @@
       </trans-unit>
       <trans-unit id="5929637553579019226" datatype="html">
         <source>oss-friends</source>
-        <target state="new">oss-friends</target>
+        <target state="translated">oss-amici</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
