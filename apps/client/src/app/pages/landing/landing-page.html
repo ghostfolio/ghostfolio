@@ -46,7 +46,7 @@
         @if (hasPermissionToCreateUser) {
           <div class="mx-3 text-muted" i18n>or</div>
         }
-        <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+        <a i18n mat-stroked-button [routerLink]="routerLinkDemo">Live Demo</a>
       }
     </div>
   </div>
@@ -60,7 +60,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Monthly Active Users (MAU)"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -78,7 +78,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Stars on GitHub"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -96,7 +96,7 @@
         <a
           class="d-block"
           title="Ghostfolio in Numbers: Pulls on Docker Hub"
-          [routerLink]="['/open']"
+          [routerLink]="routerLinkOpenStartup"
         >
           <gf-value
             i18n
@@ -448,7 +448,9 @@
           </a>
           @if (hasPermissionForDemo) {
             <div class="mx-3 text-muted" i18n>or</div>
-            <a i18n mat-stroked-button [routerLink]="['/demo']">Live Demo</a>
+            <a i18n mat-stroked-button [routerLink]="routerLinkDemo"
+              >Live Demo</a
+            >
           }
         </div>
       </div>

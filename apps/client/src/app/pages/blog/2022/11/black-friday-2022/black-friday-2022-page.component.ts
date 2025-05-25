@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './black-friday-2022-page.html'
 })
 export class BlackFriday2022PageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
   public routerLinkFeatures = ['/' + paths.features];
   public routerLinkPricing = ['/' + paths.pricing];
 }

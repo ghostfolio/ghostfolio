@@ -7,6 +7,7 @@ import {
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 
@@ -35,6 +36,10 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
+  ];
+  public routerLinkPortfolioActivities = [
+    '/' + paths.portfolio,
+    paths.activities
   ];
   public user: User;
   public viewModeFormControl = new FormControl<HoldingsViewMode>(

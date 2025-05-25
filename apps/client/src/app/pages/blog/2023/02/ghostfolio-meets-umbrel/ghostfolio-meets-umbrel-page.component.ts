@@ -1,3 +1,5 @@
+import { paths } from '@ghostfolio/common/paths';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -8,4 +10,6 @@ import { RouterModule } from '@angular/router';
   selector: 'gf-ghostfolio-meets-umbrel-page',
   templateUrl: './ghostfolio-meets-umbrel-page.html'
 })
-export class GhostfolioMeetsUmbrelPageComponent {}
+export class GhostfolioMeetsUmbrelPageComponent {
+  public routerLinkBlog = ['/' + paths.blog];
+}

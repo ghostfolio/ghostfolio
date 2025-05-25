@@ -12,4 +12,5 @@ import { RouterModule } from '@angular/router';
 })
 export class GhostfolioJoinsOssFriendsPageComponent {
   public routerLinkAboutOssFriends = ['/' + paths.about, paths.ossFriends];
+  public routerLinkBlog = ['/' + paths.blog];
 }
