@@ -7598,7 +7598,7 @@
       </trans-unit>
       <trans-unit id="793097298820646129" datatype="html">
         <source>changelog</source>
-        <target state="translated">registro delle modifiche</target>
+        <target state="translated">registro-delle-modifiche</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
