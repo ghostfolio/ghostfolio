@@ -7615,7 +7615,7 @@
       </trans-unit>
       <trans-unit id="9010413891924313175" datatype="html">
         <source>open</source>
-        <target state="new">open</target>
+        <target state="translated">açık</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
