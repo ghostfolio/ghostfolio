@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Polish (`pl`)
+- Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
 
 ## 2.163.0 - 2025-05-26
 
