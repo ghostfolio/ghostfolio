@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Turkish (`tr`)
 - Upgraded `yahoo-finance2` from version `3.3.3` to `3.3.4`
+- Improved the language localization for French (`fr`)
 
 ## 2.162.1 - 2025-05-24
 
