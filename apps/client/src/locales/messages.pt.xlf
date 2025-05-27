@@ -5842,7 +5842,7 @@
       </trans-unit>
       <trans-unit id="5570511897986600686" datatype="html">
         <source>Job Queue</source>
-        <target state="new">Job Queue</target>
+        <target state="translated">Fila de trabalhos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page-routing.module.ts</context>
           <context context-type="linenumber">26</context>
