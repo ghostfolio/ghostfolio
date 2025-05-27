@@ -4620,7 +4620,7 @@
       </trans-unit>
       <trans-unit id="2f13d7cb644a3f330e3dd3613be87f2ea57c44a1" datatype="html">
         <source>Get a comprehensive financial overview by adding your bank and brokerage accounts.</source>
-        <target state="new">Get a comprehensive financial overview by adding your bank and brokerage accounts.</target>
+        <target state="translated">Obtén una visión financiera completa agregando tus cuentas bancarias y de corretaje.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">17</context>
@@ -4628,7 +4628,7 @@
       </trans-unit>
       <trans-unit id="4747213591a189a98d5aface48f2755f863025a4" datatype="html">
         <source>Capture your activities</source>
-        <target state="new">Capture your activities</target>
+        <target state="translated">Captura tus actividades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">24</context>
@@ -4636,7 +4636,7 @@
       </trans-unit>
       <trans-unit id="80c8f0ef9eb8f28bdb327674ce54dfc2431d3959" datatype="html">
         <source>Record your investment activities to keep your portfolio up to date.</source>
-        <target state="new">Record your investment activities to keep your portfolio up to date.</target>
+        <target state="translated">Registra tus actividades de inversión para mantener tu portafolio actualizado.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">26</context>
@@ -4644,7 +4644,7 @@
       </trans-unit>
       <trans-unit id="3d0333063dd1cd5062db56f859be74bdfb25a7f3" datatype="html">
         <source>Monitor and analyze your portfolio</source>
-        <target state="new">Monitor and analyze your portfolio</target>
+        <target state="translated">Monitorea y analiza tu portafolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">33</context>
@@ -4652,7 +4652,7 @@
       </trans-unit>
       <trans-unit id="77393329771af93886e87ee2f3fcd29a4c8d8763" datatype="html">
         <source>Track your progress in real-time with comprehensive analysis and insights.</source>
-        <target state="new">Track your progress in real-time with comprehensive analysis and insights.</target>
+        <target state="translated">Sigue tu progreso en tiempo real con análisis e información detallada.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">35</context>
@@ -4660,7 +4660,7 @@
       </trans-unit>
       <trans-unit id="0038953528872613d2eff0ed3912b109d9e9b5cf" datatype="html">
         <source>No data available</source>
-        <target state="new">No data available</target>
+        <target state="translated">No hay datos disponibles.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">250</context>
@@ -4680,7 +4680,7 @@
       </trans-unit>
       <trans-unit id="06c1bcff740ab4b1d5283d937d22e9daf8b31933" datatype="html">
         <source>Ready to take control of your personal finances?</source>
-        <target state="new">Ready to take control of your personal finances?</target>
+        <target state="translated">¿Listo para tomar el control de tus finanzas personales?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">8</context>
@@ -4688,7 +4688,7 @@
       </trans-unit>
       <trans-unit id="1bdfdbf86e61060cf785b6bd53692b47c9afec63" datatype="html">
         <source>Setup accounts</source>
-        <target state="new">Setup accounts</target>
+        <target state="translated">Configura tus cuentas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-overview/home-overview.html</context>
           <context context-type="linenumber">48</context>
@@ -4696,7 +4696,7 @@
       </trans-unit>
       <trans-unit id="fa22693b23a8bed32d787023df105a7b40002f9c" datatype="html">
         <source>Biometric Authentication</source>
-        <target state="new">Biometric Authentication</target>
+        <target state="translated">Autenticación biométrica</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">218</context>
@@ -4704,7 +4704,7 @@
       </trans-unit>
       <trans-unit id="8d0f35e084b3902a5b04ee86cfde0d4b991a93af" datatype="html">
         <source> At Ghostfolio, transparency is at the core of our values. We publish the source code as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> and we openly share aggregated key metrics of the platform’s operational status. </source>
-        <target state="new"> At Ghostfolio, transparency is at the core of our values. We publish the source code as <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>open source software<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) under the <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>AGPL-3.0 license<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> and we openly share aggregated key metrics of the platform’s operational status. </target>
+        <target state="translated"> En Ghostfolio, la transparencia está en el centro de nuestros valores. Publicamos el código fuente como <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot; title=&quot;Find Ghostfolio on GitHub&quot; &gt;"/>software de código abierto<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> (OSS) bajo la licencia <x id="START_LINK_1" equiv-text="&lt;a href=&quot;https://www.gnu.org/licenses/agpl-3.0.html&quot; title=&quot;GNU Affero General Public License&quot; &gt;"/>Licencia AGPL-3.0<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a &gt;"/> y compartimos abiertamente métricas clave agregadas sobre el estado operativo de la plataforma. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">6</context>
@@ -4712,7 +4712,7 @@
       </trans-unit>
       <trans-unit id="1de491c923555d6422bc6f1146357eb2b47853da" datatype="html">
         <source>Active Users</source>
-        <target state="new">Active Users</target>
+        <target state="translated">Usuarios activos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">40</context>
@@ -4724,7 +4724,7 @@
       </trans-unit>
       <trans-unit id="8c4cfd77b7b3d7917de13bec98a8a74890f95618" datatype="html">
         <source>New Users</source>
-        <target state="new">New Users</target>
+        <target state="translated">Nuevos usuarios</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">51</context>
@@ -4732,7 +4732,7 @@
       </trans-unit>
       <trans-unit id="c0eb011366e597e23542be386e8bc0d53470b520" datatype="html">
         <source>Users in Slack community</source>
-        <target state="new">Users in Slack community</target>
+        <target state="translated">Usuarios en la comunidad de Slack</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">75</context>
@@ -4740,7 +4740,7 @@
       </trans-unit>
       <trans-unit id="be99161cc904867871ab172df77b736d3b27dfc5" datatype="html">
         <source>Contributors on GitHub</source>
-        <target state="new">Contributors on GitHub</target>
+        <target state="translated">Colaboradores en GitHub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">89</context>
@@ -4748,7 +4748,7 @@
       </trans-unit>
       <trans-unit id="8d3932a9eba50bc101c2b8c329e7b4ea033cde97" datatype="html">
         <source>Stars on GitHub</source>
-        <target state="new">Stars on GitHub</target>
+        <target state="translated">Estrellas en GitHub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">88</context>
@@ -4760,7 +4760,7 @@
       </trans-unit>
       <trans-unit id="512b096f732f5e05dc1c451276b7a2b1a2509acd" datatype="html">
         <source>Pulls on Docker Hub</source>
-        <target state="new">Pulls on Docker Hub</target>
+        <target state="translated">Descargas en Docker Hub</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">106</context>
@@ -4772,7 +4772,7 @@
       </trans-unit>
       <trans-unit id="ed1d16219cf7cc3ad92d2d49f0c55bbafe3768b2" datatype="html">
         <source>Uptime</source>
-        <target state="new">Uptime</target>
+        <target state="translated">Tiempo de actividad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/open/open-page.html</context>
           <context context-type="linenumber">132</context>
@@ -4780,7 +4780,7 @@
       </trans-unit>
       <trans-unit id="35a09ebb1f8ae079a58f2ab952be62e354a51672" datatype="html">
         <source>Export Data</source>
-        <target state="new">Export Data</target>
+        <target state="translated">Exportar datos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">260</context>
@@ -4788,7 +4788,7 @@
       </trans-unit>
       <trans-unit id="8298612418414367990" datatype="html">
         <source>Currencies</source>
-        <target state="new">Currencies</target>
+        <target state="translated">Monedas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">86</context>
@@ -4796,7 +4796,7 @@
       </trans-unit>
       <trans-unit id="bc5d27ff889e9ac6d1f33ba419ec2d5fe923cfe3" datatype="html">
         <source>Our</source>
-        <target state="new">Our</target>
+        <target state="translated">Nuestro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">6</context>
@@ -4804,7 +4804,7 @@
       </trans-unit>
       <trans-unit id="6bf6d7aaba2bcbbd200e6869bbfdafc5991d5df8" datatype="html">
         <source>Visit</source>
-        <target state="new">Visit</target>
+        <target state="translated">Visitar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">28</context>
@@ -4812,7 +4812,7 @@
       </trans-unit>
       <trans-unit id="84e1290e06dcaba8e890116cd795d79ef89ccc90" datatype="html">
         <source>Discover other exciting Open Source Software projects</source>
-        <target state="new">Discover other exciting Open Source Software projects</target>
+        <target state="translated">Descubre otros proyectos emocionantes de software de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/about/oss-friends/oss-friends-page.html</context>
           <context context-type="linenumber">9</context>
@@ -4820,7 +4820,7 @@
       </trans-unit>
       <trans-unit id="4a5c9b07abc085e962577404378b1fac1af7ae4d" datatype="html">
         <source> Frequently Asked Questions (FAQ) </source>
-        <target state="new"> Frequently Asked Questions (FAQ) </target>
+        <target state="translated"> Preguntas Frecuentes (FAQ) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/faq/overview/faq-overview-page.html</context>
           <context context-type="linenumber">4</context>
@@ -4836,7 +4836,7 @@
       </trans-unit>
       <trans-unit id="b942ec19956854206b38d6bbd66eddb69f09c135" datatype="html">
         <source> Check out the numerous features of Ghostfolio to manage your wealth </source>
-        <target state="new"> Check out the numerous features of Ghostfolio to manage your wealth </target>
+        <target state="translated"> Descubra las numerosas funciones de Ghostfolio para gestionar su patrimonio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/features/features-page.html</context>
           <context context-type="linenumber">6</context>
@@ -4844,7 +4844,7 @@
       </trans-unit>
       <trans-unit id="6b49028880d0af1ba78f1c4b8fdc601e23f061fb" datatype="html">
         <source>Discover the latest Ghostfolio updates and insights on personal finance</source>
-        <target state="new">Discover the latest Ghostfolio updates and insights on personal finance</target>
+        <target state="translated">Conoce las últimas actualizaciones de Ghostfolio y obtén información sobre finanzas personales</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/blog/blog-page.html</context>
           <context context-type="linenumber">7</context>
@@ -4852,7 +4852,7 @@
       </trans-unit>
       <trans-unit id="cf087e9f8728da2befde9cc29fa65c70d5f8edc4" datatype="html">
         <source> If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </source>
-        <target state="new"> If you prefer to run Ghostfolio on your own infrastructure, please find the source code and further instructions on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </target>
+        <target state="translated"> Si prefieres ejecutar Ghostfolio en tu propia infraestructura, puedes encontrar el código fuente e instrucciones adicionales en <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;https://github.com/ghostfolio/ghostfolio&quot;&gt;"/>GitHub<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">26</context>
@@ -4860,7 +4860,7 @@
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
         <source> Manage your wealth like a boss </source>
-        <target state="new"> Manage your wealth like a boss </target>
+        <target state="translated"> Gestiona tu patrimonio como un jefe </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">5</context>
@@ -4868,7 +4868,7 @@
       </trans-unit>
       <trans-unit id="f251aca95a00756de48b14172b02d33f175661fc" datatype="html">
         <source> Ghostfolio is a privacy-first, open source dashboard for your personal finances. Break down your asset allocation, know your net worth and make solid, data-driven investment decisions. </source>
-        <target state="new"> Ghostfolio is a privacy-first, open source dashboard for your personal finances. Break down your asset allocation, know your net worth and make solid, data-driven investment decisions. </target>
+        <target state="translated"> Ghostfolio es un panel de control de código abierto y centrado en la privacidad para tus finanzas personales. Analiza la asignación de tus activos, conoce tu patrimonio neto y toma decisiones de inversión sólidas basadas en datos. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">9</context>
@@ -4888,7 +4888,7 @@
       </trans-unit>
       <trans-unit id="1d6f11238819cf97ea87ab54714deda567d83f5c" datatype="html">
         <source>Monthly Active Users</source>
-        <target state="new">Monthly Active Users</target>
+        <target state="translated">Usuarios activos mensuales</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">70</context>
@@ -4896,7 +4896,7 @@
       </trans-unit>
       <trans-unit id="9c7ee452b83c7458f6ffdd49837daf95b1d5f34e" datatype="html">
         <source>As seen in</source>
-        <target state="new">As seen in</target>
+        <target state="translated">Visto en</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">115</context>
@@ -4904,7 +4904,7 @@
       </trans-unit>
       <trans-unit id="c8ef12032b654cfd51b9ae1082fde84247945e03" datatype="html">
         <source> Protect your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>assets<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refine your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </source>
-        <target state="new"> Protect your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>assets<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Refine your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </target>
+        <target state="translated"> Protege tus <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>assets<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. Mejora tu <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>estrategia de inversión personal<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">225</context>
@@ -4912,7 +4912,7 @@
       </trans-unit>
       <trans-unit id="9dd7364c5dcf1b010bfa80e824ba80eb67cc2b57" datatype="html">
         <source> Ghostfolio empowers busy people to keep track of stocks, ETFs or cryptocurrencies without being tracked. </source>
-        <target state="new"> Ghostfolio empowers busy people to keep track of stocks, ETFs or cryptocurrencies without being tracked. </target>
+        <target state="translated"> Ghostfolio permite a las personas ocupadas hacer un seguimiento de acciones, ETFs o criptomonedas sin ser rastreadas. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">229</context>
@@ -4920,7 +4920,7 @@
       </trans-unit>
       <trans-unit id="70a1ed4b69a5a2cefa86b16c94ff2799a6566b4f" datatype="html">
         <source>360° View</source>
-        <target state="new">360° View</target>
+        <target state="translated">Vista 360°</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">240</context>
@@ -4928,7 +4928,7 @@
       </trans-unit>
       <trans-unit id="e0840e61fd65397c9dd8c0aa35ec19778c79b73d" datatype="html">
         <source>Web3 Ready</source>
-        <target state="new">Web3 Ready</target>
+        <target state="translated">Preparado para Web3</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">251</context>
@@ -4936,7 +4936,7 @@
       </trans-unit>
       <trans-unit id="0a82bf107b3693ed6bdba551a97ce92494921513" datatype="html">
         <source> Use Ghostfolio anonymously and own your financial data. </source>
-        <target state="new"> Use Ghostfolio anonymously and own your financial data. </target>
+        <target state="translated"> Usa Ghostfolio de forma anónima y sé dueño de tus datos financieros. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">253</context>
@@ -4944,7 +4944,7 @@
       </trans-unit>
       <trans-unit id="ebc1c2623f53ce48c714e00161a2f31f732c815b" datatype="html">
         <source>Open Source</source>
-        <target state="new">Open Source</target>
+        <target state="translated">Código Abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">261</context>
@@ -4952,7 +4952,7 @@
       </trans-unit>
       <trans-unit id="3756fe4769648222e9a3143d6a140e55afd7424b" datatype="html">
         <source> Benefit from continuous improvements through a strong community. </source>
-        <target state="new"> Benefit from continuous improvements through a strong community. </target>
+        <target state="translated"> Disfruta de mejoras continuas gracias a una comunidad sólida. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">263</context>
@@ -4960,7 +4960,7 @@
       </trans-unit>
       <trans-unit id="e7360ce972bb10156736d042a15c6c939fea123d" datatype="html">
         <source>Why <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>?</source>
-        <target state="new">Why <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>?</target>
+        <target state="translated">¿Por qué <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">272</context>
@@ -4968,7 +4968,7 @@
       </trans-unit>
       <trans-unit id="b2466b29949bb745c1f96f2d82e5dab9061f8efe" datatype="html">
         <source> Ghostfolio is for you if you are... </source>
-        <target state="new"> Ghostfolio is for you if you are... </target>
+        <target state="translated"> Ghostfolio es para ti si estás... </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">273</context>
@@ -4976,7 +4976,7 @@
       </trans-unit>
       <trans-unit id="2fe7c768f92932a3a6c9b460dd5d72e53deb9cfe" datatype="html">
         <source>trading stocks, ETFs or cryptocurrencies on multiple platforms</source>
-        <target state="new">trading stocks, ETFs or cryptocurrencies on multiple platforms</target>
+        <target state="translated">operando con acciones, ETFs o criptomonedas en múltiples plataformas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">280</context>
@@ -4984,7 +4984,7 @@
       </trans-unit>
       <trans-unit id="fe71658bf131fad393a7ce618908e246617ded26" datatype="html">
         <source>pursuing a buy &amp; hold strategy</source>
-        <target state="new">pursuing a buy &amp; hold strategy</target>
+        <target state="translated">persiguiendo una compra &amp; mantener estrategia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">286</context>
@@ -4992,7 +4992,7 @@
       </trans-unit>
       <trans-unit id="2e95d2cbc69d45e5ecf3eb92c2972e8cb4ff3ec6" datatype="html">
         <source>interested in getting insights of your portfolio composition</source>
-        <target state="new">interested in getting insights of your portfolio composition</target>
+        <target state="translated">interesado en obtener información sobre la composición de tu portafolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">291</context>
@@ -5000,7 +5000,7 @@
       </trans-unit>
       <trans-unit id="4093027d62fd4125e36fe21bdd44475fc7499d02" datatype="html">
         <source>valuing privacy and data ownership</source>
-        <target state="new">valuing privacy and data ownership</target>
+        <target state="translated">valorando la privacidad y la propiedad de tus datos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">296</context>

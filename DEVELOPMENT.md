@@ -5,7 +5,7 @@
 ### Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop)
-- [Node.js](https://nodejs.org/en/download) (version 20+)
+- [Node.js](https://nodejs.org/en/download) (version 22+)
 - Create a local copy of this Git repository (clone)
 - Copy the file `.env.dev` to `.env` and populate it with your data (`cp .env.dev .env`)
 

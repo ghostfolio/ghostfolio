@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Improved the language localization for French (`fr`)
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
+
 ## 2.163.0 - 2025-05-26
 
 ### Changed
@@ -34,12 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
-- Improved the language localization for Español (`es`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `countup.js` from version `2.8.0` to `2.8.2`
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
 - Upgraded `prisma` from version `6.7.0` to `6.8.2`
@@ -96,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
 
 ### Fixed
@@ -137,7 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
 - Respected the watcher count for the delete asset profiles checkbox in the historical market data table of the admin control panel
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Upgraded `ngx-skeleton-loader` from version `10.0.0` to `11.0.0`
 - Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
@@ -237,7 +246,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the check for duplicates in the preview step of the activities import (allow different comments)
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `ng-extract-i18n-merge` from version `2.14.1` to `2.14.3`
@@ -3692,7 +3701,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the language localization for Français (`fr`)
+- Added the language localization for French (`fr`)
 - Extended the landing page by a global heat map of subscribers
 - Added support for the thousand separator in the global heat map component
 
@@ -3721,7 +3730,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the dividend timeline grouped by year
 - Added support for the investment timeline grouped by year
-- Set up the language localization for Français (`fr`)
+- Set up the language localization for French (`fr`)
 
 ### Changed
 
@@ -3830,7 +3839,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the value redaction interceptor (including `comment`)
-- Improved the language localization for Español (`es`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `cheerio` from version `1.0.0-rc.6` to `1.0.0-rc.12`
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 
@@ -4059,7 +4068,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usage of the value component in the admin control panel
-- Improved the language localization for Español (`es`)
+- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
@@ -4081,7 +4090,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Español (`es`)
+- Set up the language localization for Spanish (`es`)
 - Added support for sectors in mutual funds
 
 ## 1.198.0 - 25.09.2022
