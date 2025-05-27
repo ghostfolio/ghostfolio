@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the language localization for French (`fr`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
@@ -104,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Upgraded `bootstrap` from version `4.6.0` to `4.6.2`
 
 ### Fixed
@@ -145,7 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the error message of the currency code validation
 - Tightened the currency code validation by requiring uppercase letters
 - Respected the watcher count for the delete asset profiles checkbox in the historical market data table of the admin control panel
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Upgraded `ngx-skeleton-loader` from version `10.0.0` to `11.0.0`
 - Upgraded `Nx` from version `20.8.0` to `20.8.1`
 
@@ -245,7 +246,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the check for duplicates in the preview step of the activities import (allow different comments)
-- Improved the language localization for Français (`fr`)
+- Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Polish (`pl`)
 - Upgraded `ng-extract-i18n-merge` from version `2.14.1` to `2.14.3`
@@ -3700,7 +3701,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the language localization for Français (`fr`)
+- Added the language localization for French (`fr`)
 - Extended the landing page by a global heat map of subscribers
 - Added support for the thousand separator in the global heat map component
 
@@ -3729,7 +3730,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for the dividend timeline grouped by year
 - Added support for the investment timeline grouped by year
-- Set up the language localization for Français (`fr`)
+- Set up the language localization for French (`fr`)
 
 ### Changed
 
