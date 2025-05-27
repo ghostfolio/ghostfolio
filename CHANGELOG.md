@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
 
 ## 2.163.0 - 2025-05-26
@@ -41,12 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Chinese (`zh`)
 - Improved the language localization for Dutch (`nl`)
-- Improved the language localization for Español (`es`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `countup.js` from version `2.8.0` to `2.8.2`
 - Upgraded `nestjs` from version `10.4.15` to `11.0.12`
 - Upgraded `prisma` from version `6.7.0` to `6.8.2`
@@ -3837,7 +3838,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the value redaction interceptor (including `comment`)
-- Improved the language localization for Español (`es`)
+- Improved the language localization for Spanish (`es`)
 - Upgraded `cheerio` from version `1.0.0-rc.6` to `1.0.0-rc.12`
 - Upgraded `prisma` from version `4.6.1` to `4.7.1`
 
@@ -4066,7 +4067,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the usage of the value component in the admin control panel
-- Improved the language localization for Español (`es`)
+- Improved the language localization for Spanish (`es`)
 
 ### Fixed
 
@@ -4088,7 +4089,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for Español (`es`)
+- Set up the language localization for Spanish (`es`)
 - Added support for sectors in mutual funds
 
 ## 1.198.0 - 25.09.2022
