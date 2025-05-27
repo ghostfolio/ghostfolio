@@ -6898,7 +6898,7 @@
       </trans-unit>
       <trans-unit id="6973601224334878334" datatype="html">
         <source>Get access to 80’000+ tickers from over 50 exchanges</source>
-        <target state="translated">Uzyskaj dostęp do ponad 100 000 pasków notowań giełdowych z ponad 50 giełd</target>
+        <target state="translated">Uzyskaj dostęp do ponad 80 000 pasków notowań giełdowych z ponad 50 giełd</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">24</context>
