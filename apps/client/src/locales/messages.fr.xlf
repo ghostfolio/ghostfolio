@@ -5652,7 +5652,7 @@
         <target state="translated">Logiciel libre de Gestion de Patrimoine</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">

@@ -1,6 +1,5 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
-import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
@@ -14,7 +13,6 @@ import { EvaluationResult } from './interfaces/evaluation-result.interface';
 import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
-  protected i18nService = new I18nService();
   private key: string;
   private name: string;
 
