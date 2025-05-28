@@ -5,14 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.164.0 - 2025-05-28
 
 ### Changed
 
+- Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
+- Upgraded `yahoo-finance2` from version `3.3.4` to `3.3.5`
 
 ## 2.163.0 - 2025-05-26
 
