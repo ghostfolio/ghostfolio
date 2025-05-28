@@ -7220,7 +7220,7 @@
       </trans-unit>
       <trans-unit id="5de9d226db382155f482a557b832da6d63108112" datatype="html">
         <source>Selector</source>
-        <target state="translated">Kiezer</target> 
+        <target state="translated">Kiezer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">439</context>
