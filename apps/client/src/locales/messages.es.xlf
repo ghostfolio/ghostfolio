@@ -7605,24 +7605,6 @@
           <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5929637553579019226" datatype="html">
-        <source>oss-friends</source>
-        <target state="new">oss-friends</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9010413891924313175" datatype="html">
-        <source>open</source>
-        <target state="new">open</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit>
     </body>
   </file>
 </xliff>

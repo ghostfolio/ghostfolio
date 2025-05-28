@@ -32,7 +32,7 @@ export const paths = {
   xRay: 'x-ray',
   zen: 'zen',
 
-  // Localized paths (public-facing pages)
+  // Publicly accessible pages
   about: $localize`:kebab-case:about`,
   changelog: $localize`:kebab-case:changelog`,
   faq: $localize`:kebab-case:faq`,
@@ -42,8 +42,8 @@ export const paths = {
   license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  openStartup: $localize`:kebab-case:open`,
-  ossFriends: $localize`:kebab-case:oss-friends`,
+  openStartup: 'open',
+  ossFriends: 'oss-friends',
   pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
   register: $localize`:kebab-case:register`,
