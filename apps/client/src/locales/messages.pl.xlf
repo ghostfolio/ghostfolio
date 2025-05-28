@@ -6170,7 +6170,7 @@
       </trans-unit>
       <trans-unit id="44268762ecf7c7d690288f763f17196216671353" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
-        <target state="new">{VAR_PLURAL, plural, =1 {activity} other {activities}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {activity} Inny {activities}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">14</context>
@@ -7204,7 +7204,7 @@
       </trans-unit>
       <trans-unit id="47969a4a0916bea5385b42c18749e32a35f07bd7" datatype="html">
         <source>Default Market Price</source>
-        <target state="new">Default Market Price</target>
+        <target state="translated">Domyślna cena rynkowa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">386</context>
@@ -7212,7 +7212,7 @@
       </trans-unit>
       <trans-unit id="37e10df2d9c0c25ef04ac112c9c9a7723e8efae0" datatype="html">
         <source>Mode</source>
-        <target state="new">Mode</target>
+        <target state="translated">Tryb</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">423</context>
@@ -7220,7 +7220,7 @@
       </trans-unit>
       <trans-unit id="5de9d226db382155f482a557b832da6d63108112" datatype="html">
         <source>Selector</source>
-        <target state="new">Selector</target>
+        <target state="translated">Selektor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">439</context>
@@ -7228,7 +7228,7 @@
       </trans-unit>
       <trans-unit id="135a208952e884a5ee78533cc4cc8559c702d555" datatype="html">
         <source>HTTP Request Headers</source>
-        <target state="new">HTTP Request Headers</target>
+        <target state="translated">Nagłówki żądań HTTP</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">399</context>
@@ -7236,7 +7236,7 @@
       </trans-unit>
       <trans-unit id="8635324470284879211" datatype="html">
         <source>end of day</source>
-        <target state="new">end of day</target>
+        <target state="translated">koniec dnia</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -7244,7 +7244,7 @@
       </trans-unit>
       <trans-unit id="4547068148181074902" datatype="html">
         <source>real-time</source>
-        <target state="new">real-time</target>
+        <target state="translated">w czasie rzeczywistym</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">142</context>
@@ -7268,7 +7268,7 @@
       </trans-unit>
       <trans-unit id="cdcd7c871f3bc0326ee77e5aea82af1ef26f46f2" datatype="html">
         <source>Market Data</source>
-        <target state="new">Market Data</target>
+        <target state="translated">Dane rynkowe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">374</context>
@@ -7485,7 +7485,7 @@
       </trans-unit>
       <trans-unit id="d59937471dbd9dee61cfd6402c3963bbfccc7b2b" datatype="html">
         <source>Gather Recent Historical Market Data</source>
-        <target state="new">Gather Recent Historical Market Data</target>
+        <target state="translated">Zbierz najnowsze historyczne dane rynkowe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">226</context>
