@@ -80,7 +80,7 @@ export class RedisCacheService {
 
   public async isHealthy() {
     try {
-      const isHealthy = await Promise.race([
+      await Promise.race([
         this.getKeys(),
         new Promise((_, reject) =>
           setTimeout(
@@ -90,7 +90,7 @@ export class RedisCacheService {
         )
       ]);
 
-      return isHealthy === 'PONG';
+      return true;
     } catch (error) {
       return false;
     }

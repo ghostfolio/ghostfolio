@@ -12,6 +12,7 @@ import {
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem, User } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { ColorScheme } from '@ghostfolio/common/types';
 
@@ -63,6 +64,10 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
   public chart: Chart<'line'>;
   public hasPermissionToAccessAdminControl: boolean;
+  public routerLinkAdminControlMarketData = [
+    '/' + paths.adminControl,
+    paths.marketData
+  ];
 
   public constructor() {
     Chart.register(

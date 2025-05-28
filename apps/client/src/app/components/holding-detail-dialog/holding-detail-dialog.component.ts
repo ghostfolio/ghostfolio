@@ -13,6 +13,7 @@ import {
   LineChartItem,
   User
 } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { GfActivitiesTableComponent } from '@ghostfolio/ui/activities-table';
 import { GfDataProviderCreditsComponent } from '@ghostfolio/ui/data-provider-credits';
@@ -468,7 +469,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public onCloneActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, createDialog: true }
     });
 
@@ -510,7 +511,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   }
 
   public onUpdateActivity(aActivity: Activity) {
-    this.router.navigate(['/portfolio', 'activities'], {
+    this.router.navigate(['/' + paths.portfolio, paths.activities], {
       queryParams: { activityId: aActivity.id, editDialog: true }
     });
 

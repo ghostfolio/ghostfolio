@@ -135,7 +135,10 @@ export class AdminService {
   }
 
   public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
-    const dataSources = await this.dataProviderService.getDataSources({ user });
+    const dataSources = await this.dataProviderService.getDataSources({
+      user,
+      includeGhostfolio: true
+    });
 
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),

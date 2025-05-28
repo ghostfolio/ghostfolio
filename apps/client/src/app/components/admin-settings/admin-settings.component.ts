@@ -13,6 +13,7 @@ import {
   DataProviderInfo,
   User
 } from '@ghostfolio/common/interfaces';
+import { paths } from '@ghostfolio/common/paths';
 
 import {
   ChangeDetectionStrategy,
@@ -75,9 +76,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           const languageCode =
             this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
 
-          this.pricingUrl =
-            `https://ghostfol.io/${languageCode}/` +
-            $localize`:snake-case:pricing`;
+          this.pricingUrl = `https://ghostfol.io/${languageCode}/${paths.pricing}`;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -146,29 +145,35 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
         this.dataSource = new MatTableDataSource(filteredProviders);
 
-        this.adminService
-          .fetchGhostfolioDataProviderStatus(
-            settings[PROPERTY_API_KEY_GHOSTFOLIO] as string
-          )
-          .pipe(
-            catchError(() => {
-              this.isGhostfolioApiKeyValid = false;
+        const ghostfolioApiKey = settings[
+          PROPERTY_API_KEY_GHOSTFOLIO
+        ] as string;
+
+        if (ghostfolioApiKey) {
+          this.adminService
+            .fetchGhostfolioDataProviderStatus(ghostfolioApiKey)
+            .pipe(
+              catchError(() => {
+                this.isGhostfolioApiKeyValid = false;
+
+                this.changeDetectorRef.markForCheck();
+
+                return of(null);
+              }),
+              filter((status) => {
+                return status !== null;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe((status) => {
+              this.ghostfolioApiStatus = status;
+              this.isGhostfolioApiKeyValid = true;
 
               this.changeDetectorRef.markForCheck();
-
-              return of(null);
-            }),
-            filter((status) => {
-              return status !== null;
-            }),
-            takeUntil(this.unsubscribeSubject)
-          )
-          .subscribe((status) => {
-            this.ghostfolioApiStatus = status;
-            this.isGhostfolioApiKeyValid = true;
-
-            this.changeDetectorRef.markForCheck();
-          });
+            });
+        } else {
+          this.isGhostfolioApiKeyValid = false;
+        }
 
         this.isLoading = false;
 
