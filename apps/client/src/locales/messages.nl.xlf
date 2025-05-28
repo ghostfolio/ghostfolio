@@ -7220,7 +7220,7 @@
       </trans-unit>
       <trans-unit id="5de9d226db382155f482a557b832da6d63108112" datatype="html">
         <source>Selector</source>
-        <target state="translated">Kiezer</target> 
+        <target state="new">Selector</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">439</context>
@@ -7589,7 +7589,7 @@
       </trans-unit>
       <trans-unit id="9d1266dbf13a2f77fa5746e235cb8e688a3499e8" datatype="html">
         <source> Calculations are based on delayed market data and may not be displayed in real-time.</source>
-        <target state="translated">Berekeningen zijn gebaseerd op vertraagde marktgegevens en worden mogelijk niet in realtime weergegeven.</target>
+        <target state="new"> Calculations are based on delayed market data and may not be displayed in real-time.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.html</context>
           <context context-type="linenumber">41</context>
@@ -7597,7 +7597,7 @@
       </trans-unit>
       <trans-unit id="793097298820646129" datatype="html">
         <source>changelog</source>
-        <target state="translated">wijzigingslogboek</target>
+        <target state="new">changelog</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
@@ -7606,7 +7606,7 @@
       </trans-unit>
       <trans-unit id="5929637553579019226" datatype="html">
         <source>oss-friends</source>
-        <target state="translated">oss-vrienden</target>
+        <target state="new">oss-friends</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
@@ -7615,7 +7615,7 @@
       </trans-unit>
       <trans-unit id="9010413891924313175" datatype="html">
         <source>open</source>
-        <target state="translated">openen</target>
+        <target state="new">open</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
