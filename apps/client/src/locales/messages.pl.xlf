@@ -6898,7 +6898,7 @@
       </trans-unit>
       <trans-unit id="6973601224334878334" datatype="html">
         <source>Get access to 80’000+ tickers from over 50 exchanges</source>
-        <target state="translated">Uzyskaj dostęp do ponad 100 000 pasków notowań giełdowych z ponad 50 giełd</target>
+        <target state="translated">Uzyskaj dostęp do ponad 80 000 pasków notowań giełdowych z ponad 50 giełd</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/i18n.ts</context>
           <context context-type="linenumber">24</context>
@@ -7602,24 +7602,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">37</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5929637553579019226" datatype="html">
-        <source>oss-friends</source>
-        <target state="new">oss-friends</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9010413891924313175" datatype="html">
-        <source>open</source>
-        <target state="new">open</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
-          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
     </body>
