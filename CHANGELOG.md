@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Spanish (`es`)
 - Upgraded `big.js` from version `6.2.2` to `7.0.1`
 
+### Fixed
+
+- Changed the investment value to take the currency effects into account in the holding detail dialog
+
 ## 2.164.0 - 2025-05-28
 
 ### Changed
