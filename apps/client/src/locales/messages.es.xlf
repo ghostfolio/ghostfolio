@@ -5008,7 +5008,7 @@
       </trans-unit>
       <trans-unit id="5fae4f4ad7de60db18a5c52ccf5e7e8c7b194a9c" datatype="html">
         <source>into minimalism</source>
-        <target state="new">into minimalism</target>
+        <target state="translated">en el minimalismo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">299</context>
@@ -5016,7 +5016,7 @@
       </trans-unit>
       <trans-unit id="18bb2c16577866572e3656986d9660d2db012565" datatype="html">
         <source>caring about diversifying your financial resources</source>
-        <target state="new">caring about diversifying your financial resources</target>
+        <target state="translated">preocuparse por diversificar tus recursos financieros</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">303</context>
@@ -5024,7 +5024,7 @@
       </trans-unit>
       <trans-unit id="0a6c37c2d3a8c41e7e44f020aefb1c667ac150dc" datatype="html">
         <source>interested in financial independence</source>
-        <target state="new">interested in financial independence</target>
+        <target state="translated">interesado en la independencia financiera</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">307</context>
@@ -5032,7 +5032,7 @@
       </trans-unit>
       <trans-unit id="81fbb4e2cd3d3079d790bdddbfcc73ec3b600d22" datatype="html">
         <source>saying no to spreadsheets in <x id="INTERPOLATION" equiv-text="{{ currentYear }}"/></source>
-        <target state="new">saying no to spreadsheets in <x id="INTERPOLATION" equiv-text="{{ currentYear }}"/></target>
+        <target state="translated">diciendo no a las hojas de cálculo en <x id="INTERPOLATION" equiv-text="{{ currentYear }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">311</context>
@@ -5040,7 +5040,7 @@
       </trans-unit>
       <trans-unit id="92cef868de56015b451e7eee26c9eaef54f41d37" datatype="html">
         <source>still reading this list</source>
-        <target state="new">still reading this list</target>
+        <target state="translated">todavía leyendo esta lista</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">314</context>
@@ -5048,7 +5048,7 @@
       </trans-unit>
       <trans-unit id="8c11c506c55700ca9883f360c52df5a432a51dcf" datatype="html">
         <source>Learn more about Ghostfolio</source>
-        <target state="new">Learn more about Ghostfolio</target>
+        <target state="translated">Más información sobre Ghostfolio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">319</context>
@@ -5056,7 +5056,7 @@
       </trans-unit>
       <trans-unit id="ae508ae33a02ae69247d9e4d84e98b610209ef3b" datatype="html">
         <source> What our <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>users<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> are saying </source>
-        <target state="new"> What our <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>users<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> are saying </target>
+        <target state="translated"> Lo que nuestros <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>usuarios<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> están diciendo </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">327</context>
@@ -5064,7 +5064,7 @@
       </trans-unit>
       <trans-unit id="49cccc34723a396488453992d4d469fb0f644ef4" datatype="html">
         <source> Members from around the globe are using <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;pricing&quot;&gt;"/><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio Premium<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
-        <target state="new"> Members from around the globe are using <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;pricing&quot;&gt;"/><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio Premium<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        <target state="translated"> Miembros de todo el mundo están usando <x id="START_LINK" ctype="x-a" equiv-text="&lt;a href=&quot;pricing&quot;&gt;"/><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio Premium<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">366</context>
@@ -5072,7 +5072,7 @@
       </trans-unit>
       <trans-unit id="fb9e3bfd7030894a15bebdb45e9502469d7b44b1" datatype="html">
         <source> How does <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> work? </source>
-        <target state="new"> How does <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> work? </target>
+        <target state="translated"> ¿Cómo <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> work? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">383</context>
@@ -5080,7 +5080,7 @@
       </trans-unit>
       <trans-unit id="969974097ecdfff6cb04b4cb71efccd717da1ce8" datatype="html">
         <source>Sign up anonymously*</source>
-        <target state="new">Sign up anonymously*</target>
+        <target state="translated">Regístrate de forma anónima*</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">392</context>
@@ -5088,7 +5088,7 @@
       </trans-unit>
       <trans-unit id="100e94a30dd0af12854336d0c90b50381e457b97" datatype="html">
         <source><x id="START_SMALL_TEXT" ctype="x-small" equiv-text="&lt;small&gt;"/>* no e-mail address nor credit card required<x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/></source>
-        <target state="new"><x id="START_SMALL_TEXT" ctype="x-small" equiv-text="&lt;small&gt;"/>* no e-mail address nor credit card required<x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/></target>
+        <target state="translated"><x id="START_SMALL_TEXT" ctype="x-small" equiv-text="&lt;small&gt;"/>* no se requiere dirección de correo electrónico ni tarjeta de crédito<x id="CLOSE_SMALL_TEXT" ctype="x-small" equiv-text="&lt;/small&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">394</context>
@@ -5096,7 +5096,7 @@
       </trans-unit>
       <trans-unit id="57aad8c9d23cc4f0bbb0abf4f3313bfb85154592" datatype="html">
         <source> Add any of your historical transactions </source>
-        <target state="new"> Add any of your historical transactions </target>
+        <target state="translated"> Agrega cualquiera de tus transacciones históricas </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">405</context>
@@ -5104,7 +5104,7 @@
       </trans-unit>
       <trans-unit id="9bb49f7d149617560f1962d3688ed6fafba63c0d" datatype="html">
         <source> Get valuable insights of your portfolio composition </source>
-        <target state="new"> Get valuable insights of your portfolio composition </target>
+        <target state="translated"> Obtén información valiosa sobre la composición de tu portafolio </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">417</context>
@@ -5112,7 +5112,7 @@
       </trans-unit>
       <trans-unit id="80abe38d82bca467f47bbb65f821a115cf9dfdc1" datatype="html">
         <source> Are <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>you<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ready? </source>
-        <target state="new"> Are <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>you<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> ready? </target>
+        <target state="translated"> ¿Estás <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>tú<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> listo? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">431</context>
@@ -5120,7 +5120,7 @@
       </trans-unit>
       <trans-unit id="195d2d6475819f55cf73287f97752093b7721ade" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">Demostración en vivo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">49</context>
@@ -5132,7 +5132,7 @@
       </trans-unit>
       <trans-unit id="dbe66b4824faaff93249a96c9ce23c237b446ed5" datatype="html">
         <source> Get the full picture of your personal finances across multiple platforms. </source>
-        <target state="new"> Get the full picture of your personal finances across multiple platforms. </target>
+        <target state="translated"> Obtén una visión completa de tus finanzas personales en múltiples plataformas. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">242</context>
@@ -5140,7 +5140,7 @@
       </trans-unit>
       <trans-unit id="9454b3758f67cb4d178570e8bfb3e0d684e2353e" datatype="html">
         <source>Get started in only 3 steps</source>
-        <target state="new">Get started in only 3 steps</target>
+        <target state="translated">Comienza en solo 3 pasos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">386</context>
@@ -5229,7 +5229,7 @@
       </trans-unit>
       <trans-unit id="a92a0e8a2e70e4a0735b714680629187d2b6f23e" datatype="html">
         <source> This overview page features a curated collection of personal finance tools compared to the open source alternative <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. If you value transparency, data privacy, and community collaboration, Ghostfolio provides an excellent opportunity to take control of your financial management. </source>
-        <target state="new"> This overview page features a curated collection of personal finance tools compared to the open source alternative <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. If you value transparency, data privacy, and community collaboration, Ghostfolio provides an excellent opportunity to take control of your financial management. </target>
+        <target state="translated"> Esta página de resumen presenta una colección seleccionada de herramientas de finanzas personales, comparadas con la alternativa de código abierto <x id="START_LINK" ctype="x-a" equiv-text="&lt;a [routerLink]=&quot;routerLinkAbout&quot;&gt;"/>Ghostfolio<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Si valoras la transparencia, la privacidad de los datos y la colaboración comunitaria, Ghostfolio ofrece una excelente oportunidad para tomar el control de tu gestión financiera. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">8</context>
@@ -5237,7 +5237,7 @@
       </trans-unit>
       <trans-unit id="bd90980cf63dc92053b4b209cc82b609fded14e9" datatype="html">
         <source> Explore the links below to compare a variety of personal finance tools with Ghostfolio. </source>
-        <target state="new"> Explore the links below to compare a variety of personal finance tools with Ghostfolio. </target>
+        <target state="translated"> Explora los siguientes enlaces para comparar una variedad de herramientas de finanzas personales con Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">16</context>
@@ -5245,7 +5245,7 @@
       </trans-unit>
       <trans-unit id="6264b47d8cbc74a3a411c1910964285bb0c8cc5e" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </source>
-        <target state="new"> Alternativa de software libre a <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
+        <target state="translated"> Alternativa de software libre a <x id="INTERPOLATION" equiv-text="{{ product.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">42</context>
