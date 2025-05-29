@@ -7,10 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _General_ section by the performance calculation method on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
-- Improved the language localization for Spanish (`es`)
+- Renamed `orders` to `activities` in the `Tag` database schema
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `big.js` from version `6.2.2` to `7.0.1`
 
 ## 2.164.0 - 2025-05-28
 
