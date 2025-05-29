@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `orders` to `activities` in the `Tag` database schema
 - Improved the language localization for Dutch (`nl`)
 
 ## 2.164.0 - 2025-05-28
