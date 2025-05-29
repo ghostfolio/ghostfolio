@@ -663,7 +663,8 @@ export class PortfolioService {
         grossPerformancePercentWithCurrencyEffect: undefined,
         grossPerformanceWithCurrencyEffect: undefined,
         historicalData: [],
-        investment: undefined,
+        investmentInBaseCurrency: undefined,
+        investmentInBaseCurrencyWithCurrencyEffect: undefined,
         marketPrice: undefined,
         marketPriceMax: undefined,
         marketPriceMin: undefined,
@@ -853,7 +854,9 @@ export class PortfolioService {
         grossPerformanceWithCurrencyEffect:
           position.grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
-        investment: position.investment?.toNumber(),
+        investmentInBaseCurrency: position.investment?.toNumber(),
+        investmentInBaseCurrencyWithCurrencyEffect:
+          position.investmentWithCurrencyEffect?.toNumber(),
         netPerformance: position.netPerformance?.toNumber(),
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
@@ -952,7 +955,8 @@ export class PortfolioService {
         grossPerformancePercentWithCurrencyEffect: undefined,
         grossPerformanceWithCurrencyEffect: undefined,
         historicalData: historicalDataArray,
-        investment: 0,
+        investmentInBaseCurrency: 0,
+        investmentInBaseCurrencyWithCurrencyEffect: 0,
         netPerformance: undefined,
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,

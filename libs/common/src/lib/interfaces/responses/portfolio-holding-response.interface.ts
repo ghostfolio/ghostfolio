@@ -22,7 +22,8 @@ export interface PortfolioHoldingResponse {
   grossPerformancePercentWithCurrencyEffect: number;
   grossPerformanceWithCurrencyEffect: number;
   historicalData: HistoricalDataItem[];
-  investment: number;
+  investmentInBaseCurrency: number;
+  investmentInBaseCurrencyWithCurrencyEffect: number;
   marketPrice: number;
   marketPriceMax: number;
   marketPriceMin: number;
