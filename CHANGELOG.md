@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed `orders` to `activities` in the `Tag` database schema
 - Improved the language localization for Dutch (`nl`)
+- Upgraded `big.js` from version `6.2.2` to `7.0.1`
 
 ## 2.164.0 - 2025-05-28
 

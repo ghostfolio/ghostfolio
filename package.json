@@ -93,7 +93,7 @@
     "@simplewebauthn/server": "13.1.1",
     "@stripe/stripe-js": "5.4.0",
     "alphavantage": "2.2.0",
-    "big.js": "6.2.2",
+    "big.js": "7.0.1",
     "bootstrap": "4.6.2",
     "bull": "4.16.5",
     "chart.js": "4.4.9",
