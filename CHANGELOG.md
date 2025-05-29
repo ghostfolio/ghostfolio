@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the content of the _General_ section by the performance calculation method on the Frequently Asked Questions (FAQ) page
+
 ### Changed
 
 - Renamed `orders` to `activities` in the `Tag` database schema
