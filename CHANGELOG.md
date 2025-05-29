@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Polish (`pl`)
 
 ## 2.164.0 - 2025-05-28
 
@@ -17,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for French (`fr`)
-- Improved the language localization for Polish (`pl`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
 - Upgraded `Node.js` from version `20` to `22` (`Dockerfile`)
