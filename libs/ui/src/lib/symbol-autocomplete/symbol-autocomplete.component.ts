@@ -83,8 +83,7 @@ export class GfSymbolAutocompleteComponent
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
   public control = new FormControl();
-  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
-    [];
+  public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -106,7 +105,7 @@ export class GfSymbolAutocompleteComponent
     }
 
     if (this.defaultLookupItems?.length) {
-      this.filteredLookupItems = this.defaultLookupItems.map((lookupItem) => {
+      this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
         return {
           ...lookupItem,
           assetSubClassString: translate(lookupItem.assetSubClass)
@@ -144,7 +143,7 @@ export class GfSymbolAutocompleteComponent
         })
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+        this.lookupItems = filteredLookupItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
@@ -170,7 +169,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public isValueInOptions(value: string) {
-    return this.filteredLookupItems.some((item) => {
+    return this.lookupItems.some((item) => {
       return item.symbol === value;
     });
   }
