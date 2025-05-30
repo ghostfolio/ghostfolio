@@ -938,9 +938,11 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
         Net performance: ${totalNetPerformance.toFixed(
           2
         )} / ${netPerformancePercentage.mul(100).toFixed(2)}%
-        Net performance with currency effect: ${netPerformancePercentageWithCurrencyEffectMap[
-          'max'
-        ].toFixed(2)}%`
+        Net performance with currency effect: ${netPerformanceValuesWithCurrencyEffect[
+          endDateString
+        ].toFixed(2)} / ${netPerformancePercentageWithCurrencyEffectMap['max']
+          .mul(100)
+          .toFixed(2)}%`
       );
     }
 
