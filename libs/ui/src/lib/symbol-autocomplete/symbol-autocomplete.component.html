@@ -1,45 +1,15 @@
 <input
-  *ngIf="!isAutocomplete"
   autocapitalize="off"
   autocomplete="off"
   matInput
-  [formControl]="inputControl"
+  [formControl]="control"
   [matAutocomplete]="symbolAutocomplete"
 />
 
-<mat-select
-  *ngIf="isAutocomplete"
-  [displayWith]="displayFn"
-  [formControl]="selectControl"
-  (keydown)="onShowAutocomplete($event)"
-  (selectionChange)="onSelectUpdateSymbol($event)"
->
-  @for (lookupItem of defaultLookupItems; track lookupItem) {
-    <mat-option
-      class="line-height-1"
-      [disabled]="lookupItem.dataProviderInfo.isPremium"
-      [value]="lookupItem"
-    >
-      <span class="align-items-center d-flex line-height-1"
-        ><span>{{ lookupItem.name }}</span>
-        @if (lookupItem.dataProviderInfo.isPremium) {
-          <gf-premium-indicator class="ml-1" [enableLink]="false" />
-        }
-      </span>
-      <small class="text-muted"
-        >{{ lookupItem.symbol | gfSymbol }} · {{ lookupItem.currency }}
-        @if (lookupItem.dataProviderInfo.name) {
-          · {{ lookupItem.dataProviderInfo.name }}
-        }
-      </small>
-    </mat-option>
-  }
-</mat-select>
-
 <mat-autocomplete
-  #symbolAutocomplete
+  #symbolAutocomplete="matAutocomplete"
   [displayWith]="displayFn"
-  (optionSelected)="onAutocompleteUpdateSymbol($event)"
+  (optionSelected)="onUpdateSymbol($event)"
 >
   @if (!isLoading) {
     @for (lookupItem of filteredLookupItems; track lookupItem) {
@@ -65,7 +35,7 @@
         </small>
       </mat-option>
     } @empty {
-      @if (inputControl.value?.length > 1) {
+      @if (control.value?.length > 1) {
         <mat-option class="line-height-1" disabled="true" i18n
           >Oops! Could not find any assets.</mat-option
         >
