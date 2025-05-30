@@ -2516,7 +2516,7 @@
       </trans-unit>
       <trans-unit id="44268762ecf7c7d690288f763f17196216671353" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {activity} other {activities}}</source>
-        <target state="new">{VAR_PLURAL, plural, =1 {activity} other {activities}}</target>
+        <target state="translated">{VAR_PLURAL, plural, =1 {activitat} other {activitats}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/portfolio-summary/portfolio-summary.component.html</context>
           <context context-type="linenumber">14</context>
@@ -4257,7 +4257,7 @@
       </trans-unit>
       <trans-unit id="0c733f4d3a472252964704587a83aa7cc83e1bb3" datatype="html">
         <source>Mortgages, personal loans, credit cards</source>
-        <target state="new">Mortgages, personal loans, credit cards</target>
+        <target state="translated">Hipoteques, préstecs personals, targetes de crèdit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">57</context>
@@ -4265,7 +4265,7 @@
       </trans-unit>
       <trans-unit id="8beebcb81b9784b6be5d535419735221efd2d1ce" datatype="html">
         <source>Luxury items, real estate, private companies</source>
-        <target state="new">Luxury items, real estate, private companies</target>
+        <target state="translated">Articles de luxe, immobiliari, empreses privades</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">73</context>
@@ -4273,7 +4273,7 @@
       </trans-unit>
       <trans-unit id="29881a45dafbe5aa05cd9d0441a4c0c2fb06df92" datatype="html">
         <source>Account</source>
-        <target state="new">Account</target>
+        <target state="translated">Compte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">85</context>
@@ -4289,7 +4289,7 @@
       </trans-unit>
       <trans-unit id="f4e44195c1fc545934be51e9abfba1202911462a" datatype="html">
         <source>Update Cash Balance</source>
-        <target state="new">Update Cash Balance</target>
+        <target state="translated">Actualitzar el saldo d’efectiu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">112</context>
@@ -4297,7 +4297,7 @@
       </trans-unit>
       <trans-unit id="6713459747f0f67e53a8a0be0bba45ed324bc112" datatype="html">
         <source>Unit Price</source>
-        <target state="new">Unit Price</target>
+        <target state="translated">Preu unitari</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">213</context>
@@ -4309,7 +4309,7 @@
       </trans-unit>
       <trans-unit id="160f1ffbd26df073d0fbd02cf8ce0d8cea7603b0" datatype="html">
         <source>Fee</source>
-        <target state="new">Fee</target>
+        <target state="translated">Quota</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/create-or-update-activity-dialog/create-or-update-activity-dialog.html</context>
           <context context-type="linenumber">261</context>
@@ -4321,7 +4321,7 @@
       </trans-unit>
       <trans-unit id="1817902710689724227" datatype="html">
         <source>Import Activities</source>
-        <target state="new">Import Activities</target>
+        <target state="translated">Activitats d’importació</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">47</context>
@@ -4329,7 +4329,7 @@
       </trans-unit>
       <trans-unit id="72640258012696878" datatype="html">
         <source>Import Dividends</source>
-        <target state="new">Import Dividends</target>
+        <target state="translated">Importar dividends</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">88</context>
@@ -4337,7 +4337,7 @@
       </trans-unit>
       <trans-unit id="848497846891931418" datatype="html">
         <source>Importing data...</source>
-        <target state="new">Importing data...</target>
+        <target state="translated">S’estan important dades...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">126</context>
@@ -4345,7 +4345,7 @@
       </trans-unit>
       <trans-unit id="7500216440144530775" datatype="html">
         <source>Import has been completed</source>
-        <target state="new">Import has been completed</target>
+        <target state="translated">La importació s’ha completat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">134</context>
@@ -4353,7 +4353,7 @@
       </trans-unit>
       <trans-unit id="8763985977445247551" datatype="html">
         <source>Validating data...</source>
-        <target state="new">Validating data...</target>
+        <target state="translated">S’estan validant les dades...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.component.ts</context>
           <context context-type="linenumber">242</context>
@@ -4361,7 +4361,7 @@
       </trans-unit>
       <trans-unit id="4de7b521c9a386fa682d6c995b30f6bc2d6c14b8" datatype="html">
         <source>Select Holding</source>
-        <target state="new">Select Holding</target>
+        <target state="translated">Seleccioneu Holding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">20</context>
@@ -4369,7 +4369,7 @@
       </trans-unit>
       <trans-unit id="e95a9542e72bb61cac804b274ab760af2b5f7fc5" datatype="html">
         <source>Select File</source>
-        <target state="new">Select File</target>
+        <target state="translated">Seleccioneu Fitxer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/activities/import-activities-dialog/import-activities-dialog.html</context>
           <context context-type="linenumber">22</context>
