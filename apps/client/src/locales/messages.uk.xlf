@@ -4004,7 +4004,7 @@
         <target state="translated">Програмне забезпечення управління багатством з відкритим кодом</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -7602,6 +7602,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/paths.ts</context>
           <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.fee-ratio-initial-investment.exceed" datatype="html">
+        <source> The fees do exceed {thresholdMax}% of your initial investment ({feeRatio}%) </source>
+        <target state="new"> The fees do exceed {thresholdMax}% of your initial investment ({feeRatio}%) </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.fee-ratio-initial-investment.not-exceed" datatype="html">
+        <source> The fees do not exceed {thresholdMax}% of your initial investment ({feeRatio}%) </source>
+        <target state="new"> The fees do not exceed {thresholdMax}% of your initial investment ({feeRatio}%) </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
     </body>
