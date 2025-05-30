@@ -12,7 +12,7 @@
   (optionSelected)="onUpdateSymbol($event)"
 >
   @if (!isLoading) {
-    @for (lookupItem of filteredLookupItems; track lookupItem) {
+    @for (lookupItem of lookupItems; track lookupItem) {
       <mat-option
         class="line-height-1"
         [disabled]="lookupItem.dataProviderInfo.isPremium"
