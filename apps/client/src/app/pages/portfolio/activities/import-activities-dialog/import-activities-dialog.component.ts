@@ -289,6 +289,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             this.activities = activities;
             this.dataSource = new MatTableDataSource(activities.reverse());
             this.totalItems = activities.length;
+
+            this.selectedActivities = [...activities];
+            this.changeDetectorRef.markForCheck();
+            stepper.next();
           } catch (error) {
             console.error(error);
             this.handleImportError({ error, activities: content.activities });
@@ -307,6 +311,10 @@ export class ImportActivitiesDialog implements OnDestroy {
             this.activities = data.activities;
             this.dataSource = new MatTableDataSource(data.activities.reverse());
             this.totalItems = data.activities.length;
+
+            this.selectedActivities = [...data.activities];
+            this.changeDetectorRef.markForCheck();
+            stepper.next();
           } catch (error) {
             console.error(error);
             this.handleImportError({
