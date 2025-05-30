@@ -554,6 +554,16 @@ export class RoaiPortfolioCalculator extends PortfolioCalculator {
 
           initialValueWithCurrencyEffect =
             transactionInvestmentWithCurrencyEffect;
+        } else if (
+          order.quantity.gt(0) &&
+          ['BUY', 'SELL'].includes(order.type) &&
+          !order.itemType
+        ) {
+          initialValue = order.quantity.mul(marketPriceInBaseCurrency);
+
+          initialValueWithCurrencyEffect = order.quantity.mul(
+            marketPriceInBaseCurrencyWithCurrencyEffect
+          );
         }
       }
 
