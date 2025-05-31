@@ -68,6 +68,13 @@ export class AdminController {
     return this.adminService.get({ user: this.request.user });
   }
 
+  @Get('demo-user/sync')
+  @HasPermission(permissions.syncDemoUserAccount)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async syncDemoUserAccount(): Promise<Prisma.BatchPayload> {
+    return this.demoService.syncDemoUserAccount();
+  }
+
   @HasPermission(permissions.accessAdminControl)
   @Post('gather')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
@@ -274,13 +281,6 @@ export class AdminController {
       { dataSource, symbol },
       assetProfile
     );
-  }
-
-  @Get('demo-user/sync')
-  @HasPermission(permissions.syncDemoUserAccount)
-  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async syncDemoUserAccount(): Promise<Prisma.BatchPayload> {
-    return this.demoService.syncDemoUserAccount();
   }
 
   @HasPermission(permissions.accessAdminControl)
