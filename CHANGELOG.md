@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgraded `big.js` from version `6.2.2` to `7.0.1`
 - Upgraded `ng-extract-i18n-merge` from version `2.14.3` to `2.15.0`
 
+### Fixed
+
+- Changed the investment value to take the currency effects into account in the holding detail dialog
+
 ## 2.164.0 - 2025-05-28
 
 ### Changed
