@@ -12,12 +12,14 @@ import { ConfigurationService } from '@ghostfolio/api/services/configuration/con
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { TagService } from '@ghostfolio/api/services/tag/tag.service';
 import { DATA_GATHERING_QUEUE_PRIORITY_HIGH } from '@ghostfolio/common/config';
 import {
   getAssetProfileIdentifier,
   parseDate
 } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import {
   AccountWithPlatform,
   OrderWithAccount,
@@ -25,7 +27,7 @@ import {
 } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
-import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
+import { DataSource, Prisma, SymbolProfile, Tag } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
 import { uniqBy } from 'lodash';
@@ -41,7 +43,8 @@ export class ImportService {
     private readonly orderService: OrderService,
     private readonly platformService: PlatformService,
     private readonly portfolioService: PortfolioService,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly tagService: TagService
   ) {}
 
   public async getDividends({
@@ -151,6 +154,7 @@ export class ImportService {
     user: UserWithSettings;
   }): Promise<Activity[]> {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
+    const tagIdMapping: { [oldTagId: string]: string } = {};
     const userCurrency = user.Settings.settings.baseCurrency;
 
     if (!isDryRun && accountsDto?.length) {
@@ -214,6 +218,50 @@ export class ImportService {
       }
     }
 
+    // Handle tags before activities
+    if (!isDryRun) {
+      const existingTags = await this.tagService.getTags({
+        where: {
+          OR: [
+            { userId: user.id },
+            { userId: null }
+          ]
+        }
+      });
+
+      const canCreateOwnTag = hasPermission(user.permissions, permissions.createOwnTag);
+      const canCreateTag = hasPermission(user.permissions, permissions.createTag);
+
+      for (const activity of activitiesDto) {
+        if (activity.tags?.length > 0) {
+          const newTags = [];
+          for (const tag of activity.tags) {
+            // Check if tag exists
+            const existingTag = existingTags.find((t) => 
+              t.id === tag.id || t.name.toLowerCase() === tag.name?.toLowerCase()
+            );
+
+            if (existingTag) {
+              // Map existing tag ID
+              if (tag.id && tag.id !== existingTag.id) {
+                tagIdMapping[tag.id] = existingTag.id;
+              }
+            } else if (tag.name) {
+              // Create new tag if permissions allow
+              if (canCreateOwnTag || canCreateTag) {
+                const newTag = await this.tagService.createTag({
+                  name: tag.name,
+                  userId: canCreateOwnTag ? user.id : null
+                });
+                tagIdMapping[tag.id] = newTag.id;
+                existingTags.push(newTag);
+              }
+            }
+          }
+        }
+      }
+    }
+
     for (const activity of activitiesDto) {
       if (!activity.dataSource) {
         if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(activity.type)) {
@@ -228,6 +276,16 @@ export class ImportService {
       if (!isDryRun) {
         if (Object.keys(accountIdMapping).includes(activity.accountId)) {
           activity.accountId = accountIdMapping[activity.accountId];
+        }
+
+        // Update tag IDs with new mappings
+        if (activity.tags?.length > 0) {
+          activity.tags = activity.tags.map(tag => {
+            if (tag.id && tagIdMapping[tag.id]) {
+              return { ...tag, id: tagIdMapping[tag.id] };
+            }
+            return tag;
+          });
         }
       }
     }
@@ -444,76 +502,65 @@ export class ImportService {
     userCurrency: string;
     userId: string;
   }): Promise<Partial<Activity>[]> {
-    const { activities: existingActivities } =
-      await this.orderService.getOrders({
-        userCurrency,
-        userId,
-        includeDrafts: true,
-        withExcludedAccounts: true
+    const activities: Partial<Activity>[] = [];
+
+    const assetProfiles = await this.validateActivities({
+      activitiesDto,
+      maxActivitiesToImport: activitiesDto.length,
+      user: { id: userId } as UserWithSettings
+    });
+
+    const accounts = await this.accountService.getAccounts(userId);
+
+    for (const activity of activitiesDto) {
+      const assetProfile =
+        assetProfiles[
+          getAssetProfileIdentifier({
+            dataSource: activity.dataSource,
+            symbol: activity.symbol
+          })
+        ];
+
+      const account = accounts.find(({ id }) => {
+        return id === activity.accountId;
       });
 
-    return activitiesDto.map(
-      ({
-        accountId,
-        comment,
-        currency,
-        dataSource,
-        date: dateString,
-        fee,
-        quantity,
-        symbol,
-        type,
-        unitPrice
-      }) => {
-        const date = parseISO(dateString);
-        const isDuplicate = existingActivities.some((activity) => {
-          return (
-            activity.accountId === accountId &&
-            activity.comment === comment &&
-            (activity.currency === currency ||
-              activity.SymbolProfile.currency === currency) &&
-            activity.SymbolProfile.dataSource === dataSource &&
-            isSameSecond(activity.date, date) &&
-            activity.fee === fee &&
-            activity.quantity === quantity &&
-            activity.SymbolProfile.symbol === symbol &&
-            activity.type === type &&
-            activity.unitPrice === unitPrice
-          );
+      let error: ActivityError;
+
+      if (activity.type === 'DIVIDEND') {
+        const isDuplicate = await this.orderService.hasDuplicateOrder({
+          accountId: activity.accountId,
+          date: parseISO(activity.date),
+          fee: activity.fee,
+          quantity: activity.quantity,
+          symbol: activity.symbol,
+          type: activity.type,
+          unitPrice: activity.unitPrice,
+          userId
         });
 
-        const error: ActivityError = isDuplicate
-          ? { code: 'IS_DUPLICATE' }
-          : undefined;
-
-        return {
-          accountId,
-          comment,
-          currency,
-          date,
-          error,
-          fee,
-          quantity,
-          type,
-          unitPrice,
-          SymbolProfile: {
-            dataSource,
-            symbol,
-            activitiesCount: undefined,
-            assetClass: undefined,
-            assetSubClass: undefined,
-            countries: undefined,
-            createdAt: undefined,
-            currency: undefined,
-            holdings: undefined,
-            id: undefined,
-            isActive: true,
-            sectors: undefined,
-            updatedAt: undefined
-          }
-        };
+        if (isDuplicate) {
+          error = { code: 'IS_DUPLICATE' };
+        }
       }
-    );
+
+      const value = new Big(activity.quantity).mul(activity.unitPrice).toNumber();
+
+      activities.push({
+        ...activity,
+        Account: account,
+        error,
+        feeInBaseCurrency: activity.fee,
+        feeInAssetProfileCurrency: activity.fee,
+        SymbolProfile: assetProfile,
+        tags: activity.tags,
+        unitPriceInAssetProfileCurrency: activity.unitPrice,
+        value,
+        valueInBaseCurrency: value
+      });
+    }
+
+    return activities;
   }
 
   private isUniqueAccount(accounts: AccountWithPlatform[]) {
