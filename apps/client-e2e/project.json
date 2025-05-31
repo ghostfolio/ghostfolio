@@ -3,12 +3,13 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/client-e2e/src",
   "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["client"],
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/client-e2e/cypress.json",
-        "tsConfig": "apps/client-e2e/tsconfig.e2e.json",
         "devServerTarget": "client:serve"
       },
       "configurations": {
@@ -17,7 +18,5 @@
         }
       }
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["client"]
+  }
 }
