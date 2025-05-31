@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Renamed `orders` to `activities` in the `Tag` database schema
 - Refreshed the cryptocurrencies list
+- Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Polish (`pl`)
 - Improved the language localization for Spanish (`es`)
