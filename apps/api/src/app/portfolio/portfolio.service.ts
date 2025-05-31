@@ -542,7 +542,7 @@ export class PortfolioService {
     }
 
     if (filters?.length === 0 || isFilteredByAccount || isFilteredByCash) {
-      const cashPositions = await this.getCashPositions({
+      const cashPositions = this.getCashPositions({
         cashDetails,
         userCurrency,
         value: filteredValueInBaseCurrency
@@ -567,7 +567,7 @@ export class PortfolioService {
       filters[0].id === TAG_ID_EMERGENCY_FUND &&
       filters[0].type === 'TAG'
     ) {
-      const emergencyFundCashPositions = await this.getCashPositions({
+      const emergencyFundCashPositions = this.getCashPositions({
         cashDetails,
         userCurrency,
         value: filteredValueInBaseCurrency
@@ -1533,7 +1533,7 @@ export class PortfolioService {
     return { markets, marketsAdvanced };
   }
 
-  private async getCashPositions({
+  private getCashPositions({
     cashDetails,
     userCurrency,
     value
