@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support to create custom tags in the holding detail dialog (experimental)
+- Added support to create custom tags in the create or update activity dialog (experimental)
 
 ### Changed
 
