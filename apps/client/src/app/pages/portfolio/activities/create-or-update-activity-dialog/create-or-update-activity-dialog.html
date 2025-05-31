@@ -315,6 +315,10 @@
     </div>
     <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
       <gf-tags-selector
+        [hasPermissionToCreateTag]="
+          hasPermissionToCreateOwnTag &&
+          data.user?.settings?.isExperimentalFeatures
+        "
         [tags]="activityForm.get('tags')?.value"
         [tagsAvailable]="tagsAvailable"
         (tagsChanged)="onTagsChanged($event)"
