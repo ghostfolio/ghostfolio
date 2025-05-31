@@ -163,7 +163,8 @@ export class PortfolioService {
         filters,
         withExcludedAccounts,
         impersonationId: userId,
-        userId: this.request.user.id
+        userId: this.request.user.id,
+        withSummary: true
       })
     ]);
 
@@ -185,6 +186,10 @@ export class PortfolioService {
         ...account,
         transactionCount,
         valueInBaseCurrency,
+        allocationInPercentage:
+          details.summary.totalValueInBaseCurrency > 0
+            ? valueInBaseCurrency / details.summary.totalValueInBaseCurrency
+            : 0,
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
