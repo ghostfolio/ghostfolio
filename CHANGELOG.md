@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the _Live Demo_ setup by syncing activities based on tags
 - Renamed `orders` to `activities` in the `Tag` database schema
 - Refreshed the cryptocurrencies list
 - Improved the language localization for Dutch (`nl`)
