@@ -411,6 +411,10 @@ export class UserService {
         user.subscription.offer.durationExtension = undefined;
         user.subscription.offer.label = undefined;
       }
+
+      if (hasRole(user, Role.ADMIN)) {
+        currentPermissions.push(permissions.syncDemoUserAccount);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -433,7 +437,7 @@ export class UserService {
       }
     }
 
-    if (!environment.production && role === 'ADMIN') {
+    if (!environment.production && hasRole(user, Role.ADMIN)) {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
