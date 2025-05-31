@@ -793,10 +793,7 @@ export class PortfolioService {
           historicalDataArray.push({
             date,
             averagePrice: currentAveragePrice,
-            marketPrice:
-              historicalDataArray.length > 0
-                ? marketPrice
-                : currentAveragePrice,
+            marketPrice,
             quantity: currentQuantity
           });
 
