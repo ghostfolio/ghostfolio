@@ -1,13 +1,12 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
-import { CronService } from '@ghostfolio/api/services/cron.service';
+import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
-import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
@@ -78,6 +77,7 @@ import { UserModule } from './user/user.module';
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,
+    CronModule,
     DataGatheringModule,
     DataProviderModule,
     EventEmitterModule.forRoot(),
@@ -128,10 +128,8 @@ import { UserModule } from './user/user.module';
     SubscriptionModule,
     SymbolModule,
     TagsModule,
-    TwitterBotModule,
     UserModule,
     WatchlistModule
-  ],
-  providers: [CronService]
+  ]
 })
 export class AppModule {}
