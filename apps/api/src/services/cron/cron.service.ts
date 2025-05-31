@@ -1,9 +1,9 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
-import { ConfigurationService } from '@ghostfolio/api/services//configuration/configuration.service';
-import { ExchangeRateDataService } from '@ghostfolio/api/services//exchange-rate-data/exchange-rate-data.service';
-import { PropertyService } from '@ghostfolio/api/services//property/property.service';
-import { DataGatheringService } from '@ghostfolio/api/services//queues/data-gathering/data-gathering.service';
-import { TwitterBotService } from '@ghostfolio/api/services//twitter-bot/twitter-bot.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
