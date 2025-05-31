@@ -3,6 +3,7 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { TransformDataSourceInRequestInterceptor } from '@ghostfolio/api/interceptors/transform-data-source-in-request/transform-data-source-in-request.interceptor';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
+import { DemoService } from '@ghostfolio/api/services/demo/demo.service';
 import { PropertyDto } from '@ghostfolio/api/services/property/property.dto';
 import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
 import {
@@ -55,6 +56,7 @@ export class AdminController {
     private readonly adminService: AdminService,
     private readonly apiService: ApiService,
     private readonly dataGatheringService: DataGatheringService,
+    private readonly demoService: DemoService,
     private readonly manualService: ManualService,
     @Inject(REQUEST) private readonly request: RequestWithUser
   ) {}
@@ -272,6 +274,13 @@ export class AdminController {
       { dataSource, symbol },
       assetProfile
     );
+  }
+
+  @Get('demo-user/sync')
+  @HasPermission(permissions.syncDemoUserAccount)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async syncDemoUserAccount(): Promise<Prisma.BatchPayload> {
+    return this.demoService.syncDemoUserAccount();
   }
 
   @HasPermission(permissions.accessAdminControl)
