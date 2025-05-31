@@ -76,16 +76,14 @@ export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {
-  @Input() private includeIndices = false;
-  @Input() public isLoading = false;
+  public isLoading = false;
+  @Input() public defaultLookupItems: LookupItem[] = [];
 
   @ViewChild(MatInput) private input: MatInput;
-
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
   public control = new FormControl();
-  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
-    [];
+  public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -104,6 +102,17 @@ export class GfSymbolAutocompleteComponent
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
+    }
+
+    if (this.defaultLookupItems?.length) {
+      this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
+        return {
+          ...lookupItem,
+          assetSubClassString: translate(lookupItem.assetSubClass)
+        };
+      });
+
+      this.changeDetectorRef.markForCheck();
     }
 
     this.control.valueChanges
@@ -129,13 +138,12 @@ export class GfSymbolAutocompleteComponent
         takeUntil(this.unsubscribeSubject),
         switchMap((query: string) => {
           return this.dataService.fetchSymbols({
-            query,
-            includeIndices: this.includeIndices
+            query
           });
         })
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+        this.lookupItems = filteredLookupItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
@@ -161,7 +169,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public isValueInOptions(value: string) {
-    return this.filteredLookupItems.some((item) => {
+    return this.lookupItems.some((item) => {
       return item.symbol === value;
     });
   }
