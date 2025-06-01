@@ -23,7 +23,7 @@
                       [enableLink]="false"
                     />
                     @if (isGhostfolioApiKeyValid === false) {
-                      <span class="badge badge-warning ml-2" i18n
+                      <span class="badge badge-light early-access ml-2" i18n
                         >Early Access</span
                       >
                     }
@@ -105,12 +105,11 @@
                 </mat-menu>
               } @else if (isGhostfolioApiKeyValid === false) {
                 <button
-                  color="accent"
+                  class="special"
                   mat-flat-button
                   (click)="onSetGhostfolioApiKey()"
                 >
-                  <ion-icon class="mr-1" name="key-outline" />
-                  <span i18n>Set API key</span>
+                  <ng-container i18n>Set API key</ng-container>
                 </button>
               }
             }
