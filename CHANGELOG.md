@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for German (`de`)
+- Improved the language localization for Turkish (`tr`)
 - Improved the language localization for Ukrainian (`uk`)
 
 ## 2.165.0 - 2025-05-31
