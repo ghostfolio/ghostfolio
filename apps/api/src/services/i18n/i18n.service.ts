@@ -15,10 +15,12 @@ export class I18nService {
 
   public getTranslation({
     id,
-    languageCode
+    languageCode,
+    placeholders
   }: {
     id: string;
     languageCode: string;
+    placeholders?: Record<string, string | number>;
   }): string {
     const $ = this.translations[languageCode];
 
@@ -26,7 +28,7 @@ export class I18nService {
       Logger.warn(`Translation not found for locale '${languageCode}'`);
     }
 
-    const translatedText = $(
+    let translatedText = $(
       `trans-unit[id="${id}"] > ${
         languageCode === DEFAULT_LANGUAGE_CODE ? 'source' : 'target'
       }`
@@ -36,6 +38,12 @@ export class I18nService {
       Logger.warn(
         `Translation not found for id '${id}' in locale '${languageCode}'`
       );
+    }
+
+    if (placeholders) {
+      for (const [key, value] of Object.entries(placeholders)) {
+        translatedText = translatedText.replace(`{${key}}`, String(value));
+      }
     }
 
     return translatedText.trim();

@@ -30,13 +30,14 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       : 0;
 
     if (feeRatio > ruleSettings.thresholdMax) {
-      const evaluation = this.i18nService
-        .getTranslation({
-          id: 'rule.fee-ratio-initial-investment.exceed',
-          languageCode: DEFAULT_LANGUAGE_CODE
-        })
-        .replace('{thresholdMax}', (ruleSettings.thresholdMax * 100).toFixed(2))
-        .replace('{feeRatio}', (feeRatio * 100).toPrecision(3));
+      const evaluation = this.i18nService.getTranslation({
+        id: 'rule.fee-ratio-initial-investment.exceed',
+        languageCode: DEFAULT_LANGUAGE_CODE,
+        placeholders: {
+          feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
+          thresholdMax: (feeRatio * 100).toPrecision(3)
+        }
+      });
 
       return {
         evaluation,
@@ -44,13 +45,14 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       };
     }
 
-    const evaluation = this.i18nService
-      .getTranslation({
-        id: 'rule.fee-ratio-initial-investment.not-exceed',
-        languageCode: DEFAULT_LANGUAGE_CODE
-      })
-      .replace('{thresholdMax}', (ruleSettings.thresholdMax * 100).toFixed(2))
-      .replace('{feeRatio}', (feeRatio * 100).toPrecision(3));
+    const evaluation = this.i18nService.getTranslation({
+      id: 'rule.fee-ratio-initial-investment.not-exceed',
+      languageCode: DEFAULT_LANGUAGE_CODE,
+      placeholders: {
+        feeRatio: (feeRatio * 100).toPrecision(3),
+        thresholdMax: (ruleSettings.thresholdMax * 100).toFixed(2)
+      }
+    });
 
     return {
       evaluation,
