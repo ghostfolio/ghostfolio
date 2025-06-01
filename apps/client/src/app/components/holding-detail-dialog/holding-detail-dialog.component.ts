@@ -102,8 +102,8 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
   public hasPermissionToCreateOwnTag: boolean;
   public hasPermissionToReadMarketDataOfOwnAssetProfile: boolean;
   public historicalDataItems: LineChartItem[];
-  public investment: number;
-  public investmentPrecision = 2;
+  public investmentInBaseCurrencyWithCurrencyEffect: number;
+  public investmentInBaseCurrencyWithCurrencyEffectPrecision = 2;
   public marketDataItems: MarketData[] = [];
   public marketPrice: number;
   public marketPriceMax: number;
@@ -233,7 +233,7 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
           feeInBaseCurrency,
           firstBuyDate,
           historicalData,
-          investment,
+          investmentInBaseCurrencyWithCurrencyEffect,
           marketPrice,
           marketPriceMax,
           marketPriceMin,
@@ -288,13 +288,15 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
             }
           );
 
-          this.investment = investment;
+          this.investmentInBaseCurrencyWithCurrencyEffect =
+            investmentInBaseCurrencyWithCurrencyEffect;
 
           if (
             this.data.deviceType === 'mobile' &&
-            this.investment >= NUMERICAL_PRECISION_THRESHOLD
+            this.investmentInBaseCurrencyWithCurrencyEffect >=
+              NUMERICAL_PRECISION_THRESHOLD
           ) {
-            this.investmentPrecision = 0;
+            this.investmentInBaseCurrencyWithCurrencyEffectPrecision = 0;
           }
 
           this.marketPrice = marketPrice;
@@ -450,10 +452,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOwnTag = hasPermission(
-            this.user.permissions,
-            permissions.createOwnTag
-          );
+          this.hasPermissionToCreateOwnTag =
+            hasPermission(this.user.permissions, permissions.createOwnTag) &&
+            this.user?.settings?.isExperimentalFeatures;
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {

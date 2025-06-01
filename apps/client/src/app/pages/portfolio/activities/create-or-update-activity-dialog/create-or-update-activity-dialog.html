@@ -313,8 +313,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
+    <div class="mb-3">
       <gf-tags-selector
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
         [tags]="activityForm.get('tags')?.value"
         [tagsAvailable]="tagsAvailable"
         (tagsChanged)="onTagsChanged($event)"

@@ -233,11 +233,11 @@ model Subscription {
 }
 
 model Tag {
-  id     String  @id @default(uuid())
-  name   String
-  orders Order[]
-  userId String?
-  User   User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
+  activities Order[]
+  id         String  @id @default(uuid())
+  name       String
+  userId     String?
+  User       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@unique([name, userId])
   @@index([name])
