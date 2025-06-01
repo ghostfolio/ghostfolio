@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the card components
 - Improved the style of the system message
 - Improved the language localization for German (`de`)
 - Improved the language localization for Turkish (`tr`)
