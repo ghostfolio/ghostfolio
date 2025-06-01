@@ -69,10 +69,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
-    this.hasPermissionToCreateOwnTag = hasPermission(
-      this.data.user?.permissions,
-      permissions.createOwnTag
-    );
+    this.hasPermissionToCreateOwnTag =
+      this.data.user?.settings?.isExperimentalFeatures &&
+      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
     this.locale = this.data.user?.settings?.locale;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
