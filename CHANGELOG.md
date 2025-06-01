@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to create custom tags in the create or update activity dialog (experimental)
+
 ### Changed
 
 - Improved the language localization for German (`de`)

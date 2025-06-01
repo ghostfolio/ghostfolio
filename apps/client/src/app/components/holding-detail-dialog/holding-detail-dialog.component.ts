@@ -452,10 +452,9 @@ export class GfHoldingDetailDialogComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.user = state.user;
 
-          this.hasPermissionToCreateOwnTag = hasPermission(
-            this.user.permissions,
-            permissions.createOwnTag
-          );
+          this.hasPermissionToCreateOwnTag =
+            hasPermission(this.user.permissions, permissions.createOwnTag) &&
+            this.user?.settings?.isExperimentalFeatures;
 
           this.tagsAvailable =
             this.user?.tags?.map((tag) => {
