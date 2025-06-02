@@ -1,5 +1,6 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
@@ -14,24 +15,32 @@ import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private key: string;
+  private languageCode: string;
   private name: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
       key,
+      languageCode = DEFAULT_LANGUAGE_CODE,
       name
     }: {
       key: string;
+      languageCode?: string; // TODO: Make mandatory
       name: string;
     }
   ) {
     this.key = key;
+    this.languageCode = languageCode;
     this.name = name;
   }
 
   public getKey() {
     return this.key;
+  }
+
+  public getLanguageCode() {
+    return this.languageCode;
   }
 
   public getName() {
