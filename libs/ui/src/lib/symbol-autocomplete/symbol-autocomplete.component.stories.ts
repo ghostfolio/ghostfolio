@@ -12,18 +12,18 @@ import {
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
-import { HttpClientMock } from './mocks/httpClient.mock';
+import { HttpClientMock } from '../mocks/httpClient.mock';
 import { GfSymbolAutocompleteComponent } from './symbol-autocomplete.component';
 
-const FILTERED_OPTIONS: LookupItem[] = [
+const DEFAULT_OPTIONS: LookupItem[] = [
   {
     assetClass: 'COMMODITY',
     assetSubClass: 'ETF',
     currency: 'USD',
     dataProviderInfo: { name: 'YAHOO', isPremium: false },
     dataSource: null,
-    name: 'Test3',
-    symbol: 'TEST3'
+    name: 'Default1',
+    symbol: 'DEFAULT1'
   },
   {
     assetClass: 'EQUITY',
@@ -31,8 +31,28 @@ const FILTERED_OPTIONS: LookupItem[] = [
     currency: 'USD',
     dataProviderInfo: { name: 'YAHOO', isPremium: false },
     dataSource: null,
-    name: 'Test4',
-    symbol: 'TEST4'
+    name: 'Default2',
+    symbol: 'DEFAULT2'
+  }
+];
+const FILTERED_OPTIONS: LookupItem[] = [
+  {
+    assetClass: 'COMMODITY',
+    assetSubClass: 'ETF',
+    currency: 'USD',
+    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataSource: null,
+    name: 'Autocomplete1',
+    symbol: 'AUTOCOMPLETE1'
+  },
+  {
+    assetClass: 'EQUITY',
+    assetSubClass: 'STOCK',
+    currency: 'USD',
+    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataSource: null,
+    name: 'Autocomplete2',
+    symbol: 'AUTOCOMPLETE2'
   }
 ];
 
@@ -53,25 +73,20 @@ export default {
         },
         {
           provide: HttpClient,
-          useValue: new HttpClientMock('/api/v1/symbol/lookup', {
-            items: FILTERED_OPTIONS
-          })
+          useValue: new HttpClientMock(
+            new Map([
+              [
+                '/api/v1/symbol/lookup',
+                {
+                  items: FILTERED_OPTIONS
+                }
+              ]
+            ])
+          )
         }
       ]
     })
-  ],
-  parameters: {
-    mockData: [
-      {
-        url: '/api/v1/symbol/lookup',
-        method: 'GET',
-        status: 200,
-        response: {
-          items: FILTERED_OPTIONS
-        }
-      }
-    ]
-  }
+  ]
 } as Meta<GfSymbolAutocompleteComponent>;
 
 type Story = StoryObj<GfSymbolAutocompleteComponent>;
@@ -84,25 +99,6 @@ export const WithoutDefaults: Story = {
 
 export const WithDefaults: Story = {
   args: {
-    defaultLookupItems: [
-      {
-        assetClass: 'COMMODITY',
-        assetSubClass: 'ETF',
-        currency: 'USD',
-        dataProviderInfo: { name: 'YAHOO', isPremium: false },
-        dataSource: null,
-        name: 'Test1',
-        symbol: 'TEST1'
-      },
-      {
-        assetClass: 'EQUITY',
-        assetSubClass: 'STOCK',
-        currency: 'USD',
-        dataProviderInfo: { name: 'YAHOO', isPremium: false },
-        dataSource: null,
-        name: 'Test2',
-        symbol: 'TEST2'
-      }
-    ]
+    defaultLookupItems: DEFAULT_OPTIONS
   }
 };
