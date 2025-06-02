@@ -11,7 +11,7 @@ import {
   HEADER_KEY_TOKEN,
   PROPERTY_BETTER_UPTIME_MONITOR_ID,
   PROPERTY_COUNTRIES_OF_SUBSCRIBERS,
-  PROPERTY_DEMO_USER_ID_LEGACY,
+  PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
   ghostfolioFearAndGreedIndexDataSource
@@ -237,7 +237,7 @@ export class InfoService {
 
   private async getDemoAuthToken() {
     const demoUserId = (await this.propertyService.getByKey(
-      PROPERTY_DEMO_USER_ID_LEGACY
+      PROPERTY_DEMO_USER_ID
     )) as string;
 
     if (demoUserId) {
