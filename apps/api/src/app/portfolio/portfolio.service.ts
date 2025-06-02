@@ -31,7 +31,7 @@ import {
 } from '@ghostfolio/common/calculation-helper';
 import {
   DEFAULT_CURRENCY,
-  EMERGENCY_FUND_TAG_ID,
+  TAG_ID_EMERGENCY_FUND,
   UNKNOWN_KEY
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, getSum, parseDate } from '@ghostfolio/common/helper';
@@ -564,7 +564,7 @@ export class PortfolioService {
 
     if (
       filters?.length === 1 &&
-      filters[0].id === EMERGENCY_FUND_TAG_ID &&
+      filters[0].id === TAG_ID_EMERGENCY_FUND &&
       filters[0].type === 'TAG'
     ) {
       const emergencyFundCashPositions = await this.getCashPositions({
@@ -663,7 +663,7 @@ export class PortfolioService {
         grossPerformancePercentWithCurrencyEffect: undefined,
         grossPerformanceWithCurrencyEffect: undefined,
         historicalData: [],
-        investment: undefined,
+        investmentInBaseCurrencyWithCurrencyEffect: undefined,
         marketPrice: undefined,
         marketPriceMax: undefined,
         marketPriceMin: undefined,
@@ -853,7 +853,8 @@ export class PortfolioService {
         grossPerformanceWithCurrencyEffect:
           position.grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
-        investment: position.investment?.toNumber(),
+        investmentInBaseCurrencyWithCurrencyEffect:
+          position.investmentWithCurrencyEffect?.toNumber(),
         netPerformance: position.netPerformance?.toNumber(),
         netPerformancePercent: position.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
@@ -952,7 +953,7 @@ export class PortfolioService {
         grossPerformancePercentWithCurrencyEffect: undefined,
         grossPerformanceWithCurrencyEffect: undefined,
         historicalData: historicalDataArray,
-        investment: 0,
+        investmentInBaseCurrencyWithCurrencyEffect: 0,
         netPerformance: undefined,
         netPerformancePercent: undefined,
         netPerformancePercentWithCurrencyEffect: undefined,
@@ -1654,7 +1655,7 @@ export class PortfolioService {
     const emergencyFundHoldings = Object.values(holdings).filter(({ tags }) => {
       return (
         tags?.some(({ id }) => {
-          return id === EMERGENCY_FUND_TAG_ID;
+          return id === TAG_ID_EMERGENCY_FUND;
         }) ?? false
       );
     });

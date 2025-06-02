@@ -1,4 +1,9 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
+import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
+import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import { DataGatheringService } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.service';
+import { TwitterBotService } from '@ghostfolio/api/services/twitter-bot/twitter-bot.service';
 import {
   DATA_GATHERING_QUEUE_PRIORITY_LOW,
   GATHER_ASSET_PROFILE_PROCESS_JOB_NAME,
@@ -9,12 +14,6 @@ import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-
-import { ConfigurationService } from './configuration/configuration.service';
-import { ExchangeRateDataService } from './exchange-rate-data/exchange-rate-data.service';
-import { PropertyService } from './property/property.service';
-import { DataGatheringService } from './queues/data-gathering/data-gathering.service';
-import { TwitterBotService } from './twitter-bot/twitter-bot.service';
 
 @Injectable()
 export class CronService {
@@ -43,7 +42,9 @@ export class CronService {
 
   @Cron(CronExpression.EVERY_DAY_AT_5PM)
   public async runEveryDayAtFivePm() {
-    this.twitterBotService.tweetFearAndGreedIndex();
+    if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
+      this.twitterBotService.tweetFearAndGreedIndex();
+    }
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)

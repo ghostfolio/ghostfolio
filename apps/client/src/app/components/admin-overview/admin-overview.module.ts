@@ -9,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 
 import { AdminOverviewComponent } from './admin-overview.component';
@@ -24,6 +25,7 @@ import { AdminOverviewComponent } from './admin-overview.component';
     MatCardModule,
     MatMenuModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatSlideToggleModule,
     ReactiveFormsModule,
     RouterModule

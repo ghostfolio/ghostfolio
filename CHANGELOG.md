@@ -7,11 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added support to create custom tags in the create or update activity dialog (experimental)
+
 ### Changed
 
-- Improved the language localization for Dutch (`nl`)
+- Improved the style of the system message
+- Improved the language localization for German (`de`)
+- Improved the language localization for Turkish (`tr`)
+- Improved the language localization for Ukrainian (`uk`)
 - Upgraded the _Stripe_ dependencies
 - Upgraded `ngx-stripe` from version `19.0.0` to `19.7.0`
+
+## 2.165.0 - 2025-05-31
+
+### Added
+
+- Extended the content of the _General_ section by the performance calculation method on the Frequently Asked Questions (FAQ) page
+
+### Changed
+
+- Improved the _Live Demo_ setup by syncing activities based on tags
+- Renamed `orders` to `activities` in the `Tag` database schema
+- Modularized the cron service
+- Refreshed the cryptocurrencies list
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Polish (`pl`)
+- Improved the language localization for Spanish (`es`)
+- Upgraded `big.js` from version `6.2.2` to `7.0.1`
+- Upgraded `ng-extract-i18n-merge` from version `2.14.3` to `2.15.0`
+
+### Fixed
+
+- Changed the investment value to take the currency effects into account in the holding detail dialog
 
 ## 2.164.0 - 2025-05-28
 
