@@ -33,8 +33,8 @@ COPY ./nx.json nx.json
 COPY ./replace.build.mjs replace.build.mjs
 COPY ./tsconfig.base.json tsconfig.base.json
 
-# Update build command for Nx 21
-RUN npx nx run-many --target=build --projects=api,client --configuration=production
+# Use build:production script from package.json (with Nx 21 syntax)
+RUN npm run build:production
 
 # Prepare the dist image with additional node_modules
 WORKDIR /ghostfolio/dist/apps/api
