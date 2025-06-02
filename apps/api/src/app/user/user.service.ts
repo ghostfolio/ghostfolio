@@ -304,6 +304,7 @@ export class UserService {
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
         undefined,
         undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       RegionalMarketClusterRiskAsiaPacific:

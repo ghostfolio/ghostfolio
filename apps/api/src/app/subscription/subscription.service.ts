@@ -61,7 +61,7 @@ export class SubscriptionService {
 
     const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
       cancel_url: `${this.configurationService.get('ROOT_URL')}/${
-        user.Settings?.settings?.language ?? DEFAULT_LANGUAGE_CODE
+        user.Settings.settings.language
       }/account`,
       client_reference_id: user.id,
       line_items: [

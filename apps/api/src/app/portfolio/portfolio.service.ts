@@ -1332,6 +1332,7 @@ export class PortfolioService {
         [
           new FeeRatioInitialInvestment(
             this.exchangeRateDataService,
+            userSettings.language,
             summary.committedFunds,
             summary.fees
           )

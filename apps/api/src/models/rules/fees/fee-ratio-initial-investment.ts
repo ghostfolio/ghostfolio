@@ -2,7 +2,6 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class FeeRatioInitialInvestment extends Rule<Settings> {
@@ -12,10 +11,12 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    languageCode: string,
     totalInvestment: number,
     fees: number
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: FeeRatioInitialInvestment.name,
       name: 'Fee Ratio'
     });
@@ -30,32 +31,28 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       : 0;
 
     if (feeRatio > ruleSettings.thresholdMax) {
-      const evaluation = this.i18nService.getTranslation({
-        id: 'rule.fee-ratio-initial-investment.exceed',
-        languageCode: DEFAULT_LANGUAGE_CODE,
-        placeholders: {
-          feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
-          thresholdMax: (feeRatio * 100).toPrecision(3)
-        }
-      });
-
       return {
-        evaluation,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.feeRatioInitialInvestment.exceed',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
+            thresholdMax: (feeRatio * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
 
-    const evaluation = this.i18nService.getTranslation({
-      id: 'rule.fee-ratio-initial-investment.not-exceed',
-      languageCode: DEFAULT_LANGUAGE_CODE,
-      placeholders: {
-        feeRatio: (feeRatio * 100).toPrecision(3),
-        thresholdMax: (ruleSettings.thresholdMax * 100).toFixed(2)
-      }
-    });
-
     return {
-      evaluation,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.feeRatioInitialInvestment.notExceed',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          feeRatio: (feeRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toFixed(2)
+        }
+      }),
       value: true
     };
   }
