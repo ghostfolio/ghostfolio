@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the style of the system message
 - Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
 - Improved the language localization for Turkish (`tr`)
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded the _Stripe_ dependencies
