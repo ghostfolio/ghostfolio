@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Respected the filter by holding when exporting activities on the portfolio activities page
 - Fixed an exception with currencies in the historical market data editor of the admin control panel
 
 ## 2.165.0 - 2025-05-31
