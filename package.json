@@ -174,7 +174,7 @@
     "@types/big.js": "6.2.2",
     "@types/google-spreadsheet": "3.1.5",
     "@types/jest": "29.5.13",
-    "@types/lodash": "4.17.16",
+    "@types/lodash": "4.17.17",
     "@types/node": "22.15.17",
     "@types/papaparse": "5.3.7",
     "@types/passport-google-oauth20": "2.0.16",
