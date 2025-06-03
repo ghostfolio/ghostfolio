@@ -13,10 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the card components
 - Improved the style of the system message
 - Improved the language localization for German (`de`)
+- Improved the language localization for Spanish (`es`)
 - Improved the language localization for Turkish (`tr`)
 - Improved the language localization for Ukrainian (`uk`)
+- Upgraded the _Stripe_ dependencies
+- Upgraded `ngx-stripe` from version `19.0.0` to `19.7.0`
+
+### Fixed
+
+- Fixed an exception with currencies in the historical market data editor of the admin control panel
 
 ## 2.165.0 - 2025-05-31
 
