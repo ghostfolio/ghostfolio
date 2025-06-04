@@ -15,8 +15,7 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
-      key: AccountClusterRiskCurrentInvestment.name,
-      name: 'Investment'
+      key: AccountClusterRiskCurrentInvestment.name
     });
 
     this.accounts = accounts;
@@ -86,6 +85,10 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
       },
       thresholdMax: true
     };
+  }
+
+  public getName() {
+    return 'Investment';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
