@@ -12,6 +12,7 @@ import { BenchmarkModule } from '@ghostfolio/api/services/benchmark/benchmark.mo
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { I18nModule } from '@ghostfolio/api/services/i18n/i18n.module';
 import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impersonation.module';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
@@ -32,6 +33,7 @@ import { AiService } from './ai.service';
     ConfigurationModule,
     DataProviderModule,
     ExchangeRateDataModule,
+    I18nModule,
     ImpersonationModule,
     MarketDataModule,
     OrderModule,

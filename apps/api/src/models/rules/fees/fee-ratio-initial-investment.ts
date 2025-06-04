@@ -13,7 +13,8 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     protected exchangeRateDataService: ExchangeRateDataService,
     languageCode: string,
     totalInvestment: number,
-    fees: number
+    fees: number,
+    private i18nService: I18nService
   ) {
     super(exchangeRateDataService, {
       languageCode,

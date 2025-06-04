@@ -52,11 +52,10 @@ import { sortBy, without } from 'lodash';
 
 @Injectable()
 export class UserService {
-  private i18nService = new I18nService();
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly i18nService: I18nService,
     private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -303,6 +302,7 @@ export class UserService {
         undefined
       ).getSettings(user.Settings.settings),
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+        undefined,
         undefined,
         undefined,
         undefined,
