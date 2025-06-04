@@ -33,7 +33,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
     if (feeRatio > ruleSettings.thresholdMax) {
       return {
         evaluation: this.i18nService.getTranslation({
-          id: 'rule.feeRatioInitialInvestment.exceed',
+          id: 'rule.feeRatioInitialInvestment.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
             feeRatio: (ruleSettings.thresholdMax * 100).toFixed(2),
@@ -46,7 +46,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.feeRatioInitialInvestment.notExceed',
+        id: 'rule.feeRatioInitialInvestment.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
           feeRatio: (feeRatio * 100).toPrecision(3),
