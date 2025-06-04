@@ -18,7 +18,6 @@ import { ExportService } from './export.service';
     TagModule,
     TransformDataSourceInRequestModule
   ],
-
   providers: [ExportService]
 })
 export class ExportModule {}
