@@ -14,8 +14,7 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
     northAmericaValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: RegionalMarketClusterRiskNorthAmerica.name,
-      name: 'North America'
+      key: RegionalMarketClusterRiskNorthAmerica.name
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -64,6 +63,10 @@ export class RegionalMarketClusterRiskNorthAmerica extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'North America';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

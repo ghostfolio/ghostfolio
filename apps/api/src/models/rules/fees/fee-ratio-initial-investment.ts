@@ -17,8 +17,7 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
   ) {
     super(exchangeRateDataService, {
       languageCode,
-      key: FeeRatioInitialInvestment.name,
-      name: 'Fee Ratio'
+      key: FeeRatioInitialInvestment.name
     });
 
     this.fees = fees;
@@ -67,6 +66,13 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
       },
       thresholdMax: true
     };
+  }
+
+  public getName() {
+    return this.i18nService.getTranslation({
+      id: 'rule.feeRatioInitialInvestment',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

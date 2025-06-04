@@ -16,23 +16,19 @@ import { RuleInterface } from './interfaces/rule.interface';
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private key: string;
   private languageCode: string;
-  private name: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
       key,
-      languageCode = DEFAULT_LANGUAGE_CODE,
-      name
+      languageCode = DEFAULT_LANGUAGE_CODE
     }: {
       key: string;
       languageCode?: string; // TODO: Make mandatory
-      name: string;
     }
   ) {
     this.key = key;
     this.languageCode = languageCode;
-    this.name = name;
   }
 
   public getKey() {
@@ -41,10 +37,6 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
 
   public getLanguageCode() {
     return this.languageCode;
-  }
-
-  public getName() {
-    return this.name;
   }
 
   public groupCurrentHoldingsByAttribute(
@@ -81,6 +73,8 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   public abstract getConfiguration(): Partial<
     PortfolioReportRule['configuration']
   >;
+
+  public abstract getName(): string;
 
   public abstract getSettings(aUserSettings: UserSettings): T;
 }

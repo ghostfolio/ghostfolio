@@ -11,8 +11,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
     emergencyFund: number
   ) {
     super(exchangeRateDataService, {
-      key: EmergencyFundSetup.name,
-      name: 'Emergency Fund: Set up'
+      key: EmergencyFundSetup.name
     });
 
     this.emergencyFund = emergencyFund;
@@ -34,6 +33,10 @@ export class EmergencyFundSetup extends Rule<Settings> {
 
   public getConfiguration() {
     return undefined;
+  }
+
+  public getName() {
+    return 'Emergency Fund: Set up';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
