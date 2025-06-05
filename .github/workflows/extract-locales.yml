@@ -11,8 +11,6 @@ permissions:
 
 jobs:
   extract_locales:
-    env:
-      # NX_DAEMON: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

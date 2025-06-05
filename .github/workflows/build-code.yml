@@ -9,8 +9,6 @@ permissions:
 
 jobs:
   build:
-    env:
-      # NX_DAEMON: false
     runs-on: ubuntu-latest
     strategy:
       matrix:
