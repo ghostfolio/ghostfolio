@@ -53,14 +53,19 @@ export class OrderController {
   @Delete()
   @HasPermission(permissions.deleteOrder)
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  @UseInterceptors(TransformDataSourceInRequestInterceptor)
   public async deleteOrders(
     @Query('accounts') filterByAccounts?: string,
     @Query('assetClasses') filterByAssetClasses?: string,
+    @Query('dataSource') filterByDataSource?: string,
+    @Query('symbol') filterBySymbol?: string,
     @Query('tags') filterByTags?: string
   ): Promise<number> {
     const filters = this.apiService.buildFiltersFromQueryParams({
       filterByAccounts,
       filterByAssetClasses,
+      filterByDataSource,
+      filterBySymbol,
       filterByTags
     });
 

@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Set up the language localization for the static portfolio analysis rule: _Emergency Fund_ (Setup)
 - Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
+
+### Changed
+
+- Upgraded `Nx` from version `20.8.1` to `21.1.2`
+
+## 2.166.0 - 2025-06-05
+
+### Added
+
 - Added support to create custom tags in the create or update activity dialog (experimental)
 
 ### Changed
@@ -26,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Respected the filter by holding when deleting activities on the portfolio activities page
+- Respected the filter by holding when exporting activities on the portfolio activities page
 - Fixed an exception with currencies in the historical market data editor of the admin control panel
 
 ## 2.165.0 - 2025-05-31
