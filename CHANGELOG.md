@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Upgraded `ng-extract-i18n-merge` from version `2.15.0` to `2.15.1`
 - Upgraded `Nx` from version `20.8.1` to `21.1.2`
 
 ### Fixed
