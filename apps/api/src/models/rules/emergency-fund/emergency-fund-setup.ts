@@ -34,7 +34,7 @@ export class EmergencyFundSetup extends Rule<Settings> {
 
     return {
       evaluation: this.i18nService.getTranslation({
-        id: 'rule.emergencyFundSetup.false',
+        id: 'rule.emergencyFundSetup.true',
         languageCode: this.getLanguageCode()
       }),
       value: true
