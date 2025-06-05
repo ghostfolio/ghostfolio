@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Upgraded `Nx` from version `20.8.1` to `21.1.2`
 
+### Fixed
+
+- Fixed an issue where the import button was not correctly enabled in the import activities dialog
+
 ## 2.166.0 - 2025-06-05
 
 ### Added
@@ -60,10 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Changed the investment value to take the currency effects into account in the holding detail dialog
-
-### Fixed
-
-- Fixed an issue where the import button was not correctly enabled in the import activities dialog
 
 ## 2.164.0 - 2025-05-28
 
