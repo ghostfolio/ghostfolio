@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
+
 ### Changed
 
 - Upgraded `Nx` from version `20.8.1` to `21.1.2`
@@ -15,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
 - Added support to create custom tags in the create or update activity dialog (experimental)
 
 ### Changed
