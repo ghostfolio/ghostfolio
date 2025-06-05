@@ -61,6 +61,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Changed the investment value to take the currency effects into account in the holding detail dialog
 
+### Fixed
+
+- Fixed an issue where the import button was not correctly enabled in the import activities dialog
+
 ## 2.164.0 - 2025-05-28
 
 ### Changed
