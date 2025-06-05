@@ -330,9 +330,10 @@ export class ImportActivitiesDialog implements OnDestroy {
       } finally {
         this.importStep = ImportStep.SELECT_ACTIVITIES;
         this.snackBar.dismiss();
+        this.updateSelection(this.activities);
 
         stepper.next();
-        this.updateSelection(this.activities);
+
         this.changeDetectorRef.markForCheck();
       }
     };
