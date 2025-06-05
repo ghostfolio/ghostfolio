@@ -14,8 +14,7 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
     japanValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: RegionalMarketClusterRiskJapan.name,
-      name: 'Japan'
+      key: RegionalMarketClusterRiskJapan.name
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -64,6 +63,10 @@ export class RegionalMarketClusterRiskJapan extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Japan';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

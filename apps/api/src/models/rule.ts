@@ -1,5 +1,6 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { DEFAULT_LANGUAGE_CODE } from '@ghostfolio/common/config';
 import { groupBy } from '@ghostfolio/common/helper';
 import {
   PortfolioPosition,
@@ -14,28 +15,28 @@ import { RuleInterface } from './interfaces/rule.interface';
 
 export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   private key: string;
-  private name: string;
+  private languageCode: string;
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     {
       key,
-      name
+      languageCode = DEFAULT_LANGUAGE_CODE
     }: {
       key: string;
-      name: string;
+      languageCode?: string; // TODO: Make mandatory
     }
   ) {
     this.key = key;
-    this.name = name;
+    this.languageCode = languageCode;
   }
 
   public getKey() {
     return this.key;
   }
 
-  public getName() {
-    return this.name;
+  public getLanguageCode() {
+    return this.languageCode;
   }
 
   public groupCurrentHoldingsByAttribute(
@@ -72,6 +73,8 @@ export abstract class Rule<T extends RuleSettings> implements RuleInterface<T> {
   public abstract getConfiguration(): Partial<
     PortfolioReportRule['configuration']
   >;
+
+  public abstract getName(): string;
 
   public abstract getSettings(aUserSettings: UserSettings): T;
 }

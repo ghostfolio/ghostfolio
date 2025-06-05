@@ -14,8 +14,7 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
     asiaPacificValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: RegionalMarketClusterRiskAsiaPacific.name,
-      name: 'Asia-Pacific'
+      key: RegionalMarketClusterRiskAsiaPacific.name
     });
 
     this.asiaPacificValueInBaseCurrency = asiaPacificValueInBaseCurrency;
@@ -64,6 +63,10 @@ export class RegionalMarketClusterRiskAsiaPacific extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Asia-Pacific';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

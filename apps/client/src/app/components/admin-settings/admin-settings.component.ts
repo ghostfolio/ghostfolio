@@ -3,10 +3,7 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  PROPERTY_API_KEY_GHOSTFOLIO
-} from '@ghostfolio/common/config';
+import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
@@ -70,11 +67,10 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           this.user = state.user;
 
           this.defaultDateFormat = getDateFormatString(
-            this.user?.settings?.locale
+            this.user.settings.locale
           );
 
-          const languageCode =
-            this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+          const languageCode = this.user.settings.language;
 
           this.pricingUrl = `https://ghostfol.io/${languageCode}/${paths.pricing}`;
 

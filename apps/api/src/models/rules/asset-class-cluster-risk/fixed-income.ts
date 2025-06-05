@@ -11,8 +11,7 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
-      key: AssetClassClusterRiskFixedIncome.name,
-      name: 'Fixed Income'
+      key: AssetClassClusterRiskFixedIncome.name
     });
 
     this.holdings = holdings;
@@ -76,6 +75,10 @@ export class AssetClassClusterRiskFixedIncome extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Fixed Income';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
