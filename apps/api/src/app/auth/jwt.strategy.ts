@@ -1,7 +1,11 @@
 import { UserService } from '@ghostfolio/api/app/user/user.service';
 import { ConfigurationService } from '@ghostfolio/api/services/configuration/configuration.service';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
-import { HEADER_KEY_TIMEZONE } from '@ghostfolio/common/config';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_LANGUAGE_CODE,
+  HEADER_KEY_TIMEZONE
+} from '@ghostfolio/common/config';
 import { hasRole } from '@ghostfolio/common/permissions';
 
 import { HttpException, Injectable } from '@nestjs/common';
@@ -50,6 +54,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             },
             where: { userId: user.id }
           });
+        }
+
+        if (!user.Settings.settings.baseCurrency) {
+          user.Settings.settings.baseCurrency = DEFAULT_CURRENCY;
+        }
+
+        if (!user.Settings.settings.language) {
+          user.Settings.settings.language = DEFAULT_LANGUAGE_CODE;
         }
 
         return user;
