@@ -6,7 +6,6 @@ import { UserSettings } from '@ghostfolio/common/interfaces';
 
 export class FeeRatioInitialInvestment extends Rule<Settings> {
   private fees: number;
-  private i18nService = new I18nService();
   private totalInvestment: number;
 
   public constructor(
