@@ -23,10 +23,12 @@ export function getAnnualizedPerformancePercent({
 }): Big {
   if (isNumber(daysInMarket) && daysInMarket > 0) {
     const exponent = new Big(365).div(daysInMarket).toNumber();
+    const growthFactor = Math.pow(
+      netPerformancePercentage.plus(1).toNumber(),
+      exponent
+    );
 
-    return new Big(
-      Math.pow(netPerformancePercentage.plus(1).toNumber(), exponent)
-    ).minus(1);
+    return !isNaN(growthFactor) ? new Big(growthFactor).minus(1) : new Big(0);
   }
 
   return new Big(0);
