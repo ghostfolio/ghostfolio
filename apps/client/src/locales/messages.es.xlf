@@ -5458,7 +5458,7 @@
       </trans-unit>
       <trans-unit id="21fd41eb147f55ca26362f9c398e47733639837a" datatype="html">
         <source>Add tag</source>
-        <target state="new">Add tag</target>
+        <target state="translated">Añadir etiqueta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-tag/create-or-update-tag-dialog/create-or-update-tag-dialog.html</context>
           <context context-type="linenumber">10</context>
@@ -5466,7 +5466,7 @@
       </trans-unit>
       <trans-unit id="50760c2140335b2324deaee120f40d9aa64b3238" datatype="html">
         <source>Currency Cluster Risks</source>
-        <target state="new">Currency Cluster Risks</target>
+        <target state="translated">Riesgos de clúster de divisas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">93</context>
@@ -5474,7 +5474,7 @@
       </trans-unit>
       <trans-unit id="c7b797e5df289241021db16010efb6ac3c6cfb86" datatype="html">
         <source>Account Cluster Risks</source>
-        <target state="new">Account Cluster Risks</target>
+        <target state="translated">Riesgos de clúster de cuentas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">141</context>
@@ -5482,7 +5482,7 @@
       </trans-unit>
       <trans-unit id="4b00337456de4a757f7abc8224d8b391f5d0634a" datatype="html">
         <source>Transfer Cash Balance</source>
-        <target state="new">Transfer Cash Balance</target>
+        <target state="translated">Transferir saldo de efectivo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/accounts-table/accounts-table.component.html</context>
           <context context-type="linenumber">10</context>
@@ -5494,7 +5494,7 @@
       </trans-unit>
       <trans-unit id="0b05507801c7eca260d8978c36621e826f07aaaa" datatype="html">
         <source>Benchmark</source>
-        <target state="new">Benchmark</target>
+        <target state="translated">Benchmark</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.html</context>
           <context context-type="linenumber">346</context>
@@ -5502,7 +5502,7 @@
       </trans-unit>
       <trans-unit id="8fe73a4787b8068b2ba61f54ab7e0f9af2ea1fc9" datatype="html">
         <source>Version</source>
-        <target state="new">Version</target>
+        <target state="translated">Versión</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">7</context>
@@ -5510,7 +5510,7 @@
       </trans-unit>
       <trans-unit id="121cc5391cd2a5115bc2b3160379ee5b36cd7716" datatype="html">
         <source>Settings</source>
-        <target state="new">Settings</target>
+        <target state="translated">Configuración</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">2</context>
@@ -5518,7 +5518,7 @@
       </trans-unit>
       <trans-unit id="d5e0dbc9fd4651759df915cdc6ba26fe3f17475f" datatype="html">
         <source>From</source>
-        <target state="new">From</target>
+        <target state="translated">Desde</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/transfer-balance/transfer-balance-dialog.html</context>
           <context context-type="linenumber">11</context>
@@ -5526,7 +5526,7 @@
       </trans-unit>
       <trans-unit id="63c9c3aa536dbd11120ae8feab62186c47838028" datatype="html">
         <source>To</source>
-        <target state="new">To</target>
+        <target state="translated">A</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/transfer-balance/transfer-balance-dialog.html</context>
           <context context-type="linenumber">32</context>
@@ -5534,7 +5534,7 @@
       </trans-unit>
       <trans-unit id="798f7720c371eda6d7931bc590b771a02e2881bb" datatype="html">
         <source>Transfer</source>
-        <target state="new">Transfer</target>
+        <target state="translated">Transferir</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/transfer-balance/transfer-balance-dialog.html</context>
           <context context-type="linenumber">72</context>
@@ -5542,7 +5542,7 @@
       </trans-unit>
       <trans-unit id="3737711445155929474" datatype="html">
         <source>Membership</source>
-        <target state="new">Membership</target>
+        <target state="translated">Membresía</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page-routing.module.ts</context>
           <context context-type="linenumber">24</context>
@@ -5554,7 +5554,7 @@
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
         <source>Access</source>
-        <target state="new">Access</target>
+        <target state="translated">Acceso</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/user-account/user-account-page-routing.module.ts</context>
           <context context-type="linenumber">29</context>
@@ -5566,7 +5566,7 @@
       </trans-unit>
       <trans-unit id="4149127798893455354" datatype="html">
         <source>Find holding...</source>
-        <target state="new">Find holding...</target>
+        <target state="translated">Buscar holding...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">143</context>
@@ -5574,7 +5574,7 @@
       </trans-unit>
       <trans-unit id="cd206f0509271d9e611747bef0713c7df048d3af" datatype="html">
         <source>No entries...</source>
-        <target state="new">No entries...</target>
+        <target state="translated">No hay entradas...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">62</context>
@@ -5586,7 +5586,7 @@
       </trans-unit>
       <trans-unit id="779aa6949e9d62c58ad44357d11a3157ef6780f5" datatype="html">
         <source>Asset Profile</source>
-        <target state="new">Asset Profile</target>
+        <target state="translated">Perfil de activo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-jobs/admin-jobs.html</context>
           <context context-type="linenumber">35</context>
@@ -5594,7 +5594,7 @@
       </trans-unit>
       <trans-unit id="6786981261778452561" datatype="html">
         <source>Do you really want to delete this asset profile?</source>
-        <target state="new">Do you really want to delete this asset profile?</target>
+        <target state="translated">¿Realmente deseas eliminar este perfil de activo?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">37</context>
@@ -5602,7 +5602,7 @@
       </trans-unit>
       <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
         <source>Search</source>
-        <target state="new">Search</target>
+        <target state="translated">Buscar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/create-asset-profile-dialog/create-asset-profile-dialog.html</context>
           <context context-type="linenumber">16</context>
@@ -5610,7 +5610,7 @@
       </trans-unit>
       <trans-unit id="5addbb0c4775966d2aa8eddc530d5b81a4ddad03" datatype="html">
         <source>Add Manually</source>
-        <target state="new">Add Manually</target>
+        <target state="translated">Añadir manualmente</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/create-asset-profile-dialog/create-asset-profile-dialog.html</context>
           <context context-type="linenumber">19</context>
@@ -5618,7 +5618,7 @@
       </trans-unit>
       <trans-unit id="metaDescription" datatype="html">
         <source> Ghostfolio is a personal finance dashboard to keep track of your net worth including cash, stocks, ETFs and cryptocurrencies across multiple platforms. </source>
-        <target state="new"> Ghostfolio es un dashboard de finanzas personales para hacer un seguimiento de tus activos como acciones, ETFs o criptodivisas a través de múltiples plataformas. </target>
+        <target state="translated"> Ghostfolio es un dashboard de finanzas personales para hacer un seguimiento de tus activos como acciones, ETFs o criptodivisas a través de múltiples plataformas. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">4</context>
@@ -5626,7 +5626,7 @@
       </trans-unit>
       <trans-unit id="46236411f4e4f76b93179e7c73a08257d1be63cc" datatype="html">
         <source>Last All Time High</source>
-        <target state="new">Last All Time High</target>
+        <target state="translated">Último máximo histórico</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
           <context context-type="linenumber">74</context>
@@ -5634,7 +5634,7 @@
       </trans-unit>
       <trans-unit id="a3db2898b85fed425f03294b839a98cef247a2dc" datatype="html">
         <source> User </source>
-        <target state="new"> User </target>
+        <target state="translated"> Usuario </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.html</context>
           <context context-type="linenumber">29</context>
@@ -5650,7 +5650,7 @@
       </trans-unit>
       <trans-unit id="slogan" datatype="html">
         <source>Open Source Wealth Management Software</source>
-        <target state="new">Open Source Wealth Management Software</target>
+        <target state="translated">Software de gestión de patrimonio de código abierto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -5666,7 +5666,7 @@
       </trans-unit>
       <trans-unit id="1868064391111970959" datatype="html">
         <source>Oops, cash balance transfer has failed.</source>
-        <target state="new">Oops, cash balance transfer has failed.</target>
+        <target state="translated">Oops, el saldo de efectivo no se ha transferido.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/accounts/accounts-page.component.ts</context>
           <context context-type="linenumber">318</context>
