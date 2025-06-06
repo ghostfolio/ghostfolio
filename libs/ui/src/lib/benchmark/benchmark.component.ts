@@ -13,18 +13,21 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -41,6 +44,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
     GfValueComponent,
     MatButtonModule,
     MatMenuModule,
+    MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
     RouterModule
@@ -50,7 +54,9 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent implements OnChanges, OnDestroy {
+export class GfBenchmarkComponent
+  implements AfterViewInit, OnChanges, OnDestroy
+{
   @Input() benchmarks: Benchmark[];
   @Input() deviceType: string;
   @Input() hasPermissionToDeleteItem: boolean;
@@ -59,6 +65,9 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
+  @ViewChild(MatSort) sort: MatSort;
+
+  public dataSource = new MatTableDataSource<Benchmark>([]);
   public displayedColumns = [
     'name',
     'date',
@@ -95,8 +104,26 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
       });
   }
 
+  public ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+
+    // Custom sorting for the 'change' column which uses nested properties
+    this.dataSource.sortingDataAccessor = (
+      item: Benchmark,
+      property: string
+    ) => {
+      switch (property) {
+        case 'change':
+          return item?.performances?.allTimeHigh?.performancePercent || 0;
+        default:
+          return item[property];
+      }
+    };
+  }
+
   public ngOnChanges() {
     if (this.benchmarks) {
+      this.dataSource.data = this.benchmarks;
       this.isLoading = false;
     }
 
