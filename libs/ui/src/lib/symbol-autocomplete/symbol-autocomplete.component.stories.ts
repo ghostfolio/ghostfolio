@@ -20,39 +20,52 @@ const DEFAULT_OPTIONS: LookupItem[] = [
     assetClass: 'COMMODITY',
     assetSubClass: 'ETF',
     currency: 'USD',
-    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataProviderInfo: {
+      dataSource: 'YAHOO',
+      isPremium: false
+    },
     dataSource: null,
-    name: 'Default1',
-    symbol: 'DEFAULT1'
+    name: 'Default 1',
+    symbol: 'D1'
   },
   {
     assetClass: 'EQUITY',
     assetSubClass: 'STOCK',
     currency: 'USD',
-    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataProviderInfo: {
+      dataSource: 'YAHOO',
+      isPremium: false
+    },
     dataSource: null,
-    name: 'Default2',
-    symbol: 'DEFAULT2'
+    name: 'Default 2',
+    symbol: 'D2'
   }
 ];
+
 const FILTERED_OPTIONS: LookupItem[] = [
   {
     assetClass: 'COMMODITY',
     assetSubClass: 'ETF',
     currency: 'USD',
-    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataProviderInfo: {
+      dataSource: 'YAHOO',
+      isPremium: false
+    },
     dataSource: null,
-    name: 'Autocomplete1',
-    symbol: 'AUTOCOMPLETE1'
+    name: 'Autocomplete 1',
+    symbol: 'A1'
   },
   {
     assetClass: 'EQUITY',
     assetSubClass: 'STOCK',
     currency: 'USD',
-    dataProviderInfo: { name: 'YAHOO', isPremium: false },
+    dataProviderInfo: {
+      dataSource: 'YAHOO',
+      isPremium: false
+    },
     dataSource: null,
-    name: 'Autocomplete2',
-    symbol: 'AUTOCOMPLETE2'
+    name: 'Autocomplete 2',
+    symbol: 'A2'
   }
 ];
 
@@ -91,13 +104,11 @@ export default {
 
 type Story = StoryObj<GfSymbolAutocompleteComponent>;
 
-export const WithoutDefaults: Story = {
-  args: {
-    defaultLookupItems: []
-  }
+export const Default: Story = {
+  args: {}
 };
 
-export const WithDefaults: Story = {
+export const WithDefaultItems: Story = {
   args: {
     defaultLookupItems: DEFAULT_OPTIONS
   }

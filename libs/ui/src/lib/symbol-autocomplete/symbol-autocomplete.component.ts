@@ -77,11 +77,13 @@ export class GfSymbolAutocompleteComponent
   implements OnInit, OnDestroy
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
-  @Input() private includeIndices = false;
   @Input() public isLoading = false;
 
-  @ViewChild(MatInput) private input: MatInput;
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
+
+  @Input() private includeIndices = false;
+
+  @ViewChild(MatInput) private input: MatInput;
 
   public control = new FormControl();
   public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
@@ -122,10 +124,11 @@ export class GfSymbolAutocompleteComponent
         filter((query) => {
           if (query.length === 0) {
             this.showDefaultOptions();
+
             return false;
           }
 
-          return isString(query) && query.length > 1;
+          return isString(query);
         }),
         tap(() => {
           this.isLoading = true;
