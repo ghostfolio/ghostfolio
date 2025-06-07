@@ -252,6 +252,7 @@ model User {
   provider      Provider        @default(ANONYMOUS)
   role          Role            @default(USER)
   subscriptions Subscription[]
+  tags          Tag[]
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
@@ -263,7 +264,6 @@ model User {
   AuthDevice    AuthDevice[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]
-  Tag           Tag[]
 
   @@index([accessToken])
   @@index([createdAt])
