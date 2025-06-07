@@ -185,7 +185,7 @@
             "command": "shx cp -r apps/client/src/assets/* dist/apps/client/assets"
           },
           {
-            "command": "shx cp -r apps/client/src/assets/.well-known/* dist/apps/client/.well-known"
+            "command": "shx cp -r apps/client/src/assets/.well-known/assetlinks.json dist/apps/client/.well-known"
           },
           {
             "command": "shx cp apps/client/src/assets/favicon.ico dist/apps/client"
