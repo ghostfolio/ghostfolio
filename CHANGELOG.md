@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue where the import button was not correctly enabled in the import activities dialog
+- Fixed an issue in the annualized performance calculation
 
 ## 2.166.0 - 2025-06-05
 
