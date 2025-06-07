@@ -3,9 +3,9 @@
     class="gf-table w-100"
     mat-table
     matSort
+    matSortActive="name"
+    matSortDirection="asc"
     [dataSource]="dataSource"
-    [matSortActive]="sortColumn"
-    [matSortDirection]="sortDirection"
   >
     <ng-container matColumnDef="name">
       <th *matHeaderCellDef class="px-2" i18n mat-header-cell mat-sort-header>
@@ -102,9 +102,9 @@
     <ng-container matColumnDef="change">
       <th
         *matHeaderCellDef
-        class="px-2 text-right"
+        class="px-2 justify-content-end"
         mat-header-cell
-        mat-sort-header
+        mat-sort-header="performances.allTimeHigh.performancePercent"
       >
         <span class="d-none d-sm-block text-nowrap" i18n
           >Change from All Time High</span

@@ -12,7 +12,6 @@ import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +25,7 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatSort, MatSortModule, SortDirection } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { get, isNumber } from 'lodash';
@@ -54,9 +53,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
   styleUrls: ['./benchmark.component.scss'],
   templateUrl: './benchmark.component.html'
 })
-export class GfBenchmarkComponent
-  implements AfterViewInit, OnChanges, OnDestroy
-{
+export class GfBenchmarkComponent implements OnChanges, OnDestroy {
   @Input() benchmarks: Benchmark[];
   @Input() deviceType: string;
   @Input() hasPermissionToDeleteItem: boolean;
@@ -78,8 +75,6 @@ export class GfBenchmarkComponent
   public isLoading = true;
   public isNumber = isNumber;
   public resolveMarketCondition = resolveMarketCondition;
-  public sortColumn = 'name';
-  public sortDirection: SortDirection = 'asc';
   public translate = translate;
 
   private unsubscribeSubject = new Subject<void>();
@@ -106,22 +101,12 @@ export class GfBenchmarkComponent
       });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-
-    this.dataSource.sortingDataAccessor = (item, property) => {
-      switch (property) {
-        case 'change':
-          return item.performances?.allTimeHigh?.performancePercent;
-        default:
-          return get(item, property);
-      }
-    };
-  }
-
   public ngOnChanges() {
     if (this.benchmarks) {
       this.dataSource.data = this.benchmarks;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = get;
+
       this.isLoading = false;
     }
 
