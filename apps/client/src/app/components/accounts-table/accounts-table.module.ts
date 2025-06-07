@@ -1,4 +1,4 @@
-import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
