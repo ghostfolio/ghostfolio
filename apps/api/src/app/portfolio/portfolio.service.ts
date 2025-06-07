@@ -23,6 +23,7 @@ import { RegionalMarketClusterRiskNorthAmerica } from '@ghostfolio/api/models/ru
 import { BenchmarkService } from '@ghostfolio/api/services/benchmark/benchmark.service';
 import { DataProviderService } from '@ghostfolio/api/services/data-provider/data-provider.service';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { ImpersonationService } from '@ghostfolio/api/services/impersonation/impersonation.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
@@ -105,6 +106,7 @@ export class PortfolioService {
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
+    private readonly i18nService: I18nService,
     private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
@@ -1319,6 +1321,7 @@ export class PortfolioService {
         [
           new EmergencyFundSetup(
             this.exchangeRateDataService,
+            this.i18nService,
             userSettings.language,
             this.getTotalEmergencyFund({
               userSettings,
@@ -1333,6 +1336,7 @@ export class PortfolioService {
         [
           new FeeRatioInitialInvestment(
             this.exchangeRateDataService,
+            this.i18nService,
             userSettings.language,
             summary.committedFunds,
             summary.fees
