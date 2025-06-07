@@ -7,7 +7,11 @@
 
     .logo-container {
       &.filled {
-        background-color: rgba(var(--palette-foreground-base), 0.02);
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(var(--palette-foreground-base), 0.02)
+        );
       }
 
       @media (min-width: 576px) {
@@ -56,7 +60,11 @@
 
     .logo-container {
       &.filled {
-        background-color: rgba(var(--palette-foreground-base-dark), 0.02);
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          rgba(var(--palette-foreground-base-dark), 0.02)
+        );
       }
     }
   }
