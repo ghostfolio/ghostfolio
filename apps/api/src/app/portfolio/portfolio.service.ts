@@ -1321,6 +1321,7 @@ export class PortfolioService {
         [
           new EmergencyFundSetup(
             this.exchangeRateDataService,
+            this.i18nService,
             userSettings.language,
             this.getTotalEmergencyFund({
               userSettings,

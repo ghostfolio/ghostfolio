@@ -299,6 +299,7 @@ export class UserService {
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
         undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
