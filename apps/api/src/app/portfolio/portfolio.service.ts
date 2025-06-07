@@ -106,8 +106,8 @@ export class PortfolioService {
     private readonly calculatorFactory: PortfolioCalculatorFactory,
     private readonly dataProviderService: DataProviderService,
     private readonly exchangeRateDataService: ExchangeRateDataService,
-    private readonly impersonationService: ImpersonationService,
     private readonly i18nService: I18nService,
+    private readonly impersonationService: ImpersonationService,
     private readonly orderService: OrderService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
     private readonly rulesService: RulesService,
@@ -1335,10 +1335,10 @@ export class PortfolioService {
         [
           new FeeRatioInitialInvestment(
             this.exchangeRateDataService,
+            this.i18nService,
             userSettings.language,
             summary.committedFunds,
-            summary.fees,
-            this.i18nService
+            summary.fees
           )
         ],
         userSettings

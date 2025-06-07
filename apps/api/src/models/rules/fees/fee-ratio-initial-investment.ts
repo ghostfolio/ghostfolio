@@ -10,10 +10,10 @@ export class FeeRatioInitialInvestment extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
     languageCode: string,
     totalInvestment: number,
-    fees: number,
-    private i18nService: I18nService
+    fees: number
   ) {
     super(exchangeRateDataService, {
       languageCode,
