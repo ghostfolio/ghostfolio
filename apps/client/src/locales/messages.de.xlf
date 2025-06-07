@@ -7128,7 +7128,7 @@
       </trans-unit>
       <trans-unit id="8508033bf4a7ba848a54b1606283d2f38679ede9" datatype="html">
         <source>rules align with your portfolio.</source>
-        <target state="translated">Regeln werden von Ihrem Portfolio erfüllt.</target>
+        <target state="translated">Regeln werden von deinem Portfolio erfüllt.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/x-ray/x-ray-page.component.html</context>
           <context context-type="linenumber">58</context>
