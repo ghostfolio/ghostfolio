@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Migrated the `i18n` service to `@Injectable()`
+- Migrated the `i18n` service to use `@Injectable()`
 - Improved the language localization for German (`de`)
 
 ## 2.167.0 - 2025-06-07
