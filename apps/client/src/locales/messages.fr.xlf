@@ -7602,7 +7602,7 @@
       </trans-unit>
       <trans-unit id="3920411961658116502" datatype="html">
         <source>Demo user account has been synced.</source>
-        <target state="new">Demo user account has been synced.</target>
+        <target state="translated">Le compte utilisateur de démonstration a été synchronisé.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">223</context>
@@ -7610,7 +7610,7 @@
       </trans-unit>
       <trans-unit id="18fe01d6ae816d6787148e59ea1a39d0bb542e24" datatype="html">
         <source>Sync Demo User Account</source>
-        <target state="new">Sync Demo User Account</target>
+        <target state="translated">Synchroniser le compte utilisateur de démonstration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">181</context>
@@ -7618,7 +7618,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Emergency Fund: Set up</source>
-        <target state="new">Emergency Fund: Set up</target>
+        <target state="translated">Fonds d'urgence : Configuration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7626,7 +7626,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
         <source> No emergency fund has been set up </source>
-        <target state="new"> No emergency fund has been set up </target>
+        <target state="translated"> Aucun fonds d'urgence n'a été mis en place </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7634,7 +7634,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
         <source> An emergency fund has been set up </source>
-        <target state="new"> An emergency fund has been set up </target>
+        <target state="translated"> Un fonds d'urgence a été mis en place </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">18</context>
@@ -7642,7 +7642,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment" datatype="html">
         <source>Fee Ratio</source>
-        <target state="new">Fee Ratio</target>
+        <target state="translated">Ratio de frais</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">21</context>
@@ -7650,7 +7650,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.false" datatype="html">
         <source> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
-        <target state="new"> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
+        <target state="translated"> Les frais dépassent ${thresholdMax}% de votre investissement initial (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">22</context>
@@ -7658,7 +7658,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.true" datatype="html">
         <source> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
-        <target state="new"> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
+        <target state="translated"> Les frais ne dépassent pas ${thresholdMax}% de votre investissement initial (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">26</context>
@@ -7666,7 +7666,7 @@
       </trans-unit>
       <trans-unit id="253d612b439c367d21c4ba59763df303a6106968" datatype="html">
         <source> Name </source>
-        <target state="new"> Name </target>
+        <target state="translated"> Nom </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
           <context context-type="linenumber">11</context>
