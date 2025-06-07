@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed missing `/.well-known/assetlinks.json` for TWA
 
+### Changed
+
+- Improved the language localization for French (`fr`)
+
 ## 2.168.0 - 2025-06-07
 
 ### Added
