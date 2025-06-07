@@ -28,7 +28,9 @@ export function getAnnualizedPerformancePercent({
       exponent
     );
 
-    return !isNaN(growthFactor) ? new Big(growthFactor).minus(1) : new Big(0);
+    if (!isNaN(growthFactor)) {
+      return new Big(growthFactor).minus(1);
+    }
   }
 
   return new Big(0);
