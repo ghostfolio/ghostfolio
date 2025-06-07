@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the symbol search component by default options
+- Renamed `Tag` to `tags` in the `User` database schema
 - Improved the language localization for Spanish (`es`)
 - Improved the language localization for Turkish (`tr`)
 - Upgraded `ng-extract-i18n-merge` from version `2.15.0` to `2.15.1`
