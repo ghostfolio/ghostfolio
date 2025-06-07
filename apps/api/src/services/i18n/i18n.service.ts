@@ -42,7 +42,7 @@ export class I18nService {
 
     if (placeholders) {
       for (const [key, value] of Object.entries(placeholders)) {
-        translatedText = translatedText.replace(`{${key}}`, String(value));
+        translatedText = translatedText.replace(`\${${key}}`, String(value));
       }
     }
 
