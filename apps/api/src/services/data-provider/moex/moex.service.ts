@@ -153,7 +153,8 @@ async function getDividendsFromMoex({
 
 async function readBatchedResponse<T>(
   getNextBatch: (start: number) => Promise<Response<T>>,
-  extractor: (batch: Response<T>) => ResponseData
+  extractor: (batch: Response<T>) => ResponseData,
+  max_items?: number
 ): Promise<ResponseData> {
   let batch: ResponseData;
   const wholeResponse: ResponseData = { columns: [], data: [] };
@@ -174,7 +175,10 @@ async function readBatchedResponse<T>(
     }
 
     wholeResponse.data = [...wholeResponse.data, ...batch.data];
-  } while (batch.data.length > 0);
+  } while (
+    batch.data.length > 0 &&
+    (!max_items || wholeResponse.data.length <= max_items)
+  );
 
   return wholeResponse;
 }
@@ -553,6 +557,7 @@ export class MoexService implements DataProviderInterface {
   }
 
   async search({ query }: GetSearchParams): Promise<LookupResponse> {
+    const MAX_SEARCH_ITEMS: number = 50;
     // MOEX doesn't support search for queries less than 3 symbols
     if (query.length < 3) {
       return { items: [] };
@@ -567,7 +572,8 @@ export class MoexService implements DataProviderInterface {
         params['start'] = x;
         return await moexClient.security.getSecurities(params);
       },
-      (x) => x.data.securities
+      (x) => x.data.securities,
+      MAX_SEARCH_ITEMS
     );
 
     const search = response_data_to_map(searchResponse, 'secid');
@@ -578,7 +584,7 @@ export class MoexService implements DataProviderInterface {
         continue;
       }
       const profile = await this.getAssetProfile({ symbol: k });
-      result.items.push({
+      const lookedup_profile = {
         assetClass: profile.assetClass,
         assetSubClass: profile.assetSubClass,
         currency: profile.currency,
@@ -586,7 +592,13 @@ export class MoexService implements DataProviderInterface {
         dataSource: this.getName(),
         name: profile.name,
         symbol: k
-      });
+      };
+
+      if (k === query) {
+        result.items.unshift(lookedup_profile);
+      } else {
+        result.items.push(lookedup_profile);
+      }
     }
 
     return result;
