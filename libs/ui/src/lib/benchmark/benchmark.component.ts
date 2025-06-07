@@ -19,14 +19,16 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  Output
+  Output,
+  ViewChild
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { isNumber } from 'lodash';
+import { get, isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -41,6 +43,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
     GfValueComponent,
     MatButtonModule,
     MatMenuModule,
+    MatSortModule,
     MatTableModule,
     NgxSkeletonLoaderModule,
     RouterModule
@@ -59,6 +62,9 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
 
   @Output() itemDeleted = new EventEmitter<AssetProfileIdentifier>();
 
+  @ViewChild(MatSort) sort: MatSort;
+
+  public dataSource = new MatTableDataSource<Benchmark>([]);
   public displayedColumns = [
     'name',
     'date',
@@ -97,6 +103,10 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
 
   public ngOnChanges() {
     if (this.benchmarks) {
+      this.dataSource.data = this.benchmarks;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = get;
+
       this.isLoading = false;
     }
 
