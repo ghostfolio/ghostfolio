@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for column sorting to the markets overview
+- Added support for column sorting to the watchlist
 - Set up the language localization for the static portfolio analysis rule: _Emergency Fund_ (Setup)
 - Set up the language localization for the static portfolio analysis rule: _Fees_ (Fee Ratio)
 
