@@ -48,11 +48,14 @@
         </ng-container>
 
         <ng-container matColumnDef="assetProfileCount">
-          <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
+          <th *matHeaderCellDef class="px-1 py-2 justify-content-end" mat-header-cell>
             <ng-container i18n>Asset Profiles</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
-            {{ element.assetProfileCount }}
+            <gf-value
+              class="d-inline-block justify-content-end"
+              [value]="element.assetProfileCount"
+            />
           </td>
         </ng-container>
 
