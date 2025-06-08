@@ -1,5 +1,5 @@
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
-import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';

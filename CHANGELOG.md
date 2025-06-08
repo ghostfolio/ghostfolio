@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Moved the asset profile icon component to `@ghostfolio/ui`
+
 ### Fixed
 
 - Fixed missing `/.well-known/assetlinks.json` for TWA
