@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Handled an exception in the get keys function of the _Redis_ cache service
 - Fixed missing `/.well-known/assetlinks.json` for TWA
 
 ## 2.168.0 - 2025-06-07
