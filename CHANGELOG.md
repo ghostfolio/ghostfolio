@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for Polish (`pl`)
+- Upgraded `zone.js` from version `0.15.0` to `0.15.1`
 
 ### Fixed
 
