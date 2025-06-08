@@ -1,4 +1,4 @@
-import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -14,8 +14,8 @@ import { CreateOrUpdatePlatformDialog } from './create-or-update-platform-dialog
   declarations: [CreateOrUpdatePlatformDialog],
   imports: [
     CommonModule,
-    GfAssetProfileIconComponent,
     FormsModule,
+    GfEntityLogoComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,

@@ -4,7 +4,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
 import { DateRange } from '@ghostfolio/common/types';
-import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { FocusKeyManager } from '@angular/cdk/a11y';
@@ -61,8 +61,8 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    GfAssetProfileIconComponent,
     GfAssistantListItemComponent,
+    GfEntityLogoComponent,
     GfSymbolModule,
     MatButtonModule,
     MatFormFieldModule,

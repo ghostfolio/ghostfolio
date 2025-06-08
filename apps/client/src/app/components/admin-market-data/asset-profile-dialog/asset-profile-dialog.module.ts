@@ -1,6 +1,6 @@
 import { AdminMarketDataService } from '@ghostfolio/client/components/admin-market-data/admin-market-data.service';
-import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
 import { GfCurrencySelectorComponent } from '@ghostfolio/ui/currency-selector';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfHistoricalMarketDataEditorComponent } from '@ghostfolio/ui/historical-market-data-editor';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
 import { GfPortfolioProportionChartComponent } from '@ghostfolio/ui/portfolio-proportion-chart';
@@ -27,8 +27,8 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
   imports: [
     CommonModule,
     FormsModule,
-    GfAssetProfileIconComponent,
     GfCurrencySelectorComponent,
+    GfEntityLogoComponent,
     GfHistoricalMarketDataEditorComponent,
     GfLineChartComponent,
     GfPortfolioProportionChartComponent,
