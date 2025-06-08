@@ -1,4 +1,4 @@
-import { internalRoutes, routes } from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -25,6 +25,6 @@ export class GfNoTransactionsInfoComponent {
 
   public routerLinkPortfolioActivities = [
     '/' + internalRoutes.portfolio.path,
-    routes.activities
+    internalRoutes.portfolio.subRoutes.activities.path
   ];
 }

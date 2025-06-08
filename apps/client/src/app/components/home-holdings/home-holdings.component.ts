@@ -8,7 +8,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { internalRoutes, routes } from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes';
 import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -39,7 +39,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   ];
   public routerLinkPortfolioActivities = [
     '/' + internalRoutes.portfolio.path,
-    routes.activities
+    internalRoutes.portfolio.subRoutes.activities.path
   ];
   public user: User;
   public viewModeFormControl = new FormControl<HoldingsViewMode>(

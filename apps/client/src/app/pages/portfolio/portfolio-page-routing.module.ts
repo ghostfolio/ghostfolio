@@ -21,7 +21,7 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.activities,
+        path: internalRoutes.portfolio.subRoutes.activities.path,
         loadChildren: () =>
           import('./activities/activities-page.module').then(
             (m) => m.ActivitiesPageModule

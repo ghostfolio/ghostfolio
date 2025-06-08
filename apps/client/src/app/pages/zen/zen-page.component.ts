@@ -38,7 +38,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             },
             {
               iconName: 'wallet-outline',
-              label: $localize`Holdings`,
+              label: internalRoutes.zen.title,
               path: ['/' + internalRoutes.zen.path, routes.holdings]
             }
           ];

@@ -10,7 +10,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { internalRoutes, routes } from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 
 import {
@@ -94,7 +94,10 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(
-      ['/' + internalRoutes.portfolio.path, routes.activities],
+      [
+        '/' + internalRoutes.portfolio.path,
+        internalRoutes.portfolio.subRoutes.activities.path
+      ],
       {
         queryParams: { activityId: aActivity.id, createDialog: true }
       }
@@ -156,7 +159,10 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
   public onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
-      ['/' + internalRoutes.portfolio.path, routes.activities],
+      [
+        '/' + internalRoutes.portfolio.path,
+        internalRoutes.portfolio.subRoutes.activities.path
+      ],
       {
         queryParams: { activityId: aActivity.id, editDialog: true }
       }

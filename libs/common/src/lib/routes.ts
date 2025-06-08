@@ -3,7 +3,6 @@ import '@angular/localize/init';
 export const routes = {
   access: 'access',
   account: 'account',
-  activities: 'activities',
   adminControl: 'admin',
   allocations: 'allocations',
   api: 'api',
@@ -60,7 +59,12 @@ export const internalRoutes = {
   },
   portfolio: {
     path: 'portfolio',
-    subRoutes: {},
+    subRoutes: {
+      activities: {
+        path: 'activities',
+        title: $localize`Activities`
+      }
+    },
     title: $localize`Portfolio`
   },
   zen: {
