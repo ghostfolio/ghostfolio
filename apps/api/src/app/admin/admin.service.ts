@@ -824,7 +824,7 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, activities: true }
+          select: { accounts: true, activities: true }
         },
         Analytics: {
           select: {
@@ -871,7 +871,7 @@ export class AdminService {
           id,
           role,
           subscription,
-          accountCount: _count.Account || 0,
+          accountCount: _count.accounts || 0,
           activityCount: _count.activities || 0,
           country: Analytics?.country,
           dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,

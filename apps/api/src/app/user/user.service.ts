@@ -95,7 +95,7 @@ export class UserService {
   }
 
   public async getUser(
-    { Account, id, permissions, Settings, subscription }: UserWithSettings,
+    { accounts, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
@@ -141,6 +141,7 @@ export class UserService {
     }
 
     return {
+      accounts,
       activitiesCount,
       id,
       permissions,
@@ -154,7 +155,6 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
-      accounts: Account,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(Settings.settings as UserSettings),
@@ -181,7 +181,7 @@ export class UserService {
     const {
       Access,
       accessToken,
-      Account,
+      accounts,
       Analytics,
       authChallenge,
       createdAt,
@@ -195,7 +195,7 @@ export class UserService {
     } = await this.prismaService.user.findUnique({
       include: {
         Access: true,
-        Account: {
+        accounts: {
           include: { Platform: true }
         },
         Analytics: true,
@@ -208,7 +208,7 @@ export class UserService {
     const user: UserWithSettings = {
       Access,
       accessToken,
-      Account,
+      accounts,
       authChallenge,
       createdAt,
       id,
@@ -444,7 +444,7 @@ export class UserService {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.Account = sortBy(user.Account, ({ name }) => {
+    user.accounts = sortBy(user.accounts, ({ name }) => {
       return name.toLowerCase();
     });
     user.permissions = currentPermissions.sort();
@@ -481,7 +481,7 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        Account: {
+        accounts: {
           create: {
             currency: DEFAULT_CURRENCY,
             name: this.i18nService.getTranslation({
