@@ -1,5 +1,13 @@
 import '@angular/localize/init';
 
+export interface IRoute {
+  excludeFromAssistant?: boolean;
+  path: string;
+  routerLink: string[];
+  subRoutes?: Record<string, IRoute>;
+  title: string;
+}
+
 export const routes = {
   access: 'access',
   account: 'account',
@@ -44,7 +52,7 @@ export const routes = {
   termsOfService: $localize`:kebab-case:terms-of-service`
 };
 
-export const internalRoutes = {
+export const internalRoutes: Record<string, IRoute> = {
   accounts: {
     path: 'accounts',
     routerLink: ['/accounts'],
