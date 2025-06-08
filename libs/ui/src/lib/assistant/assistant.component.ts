@@ -279,8 +279,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 this.changeDetectorRef.markForCheck();
               })
             );
-
-          // 4. Emit initial results first, then the combined results when async operations complete
+          // Merge all results
           return merge(quickLinks$, assetProfiles$, holdings$).pipe(
             scan(
               (acc: ISearchResults, curr: Partial<ISearchResults>) => ({
