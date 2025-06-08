@@ -1,8 +1,8 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -18,10 +18,10 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkFaq = ['/' + paths.faq];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkOpenStartup = ['/' + paths.openStartup];
+  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkFaq = ['/' + routes.faq];
+  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkOpenStartup = ['/' + publicRoutes.openStartup.path];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

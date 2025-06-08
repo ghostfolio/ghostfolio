@@ -10,7 +10,7 @@ import {
   DataProviderInfo,
   User
 } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import {
   ChangeDetectionStrategy,
@@ -72,7 +72,7 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
           const languageCode = this.user.settings.language;
 
-          this.pricingUrl = `https://ghostfol.io/${languageCode}/${paths.pricing}`;
+          this.pricingUrl = `https://ghostfol.io/${languageCode}/${routes.pricing}`;
 
           this.changeDetectorRef.markForCheck();
         }

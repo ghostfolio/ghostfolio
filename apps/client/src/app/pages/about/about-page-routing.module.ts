@@ -1,5 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/common/paths';
+import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,35 +18,35 @@ const routes: Routes = [
           )
       },
       {
-        path: paths.changelog,
+        path: ghostfolioRoutes.changelog,
         loadChildren: () =>
           import('./changelog/changelog-page.module').then(
             (m) => m.ChangelogPageModule
           )
       },
       {
-        path: paths.license,
+        path: ghostfolioRoutes.license,
         loadChildren: () =>
           import('./license/license-page.module').then(
             (m) => m.LicensePageModule
           )
       },
       {
-        path: paths.ossFriends,
+        path: ghostfolioRoutes.ossFriends,
         loadChildren: () =>
           import('./oss-friends/oss-friends-page.module').then(
             (m) => m.OpenSourceSoftwareFriendsPageModule
           )
       },
       {
-        path: paths.privacyPolicy,
+        path: ghostfolioRoutes.privacyPolicy,
         loadChildren: () =>
           import('./privacy-policy/privacy-policy-page.module').then(
             (m) => m.PrivacyPolicyPageModule
           )
       },
       {
-        path: paths.termsOfService,
+        path: ghostfolioRoutes.termsOfService,
         loadChildren: () =>
           import('./terms-of-service/terms-of-service-page.module').then(
             (m) => m.TermsOfServicePageModule

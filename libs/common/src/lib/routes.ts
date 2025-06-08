@@ -1,26 +1,20 @@
 import '@angular/localize/init';
 
-export const paths = {
+export const routes = {
   access: 'access',
   account: 'account',
-  accounts: 'accounts',
-  activities: 'activities',
   adminControl: 'admin',
   allocations: 'allocations',
   api: 'api',
   auth: 'auth',
-  blog: 'blog',
   demo: 'demo',
   fire: 'fire',
-  holdings: 'holdings',
-  home: 'home',
   i18n: 'i18n',
   jobs: 'jobs',
   market: 'market',
   marketData: 'market-data',
   membership: 'membership',
   personalFinanceTools: 'personal-finance-tools',
-  portfolio: 'portfolio',
   public: 'p',
   saas: 'saas',
   settings: 'settings',
@@ -30,10 +24,10 @@ export const paths = {
   watchlist: 'watchlist',
   webauthn: 'webauthn',
   xRay: 'x-ray',
-  zen: 'zen',
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
+  blog: 'blog',
   changelog: $localize`:kebab-case:changelog`,
   faq: $localize`:kebab-case:faq`,
   features: $localize`:kebab-case:features`,
@@ -42,12 +36,67 @@ export const paths = {
   license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  openStartup: 'open',
   ossFriends: 'oss-friends',
   pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
-  register: $localize`:kebab-case:register`,
   resources: $localize`:kebab-case:resources`,
   selfHosting: $localize`:kebab-case:self-hosting`,
   termsOfService: $localize`:kebab-case:terms-of-service`
+};
+
+export const internalRoutes = {
+  accounts: {
+    path: 'accounts',
+    routerLink: ['/accounts'],
+    title: $localize`Accounts`
+  },
+  home: {
+    excludeFromAssistant: true,
+    path: 'home',
+    routerLink: ['/home'],
+    subRoutes: {
+      holdings: {
+        path: 'holdings',
+        routerLink: ['/home', 'holdings'],
+        title: $localize`Holdings`
+      }
+    },
+    title: $localize`Overview`
+  },
+  portfolio: {
+    path: 'portfolio',
+    routerLink: ['/portfolio'],
+    subRoutes: {
+      activities: {
+        path: 'activities',
+        routerLink: ['/portfolio', 'activities'],
+        title: $localize`Activities`
+      }
+    },
+    title: $localize`Portfolio`
+  },
+  zen: {
+    excludeFromAssistant: true,
+    path: 'zen',
+    routerLink: ['/zen'],
+    subRoutes: {
+      holdings: {
+        path: 'holdings',
+        routerLink: ['/zen', 'holdings'],
+        title: $localize`Holdings`
+      }
+    },
+    title: $localize`Overview`
+  }
+};
+
+export const publicRoutes = {
+  openStartup: {
+    path: 'open',
+    title: 'Open Startup'
+  },
+  register: {
+    path: $localize`:kebab-case:register`,
+    title: $localize`Registration`
+  }
 };

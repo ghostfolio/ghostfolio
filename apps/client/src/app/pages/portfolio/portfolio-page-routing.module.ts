@@ -1,5 +1,8 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/common/paths';
+import {
+  routes as ghostfolioRoutes,
+  internalRoutes
+} from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,33 +21,33 @@ const routes: Routes = [
           )
       },
       {
-        path: paths.activities,
+        path: internalRoutes.portfolio.subRoutes.activities.path,
         loadChildren: () =>
           import('./activities/activities-page.module').then(
             (m) => m.ActivitiesPageModule
           )
       },
       {
-        path: paths.allocations,
+        path: ghostfolioRoutes.allocations,
         loadChildren: () =>
           import('./allocations/allocations-page.module').then(
             (m) => m.AllocationsPageModule
           )
       },
       {
-        path: paths.fire,
+        path: ghostfolioRoutes.fire,
         loadChildren: () =>
           import('./fire/fire-page.module').then((m) => m.FirePageModule)
       },
       {
-        path: paths.xRay,
+        path: ghostfolioRoutes.xRay,
         loadChildren: () =>
           import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
       }
     ],
     component: PortfolioPageComponent,
     path: '',
-    title: $localize`Portfolio`
+    title: internalRoutes.portfolio.title
   }
 ];
 
