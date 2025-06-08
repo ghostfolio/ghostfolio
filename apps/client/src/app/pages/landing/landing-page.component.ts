@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { format } from 'date-fns';
@@ -25,10 +25,10 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkDemo = ['/' + paths.demo];
-  public routerLinkOpenStartup = ['/' + paths.openStartup];
-  public routerLinkRegister = ['/' + paths.register];
+  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkDemo = ['/' + routes.demo];
+  public routerLinkOpenStartup = ['/' + publicRoutes.openStartup.path];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public statistics: Statistics;
   public testimonials = [
     {

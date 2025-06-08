@@ -1,6 +1,6 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/common/paths';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
+import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -24,7 +24,7 @@ const routes: Routes = [
             return GfProductPageComponent;
           }
         ),
-      path: `${paths.openSourceAlternativeTo}-${alias ?? key}`,
+      path: `${ghostfolioRoutes.openSourceAlternativeTo}-${alias ?? key}`,
       title: $localize`Open Source Alternative to ${name}`
     };
   })

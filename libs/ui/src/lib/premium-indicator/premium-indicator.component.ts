@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -20,5 +20,5 @@ import { RouterModule } from '@angular/router';
 export class GfPremiumIndicatorComponent {
   @Input() enableLink = true;
 
-  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkPricing = ['/' + routes.pricing];
 }

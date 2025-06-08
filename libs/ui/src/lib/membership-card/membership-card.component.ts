@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { CommonModule } from '@angular/common';
 import {
@@ -29,7 +29,7 @@ export class GfMembershipCardComponent {
 
   @Output() generateApiKeyClicked = new EventEmitter<void>();
 
-  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkPricing = ['/' + routes.pricing];
 
   public onGenerateApiKey(event: MouseEvent) {
     event.preventDefault();

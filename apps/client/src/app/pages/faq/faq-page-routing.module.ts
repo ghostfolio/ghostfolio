@@ -1,5 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/common/paths';
+import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,12 +18,12 @@ const routes: Routes = [
           )
       },
       {
-        path: paths.saas,
+        path: ghostfolioRoutes.saas,
         loadChildren: () =>
           import('./saas/saas-page.module').then((m) => m.SaasPageModule)
       },
       {
-        path: paths.selfHosting,
+        path: ghostfolioRoutes.selfHosting,
         loadChildren: () =>
           import('./self-hosting/self-hosting-page.module').then(
             (m) => m.SelfHostingPageModule

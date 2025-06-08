@@ -10,8 +10,8 @@ import {
   PortfolioPerformance,
   User
 } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { internalRoutes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -37,12 +37,10 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public isLoadingPerformance = true;
   public performance: PortfolioPerformance;
   public precision = 2;
-  public routerLinkAccounts = ['/' + paths.accounts];
-  public routerLinkPortfolio = ['/' + paths.portfolio];
-  public routerLinkPortfolioActivities = [
-    '/' + paths.portfolio,
-    paths.activities
-  ];
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
   public showDetails = false;
   public unit: string;
   public user: User;
