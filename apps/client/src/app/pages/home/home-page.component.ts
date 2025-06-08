@@ -41,8 +41,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
             },
             {
               iconName: 'wallet-outline',
-              label: $localize`Holdings`,
-              path: ['/' + internalRoutes.home.path, routes.holdings]
+              label: internalRoutes.home.subRoutes.holdings.title,
+              path: [
+                '/' + internalRoutes.home.path,
+                internalRoutes.home.subRoutes.holdings.path
+              ]
             },
             {
               iconName: 'reader-outline',

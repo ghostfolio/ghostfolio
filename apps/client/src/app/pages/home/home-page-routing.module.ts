@@ -23,9 +23,9 @@ const routes: Routes = [
         component: HomeOverviewComponent
       },
       {
-        path: ghostfolioRoutes.holdings,
+        path: internalRoutes.home.subRoutes.holdings.path,
         component: HomeHoldingsComponent,
-        title: $localize`Holdings`
+        title: internalRoutes.home.subRoutes.holdings.title
       },
       {
         path: ghostfolioRoutes.summary,

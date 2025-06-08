@@ -1,6 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
-import { internalRoutes, routes } from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -39,7 +39,10 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'wallet-outline',
               label: internalRoutes.zen.title,
-              path: ['/' + internalRoutes.zen.path, routes.holdings]
+              path: [
+                '/' + internalRoutes.zen.path,
+                internalRoutes.zen.subRoutes.holdings.path
+              ]
             }
           ];
           this.user = state.user;

@@ -9,7 +9,6 @@ export const routes = {
   auth: 'auth',
   demo: 'demo',
   fire: 'fire',
-  holdings: 'holdings',
   i18n: 'i18n',
   jobs: 'jobs',
   market: 'market',
@@ -54,7 +53,12 @@ export const internalRoutes = {
   home: {
     excludeFromAssistant: true,
     path: 'home',
-    subRoutes: {},
+    subRoutes: {
+      holdings: {
+        path: 'holdings',
+        title: $localize`Holdings`
+      }
+    },
     title: $localize`Overview`
   },
   portfolio: {
@@ -70,7 +74,12 @@ export const internalRoutes = {
   zen: {
     excludeFromAssistant: true,
     path: 'zen',
-    subRoutes: {},
+    subRoutes: {
+      holdings: {
+        path: 'holdings',
+        title: $localize`Holdings`
+      }
+    },
     title: $localize`Overview`
   }
 };
