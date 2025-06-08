@@ -20,9 +20,11 @@
           mat-flat-button
           [ngClass]="{
             'font-weight-bold':
-              currentRoute === routes.home || currentRoute === routes.zen,
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path,
             'text-decoration-underline':
-              currentRoute === routes.home || currentRoute === routes.zen
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path
           }"
           [routerLink]="['/']"
           >Overview</a
@@ -34,8 +36,9 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === routes.portfolio,
-            'text-decoration-underline': currentRoute === routes.portfolio
+            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.portfolio.path
           }"
           [routerLink]="routerLinkPortfolio"
           >Portfolio</a
@@ -47,8 +50,9 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === routes.accounts,
-            'text-decoration-underline': currentRoute === routes.accounts
+            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.accounts.path
           }"
           [routerLink]="routerLinkAccounts"
           >Accounts</a
@@ -235,7 +239,8 @@
             mat-menu-item
             [ngClass]="{
               'font-weight-bold':
-                currentRoute === routes.home || currentRoute === routes.zen
+                currentRoute === internalRoutes.home.path ||
+                currentRoute === internalRoutes.zen.path
             }"
             [routerLink]="['/']"
             >Overview</a
@@ -245,7 +250,7 @@
             i18n
             mat-menu-item
             [ngClass]="{
-              'font-weight-bold': currentRoute === routes.portfolio
+              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
             }"
             [routerLink]="routerLinkPortfolio"
             >Portfolio</a
@@ -254,7 +259,9 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === routes.accounts }"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.accounts.path
+            }"
             [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
