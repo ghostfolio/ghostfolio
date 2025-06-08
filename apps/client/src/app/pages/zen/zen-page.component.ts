@@ -33,12 +33,12 @@ export class ZenPageComponent implements OnDestroy, OnInit {
           this.tabs = [
             {
               iconName: 'analytics-outline',
-              label: $localize`Overview`,
-              path: ['/' + internalRoutes.zen.path]
+              label: internalRoutes.zen.title,
+              path: internalRoutes.zen.routerLink
             },
             {
               iconName: 'wallet-outline',
-              label: internalRoutes.zen.title,
+              label: internalRoutes.zen.subRoutes.holdings.title,
               path: [
                 '/' + internalRoutes.zen.path,
                 internalRoutes.zen.subRoutes.holdings.path

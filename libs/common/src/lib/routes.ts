@@ -47,15 +47,17 @@ export const routes = {
 export const internalRoutes = {
   accounts: {
     path: 'accounts',
-    subRoutes: {},
+    routerLink: ['/accounts'],
     title: $localize`Accounts`
   },
   home: {
     excludeFromAssistant: true,
     path: 'home',
+    routerLink: ['/home'],
     subRoutes: {
       holdings: {
         path: 'holdings',
+        routerLink: [], // TODO
         title: $localize`Holdings`
       }
     },
@@ -63,9 +65,11 @@ export const internalRoutes = {
   },
   portfolio: {
     path: 'portfolio',
+    routerLink: ['/portfolio'],
     subRoutes: {
       activities: {
         path: 'activities',
+        routerLink: [], // TODO
         title: $localize`Activities`
       }
     },
@@ -74,9 +78,11 @@ export const internalRoutes = {
   zen: {
     excludeFromAssistant: true,
     path: 'zen',
+    routerLink: ['/zen'],
     subRoutes: {
       holdings: {
         path: 'holdings',
+        routerLink: [], // TODO
         title: $localize`Holdings`
       }
     },

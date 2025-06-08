@@ -34,7 +34,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Analysis`,
-              path: ['/' + internalRoutes.portfolio.path]
+              path: internalRoutes.portfolio.routerLink
             },
             {
               iconName: 'swap-vertical-outline',

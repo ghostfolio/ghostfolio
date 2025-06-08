@@ -36,8 +36,8 @@ export class HomePageComponent implements OnDestroy, OnInit {
           this.tabs = [
             {
               iconName: 'analytics-outline',
-              label: $localize`Overview`,
-              path: ['/' + internalRoutes.home.path]
+              label: internalRoutes.home.title,
+              path: internalRoutes.home.routerLink
             },
             {
               iconName: 'wallet-outline',

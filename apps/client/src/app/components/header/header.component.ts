@@ -92,11 +92,11 @@ export class HeaderComponent implements OnChanges {
   public routes = routes;
   public routerLinkAbout = ['/' + routes.about];
   public routerLinkAccount = ['/' + routes.account];
-  public routerLinkAccounts = ['/' + internalRoutes.accounts.path];
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkAdminControl = ['/' + routes.adminControl];
   public routerLinkFeatures = ['/' + routes.features];
   public routerLinkMarkets = ['/' + routes.markets];
-  public routerLinkPortfolio = ['/' + internalRoutes.portfolio.path];
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPricing = ['/' + routes.pricing];
   public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];

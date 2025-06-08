@@ -95,14 +95,14 @@ export class AuthGuard {
             state.url.startsWith(`/${internalRoutes.home.path}`) &&
             user.settings.viewMode === 'ZEN'
           ) {
-            this.router.navigate(['/' + internalRoutes.zen.path]);
+            this.router.navigate(internalRoutes.zen.routerLink);
             resolve(false);
             return;
           } else if (state.url.startsWith(`/${routes.start}`)) {
             if (user.settings.viewMode === 'ZEN') {
-              this.router.navigate(['/' + internalRoutes.zen.path]);
+              this.router.navigate(internalRoutes.zen.routerLink);
             } else {
-              this.router.navigate(['/' + internalRoutes.home.path]);
+              this.router.navigate(internalRoutes.home.routerLink);
             }
 
             resolve(false);
@@ -111,7 +111,7 @@ export class AuthGuard {
             state.url.startsWith(`/${internalRoutes.zen.path}`) &&
             user.settings.viewMode === 'DEFAULT'
           ) {
-            this.router.navigate(['/' + internalRoutes.home.path]);
+            this.router.navigate(internalRoutes.home.routerLink);
             resolve(false);
             return;
           }
