@@ -1,6 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes';
+import { internalRoutes, routes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -34,27 +34,27 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Analysis`,
-              path: ['/' + routes.portfolio]
+              path: ['/' + internalRoutes.portfolio.path]
             },
             {
               iconName: 'swap-vertical-outline',
               label: $localize`Activities`,
-              path: ['/' + routes.portfolio, routes.activities]
+              path: ['/' + internalRoutes.portfolio.path, routes.activities]
             },
             {
               iconName: 'pie-chart-outline',
               label: $localize`Allocations`,
-              path: ['/' + routes.portfolio, routes.allocations]
+              path: ['/' + internalRoutes.portfolio.path, routes.allocations]
             },
             {
               iconName: 'calculator-outline',
               label: 'FIRE ',
-              path: ['/' + routes.portfolio, routes.fire]
+              path: ['/' + internalRoutes.portfolio.path, routes.fire]
             },
             {
               iconName: 'scan-outline',
               label: 'X-ray',
-              path: ['/' + routes.portfolio, routes.xRay]
+              path: ['/' + internalRoutes.portfolio.path, routes.xRay]
             }
           ];
           this.user = state.user;

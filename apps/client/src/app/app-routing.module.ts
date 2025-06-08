@@ -104,7 +104,7 @@ const routes: Routes = [
       import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
   },
   {
-    path: ghostfolioRoutes.portfolio,
+    path: internalRoutes.portfolio.path,
     loadChildren: () =>
       import('./pages/portfolio/portfolio-page.module').then(
         (m) => m.PortfolioPageModule

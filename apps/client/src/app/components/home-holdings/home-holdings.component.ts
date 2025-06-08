@@ -8,7 +8,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import { internalRoutes, routes } from '@ghostfolio/common/routes';
 import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -38,7 +38,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
   public routerLinkPortfolioActivities = [
-    '/' + routes.portfolio,
+    '/' + internalRoutes.portfolio.path,
     routes.activities
   ];
   public user: User;

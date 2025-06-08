@@ -38,9 +38,9 @@ export class HomeOverviewComponent implements OnDestroy, OnInit {
   public performance: PortfolioPerformance;
   public precision = 2;
   public routerLinkAccounts = ['/' + internalRoutes.accounts.path];
-  public routerLinkPortfolio = ['/' + routes.portfolio];
+  public routerLinkPortfolio = ['/' + internalRoutes.portfolio.path];
   public routerLinkPortfolioActivities = [
-    '/' + routes.portfolio,
+    '/' + internalRoutes.portfolio.path,
     routes.activities
   ];
   public showDetails = false;

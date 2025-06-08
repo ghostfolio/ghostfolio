@@ -17,7 +17,6 @@ export const routes = {
   marketData: 'market-data',
   membership: 'membership',
   personalFinanceTools: 'personal-finance-tools',
-  portfolio: 'portfolio',
   public: 'p',
   saas: 'saas',
   settings: 'settings',
@@ -55,11 +54,18 @@ export const internalRoutes = {
     title: $localize`Accounts`
   },
   home: {
+    excludeFromAssistant: true,
     path: 'home',
     subRoutes: {},
     title: $localize`Overview`
   },
+  portfolio: {
+    path: 'portfolio',
+    subRoutes: {},
+    title: $localize`Portfolio`
+  },
   zen: {
+    excludeFromAssistant: true,
     path: 'zen',
     subRoutes: {},
     title: $localize`Overview`

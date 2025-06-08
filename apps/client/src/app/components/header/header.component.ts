@@ -96,7 +96,7 @@ export class HeaderComponent implements OnChanges {
   public routerLinkAdminControl = ['/' + routes.adminControl];
   public routerLinkFeatures = ['/' + routes.features];
   public routerLinkMarkets = ['/' + routes.markets];
-  public routerLinkPortfolio = ['/' + routes.portfolio];
+  public routerLinkPortfolio = ['/' + internalRoutes.portfolio.path];
   public routerLinkPricing = ['/' + routes.pricing];
   public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];
