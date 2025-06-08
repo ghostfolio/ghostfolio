@@ -78,7 +78,7 @@ const routes: Routes = [
     title: $localize`Features`
   },
   {
-    path: ghostfolioRoutes.home,
+    path: internalRoutes.home.path,
     loadChildren: () =>
       import('./pages/home/home-page.module').then((m) => m.HomePageModule)
   },
@@ -154,7 +154,7 @@ const routes: Routes = [
     title: $localize`Sign in`
   },
   {
-    path: ghostfolioRoutes.zen,
+    path: internalRoutes.zen.path,
     loadChildren: () =>
       import('./pages/zen/zen-page.module').then((m) => m.ZenPageModule)
   },

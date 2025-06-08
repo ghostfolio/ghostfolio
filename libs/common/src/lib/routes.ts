@@ -11,7 +11,6 @@ export const routes = {
   demo: 'demo',
   fire: 'fire',
   holdings: 'holdings',
-  home: 'home',
   i18n: 'i18n',
   jobs: 'jobs',
   market: 'market',
@@ -28,7 +27,6 @@ export const routes = {
   watchlist: 'watchlist',
   webauthn: 'webauthn',
   xRay: 'x-ray',
-  zen: 'zen',
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
@@ -55,6 +53,16 @@ export const internalRoutes = {
     path: 'accounts',
     subRoutes: {},
     title: $localize`Accounts`
+  },
+  home: {
+    path: 'home',
+    subRoutes: {},
+    title: $localize`Overview`
+  },
+  zen: {
+    path: 'zen',
+    subRoutes: {},
+    title: $localize`Overview`
   }
 };
 

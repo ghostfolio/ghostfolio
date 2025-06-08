@@ -4,7 +4,10 @@ import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overvi
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
+import {
+  routes as ghostfolioRoutes,
+  internalRoutes
+} from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -41,7 +44,8 @@ const routes: Routes = [
       }
     ],
     component: HomePageComponent,
-    path: ''
+    path: '',
+    title: internalRoutes.home.title
   }
 ];
 

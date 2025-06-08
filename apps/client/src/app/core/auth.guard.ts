@@ -1,7 +1,11 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { publicRoutes, routes } from '@ghostfolio/common/routes';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes';
 
 import { Injectable } from '@angular/core';
 import {
@@ -88,26 +92,26 @@ export class AuthGuard {
             resolve(true);
             return;
           } else if (
-            state.url.startsWith(`/${routes.home}`) &&
+            state.url.startsWith(`/${internalRoutes.home.path}`) &&
             user.settings.viewMode === 'ZEN'
           ) {
-            this.router.navigate(['/' + routes.zen]);
+            this.router.navigate(['/' + internalRoutes.zen.path]);
             resolve(false);
             return;
           } else if (state.url.startsWith(`/${routes.start}`)) {
             if (user.settings.viewMode === 'ZEN') {
-              this.router.navigate(['/' + routes.zen]);
+              this.router.navigate(['/' + internalRoutes.zen.path]);
             } else {
-              this.router.navigate(['/' + routes.home]);
+              this.router.navigate(['/' + internalRoutes.home.path]);
             }
 
             resolve(false);
             return;
           } else if (
-            state.url.startsWith(`/${routes.zen}`) &&
+            state.url.startsWith(`/${internalRoutes.zen.path}`) &&
             user.settings.viewMode === 'DEFAULT'
           ) {
-            this.router.navigate(['/' + routes.home]);
+            this.router.navigate(['/' + internalRoutes.home.path]);
             resolve(false);
             return;
           }
