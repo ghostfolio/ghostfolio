@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Moved the asset profile icon component to `@ghostfolio/ui`
+- Renamed the asset profile icon component to entity logo component and moved to `@ghostfolio/ui`
 - Renamed `Account` to `accounts` in the `User` database schema
 
 ### Fixed
