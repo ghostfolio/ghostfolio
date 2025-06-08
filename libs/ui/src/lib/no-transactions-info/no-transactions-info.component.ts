@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -24,7 +24,7 @@ export class GfNoTransactionsInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
 
   public routerLinkPortfolioActivities = [
-    '/' + paths.portfolio,
-    paths.activities
+    '/' + routes.portfolio,
+    routes.activities
   ];
 }

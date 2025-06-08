@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './how-do-i-get-my-finances-in-order-page.html'
 })
 export class HowDoIGetMyFinancesInOrderPageComponent {
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkResources = ['/' + paths.resources];
+  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkResources = ['/' + routes.resources];
 }

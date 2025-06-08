@@ -1,6 +1,6 @@
 import '@angular/localize/init';
 
-export const paths = {
+export const routes = {
   access: 'access',
   account: 'account',
   accounts: 'accounts',

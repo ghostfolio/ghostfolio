@@ -11,8 +11,8 @@ import {
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { routes } from '@ghostfolio/common/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -80,22 +80,22 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
   public isMenuOpen: boolean;
-  public paths = paths;
-  public routeAbout = paths.about;
-  public routeFeatures = paths.features;
-  public routeMarkets = paths.markets;
-  public routePricing = paths.pricing;
-  public routeResources = paths.resources;
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkAccount = ['/' + paths.account];
-  public routerLinkAccounts = ['/' + paths.accounts];
-  public routerLinkAdminControl = ['/' + paths.adminControl];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkMarkets = ['/' + paths.markets];
-  public routerLinkPortfolio = ['/' + paths.portfolio];
-  public routerLinkPricing = ['/' + paths.pricing];
-  public routerLinkRegister = ['/' + paths.register];
-  public routerLinkResources = ['/' + paths.resources];
+  public routeAbout = routes.about;
+  public routeFeatures = routes.features;
+  public routeMarkets = routes.markets;
+  public routePricing = routes.pricing;
+  public routeResources = routes.resources;
+  public routes = routes;
+  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAccount = ['/' + routes.account];
+  public routerLinkAccounts = ['/' + routes.accounts];
+  public routerLinkAdminControl = ['/' + routes.adminControl];
+  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkPortfolio = ['/' + routes.portfolio];
+  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkResources = ['/' + routes.resources];
 
   private unsubscribeSubject = new Subject<void>();
 

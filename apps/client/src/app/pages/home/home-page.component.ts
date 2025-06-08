@@ -1,7 +1,7 @@
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -37,27 +37,27 @@ export class HomePageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: $localize`Overview`,
-              path: ['/' + paths.home]
+              path: ['/' + routes.home]
             },
             {
               iconName: 'wallet-outline',
               label: $localize`Holdings`,
-              path: ['/' + paths.home, paths.holdings]
+              path: ['/' + routes.home, routes.holdings]
             },
             {
               iconName: 'reader-outline',
               label: $localize`Summary`,
-              path: ['/' + paths.home, paths.summary]
+              path: ['/' + routes.home, routes.summary]
             },
             {
               iconName: 'bookmark-outline',
               label: $localize`Watchlist`,
-              path: ['/' + paths.home, paths.watchlist]
+              path: ['/' + routes.home, routes.watchlist]
             },
             {
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
-              path: ['/' + paths.home, paths.market]
+              path: ['/' + routes.home, routes.market]
             }
           ];
 
