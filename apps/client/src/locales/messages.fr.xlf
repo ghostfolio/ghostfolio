@@ -7614,7 +7614,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
         <source> No emergency fund has been set up </source>
-        <target state="translated"> Aucun fonds d’urgence n'a été mis en place </target>
+        <target state="translated"> Aucun fonds d’urgence n’a été mis en place </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
