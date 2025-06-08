@@ -5,17 +5,28 @@ import { AssetProfileIdentifier, Filter } from '@ghostfolio/common/interfaces';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'crypto';
+import Keyv from 'keyv';
 import ms from 'ms';
 
 @Injectable()
 export class RedisCacheService {
+  private client: Keyv;
+
   public constructor(
     @Inject(CACHE_MANAGER) private readonly cache: Cache,
     private readonly configurationService: ConfigurationService
   ) {
-    const client = cache.stores[0];
+    this.client = cache.stores[0];
 
-    client.on('error', (error) => {
+    this.client.deserialize = (value) => {
+      try {
+        return JSON.parse(value);
+      } catch {}
+
+      return value;
+    };
+
+    this.client.on('error', (error) => {
       Logger.error(error, 'RedisCacheService');
     });
   }
@@ -28,28 +39,13 @@ export class RedisCacheService {
     const keys: string[] = [];
     const prefix = aPrefix;
 
-    this.cache.stores[0].deserialize = (value) => {
-      try {
-        return JSON.parse(value);
-      } catch (error: any) {
-        if (error instanceof SyntaxError) {
-          Logger.debug(
-            `Failed to parse json, returning the value as String: ${value}`,
-            'RedisCacheService'
-          );
-
-          return value;
-        } else {
-          throw error;
+    try {
+      for await (const [key] of this.client.iterator({})) {
+        if ((prefix && key.startsWith(prefix)) || !prefix) {
+          keys.push(key);
         }
       }
-    };
-
-    for await (const [key] of this.cache.stores[0].iterator({})) {
-      if ((prefix && key.startsWith(prefix)) || !prefix) {
-        keys.push(key);
-      }
-    }
+    } catch {}
 
     return keys;
   }
