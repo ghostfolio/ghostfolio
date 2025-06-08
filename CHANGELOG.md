@@ -13,14 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Account` to `accounts` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Polish (`pl`)
+- Improved the language localization for French (`fr`)
 
 ### Fixed
 
 - Fixed missing `/.well-known/assetlinks.json` for TWA
-
-### Changed
-
-- Improved the language localization for French (`fr`)
 
 ## 2.168.0 - 2025-06-07
 
