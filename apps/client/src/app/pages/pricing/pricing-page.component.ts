@@ -3,7 +3,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
@@ -42,7 +42,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
   public routerLinkFeatures = ['/' + routes.features];
-  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

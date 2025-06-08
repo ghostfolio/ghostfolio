@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
@@ -26,7 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class GfFeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];
   public user: User;
 

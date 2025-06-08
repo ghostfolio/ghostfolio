@@ -1,6 +1,10 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
+import {
+  publicRoutes,
+  routes as ghostfolioRoutes,
+  internalRoutes
+} from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
@@ -21,7 +25,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.accounts,
+    path: internalRoutes.accounts.path,
     loadChildren: () =>
       import('./pages/accounts/accounts-page.module').then(
         (m) => m.AccountsPageModule
@@ -121,7 +125,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.register,
+    path: publicRoutes.register.path,
     loadChildren: () =>
       import('./pages/register/register-page.module').then(
         (m) => m.RegisterPageModule

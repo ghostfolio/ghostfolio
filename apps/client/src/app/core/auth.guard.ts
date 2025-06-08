@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import { routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 
 import { Injectable } from '@angular/core';
 import {
@@ -24,7 +24,7 @@ export class AuthGuard {
     `/${routes.openStartup}`,
     `/${routes.pricing}`,
     `/${routes.public}`,
-    `/${routes.register}`,
+    `/${publicRoutes.register.path}`,
     `/${routes.resources}`
   ];
 
@@ -51,7 +51,7 @@ export class AuthGuard {
               this.router.navigate(['/' + routes.demo]);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/' + routes.register]);
+              this.router.navigate(['/' + publicRoutes.register.path]);
               resolve(false);
             } else if (
               AuthGuard.PUBLIC_PAGE_ROUTES.some((publicPageRoute) => {

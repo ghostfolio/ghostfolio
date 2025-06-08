@@ -3,7 +3,7 @@ import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';
@@ -80,7 +80,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkMarkets = ['/' + routes.markets];
   public routerLinkOpenStartup = ['/' + routes.openStartup];
   public routerLinkPricing = ['/' + routes.pricing];
-  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];
   public showFooter = false;
   public user: User;

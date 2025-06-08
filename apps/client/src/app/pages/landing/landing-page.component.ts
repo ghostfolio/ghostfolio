@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Statistics } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { format } from 'date-fns';
@@ -28,7 +28,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public routerLinkAbout = ['/' + routes.about];
   public routerLinkDemo = ['/' + routes.demo];
   public routerLinkOpenStartup = ['/' + routes.openStartup];
-  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public statistics: Statistics;
   public testimonials = [
     {

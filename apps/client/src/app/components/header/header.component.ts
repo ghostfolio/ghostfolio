@@ -12,7 +12,11 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -88,13 +92,13 @@ export class HeaderComponent implements OnChanges {
   public routes = routes;
   public routerLinkAbout = ['/' + routes.about];
   public routerLinkAccount = ['/' + routes.account];
-  public routerLinkAccounts = ['/' + routes.accounts];
+  public routerLinkAccounts = ['/' + internalRoutes.accounts.path];
   public routerLinkAdminControl = ['/' + routes.adminControl];
   public routerLinkFeatures = ['/' + routes.features];
   public routerLinkMarkets = ['/' + routes.markets];
   public routerLinkPortfolio = ['/' + routes.portfolio];
   public routerLinkPricing = ['/' + routes.pricing];
-  public routerLinkRegister = ['/' + routes.register];
+  public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];
 
   private unsubscribeSubject = new Subject<void>();

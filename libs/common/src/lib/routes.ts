@@ -3,13 +3,11 @@ import '@angular/localize/init';
 export const routes = {
   access: 'access',
   account: 'account',
-  accounts: 'accounts',
   activities: 'activities',
   adminControl: 'admin',
   allocations: 'allocations',
   api: 'api',
   auth: 'auth',
-  blog: 'blog',
   demo: 'demo',
   fire: 'fire',
   holdings: 'holdings',
@@ -34,6 +32,7 @@ export const routes = {
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
+  blog: 'blog',
   changelog: $localize`:kebab-case:changelog`,
   faq: $localize`:kebab-case:faq`,
   features: $localize`:kebab-case:features`,
@@ -46,8 +45,23 @@ export const routes = {
   ossFriends: 'oss-friends',
   pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
-  register: $localize`:kebab-case:register`,
   resources: $localize`:kebab-case:resources`,
   selfHosting: $localize`:kebab-case:self-hosting`,
   termsOfService: $localize`:kebab-case:terms-of-service`
+};
+
+export const internalRoutes = {
+  accounts: {
+    path: 'accounts',
+    subRoutes: {},
+    title: $localize`Accounts`
+  }
+};
+
+export const publicRoutes = {
+  register: {
+    path: $localize`:kebab-case:register`,
+    subRoutes: {},
+    title: $localize`Registration`
+  }
 };
