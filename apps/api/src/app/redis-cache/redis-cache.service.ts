@@ -79,12 +79,22 @@ export class RedisCacheService {
   }
 
   public async isHealthy() {
+    const testKey = '__health_check__';
+    const testValue = Date.now().toString();
+
     try {
       await Promise.race([
-        this.getKeys(),
+        (async () => {
+          await this.set(testKey, testValue, ms('1 second'));
+          const result = await this.get(testKey);
+
+          if (result !== testValue) {
+            throw new Error('Redis health check failed: value mismatch');
+          }
+        })(),
         new Promise((_, reject) =>
           setTimeout(
-            () => reject(new Error('Redis health check timeout')),
+            () => reject(new Error('Redis health check failed: timeout')),
             ms('2 seconds')
           )
         )
@@ -92,7 +102,13 @@ export class RedisCacheService {
 
       return true;
     } catch (error) {
+      Logger.error(error?.message, 'RedisCacheService');
+
       return false;
+    } finally {
+      try {
+        await this.remove(testKey);
+      } catch {}
     }
   }
 
