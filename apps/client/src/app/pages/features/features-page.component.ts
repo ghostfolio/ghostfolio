@@ -26,7 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class GfFeaturesPageComponent implements OnDestroy {
   public hasPermissionForSubscription: boolean;
   public info: InfoItem;
-  public routerLinkRegister = ['/' + publicRoutes.register.path];
+  public routerLinkRegister = publicRoutes.register.routerLink;
   public routerLinkResources = ['/' + routes.resources];
   public user: User;
 
