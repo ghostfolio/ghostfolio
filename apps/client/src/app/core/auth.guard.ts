@@ -55,7 +55,7 @@ export class AuthGuard {
               this.router.navigate(['/' + routes.demo]);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
-              this.router.navigate(['/' + publicRoutes.register.path]);
+              this.router.navigate(publicRoutes.register.routerLink);
               resolve(false);
             } else if (
               AuthGuard.PUBLIC_PAGE_ROUTES.some((publicPageRoute) => {

@@ -42,7 +42,7 @@ export class PricingPageComponent implements OnDestroy, OnInit {
     'PROFESSIONAL_DATA_PROVIDER_TOOLTIP_PREMIUM'
   );
   public routerLinkFeatures = ['/' + routes.features];
-  public routerLinkRegister = ['/' + publicRoutes.register.path];
+  public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();
