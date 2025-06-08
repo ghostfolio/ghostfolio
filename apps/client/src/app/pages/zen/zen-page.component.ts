@@ -39,10 +39,7 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'wallet-outline',
               label: internalRoutes.zen.subRoutes.holdings.title,
-              path: [
-                '/' + internalRoutes.zen.path,
-                internalRoutes.zen.subRoutes.holdings.path
-              ]
+              path: internalRoutes.zen.subRoutes.holdings.routerLink
             }
           ];
           this.user = state.user;

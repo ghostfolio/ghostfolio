@@ -23,8 +23,6 @@ import { GfLogoComponent } from '../logo';
 export class GfNoTransactionsInfoComponent {
   @HostBinding('class.has-border') @Input() hasBorder = true;
 
-  public routerLinkPortfolioActivities = [
-    '/' + internalRoutes.portfolio.path,
-    internalRoutes.portfolio.subRoutes.activities.path
-  ];
+  public routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
 }

@@ -39,10 +39,7 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'swap-vertical-outline',
               label: internalRoutes.portfolio.subRoutes.activities.title,
-              path: [
-                '/' + internalRoutes.portfolio.path,
-                internalRoutes.portfolio.subRoutes.activities.path
-              ]
+              path: internalRoutes.portfolio.subRoutes.activities.routerLink
             },
             {
               iconName: 'pie-chart-outline',

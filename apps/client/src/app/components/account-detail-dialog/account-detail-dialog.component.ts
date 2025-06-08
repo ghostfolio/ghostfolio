@@ -94,10 +94,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
   public onCloneActivity(aActivity: Activity) {
     this.router.navigate(
-      [
-        '/' + internalRoutes.portfolio.path,
-        internalRoutes.portfolio.subRoutes.activities.path
-      ],
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
         queryParams: { activityId: aActivity.id, createDialog: true }
       }
@@ -159,10 +156,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
 
   public onUpdateActivity(aActivity: Activity) {
     this.router.navigate(
-      [
-        '/' + internalRoutes.portfolio.path,
-        internalRoutes.portfolio.subRoutes.activities.path
-      ],
+      internalRoutes.portfolio.subRoutes.activities.routerLink,
       {
         queryParams: { activityId: aActivity.id, editDialog: true }
       }

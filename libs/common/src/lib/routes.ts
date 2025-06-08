@@ -57,7 +57,7 @@ export const internalRoutes = {
     subRoutes: {
       holdings: {
         path: 'holdings',
-        routerLink: [], // TODO
+        routerLink: ['/home', 'holdings'],
         title: $localize`Holdings`
       }
     },
@@ -69,7 +69,7 @@ export const internalRoutes = {
     subRoutes: {
       activities: {
         path: 'activities',
-        routerLink: [], // TODO
+        routerLink: ['/portfolio', 'activities'],
         title: $localize`Activities`
       }
     },
@@ -82,7 +82,7 @@ export const internalRoutes = {
     subRoutes: {
       holdings: {
         path: 'holdings',
-        routerLink: [], // TODO
+        routerLink: ['/zen', 'holdings'],
         title: $localize`Holdings`
       }
     },

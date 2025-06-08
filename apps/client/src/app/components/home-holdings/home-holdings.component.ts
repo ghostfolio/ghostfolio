@@ -37,10 +37,8 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     { label: $localize`Active`, value: 'ACTIVE' },
     { label: $localize`Closed`, value: 'CLOSED' }
   ];
-  public routerLinkPortfolioActivities = [
-    '/' + internalRoutes.portfolio.path,
-    internalRoutes.portfolio.subRoutes.activities.path
-  ];
+  public routerLinkPortfolioActivities =
+    internalRoutes.portfolio.subRoutes.activities.routerLink;
   public user: User;
   public viewModeFormControl = new FormControl<HoldingsViewMode>(
     HomeHoldingsComponent.DEFAULT_HOLDINGS_VIEW_MODE
