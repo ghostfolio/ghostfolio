@@ -37,19 +37,18 @@
       }
     </div>
     <div
-      *ngIf="isLoading || searchFormControl.value"
+      *ngIf="searchFormControl.value"
       class="overflow-auto py-3 result-container"
     >
       <div>
         <div class="h6 mb-1 px-2" i18n>Holdings</div>
         <gf-assistant-list-item
           *ngFor="let searchResultItem of searchResults?.holdings"
-          mode="holding"
           [item]="searchResultItem"
           (clicked)="onCloseAssistant()"
         />
         <ng-container *ngIf="searchResults?.holdings?.length === 0">
-          @if (isLoading) {
+          @if (isLoading.holdings) {
             <ngx-skeleton-loader
               animation="pulse"
               class="mx-2"
@@ -67,12 +66,33 @@
         <div class="h6 mb-1 px-2" i18n>Asset Profiles</div>
         <gf-assistant-list-item
           *ngFor="let searchResultItem of searchResults?.assetProfiles"
-          mode="assetProfile"
           [item]="searchResultItem"
           (clicked)="onCloseAssistant()"
         />
         <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
-          @if (isLoading) {
+          @if (isLoading.assetProfiles) {
+            <ngx-skeleton-loader
+              animation="pulse"
+              class="mx-2"
+              [theme]="{
+                height: '1.5rem',
+                width: '100%'
+              }"
+            />
+          } @else {
+            <div class="px-2 py-1" i18n>No entries...</div>
+          }
+        </ng-container>
+      </div>
+      <div class="mt-3">
+        <div class="h6 mb-1 px-2" i18n>Quick Links</div>
+        <gf-assistant-list-item
+          *ngFor="let searchResultItem of searchResults?.quickLinks"
+          [item]="searchResultItem"
+          (clicked)="onCloseAssistant()"
+        />
+        <ng-container *ngIf="searchResults?.quickLinks?.length === 0">
+          @if (isLoading.quickLinks) {
             <ngx-skeleton-loader
               animation="pulse"
               class="mx-2"
