@@ -112,7 +112,7 @@
               @for (account of accounts; track account.id) {
                 <mat-option [value]="account.id">
                   <div class="d-flex">
-                    <gf-asset-profile-icon
+                    <gf-entity-logo
                       *ngIf="account.Platform?.url"
                       class="mr-1"
                       [tooltip]="account.Platform?.name"

@@ -4,7 +4,7 @@ import {
   AssetProfileIdentifier,
   PortfolioPosition
 } from '@ghostfolio/common/interfaces';
-import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
@@ -32,7 +32,7 @@ import { Subject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    GfAssetProfileIconComponent,
+    GfEntityLogoComponent,
     GfSymbolModule,
     GfValueComponent,
     MatButtonModule,

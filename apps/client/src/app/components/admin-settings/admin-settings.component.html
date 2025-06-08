@@ -9,7 +9,7 @@
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
             <div class="d-flex align-items-center">
-              <gf-asset-profile-icon class="mr-1" [url]="element.url" />
+              <gf-entity-logo class="mr-1" [url]="element.url" />
               <div>
                 @if (isGhostfolioDataProvider(element)) {
                   <a

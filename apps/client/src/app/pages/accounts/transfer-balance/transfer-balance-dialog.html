@@ -14,7 +14,7 @@
             <mat-option [value]="account.id">
               <div class="d-flex">
                 @if (account.Platform?.url) {
-                  <gf-asset-profile-icon
+                  <gf-entity-logo
                     class="mr-1"
                     [tooltip]="account.Platform?.name"
                     [url]="account.Platform?.url"
@@ -35,7 +35,7 @@
             <mat-option [value]="account.id">
               <div class="d-flex">
                 @if (account.Platform?.url) {
-                  <gf-asset-profile-icon
+                  <gf-entity-logo
                     class="mr-1"
                     [tooltip]="account.Platform?.name"
                     [url]="account.Platform?.url"

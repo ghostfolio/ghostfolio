@@ -1,4 +1,4 @@
-import { GfAssetProfileIconComponent } from '@ghostfolio/ui/asset-profile-icon';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -15,7 +15,7 @@ import { TransferBalanceDialog } from './transfer-balance-dialog.component';
   declarations: [TransferBalanceDialog],
   imports: [
     CommonModule,
-    GfAssetProfileIconComponent,
+    GfEntityLogoComponent,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
