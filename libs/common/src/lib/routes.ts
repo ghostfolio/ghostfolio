@@ -38,7 +38,6 @@ export const routes = {
   license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  openStartup: 'open',
   ossFriends: 'oss-friends',
   pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
@@ -73,9 +72,12 @@ export const internalRoutes = {
 };
 
 export const publicRoutes = {
+  openStartup: {
+    path: 'open',
+    title: 'Open Startup'
+  },
   register: {
     path: $localize`:kebab-case:register`,
-    subRoutes: {},
     title: $localize`Registration`
   }
 };

@@ -78,7 +78,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkFaq = ['/' + routes.faq];
   public routerLinkFeatures = ['/' + routes.features];
   public routerLinkMarkets = ['/' + routes.markets];
-  public routerLinkOpenStartup = ['/' + routes.openStartup];
+  public routerLinkOpenStartup = ['/' + publicRoutes.openStartup.path];
   public routerLinkPricing = ['/' + routes.pricing];
   public routerLinkRegister = ['/' + publicRoutes.register.path];
   public routerLinkResources = ['/' + routes.resources];

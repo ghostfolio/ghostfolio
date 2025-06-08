@@ -99,7 +99,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.openStartup,
+    path: publicRoutes.openStartup.path,
     loadChildren: () =>
       import('./pages/open/open-page.module').then((m) => m.OpenPageModule)
   },
