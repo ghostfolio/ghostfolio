@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Upgraded `@keyv/redis` from version `4.3.4` to `4.4.0`
+
 ### Fixed
 
 - Restricted the date range change permission in the _Zen Mode_
@@ -79,7 +83,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Turkish (`tr`)
 - Improved the language localization for Ukrainian (`uk`)
 - Upgraded the _Stripe_ dependencies
-- Upgraded `@keyv/redis` from version `4.3.4` to `4.4.0`
 - Upgraded `ngx-stripe` from version `19.0.0` to `19.7.0`
 
 ### Fixed
