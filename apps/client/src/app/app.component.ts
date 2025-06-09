@@ -3,7 +3,7 @@ import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { publicRoutes, routes } from '@ghostfolio/common/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';

@@ -1,12 +1,6 @@
 import '@angular/localize/init';
 
-export interface IRoute {
-  excludeFromAssistant?: boolean;
-  path: string;
-  routerLink: string[];
-  subRoutes?: Record<string, IRoute>;
-  title: string;
-}
+import { IRoute } from './interfaces/interfaces';
 
 export const routes = {
   access: 'access',
@@ -59,7 +53,6 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Accounts`
   },
   home: {
-    excludeFromAssistant: true,
     path: 'home',
     routerLink: ['/home'],
     subRoutes: {

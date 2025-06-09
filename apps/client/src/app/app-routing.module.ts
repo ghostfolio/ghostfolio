@@ -4,7 +4,7 @@ import {
   publicRoutes,
   routes as ghostfolioRoutes,
   internalRoutes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';

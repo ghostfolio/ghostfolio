@@ -16,7 +16,7 @@ import {
   internalRoutes,
   publicRoutes,
   routes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 

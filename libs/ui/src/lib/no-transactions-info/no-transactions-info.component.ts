@@ -1,4 +1,4 @@
-import { internalRoutes } from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import {
   CUSTOM_ELEMENTS_SCHEMA,

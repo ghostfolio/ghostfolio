@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { Component } from '@angular/core';

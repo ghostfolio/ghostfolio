@@ -1,7 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { Access, User } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
