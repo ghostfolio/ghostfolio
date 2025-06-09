@@ -74,11 +74,12 @@ export class GfAssistantListItemComponent
     this.changeDetectorRef.markForCheck();
   }
 
-  public isAssetProfileOrHoldingItem(
-    item: ISearchResultItem
-  ): item is IAssetSearchResultItem {
+  public isAsset(item: ISearchResultItem): item is IAssetSearchResultItem {
     return (
-      item.mode === SearchMode.ASSET_PROFILE || item.mode === SearchMode.HOLDING
+      (item.mode === SearchMode.ASSET_PROFILE ||
+        item.mode === SearchMode.HOLDING) &&
+      !!item.dataSource &&
+      !!item.symbol
     );
   }
 

@@ -7,7 +7,7 @@
   ><span
     ><b>{{ item?.name }}</b></span
   >
-  @if (item && isAssetProfileOrHoldingItem(item)) {
+  @if (item && isAsset(item)) {
     <br />
     <small class="text-muted"
       >{{ item?.symbol | gfSymbol }} · {{ item?.currency }}

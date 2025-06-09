@@ -210,6 +210,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             holdings: [],
             quickLinks: []
           } as ISearchResults;
+
           if (!searchTerm) {
             return of(results).pipe(
               tap(() => {
@@ -221,17 +222,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })
             );
           }
-
-          // QuickLinks
-          const quickLinksData = this.searchQuickLinks(searchTerm);
-          const quickLinks$: Observable<Partial<ISearchResults>> = of({
-            quickLinks: quickLinksData
-          }).pipe(
-            tap(() => {
-              this.isLoading.quickLinks = false;
-              this.changeDetectorRef.markForCheck();
-            })
-          );
 
           // Asset Profiles
           const assetProfiles$: Observable<Partial<ISearchResults>> = this
@@ -280,6 +270,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 this.changeDetectorRef.markForCheck();
               })
             );
+
+          // QuickLinks
+          const quickLinksData = this.searchQuickLinks(searchTerm);
+          const quickLinks$: Observable<Partial<ISearchResults>> = of({
+            quickLinks: quickLinksData
+          }).pipe(
+            tap(() => {
+              this.isLoading.quickLinks = false;
+              this.changeDetectorRef.markForCheck();
+            })
+          );
+
           // Merge all results
           return merge(quickLinks$, assetProfiles$, holdings$).pipe(
             scan(
@@ -599,11 +601,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private searchQuickLinks(aSearchTerm: string): ISearchResultItem[] {
-    const term = aSearchTerm.toLowerCase();
+    const searchTerm = aSearchTerm.toLowerCase();
 
     const allRoutes = Object.values(internalRoutes)
-      .filter((route) => {
-        return !route.excludeFromAssistant;
+      .filter(({ excludeFromAssistant }) => {
+        return !excludeFromAssistant;
       })
       .reduce((acc, route) => {
         acc.push(route);
@@ -614,14 +616,14 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       }, [] as IRoute[]);
 
     return allRoutes
-      .filter((route) => {
-        return route.title.toLowerCase().includes(term);
+      .filter(({ title }) => {
+        return title.toLowerCase().includes(searchTerm);
       })
-      .map((route) => {
+      .map(({ routerLink, title }) => {
         return {
+          routerLink,
           mode: SearchMode.QUICK_LINK as const,
-          name: route.title,
-          routerLink: route.routerLink
+          name: title
         };
       })
       .sort((a, b) => {
