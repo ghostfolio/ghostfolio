@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
-import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 import { DataSource } from '@prisma/client';
+import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
 
 import { HttpClientMock } from '../mocks/httpClient.mock';
 import { GfEntityLogoComponent } from './entity-logo.component';
@@ -19,7 +19,7 @@ export default {
           useValue: new HttpClientMock(
             new Map([
               [
-                '/api/v1/logo?url=https://ghostfol.io',
+                '../api/v1/logo?url=https://ghostfol.io',
                 {
                   logoUrl: 'https://ghostfol.io/logo.png'
                 }
@@ -47,4 +47,4 @@ export const WithUrl: Story = {
     tooltip: 'Ghostfolio',
     url: 'https://ghostfol.io'
   }
-}; 
+};
