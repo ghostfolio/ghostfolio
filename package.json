@@ -76,7 +76,7 @@
     "@dfinity/principal": "0.15.7",
     "@dinero.js/currencies": "2.0.0-alpha.8",
     "@internationalized/number": "3.6.0",
-    "@keyv/redis": "4.3.4",
+    "@keyv/redis": "4.4.0",
     "@nestjs/bull": "11.0.2",
     "@nestjs/cache-manager": "3.0.1",
     "@nestjs/common": "11.1.3",
