@@ -188,7 +188,8 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentSubRoute ===
               internalRoutes.portfolio.subRoutes.activities.path) ||
           (this.currentRoute === internalRoutes.portfolio.path &&
-            this.currentSubRoute === routes.allocations) ||
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.allocations.path) ||
           (this.currentRoute === internalRoutes.zen.path &&
             this.currentSubRoute ===
               internalRoutes.home.subRoutes.holdings.path)
@@ -202,7 +203,7 @@ export class AppComponent implements OnDestroy, OnInit {
           (this.currentRoute === routes.about ||
             this.currentRoute === routes.faq ||
             this.currentRoute === routes.resources ||
-            this.currentRoute === routes.account ||
+            this.currentRoute === internalRoutes.account.path ||
             this.currentRoute === routes.adminControl ||
             this.currentRoute === internalRoutes.home.path ||
             this.currentRoute === internalRoutes.portfolio.path ||
