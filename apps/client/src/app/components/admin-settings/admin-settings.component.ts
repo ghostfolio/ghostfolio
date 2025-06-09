@@ -10,7 +10,7 @@ import {
   DataProviderInfo,
   User
 } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 
 import {
   ChangeDetectionStrategy,

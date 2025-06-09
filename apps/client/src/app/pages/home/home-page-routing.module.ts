@@ -7,7 +7,7 @@ import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import {
   routes as ghostfolioRoutes,
   internalRoutes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

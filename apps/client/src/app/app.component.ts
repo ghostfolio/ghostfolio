@@ -7,7 +7,7 @@ import {
   internalRoutes,
   publicRoutes,
   routes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';

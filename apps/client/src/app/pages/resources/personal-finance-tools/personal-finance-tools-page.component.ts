@@ -1,5 +1,5 @@
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';

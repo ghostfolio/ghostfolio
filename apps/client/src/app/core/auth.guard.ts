@@ -5,7 +5,7 @@ import {
   internalRoutes,
   publicRoutes,
   routes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 
 import { Injectable } from '@angular/core';
 import {
