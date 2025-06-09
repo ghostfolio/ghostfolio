@@ -101,10 +101,12 @@ export const internalRoutes: Record<string, IRoute> = {
 export const publicRoutes = {
   openStartup: {
     path: 'open',
+    routerLink: ['/open'],
     title: 'Open Startup'
   },
   register: {
     path: $localize`:kebab-case:register`,
+    routerLink: ['/' + $localize`:kebab-case:register`],
     title: $localize`Registration`
   }
 };

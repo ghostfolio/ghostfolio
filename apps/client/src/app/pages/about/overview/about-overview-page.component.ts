@@ -21,7 +21,7 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public routerLinkBlog = ['/' + routes.blog];
   public routerLinkFaq = ['/' + routes.faq];
   public routerLinkFeatures = ['/' + routes.features];
-  public routerLinkOpenStartup = ['/' + publicRoutes.openStartup.path];
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public user: User;
 
   private unsubscribeSubject = new Subject<void>();

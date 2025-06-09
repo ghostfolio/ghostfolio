@@ -83,13 +83,13 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
+  public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
   public routeAbout = routes.about;
   public routeFeatures = routes.features;
   public routeMarkets = routes.markets;
   public routePricing = routes.pricing;
   public routeResources = routes.resources;
-  public routes = routes;
   public routerLinkAbout = ['/' + routes.about];
   public routerLinkAccount = ['/' + routes.account];
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
@@ -98,8 +98,9 @@ export class HeaderComponent implements OnChanges {
   public routerLinkMarkets = ['/' + routes.markets];
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPricing = ['/' + routes.pricing];
-  public routerLinkRegister = ['/' + publicRoutes.register.path];
+  public routerLinkRegister = publicRoutes.register.routerLink;
   public routerLinkResources = ['/' + routes.resources];
+  public routes = routes;
 
   private unsubscribeSubject = new Subject<void>();
 

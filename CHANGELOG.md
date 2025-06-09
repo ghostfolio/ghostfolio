@@ -5,17 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 2.169.0 - 2025-06-08
 
 ### Changed
 
 - Renamed the asset profile icon component to entity logo component and moved to `@ghostfolio/ui`
 - Renamed `Account` to `accounts` in the `User` database schema
+- Improved the cache verification in the health check endpoint (experimental)
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for French (`fr`)
 - Improved the language localization for Polish (`pl`)
 
 ### Fixed
 
+- Handled an exception in the get keys function of the _Redis_ cache service
 - Fixed missing `/.well-known/assetlinks.json` for TWA
 
 ## 2.168.0 - 2025-06-07
