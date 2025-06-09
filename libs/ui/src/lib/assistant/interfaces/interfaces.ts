@@ -16,7 +16,7 @@ export interface IAssetSearchResultItem extends AssetProfileIdentifier {
 }
 
 export interface IQuickLinkSearchResultItem {
-  mode: SearchMode.QUICKLINK;
+  mode: SearchMode.QUICK_LINK;
   name: string;
   routerLink: string[];
 }

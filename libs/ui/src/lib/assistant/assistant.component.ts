@@ -619,7 +619,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       })
       .map((route) => {
         return {
-          mode: SearchMode.QUICKLINK as const,
+          mode: SearchMode.QUICK_LINK as const,
           name: route.title,
           routerLink: route.routerLink
         };

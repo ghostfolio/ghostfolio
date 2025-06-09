@@ -62,7 +62,7 @@ export class GfAssistantListItemComponent
         symbol: this.item?.symbol
       };
       this.routerLink = [];
-    } else if (this.item?.mode === SearchMode.QUICKLINK) {
+    } else if (this.item?.mode === SearchMode.QUICK_LINK) {
       this.queryParams = {};
       this.routerLink = this.item.routerLink;
     }
