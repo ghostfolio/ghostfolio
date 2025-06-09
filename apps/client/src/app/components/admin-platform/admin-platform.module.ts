@@ -1,4 +1,4 @@
-import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -16,8 +16,8 @@ import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platfor
   exports: [AdminPlatformComponent],
   imports: [
     CommonModule,
-    GfAssetProfileIconComponent,
     GfCreateOrUpdatePlatformDialogModule,
+    GfEntityLogoComponent,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,

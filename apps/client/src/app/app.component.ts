@@ -2,8 +2,12 @@ import { GfHoldingDetailDialogComponent } from '@ghostfolio/client/components/ho
 import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding-detail-dialog/interfaces/interfaces';
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';
@@ -63,25 +67,25 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkAboutChangelog = ['/' + paths.about, paths.changelog];
-  public routerLinkAboutLicense = ['/' + paths.about, paths.license];
+  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAboutChangelog = ['/' + routes.about, routes.changelog];
+  public routerLinkAboutLicense = ['/' + routes.about, routes.license];
   public routerLinkAboutPrivacyPolicy = [
-    '/' + paths.about,
-    paths.privacyPolicy
+    '/' + routes.about,
+    routes.privacyPolicy
   ];
   public routerLinkAboutTermsOfService = [
-    '/' + paths.about,
-    paths.termsOfService
+    '/' + routes.about,
+    routes.termsOfService
   ];
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkFaq = ['/' + paths.faq];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkMarkets = ['/' + paths.markets];
-  public routerLinkOpenStartup = ['/' + paths.openStartup];
-  public routerLinkPricing = ['/' + paths.pricing];
-  public routerLinkRegister = ['/' + paths.register];
-  public routerLinkResources = ['/' + paths.resources];
+  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkFaq = ['/' + routes.faq];
+  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
+  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = ['/' + routes.resources];
   public showFooter = false;
   public user: User;
 
@@ -160,12 +164,14 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentSubRoute = urlSegments[1]?.path;
 
         if (
-          (this.currentRoute === 'home' && !this.currentSubRoute) ||
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          ((this.currentRoute === internalRoutes.home.path &&
+            !this.currentSubRoute) ||
+            (this.currentRoute === internalRoutes.home.path &&
+              this.currentSubRoute ===
+                internalRoutes.home.subRoutes.holdings.path) ||
+            (this.currentRoute === internalRoutes.portfolio.path &&
+              !this.currentSubRoute)) &&
+          this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
         } else {
@@ -173,14 +179,19 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         if (
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'activities') ||
-          (this.currentRoute === 'portfolio' &&
-            this.currentSubRoute === 'allocations') ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          (this.currentRoute === internalRoutes.home.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            !this.currentSubRoute) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute ===
+              internalRoutes.portfolio.subRoutes.activities.path) ||
+          (this.currentRoute === internalRoutes.portfolio.path &&
+            this.currentSubRoute === routes.allocations) ||
+          (this.currentRoute === internalRoutes.zen.path &&
+            this.currentSubRoute ===
+              internalRoutes.home.subRoutes.holdings.path)
         ) {
           this.hasPermissionToChangeFilters = true;
         } else {
@@ -188,25 +199,25 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         this.hasTabs =
-          (this.currentRoute === this.routerLinkAbout[0].slice(1) ||
-            this.currentRoute === this.routerLinkFaq[0].slice(1) ||
-            this.currentRoute === this.routerLinkResources[0].slice(1) ||
-            this.currentRoute === 'account' ||
-            this.currentRoute === 'admin' ||
-            this.currentRoute === 'home' ||
-            this.currentRoute === 'portfolio' ||
-            this.currentRoute === 'zen') &&
+          (this.currentRoute === routes.about ||
+            this.currentRoute === routes.faq ||
+            this.currentRoute === routes.resources ||
+            this.currentRoute === routes.account ||
+            this.currentRoute === routes.adminControl ||
+            this.currentRoute === internalRoutes.home.path ||
+            this.currentRoute === internalRoutes.portfolio.path ||
+            this.currentRoute === internalRoutes.zen.path) &&
           this.deviceType !== 'mobile';
 
         this.showFooter =
-          (this.currentRoute === 'blog' ||
-            this.currentRoute === this.routerLinkFeatures[0].slice(1) ||
-            this.currentRoute === this.routerLinkMarkets[0].slice(1) ||
-            this.currentRoute === 'open' ||
-            this.currentRoute === 'p' ||
-            this.currentRoute === this.routerLinkPricing[0].slice(1) ||
-            this.currentRoute === this.routerLinkRegister[0].slice(1) ||
-            this.currentRoute === 'start') &&
+          (this.currentRoute === routes.blog ||
+            this.currentRoute === routes.features ||
+            this.currentRoute === routes.markets ||
+            this.currentRoute === publicRoutes.openStartup.path ||
+            this.currentRoute === routes.public ||
+            this.currentRoute === routes.pricing ||
+            this.currentRoute === publicRoutes.register.path ||
+            this.currentRoute === routes.start) &&
           this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {

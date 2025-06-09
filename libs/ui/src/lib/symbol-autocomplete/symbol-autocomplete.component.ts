@@ -76,16 +76,17 @@ export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
   implements OnInit, OnDestroy
 {
-  @Input() private includeIndices = false;
+  @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
-
-  @ViewChild(MatInput) private input: MatInput;
 
   @ViewChild('symbolAutocomplete') public symbolAutocomplete: MatAutocomplete;
 
+  @Input() private includeIndices = false;
+
+  @ViewChild(MatInput) private input: MatInput;
+
   public control = new FormControl();
-  public filteredLookupItems: (LookupItem & { assetSubClassString: string })[] =
-    [];
+  public lookupItems: (LookupItem & { assetSubClassString: string })[] = [];
 
   private unsubscribeSubject = new Subject<void>();
 
@@ -106,6 +107,10 @@ export class GfSymbolAutocompleteComponent
       this.control.disable();
     }
 
+    if (this.defaultLookupItems?.length) {
+      this.showDefaultOptions();
+    }
+
     this.control.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
@@ -117,7 +122,13 @@ export class GfSymbolAutocompleteComponent
     this.control.valueChanges
       .pipe(
         filter((query) => {
-          return isString(query) && query.length > 1;
+          if (query.length === 0) {
+            this.showDefaultOptions();
+
+            return false;
+          }
+
+          return isString(query);
         }),
         tap(() => {
           this.isLoading = true;
@@ -135,7 +146,7 @@ export class GfSymbolAutocompleteComponent
         })
       )
       .subscribe((filteredLookupItems) => {
-        this.filteredLookupItems = filteredLookupItems.map((lookupItem) => {
+        this.lookupItems = filteredLookupItems.map((lookupItem) => {
           return {
             ...lookupItem,
             assetSubClassString: translate(lookupItem.assetSubClass)
@@ -161,7 +172,7 @@ export class GfSymbolAutocompleteComponent
   }
 
   public isValueInOptions(value: string) {
-    return this.filteredLookupItems.some((item) => {
+    return this.lookupItems.some((item) => {
       return item.symbol === value;
     });
   }
@@ -191,6 +202,17 @@ export class GfSymbolAutocompleteComponent
 
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
+  }
+
+  private showDefaultOptions() {
+    this.lookupItems = this.defaultLookupItems.map((lookupItem) => {
+      return {
+        ...lookupItem,
+        assetSubClassString: translate(lookupItem.assetSubClass)
+      };
+    });
+
+    this.changeDetectorRef.markForCheck();
   }
 
   private validateRequired() {

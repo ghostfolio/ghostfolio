@@ -13,8 +13,7 @@ export class EconomicMarketClusterRiskEmergingMarkets extends Rule<Settings> {
     emergingMarketsValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: EconomicMarketClusterRiskEmergingMarkets.name,
-      name: 'Emerging Markets'
+      key: EconomicMarketClusterRiskEmergingMarkets.name
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -65,6 +64,10 @@ export class EconomicMarketClusterRiskEmergingMarkets extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Emerging Markets';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

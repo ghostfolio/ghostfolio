@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { publicRoutes, routes } from '@ghostfolio/common/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './hacktoberfest-2024-page.html'
 })
 export class Hacktoberfest2024PageComponent {
-  public routerLinkAbout = ['/' + paths.about];
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkOpenStartup = ['/' + paths.openStartup];
+  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
 }

@@ -11,8 +11,7 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
-      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name,
-      name: 'Investment: Base Currency'
+      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name
     });
 
     this.holdings = holdings;
@@ -66,6 +65,10 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 
   public getConfiguration() {
     return undefined;
+  }
+
+  public getName() {
+    return 'Investment: Base Currency';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

@@ -2,7 +2,7 @@ import { UserAccountAccessComponent } from '@ghostfolio/client/components/user-a
 import { UserAccountMembershipComponent } from '@ghostfolio/client/components/user-account-membership/user-account-membership.component';
 import { UserAccountSettingsComponent } from '@ghostfolio/client/components/user-account-settings/user-account-settings.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { paths } from '@ghostfolio/common/paths';
+import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,12 +19,12 @@ const routes: Routes = [
         title: $localize`Settings`
       },
       {
-        path: paths.membership,
+        path: ghostfolioRoutes.membership,
         component: UserAccountMembershipComponent,
         title: $localize`Membership`
       },
       {
-        path: paths.access,
+        path: ghostfolioRoutes.access,
         component: UserAccountAccessComponent,
         title: $localize`Access`
       }

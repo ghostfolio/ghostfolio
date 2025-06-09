@@ -1,6 +1,19 @@
 :host {
   display: block;
 
+  button {
+    &.special {
+      background: linear-gradient(45deg, rgb(228, 94, 237), rgb(104, 94, 237));
+      color: #fff;
+    }
+  }
+
+  .badge {
+    &.early-access {
+      border: 1px solid var(--mat-table-row-item-outline-color);
+    }
+  }
+
   .mat-mdc-progress-bar {
     --mdc-linear-progress-active-indicator-height: 0.5rem;
     --mdc-linear-progress-track-height: 0.5rem;

@@ -1,4 +1,4 @@
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './1000-stars-on-github-page.html'
 })
 export class ThousandStarsOnGitHubPageComponent {
-  public routerLinkBlog = ['/' + paths.blog];
-  public routerLinkFeatures = ['/' + paths.features];
-  public routerLinkPricing = ['/' + paths.pricing];
+  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkPricing = ['/' + routes.pricing];
 }

@@ -1,6 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
-import { paths } from '@ghostfolio/common/paths';
+import { routes } from '@ghostfolio/common/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -35,18 +35,18 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'settings-outline',
               label: $localize`Settings`,
-              path: ['/' + paths.account]
+              path: ['/' + routes.account]
             },
             {
               iconName: 'diamond-outline',
               label: $localize`Membership`,
-              path: ['/' + paths.account, paths.membership],
+              path: ['/' + routes.account, routes.membership],
               showCondition: !!this.user?.subscription
             },
             {
               iconName: 'key-outline',
               label: $localize`Access`,
-              path: ['/' + paths.account, paths.access]
+              path: ['/' + routes.account, routes.access]
             }
           ];
 

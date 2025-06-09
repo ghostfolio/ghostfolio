@@ -85,7 +85,7 @@ export class MarketDataController {
       { dataSource, symbol }
     ]);
 
-    if (!assetProfile) {
+    if (!assetProfile && !isCurrency(getCurrencyFromSymbol(symbol))) {
       throw new HttpException(
         getReasonPhrase(StatusCodes.NOT_FOUND),
         StatusCodes.NOT_FOUND
@@ -103,7 +103,7 @@ export class MarketDataController {
       );
 
     const canUpsertOwnAssetProfile =
-      assetProfile.userId === this.request.user.id &&
+      assetProfile?.userId === this.request.user.id &&
       hasPermission(
         this.request.user.permissions,
         permissions.createMarketDataOfOwnAssetProfile

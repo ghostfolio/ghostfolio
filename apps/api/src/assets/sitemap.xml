@@ -89,7 +89,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/de/ueber-uns/oss-freunde</loc>
+    <loc>https://ghostfol.io/de/ueber-uns/oss-friends</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -317,7 +317,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/fr/a-propos/changelog</loc>
+    <loc>https://ghostfol.io/fr/a-propos/journal-des-modifications</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -395,7 +395,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/it/informazioni-su/oss-amici</loc>
+    <loc>https://ghostfol.io/it/informazioni-su/oss-friends</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -455,10 +455,6 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/nl/over/changelog</loc>
-    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-  </url>
-  <url>
     <loc>https://ghostfol.io/nl/over/licentie</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -468,6 +464,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/over/privacybeleid</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/over/wijzigingslogboek</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>

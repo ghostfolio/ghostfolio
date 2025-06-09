@@ -20,9 +20,11 @@
           mat-flat-button
           [ngClass]="{
             'font-weight-bold':
-              currentRoute === paths.home || currentRoute === paths.zen,
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path,
             'text-decoration-underline':
-              currentRoute === paths.home || currentRoute === paths.zen
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path
           }"
           [routerLink]="['/']"
           >Overview</a
@@ -34,8 +36,9 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === paths.portfolio,
-            'text-decoration-underline': currentRoute === paths.portfolio
+            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.portfolio.path
           }"
           [routerLink]="routerLinkPortfolio"
           >Portfolio</a
@@ -47,8 +50,9 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === paths.accounts,
-            'text-decoration-underline': currentRoute === paths.accounts
+            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.accounts.path
           }"
           [routerLink]="routerLinkAccounts"
           >Accounts</a
@@ -61,8 +65,8 @@
             i18n
             mat-flat-button
             [ngClass]="{
-              'font-weight-bold': currentRoute === paths.adminControl,
-              'text-decoration-underline': currentRoute === paths.adminControl
+              'font-weight-bold': currentRoute === routes.adminControl,
+              'text-decoration-underline': currentRoute === routes.adminControl
             }"
             [routerLink]="routerLinkAdminControl"
             >Admin Control</a
@@ -235,7 +239,8 @@
             mat-menu-item
             [ngClass]="{
               'font-weight-bold':
-                currentRoute === paths.home || currentRoute === paths.zen
+                currentRoute === internalRoutes.home.path ||
+                currentRoute === internalRoutes.zen.path
             }"
             [routerLink]="['/']"
             >Overview</a
@@ -245,7 +250,7 @@
             i18n
             mat-menu-item
             [ngClass]="{
-              'font-weight-bold': currentRoute === paths.portfolio
+              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
             }"
             [routerLink]="routerLinkPortfolio"
             >Portfolio</a
@@ -254,14 +259,16 @@
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === paths.accounts }"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.accounts.path
+            }"
             [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
           <a
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === paths.account }"
+            [ngClass]="{ 'font-weight-bold': currentRoute === routes.account }"
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
@@ -271,7 +278,7 @@
               i18n
               mat-menu-item
               [ngClass]="{
-                'font-weight-bold': currentRoute === paths.adminControl
+                'font-weight-bold': currentRoute === routes.adminControl
               }"
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a

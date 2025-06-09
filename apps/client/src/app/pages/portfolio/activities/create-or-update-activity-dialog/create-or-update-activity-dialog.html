@@ -94,7 +94,7 @@
             <mat-option [value]="account.id">
               <div class="d-flex">
                 @if (account.Platform?.url) {
-                  <gf-asset-profile-icon
+                  <gf-entity-logo
                     class="mr-1"
                     [tooltip]="account.Platform?.name"
                     [url]="account.Platform?.url"
@@ -313,8 +313,9 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div class="mb-3" [ngClass]="{ 'd-none': tagsAvailable?.length < 1 }">
+    <div class="mb-3">
       <gf-tags-selector
+        [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
         [tags]="activityForm.get('tags')?.value"
         [tagsAvailable]="tagsAvailable"
         (tagsChanged)="onTagsChanged($event)"
