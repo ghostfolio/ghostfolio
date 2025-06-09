@@ -223,12 +223,12 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             );
           }
 
-          // Asset Profiles
+          // Asset profiles
           const assetProfiles$: Observable<Partial<ISearchResults>> = this
             .hasPermissionToAccessAdminControl
             ? this.searchAssetProfiles(searchTerm).pipe(
-                map((profiles) => ({
-                  assetProfiles: profiles.slice(
+                map((assetProfiles) => ({
+                  assetProfiles: assetProfiles.slice(
                     0,
                     GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
                   )
@@ -255,8 +255,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           // Holdings
           const holdings$: Observable<Partial<ISearchResults>> =
             this.searchHoldings(searchTerm).pipe(
-              map((h) => ({
-                holdings: h.slice(
+              map((holdings) => ({
+                holdings: holdings.slice(
                   0,
                   GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
                 )
@@ -271,10 +271,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })
             );
 
-          // Quick Links
-          const quickLinksData = this.searchQuickLinks(searchTerm);
+          // Quick links
           const quickLinks$: Observable<Partial<ISearchResults>> = of({
-            quickLinks: quickLinksData
+            quickLinks: this.searchQuickLinks(searchTerm)
           }).pipe(
             tap(() => {
               this.isLoading.quickLinks = false;
