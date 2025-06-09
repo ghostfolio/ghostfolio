@@ -160,12 +160,11 @@ export class AppComponent implements OnDestroy, OnInit {
         this.currentSubRoute = urlSegments[1]?.path;
 
         if (
-          (this.currentRoute === 'home' && !this.currentSubRoute) ||
-          (this.currentRoute === 'home' &&
-            this.currentSubRoute === 'holdings') ||
-          (this.currentRoute === 'portfolio' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && !this.currentSubRoute) ||
-          (this.currentRoute === 'zen' && this.currentSubRoute === 'holdings')
+          ((this.currentRoute === 'home' && !this.currentSubRoute) ||
+            (this.currentRoute === 'home' &&
+              this.currentSubRoute === 'holdings') ||
+            (this.currentRoute === 'portfolio' && !this.currentSubRoute)) &&
+          this.user?.settings?.viewMode !== 'ZEN'
         ) {
           this.hasPermissionToChangeDateRange = true;
         } else {
