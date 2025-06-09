@@ -271,7 +271,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
               })
             );
 
-          // QuickLinks
+          // Quick Links
           const quickLinksData = this.searchQuickLinks(searchTerm);
           const quickLinks$: Observable<Partial<ISearchResults>> = of({
             quickLinks: quickLinksData
@@ -304,8 +304,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           this.searchResults = searchResults;
           this.changeDetectorRef.markForCheck();
         },
-        error: (err) => {
-          console.error('Assistant search stream error:', err);
+        error: (error) => {
+          console.error('Assistant search stream error:', error);
           this.searchResults = {
             assetProfiles: [],
             holdings: [],
