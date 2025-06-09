@@ -272,9 +272,15 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
             );
 
           // Quick links
-          const quickLinks$: Observable<Partial<ISearchResults>> = of({
-            quickLinks: this.searchQuickLinks(searchTerm)
-          }).pipe(
+          const quickLinks$: Observable<Partial<ISearchResults>> = of(
+            this.searchQuickLinks(searchTerm)
+          ).pipe(
+            map((quickLinks) => ({
+              quickLinks: quickLinks.slice(
+                0,
+                GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+              )
+            })),
             tap(() => {
               this.isLoading.quickLinks = false;
               this.changeDetectorRef.markForCheck();
