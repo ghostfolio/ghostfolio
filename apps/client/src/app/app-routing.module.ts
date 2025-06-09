@@ -18,7 +18,7 @@ const routes: Routes = [
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
   {
-    path: ghostfolioRoutes.account,
+    path: internalRoutes.account.path,
     loadChildren: () =>
       import('./pages/user-account/user-account-page.module').then(
         (m) => m.UserAccountPageModule
