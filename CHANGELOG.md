@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Included quick links in the search results of the assistant
+
 ### Changed
 
 - Improved the language localization for Portuguese (`pt`)
