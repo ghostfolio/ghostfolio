@@ -247,6 +247,7 @@ model User {
   accessToken   String?
   accounts      Account[]
   activities    Order[]
+  apiKeys       ApiKey[]
   authChallenge String?
   createdAt     DateTime        @default(now())
   id            String          @id @default(uuid())
@@ -260,7 +261,6 @@ model User {
   Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
   Analytics     Analytics?
-  ApiKey        ApiKey[]
   AuthDevice    AuthDevice[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]
