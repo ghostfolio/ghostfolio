@@ -1,5 +1,5 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';

@@ -1,8 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import {
-  routes as ghostfolioRoutes,
-  internalRoutes
-} from '@ghostfolio/common/routes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -28,19 +25,19 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.allocations,
+        path: internalRoutes.portfolio.subRoutes.allocations.path,
         loadChildren: () =>
           import('./allocations/allocations-page.module').then(
             (m) => m.AllocationsPageModule
           )
       },
       {
-        path: ghostfolioRoutes.fire,
+        path: internalRoutes.portfolio.subRoutes.fire.path,
         loadChildren: () =>
           import('./fire/fire-page.module').then((m) => m.FirePageModule)
       },
       {
-        path: ghostfolioRoutes.xRay,
+        path: internalRoutes.portfolio.subRoutes.xRay.path,
         loadChildren: () =>
           import('./x-ray/x-ray-page.module').then((m) => m.XRayPageModule)
       }
