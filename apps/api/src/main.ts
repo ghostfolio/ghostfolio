@@ -18,7 +18,6 @@ import helmet from 'helmet';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { HtmlTemplateMiddleware } from './middlewares/html-template.middleware';
 
 async function bootstrap() {
   const configApp = await NestFactory.create(AppModule);
@@ -76,8 +75,6 @@ async function bootstrap() {
       }
     });
   }
-
-  app.use(HtmlTemplateMiddleware);
 
   const HOST = configService.get<string>('HOST') || DEFAULT_HOST;
   const PORT = configService.get<number>('PORT') || DEFAULT_PORT;
