@@ -1,14 +1,13 @@
 import '@angular/localize/init';
 
+import { IRoute } from './interfaces/interfaces';
+
 export const routes = {
   access: 'access',
-  account: 'account',
   adminControl: 'admin',
-  allocations: 'allocations',
   api: 'api',
   auth: 'auth',
   demo: 'demo',
-  fire: 'fire',
   i18n: 'i18n',
   jobs: 'jobs',
   market: 'market',
@@ -19,11 +18,8 @@ export const routes = {
   saas: 'saas',
   settings: 'settings',
   start: 'start',
-  summary: 'summary',
   users: 'users',
-  watchlist: 'watchlist',
   webauthn: 'webauthn',
-  xRay: 'x-ray',
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
@@ -44,14 +40,18 @@ export const routes = {
   termsOfService: $localize`:kebab-case:terms-of-service`
 };
 
-export const internalRoutes = {
+export const internalRoutes: Record<string, IRoute> = {
+  account: {
+    path: 'account',
+    routerLink: ['/account'],
+    title: $localize`Settings`
+  },
   accounts: {
     path: 'accounts',
     routerLink: ['/accounts'],
     title: $localize`Accounts`
   },
   home: {
-    excludeFromAssistant: true,
     path: 'home',
     routerLink: ['/home'],
     subRoutes: {
@@ -59,6 +59,16 @@ export const internalRoutes = {
         path: 'holdings',
         routerLink: ['/home', 'holdings'],
         title: $localize`Holdings`
+      },
+      summary: {
+        path: 'summary',
+        routerLink: ['/home', 'summary'],
+        title: $localize`Summary`
+      },
+      watchlist: {
+        path: 'watchlist',
+        routerLink: ['/home', 'watchlist'],
+        title: $localize`Watchlist`
       }
     },
     title: $localize`Overview`
@@ -71,6 +81,26 @@ export const internalRoutes = {
         path: 'activities',
         routerLink: ['/portfolio', 'activities'],
         title: $localize`Activities`
+      },
+      allocations: {
+        path: 'allocations',
+        routerLink: ['/portfolio', 'allocations'],
+        title: $localize`Allocations`
+      },
+      analysis: {
+        path: undefined, // Default sub route
+        routerLink: ['/portfolio'],
+        title: $localize`Analysis`
+      },
+      fire: {
+        path: 'fire',
+        routerLink: ['/portfolio', 'fire'],
+        title: 'FIRE'
+      },
+      xRay: {
+        path: 'x-ray',
+        routerLink: ['/portfolio', 'x-ray'],
+        title: 'X-ray'
       }
     },
     title: $localize`Portfolio`

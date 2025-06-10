@@ -4,7 +4,7 @@ import {
   publicRoutes,
   routes as ghostfolioRoutes,
   internalRoutes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
@@ -18,7 +18,7 @@ const routes: Routes = [
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
   {
-    path: ghostfolioRoutes.account,
+    path: internalRoutes.account.path,
     loadChildren: () =>
       import('./pages/user-account/user-account-page.module').then(
         (m) => m.UserAccountPageModule

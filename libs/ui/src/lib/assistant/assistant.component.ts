@@ -3,6 +3,8 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
+import { IRoute } from '@ghostfolio/common/routes/interfaces/interfaces';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
@@ -39,17 +41,20 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { EMPTY, Observable, Subject, lastValueFrom } from 'rxjs';
+import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
   map,
-  mergeMap,
-  takeUntil
+  scan,
+  switchMap,
+  takeUntil,
+  tap
 } from 'rxjs/operators';
 
 import { GfAssistantListItemComponent } from './assistant-list-item/assistant-list-item.component';
+import { SearchMode } from './enums/search-mode';
 import {
   IDateRangeOption,
   ISearchResultItem,
@@ -138,13 +143,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     tag: new FormControl<string>(undefined)
   });
   public holdings: PortfolioPosition[] = [];
-  public isLoading = false;
+  public isLoading = {
+    assetProfiles: false,
+    holdings: false,
+    quickLinks: false
+  };
   public isOpen = false;
-  public placeholder = $localize`Find holding...`;
+  public placeholder = $localize`Find holding or page...`;
   public searchFormControl = new FormControl('');
   public searchResults: ISearchResults = {
     assetProfiles: [],
-    holdings: []
+    holdings: [],
+    quickLinks: []
   };
   public tags: Filter[] = [];
 
@@ -177,39 +187,145 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     this.searchFormControl.valueChanges
       .pipe(
         map((searchTerm) => {
-          this.isLoading = true;
+          this.isLoading = {
+            assetProfiles: true,
+            holdings: true,
+            quickLinks: true
+          };
           this.searchResults = {
             assetProfiles: [],
-            holdings: []
+            holdings: [],
+            quickLinks: []
           };
 
           this.changeDetectorRef.markForCheck();
 
-          return searchTerm;
+          return searchTerm?.trim();
         }),
         debounceTime(300),
         distinctUntilChanged(),
-        mergeMap(async (searchTerm) => {
-          const result = {
+        switchMap((searchTerm) => {
+          const results = {
             assetProfiles: [],
-            holdings: []
+            holdings: [],
+            quickLinks: []
           } as ISearchResults;
 
-          try {
-            if (searchTerm) {
-              return await this.getSearchResults(searchTerm);
-            }
-          } catch {}
+          if (!searchTerm) {
+            return of(results).pipe(
+              tap(() => {
+                this.isLoading = {
+                  assetProfiles: false,
+                  holdings: false,
+                  quickLinks: false
+                };
+              })
+            );
+          }
 
-          return result;
+          // Asset profiles
+          const assetProfiles$: Observable<Partial<ISearchResults>> = this
+            .hasPermissionToAccessAdminControl
+            ? this.searchAssetProfiles(searchTerm).pipe(
+                map((assetProfiles) => ({
+                  assetProfiles: assetProfiles.slice(
+                    0,
+                    GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                  )
+                })),
+                catchError((error) => {
+                  console.error(
+                    'Error fetching asset profiles for assistant:',
+                    error
+                  );
+                  return of({ assetProfiles: [] as ISearchResultItem[] });
+                }),
+                tap(() => {
+                  this.isLoading.assetProfiles = false;
+                  this.changeDetectorRef.markForCheck();
+                })
+              )
+            : of({ assetProfiles: [] as ISearchResultItem[] }).pipe(
+                tap(() => {
+                  this.isLoading.assetProfiles = false;
+                  this.changeDetectorRef.markForCheck();
+                })
+              );
+
+          // Holdings
+          const holdings$: Observable<Partial<ISearchResults>> =
+            this.searchHoldings(searchTerm).pipe(
+              map((holdings) => ({
+                holdings: holdings.slice(
+                  0,
+                  GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+                )
+              })),
+              catchError((error) => {
+                console.error('Error fetching holdings for assistant:', error);
+                return of({ holdings: [] as ISearchResultItem[] });
+              }),
+              tap(() => {
+                this.isLoading.holdings = false;
+                this.changeDetectorRef.markForCheck();
+              })
+            );
+
+          // Quick links
+          const quickLinks$: Observable<Partial<ISearchResults>> = of(
+            this.searchQuickLinks(searchTerm)
+          ).pipe(
+            map((quickLinks) => ({
+              quickLinks: quickLinks.slice(
+                0,
+                GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
+              )
+            })),
+            tap(() => {
+              this.isLoading.quickLinks = false;
+              this.changeDetectorRef.markForCheck();
+            })
+          );
+
+          // Merge all results
+          return merge(quickLinks$, assetProfiles$, holdings$).pipe(
+            scan(
+              (acc: ISearchResults, curr: Partial<ISearchResults>) => ({
+                ...acc,
+                ...curr
+              }),
+              {
+                assetProfiles: [],
+                holdings: [],
+                quickLinks: []
+              } as ISearchResults
+            )
+          );
         }),
         takeUntil(this.unsubscribeSubject)
       )
-      .subscribe((searchResults) => {
-        this.searchResults = searchResults;
-        this.isLoading = false;
-
-        this.changeDetectorRef.markForCheck();
+      .subscribe({
+        next: (searchResults) => {
+          this.searchResults = searchResults;
+          this.changeDetectorRef.markForCheck();
+        },
+        error: (error) => {
+          console.error('Assistant search stream error:', error);
+          this.searchResults = {
+            assetProfiles: [],
+            holdings: [],
+            quickLinks: []
+          };
+          this.changeDetectorRef.markForCheck();
+        },
+        complete: () => {
+          this.isLoading = {
+            assetProfiles: false,
+            holdings: false,
+            quickLinks: false
+          };
+          this.changeDetectorRef.markForCheck();
+        }
       });
   }
 
@@ -307,11 +423,16 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public initialize() {
-    this.isLoading = true;
+    this.isLoading = {
+      assetProfiles: true,
+      holdings: true,
+      quickLinks: true
+    };
     this.keyManager = new FocusKeyManager(this.assistantListItems).withWrap();
     this.searchResults = {
       assetProfiles: [],
-      holdings: []
+      holdings: [],
+      quickLinks: []
     };
 
     for (const item of this.assistantListItems) {
@@ -323,7 +444,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       this.searchElement?.nativeElement?.focus();
     });
 
-    this.isLoading = false;
+    this.isLoading = {
+      assetProfiles: false,
+      holdings: false,
+      quickLinks: false
+    };
     this.setIsOpen(true);
 
     this.dataService
@@ -412,36 +537,6 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     });
   }
 
-  private async getSearchResults(aSearchTerm: string) {
-    let assetProfiles: ISearchResultItem[] = [];
-    let holdings: ISearchResultItem[] = [];
-
-    if (this.hasPermissionToAccessAdminControl) {
-      try {
-        assetProfiles = await lastValueFrom(
-          this.searchAssetProfiles(aSearchTerm)
-        );
-        assetProfiles = assetProfiles.slice(
-          0,
-          GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
-        );
-      } catch {}
-    }
-
-    try {
-      holdings = await lastValueFrom(this.searchHoldings(aSearchTerm));
-      holdings = holdings.slice(
-        0,
-        GfAssistantComponent.SEARCH_RESULTS_DEFAULT_LIMIT
-      );
-    } catch {}
-
-    return {
-      assetProfiles,
-      holdings
-    };
-  }
-
   private searchAssetProfiles(
     aSearchTerm: string
   ): Observable<ISearchResultItem[]> {
@@ -467,7 +562,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass)
+                assetSubClassString: translate(assetSubClass),
+                mode: SearchMode.ASSET_PROFILE as const
               };
             }
           );
@@ -499,13 +595,45 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
                 dataSource,
                 name,
                 symbol,
-                assetSubClassString: translate(assetSubClass)
+                assetSubClassString: translate(assetSubClass),
+                mode: SearchMode.HOLDING as const
               };
             }
           );
         }),
         takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  private searchQuickLinks(aSearchTerm: string): ISearchResultItem[] {
+    const searchTerm = aSearchTerm.toLowerCase();
+
+    const allRoutes = Object.values(internalRoutes)
+      .filter(({ excludeFromAssistant }) => {
+        return !excludeFromAssistant;
+      })
+      .reduce((acc, route) => {
+        acc.push(route);
+        if (route.subRoutes) {
+          acc.push(...Object.values(route.subRoutes));
+        }
+        return acc;
+      }, [] as IRoute[]);
+
+    return allRoutes
+      .filter(({ title }) => {
+        return title.toLowerCase().includes(searchTerm);
+      })
+      .map(({ routerLink, title }) => {
+        return {
+          routerLink,
+          mode: SearchMode.QUICK_LINK as const,
+          name: title
+        };
+      })
+      .sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
   }
 
   private setFilterFormValues() {

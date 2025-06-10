@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes';
+import { routes } from '@ghostfolio/common/routes/routes';
 
 import {
   HTTP_INTERCEPTORS,

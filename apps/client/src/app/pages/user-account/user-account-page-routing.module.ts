@@ -2,7 +2,7 @@ import { UserAccountAccessComponent } from '@ghostfolio/client/components/user-a
 import { UserAccountMembershipComponent } from '@ghostfolio/client/components/user-account-membership/user-account-membership.component';
 import { UserAccountSettingsComponent } from '@ghostfolio/client/components/user-account-settings/user-account-settings.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes';
+import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

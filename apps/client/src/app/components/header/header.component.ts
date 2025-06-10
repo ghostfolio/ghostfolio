@@ -16,7 +16,7 @@ import {
   internalRoutes,
   publicRoutes,
   routes
-} from '@ghostfolio/common/routes';
+} from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -91,7 +91,7 @@ export class HeaderComponent implements OnChanges {
   public routePricing = routes.pricing;
   public routeResources = routes.resources;
   public routerLinkAbout = ['/' + routes.about];
-  public routerLinkAccount = ['/' + routes.account];
+  public routerLinkAccount = internalRoutes.account.routerLink;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkAdminControl = ['/' + routes.adminControl];
   public routerLinkFeatures = ['/' + routes.features];
