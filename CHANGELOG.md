@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added a skeleton loader to the changelog page
 - Included quick links in the search results of the assistant
+- Added a skeleton loader to the changelog page
 - Extended the content of the _Self-Hosting_ section by information about additional data providers on the Frequently Asked Questions (FAQ) page
 
 ### Changed
