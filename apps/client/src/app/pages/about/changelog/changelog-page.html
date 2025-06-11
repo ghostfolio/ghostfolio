@@ -2,8 +2,38 @@
   <div class="mb-5 row">
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Changelog</h1>
-      <div class="changelog">
-        <markdown [src]="'../assets/CHANGELOG.md'"></markdown>
+
+      <div *ngIf="isLoading">
+        <ngx-skeleton-loader
+          [theme]="{
+            'border-radius': '0.25rem',
+            height: '22px',
+            width: '35%'
+          }"
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          [theme]="{
+            'border-radius': '0.25rem',
+            height: '22px',
+            'margin-top': '0.5rem',
+            width: '15%'
+          }"
+        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader
+          [theme]="{
+            'border-radius': '0.25rem',
+            height: '22px',
+            'margin-top': '0.5rem',
+            width: '65%'
+          }"
+        ></ngx-skeleton-loader>
+      </div>
+
+      <div class="changelog" *ngIf="!isLoading">
+        <markdown
+          (load)="onLoad()"
+          [src]="'../assets/CHANGELOG.md'"
+        ></markdown>
       </div>
     </div>
   </div>
