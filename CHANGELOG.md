@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Renamed `ApiKey` to `apiKeys` in the `User` database schema
+- Improved the language localization for French (`fr`)
 - Improved the language localization for Portuguese (`pt`)
 - Upgraded `@keyv/redis` from version `4.3.4` to `4.4.0`
 - Upgraded `zone.js` from version `0.15.0` to `0.15.1`
