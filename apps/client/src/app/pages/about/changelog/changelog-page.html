@@ -29,11 +29,8 @@
         ></ngx-skeleton-loader>
       </div>
 
-      <div class="changelog" *ngIf="!isLoading">
-        <markdown
-          (load)="onLoad()"
-          [src]="'../assets/CHANGELOG.md'"
-        ></markdown>
+      <div *ngIf="!isLoading" class="changelog">
+        <markdown [src]="'../assets/CHANGELOG.md'" (load)="onLoad()"></markdown>
       </div>
     </div>
   </div>
