@@ -9,14 +9,15 @@ import { Subject } from 'rxjs';
 })
 export class ChangelogPageComponent implements OnDestroy {
   public isLoading = true;
+
   private unsubscribeSubject = new Subject<void>();
+
+  public onLoad() {
+    this.isLoading = false;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
     this.unsubscribeSubject.complete();
-  }
-
-  public onLoad() {
-    this.isLoading = false;
   }
 }

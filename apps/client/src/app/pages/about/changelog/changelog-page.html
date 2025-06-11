@@ -3,35 +3,41 @@
     <div class="col">
       <h1 class="d-none d-sm-block h3 mb-4 text-center" i18n>Changelog</h1>
 
-      <div *ngIf="isLoading">
-        <ngx-skeleton-loader
-          [theme]="{
-            'border-radius': '0.25rem',
-            height: '22px',
-            width: '35%'
-          }"
-        ></ngx-skeleton-loader>
-        <ngx-skeleton-loader
-          [theme]="{
-            'border-radius': '0.25rem',
-            height: '22px',
-            'margin-top': '0.5rem',
-            width: '15%'
-          }"
-        ></ngx-skeleton-loader>
-        <ngx-skeleton-loader
-          [theme]="{
-            'border-radius': '0.25rem',
-            height: '22px',
-            'margin-top': '0.5rem',
-            width: '65%'
-          }"
-        ></ngx-skeleton-loader>
+      @if (isLoading) {
+      <ngx-skeleton-loader
+        animation="pulse"
+        [theme]="{
+          'border-radius': '0.25rem',
+          height: '1.375rem',
+          width: '35%'
+        }"
+      />
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mt-2"
+        [theme]="{
+          'border-radius': '0.25rem',
+          height: '1.375rem',
+          width: '15%'
+        }"
+      />
+      <ngx-skeleton-loader
+        animation="pulse"
+        class="mt-2"
+        [theme]="{
+          'border-radius': '0.25rem',
+          height: '1.375rem',
+          width: '65%'
+        }"
+      />
+      } @else {
+      <div class="changelog">
+        <markdown
+          (load)="onLoad()"
+          [src]="'../assets/CHANGELOG.md'"
+        ></markdown>
       </div>
-
-      <div *ngIf="!isLoading" class="changelog">
-        <markdown [src]="'../assets/CHANGELOG.md'" (load)="onLoad()"></markdown>
-      </div>
+      }
     </div>
   </div>
 </div>
