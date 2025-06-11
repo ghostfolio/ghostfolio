@@ -14,6 +14,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -107,10 +108,6 @@ export class GfSymbolAutocompleteComponent
       this.control.disable();
     }
 
-    if (this.defaultLookupItems?.length) {
-      this.showDefaultOptions();
-    }
-
     this.control.valueChanges
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe(() => {
@@ -157,6 +154,12 @@ export class GfSymbolAutocompleteComponent
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['defaultLookupItems'] && this.defaultLookupItems?.length) {
+      this.showDefaultOptions();
+    }
   }
 
   public displayFn(aLookupItem: LookupItem) {

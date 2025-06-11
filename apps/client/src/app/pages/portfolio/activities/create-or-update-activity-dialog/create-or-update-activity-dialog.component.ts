@@ -2,6 +2,7 @@ import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
+import { LookupItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
@@ -44,6 +45,7 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
   public defaultDateFormat: string;
+  public defaultLookupItems: LookupItem[] = [];
   public hasPermissionToCreateOwnTag: boolean;
   public isLoading = false;
   public isToday = isToday;
@@ -82,6 +84,35 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
+
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.defaultLookupItems = holdings
+          .filter(({ assetSubClass }) => {
+            return !['CASH'].includes(assetSubClass);
+          })
+          .sort((a, b) => {
+            return a.name?.localeCompare(b.name);
+          })
+          .map((holding) => {
+            return {
+              assetClass: holding.assetClass,
+              assetSubClass: holding.assetSubClass,
+              currency: holding.currency,
+              dataProviderInfo: {
+                dataSource: holding.dataSource,
+                isPremium: false,
+                name: holding.name,
+                url: holding.url
+              },
+              dataSource: holding.dataSource,
+              name: holding.name,
+              symbol: holding.symbol
+            };
+          });
+      });
 
     this.tagsAvailable =
       this.data.user?.tags?.map((tag) => {
