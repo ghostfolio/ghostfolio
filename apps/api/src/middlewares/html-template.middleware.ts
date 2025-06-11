@@ -7,7 +7,7 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
 
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 import * as fs from 'fs';
@@ -82,7 +82,7 @@ const locales = {
 export class HtmlTemplateMiddleware implements NestMiddleware {
   private indexHtmlMap: { [languageCode: string]: string } = {};
 
-  constructor(private readonly i18nService: I18nService) {
+  public constructor(private readonly i18nService: I18nService) {
     try {
       this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
         (map, languageCode) => ({
@@ -95,11 +95,15 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
         {}
       );
     } catch (error) {
-      console.error('Failed to load index.html files:', error);
+      Logger.error(
+        'Failed to initialize index HTML map',
+        error,
+        'HTMLTemplateMiddleware'
+      );
     }
   }
 
-  use(request: Request, response: Response, next: NextFunction) {
+  public use(request: Request, response: Response, next: NextFunction) {
     const path = request.originalUrl.replace(/\/$/, '');
     let languageCode = path.substr(1, 2);
 

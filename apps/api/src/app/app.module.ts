@@ -136,7 +136,7 @@ import { UserModule } from './user/user.module';
   providers: [I18nService]
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
+  public configure(consumer: MiddlewareConsumer) {
     consumer.apply(HtmlTemplateMiddleware).forRoutes('*');
   }
 }
