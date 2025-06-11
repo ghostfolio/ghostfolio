@@ -8,7 +8,13 @@ import { Subject } from 'rxjs';
   standalone: false
 })
 export class ChangelogPageComponent implements OnDestroy {
+  public isLoading = true;
+
   private unsubscribeSubject = new Subject<void>();
+
+  public onLoad() {
+    this.isLoading = false;
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();
