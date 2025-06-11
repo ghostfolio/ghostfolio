@@ -7646,7 +7646,7 @@
       </trans-unit>
       <trans-unit id="7784226024223865620" datatype="html">
         <source>Find holding or page...</source>
-        <target state="translated">Rechercher une collection ou une page...</target>
+        <target state="translated">Rechercher une position ou une page...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">152</context>
