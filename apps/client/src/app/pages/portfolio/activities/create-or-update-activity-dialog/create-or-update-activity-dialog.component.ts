@@ -109,15 +109,17 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
                 assetClass,
                 assetSubClass,
                 currency,
-                dataProviderInfo: {
-                  isPremium: false
-                },
                 dataSource,
                 name,
-                symbol
+                symbol,
+                dataProviderInfo: {
+                  isPremium: false
+                }
               };
             }
           );
+
+        this.changeDetectorRef.markForCheck();
       });
 
     this.tagsAvailable =
