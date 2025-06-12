@@ -12,6 +12,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   SimpleChanges,
@@ -75,7 +76,7 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnInit, OnDestroy
+  implements OnChanges, OnDestroy, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;

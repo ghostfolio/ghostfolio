@@ -96,22 +96,28 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
           .sort((a, b) => {
             return a.name?.localeCompare(b.name);
           })
-          .map((holding) => {
-            return {
-              assetClass: holding.assetClass,
-              assetSubClass: holding.assetSubClass,
-              currency: holding.currency,
-              dataProviderInfo: {
-                dataSource: holding.dataSource,
-                isPremium: false,
-                name: holding.name,
-                url: holding.url
-              },
-              dataSource: holding.dataSource,
-              name: holding.name,
-              symbol: holding.symbol
-            };
-          });
+          .map(
+            ({
+              assetClass,
+              assetSubClass,
+              currency,
+              dataSource,
+              name,
+              symbol
+            }) => {
+              return {
+                assetClass,
+                assetSubClass,
+                currency,
+                dataProviderInfo: {
+                  isPremium: false
+                },
+                dataSource,
+                name,
+                symbol
+              };
+            }
+          );
       });
 
     this.tagsAvailable =
