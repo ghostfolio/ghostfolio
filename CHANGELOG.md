@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for French (`fr`)
+- Improved the language localization for Polish (`pl`)
 
 ## 2.170.0 - 2025-06-11
 
