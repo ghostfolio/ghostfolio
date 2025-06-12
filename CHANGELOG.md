@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Improved the style of the assistant
 - Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
 - Improved the language localization for French (`fr`)
 - Improved the language localization for Polish (`pl`)
