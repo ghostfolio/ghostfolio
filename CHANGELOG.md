@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
 - Renamed `ApiKey` to `apiKeys` in the `User` database schema
 - Improved the language localization for French (`fr`)
 - Improved the language localization for Portuguese (`pt`)
