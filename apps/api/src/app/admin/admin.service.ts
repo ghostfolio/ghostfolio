@@ -674,7 +674,7 @@ export class AdminService {
                         select: {
                           activities: {
                             where: {
-                              User: {
+                              user: {
                                 subscriptions: {
                                   some: {
                                     expiresAt: {

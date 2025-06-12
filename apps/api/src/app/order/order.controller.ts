@@ -214,7 +214,7 @@ export class OrderController {
           }
         }
       },
-      User: { connect: { id: this.request.user.id } },
+      user: { connect: { id: this.request.user.id } },
       userId: this.request.user.id
     });
 
@@ -287,7 +287,7 @@ export class OrderController {
             name: data.symbol
           }
         },
-        User: { connect: { id: this.request.user.id } }
+        user: { connect: { id: this.request.user.id } }
       },
       where: {
         id

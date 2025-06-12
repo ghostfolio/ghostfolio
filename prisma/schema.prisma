@@ -18,7 +18,7 @@ model Access {
   updatedAt     DateTime           @updatedAt
   userId        String
   GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
-  User          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
+  user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
   @@index([granteeUserId])
@@ -37,9 +37,9 @@ model Account {
   name       String?
   platformId String?
   updatedAt  DateTime         @updatedAt
+  user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String
   Platform   Platform?        @relation(fields: [platformId], references: [id])
-  User       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@id([id, userId])
   @@index([currency])
@@ -70,8 +70,8 @@ model Analytics {
   dataProviderGhostfolioDailyRequests Int      @default(0)
   lastRequestAt                       DateTime @default(now())
   updatedAt                           DateTime @updatedAt
+  user                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                              String   @id
-  User                                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([lastRequestAt])
   @@index([updatedAt])
@@ -82,8 +82,8 @@ model ApiKey {
   hashedKey String   @unique
   id        String   @id @default(uuid())
   updatedAt DateTime @updatedAt
-  userId    String
   user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
+  userId    String
 
   @@index([userId])
 }
@@ -95,8 +95,8 @@ model AuthDevice {
   counter             Int
   id                  String   @id @default(uuid())
   updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId              String
-  User                User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([userId])
 }
@@ -135,10 +135,10 @@ model Order {
   type            Type
   unitPrice       Float
   updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId          String
   Account         Account?      @relation(fields: [accountId, accountUserId], references: [id, userId])
   SymbolProfile   SymbolProfile @relation(fields: [symbolProfileId], references: [id])
-  User            User          @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([accountId])
   @@index([date])
@@ -163,8 +163,8 @@ model Property {
 model Settings {
   settings  Json?
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId    String   @id
-  User      User     @relation(fields: [userId], onDelete: Cascade, references: [id])
 }
 
 model SymbolProfile {
@@ -191,10 +191,10 @@ model SymbolProfile {
   symbol                 String
   symbolMapping          Json?
   url                    String?
+  user                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
   watchedBy              User[]                  @relation("UserWatchlist")
   SymbolProfileOverrides SymbolProfileOverrides?
-  User                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@unique([dataSource, symbol])
   @@index([assetClass])
@@ -236,8 +236,8 @@ model Tag {
   activities Order[]
   id         String  @id @default(uuid())
   name       String
+  user       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String?
-  User       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
 
   @@unique([name, userId])
   @@index([name])
