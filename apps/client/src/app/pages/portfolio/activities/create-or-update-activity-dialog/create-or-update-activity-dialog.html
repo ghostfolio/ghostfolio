@@ -124,6 +124,7 @@
         <mat-label i18n>Name, symbol or ISIN</mat-label>
         <gf-symbol-autocomplete
           formControlName="searchSymbol"
+          [defaultLookupItems]="defaultLookupItems"
           [isLoading]="isLoading"
         />
       </mat-form-field>

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Added the current holdings as default options of the symbol search in the create or update activity dialog
+
 ### Changed
 
 - Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`

@@ -12,8 +12,10 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {
@@ -74,7 +76,7 @@ import { GfPremiumIndicatorComponent } from '../premium-indicator';
 })
 export class GfSymbolAutocompleteComponent
   extends AbstractMatFormField<LookupItem>
-  implements OnInit, OnDestroy
+  implements OnChanges, OnDestroy, OnInit
 {
   @Input() public defaultLookupItems: LookupItem[] = [];
   @Input() public isLoading = false;
@@ -105,10 +107,6 @@ export class GfSymbolAutocompleteComponent
   public ngOnInit() {
     if (this.disabled) {
       this.control.disable();
-    }
-
-    if (this.defaultLookupItems?.length) {
-      this.showDefaultOptions();
     }
 
     this.control.valueChanges
@@ -157,6 +155,12 @@ export class GfSymbolAutocompleteComponent
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['defaultLookupItems'] && this.defaultLookupItems?.length) {
+      this.showDefaultOptions();
+    }
   }
 
   public displayFn(aLookupItem: LookupItem) {
