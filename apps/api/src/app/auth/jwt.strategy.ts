@@ -46,7 +46,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
             countriesAndTimezones.getCountryForTimezone(timezone)?.id;
 
           await this.prismaService.analytics.upsert({
-            create: { country, User: { connect: { id: user.id } } },
+            create: { country, user: { connect: { id: user.id } } },
             update: {
               country,
               activityCount: { increment: 1 },

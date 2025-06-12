@@ -89,7 +89,7 @@ export class AccessController {
           ? { connect: { id: data.granteeUserId } }
           : undefined,
         permissions: data.permissions,
-        User: { connect: { id: this.request.user.id } }
+        user: { connect: { id: this.request.user.id } }
       });
     } catch {
       throw new HttpException(

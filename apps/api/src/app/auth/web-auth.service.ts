@@ -131,7 +131,7 @@ export class WebAuthService {
           counter,
           credentialId: Buffer.from(credentialId),
           credentialPublicKey: Buffer.from(credentialPublicKey),
-          User: { connect: { id: user.id } }
+          user: { connect: { id: user.id } }
         });
       }
 

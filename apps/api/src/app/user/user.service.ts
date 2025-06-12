@@ -101,7 +101,7 @@ export class UserService {
     const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
-          User: true
+          user: true
         },
         orderBy: { alias: 'asc' },
         where: { GranteeUser: { id } }
@@ -503,7 +503,7 @@ export class UserService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       await this.prismaService.analytics.create({
         data: {
-          User: { connect: { id: user.id } }
+          user: { connect: { id: user.id } }
         }
       });
     }
@@ -598,7 +598,7 @@ export class UserService {
     const { settings } = await this.prismaService.settings.upsert({
       create: {
         settings: userSettings as unknown as Prisma.JsonObject,
-        User: {
+        user: {
           connect: {
             id: userId
           }
