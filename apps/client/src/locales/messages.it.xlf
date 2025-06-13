@@ -7571,7 +7571,7 @@
       </trans-unit>
       <trans-unit id="3920411961658116502" datatype="html">
         <source>Demo user account has been synced.</source>
-        <target state="translated">L'account utente demo è stato sincronizzato.</target>
+        <target state="translated">L’account utente demo è stato sincronizzato.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">223</context>
@@ -7579,7 +7579,7 @@
       </trans-unit>
       <trans-unit id="18fe01d6ae816d6787148e59ea1a39d0bb542e24" datatype="html">
         <source>Sync Demo User Account</source>
-        <target state="translated">Sincronizza l'account utente demo</target>
+        <target state="translated">Sincronizza l’account utente demo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">181</context>
