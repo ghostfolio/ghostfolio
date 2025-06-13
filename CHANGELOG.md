@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the assistant
+- Reused the value component in the data providers management of the admin control panel
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
@@ -106,7 +107,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Reused the value component in the data providers management of the admin control panel
 - Improved the style of the card components
 - Improved the style of the system message
 - Improved the language localization for German (`de`)
