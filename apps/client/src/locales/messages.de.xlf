@@ -7648,9 +7648,9 @@
           <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="d4b2c4ca3538e5b2f8a747d63ab8381a2cf4002d" datatype="html">
-        <source>Quick Links</source>
-        <target state="translated">Schnellzugriff</target>
+      <trans-unit id="d686461eaa1139e5955ae0ec9a53876d3ad2e4de" datatype="html">
+        <source> Quick Links </source>
+        <target state="translated"> Schnellzugriff </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">47</context>
