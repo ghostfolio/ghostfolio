@@ -40,23 +40,20 @@
       *ngIf="searchFormControl.value"
       class="overflow-auto py-2 result-container"
     >
-      <div
-        *ngIf="searchResults?.quickLinks?.length !== 0 || isLoading.quickLinks"
-        class="mb-2"
-      >
-        <div class="font-weight-bold px-3 text-muted title" i18n>
-          Quick Links
-        </div>
-        @for (
-          searchResultItem of searchResults?.quickLinks;
-          track searchResultItem
-        ) {
-          <gf-assistant-list-item
-            [item]="searchResultItem"
-            (clicked)="onCloseAssistant()"
-          />
-        }
-        <ng-container>
+      @if (searchResults?.quickLinks?.length !== 0 || isLoading.quickLinks) {
+        <div class="mb-2">
+          <div class="font-weight-bold px-3 text-muted title" i18n>
+            Quick Links
+          </div>
+          @for (
+            searchResultItem of searchResults?.quickLinks;
+            track searchResultItem
+          ) {
+            <gf-assistant-list-item
+              [item]="searchResultItem"
+              (clicked)="onCloseAssistant()"
+            />
+          }
           @if (isLoading.quickLinks) {
             <ngx-skeleton-loader
               animation="pulse"
@@ -67,8 +64,8 @@
               }"
             />
           }
-        </ng-container>
-      </div>
+        </div>
+      }
       <div>
         <div class="font-weight-bold px-3 text-muted title" i18n>Holdings</div>
         @for (
@@ -80,7 +77,7 @@
             (clicked)="onCloseAssistant()"
           />
         }
-        <ng-container *ngIf="searchResults?.holdings?.length === 0">
+        @if (searchResults?.holdings?.length === 0) {
           @if (isLoading.holdings) {
             <ngx-skeleton-loader
               animation="pulse"
@@ -93,7 +90,7 @@
           } @else {
             <div class="px-3 py-1 text-muted" i18n>No entries...</div>
           }
-        </ng-container>
+        }
       </div>
       <div *ngIf="hasPermissionToAccessAdminControl" class="mt-2">
         <div class="font-weight-bold px-3 text-muted title" i18n>
@@ -108,7 +105,7 @@
             (clicked)="onCloseAssistant()"
           />
         }
-        <ng-container *ngIf="searchResults?.assetProfiles?.length === 0">
+        @if (searchResults?.assetProfiles?.length === 0) {
           @if (isLoading.assetProfiles) {
             <ngx-skeleton-loader
               animation="pulse"
@@ -121,7 +118,7 @@
           } @else {
             <div class="px-3 py-1 text-muted" i18n>No entries...</div>
           }
-        </ng-container>
+        }
       </div>
     </div>
   </div>
@@ -149,12 +146,14 @@
               @for (account of accounts; track account.id) {
                 <mat-option [value]="account.id">
                   <div class="d-flex">
-                    <gf-entity-logo
-                      *ngIf="account.Platform?.url"
-                      class="mr-1"
-                      [tooltip]="account.Platform?.name"
-                      [url]="account.Platform?.url"
-                    /><span>{{ account.name }}</span>
+                    @if (account.Platform?.url) {
+                      <gf-entity-logo
+                        class="mr-1"
+                        [tooltip]="account.Platform?.name"
+                        [url]="account.Platform?.url"
+                      />
+                    }
+                    <span>{{ account.name }}</span>
                   </div>
                 </mat-option>
               }
