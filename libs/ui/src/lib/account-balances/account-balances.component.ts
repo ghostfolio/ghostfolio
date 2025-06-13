@@ -31,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { format } from 'date-fns';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 
@@ -114,7 +115,7 @@ export class GfAccountBalancesComponent
     const accountBalance: CreateAccountBalanceDto = {
       accountId: this.accountId,
       balance: this.accountBalanceForm.get('balance').value,
-      date: this.accountBalanceForm.get('date').value.toISOString()
+      date: format(this.accountBalanceForm.get('date').value, 'yyyy-MM-dd')
     };
 
     try {
