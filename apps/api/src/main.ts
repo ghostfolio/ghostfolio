@@ -43,7 +43,9 @@ async function bootstrap() {
     defaultVersion: '1',
     type: VersioningType.URI
   });
-  app.setGlobalPrefix('api', { exclude: ['sitemap.xml'] });
+  app.setGlobalPrefix('api', {
+    exclude: ['sitemap.xml', '/:lang/auth/*wildcard']
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       forbidNonWhitelisted: true,
