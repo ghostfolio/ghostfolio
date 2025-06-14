@@ -22,6 +22,7 @@ import {
   LookupItem,
   LookupResponse
 } from '@ghostfolio/common/interfaces';
+import { MarketState } from '@ghostfolio/common/types';
 
 import { Injectable, Logger } from '@nestjs/common';
 import {
@@ -378,12 +379,22 @@ export class FinancialModelingPrepService implements DataProviderInterface {
       );
 
       for (const { price, symbol } of quotes) {
+        let marketState: MarketState = 'delayed';
+
+        if (
+          isCurrency(
+            symbol.substring(0, symbol.length - DEFAULT_CURRENCY.length)
+          )
+        ) {
+          marketState = 'open';
+        }
+
         response[symbol] = {
+          marketState,
           currency: currencyBySymbolMap[symbol]?.currency,
           dataProviderInfo: this.getDataProviderInfo(),
           dataSource: DataSource.FINANCIAL_MODELING_PREP,
-          marketPrice: price,
-          marketState: 'delayed'
+          marketPrice: price
         };
       }
     } catch (error) {
