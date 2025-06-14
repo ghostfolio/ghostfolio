@@ -7658,7 +7658,7 @@
       </trans-unit>
       <trans-unit id="a8f3c2cc84e0a86744659692af541ff749c21a8c" datatype="html">
         <source> Asset Profiles </source>
-        <target state="new"> Asset Profiles </target>
+        <target state="translated"> Profile zasobów </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">96</context>
