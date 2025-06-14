@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
 - Renamed `User` to `user` in the database schema
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Español (`es`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
