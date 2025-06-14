@@ -60,7 +60,9 @@ RUN apt-get update && apt-get install -y --no-install-suggests \
   openssl \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=node:node --from=builder /ghostfolio/dist/apps /ghostfolio/apps
+# Copy the client app with all its assets including .well-known directory
+COPY --chown=node:node --from=builder /ghostfolio/dist/apps/api /ghostfolio/apps/api
+COPY --chown=node:node --from=builder /ghostfolio/dist/apps/client /ghostfolio/apps/client
 COPY --chown=node:node ./docker/entrypoint.sh /ghostfolio/entrypoint.sh
 WORKDIR /ghostfolio/apps/api
 EXPOSE ${PORT:-3333}
