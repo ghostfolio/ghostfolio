@@ -83,6 +83,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
   private indexHtmlMap: { [languageCode: string]: string } = {};
 
   public constructor(private readonly i18nService: I18nService) {
+    Logger.debug('Initialize HtmlTemplateMiddleware', 'HtmlTemplateMiddleware');
+
     try {
       this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
         (map, languageCode) => ({
@@ -104,6 +106,8 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
   }
 
   public use(request: Request, response: Response, next: NextFunction) {
+    Logger.debug('use', 'HtmlTemplateMiddleware');
+
     const path = request.originalUrl.replace(/\/$/, '');
     let languageCode = path.substr(1, 2);
 
@@ -120,6 +124,17 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
       this.isFileRequest(path) ||
       !environment.production
     ) {
+      Logger.debug(`Path: ${path}`, 'HtmlTemplateMiddleware');
+      Logger.debug(
+        `Starts with api: ${path.startsWith('/api/')}`,
+        'HtmlTemplateMiddleware'
+      );
+      Logger.debug(
+        `File request: ${this.isFileRequest(path)}`,
+        'HtmlTemplateMiddleware'
+      );
+      Logger.debug('Skip', 'HtmlTemplateMiddleware');
+
       // Skip
       next();
     } else {
@@ -146,11 +161,15 @@ export class HtmlTemplateMiddleware implements NestMiddleware {
           })}`
       });
 
+      Logger.debug('Send index HTML', 'HtmlTemplateMiddleware');
+
       return response.send(indexHtml);
     }
   }
 
   private isFileRequest(filename: string) {
+    Logger.debug(`isFileRequest: ${filename}`, 'HtmlTemplateMiddleware');
+
     if (filename === '/assets/LICENSE') {
       return true;
     } else if (

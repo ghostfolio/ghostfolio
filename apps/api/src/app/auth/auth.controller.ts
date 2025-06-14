@@ -9,6 +9,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Logger,
   Param,
   Post,
   Req,
@@ -86,6 +87,8 @@ export class AuthController {
   ) {
     // Handles the Google OAuth2 callback
     const jwt: string = (request.user as any).jwt;
+
+    Logger.debug(`JWT: ${!!jwt} in google/callback`, 'AuthController');
 
     if (jwt) {
       response.redirect(
