@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Polish (`pl`)
+- Improved the language localization for Turkish (`tr`)
 - Upgraded the _Stripe_ dependencies
 
 ## 2.170.0 - 2025-06-11
