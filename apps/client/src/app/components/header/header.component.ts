@@ -86,7 +86,7 @@ export class HeaderComponent implements OnChanges {
   public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
   public routeAbout = routes.about;
-  public routeFeatures = routes.features;
+  public routeFeatures = publicRoutes.features.path;
   public routeMarkets = routes.markets;
   public routePricing = routes.pricing;
   public routeResources = routes.resources;
@@ -94,7 +94,7 @@ export class HeaderComponent implements OnChanges {
   public routerLinkAccount = internalRoutes.account.routerLink;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkAdminControl = ['/' + routes.adminControl];
-  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkMarkets = ['/' + routes.markets];
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPricing = ['/' + routes.pricing];

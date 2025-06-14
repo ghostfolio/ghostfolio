@@ -20,7 +20,7 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public isLoggedIn: boolean;
   public routerLinkBlog = ['/' + routes.blog];
   public routerLinkFaq = ['/' + routes.faq];
-  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public user: User;
 

@@ -26,7 +26,6 @@ export const routes = {
   blog: 'blog',
   changelog: $localize`:kebab-case:changelog`,
   faq: $localize`:kebab-case:faq`,
-  features: $localize`:kebab-case:features`,
   glossary: $localize`:kebab-case:glossary`,
   guides: $localize`:kebab-case:guides`,
   license: $localize`:kebab-case:license`,
@@ -121,6 +120,11 @@ export const internalRoutes: Record<string, IRoute> = {
 };
 
 export const publicRoutes = {
+  features: {
+    path: $localize`:kebab-case:features`,
+    routerLink: ['/' + $localize`:kebab-case:features`],
+    title: $localize`Features`
+  },
   openStartup: {
     path: 'open',
     routerLink: ['/open'],

@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,5 +12,5 @@ import { RouterModule } from '@angular/router';
 })
 export class ExploringThePathToFirePageComponent {
   public routerLinkBlog = ['/' + routes.blog];
-  public routerLinkFeatures = ['/' + routes.features];
+  public routerLinkFeatures = publicRoutes.features.routerLink;
 }

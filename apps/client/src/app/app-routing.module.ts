@@ -74,8 +74,8 @@ const routes: Routes = [
       import('./pages/features/features-page.component').then(
         (c) => c.GfFeaturesPageComponent
       ),
-    path: ghostfolioRoutes.features,
-    title: $localize`Features`
+    path: publicRoutes.features.path,
+    title: publicRoutes.features.title
   },
   {
     path: internalRoutes.home.path,
