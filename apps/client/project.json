@@ -200,7 +200,7 @@
             "command": "shx cp node_modules/ionicons/dist/index.js dist/apps/client"
           },
           {
-            "command": "shx cp node_modules/ionicons/dist/ionicons.js dist/apps/client"
+            "command": "shx cp node_modules/ionicons/dist/esm/ionicons.js dist/apps/client"
           },
           {
             "command": "shx cp -r node_modules/ionicons/dist/ionicons/* dist/apps/client/ionicons"
