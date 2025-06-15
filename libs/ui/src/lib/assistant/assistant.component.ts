@@ -40,6 +40,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass, DataSource } from '@prisma/client';
+import { differenceInYears } from 'date-fns';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 import {
@@ -332,6 +333,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     this.accounts = this.user?.accounts ?? [];
 
+    // Start with basic date range options that don't depend on user activity
     this.dateRangeOptions = [
       { label: $localize`Today`, value: '1d' },
       {
@@ -345,12 +347,20 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       {
         label: $localize`Year to date` + ' (' + $localize`YTD` + ')',
         value: 'ytd'
-      },
-      {
-        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
-        value: '1y'
       }
     ];
+
+    const currentDate = new Date();
+
+    if (
+      this.user?.dateOfFirstActivity &&
+      differenceInYears(currentDate, this.user.dateOfFirstActivity) >= 1
+    ) {
+      this.dateRangeOptions.push({
+        label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
+        value: '1y'
+      });
+    }
 
     // TODO
     // if (this.user?.settings?.isExperimentalFeatures) {
@@ -367,13 +377,19 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     //   );
     // }
 
-    this.dateRangeOptions = this.dateRangeOptions.concat([
-      {
+    // Only add the 5Y option if the user has activity data from at least 5 years ago
+    if (
+      this.user?.dateOfFirstActivity &&
+      differenceInYears(currentDate, this.user.dateOfFirstActivity) >= 5
+    ) {
+      this.dateRangeOptions.push({
         label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
         value: '5y'
-      },
-      { label: $localize`Max`, value: 'max' }
-    ]);
+      });
+    }
+
+    // Always add the Max option
+    this.dateRangeOptions.push({ label: $localize`Max`, value: 'max' });
 
     this.dateRangeFormControl.disable({ emitEvent: false });
 
