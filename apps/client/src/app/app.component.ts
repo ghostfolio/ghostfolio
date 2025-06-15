@@ -78,7 +78,7 @@ export class AppComponent implements OnDestroy, OnInit {
     '/' + routes.about,
     routes.termsOfService
   ];
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = ['/' + routes.faq];
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkMarkets = ['/' + routes.markets];
@@ -211,7 +211,7 @@ export class AppComponent implements OnDestroy, OnInit {
           this.deviceType !== 'mobile';
 
         this.showFooter =
-          (this.currentRoute === routes.blog ||
+          (this.currentRoute === publicRoutes.blog.path ||
             this.currentRoute === publicRoutes.features.path ||
             this.currentRoute === routes.markets ||
             this.currentRoute === publicRoutes.openStartup.path ||

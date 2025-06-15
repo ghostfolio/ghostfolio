@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './unlock-your-financial-potential-with-ghostfolio-page.html'
 })
 export class UnlockYourFinancialPotentialWithGhostfolioPageComponent {
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkResources = ['/' + routes.resources];
 }

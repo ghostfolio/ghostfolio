@@ -51,7 +51,7 @@ const routes: Routes = [
       import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
   },
   {
-    path: ghostfolioRoutes.blog,
+    path: publicRoutes.blog.path,
     loadChildren: () =>
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
   },

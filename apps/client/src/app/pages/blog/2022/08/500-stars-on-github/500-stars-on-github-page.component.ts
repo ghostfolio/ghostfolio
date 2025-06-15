@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './500-stars-on-github-page.html'
 })
 export class FiveHundredStarsOnGitHubPageComponent {
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkMarkets = ['/' + routes.markets];
   public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

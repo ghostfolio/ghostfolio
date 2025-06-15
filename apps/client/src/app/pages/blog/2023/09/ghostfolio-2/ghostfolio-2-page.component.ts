@@ -13,7 +13,7 @@ import { RouterModule } from '@angular/router';
 export class Ghostfolio2PageComponent {
   public routerLinkAbout = ['/' + routes.about];
   public routerLinkAboutChangelog = ['/' + routes.about, routes.changelog];
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkMarkets = ['/' + routes.markets];
 }

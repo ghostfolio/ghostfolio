@@ -18,7 +18,7 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public isLoggedIn: boolean;
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = ['/' + routes.faq];
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
