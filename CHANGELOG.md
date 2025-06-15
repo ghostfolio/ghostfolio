@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed a date offset issue with account balances
 - Fixed missing `/.well-known/assetlinks.json` for TWA
 
 ## 2.170.0 - 2025-06-11
