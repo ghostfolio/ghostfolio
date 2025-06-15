@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -7,7 +9,7 @@ const routes: Routes = [
   {
     component: ResourcesGlossaryPageComponent,
     path: '',
-    title: $localize`Glossary`
+    title: publicRoutes.resources.subRoutes.glossary.title
   }
 ];
 

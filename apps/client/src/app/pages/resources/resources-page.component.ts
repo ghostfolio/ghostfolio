@@ -1,5 +1,5 @@
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -18,22 +18,22 @@ export class ResourcesPageComponent implements OnInit {
     {
       iconName: 'reader-outline',
       label: $localize`Overview`,
-      routerLink: ['/' + routes.resources]
+      routerLink: publicRoutes.resources.routerLink
     },
     {
       label: $localize`Guides`,
       iconName: 'book-outline',
-      routerLink: ['/' + routes.resources, routes.guides]
+      routerLink: publicRoutes.resources.subRoutes.guides.routerLink
     },
     {
       iconName: 'newspaper-outline',
       label: $localize`Markets`,
-      routerLink: ['/' + routes.resources, routes.markets]
+      routerLink: publicRoutes.resources.subRoutes.markets.routerLink
     },
     {
       iconName: 'library-outline',
       label: $localize`Glossary`,
-      routerLink: ['/' + routes.resources, routes.glossary]
+      routerLink: publicRoutes.resources.subRoutes.glossary.routerLink
     }
   ];
 

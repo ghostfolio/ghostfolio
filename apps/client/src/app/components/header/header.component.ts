@@ -85,11 +85,11 @@ export class HeaderComponent implements OnChanges {
   public impersonationId: string;
   public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
-  public routeAbout = routes.about;
+  public routeAbout = publicRoutes.about.path;
   public routeFeatures = publicRoutes.features.path;
   public routeMarkets = publicRoutes.markets.path;
   public routePricing = publicRoutes.pricing.path;
-  public routeResources = routes.resources;
+  public routeResources = publicRoutes.resources.path;
   public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkAccount = internalRoutes.account.routerLink;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
@@ -99,7 +99,7 @@ export class HeaderComponent implements OnChanges {
   public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = ['/' + routes.resources];
+  public routerLinkResources = publicRoutes.resources.routerLink;
   public routes = routes;
 
   private unsubscribeSubject = new Subject<void>();
