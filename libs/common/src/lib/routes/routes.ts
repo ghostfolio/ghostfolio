@@ -21,12 +21,7 @@ export const routes = {
   webauthn: 'webauthn',
 
   // Publicly accessible pages
-  about: $localize`:kebab-case:about`,
-  glossary: $localize`:kebab-case:glossary`,
-  guides: $localize`:kebab-case:guides`,
-  markets: $localize`:kebab-case:markets`,
-  openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  resources: $localize`:kebab-case:resources`
+  openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`
 };
 
 export const internalRoutes: Record<string, IRoute> = {
@@ -203,5 +198,36 @@ export const publicRoutes = {
     path: $localize`:kebab-case:register`,
     routerLink: ['/' + $localize`:kebab-case:register`],
     title: $localize`Registration`
+  },
+  resources: {
+    path: $localize`:kebab-case:resources`,
+    routerLink: ['/' + $localize`:kebab-case:resources`],
+    subRoutes: {
+      glossary: {
+        path: $localize`:kebab-case:glossary`,
+        routerLink: [
+          '/' + $localize`:kebab-case:resources`,
+          $localize`:kebab-case:glossary`
+        ],
+        title: $localize`Glossary`
+      },
+      guides: {
+        path: $localize`:kebab-case:guides`,
+        routerLink: [
+          '/' + $localize`:kebab-case:resources`,
+          $localize`:kebab-case:guides`
+        ],
+        title: $localize`Guides`
+      },
+      markets: {
+        path: $localize`:kebab-case:markets`,
+        routerLink: [
+          '/' + $localize`:kebab-case:resources`,
+          $localize`:kebab-case:markets`
+        ],
+        title: $localize`Markets`
+      }
+    },
+    title: $localize`Resources`
   }
 };

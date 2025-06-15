@@ -1,5 +1,8 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes/routes';
+import {
+  routes as ghostfolioRoutes,
+  publicRoutes
+} from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -19,21 +22,21 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.glossary,
+        path: publicRoutes.resources.subRoutes.glossary.path,
         loadChildren: () =>
           import('./glossary/resources-glossary.module').then(
             (m) => m.ResourcesGlossaryPageModule
           )
       },
       {
-        path: ghostfolioRoutes.guides,
+        path: publicRoutes.resources.subRoutes.guides.path,
         loadChildren: () =>
           import('./guides/resources-guides.module').then(
             (m) => m.ResourcesGuidesModule
           )
       },
       {
-        path: ghostfolioRoutes.markets,
+        path: publicRoutes.resources.subRoutes.markets.path,
         loadChildren: () =>
           import('./markets/resources-markets.module').then(
             (m) => m.ResourcesMarketsModule
@@ -48,7 +51,7 @@ const routes: Routes = [
       }))
     ],
     path: '',
-    title: $localize`Resources`
+    title: publicRoutes.resources.title
   }
 ];
 

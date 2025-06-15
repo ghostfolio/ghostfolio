@@ -19,7 +19,7 @@ import { catchError } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
-    `/${routes.about}`,
+    `/${publicRoutes.about.path}`,
     `/${publicRoutes.blog.path}`,
     `/${routes.demo}`,
     `/${publicRoutes.faq.path}`,
@@ -29,7 +29,7 @@ export class AuthGuard {
     `/${publicRoutes.pricing.path}`,
     `/${routes.public}`,
     `/${publicRoutes.register.path}`,
-    `/${routes.resources}`
+    `/${publicRoutes.resources.path}`
   ];
 
   public constructor(

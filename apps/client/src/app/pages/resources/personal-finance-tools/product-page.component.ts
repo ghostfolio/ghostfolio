@@ -23,7 +23,7 @@ export class GfProductPageComponent implements OnInit {
   public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkResourcesPersonalFinanceTools = [
-    '/' + routes.resources,
+    '/' + publicRoutes.resources.path,
     routes.personalFinanceTools
   ];
   public tags: string[];

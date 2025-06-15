@@ -83,7 +83,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
-  public routerLinkResources = ['/' + routes.resources];
+  public routerLinkResources = publicRoutes.resources.routerLink;
   public showFooter = false;
   public user: User;
 
@@ -198,9 +198,9 @@ export class AppComponent implements OnDestroy, OnInit {
         }
 
         this.hasTabs =
-          (this.currentRoute === routes.about ||
+          (this.currentRoute === publicRoutes.about.path ||
             this.currentRoute === publicRoutes.faq.path ||
-            this.currentRoute === routes.resources ||
+            this.currentRoute === publicRoutes.resources.path ||
             this.currentRoute === internalRoutes.account.path ||
             this.currentRoute === routes.adminControl ||
             this.currentRoute === internalRoutes.home.path ||

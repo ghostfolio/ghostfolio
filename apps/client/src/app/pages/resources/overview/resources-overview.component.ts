@@ -1,4 +1,4 @@
-import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 
@@ -19,20 +19,20 @@ export class ResourcesOverviewComponent {
     {
       description:
         'Explore our guides to help you get started with investing and managing your finances.',
-      routerLink: ['/' + routes.resources, routes.guides],
-      title: 'Guides'
+      routerLink: publicRoutes.resources.subRoutes.guides.routerLink,
+      title: publicRoutes.resources.subRoutes.guides.title
     },
     {
       description:
         'Access various market resources and tools to stay informed about financial markets.',
-      routerLink: ['/' + routes.resources, routes.markets],
-      title: 'Markets'
+      routerLink: publicRoutes.resources.subRoutes.markets.routerLink,
+      title: publicRoutes.resources.subRoutes.markets.title
     },
     {
       description:
         'Learn key financial terms and concepts in our comprehensive glossary.',
-      routerLink: ['/' + routes.resources, routes.glossary],
-      title: 'Glossary'
+      routerLink: publicRoutes.resources.subRoutes.glossary.routerLink,
+      title: publicRoutes.resources.subRoutes.glossary.title
     }
   ];
 }

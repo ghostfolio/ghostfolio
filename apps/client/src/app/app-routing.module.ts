@@ -13,7 +13,7 @@ import { ModulePreloadService } from './core/module-preload.service';
 
 const routes: Routes = [
   {
-    path: ghostfolioRoutes.about,
+    path: publicRoutes.about.path,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
@@ -132,7 +132,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.resources,
+    path: publicRoutes.resources.path,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
         (m) => m.ResourcesPageModule

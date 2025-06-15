@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 })
 export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public pathAlternativeTo = routes.openSourceAlternativeTo + '-';
-  public pathResources = '/' + routes.resources;
+  public pathResources = publicRoutes.resources.path;
   public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
