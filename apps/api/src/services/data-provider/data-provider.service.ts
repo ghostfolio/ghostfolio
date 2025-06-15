@@ -39,6 +39,7 @@ import ms from 'ms';
 @Injectable()
 export class DataProviderService {
   private dataProviderMapping: { [dataProviderName: string]: string };
+  private isInitialized = false;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -53,10 +54,16 @@ export class DataProviderService {
   }
 
   public async initialize() {
+    if (this.isInitialized) {
+      return;
+    }
+
     this.dataProviderMapping =
       ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
         [dataProviderName: string]: string;
       }) ?? {};
+
+    this.isInitialized = true;
   }
 
   public async checkQuote(dataSource: DataSource) {
