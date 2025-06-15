@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
-import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import {
   HTTP_INTERCEPTORS,
@@ -60,7 +60,9 @@ export class HttpResponseInterceptor implements HttpInterceptor {
                   duration: ms('6 seconds')
                 }
               );
-            } else if (!error.url.includes('/auth')) {
+            } else if (
+              !error.url.includes(internalRoutes.auth.routerLink.join(''))
+            ) {
               this.snackBarRef = this.snackBar.open(
                 $localize`This action is not allowed.`,
                 undefined,
@@ -111,7 +113,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         } else if (error.status === StatusCodes.UNAUTHORIZED) {
           if (!error.url.includes('/data-providers/ghostfolio/status')) {
             if (this.webAuthnService.isEnabled()) {
-              this.router.navigate(['/' + routes.webauthn]);
+              this.router.navigate(internalRoutes.webauthn.routerLink);
             } else {
               this.tokenStorageService.signOut();
             }

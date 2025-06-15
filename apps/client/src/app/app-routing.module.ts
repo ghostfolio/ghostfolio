@@ -32,7 +32,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.adminControl,
+    path: internalRoutes.adminControl.path,
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
@@ -46,9 +46,10 @@ const routes: Routes = [
     title: 'Ghostfolio API'
   },
   {
-    path: ghostfolioRoutes.auth,
+    path: internalRoutes.auth.path,
     loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
+      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule),
+    title: internalRoutes.auth.title
   },
   {
     path: publicRoutes.blog.path,
@@ -61,7 +62,7 @@ const routes: Routes = [
       import('./pages/demo/demo-page.component').then(
         (c) => c.GfDemoPageComponent
       ),
-    path: ghostfolioRoutes.demo
+    path: publicRoutes.demo.path
   },
   {
     path: publicRoutes.faq.path,
@@ -139,7 +140,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.start,
+    path: publicRoutes.start.path,
     loadChildren: () =>
       import('./pages/landing/landing-page.module').then(
         (m) => m.LandingPageModule
@@ -150,8 +151,8 @@ const routes: Routes = [
       import('./pages/webauthn/webauthn-page.component').then(
         (c) => c.GfWebauthnPageComponent
       ),
-    path: ghostfolioRoutes.webauthn,
-    title: $localize`Sign in`
+    path: internalRoutes.webauthn.path,
+    title: internalRoutes.webauthn.title
   },
   {
     path: internalRoutes.zen.path,

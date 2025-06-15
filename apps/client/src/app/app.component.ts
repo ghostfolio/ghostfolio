@@ -202,7 +202,7 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === publicRoutes.faq.path ||
             this.currentRoute === publicRoutes.resources.path ||
             this.currentRoute === internalRoutes.account.path ||
-            this.currentRoute === routes.adminControl ||
+            this.currentRoute === internalRoutes.adminControl.path ||
             this.currentRoute === internalRoutes.home.path ||
             this.currentRoute === internalRoutes.portfolio.path ||
             this.currentRoute === internalRoutes.zen.path) &&
@@ -216,7 +216,7 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === routes.public ||
             this.currentRoute === publicRoutes.pricing.path ||
             this.currentRoute === publicRoutes.register.path ||
-            this.currentRoute === routes.start) &&
+            this.currentRoute === publicRoutes.start.path) &&
           this.deviceType !== 'mobile';
 
         if (this.deviceType === 'mobile') {
