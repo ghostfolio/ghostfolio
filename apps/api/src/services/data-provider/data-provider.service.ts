@@ -29,7 +29,7 @@ import {
 import { hasRole } from '@ghostfolio/common/permissions';
 import type { Granularity, UserWithSettings } from '@ghostfolio/common/types';
 
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { DataSource, MarketData, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { eachDayOfInterval, format, isBefore, isValid } from 'date-fns';
@@ -37,9 +37,8 @@ import { groupBy, isEmpty, isNumber, uniqWith } from 'lodash';
 import ms from 'ms';
 
 @Injectable()
-export class DataProviderService {
+export class DataProviderService implements OnModuleInit {
   private dataProviderMapping: { [dataProviderName: string]: string };
-  private isInitialized = false;
 
   public constructor(
     private readonly configurationService: ConfigurationService,
@@ -49,21 +48,13 @@ export class DataProviderService {
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
     private readonly redisCacheService: RedisCacheService
-  ) {
-    this.initialize();
-  }
+  ) {}
 
-  public async initialize() {
-    if (this.isInitialized) {
-      return;
-    }
-
+  public async onModuleInit() {
     this.dataProviderMapping =
       ((await this.propertyService.getByKey(PROPERTY_DATA_SOURCE_MAPPING)) as {
         [dataProviderName: string]: string;
       }) ?? {};
-
-    this.isInitialized = true;
   }
 
   public async checkQuote(dataSource: DataSource) {
