@@ -119,7 +119,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.public,
+    path: publicRoutes.public.path,
     loadChildren: () =>
       import('./pages/public/public-page.module').then(
         (m) => m.PublicPageModule
