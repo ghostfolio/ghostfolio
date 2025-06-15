@@ -23,6 +23,7 @@ export class ImportActivitiesService {
   private static FEE_KEYS = ['commission', 'fee', 'ibcommission'];
   private static QUANTITY_KEYS = ['qty', 'quantity', 'shares', 'units'];
   private static SYMBOL_KEYS = ['code', 'symbol', 'ticker'];
+  private static TAGS_KEYS = ['tags', 'labels'];
   private static TYPE_KEYS = ['action', 'buy/sell', 'type'];
   private static UNIT_PRICE_KEYS = [
     'price',
@@ -61,6 +62,7 @@ export class ImportActivitiesService {
         fee: this.parseFee({ content, index, item }),
         quantity: this.parseQuantity({ content, index, item }),
         symbol: this.parseSymbol({ content, index, item }),
+        tags: this.parseTags({ item }),
         type: this.parseType({ content, index, item }),
         unitPrice: this.parseUnitPrice({ content, index, item }),
         updateAccountBalance: false
@@ -131,6 +133,7 @@ export class ImportActivitiesService {
     fee,
     quantity,
     SymbolProfile,
+    tags,
     type,
     unitPrice,
     updateAccountBalance
@@ -140,6 +143,7 @@ export class ImportActivitiesService {
       comment,
       fee,
       quantity,
+      tags,
       type,
       unitPrice,
       updateAccountBalance,
@@ -382,6 +386,26 @@ export class ImportActivitiesService {
       activities: content,
       message: `activities.${index}.unitPrice is not valid`
     };
+  }
+
+  private parseTags({ item }: { item: any }): { name: string }[] {
+    item = this.lowercaseKeys(item);
+
+    for (const key of ImportActivitiesService.TAGS_KEYS) {
+      if (item[key]) {
+        // Handle both comma-separated strings and arrays
+        const tagValues = Array.isArray(item[key]) 
+          ? item[key] 
+          : item[key].toString().split(',');
+
+        return tagValues
+          .map(tag => tag.trim())
+          .filter(tag => tag.length > 0)
+          .map(tag => ({ name: tag }));
+      }
+    }
+
+    return [];
   }
 
   private postImport(
