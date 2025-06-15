@@ -23,7 +23,6 @@ export const routes = {
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
-  blog: 'blog',
   changelog: $localize`:kebab-case:changelog`,
   faq: $localize`:kebab-case:faq`,
   glossary: $localize`:kebab-case:glossary`,
@@ -129,6 +128,11 @@ export const publicRoutes = {
       }
     },
     title: $localize`About`
+  },
+  blog: {
+    path: 'blog',
+    routerLink: ['/blog'],
+    title: $localize`Blog`
   },
   features: {
     path: $localize`:kebab-case:features`,

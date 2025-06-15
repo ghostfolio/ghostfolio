@@ -20,7 +20,7 @@ import { catchError } from 'rxjs/operators';
 export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
     `/${routes.about}`,
-    `/${routes.blog}`,
+    `/${publicRoutes.blog.path}`,
     `/${routes.demo}`,
     `/${routes.faq}`,
     `/${publicRoutes.features.path}`,
