@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changelog
 
 - Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Portuguese (`pt`)
 
 ## 2.171.0 - 2025-06-15
 
