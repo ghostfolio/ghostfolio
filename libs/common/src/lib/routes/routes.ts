@@ -31,7 +31,6 @@ export const routes = {
   license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  ossFriends: 'oss-friends',
   pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
   resources: $localize`:kebab-case:resources`,
@@ -120,6 +119,18 @@ export const internalRoutes: Record<string, IRoute> = {
 };
 
 export const publicRoutes = {
+  about: {
+    path: $localize`:kebab-case:about`,
+    routerLink: ['/' + $localize`:kebab-case:about`],
+    subRoutes: {
+      ossFriends: {
+        path: 'oss-friends',
+        routerLink: ['/' + $localize`:kebab-case:about`, 'oss-friends'],
+        title: 'OSS Friends'
+      }
+    },
+    title: $localize`About`
+  },
   features: {
     path: $localize`:kebab-case:features`,
     routerLink: ['/' + $localize`:kebab-case:features`],

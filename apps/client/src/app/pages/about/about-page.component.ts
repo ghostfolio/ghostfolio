@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -81,8 +81,8 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
         this.tabs.push({
           iconName: 'happy-outline',
-          label: 'OSS Friends',
-          path: ['/' + routes.about, routes.ossFriends]
+          label: publicRoutes.about.subRoutes.ossFriends.title,
+          path: publicRoutes.about.subRoutes.ossFriends.routerLink
         });
       });
   }

@@ -1,5 +1,8 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes/routes';
+import {
+  routes as ghostfolioRoutes,
+  publicRoutes
+} from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -32,7 +35,7 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.ossFriends,
+        path: publicRoutes.about.subRoutes.ossFriends.path,
         loadChildren: () =>
           import('./oss-friends/oss-friends-page.module').then(
             (m) => m.OpenSourceSoftwareFriendsPageModule
