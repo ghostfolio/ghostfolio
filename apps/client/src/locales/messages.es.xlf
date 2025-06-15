@@ -5801,7 +5801,7 @@
         <target state="translated">¿Realmente desea eliminar el saldo de esta cuenta?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/account-balances/account-balances.component.ts</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">110</context>
         </context-group>
       </trans-unit>
       <trans-unit id="62c28ddba8fedb2ae7b0fff9a641778b59791aa2" datatype="html">
