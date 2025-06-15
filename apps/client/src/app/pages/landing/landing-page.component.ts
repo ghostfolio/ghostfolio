@@ -25,7 +25,7 @@ export class LandingPageComponent implements OnDestroy, OnInit {
   public hasPermissionForStatistics: boolean;
   public hasPermissionForSubscription: boolean;
   public hasPermissionToCreateUser: boolean;
-  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkDemo = ['/' + routes.demo];
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;

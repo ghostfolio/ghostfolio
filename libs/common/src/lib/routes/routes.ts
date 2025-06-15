@@ -22,15 +22,11 @@ export const routes = {
 
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
-  changelog: $localize`:kebab-case:changelog`,
   glossary: $localize`:kebab-case:glossary`,
   guides: $localize`:kebab-case:guides`,
-  license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  privacyPolicy: $localize`:kebab-case:privacy-policy`,
-  resources: $localize`:kebab-case:resources`,
-  termsOfService: $localize`:kebab-case:terms-of-service`
+  resources: $localize`:kebab-case:resources`
 };
 
 export const internalRoutes: Record<string, IRoute> = {
@@ -118,10 +114,42 @@ export const publicRoutes = {
     path: $localize`:kebab-case:about`,
     routerLink: ['/' + $localize`:kebab-case:about`],
     subRoutes: {
+      changelog: {
+        path: $localize`:kebab-case:changelog`,
+        routerLink: [
+          '/' + $localize`:kebab-case:about`,
+          $localize`:kebab-case:changelog`
+        ],
+        title: $localize`Changelog`
+      },
+      license: {
+        path: $localize`:kebab-case:license`,
+        routerLink: [
+          '/' + $localize`:kebab-case:about`,
+          $localize`:kebab-case:license`
+        ],
+        title: $localize`License`
+      },
       ossFriends: {
         path: 'oss-friends',
         routerLink: ['/' + $localize`:kebab-case:about`, 'oss-friends'],
         title: 'OSS Friends'
+      },
+      privacyPolicy: {
+        path: $localize`:kebab-case:privacy-policy`,
+        routerLink: [
+          '/' + $localize`:kebab-case:about`,
+          $localize`:kebab-case:privacy-policy`
+        ],
+        title: $localize`Privacy Policy`
+      },
+      termsOfService: {
+        path: $localize`:kebab-case:terms-of-service`,
+        routerLink: [
+          '/' + $localize`:kebab-case:about`,
+          $localize`:kebab-case:terms-of-service`
+        ],
+        title: $localize`Terms of Service`
       }
     },
     title: $localize`About`

@@ -1,5 +1,5 @@
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -17,7 +17,7 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public personalFinanceTools = personalFinanceTools.sort((a, b) => {
     return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
   });
-  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAbout = publicRoutes.about.routerLink;
 
   private unsubscribeSubject = new Subject<void>();
 

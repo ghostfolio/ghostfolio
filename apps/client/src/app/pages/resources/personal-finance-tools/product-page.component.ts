@@ -20,7 +20,7 @@ export class GfProductPageComponent implements OnInit {
   public price: number;
   public product1: Product;
   public product2: Product;
-  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
   public routerLinkResourcesPersonalFinanceTools = [
     '/' + routes.resources,

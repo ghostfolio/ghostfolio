@@ -90,7 +90,7 @@ export class HeaderComponent implements OnChanges {
   public routeMarkets = publicRoutes.markets.path;
   public routePricing = publicRoutes.pricing.path;
   public routeResources = routes.resources;
-  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkAccount = internalRoutes.account.routerLink;
   public routerLinkAccounts = internalRoutes.accounts.routerLink;
   public routerLinkAdminControl = ['/' + routes.adminControl];
