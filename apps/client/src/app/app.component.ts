@@ -67,17 +67,15 @@ export class AppComponent implements OnDestroy, OnInit {
   public hasTabs = false;
   public info: InfoItem;
   public pageTitle: string;
-  public routerLinkAbout = ['/' + routes.about];
-  public routerLinkAboutChangelog = ['/' + routes.about, routes.changelog];
-  public routerLinkAboutLicense = ['/' + routes.about, routes.license];
-  public routerLinkAboutPrivacyPolicy = [
-    '/' + routes.about,
-    routes.privacyPolicy
-  ];
-  public routerLinkAboutTermsOfService = [
-    '/' + routes.about,
-    routes.termsOfService
-  ];
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAboutChangelog =
+    publicRoutes.about.subRoutes.changelog.routerLink;
+  public routerLinkAboutLicense =
+    publicRoutes.about.subRoutes.license.routerLink;
+  public routerLinkAboutPrivacyPolicy =
+    publicRoutes.about.subRoutes.privacyPolicy.routerLink;
+  public routerLinkAboutTermsOfService =
+    publicRoutes.about.subRoutes.termsOfService.routerLink;
   public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = publicRoutes.faq.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;

@@ -1,8 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import {
-  routes as ghostfolioRoutes,
-  publicRoutes
-} from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -21,14 +18,14 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.changelog,
+        path: publicRoutes.about.subRoutes.changelog.path,
         loadChildren: () =>
           import('./changelog/changelog-page.module').then(
             (m) => m.ChangelogPageModule
           )
       },
       {
-        path: ghostfolioRoutes.license,
+        path: publicRoutes.about.subRoutes.license.path,
         loadChildren: () =>
           import('./license/license-page.module').then(
             (m) => m.LicensePageModule
@@ -42,14 +39,14 @@ const routes: Routes = [
           )
       },
       {
-        path: ghostfolioRoutes.privacyPolicy,
+        path: publicRoutes.about.subRoutes.privacyPolicy.path,
         loadChildren: () =>
           import('./privacy-policy/privacy-policy-page.module').then(
             (m) => m.PrivacyPolicyPageModule
           )
       },
       {
-        path: ghostfolioRoutes.termsOfService,
+        path: publicRoutes.about.subRoutes.termsOfService.path,
         loadChildren: () =>
           import('./terms-of-service/terms-of-service-page.module').then(
             (m) => m.TermsOfServicePageModule
@@ -58,7 +55,7 @@ const routes: Routes = [
     ],
     component: AboutPageComponent,
     path: '',
-    title: $localize`About`
+    title: publicRoutes.about.title
   }
 ];
 
