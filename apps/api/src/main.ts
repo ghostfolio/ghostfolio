@@ -1,7 +1,8 @@
 import {
   DEFAULT_HOST,
   DEFAULT_PORT,
-  STORYBOOK_PATH
+  STORYBOOK_PATH,
+  SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
 import {
@@ -44,7 +45,10 @@ async function bootstrap() {
     type: VersioningType.URI
   });
   app.setGlobalPrefix('api', {
-    exclude: ['sitemap.xml', '/:lang/auth/*wildcard']
+    exclude: [
+      'sitemap.xml',
+      ...SUPPORTED_LANGUAGE_CODES.map((lang) => `/${lang}/*wildcard`)
+    ]
   });
   app.useGlobalPipes(
     new ValidationPipe({
