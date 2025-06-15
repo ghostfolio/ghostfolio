@@ -64,7 +64,7 @@ const routes: Routes = [
     path: ghostfolioRoutes.demo
   },
   {
-    path: ghostfolioRoutes.faq,
+    path: publicRoutes.faq.path,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
   },

@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -36,18 +36,18 @@ export class FaqPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`General`,
-        routerLink: ['/' + routes.faq]
+        routerLink: publicRoutes.faq.routerLink
       },
       {
         iconName: 'cloudy-outline',
         label: $localize`Cloud` + ' (SaaS)',
-        routerLink: ['/' + routes.faq, routes.saas],
+        routerLink: publicRoutes.faq.subRoutes.saas.routerLink,
         showCondition: this.hasPermissionForSubscription
       },
       {
         iconName: 'server-outline',
         label: $localize`Self-Hosting`,
-        routerLink: ['/' + routes.faq, routes.selfHosting]
+        routerLink: publicRoutes.faq.subRoutes.selfHosting.routerLink
       }
     ];
   }

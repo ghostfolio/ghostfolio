@@ -15,7 +15,6 @@ export const routes = {
   membership: 'membership',
   personalFinanceTools: 'personal-finance-tools',
   public: 'p',
-  saas: 'saas',
   settings: 'settings',
   start: 'start',
   users: 'users',
@@ -24,7 +23,6 @@ export const routes = {
   // Publicly accessible pages
   about: $localize`:kebab-case:about`,
   changelog: $localize`:kebab-case:changelog`,
-  faq: $localize`:kebab-case:faq`,
   glossary: $localize`:kebab-case:glossary`,
   guides: $localize`:kebab-case:guides`,
   license: $localize`:kebab-case:license`,
@@ -32,7 +30,6 @@ export const routes = {
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
   resources: $localize`:kebab-case:resources`,
-  selfHosting: $localize`:kebab-case:self-hosting`,
   termsOfService: $localize`:kebab-case:terms-of-service`
 };
 
@@ -133,6 +130,26 @@ export const publicRoutes = {
     path: 'blog',
     routerLink: ['/blog'],
     title: $localize`Blog`
+  },
+  faq: {
+    path: $localize`:kebab-case:faq`,
+    routerLink: ['/' + $localize`:kebab-case:faq`],
+    subRoutes: {
+      saas: {
+        path: 'saas',
+        routerLink: ['/' + $localize`:kebab-case:faq`, 'saas'],
+        title: $localize`Cloud` + ' (SaaS)'
+      },
+      selfHosting: {
+        path: $localize`:kebab-case:self-hosting`,
+        routerLink: [
+          '/' + $localize`:kebab-case:faq`,
+          $localize`:kebab-case:self-hosting`
+        ],
+        title: $localize`Self-Hosting`
+      }
+    },
+    title: $localize`Frequently Asked Questions (FAQ)`
   },
   features: {
     path: $localize`:kebab-case:features`,
