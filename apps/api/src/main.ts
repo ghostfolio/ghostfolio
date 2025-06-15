@@ -47,7 +47,9 @@ async function bootstrap() {
   app.setGlobalPrefix('api', {
     exclude: [
       'sitemap.xml',
-      ...SUPPORTED_LANGUAGE_CODES.map((lang) => `/${lang}/*wildcard`)
+      ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
+        return `/${languageCode}/*wildcard`;
+      })
     ]
   });
   app.useGlobalPipes(
