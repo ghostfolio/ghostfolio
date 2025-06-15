@@ -2,7 +2,7 @@ import { CreateAccountBalanceDto } from '@ghostfolio/api/app/account-balance/cre
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
-import { getLocale } from '@ghostfolio/common/helper';
+import { DEFAULT_FORMAT, getLocale } from '@ghostfolio/common/helper';
 import { AccountBalancesResponse } from '@ghostfolio/common/interfaces';
 
 import {
@@ -115,7 +115,7 @@ export class GfAccountBalancesComponent
     const accountBalance: CreateAccountBalanceDto = {
       accountId: this.accountId,
       balance: this.accountBalanceForm.get('balance').value,
-      date: format(this.accountBalanceForm.get('date').value, 'yyyy-MM-dd')
+      date: format(this.accountBalanceForm.get('date').value, DEFAULT_FORMAT)
     };
 
     try {
