@@ -22,7 +22,7 @@ export class AuthGuard {
     `/${routes.about}`,
     `/${publicRoutes.blog.path}`,
     `/${routes.demo}`,
-    `/${routes.faq}`,
+    `/${publicRoutes.faq.path}`,
     `/${publicRoutes.features.path}`,
     `/${routes.markets}`,
     `/${publicRoutes.openStartup.path}`,
