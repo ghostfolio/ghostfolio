@@ -111,7 +111,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.pricing,
+    path: publicRoutes.pricing.path,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule

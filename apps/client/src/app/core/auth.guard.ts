@@ -26,7 +26,7 @@ export class AuthGuard {
     `/${publicRoutes.features.path}`,
     `/${routes.markets}`,
     `/${publicRoutes.openStartup.path}`,
-    `/${routes.pricing}`,
+    `/${publicRoutes.pricing.path}`,
     `/${routes.public}`,
     `/${publicRoutes.register.path}`,
     `/${routes.resources}`
