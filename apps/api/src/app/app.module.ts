@@ -127,8 +127,8 @@ import { UserModule } from './user/user.module';
       }
     }),
     ServeStaticModule.forRoot({
-      serveRoot: '/.well-known',
-      rootPath: join(__dirname, '..', 'client', '.well-known')
+      rootPath: join(__dirname, '..', 'client', '.well-known'),
+      serveRoot: '/.well-known'
     }),
     SitemapModule,
     SubscriptionModule,
