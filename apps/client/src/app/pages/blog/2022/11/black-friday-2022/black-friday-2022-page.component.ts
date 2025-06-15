@@ -14,5 +14,5 @@ import { RouterModule } from '@angular/router';
 export class BlackFriday2022PageComponent {
   public routerLinkBlog = ['/' + routes.blog];
   public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

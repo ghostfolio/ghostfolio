@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { WebAuthnService } from '@ghostfolio/client/services/web-authn.service';
 import { InfoItem } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
 
 import {
   HTTP_INTERCEPTORS,
@@ -75,7 +75,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
             });
 
             this.snackBarRef.onAction().subscribe(() => {
-              this.router.navigate(['/' + routes.pricing]);
+              this.router.navigate(publicRoutes.pricing.routerLink);
             });
           }
         } else if (error.status === StatusCodes.INTERNAL_SERVER_ERROR) {
