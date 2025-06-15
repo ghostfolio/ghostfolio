@@ -5,9 +5,7 @@ import { IRoute } from './interfaces/interfaces';
 export const routes = {
   api: 'api',
   i18n: 'i18n',
-  market: 'market',
   personalFinanceTools: 'personal-finance-tools',
-  public: 'p',
 
   // Publicly accessible pages
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`
@@ -78,6 +76,11 @@ export const internalRoutes: Record<string, IRoute> = {
         path: 'holdings',
         routerLink: ['/home', 'holdings'],
         title: $localize`Holdings`
+      },
+      markets: {
+        path: 'markets',
+        routerLink: ['/home', 'markets'],
+        title: $localize`Markets`
       },
       summary: {
         path: 'summary',
@@ -239,6 +242,10 @@ export const publicRoutes = {
     path: $localize`:kebab-case:pricing`,
     routerLink: ['/' + $localize`:kebab-case:pricing`],
     title: $localize`Pricing`
+  },
+  public: {
+    path: 'p',
+    routerLink: ['/p']
   },
   register: {
     path: $localize`:kebab-case:register`,
