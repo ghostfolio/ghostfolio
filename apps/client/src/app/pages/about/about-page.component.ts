@@ -44,17 +44,17 @@ export class AboutPageComponent implements OnDestroy, OnInit {
           {
             iconName: 'information-circle-outline',
             label: $localize`About`,
-            path: ['/' + routes.about]
+            routerLink: ['/' + routes.about]
           },
           {
             iconName: 'sparkles-outline',
             label: $localize`Changelog`,
-            path: ['/' + routes.about, routes.changelog]
+            routerLink: ['/' + routes.about, routes.changelog]
           },
           {
             iconName: 'ribbon-outline',
             label: $localize`License`,
-            path: ['/' + routes.about, routes.license],
+            routerLink: ['/' + routes.about, routes.license],
             showCondition: !this.hasPermissionForSubscription
           }
         ];
@@ -63,14 +63,14 @@ export class AboutPageComponent implements OnDestroy, OnInit {
           this.tabs.push({
             iconName: 'shield-checkmark-outline',
             label: $localize`Privacy Policy`,
-            path: ['/' + routes.about, routes.privacyPolicy],
+            routerLink: ['/' + routes.about, routes.privacyPolicy],
             showCondition: this.hasPermissionForSubscription
           });
 
           this.tabs.push({
             iconName: 'document-text-outline',
             label: $localize`Terms of Service`,
-            path: ['/' + routes.about, routes.termsOfService],
+            routerLink: ['/' + routes.about, routes.termsOfService],
             showCondition: this.hasPermissionForSubscription
           });
 
@@ -82,7 +82,7 @@ export class AboutPageComponent implements OnDestroy, OnInit {
         this.tabs.push({
           iconName: 'happy-outline',
           label: publicRoutes.about.subRoutes.ossFriends.title,
-          path: publicRoutes.about.subRoutes.ossFriends.routerLink
+          routerLink: publicRoutes.about.subRoutes.ossFriends.routerLink
         });
       });
   }
