@@ -34,12 +34,12 @@ export class ZenPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: internalRoutes.zen.title,
-              path: internalRoutes.zen.routerLink
+              routerLink: internalRoutes.zen.routerLink
             },
             {
               iconName: 'wallet-outline',
               label: internalRoutes.zen.subRoutes.holdings.title,
-              path: internalRoutes.zen.subRoutes.holdings.routerLink
+              routerLink: internalRoutes.zen.subRoutes.holdings.routerLink
             }
           ];
           this.user = state.user;

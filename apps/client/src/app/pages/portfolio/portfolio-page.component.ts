@@ -34,27 +34,29 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: internalRoutes.portfolio.subRoutes.analysis.title,
-              path: internalRoutes.portfolio.routerLink
+              routerLink: internalRoutes.portfolio.routerLink
             },
             {
               iconName: 'swap-vertical-outline',
               label: internalRoutes.portfolio.subRoutes.activities.title,
-              path: internalRoutes.portfolio.subRoutes.activities.routerLink
+              routerLink:
+                internalRoutes.portfolio.subRoutes.activities.routerLink
             },
             {
               iconName: 'pie-chart-outline',
               label: internalRoutes.portfolio.subRoutes.allocations.title,
-              path: internalRoutes.portfolio.subRoutes.allocations.routerLink
+              routerLink:
+                internalRoutes.portfolio.subRoutes.allocations.routerLink
             },
             {
               iconName: 'calculator-outline',
               label: internalRoutes.portfolio.subRoutes.fire.title,
-              path: internalRoutes.portfolio.subRoutes.fire.routerLink
+              routerLink: internalRoutes.portfolio.subRoutes.fire.routerLink
             },
             {
               iconName: 'scan-outline',
               label: internalRoutes.portfolio.subRoutes.xRay.title,
-              path: internalRoutes.portfolio.subRoutes.xRay.routerLink
+              routerLink: internalRoutes.portfolio.subRoutes.xRay.routerLink
             }
           ];
           this.user = state.user;

@@ -1,3 +1,4 @@
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { routes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnInit } from '@angular/core';
@@ -13,26 +14,26 @@ import { Subject } from 'rxjs';
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;
-  public tabs = [
+  public tabs: TabConfiguration[] = [
     {
-      path: '.',
+      iconName: 'reader-outline',
       label: $localize`Overview`,
-      iconName: 'reader-outline'
+      routerLink: ['/' + routes.resources]
     },
     {
-      path: routes.guides,
       label: $localize`Guides`,
-      iconName: 'book-outline'
+      iconName: 'book-outline',
+      routerLink: ['/' + routes.resources, routes.guides]
     },
     {
-      path: routes.markets,
+      iconName: 'newspaper-outline',
       label: $localize`Markets`,
-      iconName: 'newspaper-outline'
+      routerLink: ['/' + routes.resources, routes.markets]
     },
     {
-      path: routes.glossary,
+      iconName: 'library-outline',
       label: $localize`Glossary`,
-      iconName: 'library-outline'
+      routerLink: ['/' + routes.resources, routes.glossary]
     }
   ];
 

@@ -36,18 +36,18 @@ export class FaqPageComponent implements OnDestroy, OnInit {
       {
         iconName: 'reader-outline',
         label: $localize`General`,
-        path: ['/' + routes.faq]
+        routerLink: ['/' + routes.faq]
       },
       {
         iconName: 'cloudy-outline',
         label: $localize`Cloud` + ' (SaaS)',
-        path: ['/' + routes.faq, routes.saas],
+        routerLink: ['/' + routes.faq, routes.saas],
         showCondition: this.hasPermissionForSubscription
       },
       {
         iconName: 'server-outline',
         label: $localize`Self-Hosting`,
-        path: ['/' + routes.faq, routes.selfHosting]
+        routerLink: ['/' + routes.faq, routes.selfHosting]
       }
     ];
   }

@@ -37,27 +37,27 @@ export class HomePageComponent implements OnDestroy, OnInit {
             {
               iconName: 'analytics-outline',
               label: internalRoutes.home.title,
-              path: internalRoutes.home.routerLink
+              routerLink: internalRoutes.home.routerLink
             },
             {
               iconName: 'wallet-outline',
               label: internalRoutes.home.subRoutes.holdings.title,
-              path: internalRoutes.home.subRoutes.holdings.routerLink
+              routerLink: internalRoutes.home.subRoutes.holdings.routerLink
             },
             {
               iconName: 'reader-outline',
               label: internalRoutes.home.subRoutes.summary.title,
-              path: internalRoutes.home.subRoutes.summary.routerLink
+              routerLink: internalRoutes.home.subRoutes.summary.routerLink
             },
             {
               iconName: 'bookmark-outline',
               label: internalRoutes.home.subRoutes.watchlist.title,
-              path: internalRoutes.home.subRoutes.watchlist.routerLink
+              routerLink: internalRoutes.home.subRoutes.watchlist.routerLink
             },
             {
               iconName: 'newspaper-outline',
               label: $localize`Markets`,
-              path: ['/' + internalRoutes.home.path, routes.market]
+              routerLink: ['/' + internalRoutes.home.path, routes.market]
             }
           ];
 

@@ -35,18 +35,21 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
             {
               iconName: 'settings-outline',
               label: internalRoutes.account.title,
-              path: internalRoutes.account.routerLink
+              routerLink: internalRoutes.account.routerLink
             },
             {
               iconName: 'diamond-outline',
               label: $localize`Membership`,
-              path: ['/' + internalRoutes.account.path, routes.membership],
+              routerLink: [
+                '/' + internalRoutes.account.path,
+                routes.membership
+              ],
               showCondition: !!this.user?.subscription
             },
             {
               iconName: 'key-outline',
               label: $localize`Access`,
-              path: ['/' + internalRoutes.account.path, routes.access]
+              routerLink: ['/' + internalRoutes.account.path, routes.access]
             }
           ];
 
