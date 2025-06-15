@@ -156,6 +156,11 @@ export const publicRoutes = {
     routerLink: ['/' + $localize`:kebab-case:features`],
     title: $localize`Features`
   },
+  markets: {
+    path: $localize`:kebab-case:markets`,
+    routerLink: ['/' + $localize`:kebab-case:markets`],
+    title: $localize`Markets`
+  },
   openStartup: {
     path: 'open',
     routerLink: ['/open'],

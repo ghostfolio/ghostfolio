@@ -1,4 +1,4 @@
-import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,6 +12,6 @@ import { RouterModule } from '@angular/router';
 })
 export class FiveHundredStarsOnGitHubPageComponent {
   public routerLinkBlog = publicRoutes.blog.routerLink;
-  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
 }
