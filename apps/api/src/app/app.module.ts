@@ -103,7 +103,7 @@ import { UserModule } from './user/user.module';
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      exclude: ['/api/*wildcard', '/sitemap.xml'],
+      exclude: ['/.well-known/*wildcard', '/api/*wildcard', '/sitemap.xml'],
       rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
@@ -125,6 +125,10 @@ import { UserModule } from './user/user.module';
           }
         }
       }
+    }),
+    ServeStaticModule.forRoot({
+      serveRoot: '/.well-known',
+      rootPath: join(__dirname, '..', 'client', '.well-known')
     }),
     SitemapModule,
     SubscriptionModule,
