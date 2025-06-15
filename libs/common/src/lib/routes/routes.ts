@@ -31,7 +31,6 @@ export const routes = {
   license: $localize`:kebab-case:license`,
   markets: $localize`:kebab-case:markets`,
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`,
-  pricing: $localize`:kebab-case:pricing`,
   privacyPolicy: $localize`:kebab-case:privacy-policy`,
   resources: $localize`:kebab-case:resources`,
   selfHosting: $localize`:kebab-case:self-hosting`,
@@ -140,6 +139,11 @@ export const publicRoutes = {
     path: 'open',
     routerLink: ['/open'],
     title: 'Open Startup'
+  },
+  pricing: {
+    path: $localize`:kebab-case:pricing`,
+    routerLink: ['/' + $localize`:kebab-case:pricing`],
+    title: $localize`Pricing`
   },
   register: {
     path: $localize`:kebab-case:register`,
