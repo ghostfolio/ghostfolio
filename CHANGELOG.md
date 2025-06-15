@@ -31,6 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Turkish (`tr`)
 - Upgraded the _Stripe_ dependencies
 
+### Fixed
+
+- Fixed missing `/.well-known/assetlinks.json` for TWA
+
 ## 2.170.0 - 2025-06-11
 
 ### Added
