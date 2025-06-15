@@ -15,5 +15,5 @@ export class Ghostfolio2PageComponent {
   public routerLinkAboutChangelog = ['/' + routes.about, routes.changelog];
   public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
 }

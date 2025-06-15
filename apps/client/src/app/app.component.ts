@@ -81,7 +81,7 @@ export class AppComponent implements OnDestroy, OnInit {
   public routerLinkBlog = publicRoutes.blog.routerLink;
   public routerLinkFaq = ['/' + routes.faq];
   public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
   public routerLinkOpenStartup = publicRoutes.openStartup.routerLink;
   public routerLinkPricing = publicRoutes.pricing.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
@@ -213,7 +213,7 @@ export class AppComponent implements OnDestroy, OnInit {
         this.showFooter =
           (this.currentRoute === publicRoutes.blog.path ||
             this.currentRoute === publicRoutes.features.path ||
-            this.currentRoute === routes.markets ||
+            this.currentRoute === publicRoutes.markets.path ||
             this.currentRoute === publicRoutes.openStartup.path ||
             this.currentRoute === routes.public ||
             this.currentRoute === publicRoutes.pricing.path ||

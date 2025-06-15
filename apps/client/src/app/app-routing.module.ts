@@ -92,7 +92,7 @@ const routes: Routes = [
     title: $localize`Internationalization`
   },
   {
-    path: ghostfolioRoutes.markets,
+    path: publicRoutes.markets.path,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
         (m) => m.MarketsPageModule

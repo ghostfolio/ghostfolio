@@ -23,7 +23,7 @@ export class SaasPageComponent implements OnDestroy {
     '/' + internalRoutes.account.path,
     routes.membership
   ];
-  public routerLinkMarkets = ['/' + routes.markets];
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
   public routerLinkRegister = publicRoutes.register.routerLink;
   public user: User;
 
