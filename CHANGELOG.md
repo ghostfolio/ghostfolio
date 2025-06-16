@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Portuguese (`pt`)
+- Upgraded `class-validator` from version `0.14.1` to `0.14.2`
 
 ## 2.171.0 - 2025-06-15
 
