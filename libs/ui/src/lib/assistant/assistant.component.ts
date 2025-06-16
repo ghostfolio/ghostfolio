@@ -333,9 +333,11 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
   public ngOnChanges() {
     this.accounts = this.user?.accounts ?? [];
 
-    // Start with basic date range options that don't depend on user activity
     this.dateRangeOptions = [
-      { label: $localize`Today`, value: '1d' },
+      {
+        label: $localize`Today`,
+        value: '1d'
+      },
       {
         label: $localize`Week to date` + ' (' + $localize`WTD` + ')',
         value: 'wtd'
@@ -350,11 +352,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       }
     ];
 
-    const currentDate = new Date();
-
     if (
       this.user?.dateOfFirstActivity &&
-      differenceInYears(currentDate, this.user.dateOfFirstActivity) >= 1
+      differenceInYears(new Date(), this.user.dateOfFirstActivity) >= 1
     ) {
       this.dateRangeOptions.push({
         label: '1 ' + $localize`year` + ' (' + $localize`1Y` + ')',
@@ -377,10 +377,9 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     //   );
     // }
 
-    // Only add the 5Y option if the user has activity data from at least 5 years ago
     if (
       this.user?.dateOfFirstActivity &&
-      differenceInYears(currentDate, this.user.dateOfFirstActivity) >= 5
+      differenceInYears(new Date(), this.user.dateOfFirstActivity) >= 5
     ) {
       this.dateRangeOptions.push({
         label: '5 ' + $localize`years` + ' (' + $localize`5Y` + ')',
@@ -388,8 +387,10 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
       });
     }
 
-    // Always add the Max option
-    this.dateRangeOptions.push({ label: $localize`Max`, value: 'max' });
+    this.dateRangeOptions.push({
+      label: $localize`Max`,
+      value: 'max'
+    });
 
     this.dateRangeFormControl.disable({ emitEvent: false });
 
