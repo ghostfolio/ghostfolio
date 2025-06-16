@@ -1,3 +1,6 @@
+import { User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
 import '@angular/localize/init';
 
 import { IRoute } from './interfaces/interfaces';
@@ -21,6 +24,9 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Settings`
   },
   adminControl: {
+    excludeFromAssistant: (aUser: User) => {
+      return hasPermission(aUser?.permissions, permissions.accessAdminControl);
+    },
     path: 'admin',
     routerLink: ['/admin'],
     subRoutes: {
@@ -53,13 +59,17 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Accounts`
   },
   api: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: () => {
+      return true;
+    },
     path: 'api',
     routerLink: ['/api'],
     title: 'Ghostfolio API'
   },
   auth: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: () => {
+      return true;
+    },
     path: 'auth',
     routerLink: ['/auth'],
     title: $localize`Sign in`
@@ -92,7 +102,9 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Overview`
   },
   i18n: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: () => {
+      return true;
+    },
     path: 'i18n',
     routerLink: ['/i18n'],
     title: $localize`Internationalization`
@@ -130,13 +142,17 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Portfolio`
   },
   webauthn: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: () => {
+      return true;
+    },
     path: 'webauthn',
     routerLink: ['/webauthn'],
     title: $localize`Sign in`
   },
   zen: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: () => {
+      return true;
+    },
     path: 'zen',
     routerLink: ['/zen'],
     subRoutes: {
