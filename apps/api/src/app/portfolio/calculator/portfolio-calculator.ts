@@ -35,6 +35,7 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { PortfolioSnapshot, TimelinePosition } from '@ghostfolio/common/models';
 import { GroupBy } from '@ghostfolio/common/types';
+import { DateRangeTypes } from '@ghostfolio/common/types/date-range.type';
 import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import { Logger } from '@nestjs/common';
@@ -1452,7 +1453,7 @@ export abstract class PortfolioCalculator {
     chartDateMap[format(endDate, DATE_FORMAT)] = true;
 
     // Make sure some key dates are present
-    for (const dateRange of ['1d', '1y', '5y', 'max', 'mtd', 'wtd', 'ytd']) {
+    for (const dateRange of DateRangeTypes) {
       const { endDate: dateRangeEnd, startDate: dateRangeStart } =
         getIntervalFromDateRange(dateRange);
 
