@@ -2,15 +2,6 @@ import '@angular/localize/init';
 
 import { IRoute } from './interfaces/interfaces';
 
-export const routes = {
-  api: 'api',
-  i18n: 'i18n',
-  personalFinanceTools: 'personal-finance-tools',
-
-  // Publicly accessible pages
-  openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`
-};
-
 export const internalRoutes: Record<string, IRoute> = {
   account: {
     path: 'account',
@@ -62,6 +53,12 @@ export const internalRoutes: Record<string, IRoute> = {
     routerLink: ['/accounts'],
     title: $localize`Accounts`
   },
+  api: {
+    excludeFromAssistant: true,
+    path: 'api',
+    routerLink: ['/api'],
+    title: 'Ghostfolio API'
+  },
   auth: {
     excludeFromAssistant: true,
     path: 'auth',
@@ -94,6 +91,12 @@ export const internalRoutes: Record<string, IRoute> = {
       }
     },
     title: $localize`Overview`
+  },
+  i18n: {
+    excludeFromAssistant: true,
+    path: 'i18n',
+    routerLink: ['/i18n'],
+    title: $localize`Internationalization`
   },
   portfolio: {
     path: 'portfolio',
@@ -279,6 +282,20 @@ export const publicRoutes = {
           $localize`:kebab-case:markets`
         ],
         title: $localize`Markets`
+      },
+      personalFinanceTools: {
+        path: 'personal-finance-tools',
+        routerLink: [
+          '/' + $localize`:kebab-case:resources`,
+          'personal-finance-tools'
+        ],
+        subRoutes: {
+          product: {
+            path: $localize`:kebab-case:open-source-alternative-to`,
+            title: $localize`Open Source Alternative to`
+          }
+        },
+        title: $localize`Personal Finance Tools`
       }
     },
     title: $localize`Resources`
