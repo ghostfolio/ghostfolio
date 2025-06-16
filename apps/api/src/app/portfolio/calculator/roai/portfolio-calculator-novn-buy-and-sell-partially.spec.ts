@@ -91,7 +91,8 @@ describe('PortfolioCalculator', () => {
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      null
     );
   });
 
@@ -157,9 +158,7 @@ describe('PortfolioCalculator', () => {
             netPerformancePercentageWithCurrencyEffectMap: {
               max: new Big('0.12348284960422163588')
             },
-            netPerformanceWithCurrencyEffectMap: {
-              max: new Big('17.68')
-            },
+            netPerformanceWithCurrencyEffectMap: { max: new Big('17.68') },
             marketPrice: 87.8,
             marketPriceInBaseCurrency: 87.8,
             quantity: new Big('1'),

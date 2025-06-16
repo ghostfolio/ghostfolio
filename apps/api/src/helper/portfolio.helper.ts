@@ -5,6 +5,7 @@ export function getFactor(activityType: ActivityType) {
 
   switch (activityType) {
     case 'BUY':
+    case 'STAKE':
       factor = 1;
       break;
     case 'SELL':

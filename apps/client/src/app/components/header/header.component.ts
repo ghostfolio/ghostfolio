@@ -188,15 +188,19 @@ export class HeaderComponent implements OnChanges {
 
     for (const filter of filters) {
       if (filter.type === 'ACCOUNT') {
-        userSetting['filters.accounts'] = filter.id ? [filter.id] : null;
+        userSetting['filters.accounts'] = filter.id?.length
+          ? [filter.id]
+          : null;
       } else if (filter.type === 'ASSET_CLASS') {
-        userSetting['filters.assetClasses'] = filter.id ? [filter.id] : null;
+        userSetting['filters.assetClasses'] = filter.id?.length
+          ? [filter.id]
+          : null;
       } else if (filter.type === 'DATA_SOURCE') {
         userSetting['filters.dataSource'] = filter.id ? filter.id : null;
       } else if (filter.type === 'SYMBOL') {
         userSetting['filters.symbol'] = filter.id ? filter.id : null;
       } else if (filter.type === 'TAG') {
-        userSetting['filters.tags'] = filter.id ? [filter.id] : null;
+        userSetting['filters.tags'] = filter.id?.length ? [filter.id] : null;
       }
     }
 

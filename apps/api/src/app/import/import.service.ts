@@ -589,7 +589,12 @@ export class ImportService {
           )?.[symbol]
         };
 
-        if (type === 'BUY' || type === 'DIVIDEND' || type === 'SELL') {
+        if (
+          type === 'BUY' ||
+          type === 'DIVIDEND' ||
+          type === 'SELL' ||
+          type === 'STAKE'
+        ) {
           if (!assetProfile?.name) {
             throw new Error(
               `activities.${index}.symbol ("${symbol}") is not valid for the specified data source ("${dataSource}")`

@@ -7,21 +7,31 @@
     interest: activityType === 'INTEREST',
     item: activityType === 'ITEM',
     liability: activityType === 'LIABILITY',
-    sell: activityType === 'SELL'
+    sell: activityType === 'SELL',
+    stake: activityType === 'STAKE'
   }"
 >
-  @if (activityType === 'BUY') {
-    <ion-icon name="arrow-up-circle-outline" />
-  } @else if (activityType === 'DIVIDEND' || activityType === 'INTEREST') {
-    <ion-icon name="add-circle-outline" />
-  } @else if (activityType === 'FEE') {
-    <ion-icon name="hammer-outline" />
-  } @else if (activityType === 'ITEM') {
-    <ion-icon name="cube-outline" />
-  } @else if (activityType === 'LIABILITY') {
-    <ion-icon name="flame-outline" />
-  } @else if (activityType === 'SELL') {
-    <ion-icon name="arrow-down-circle-outline" />
-  }
+  <ion-icon
+    *ngIf="activityType === 'BUY'"
+    name="arrow-up-circle-outline"
+  ></ion-icon>
+  <ion-icon
+    *ngIf="
+      activityType === 'DIVIDEND' ||
+      activityType === 'INTEREST' ||
+      activityType === 'STAKE'
+    "
+    name="add-circle-outline"
+  ></ion-icon>
+  <ion-icon *ngIf="activityType === 'FEE'" name="hammer-outline"></ion-icon>
+  <ion-icon *ngIf="activityType === 'ITEM'" name="cube-outline"></ion-icon>
+  <ion-icon
+    *ngIf="activityType === 'LIABILITY'"
+    name="flame-outline"
+  ></ion-icon>
+  <ion-icon
+    *ngIf="activityType === 'SELL'"
+    name="arrow-down-circle-outline"
+  ></ion-icon>
   <span class="d-none d-lg-block mx-1">{{ activityTypeLabel }}</span>
 </div>

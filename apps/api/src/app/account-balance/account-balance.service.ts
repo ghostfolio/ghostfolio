@@ -95,6 +95,7 @@ export class AccountBalanceService {
     return accountBalance;
   }
 
+  @LogPerformance
   public async getAccountBalanceItems({
     filters,
     userCurrency,

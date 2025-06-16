@@ -16,5 +16,7 @@ export interface HistoricalDataItem {
   totalInvestmentValueWithCurrencyEffect?: number;
   value?: number;
   valueInPercentage?: number;
+  timeWeightedPerformanceInPercentage?: number;
+  timeWeightedPerformanceInPercentageWithCurrencyEffect?: number;
   valueWithCurrencyEffect?: number;
 }

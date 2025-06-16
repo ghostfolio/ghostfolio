@@ -3,7 +3,14 @@
     <div
       class="align-items-center d-flex flex-grow-1 h5 mb-0 py-2 text-truncate"
     >
-      <span i18n>Performance</span>
+      <span i18n
+        >Performance
+        {{
+          user?.settings?.performanceCalculationType === 'ROI'
+            ? '(Time-Weighted)'
+            : ''
+        }}</span
+      >
       @if (user?.subscription?.type === 'Basic') {
         <gf-premium-indicator class="ml-1" />
       }

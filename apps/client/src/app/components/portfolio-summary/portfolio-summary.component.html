@@ -115,11 +115,13 @@
   <div class="flex-nowrap px-3 py-1 row">
     <div class="flex-grow-1 text-truncate ml-3">
       <ng-container i18n>Net Performance</ng-container>
-      <abbr
-        class="initialism ml-2 text-muted"
-        title="Return on Average Investment"
-        >(ROAI)</abbr
-      >
+      <ng-container *ngIf="this.calculationType">
+        <abbr
+          class="initialism ml-2 text-muted"
+          title="{{ this.calculationType.title }}"
+          >({{ this.calculationType.value }})</abbr
+        >
+      </ng-container>
     </div>
     <div class="flex-column flex-wrap justify-content-end">
       <gf-value

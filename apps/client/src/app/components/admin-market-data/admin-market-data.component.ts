@@ -261,6 +261,17 @@ export class AdminMarketDataComponent
       });
   }
 
+  public onGatherMissing() {
+    this.adminService
+      .gatherMissingOnly()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 300);
+      });
+  }
+
   public onGatherProfileData() {
     this.adminService
       .gatherProfileData()

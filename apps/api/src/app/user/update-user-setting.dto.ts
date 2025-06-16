@@ -6,6 +6,7 @@ import type {
   HoldingsViewMode,
   ViewMode
 } from '@ghostfolio/common/types';
+import { PerformanceCalculationType } from '@ghostfolio/common/types/performance-calculation-type.type';
 
 import {
   IsArray,
@@ -37,6 +38,9 @@ export class UpdateUserSettingDto {
 
   @IsIn([
     '1d',
+    '1w',
+    '1m',
+    '3m',
     '1y',
     '5y',
     'max',
@@ -114,4 +118,8 @@ export class UpdateUserSettingDto {
 
   @IsOptional()
   xRayRules?: XRayRulesSettings;
+
+  @IsIn(['TWR', 'ROI', 'ROAI', 'MWR'] as PerformanceCalculationType[])
+  @IsOptional()
+  performanceCalculationType?: PerformanceCalculationType;
 }

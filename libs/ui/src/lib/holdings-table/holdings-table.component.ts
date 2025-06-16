@@ -2,7 +2,8 @@ import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
 import { getLocale } from '@ghostfolio/common/helper';
 import {
   AssetProfileIdentifier,
-  PortfolioPosition
+  PortfolioPosition,
+  PortfolioPerformance
 } from '@ghostfolio/common/interfaces';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -55,6 +56,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   @Input() holdings: PortfolioPosition[];
   @Input() locale = getLocale();
   @Input() pageSize = Number.MAX_SAFE_INTEGER;
+  @Input() performance: PortfolioPerformance;
 
   @Output() holdingClicked = new EventEmitter<AssetProfileIdentifier>();
 
@@ -67,6 +69,10 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
   public isLoading = true;
   public routeQueryParams: Subscription;
 
+  protected totalValue = 0;
+  protected totalChange = 0;
+  protected totalChangePercentage = 0;
+
   private unsubscribeSubject = new Subject<void>();
 
   public ngOnChanges() {
@@ -77,6 +83,7 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     }
 
     this.displayedColumns.push('allocationInPercentage');
+    this.displayedColumns.push('marketPrice');
 
     if (this.hasPermissionToShowValues) {
       this.displayedColumns.push('performance');
@@ -89,6 +96,10 @@ export class GfHoldingsTableComponent implements OnChanges, OnDestroy {
     this.dataSource = new MatTableDataSource(this.holdings);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.totalValue = this.performance.currentValueInBaseCurrency;
+    this.totalChange = this.performance.netPerformanceWithCurrencyEffect;
+    this.totalChangePercentage =
+      this.performance.netPerformancePercentageWithCurrencyEffect;
 
     if (this.holdings) {
       this.isLoading = false;

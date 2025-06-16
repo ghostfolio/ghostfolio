@@ -194,6 +194,7 @@ model SymbolProfile {
   user                   User?                   @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId                 String?
   watchedBy              User[]                  @relation("UserWatchlist")
+  tags                   Tag[]
   SymbolProfileOverrides SymbolProfileOverrides?
 
   @@unique([dataSource, symbol])
@@ -238,6 +239,7 @@ model Tag {
   name       String
   user       User?   @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String?
+  symbolProfile SymbolProfile[]
 
   @@unique([name, userId])
   @@index([name])
@@ -335,6 +337,7 @@ enum Type {
   ITEM
   LIABILITY
   SELL
+  STAKE
 }
 
 enum ViewMode {

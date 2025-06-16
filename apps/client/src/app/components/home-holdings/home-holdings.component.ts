@@ -4,6 +4,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import {
   AssetProfileIdentifier,
   PortfolioPosition,
+  PortfolioPerformance,
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
@@ -32,6 +33,7 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
   public hasPermissionToAccessHoldingsChart: boolean;
   public hasPermissionToCreateOrder: boolean;
   public holdings: PortfolioPosition[];
+  public performance: PortfolioPerformance;
   public holdingType: HoldingType = 'ACTIVE';
   public holdingTypeOptions: ToggleOption[] = [
     { label: $localize`Active`, value: 'ACTIVE' },
@@ -165,8 +167,9 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
 
     this.fetchHoldings()
       .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(({ holdings }) => {
+      .subscribe(({ holdings, performance }) => {
         this.holdings = holdings;
+        this.performance = performance;
 
         this.changeDetectorRef.markForCheck();
       });

@@ -1,4 +1,4 @@
-import { AssetClass, AssetSubClass, DataSource } from '@prisma/client';
+import { AssetClass, AssetSubClass, DataSource, Tag } from '@prisma/client';
 
 import { Country } from './country.interface';
 import { DataProviderInfo } from './data-provider-info.interface';
@@ -31,5 +31,6 @@ export interface EnhancedSymbolProfile {
   symbolMapping?: { [key: string]: string };
   updatedAt: Date;
   url?: string;
+  tags?: Tag[];
   userId?: string;
 }

@@ -1,5 +1,6 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
+import { OrderService } from '@ghostfolio/api/app/order/order.service';
 import {
   activityDummyData,
   loadActivityExportFile,
@@ -60,6 +61,7 @@ describe('PortfolioCalculator', () => {
   let portfolioCalculatorFactory: PortfolioCalculatorFactory;
   let portfolioSnapshotService: PortfolioSnapshotService;
   let redisCacheService: RedisCacheService;
+  let orderService: OrderService;
 
   beforeAll(() => {
     activityDtos = loadActivityExportFile(
@@ -83,12 +85,15 @@ describe('PortfolioCalculator', () => {
 
     redisCacheService = new RedisCacheService(null, null);
 
+    orderService = new OrderService(null, null, null, null, null, null);
+
     portfolioCalculatorFactory = new PortfolioCalculatorFactory(
       configurationService,
       currentRateService,
       exchangeRateDataService,
       portfolioSnapshotService,
-      redisCacheService
+      redisCacheService,
+      orderService
     );
   });
 
@@ -135,6 +140,8 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0,
         netPerformanceWithCurrencyEffect: 0,
         netWorth: 0,
+        timeWeightedPerformanceInPercentage: 0,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
         totalAccountBalance: 0,
         totalInvestment: 0,
         totalInvestmentValueWithCurrencyEffect: 0,
@@ -153,6 +160,8 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: 0.12422837255001412, // 5535.42 ÷ 44558.42 = 0.12422837255001412
         netPerformanceWithCurrencyEffect: 5535.42, // 1 * (50098.3 - 44558.42) - 4.46 = 5535.42
         netWorth: 50098.3, // 1 * 50098.3 = 50098.3
+        timeWeightedPerformanceInPercentage: 0,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect: 0,
         totalAccountBalance: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,
@@ -172,6 +181,9 @@ describe('PortfolioCalculator', () => {
         netPerformanceInPercentageWithCurrencyEffect: -0.032837340282712,
         netPerformanceWithCurrencyEffect: -1463.18,
         netWorth: 43099.7,
+        timeWeightedPerformanceInPercentage: -0.13969735500006986,
+        timeWeightedPerformanceInPercentageWithCurrencyEffect:
+          -0.13969735500006986,
         totalAccountBalance: 0,
         totalInvestment: 44558.42,
         totalInvestmentValueWithCurrencyEffect: 44558.42,

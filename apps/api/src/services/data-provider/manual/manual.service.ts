@@ -13,6 +13,7 @@ import {
 } from '@ghostfolio/api/services/interfaces/interfaces';
 import { PrismaService } from '@ghostfolio/api/services/prisma/prisma.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import { BatchPrismaClient } from '@ghostfolio/common/chunkhelper';
 import {
   DATE_FORMAT,
   extractNumberFromString,
@@ -147,18 +148,25 @@ export class ManualService implements DataProviderInterface {
         })
       );
 
-      const marketData = await this.prismaService.marketData.findMany({
-        distinct: ['symbol'],
-        orderBy: {
-          date: 'desc'
-        },
-        take: symbols.length,
-        where: {
-          symbol: {
-            in: symbols
-          }
-        }
-      });
+      const batch = new BatchPrismaClient(this.prismaService);
+
+      const marketData = await batch
+        .over(symbols)
+        .with((prisma, _symbols) =>
+          prisma.marketData.findMany({
+            distinct: ['symbol'],
+            orderBy: {
+              date: 'desc'
+            },
+            take: symbols.length,
+            where: {
+              symbol: {
+                in: _symbols
+              }
+            }
+          })
+        )
+        .then((_result) => _result.flat());
 
       const symbolProfilesWithScraperConfigurationAndInstantMode =
         symbolProfiles.filter(({ scraperConfiguration }) => {
