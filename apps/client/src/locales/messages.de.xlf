@@ -7706,7 +7706,7 @@
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">Live Demo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">207</context>
@@ -7715,6 +7715,14 @@
       <trans-unit id="5263776643657358606" datatype="html">
         <source>Open Source Alternative to</source>
         <target state="new">Open Source Alternative to</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">295</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5263776643657358606" datatype="html">
+        <source>Open Source Alternative to</source>
+        <target state="translated">Open Source Alternative zu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">295</context>

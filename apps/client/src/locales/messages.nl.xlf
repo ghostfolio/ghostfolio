@@ -7720,6 +7720,14 @@
           <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="5263776643657358606" datatype="html">
+        <source>Open Source Alternative to</source>
+        <target state="translated">Open Source alternatief voor</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">295</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>

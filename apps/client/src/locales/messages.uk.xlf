@@ -7714,7 +7714,7 @@
       </trans-unit>
       <trans-unit id="5263776643657358606" datatype="html">
         <source>Open Source Alternative to</source>
-        <target state="new">Open Source Alternative to</target>
+        <target state="translated">Альтернатива з відкритим кодом для</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">295</context>
