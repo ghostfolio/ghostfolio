@@ -13,8 +13,7 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
     developedMarketsValueInBaseCurrency: number
   ) {
     super(exchangeRateDataService, {
-      key: EconomicMarketClusterRiskDevelopedMarkets.name,
-      name: 'Developed Markets'
+      key: EconomicMarketClusterRiskDevelopedMarkets.name
     });
 
     this.currentValueInBaseCurrency = currentValueInBaseCurrency;
@@ -65,6 +64,10 @@ export class EconomicMarketClusterRiskDevelopedMarkets extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Developed Markets';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

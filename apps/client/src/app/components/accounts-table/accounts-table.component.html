@@ -44,10 +44,10 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         @if (element.Platform?.url) {
-          <gf-asset-profile-icon
+          <gf-entity-logo
             class="d-inline d-sm-none mr-1"
             [tooltip]="element.Platform?.name"
-            [url]="element.Platform?.url"
+            [url]="element.Platform.url"
           />
         }
         <span>{{ element.name }}</span>
@@ -92,10 +92,10 @@
       >
         <div class="d-flex">
           @if (element.Platform?.url) {
-            <gf-asset-profile-icon
+            <gf-entity-logo
               class="mr-1"
               [tooltip]="element.Platform?.name"
-              [url]="element.Platform?.url"
+              [url]="element.Platform.url"
             />
           }
           <span>{{ element.Platform?.name }}</span>

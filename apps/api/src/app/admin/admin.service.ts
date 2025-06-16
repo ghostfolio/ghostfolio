@@ -135,7 +135,10 @@ export class AdminService {
   }
 
   public async get({ user }: { user: UserWithSettings }): Promise<AdminData> {
-    const dataSources = await this.dataProviderService.getDataSources({ user });
+    const dataSources = await this.dataProviderService.getDataSources({
+      user,
+      includeGhostfolio: true
+    });
 
     const [settings, transactionCount, userCount] = await Promise.all([
       this.propertyService.get(),
@@ -676,7 +679,7 @@ export class AdminService {
                         select: {
                           activities: {
                             where: {
-                              User: {
+                              user: {
                                 subscriptions: {
                                   some: {
                                     expiresAt: {
@@ -827,7 +830,7 @@ export class AdminService {
       where,
       select: {
         _count: {
-          select: { Account: true, activities: true }
+          select: { accounts: true, activities: true }
         },
         Analytics: {
           select: {
@@ -874,7 +877,7 @@ export class AdminService {
           id,
           role,
           subscription,
-          accountCount: _count.Account || 0,
+          accountCount: _count.accounts || 0,
           activityCount: _count.activities || 0,
           country: Analytics?.country,
           dailyApiRequests: Analytics?.dataProviderGhostfolioDailyRequests || 0,

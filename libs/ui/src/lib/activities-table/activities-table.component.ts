@@ -1,5 +1,4 @@
 import { Activity } from '@ghostfolio/api/app/order/interfaces/activities.interface';
-import { GfAssetProfileIconComponent } from '@ghostfolio/client/components/asset-profile-icon/asset-profile-icon.component';
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { GfSymbolModule } from '@ghostfolio/client/pipes/symbol/symbol.module';
@@ -8,6 +7,7 @@ import { getDateFormatString, getLocale } from '@ghostfolio/common/helper';
 import { AssetProfileIdentifier } from '@ghostfolio/common/interfaces';
 import { OrderWithAccount } from '@ghostfolio/common/types';
 import { GfActivityTypeComponent } from '@ghostfolio/ui/activity-type';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfNoTransactionsInfoComponent } from '@ghostfolio/ui/no-transactions-info';
 import { GfValueComponent } from '@ghostfolio/ui/value';
 
@@ -52,7 +52,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
   imports: [
     CommonModule,
     GfActivityTypeComponent,
-    GfAssetProfileIconComponent,
+    GfEntityLogoComponent,
     GfNoTransactionsInfoComponent,
     GfSymbolModule,
     GfValueComponent,

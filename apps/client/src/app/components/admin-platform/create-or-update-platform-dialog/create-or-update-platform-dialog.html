@@ -29,11 +29,7 @@
           (keydown.enter)="$event.stopPropagation()"
         />
         @if (data.platform.url) {
-          <gf-asset-profile-icon
-            class="mr-3"
-            matSuffix
-            [url]="data.platform.url"
-          />
+          <gf-entity-logo class="mr-3" matSuffix [url]="data.platform.url" />
         }
       </mat-form-field>
     </div>

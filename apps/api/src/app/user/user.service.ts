@@ -52,11 +52,10 @@ import { sortBy, without } from 'lodash';
 
 @Injectable()
 export class UserService {
-  private i18nService = new I18nService();
-
   public constructor(
     private readonly configurationService: ConfigurationService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly i18nService: I18nService,
     private readonly orderService: OrderService,
     private readonly prismaService: PrismaService,
     private readonly propertyService: PropertyService,
@@ -96,13 +95,13 @@ export class UserService {
   }
 
   public async getUser(
-    { Account, id, permissions, Settings, subscription }: UserWithSettings,
+    { accounts, id, permissions, Settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
       this.prismaService.access.findMany({
         include: {
-          User: true
+          user: true
         },
         orderBy: { alias: 'asc' },
         where: { GranteeUser: { id } }
@@ -142,6 +141,7 @@ export class UserService {
     }
 
     return {
+      accounts,
       activitiesCount,
       id,
       permissions,
@@ -155,7 +155,6 @@ export class UserService {
           permissions: accessItem.permissions
         };
       }),
-      accounts: Account,
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
         ...(Settings.settings as UserSettings),
@@ -182,7 +181,7 @@ export class UserService {
     const {
       Access,
       accessToken,
-      Account,
+      accounts,
       Analytics,
       authChallenge,
       createdAt,
@@ -196,7 +195,7 @@ export class UserService {
     } = await this.prismaService.user.findUnique({
       include: {
         Access: true,
-        Account: {
+        accounts: {
           include: { Platform: true }
         },
         Analytics: true,
@@ -209,7 +208,7 @@ export class UserService {
     const user: UserWithSettings = {
       Access,
       accessToken,
-      Account,
+      accounts,
       authChallenge,
       createdAt,
       id,
@@ -299,9 +298,13 @@ export class UserService {
         ).getSettings(user.Settings.settings),
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
+        undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
+        undefined,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -411,6 +414,10 @@ export class UserService {
         user.subscription.offer.durationExtension = undefined;
         user.subscription.offer.label = undefined;
       }
+
+      if (hasRole(user, Role.ADMIN)) {
+        currentPermissions.push(permissions.syncDemoUserAccount);
+      }
     }
 
     if (this.configurationService.get('ENABLE_FEATURE_READ_ONLY_MODE')) {
@@ -433,11 +440,11 @@ export class UserService {
       }
     }
 
-    if (!environment.production && role === 'ADMIN') {
+    if (!environment.production && hasRole(user, Role.ADMIN)) {
       currentPermissions.push(permissions.impersonateAllUsers);
     }
 
-    user.Account = sortBy(user.Account, ({ name }) => {
+    user.accounts = sortBy(user.accounts, ({ name }) => {
       return name.toLowerCase();
     });
     user.permissions = currentPermissions.sort();
@@ -474,7 +481,7 @@ export class UserService {
     const user = await this.prismaService.user.create({
       data: {
         ...data,
-        Account: {
+        accounts: {
           create: {
             currency: DEFAULT_CURRENCY,
             name: this.i18nService.getTranslation({
@@ -496,7 +503,7 @@ export class UserService {
     if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
       await this.prismaService.analytics.create({
         data: {
-          User: { connect: { id: user.id } }
+          user: { connect: { id: user.id } }
         }
       });
     }
@@ -591,7 +598,7 @@ export class UserService {
     const { settings } = await this.prismaService.settings.upsert({
       create: {
         settings: userSettings as unknown as Prisma.JsonObject,
-        User: {
+        user: {
           connect: {
             id: userId
           }

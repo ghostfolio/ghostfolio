@@ -43,7 +43,16 @@ export class TransformDataSourceInRequestInterceptor<T>
         const dataSourceValue = request[type]?.dataSource;
 
         if (dataSourceValue && !DataSource[dataSourceValue]) {
-          request[type].dataSource = decodeDataSource(dataSourceValue);
+          // In Express 5, request.query is read-only, so request[type].dataSource cannot be directly modified
+          Object.defineProperty(request, type, {
+            configurable: true,
+            enumerable: true,
+            value: {
+              ...request[type],
+              dataSource: decodeDataSource(dataSourceValue)
+            },
+            writable: true
+          });
         }
       }
     }

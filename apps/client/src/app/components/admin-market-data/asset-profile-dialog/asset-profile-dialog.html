@@ -551,7 +551,7 @@
           <mat-label i18n>Url</mat-label>
           <input formControlName="url" matInput type="text" />
           @if (assetProfileForm.get('url').value) {
-            <gf-asset-profile-icon
+            <gf-entity-logo
               class="mr-3"
               matSuffix
               [url]="assetProfileForm.get('url').value"

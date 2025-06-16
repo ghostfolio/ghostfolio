@@ -20,9 +20,11 @@
           mat-flat-button
           [ngClass]="{
             'font-weight-bold':
-              currentRoute === 'home' || currentRoute === 'zen',
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path,
             'text-decoration-underline':
-              currentRoute === 'home' || currentRoute === 'zen'
+              currentRoute === internalRoutes.home.path ||
+              currentRoute === internalRoutes.zen.path
           }"
           [routerLink]="['/']"
           >Overview</a
@@ -34,10 +36,11 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'portfolio',
-            'text-decoration-underline': currentRoute === 'portfolio'
+            'font-weight-bold': currentRoute === internalRoutes.portfolio.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.portfolio.path
           }"
-          [routerLink]="['/portfolio']"
+          [routerLink]="routerLinkPortfolio"
           >Portfolio</a
         >
       </li>
@@ -47,10 +50,11 @@
           i18n
           mat-flat-button
           [ngClass]="{
-            'font-weight-bold': currentRoute === 'accounts',
-            'text-decoration-underline': currentRoute === 'accounts'
+            'font-weight-bold': currentRoute === internalRoutes.accounts.path,
+            'text-decoration-underline':
+              currentRoute === internalRoutes.accounts.path
           }"
-          [routerLink]="['/accounts']"
+          [routerLink]="routerLinkAccounts"
           >Accounts</a
         >
       </li>
@@ -61,10 +65,10 @@
             i18n
             mat-flat-button
             [ngClass]="{
-              'font-weight-bold': currentRoute === 'admin',
-              'text-decoration-underline': currentRoute === 'admin'
+              'font-weight-bold': currentRoute === routes.adminControl,
+              'text-decoration-underline': currentRoute === routes.adminControl
             }"
-            [routerLink]="['/admin']"
+            [routerLink]="routerLinkAdminControl"
             >Admin Control</a
           >
         </li>
@@ -235,7 +239,8 @@
             mat-menu-item
             [ngClass]="{
               'font-weight-bold':
-                currentRoute === 'home' || currentRoute === 'zen'
+                currentRoute === internalRoutes.home.path ||
+                currentRoute === internalRoutes.zen.path
             }"
             [routerLink]="['/']"
             >Overview</a
@@ -245,24 +250,26 @@
             i18n
             mat-menu-item
             [ngClass]="{
-              'font-weight-bold': currentRoute === 'portfolio'
+              'font-weight-bold': currentRoute === internalRoutes.portfolio.path
             }"
-            [routerLink]="['/portfolio']"
+            [routerLink]="routerLinkPortfolio"
             >Portfolio</a
           >
           <a
             class="d-flex d-sm-none"
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'accounts' }"
-            [routerLink]="['/accounts']"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.accounts.path
+            }"
+            [routerLink]="routerLinkAccounts"
             >Accounts</a
           >
           <a
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === 'account' }"
-            [routerLink]="['/account']"
+            [ngClass]="{ 'font-weight-bold': currentRoute === routes.account }"
+            [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
           @if (hasPermissionToAccessAdminControl) {
@@ -270,8 +277,10 @@
               class="d-flex d-sm-none"
               i18n
               mat-menu-item
-              [ngClass]="{ 'font-weight-bold': currentRoute === 'admin' }"
-              [routerLink]="['/admin']"
+              [ngClass]="{
+                'font-weight-bold': currentRoute === routes.adminControl
+              }"
+              [routerLink]="routerLinkAdminControl"
               >Admin Control</a
             >
           }

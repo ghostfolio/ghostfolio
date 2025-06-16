@@ -1,5 +1,6 @@
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -32,13 +33,13 @@ export class ZenPageComponent implements OnDestroy, OnInit {
           this.tabs = [
             {
               iconName: 'analytics-outline',
-              label: $localize`Overview`,
-              path: ['/zen']
+              label: internalRoutes.zen.title,
+              routerLink: internalRoutes.zen.routerLink
             },
             {
               iconName: 'wallet-outline',
-              label: $localize`Holdings`,
-              path: ['/zen', 'holdings']
+              label: internalRoutes.zen.subRoutes.holdings.title,
+              routerLink: internalRoutes.zen.subRoutes.holdings.routerLink
             }
           ];
           this.user = state.user;

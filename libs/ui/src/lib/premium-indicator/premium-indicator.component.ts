@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { CommonModule } from '@angular/common';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -18,5 +20,5 @@ import { RouterModule } from '@angular/router';
 export class GfPremiumIndicatorComponent {
   @Input() enableLink = true;
 
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

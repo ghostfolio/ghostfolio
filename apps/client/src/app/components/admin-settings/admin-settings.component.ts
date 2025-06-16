@@ -3,16 +3,14 @@ import { NotificationService } from '@ghostfolio/client/core/notification/notifi
 import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  DEFAULT_LANGUAGE_CODE,
-  PROPERTY_API_KEY_GHOSTFOLIO
-} from '@ghostfolio/common/config';
+import { PROPERTY_API_KEY_GHOSTFOLIO } from '@ghostfolio/common/config';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import {
   DataProviderGhostfolioStatusResponse,
   DataProviderInfo,
   User
 } from '@ghostfolio/common/interfaces';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import {
   ChangeDetectionStrategy,
@@ -69,15 +67,12 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
           this.user = state.user;
 
           this.defaultDateFormat = getDateFormatString(
-            this.user?.settings?.locale
+            this.user.settings.locale
           );
 
-          const languageCode =
-            this.user?.settings?.language ?? DEFAULT_LANGUAGE_CODE;
+          const languageCode = this.user.settings.language;
 
-          this.pricingUrl =
-            `https://ghostfol.io/${languageCode}/` +
-            $localize`:snake-case:pricing`;
+          this.pricingUrl = `https://ghostfol.io/${languageCode}/${publicRoutes.pricing.path}`;
 
           this.changeDetectorRef.markForCheck();
         }
@@ -146,29 +141,35 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
 
         this.dataSource = new MatTableDataSource(filteredProviders);
 
-        this.adminService
-          .fetchGhostfolioDataProviderStatus(
-            settings[PROPERTY_API_KEY_GHOSTFOLIO] as string
-          )
-          .pipe(
-            catchError(() => {
-              this.isGhostfolioApiKeyValid = false;
+        const ghostfolioApiKey = settings[
+          PROPERTY_API_KEY_GHOSTFOLIO
+        ] as string;
+
+        if (ghostfolioApiKey) {
+          this.adminService
+            .fetchGhostfolioDataProviderStatus(ghostfolioApiKey)
+            .pipe(
+              catchError(() => {
+                this.isGhostfolioApiKeyValid = false;
+
+                this.changeDetectorRef.markForCheck();
+
+                return of(null);
+              }),
+              filter((status) => {
+                return status !== null;
+              }),
+              takeUntil(this.unsubscribeSubject)
+            )
+            .subscribe((status) => {
+              this.ghostfolioApiStatus = status;
+              this.isGhostfolioApiKeyValid = true;
 
               this.changeDetectorRef.markForCheck();
-
-              return of(null);
-            }),
-            filter((status) => {
-              return status !== null;
-            }),
-            takeUntil(this.unsubscribeSubject)
-          )
-          .subscribe((status) => {
-            this.ghostfolioApiStatus = status;
-            this.isGhostfolioApiKeyValid = true;
-
-            this.changeDetectorRef.markForCheck();
-          });
+            });
+        } else {
+          this.isGhostfolioApiKeyValid = false;
+        }
 
         this.isLoading = false;
 

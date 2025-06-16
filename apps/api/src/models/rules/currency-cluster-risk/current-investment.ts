@@ -11,8 +11,7 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
-      key: CurrencyClusterRiskCurrentInvestment.name,
-      name: 'Investment'
+      key: CurrencyClusterRiskCurrentInvestment.name
     });
 
     this.holdings = holdings;
@@ -71,6 +70,10 @@ export class CurrencyClusterRiskCurrentInvestment extends Rule<Settings> {
       },
       thresholdMax: true
     };
+  }
+
+  public getName() {
+    return 'Investment';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

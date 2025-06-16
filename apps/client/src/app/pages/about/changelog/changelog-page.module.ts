@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { ChangelogPageRoutingModule } from './changelog-page-routing.module';
 import { ChangelogPageComponent } from './changelog-page.component';
@@ -10,7 +11,8 @@ import { ChangelogPageComponent } from './changelog-page.component';
   imports: [
     ChangelogPageRoutingModule,
     CommonModule,
-    MarkdownModule.forChild()
+    MarkdownModule.forChild(),
+    NgxSkeletonLoaderModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

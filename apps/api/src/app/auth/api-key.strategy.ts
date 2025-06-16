@@ -36,7 +36,7 @@ export class ApiKeyStrategy extends PassportStrategy(
       }
 
       await this.prismaService.analytics.upsert({
-        create: { User: { connect: { id: user.id } } },
+        create: { user: { connect: { id: user.id } } },
         update: {
           activityCount: { increment: 1 },
           lastRequestAt: new Date()

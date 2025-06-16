@@ -71,7 +71,7 @@ export class ImportController {
       const activities = await this.importService.import({
         isDryRun,
         maxActivitiesToImport,
-        accountsDto: importData.accounts ?? [],
+        accountsWithBalancesDto: importData.accounts ?? [],
         activitiesDto: importData.activities,
         user: this.request.user
       });

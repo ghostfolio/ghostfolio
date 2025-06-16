@@ -6,6 +6,16 @@
   "accounts": [
     {
       "balance": 2000,
+      "balances": [
+        {
+          "date": "2024-12-31T00:00:00.000Z",
+          "value": 2000
+        },
+        {
+          "date": "2023-12-31T00:00:00.000Z",
+          "value": 1000
+        }
+      ],
       "currency": "USD",
       "id": "b2d3fe1d-d6a8-41a3-be39-07ef5e9480f0",
       "isExcluded": false,

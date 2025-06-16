@@ -1,6 +1,9 @@
 import { CreateOrderDto } from '@ghostfolio/api/app/order/create-order.dto';
 import { UpdateOrderDto } from '@ghostfolio/api/app/order/update-order.dto';
+import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
+import { LookupItem } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import {
@@ -42,6 +45,8 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
   public currencyOfAssetProfile: string;
   public currentMarketPrice = null;
   public defaultDateFormat: string;
+  public defaultLookupItems: LookupItem[] = [];
+  public hasPermissionToCreateOwnTag: boolean;
   public isLoading = false;
   public isToday = isToday;
   public mode: 'create' | 'update';
@@ -60,11 +65,15 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<CreateOrUpdateActivityDialog>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DATE_LOCALE) private locale: string
+    @Inject(MAT_DATE_LOCALE) private locale: string,
+    private userService: UserService
   ) {}
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;
+    this.hasPermissionToCreateOwnTag =
+      this.data.user?.settings?.isExperimentalFeatures &&
+      hasPermission(this.data.user?.permissions, permissions.createOwnTag);
     this.locale = this.data.user?.settings?.locale;
     this.mode = this.data.activity?.id ? 'update' : 'create';
 
@@ -75,6 +84,43 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     this.currencies = currencies;
     this.defaultDateFormat = getDateFormatString(this.locale);
     this.platforms = platforms;
+
+    this.dataService
+      .fetchPortfolioHoldings()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ holdings }) => {
+        this.defaultLookupItems = holdings
+          .filter(({ assetSubClass }) => {
+            return !['CASH'].includes(assetSubClass);
+          })
+          .sort((a, b) => {
+            return a.name?.localeCompare(b.name);
+          })
+          .map(
+            ({
+              assetClass,
+              assetSubClass,
+              currency,
+              dataSource,
+              name,
+              symbol
+            }) => {
+              return {
+                assetClass,
+                assetSubClass,
+                currency,
+                dataSource,
+                name,
+                symbol,
+                dataProviderInfo: {
+                  isPremium: false
+                }
+              };
+            }
+          );
+
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.tagsAvailable =
       this.data.user?.tags?.map((tag) => {
@@ -221,6 +267,34 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       }
 
       this.changeDetectorRef.markForCheck();
+    });
+
+    this.activityForm.get('tags').valueChanges.subscribe((tags: Tag[]) => {
+      const newTag = tags.find(({ id }) => {
+        return id === undefined;
+      });
+
+      if (newTag && this.hasPermissionToCreateOwnTag) {
+        this.dataService
+          .postTag({ ...newTag, userId: this.data.user.id })
+          .pipe(takeUntil(this.unsubscribeSubject))
+          .subscribe((tag) => {
+            this.activityForm.get('tags').setValue(
+              tags.map((currentTag) => {
+                if (currentTag.id === undefined) {
+                  return tag;
+                }
+
+                return currentTag;
+              })
+            );
+
+            this.userService
+              .get(true)
+              .pipe(takeUntil(this.unsubscribeSubject))
+              .subscribe();
+          });
+      }
     });
 
     this.activityForm

@@ -28,8 +28,10 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Prisma, SymbolProfile } from '@prisma/client';
 import { Big } from 'big.js';
 import { endOfToday, isAfter, isSameSecond, parseISO } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { omit, uniqBy } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+
+import { ImportDataDto } from './import-data.dto';
 
 @Injectable()
 export class ImportService {
@@ -138,14 +140,14 @@ export class ImportService {
   }
 
   public async import({
-    accountsDto,
+    accountsWithBalancesDto,
     activitiesDto,
     isDryRun = false,
     maxActivitiesToImport,
     user
   }: {
-    accountsDto: Partial<CreateAccountDto>[];
-    activitiesDto: Partial<CreateOrderDto>[];
+    accountsWithBalancesDto: ImportDataDto['accounts'];
+    activitiesDto: ImportDataDto['activities'];
     isDryRun?: boolean;
     maxActivitiesToImport: number;
     user: UserWithSettings;
@@ -153,12 +155,12 @@ export class ImportService {
     const accountIdMapping: { [oldAccountId: string]: string } = {};
     const userCurrency = user.Settings.settings.baseCurrency;
 
-    if (!isDryRun && accountsDto?.length) {
+    if (!isDryRun && accountsWithBalancesDto?.length) {
       const [existingAccounts, existingPlatforms] = await Promise.all([
         this.accountService.accounts({
           where: {
             id: {
-              in: accountsDto.map(({ id }) => {
+              in: accountsWithBalancesDto.map(({ id }) => {
                 return id;
               })
             }
@@ -167,14 +169,19 @@ export class ImportService {
         this.platformService.getPlatforms()
       ]);
 
-      for (const account of accountsDto) {
+      for (const accountWithBalances of accountsWithBalancesDto) {
         // Check if there is any existing account with the same ID
         const accountWithSameId = existingAccounts.find((existingAccount) => {
-          return existingAccount.id === account.id;
+          return existingAccount.id === accountWithBalances.id;
         });
 
         // If there is no account or if the account belongs to a different user then create a new account
         if (!accountWithSameId || accountWithSameId.userId !== user.id) {
+          const account: CreateAccountDto = omit(
+            accountWithBalances,
+            'balances'
+          );
+
           let oldAccountId: string;
           const platformId = account.platformId;
 
@@ -187,7 +194,10 @@ export class ImportService {
 
           let accountObject: Prisma.AccountCreateInput = {
             ...account,
-            User: { connect: { id: user.id } }
+            balances: {
+              create: accountWithBalances.balances ?? []
+            },
+            user: { connect: { id: user.id } }
           };
 
           if (
@@ -251,7 +261,7 @@ export class ImportService {
     );
 
     if (isDryRun) {
-      accountsDto.forEach(({ id, name }) => {
+      accountsWithBalancesDto.forEach(({ id, name }) => {
         accounts.push({ id, name });
       });
     }
@@ -386,7 +396,7 @@ export class ImportService {
             }
           },
           updateAccountBalance: false,
-          User: { connect: { id: user.id } },
+          user: { connect: { id: user.id } },
           userId: user.id
         });
 

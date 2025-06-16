@@ -169,10 +169,23 @@
           <div class="d-flex my-3">
             <div class="w-50" i18n>Housekeeping</div>
             <div class="w-50">
-              <button color="warn" mat-flat-button (click)="onFlushCache()">
-                <ion-icon class="mr-1" name="close-circle-outline" />
-                <span i18n>Flush Cache</span>
-              </button>
+              <div class="align-items-start d-flex flex-column">
+                @if (hasPermissionToSyncDemoUserAccount) {
+                  <button
+                    class="mb-2"
+                    color="accent"
+                    mat-flat-button
+                    (click)="onSyncDemoUserAccount()"
+                  >
+                    <ion-icon class="mr-1" name="sync-outline" />
+                    <span i18n>Sync Demo User Account</span>
+                  </button>
+                }
+                <button color="warn" mat-flat-button (click)="onFlushCache()">
+                  <ion-icon class="mr-1" name="close-circle-outline" />
+                  <span i18n>Flush Cache</span>
+                </button>
+              </div>
             </div>
           </div>
         </mat-card-content>

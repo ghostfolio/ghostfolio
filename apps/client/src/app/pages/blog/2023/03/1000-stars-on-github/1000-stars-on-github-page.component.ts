@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
@@ -9,6 +11,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './1000-stars-on-github-page.html'
 })
 export class ThousandStarsOnGitHubPageComponent {
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

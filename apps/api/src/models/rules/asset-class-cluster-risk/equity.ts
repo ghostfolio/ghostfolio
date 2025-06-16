@@ -11,8 +11,7 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
-      key: AssetClassClusterRiskEquity.name,
-      name: 'Equity'
+      key: AssetClassClusterRiskEquity.name
     });
 
     this.holdings = holdings;
@@ -76,6 +75,10 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
       thresholdMax: true,
       thresholdMin: true
     };
+  }
+
+  public getName() {
+    return 'Equity';
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

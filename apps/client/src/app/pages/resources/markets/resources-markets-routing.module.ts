@@ -1,3 +1,5 @@
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -7,7 +9,7 @@ const routes: Routes = [
   {
     component: ResourcesMarketsComponent,
     path: '',
-    title: $localize`Markets`
+    title: publicRoutes.resources.subRoutes.markets.title
   }
 ];
 

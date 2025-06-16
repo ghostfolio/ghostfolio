@@ -6,5 +6,5 @@ import { IsArray, IsOptional } from 'class-validator';
 export class CreateAccountWithBalancesDto extends CreateAccountDto {
   @IsArray()
   @IsOptional()
-  balances?: AccountBalance;
+  balances?: AccountBalance[];
 }

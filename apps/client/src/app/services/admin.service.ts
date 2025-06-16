@@ -265,6 +265,10 @@ export class AdminService {
     );
   }
 
+  public syncDemoUserAccount() {
+    return this.http.get<void>(`/api/v1/admin/demo-user/sync`);
+  }
+
   public testMarketData({
     dataSource,
     scraperConfiguration,

@@ -1,10 +1,6 @@
 import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
 import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { ApiService } from '@ghostfolio/api/services/api/api.service';
-import {
-  DEFAULT_CURRENCY,
-  DEFAULT_LANGUAGE_CODE
-} from '@ghostfolio/common/config';
 import { AiPromptResponse } from '@ghostfolio/common/interfaces';
 import { permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, RequestWithUser } from '@ghostfolio/common/types';
@@ -53,10 +49,8 @@ export class AiController {
       filters,
       mode,
       impersonationId: undefined,
-      languageCode:
-        this.request.user.Settings.settings.language ?? DEFAULT_LANGUAGE_CODE,
-      userCurrency:
-        this.request.user.Settings.settings.baseCurrency ?? DEFAULT_CURRENCY,
+      languageCode: this.request.user.Settings.settings.language,
+      userCurrency: this.request.user.Settings.settings.baseCurrency,
       userId: this.request.user.id
     });
 

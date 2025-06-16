@@ -4,12 +4,10 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
     http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-  <!--
-    <url>
-      <loc>https://ghostfol.io/ca</loc>
-      <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-    </url>
-  -->
+  <url>
+    <loc>https://ghostfol.io/ca</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
   <url>
     <loc>https://ghostfol.io/de</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
@@ -317,7 +315,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/fr/a-propos/changelog</loc>
+    <loc>https://ghostfol.io/fr/a-propos/journal-des-modifications</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -383,7 +381,7 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/it/informazioni-su/changelog</loc>
+    <loc>https://ghostfol.io/it/informazioni-su/registro-delle-modifiche</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -455,10 +453,6 @@
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
-    <loc>https://ghostfol.io/nl/over/changelog</loc>
-    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-  </url>
-  <url>
     <loc>https://ghostfol.io/nl/over/licentie</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
@@ -468,6 +462,10 @@
   </url>
   <url>
     <loc>https://ghostfol.io/nl/over/privacybeleid</loc>
+    <lastmod>${currentDate}T00:00:00+00:00</lastmod>
+  </url>
+  <url>
+    <loc>https://ghostfol.io/nl/over/wijzigingslogboek</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
   <url>
@@ -494,12 +492,6 @@
     <loc>https://ghostfol.io/pl/cennik</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
-  <!--
-    <url>
-      <loc>https://ghostfol.io/pl/faq</loc>
-      <lastmod>${currentDate}T00:00:00+00:00</lastmod>
-    </url>
-  -->
   <url>
     <loc>https://ghostfol.io/pl/funkcje</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
@@ -584,12 +576,10 @@
     <loc>https://ghostfol.io/tr</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
-  <!--
   <url>
     <loc>https://ghostfol.io/uk</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>
   </url>
-  -->
   <url>
     <loc>https://ghostfol.io/zh</loc>
     <lastmod>${currentDate}T00:00:00+00:00</lastmod>

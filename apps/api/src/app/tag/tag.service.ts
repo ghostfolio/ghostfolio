@@ -51,7 +51,7 @@ export class TagService {
     const tagsWithOrderCount = await this.prismaService.tag.findMany({
       include: {
         _count: {
-          select: { orders: true, symbolProfile: true }
+          select: { activities: true, symbolProfile: true }
         }
       }
     });
@@ -61,7 +61,7 @@ export class TagService {
         id,
         name,
         userId,
-        activityCount: _count.orders,
+        activityCount: _count.activities,
         holdingCount: _count.symbolProfile
       };
     });

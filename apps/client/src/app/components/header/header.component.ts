@@ -12,6 +12,11 @@ import { TokenStorageService } from '@ghostfolio/client/services/token-storage.s
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { Filter, InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import {
+  internalRoutes,
+  publicRoutes,
+  routes
+} from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfAssistantComponent } from '@ghostfolio/ui/assistant/assistant.component';
 
@@ -78,18 +83,24 @@ export class HeaderComponent implements OnChanges {
   public hasPermissionToAccessFearAndGreedIndex: boolean;
   public hasPermissionToCreateUser: boolean;
   public impersonationId: string;
+  public internalRoutes = internalRoutes;
   public isMenuOpen: boolean;
-  public routeAbout = $localize`:snake-case:about`;
-  public routeFeatures = $localize`:snake-case:features`;
-  public routeMarkets = $localize`:snake-case:markets`;
-  public routePricing = $localize`:snake-case:pricing`;
-  public routeResources = $localize`:snake-case:resources`;
-  public routerLinkAbout = ['/' + $localize`:snake-case:about`];
-  public routerLinkFeatures = ['/' + $localize`:snake-case:features`];
-  public routerLinkMarkets = ['/' + $localize`:snake-case:markets`];
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
-  public routerLinkRegister = ['/' + $localize`:snake-case:register`];
-  public routerLinkResources = ['/' + $localize`:snake-case:resources`];
+  public routeAbout = publicRoutes.about.path;
+  public routeFeatures = publicRoutes.features.path;
+  public routeMarkets = publicRoutes.markets.path;
+  public routePricing = publicRoutes.pricing.path;
+  public routeResources = publicRoutes.resources.path;
+  public routerLinkAbout = publicRoutes.about.routerLink;
+  public routerLinkAccount = internalRoutes.account.routerLink;
+  public routerLinkAccounts = internalRoutes.accounts.routerLink;
+  public routerLinkAdminControl = internalRoutes.adminControl.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkMarkets = publicRoutes.markets.routerLink;
+  public routerLinkPortfolio = internalRoutes.portfolio.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
+  public routerLinkRegister = publicRoutes.register.routerLink;
+  public routerLinkResources = publicRoutes.resources.routerLink;
+  public routes = routes;
 
   private unsubscribeSubject = new Subject<void>();
 

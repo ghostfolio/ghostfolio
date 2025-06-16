@@ -52,7 +52,7 @@ export class TagService {
       include: {
         _count: {
           select: {
-            orders: {
+            activities: {
               where: {
                 userId
               }
@@ -88,7 +88,7 @@ export class TagService {
     const tagsWithOrderCount = await this.prismaService.tag.findMany({
       include: {
         _count: {
-          select: { orders: true }
+          select: { activities: true }
         }
       }
     });
@@ -98,7 +98,7 @@ export class TagService {
         id,
         name,
         userId,
-        activityCount: _count.orders
+        activityCount: _count.activities
       };
     });
   }

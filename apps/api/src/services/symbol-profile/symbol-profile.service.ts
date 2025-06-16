@@ -33,7 +33,7 @@ export class SymbolProfileService {
       include: {
         activities: {
           include: {
-            User: true
+            user: true
           }
         }
       },
@@ -42,14 +42,14 @@ export class SymbolProfileService {
         activities: withUserSubscription
           ? {
               some: {
-                User: {
+                user: {
                   subscriptions: { some: { expiresAt: { gt: new Date() } } }
                 }
               }
             }
           : {
               every: {
-                User: {
+                user: {
                   subscriptions: { none: { expiresAt: { gt: new Date() } } }
                 }
               }

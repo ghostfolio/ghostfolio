@@ -164,8 +164,10 @@ export class DataProviderService {
   }
 
   public async getDataSources({
+    includeGhostfolio = false,
     user
   }: {
+    includeGhostfolio?: boolean;
     user: UserWithSettings;
   }): Promise<DataSource[]> {
     let dataSourcesKey: 'DATA_SOURCES' | 'DATA_SOURCES_LEGACY' = 'DATA_SOURCES';
@@ -188,7 +190,7 @@ export class DataProviderService {
       PROPERTY_API_KEY_GHOSTFOLIO
     )) as string;
 
-    if (ghostfolioApiKey || hasRole(user, 'ADMIN')) {
+    if (includeGhostfolio || ghostfolioApiKey) {
       dataSources.push('GHOSTFOLIO');
     }
 
@@ -686,9 +688,6 @@ export class DataProviderService {
         // Only allow symbols with supported currency
         return currency ? true : false;
       })
-      .sort(({ name: name1 }, { name: name2 }) => {
-        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
-      })
       .map((lookupItem) => {
         if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
           if (user.subscription.type === 'Premium') {
@@ -702,7 +701,21 @@ export class DataProviderService {
           lookupItem.dataProviderInfo.isPremium = false;
         }
 
+        if (
+          lookupItem.assetSubClass === 'CRYPTOCURRENCY' &&
+          user?.Settings?.settings.isExperimentalFeatures
+        ) {
+          // Remove DEFAULT_CURRENCY at the end of cryptocurrency names
+          lookupItem.name = lookupItem.name.replace(
+            new RegExp(` ${DEFAULT_CURRENCY}$`),
+            ''
+          );
+        }
+
         return lookupItem;
+      })
+      .sort(({ name: name1 }, { name: name2 }) => {
+        return name1?.toLowerCase().localeCompare(name2?.toLowerCase());
       });
 
     return {

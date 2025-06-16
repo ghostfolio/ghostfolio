@@ -32,7 +32,7 @@ export class SubscriptionService {
       this.stripe = new Stripe(
         this.configurationService.get('STRIPE_SECRET_KEY'),
         {
-          apiVersion: '2024-09-30.acacia'
+          apiVersion: '2025-05-28.basil'
         }
       );
     }
@@ -61,7 +61,7 @@ export class SubscriptionService {
 
     const checkoutSessionCreateParams: Stripe.Checkout.SessionCreateParams = {
       cancel_url: `${this.configurationService.get('ROOT_URL')}/${
-        user.Settings?.settings?.language ?? DEFAULT_LANGUAGE_CODE
+        user.Settings.settings.language
       }/account`,
       client_reference_id: user.id,
       line_items: [

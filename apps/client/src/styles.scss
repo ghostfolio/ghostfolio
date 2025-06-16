@@ -414,6 +414,14 @@ ngx-skeleton-loader {
   }
 }
 
+.mat-mdc-card {
+  .mat-mdc-card-title {
+    --mat-card-title-text-line-height: 1.2;
+
+    margin-bottom: 0.5rem;
+  }
+}
+
 .mat-mdc-checkbox {
   label {
     margin-bottom: 0;

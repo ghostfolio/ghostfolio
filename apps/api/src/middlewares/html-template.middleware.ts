@@ -7,29 +7,13 @@ import {
 } from '@ghostfolio/common/config';
 import { DATE_FORMAT, interpolate } from '@ghostfolio/common/helper';
 
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { format } from 'date-fns';
 import { NextFunction, Request, Response } from 'express';
 import * as fs from 'fs';
 import { join } from 'path';
 
-const i18nService = new I18nService();
-
-let indexHtmlMap: { [languageCode: string]: string } = {};
-
 const title = 'Ghostfolio';
-
-try {
-  indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
-    (map, languageCode) => ({
-      ...map,
-      [languageCode]: fs.readFileSync(
-        join(__dirname, '..', 'client', languageCode, 'index.html'),
-        'utf8'
-      )
-    }),
-    {}
-  );
-} catch {}
 
 const locales = {
   '/de/blog/2023/01/ghostfolio-auf-sackgeld-vorgestellt': {
@@ -94,71 +78,93 @@ const locales = {
   }
 };
 
-const isFileRequest = (filename: string) => {
-  if (filename === '/assets/LICENSE') {
-    return true;
-  } else if (
-    filename.includes('auth/ey') ||
-    filename.includes(
-      'personal-finance-tools/open-source-alternative-to-de.fi'
-    ) ||
-    filename.includes(
-      'personal-finance-tools/open-source-alternative-to-markets.sh'
-    )
-  ) {
-    return false;
+@Injectable()
+export class HtmlTemplateMiddleware implements NestMiddleware {
+  private indexHtmlMap: { [languageCode: string]: string } = {};
+
+  public constructor(private readonly i18nService: I18nService) {
+    try {
+      this.indexHtmlMap = SUPPORTED_LANGUAGE_CODES.reduce(
+        (map, languageCode) => ({
+          ...map,
+          [languageCode]: fs.readFileSync(
+            join(__dirname, '..', 'client', languageCode, 'index.html'),
+            'utf8'
+          )
+        }),
+        {}
+      );
+    } catch (error) {
+      Logger.error(
+        'Failed to initialize index HTML map',
+        error,
+        'HTMLTemplateMiddleware'
+      );
+    }
   }
 
-  return filename.split('.').pop() !== filename;
-};
+  public use(request: Request, response: Response, next: NextFunction) {
+    const path = request.originalUrl.replace(/\/$/, '');
+    let languageCode = path.substr(1, 2);
 
-export const HtmlTemplateMiddleware = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  const path = request.originalUrl.replace(/\/$/, '');
-  let languageCode = path.substr(1, 2);
+    if (!SUPPORTED_LANGUAGE_CODES.includes(languageCode)) {
+      languageCode = DEFAULT_LANGUAGE_CODE;
+    }
 
-  if (!SUPPORTED_LANGUAGE_CODES.includes(languageCode)) {
-    languageCode = DEFAULT_LANGUAGE_CODE;
-  }
+    const currentDate = format(new Date(), DATE_FORMAT);
+    const rootUrl = process.env.ROOT_URL || environment.rootUrl;
 
-  const currentDate = format(new Date(), DATE_FORMAT);
-  const rootUrl = process.env.ROOT_URL || environment.rootUrl;
-
-  if (
-    path.startsWith('/api/') ||
-    path.startsWith(STORYBOOK_PATH) ||
-    isFileRequest(path) ||
-    !environment.production
-  ) {
-    // Skip
-    next();
-  } else {
-    const indexHtml = interpolate(indexHtmlMap[languageCode], {
-      currentDate,
-      languageCode,
-      path,
-      rootUrl,
-      description: i18nService.getTranslation({
+    if (
+      path.startsWith('/api/') ||
+      path.startsWith(STORYBOOK_PATH) ||
+      this.isFileRequest(path) ||
+      !environment.production
+    ) {
+      // Skip
+      next();
+    } else {
+      const indexHtml = interpolate(this.indexHtmlMap[languageCode], {
+        currentDate,
         languageCode,
-        id: 'metaDescription'
-      }),
-      featureGraphicPath:
-        locales[path]?.featureGraphicPath ?? 'assets/cover.png',
-      keywords: i18nService.getTranslation({
-        languageCode,
-        id: 'metaKeywords'
-      }),
-      title:
-        locales[path]?.title ??
-        `${title} – ${i18nService.getTranslation({
+        path,
+        rootUrl,
+        description: this.i18nService.getTranslation({
           languageCode,
-          id: 'slogan'
-        })}`
-    });
+          id: 'metaDescription'
+        }),
+        featureGraphicPath:
+          locales[path]?.featureGraphicPath ?? 'assets/cover.png',
+        keywords: this.i18nService.getTranslation({
+          languageCode,
+          id: 'metaKeywords'
+        }),
+        title:
+          locales[path]?.title ??
+          `${title} – ${this.i18nService.getTranslation({
+            languageCode,
+            id: 'slogan'
+          })}`
+      });
 
-    return response.send(indexHtml);
+      return response.send(indexHtml);
+    }
   }
-};
+
+  private isFileRequest(filename: string) {
+    if (filename === '/assets/LICENSE') {
+      return true;
+    } else if (
+      filename.includes('auth/ey') ||
+      filename.includes(
+        'personal-finance-tools/open-source-alternative-to-de.fi'
+      ) ||
+      filename.includes(
+        'personal-finance-tools/open-source-alternative-to-markets.sh'
+      )
+    ) {
+      return false;
+    }
+
+    return filename.split('.').pop() !== filename;
+  }
+}

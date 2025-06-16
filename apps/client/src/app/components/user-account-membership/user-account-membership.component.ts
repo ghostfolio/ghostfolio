@@ -5,6 +5,7 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import {
   ChangeDetectionStrategy,
@@ -36,7 +37,7 @@ export class UserAccountMembershipComponent implements OnDestroy {
   public hasPermissionToUpdateUserSettings: boolean;
   public price: number;
   public priceId: string;
-  public routerLinkPricing = ['/' + $localize`:snake-case:pricing`];
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public trySubscriptionMail =
     'mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Trial&body=Hello%0D%0DI am interested in Ghostfolio Premium. Can you please send me a coupon code to try it for some time?%0D%0DKind regards';
   public user: User;

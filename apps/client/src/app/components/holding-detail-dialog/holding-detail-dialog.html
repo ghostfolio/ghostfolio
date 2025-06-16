@@ -146,9 +146,9 @@
           size="medium"
           [isCurrency]="true"
           [locale]="data.locale"
-          [precision]="investmentPrecision"
+          [precision]="investmentInBaseCurrencyWithCurrencyEffectPrecision"
           [unit]="data.baseCurrency"
-          [value]="investment"
+          [value]="investmentInBaseCurrencyWithCurrencyEffect"
           >Investment</gf-value
         >
       </div>
@@ -392,9 +392,7 @@
     </mat-tab-group>
 
     <gf-tags-selector
-      [hasPermissionToCreateTag]="
-        hasPermissionToCreateOwnTag && user?.settings?.isExperimentalFeatures
-      "
+      [hasPermissionToCreateTag]="hasPermissionToCreateOwnTag"
       [readonly]="!data.hasPermissionToUpdateOrder"
       [tags]="activityForm.get('tags')?.value"
       [tagsAvailable]="tagsAvailable"

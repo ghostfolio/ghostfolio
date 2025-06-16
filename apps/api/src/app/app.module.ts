@@ -1,20 +1,21 @@
 import { EventsModule } from '@ghostfolio/api/events/events.module';
+import { HtmlTemplateMiddleware } from '@ghostfolio/api/middlewares/html-template.middleware';
 import { ConfigurationModule } from '@ghostfolio/api/services/configuration/configuration.module';
-import { CronService } from '@ghostfolio/api/services/cron.service';
+import { CronModule } from '@ghostfolio/api/services/cron/cron.module';
 import { DataProviderModule } from '@ghostfolio/api/services/data-provider/data-provider.module';
 import { ExchangeRateDataModule } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.module';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
 import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { DataGatheringModule } from '@ghostfolio/api/services/queues/data-gathering/data-gathering.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
-import { TwitterBotModule } from '@ghostfolio/api/services/twitter-bot/twitter-bot.module';
 import {
   DEFAULT_LANGUAGE_CODE,
   SUPPORTED_LANGUAGE_CODES
 } from '@ghostfolio/common/config';
 
 import { BullModule } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -78,6 +79,7 @@ import { UserModule } from './user/user.module';
     CacheModule,
     ConfigModule.forRoot(),
     ConfigurationModule,
+    CronModule,
     DataGatheringModule,
     DataProviderModule,
     EventEmitterModule.forRoot(),
@@ -101,7 +103,7 @@ import { UserModule } from './user/user.module';
     RedisCacheModule,
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      exclude: ['/api*', '/sitemap.xml'],
+      exclude: ['/.well-known/*wildcard', '/api/*wildcard', '/sitemap.xml'],
       rootPath: join(__dirname, '..', 'client'),
       serveStaticOptions: {
         setHeaders: (res) => {
@@ -124,14 +126,21 @@ import { UserModule } from './user/user.module';
         }
       }
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client', '.well-known'),
+      serveRoot: '/.well-known'
+    }),
     SitemapModule,
     SubscriptionModule,
     SymbolModule,
     TagsModule,
-    TwitterBotModule,
     UserModule,
     WatchlistModule
   ],
-  providers: [CronService]
+  providers: [I18nService]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HtmlTemplateMiddleware).forRoutes('*');
+  }
+}

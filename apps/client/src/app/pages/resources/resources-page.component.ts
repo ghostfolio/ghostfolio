@@ -1,3 +1,6 @@
+import { TabConfiguration } from '@ghostfolio/common/interfaces';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
+
 import { Component, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
@@ -11,26 +14,26 @@ import { Subject } from 'rxjs';
 })
 export class ResourcesPageComponent implements OnInit {
   public deviceType: string;
-  public tabs = [
+  public tabs: TabConfiguration[] = [
     {
-      path: '.',
+      iconName: 'reader-outline',
       label: $localize`Overview`,
-      iconName: 'reader-outline'
+      routerLink: publicRoutes.resources.routerLink
     },
     {
-      path: 'guides',
       label: $localize`Guides`,
-      iconName: 'book-outline'
+      iconName: 'book-outline',
+      routerLink: publicRoutes.resources.subRoutes.guides.routerLink
     },
     {
-      path: 'markets',
+      iconName: 'newspaper-outline',
       label: $localize`Markets`,
-      iconName: 'newspaper-outline'
+      routerLink: publicRoutes.resources.subRoutes.markets.routerLink
     },
     {
-      path: 'glossary',
+      iconName: 'library-outline',
       label: $localize`Glossary`,
-      iconName: 'library-outline'
+      routerLink: publicRoutes.resources.subRoutes.glossary.routerLink
     }
   ];
 
