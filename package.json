@@ -103,7 +103,7 @@
     "chartjs-plugin-datalabels": "2.2.0",
     "cheerio": "1.0.0",
     "class-transformer": "0.5.1",
-    "class-validator": "0.14.1",
+    "class-validator": "0.14.2",
     "color": "5.0.0",
     "countries-and-timezones": "3.7.2",
     "countries-list": "3.1.1",
