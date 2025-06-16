@@ -102,6 +102,9 @@ export class YahooFinanceDataEnhancerService implements DataEnhancerInterface {
         yahooSymbol = symbol;
       } else {
         const { quotes } = await this.yahooFinance.search(response.isin);
+        if (quotes.length === 0) {
+          return response;
+        }
         yahooSymbol = quotes[0].symbol as string;
       }
 
