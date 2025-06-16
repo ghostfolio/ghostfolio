@@ -11,14 +11,14 @@
       [ngClass]="position === 'end' ? 'justify-content-end' : ''"
     >
       <ng-container *ngIf="isNumber || value === null">
-        <ng-container *ngIf="colorizeSign && !useAbsoluteValue">
+        @if (colorizeSign && !useAbsoluteValue) {
           @if (+value > 0) {
             <div class="mr-1 text-success">+</div>
           }
           @if (+value < 0) {
             <div class="mr-1 text-danger">-</div>
           }
-        </ng-container>
+        }
         @if (isPercent) {
           <div
             class="mb-0 value"
@@ -85,8 +85,8 @@
     />
   }
 
-  <ng-container>
-    <div *ngIf="size === 'large'" class="text-truncate">
+  @if (size === 'large') {
+    <div class="text-truncate">
       <span class="h6"
         ><ng-container *ngTemplateOutlet="label"></ng-container
       ></span>
@@ -97,5 +97,5 @@
     <small *ngIf="size !== 'large'" class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
-  </ng-container>
+  }
 </div>

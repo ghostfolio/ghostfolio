@@ -1,11 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  internalRoutes,
-  publicRoutes,
-  routes
-} from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Injectable } from '@angular/core';
 import {
@@ -21,13 +17,13 @@ export class AuthGuard {
   private static PUBLIC_PAGE_ROUTES = [
     `/${publicRoutes.about.path}`,
     `/${publicRoutes.blog.path}`,
-    `/${routes.demo}`,
+    `/${publicRoutes.demo.path}`,
     `/${publicRoutes.faq.path}`,
     `/${publicRoutes.features.path}`,
     `/${publicRoutes.markets.path}`,
     `/${publicRoutes.openStartup.path}`,
     `/${publicRoutes.pricing.path}`,
-    `/${routes.public}`,
+    `/${publicRoutes.public.path}`,
     `/${publicRoutes.register.path}`,
     `/${publicRoutes.resources.path}`
   ];
@@ -52,7 +48,7 @@ export class AuthGuard {
         .pipe(
           catchError(() => {
             if (utmSource === 'ios') {
-              this.router.navigate(['/' + routes.demo]);
+              this.router.navigate(publicRoutes.demo.routerLink);
               resolve(false);
             } else if (utmSource === 'trusted-web-activity') {
               this.router.navigate(publicRoutes.register.routerLink);
@@ -66,7 +62,7 @@ export class AuthGuard {
               resolve(true);
               return EMPTY;
             } else if (state.url !== '/start') {
-              this.router.navigate(['/' + routes.start]);
+              this.router.navigate(publicRoutes.start.routerLink);
               resolve(false);
               return EMPTY;
             }
@@ -98,7 +94,7 @@ export class AuthGuard {
             this.router.navigate(internalRoutes.zen.routerLink);
             resolve(false);
             return;
-          } else if (state.url.startsWith(`/${routes.start}`)) {
+          } else if (state.url.startsWith(`/${publicRoutes.start.path}`)) {
             if (user.settings.viewMode === 'ZEN') {
               this.router.navigate(internalRoutes.zen.routerLink);
             } else {

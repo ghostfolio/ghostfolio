@@ -3,22 +3,9 @@ import '@angular/localize/init';
 import { IRoute } from './interfaces/interfaces';
 
 export const routes = {
-  access: 'access',
-  adminControl: 'admin',
   api: 'api',
-  auth: 'auth',
-  demo: 'demo',
   i18n: 'i18n',
-  jobs: 'jobs',
-  market: 'market',
-  marketData: 'market-data',
-  membership: 'membership',
   personalFinanceTools: 'personal-finance-tools',
-  public: 'p',
-  settings: 'settings',
-  start: 'start',
-  users: 'users',
-  webauthn: 'webauthn',
 
   // Publicly accessible pages
   openSourceAlternativeTo: $localize`:kebab-case:open-source-alternative-to`
@@ -28,12 +15,58 @@ export const internalRoutes: Record<string, IRoute> = {
   account: {
     path: 'account',
     routerLink: ['/account'],
+    subRoutes: {
+      access: {
+        path: 'access',
+        routerLink: ['/account', 'access'],
+        title: $localize`Access`
+      },
+      membership: {
+        path: 'membership',
+        routerLink: ['/account', 'membership'],
+        title: $localize`Membership`
+      }
+    },
     title: $localize`Settings`
+  },
+  adminControl: {
+    excludeFromAssistant: true,
+    path: 'admin',
+    routerLink: ['/admin'],
+    subRoutes: {
+      jobs: {
+        path: 'jobs',
+        routerLink: ['/admin', 'jobs'],
+        title: $localize`Job Queue`
+      },
+      marketData: {
+        path: 'market-data',
+        routerLink: ['/admin', 'market-data'],
+        title: $localize`Market Data`
+      },
+      settings: {
+        path: 'settings',
+        routerLink: ['/admin', 'settings'],
+        title: $localize`Settings`
+      },
+      users: {
+        path: 'users',
+        routerLink: ['/admin', 'users'],
+        title: $localize`Users`
+      }
+    },
+    title: $localize`Admin Control`
   },
   accounts: {
     path: 'accounts',
     routerLink: ['/accounts'],
     title: $localize`Accounts`
+  },
+  auth: {
+    excludeFromAssistant: true,
+    path: 'auth',
+    routerLink: ['/auth'],
+    title: $localize`Sign in`
   },
   home: {
     path: 'home',
@@ -43,6 +76,11 @@ export const internalRoutes: Record<string, IRoute> = {
         path: 'holdings',
         routerLink: ['/home', 'holdings'],
         title: $localize`Holdings`
+      },
+      markets: {
+        path: 'markets',
+        routerLink: ['/home', 'markets'],
+        title: $localize`Markets`
       },
       summary: {
         path: 'summary',
@@ -88,6 +126,12 @@ export const internalRoutes: Record<string, IRoute> = {
       }
     },
     title: $localize`Portfolio`
+  },
+  webauthn: {
+    excludeFromAssistant: true,
+    path: 'webauthn',
+    routerLink: ['/webauthn'],
+    title: $localize`Sign in`
   },
   zen: {
     excludeFromAssistant: true,
@@ -154,6 +198,11 @@ export const publicRoutes = {
     routerLink: ['/blog'],
     title: $localize`Blog`
   },
+  demo: {
+    path: 'demo',
+    routerLink: ['/demo'],
+    title: $localize`Live Demo`
+  },
   faq: {
     path: $localize`:kebab-case:faq`,
     routerLink: ['/' + $localize`:kebab-case:faq`],
@@ -194,6 +243,10 @@ export const publicRoutes = {
     routerLink: ['/' + $localize`:kebab-case:pricing`],
     title: $localize`Pricing`
   },
+  public: {
+    path: 'p',
+    routerLink: ['/p']
+  },
   register: {
     path: $localize`:kebab-case:register`,
     routerLink: ['/' + $localize`:kebab-case:register`],
@@ -229,5 +282,9 @@ export const publicRoutes = {
       }
     },
     title: $localize`Resources`
+  },
+  start: {
+    path: 'start',
+    routerLink: ['/start']
   }
 };
