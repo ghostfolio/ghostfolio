@@ -1,8 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import {
-  routes as ghostfolioRoutes,
-  publicRoutes
-} from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -42,13 +39,13 @@ const routes: Routes = [
             (m) => m.ResourcesMarketsModule
           )
       },
-      ...[ghostfolioRoutes.personalFinanceTools].map((path) => ({
-        path,
+      {
+        path: publicRoutes.resources.subRoutes.personalFinanceTools.path,
         loadChildren: () =>
           import(
             './personal-finance-tools/personal-finance-tools-page.module'
           ).then((m) => m.PersonalFinanceToolsPageModule)
-      }))
+      }
     ],
     path: '',
     title: publicRoutes.resources.title
