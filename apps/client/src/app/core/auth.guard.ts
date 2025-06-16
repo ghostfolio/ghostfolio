@@ -1,11 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { SettingsStorageService } from '@ghostfolio/client/services/settings-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
-import {
-  internalRoutes,
-  publicRoutes,
-  routes
-} from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Injectable } from '@angular/core';
 import {
@@ -27,7 +23,7 @@ export class AuthGuard {
     `/${publicRoutes.markets.path}`,
     `/${publicRoutes.openStartup.path}`,
     `/${publicRoutes.pricing.path}`,
-    `/${routes.public}`,
+    `/${publicRoutes.public.path}`,
     `/${publicRoutes.register.path}`,
     `/${publicRoutes.resources.path}`
   ];

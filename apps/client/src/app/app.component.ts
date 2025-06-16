@@ -3,11 +3,7 @@ import { HoldingDetailDialogParams } from '@ghostfolio/client/components/holding
 import { getCssVariable } from '@ghostfolio/common/helper';
 import { InfoItem, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import {
-  internalRoutes,
-  publicRoutes,
-  routes
-} from '@ghostfolio/common/routes/routes';
+import { internalRoutes, publicRoutes } from '@ghostfolio/common/routes/routes';
 import { ColorScheme } from '@ghostfolio/common/types';
 
 import { DOCUMENT } from '@angular/common';
@@ -213,7 +209,7 @@ export class AppComponent implements OnDestroy, OnInit {
             this.currentRoute === publicRoutes.features.path ||
             this.currentRoute === publicRoutes.markets.path ||
             this.currentRoute === publicRoutes.openStartup.path ||
-            this.currentRoute === routes.public ||
+            this.currentRoute === publicRoutes.public.path ||
             this.currentRoute === publicRoutes.pricing.path ||
             this.currentRoute === publicRoutes.register.path ||
             this.currentRoute === publicRoutes.start.path) &&
