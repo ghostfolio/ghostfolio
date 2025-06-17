@@ -264,6 +264,7 @@ export class UserService {
         ),
       AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
         undefined,
+        undefined,
         {}
       ).getSettings(user.Settings.settings),
       AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(

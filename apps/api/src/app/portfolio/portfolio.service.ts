@@ -1261,6 +1261,7 @@ export class PortfolioService {
                 ),
                 new AccountClusterRiskSingleAccount(
                   this.exchangeRateDataService,
+                  this.i18nService,
                   accounts
                 )
               ],
