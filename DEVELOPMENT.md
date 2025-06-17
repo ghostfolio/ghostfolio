@@ -36,7 +36,7 @@ Run `npm run start:client` and open https://localhost:4200/en in your browser.
 
 #### Other Languages
 
-To start the client in a different language, such as German (`de`), adapt the `start:client` script in the `package.json` file and change `--configuration=development-en` to `--configuration=development-de`. Then, run `npm run start:client` and open https://localhost:4200/de in your browser.
+To start the client in a different language, such as German (`de`), adapt the `start:client` script in the `package.json` file by changing `--configuration=development-en` to `--configuration=development-de`. Then, run `npm run start:client` and open https://localhost:4200/de in your browser.
 
 ### Start _Storybook_
 
