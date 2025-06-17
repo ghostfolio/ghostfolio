@@ -2,7 +2,7 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -43,18 +43,18 @@ export class AboutPageComponent implements OnDestroy, OnInit {
         this.tabs = [
           {
             iconName: 'information-circle-outline',
-            label: $localize`About`,
-            path: ['/' + routes.about]
+            label: publicRoutes.about.title,
+            routerLink: publicRoutes.about.routerLink
           },
           {
             iconName: 'sparkles-outline',
-            label: $localize`Changelog`,
-            path: ['/' + routes.about, routes.changelog]
+            label: publicRoutes.about.subRoutes.changelog.title,
+            routerLink: publicRoutes.about.subRoutes.changelog.routerLink
           },
           {
             iconName: 'ribbon-outline',
-            label: $localize`License`,
-            path: ['/' + routes.about, routes.license],
+            label: publicRoutes.about.subRoutes.license.title,
+            routerLink: publicRoutes.about.subRoutes.license.routerLink,
             showCondition: !this.hasPermissionForSubscription
           }
         ];
@@ -62,15 +62,15 @@ export class AboutPageComponent implements OnDestroy, OnInit {
         if (state?.user) {
           this.tabs.push({
             iconName: 'shield-checkmark-outline',
-            label: $localize`Privacy Policy`,
-            path: ['/' + routes.about, routes.privacyPolicy],
+            label: publicRoutes.about.subRoutes.privacyPolicy.title,
+            routerLink: publicRoutes.about.subRoutes.privacyPolicy.routerLink,
             showCondition: this.hasPermissionForSubscription
           });
 
           this.tabs.push({
             iconName: 'document-text-outline',
-            label: $localize`Terms of Service`,
-            path: ['/' + routes.about, routes.termsOfService],
+            label: publicRoutes.about.subRoutes.termsOfService.title,
+            routerLink: publicRoutes.about.subRoutes.termsOfService.routerLink,
             showCondition: this.hasPermissionForSubscription
           });
 
@@ -81,8 +81,8 @@ export class AboutPageComponent implements OnDestroy, OnInit {
 
         this.tabs.push({
           iconName: 'happy-outline',
-          label: 'OSS Friends',
-          path: ['/' + routes.about, routes.ossFriends]
+          label: publicRoutes.about.subRoutes.ossFriends.title,
+          routerLink: publicRoutes.about.subRoutes.ossFriends.routerLink
         });
       });
   }

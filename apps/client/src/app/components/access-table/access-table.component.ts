@@ -1,7 +1,7 @@
 import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
 import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { Access, User } from '@ghostfolio/common/interfaces';
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
@@ -55,7 +55,7 @@ export class AccessTableComponent implements OnChanges {
   public getPublicUrl(aId: string): string {
     const languageCode = this.user.settings.language;
 
-    return `${this.baseUrl}/${languageCode}/${routes.public}/${aId}`;
+    return `${this.baseUrl}/${languageCode}/${publicRoutes.public.path}/${aId}`;
   }
 
   public onCopyUrlToClipboard(aId: string): void {

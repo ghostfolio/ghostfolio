@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import {
   ChangeDetectionStrategy,
@@ -28,7 +28,7 @@ export class SubscriptionInterstitialDialog implements OnInit {
 
   public remainingSkipButtonDelay =
     SubscriptionInterstitialDialog.SKIP_BUTTON_DELAY_IN_SECONDS;
-  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
   public variantIndex: number;
 
   private unsubscribeSubject = new Subject<void>();

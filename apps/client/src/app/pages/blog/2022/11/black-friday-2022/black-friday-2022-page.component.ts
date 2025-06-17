@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
 import { Component } from '@angular/core';
@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './black-friday-2022-page.html'
 })
 export class BlackFriday2022PageComponent {
-  public routerLinkBlog = ['/' + routes.blog];
-  public routerLinkFeatures = ['/' + routes.features];
-  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkFeatures = publicRoutes.features.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

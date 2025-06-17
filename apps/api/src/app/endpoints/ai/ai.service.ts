@@ -30,7 +30,7 @@ export class AiService {
     });
 
     const holdingsTable = [
-      '| Name | Symbol | Currency | Asset Class | Asset Sub Class | Allocation in Percentage |',
+      '| Name | Symbol | Currency | Asset Class | Asset Sub Class | Allocation in Percentage |',
       '| --- | --- | --- | --- | --- | --- |',
       ...Object.values(holdings)
         .sort((a, b) => {

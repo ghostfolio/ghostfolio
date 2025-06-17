@@ -2,6 +2,7 @@ import { GfAdminPlatformModule } from '@ghostfolio/client/components/admin-platf
 import { GfAdminTagModule } from '@ghostfolio/client/components/admin-tag/admin-tag.module';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -22,6 +23,7 @@ import { AdminSettingsComponent } from './admin-settings.component';
     GfAdminTagModule,
     GfEntityLogoComponent,
     GfPremiumIndicatorComponent,
+    GfValueComponent,
     MatButtonModule,
     MatMenuModule,
     MatProgressBarModule,

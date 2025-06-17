@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,6 @@ import { RouterModule } from '@angular/router';
   templateUrl: './first-months-in-open-source-page.html'
 })
 export class FirstMonthsInOpenSourcePageComponent {
-  public routerLinkBlog = ['/' + routes.blog];
-  public routerLinkPricing = ['/' + routes.pricing];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
+  public routerLinkPricing = publicRoutes.pricing.routerLink;
 }

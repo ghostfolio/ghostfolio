@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+- Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
+- Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Portuguese (`pt`)
+
+## 2.171.0 - 2025-06-15
+
 ### Added
 
 - Added the current holdings as default options of the symbol search in the create or update activity dialog
@@ -14,13 +24,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the style of the assistant
+- Reused the value component in the data providers management of the admin control panel
+- Set the market state of exchange rate symbols to `open` in the _Financial Modeling Prep_ service
+- Restructured the content of the pricing page
+- Migrated the `@ghostfolio/ui/assistant` component to control flow
+- Migrated the `@ghostfolio/ui/value` component to control flow
 - Migrated the `HtmlTemplateMiddleware` to use `@Injectable()`
 - Renamed `User` to `user` in the database schema
 - Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Español (`es`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Italian (`it`)
 - Improved the language localization for Polish (`pl`)
+- Improved the language localization for Portuguese (`pt`)
+- Improved the language localization for Turkish (`tr`)
+- Upgraded the _Stripe_ dependencies
+
+### Fixed
+
+- Fixed a date offset issue with account balances
+- Fixed missing `/.well-known/assetlinks.json` for TWA
 
 ## 2.170.0 - 2025-06-11
 

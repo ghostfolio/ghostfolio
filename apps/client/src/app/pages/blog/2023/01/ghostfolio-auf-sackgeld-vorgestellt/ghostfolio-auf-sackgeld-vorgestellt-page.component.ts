@@ -1,4 +1,4 @@
-import { routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,5 +11,5 @@ import { RouterModule } from '@angular/router';
   templateUrl: './ghostfolio-auf-sackgeld-vorgestellt-page.html'
 })
 export class GhostfolioAufSackgeldVorgestelltPageComponent {
-  public routerLinkBlog = ['/' + routes.blog];
+  public routerLinkBlog = publicRoutes.blog.routerLink;
 }

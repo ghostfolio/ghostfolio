@@ -32,8 +32,8 @@
                     personalFinanceTool.name
                   }} - {{ personalFinanceTool.slogan }}"
                   [routerLink]="[
-                    pathResources,
-                    'personal-finance-tools',
+                    '/' + pathResources,
+                    pathPersonalFinanceTools,
                     pathAlternativeTo +
                       (personalFinanceTool.alias ?? personalFinanceTool.key)
                   ]"

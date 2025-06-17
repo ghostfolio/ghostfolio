@@ -4,7 +4,7 @@ import { AdminOverviewComponent } from '@ghostfolio/client/components/admin-over
 import { AdminSettingsComponent } from '@ghostfolio/client/components/admin-settings/admin-settings.component';
 import { AdminUsersComponent } from '@ghostfolio/client/components/admin-users/admin-users.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
-import { routes as ghostfolioRoutes } from '@ghostfolio/common/routes/routes';
+import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -18,27 +18,27 @@ const routes: Routes = [
       {
         path: '',
         component: AdminOverviewComponent,
-        title: $localize`Admin Control`
+        title: internalRoutes.adminControl.title
       },
       {
-        path: ghostfolioRoutes.jobs,
+        path: internalRoutes.adminControl.subRoutes.jobs.path,
         component: AdminJobsComponent,
-        title: $localize`Job Queue`
+        title: internalRoutes.adminControl.subRoutes.jobs.title
       },
       {
-        path: ghostfolioRoutes.marketData,
+        path: internalRoutes.adminControl.subRoutes.marketData.path,
         component: AdminMarketDataComponent,
-        title: $localize`Market Data`
+        title: internalRoutes.adminControl.subRoutes.marketData.title
       },
       {
-        path: ghostfolioRoutes.settings,
+        path: internalRoutes.adminControl.subRoutes.settings.path,
         component: AdminSettingsComponent,
-        title: $localize`Settings`
+        title: internalRoutes.adminControl.subRoutes.settings.title
       },
       {
-        path: ghostfolioRoutes.users,
+        path: internalRoutes.adminControl.subRoutes.users.path,
         component: AdminUsersComponent,
-        title: $localize`Users`
+        title: internalRoutes.adminControl.subRoutes.users.title
       }
     ],
     component: AdminPageComponent,

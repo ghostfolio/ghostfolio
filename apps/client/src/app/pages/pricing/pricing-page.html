@@ -9,20 +9,6 @@
           for most people. Revenue is used to cover the costs of the hosting
           infrastructure and to fund ongoing development.
         </p>
-        @if (user?.subscription?.type === 'Basic') {
-          <p>
-            If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
-            <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
-            <i>VIAC</i>, or <i>Zak</i>, please
-            <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
-              >contact us</a
-            >
-            to use our referral link and get a Ghostfolio Premium membership for
-            one year. Looking for a student discount? Request it
-            <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a>
-            with your university e-mail address.
-          </p>
-        }
         <p i18n>
           If you prefer to run Ghostfolio on your own infrastructure, please
           find the source code and further instructions on
@@ -331,7 +317,24 @@
       </div>
     </div>
   </div>
-  @if (!user) {
+  @if (user?.subscription?.type === 'Basic') {
+    <div class="row">
+      <div class="col mt-3">
+        <p>
+          If you plan to open an account at <i>DEGIRO</i>, <i>finpension</i>,
+          <i>frankly</i>, <i>Interactive Brokers</i>, <i>Swissquote</i>,
+          <i>VIAC</i>, or <i>Zak</i>, please
+          <a href="mailto:hi@ghostfol.io?Subject=Referral link for..."
+            >contact us</a
+          >
+          to use our referral link and get a Ghostfolio Premium membership for
+          one year. Looking for a student discount? Request it
+          <a href="mailto:hi@ghostfol.io?Subject=Student Discount">here</a>
+          with your university e-mail address.
+        </p>
+      </div>
+    </div>
+  } @else if (!user) {
     <div class="row">
       <div class="col mt-3 text-center">
         <a
