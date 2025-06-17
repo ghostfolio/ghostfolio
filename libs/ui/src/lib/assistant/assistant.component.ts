@@ -626,8 +626,17 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
     const searchTerm = aSearchTerm.toLowerCase();
 
     const allRoutes = Object.values(internalRoutes)
-      .filter(({ excludeFromAssistant }) => {
-        return !excludeFromAssistant;
+      .filter(({ excludeFromAssistant, path }) => {
+        // Exclude routes based on excludeFromAssistant flag
+        if (excludeFromAssistant) {
+          return false;
+        }
+
+        if (path === 'admin' && !this.hasPermissionToAccessAdminControl) {
+          return false;
+        }
+
+        return true;
       })
       .reduce((acc, route) => {
         acc.push(route);

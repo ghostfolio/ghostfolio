@@ -21,7 +21,6 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Settings`
   },
   adminControl: {
-    excludeFromAssistant: true,
     path: 'admin',
     routerLink: ['/admin'],
     subRoutes: {
