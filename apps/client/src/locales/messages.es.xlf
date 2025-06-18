@@ -7558,7 +7558,7 @@
       </trans-unit>
       <trans-unit id="4558213855845176930" datatype="html">
         <source>Watchlist</source>
-        <target state="new">Watchlist</target>
+        <target state="translated">Lista de seguimiento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">90</context>
@@ -7566,7 +7566,7 @@
       </trans-unit>
       <trans-unit id="e9d59bb8bf6c08243d5411c55ddbdf925c7c799c" datatype="html">
         <source>Get Early Access</source>
-        <target state="new">Get Early Access</target>
+        <target state="translated">Obtenga acceso temprano</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.html</context>
           <context context-type="linenumber">29</context>
@@ -7574,7 +7574,7 @@
       </trans-unit>
       <trans-unit id="627795342008207050" datatype="html">
         <source>Do you really want to delete this item?</source>
-        <target state="new">Do you really want to delete this item?</target>
+        <target state="translated">¿Realmente deseas eliminar este elemento?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.ts</context>
           <context context-type="linenumber">132</context>
@@ -7582,7 +7582,7 @@
       </trans-unit>
       <trans-unit id="3fdc751b264ca9998e1542fcf5794e274cd56344" datatype="html">
         <source>Log out</source>
-        <target state="new">Log out</target>
+        <target state="translated">Finalizar la sesión</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/header/header.component.html</context>
           <context context-type="linenumber">329</context>
@@ -7590,7 +7590,7 @@
       </trans-unit>
       <trans-unit id="9d1266dbf13a2f77fa5746e235cb8e688a3499e8" datatype="html">
         <source> Calculations are based on delayed market data and may not be displayed in real-time.</source>
-        <target state="new"> Calculations are based on delayed market data and may not be displayed in real-time.</target>
+        <target state="translated"> Los cálculos se basan en datos de mercado retrasados ​​y es posible que no se muestren en tiempo real.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-market/home-market.html</context>
           <context context-type="linenumber">43</context>
@@ -7598,7 +7598,7 @@
       </trans-unit>
       <trans-unit id="793097298820646129" datatype="html">
         <source>changelog</source>
-        <target state="new">changelog</target>
+        <target state="translated">registro-decambios</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7611,7 +7611,7 @@
       </trans-unit>
       <trans-unit id="3920411961658116502" datatype="html">
         <source>Demo user account has been synced.</source>
-        <target state="new">Demo user account has been synced.</target>
+        <target state="translated">La cuenta de usuario de demostración se ha sincronizado.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.component.ts</context>
           <context context-type="linenumber">223</context>
@@ -7619,7 +7619,7 @@
       </trans-unit>
       <trans-unit id="18fe01d6ae816d6787148e59ea1a39d0bb542e24" datatype="html">
         <source>Sync Demo User Account</source>
-        <target state="new">Sync Demo User Account</target>
+        <target state="translated">Sincronizar cuenta de usuario de demostración</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-overview/admin-overview.html</context>
           <context context-type="linenumber">181</context>
@@ -7627,7 +7627,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup" datatype="html">
         <source>Emergency Fund: Set up</source>
-        <target state="new">Emergency Fund: Set up</target>
+        <target state="translated">Fondo de Emergencia: Establecer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7635,7 +7635,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
         <source> No emergency fund has been set up </source>
-        <target state="new"> No emergency fund has been set up </target>
+        <target state="translated"> No se ha creado ningún fondo de emergencia </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7643,7 +7643,7 @@
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
         <source> An emergency fund has been set up </source>
-        <target state="new"> An emergency fund has been set up </target>
+        <target state="translated"> Se ha creado un fondo de emergencia </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">18</context>
@@ -7651,7 +7651,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment" datatype="html">
         <source>Fee Ratio</source>
-        <target state="new">Fee Ratio</target>
+        <target state="translated">Relación de tarifas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">21</context>
@@ -7659,7 +7659,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.false" datatype="html">
         <source> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
-        <target state="new"> The fees do exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
+        <target state="translated"> Las tarifas superan el ${thresholdMax}% de su inversión inicial (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">22</context>
@@ -7667,7 +7667,7 @@
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.true" datatype="html">
         <source> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </source>
-        <target state="new"> The fees do not exceed ${thresholdMax}% of your initial investment (${feeRatio}%) </target>
+        <target state="translated"> Las tarifas no superan el ${thresholdMax}% de su inversión inicial (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">26</context>
@@ -7675,7 +7675,7 @@
       </trans-unit>
       <trans-unit id="253d612b439c367d21c4ba59763df303a6106968" datatype="html">
         <source> Name </source>
-        <target state="new"> Name </target>
+        <target state="translated"> Nombre </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/benchmark/benchmark.component.html</context>
           <context context-type="linenumber">11</context>
@@ -7683,7 +7683,7 @@
       </trans-unit>
       <trans-unit id="7784226024223865620" datatype="html">
         <source>Find holding or page...</source>
-        <target state="new">Find holding or page...</target>
+        <target state="translated">Buscar explotación o página...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
           <context context-type="linenumber">153</context>
@@ -7691,7 +7691,7 @@
       </trans-unit>
       <trans-unit id="a8e9d1a0734e578e187c8a2837dcfb6e80534f5e" datatype="html">
         <source> Quick Links </source>
-        <target state="new"> Quick Links </target>
+        <target state="translated"> Enlaces rápidos </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">45</context>
@@ -7699,7 +7699,7 @@
       </trans-unit>
       <trans-unit id="0b32dc4e5c3501141b8c7c0eed65a431bc8ab76b" datatype="html">
         <source> Asset Profiles </source>
-        <target state="new"> Asset Profiles </target>
+        <target state="translated"> Perfiles de activos </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">97</context>
