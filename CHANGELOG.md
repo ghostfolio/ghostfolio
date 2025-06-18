@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Included the admin control panel in the quick links of the assistant
+
 ### Changed
 
 - Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
