@@ -59,17 +59,13 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Accounts`
   },
   api: {
-    excludeFromAssistant: () => {
-      return true;
-    },
+    excludeFromAssistant: true,
     path: 'api',
     routerLink: ['/api'],
     title: 'Ghostfolio API'
   },
   auth: {
-    excludeFromAssistant: () => {
-      return true;
-    },
+    excludeFromAssistant: true,
     path: 'auth',
     routerLink: ['/auth'],
     title: $localize`Sign in`
@@ -102,9 +98,7 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Overview`
   },
   i18n: {
-    excludeFromAssistant: () => {
-      return true;
-    },
+    excludeFromAssistant: true,
     path: 'i18n',
     routerLink: ['/i18n'],
     title: $localize`Internationalization`
@@ -142,17 +136,13 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Portfolio`
   },
   webauthn: {
-    excludeFromAssistant: () => {
-      return true;
-    },
+    excludeFromAssistant: true,
     path: 'webauthn',
     routerLink: ['/webauthn'],
     title: $localize`Sign in`
   },
   zen: {
-    excludeFromAssistant: () => {
-      return true;
-    },
+    excludeFromAssistant: true,
     path: 'zen',
     routerLink: ['/zen'],
     subRoutes: {

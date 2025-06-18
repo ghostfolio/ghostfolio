@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { differenceInYears } from 'date-fns';
+import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 import {
@@ -627,8 +628,8 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
 
     const allRoutes = Object.values(internalRoutes)
       .filter(({ excludeFromAssistant }) => {
-        if (typeof excludeFromAssistant === 'function') {
-          return !excludeFromAssistant(this.user);
+        if (isFunction(excludeFromAssistant)) {
+          return excludeFromAssistant(this.user);
         }
 
         return !excludeFromAssistant;
