@@ -1,4 +1,5 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -10,7 +11,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     component: PrivacyPolicyPageComponent,
     path: '',
-    title: $localize`Privacy Policy`
+    title: publicRoutes.about.subRoutes.privacyPolicy.title
   }
 ];
 

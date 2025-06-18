@@ -1,10 +1,6 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
-import {
-  publicRoutes,
-  routes as ghostfolioRoutes,
-  internalRoutes
-} from '@ghostfolio/common/routes/routes';
+import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
@@ -13,7 +9,7 @@ import { ModulePreloadService } from './core/module-preload.service';
 
 const routes: Routes = [
   {
-    path: ghostfolioRoutes.about,
+    path: publicRoutes.about.path,
     loadChildren: () =>
       import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
   },
@@ -32,7 +28,7 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.adminControl,
+    path: internalRoutes.adminControl.path,
     loadChildren: () =>
       import('./pages/admin/admin-page.module').then((m) => m.AdminPageModule)
   },
@@ -42,16 +38,17 @@ const routes: Routes = [
       import('./pages/api/api-page.component').then(
         (c) => c.GfApiPageComponent
       ),
-    path: ghostfolioRoutes.api,
-    title: 'Ghostfolio API'
+    path: internalRoutes.api.path,
+    title: internalRoutes.api.title
   },
   {
-    path: ghostfolioRoutes.auth,
+    path: internalRoutes.auth.path,
     loadChildren: () =>
-      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule)
+      import('./pages/auth/auth-page.module').then((m) => m.AuthPageModule),
+    title: internalRoutes.auth.title
   },
   {
-    path: ghostfolioRoutes.blog,
+    path: publicRoutes.blog.path,
     loadChildren: () =>
       import('./pages/blog/blog-page.module').then((m) => m.BlogPageModule)
   },
@@ -61,10 +58,10 @@ const routes: Routes = [
       import('./pages/demo/demo-page.component').then(
         (c) => c.GfDemoPageComponent
       ),
-    path: ghostfolioRoutes.demo
+    path: publicRoutes.demo.path
   },
   {
-    path: ghostfolioRoutes.faq,
+    path: publicRoutes.faq.path,
     loadChildren: () =>
       import('./pages/faq/faq-page.module').then((m) => m.FaqPageModule)
   },
@@ -88,11 +85,11 @@ const routes: Routes = [
       import('./pages/i18n/i18n-page.component').then(
         (c) => c.GfI18nPageComponent
       ),
-    path: ghostfolioRoutes.i18n,
-    title: $localize`Internationalization`
+    path: internalRoutes.i18n.path,
+    title: internalRoutes.i18n.title
   },
   {
-    path: ghostfolioRoutes.markets,
+    path: publicRoutes.markets.path,
     loadChildren: () =>
       import('./pages/markets/markets-page.module').then(
         (m) => m.MarketsPageModule
@@ -111,14 +108,14 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.pricing,
+    path: publicRoutes.pricing.path,
     loadChildren: () =>
       import('./pages/pricing/pricing-page.module').then(
         (m) => m.PricingPageModule
       )
   },
   {
-    path: ghostfolioRoutes.public,
+    path: publicRoutes.public.path,
     loadChildren: () =>
       import('./pages/public/public-page.module').then(
         (m) => m.PublicPageModule
@@ -132,14 +129,14 @@ const routes: Routes = [
       )
   },
   {
-    path: ghostfolioRoutes.resources,
+    path: publicRoutes.resources.path,
     loadChildren: () =>
       import('./pages/resources/resources-page.module').then(
         (m) => m.ResourcesPageModule
       )
   },
   {
-    path: ghostfolioRoutes.start,
+    path: publicRoutes.start.path,
     loadChildren: () =>
       import('./pages/landing/landing-page.module').then(
         (m) => m.LandingPageModule
@@ -150,8 +147,8 @@ const routes: Routes = [
       import('./pages/webauthn/webauthn-page.component').then(
         (c) => c.GfWebauthnPageComponent
       ),
-    path: ghostfolioRoutes.webauthn,
-    title: $localize`Sign in`
+    path: internalRoutes.webauthn.path,
+    title: internalRoutes.webauthn.title
   },
   {
     path: internalRoutes.zen.path,

@@ -1,7 +1,7 @@
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { Product } from '@ghostfolio/common/interfaces';
 import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools';
-import { publicRoutes, routes } from '@ghostfolio/common/routes/routes';
+import { publicRoutes } from '@ghostfolio/common/routes/routes';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Component, OnInit } from '@angular/core';
@@ -20,12 +20,10 @@ export class GfProductPageComponent implements OnInit {
   public price: number;
   public product1: Product;
   public product2: Product;
-  public routerLinkAbout = ['/' + routes.about];
+  public routerLinkAbout = publicRoutes.about.routerLink;
   public routerLinkFeatures = publicRoutes.features.routerLink;
-  public routerLinkResourcesPersonalFinanceTools = [
-    '/' + routes.resources,
-    routes.personalFinanceTools
-  ];
+  public routerLinkResourcesPersonalFinanceTools =
+    publicRoutes.resources.subRoutes.personalFinanceTools.routerLink;
   public tags: string[];
 
   public constructor(

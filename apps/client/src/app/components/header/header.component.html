@@ -65,8 +65,10 @@
             i18n
             mat-flat-button
             [ngClass]="{
-              'font-weight-bold': currentRoute === routes.adminControl,
-              'text-decoration-underline': currentRoute === routes.adminControl
+              'font-weight-bold':
+                currentRoute === internalRoutes.adminControl.path,
+              'text-decoration-underline':
+                currentRoute === internalRoutes.adminControl.path
             }"
             [routerLink]="routerLinkAdminControl"
             >Admin Control</a
@@ -268,7 +270,9 @@
           <a
             i18n
             mat-menu-item
-            [ngClass]="{ 'font-weight-bold': currentRoute === routes.account }"
+            [ngClass]="{
+              'font-weight-bold': currentRoute === internalRoutes.account.path
+            }"
             [routerLink]="routerLinkAccount"
             >My Ghostfolio</a
           >
@@ -278,7 +282,8 @@
               i18n
               mat-menu-item
               [ngClass]="{
-                'font-weight-bold': currentRoute === routes.adminControl
+                'font-weight-bold':
+                  currentRoute === internalRoutes.adminControl.path
               }"
               [routerLink]="routerLinkAdminControl"
               >Admin Control</a
