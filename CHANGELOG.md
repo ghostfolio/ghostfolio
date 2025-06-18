@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changelog
 
+- Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Improved the language localization for Chinese (`zh`)
