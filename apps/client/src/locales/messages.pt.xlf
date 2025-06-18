@@ -6198,7 +6198,7 @@
       </trans-unit>
       <trans-unit id="4941836956820527118" datatype="html">
         <source>Do you really want to close your Ghostfolio account?</source>
-        <target state="new">Do you really want to close your Ghostfolio account?</target>
+        <target state="translated">Você realmente deseja encerrar sua conta Ghostfolio?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">174</context>
@@ -6206,7 +6206,7 @@
       </trans-unit>
       <trans-unit id="85614ebfd89fe16873dfcf593a05f18b7468daac" datatype="html">
         <source>Danger Zone</source>
-        <target state="new">Danger Zone</target>
+        <target state="translated">Zona de perigo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">272</context>
@@ -6214,7 +6214,7 @@
       </trans-unit>
       <trans-unit id="3c1ef66d62e3ecb5f661c8ffb89e1b1c46275684" datatype="html">
         <source>Close Account</source>
-        <target state="new">Close Account</target>
+        <target state="translated">Fechar conta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
           <context context-type="linenumber">307</context>
@@ -6222,7 +6222,7 @@
       </trans-unit>
       <trans-unit id="9d11f76485fd1306f47e2c2d585183ea844760f4" datatype="html">
         <source>By ETF Holding</source>
-        <target state="new">By ETF Holding</target>
+        <target state="translated">Por ETF Holding</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">333</context>
@@ -6230,7 +6230,7 @@
       </trans-unit>
       <trans-unit id="3d30a34e40fd0afa4f0233005752e4ab615e83a0" datatype="html">
         <source>Approximation based on the top holdings of each ETF</source>
-        <target state="new">Approximation based on the top holdings of each ETF</target>
+        <target state="translated">Aproximação baseada nas principais participações de cada ETF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/allocations/allocations-page.html</context>
           <context context-type="linenumber">340</context>
@@ -6238,7 +6238,7 @@
       </trans-unit>
       <trans-unit id="8289b77182a57fbf7ebe3bfd506b85e3fdd9e537" datatype="html">
         <source> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></source>
-        <target state="new"> Join now <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
+        <target state="translated"> Cadastre-se agora <x id="START_BLOCK_IF" equiv-text="@if (hasPermissionForDemo) {"/> or check out the example account <x id="CLOSE_BLOCK_IF" equiv-text="}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">434</context>
@@ -6246,7 +6246,7 @@
       </trans-unit>
       <trans-unit id="5724720497710437101" datatype="html">
         <source>Oops! There was an error setting up biometric authentication.</source>
-        <target state="new">Oops! There was an error setting up biometric authentication.</target>
+        <target state="translated">Ops! Ocorreu um erro ao configurar a autenticação biométrica.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">302</context>
@@ -6254,7 +6254,7 @@
       </trans-unit>
       <trans-unit id="f0c5f6f270e70cbe063b5368fcf48f9afc1abd9b" datatype="html">
         <source>Show more</source>
-        <target state="new">Show more</target>
+        <target state="translated">Mostrar mais</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/top-holdings/top-holdings.component.html</context>
           <context context-type="linenumber">174</context>
@@ -6262,7 +6262,7 @@
       </trans-unit>
       <trans-unit id="829826868886560502" datatype="html">
         <source>Benchmarks</source>
-        <target state="new">Benchmarks</target>
+        <target state="translated">Referências</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -6270,7 +6270,7 @@
       </trans-unit>
       <trans-unit id="5a6b8dff75bad9c9ea5e010bd0d34beabd8ef3a2" datatype="html">
         <source>Delete Profiles</source>
-        <target state="new">Delete Profiles</target>
+        <target state="translated">Excluir perfis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.html</context>
           <context context-type="linenumber">243</context>
@@ -6278,7 +6278,7 @@
       </trans-unit>
       <trans-unit id="3514960995395821133" datatype="html">
         <source>Do you really want to delete these profiles?</source>
-        <target state="new">Do you really want to delete these profiles?</target>
+        <target state="translated">Você realmente deseja excluir esses perfis?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">68</context>
@@ -6286,7 +6286,7 @@
       </trans-unit>
       <trans-unit id="8127349194179456616" datatype="html">
         <source>Oops! Could not delete profiles.</source>
-        <target state="new">Oops! Could not delete profiles.</target>
+        <target state="translated">Ops! Não foi possível excluir perfis.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/admin-market-data.service.ts</context>
           <context context-type="linenumber">56</context>
@@ -6294,7 +6294,7 @@
       </trans-unit>
       <trans-unit id="5c8ea0443990792280e53ee2cc87e577940c95cf" datatype="html">
         <source>Table</source>
-        <target state="new">Table</target>
+        <target state="translated">o índice</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
           <context context-type="linenumber">16</context>
@@ -6302,7 +6302,7 @@
       </trans-unit>
       <trans-unit id="5c60cf3d8e34731a4d9c2f3ff3cae128055d80a4" datatype="html">
         <source>Chart</source>
-        <target state="new">Chart</target>
+        <target state="translated">Gráfico</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/home-holdings/home-holdings.html</context>
           <context context-type="linenumber">19</context>
@@ -6310,7 +6310,7 @@
       </trans-unit>
       <trans-unit id="8e82d0437ea637850bb6cb99332b72422c723aae" datatype="html">
         <source> Would you like to <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>refine<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>? </source>
-        <target state="new"> Would you like to <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>refine<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>personal investment strategy<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>? </target>
+        <target state="translated"> Você gostaria de <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>refinar<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> seu <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>estratégia de investimento pessoal<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>? </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/public/public-page.html</context>
           <context context-type="linenumber">211</context>
@@ -6318,7 +6318,7 @@
       </trans-unit>
       <trans-unit id="4455104386790567151" datatype="html">
         <source>Alternative</source>
-        <target state="new">Alternative</target>
+        <target state="translated">Alternativo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -6326,7 +6326,7 @@
       </trans-unit>
       <trans-unit id="2818570902941667477" datatype="html">
         <source>App</source>
-        <target state="new">App</target>
+        <target state="translated">Aplicativo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -6334,7 +6334,7 @@
       </trans-unit>
       <trans-unit id="647668541461749965" datatype="html">
         <source>Budgeting</source>
-        <target state="new">Budgeting</target>
+        <target state="translated">Orçamento</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">82</context>
@@ -6342,7 +6342,7 @@
       </trans-unit>
       <trans-unit id="1274247756500564795" datatype="html">
         <source>Community</source>
-        <target state="new">Community</target>
+        <target state="translated">Comunidade</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">83</context>
@@ -6350,7 +6350,7 @@
       </trans-unit>
       <trans-unit id="4622218074144052433" datatype="html">
         <source>Family Office</source>
-        <target state="new">Family Office</target>
+        <target state="translated">Escritório Familiar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">84</context>
@@ -6358,7 +6358,7 @@
       </trans-unit>
       <trans-unit id="3178143531053451735" datatype="html">
         <source>Investor</source>
-        <target state="new">Investor</target>
+        <target state="translated">Investidor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">87</context>
