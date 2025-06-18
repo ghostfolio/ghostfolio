@@ -1,10 +1,6 @@
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { PageTitleStrategy } from '@ghostfolio/client/services/page-title.strategy';
-import {
-  publicRoutes,
-  routes as ghostfolioRoutes,
-  internalRoutes
-} from '@ghostfolio/common/routes/routes';
+import { publicRoutes, internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
@@ -42,8 +38,8 @@ const routes: Routes = [
       import('./pages/api/api-page.component').then(
         (c) => c.GfApiPageComponent
       ),
-    path: ghostfolioRoutes.api,
-    title: 'Ghostfolio API'
+    path: internalRoutes.api.path,
+    title: internalRoutes.api.title
   },
   {
     path: internalRoutes.auth.path,
@@ -89,8 +85,8 @@ const routes: Routes = [
       import('./pages/i18n/i18n-page.component').then(
         (c) => c.GfI18nPageComponent
       ),
-    path: ghostfolioRoutes.i18n,
-    title: $localize`Internationalization`
+    path: internalRoutes.i18n.path,
+    title: internalRoutes.i18n.title
   },
   {
     path: publicRoutes.markets.path,

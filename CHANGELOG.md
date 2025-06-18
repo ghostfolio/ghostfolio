@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Changelog
+### Changed
 
+- Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
 - Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
