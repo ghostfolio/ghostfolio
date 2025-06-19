@@ -10,9 +10,11 @@ export class AccountClusterRiskSingleAccount extends Rule<RuleSettings> {
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
     private i18nService: I18nService,
+    languageCode: string,
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: AccountClusterRiskSingleAccount.name
     });
 
