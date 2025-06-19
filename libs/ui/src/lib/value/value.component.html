@@ -94,7 +94,8 @@
         <span class="text-muted"> {{ subLabel }}</span>
       }
     </div>
-    <small *ngIf="size !== 'large'" class="d-block text-truncate">
+  } @else {
+    <small class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
   }
