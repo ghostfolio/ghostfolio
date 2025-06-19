@@ -7,11 +7,7 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">157</context>
+          <context context-type="linenumber">161</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -19,19 +15,23 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">170</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">183</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">191</context>
+          <context context-type="linenumber">188</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">196</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4656883433287439415" datatype="html">
@@ -40,50 +40,24 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">210</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">211</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">215</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">221</context>
+          <context context-type="linenumber">216</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">220</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">226</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6703761340382395781" datatype="html">
         <source>features</source>
         <target state="translated">oezellikler</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">230</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">231</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6099902667884446960" datatype="html">
-        <source>license</source>
-        <target state="translated">lisans</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">168</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">171</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8566970793924820888" datatype="html">
-        <source>markets</source>
-        <target state="translated">piyasalar</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -93,13 +67,39 @@
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">236</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="6099902667884446960" datatype="html">
+        <source>license</source>
+        <target state="translated">lisans</target>
+        <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">279</context>
+          <context context-type="linenumber">173</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">282</context>
+          <context context-type="linenumber">176</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8566970793924820888" datatype="html">
+        <source>markets</source>
+        <target state="translated">piyasalar</target>
+        <note priority="1" from="description">kebab-case</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">241</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">284</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">287</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9167640275204796639" datatype="html">
@@ -108,11 +108,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">245</context>
+          <context context-type="linenumber">250</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">246</context>
+          <context context-type="linenumber">251</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6948811958230386934" datatype="html">
@@ -121,29 +121,16 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">181</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">184</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5915338689523424386" datatype="html">
         <source>register</source>
         <target state="translated">kayit-ol</target>
-        <note priority="1" from="description">kebab-case</note>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">254</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">255</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4002166200801232073" datatype="html">
-        <source>resources</source>
-        <target state="translated">kaynaklar</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -153,21 +140,34 @@
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">260</context>
         </context-group>
+      </trans-unit>
+      <trans-unit id="4002166200801232073" datatype="html">
+        <source>resources</source>
+        <target state="translated">kaynaklar</target>
+        <note priority="1" from="description">kebab-case</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">264</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">265</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">273</context>
+          <context context-type="linenumber">270</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">281</context>
+          <context context-type="linenumber">278</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">289</context>
+          <context context-type="linenumber">286</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">294</context>
         </context-group>
       </trans-unit>
       <trans-unit id="41d338980f469b334618a07e799b4aa40fcf4834" datatype="html">
@@ -1727,7 +1727,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">136</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1931353503905413384" datatype="html">
@@ -1839,11 +1839,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">137</context>
+          <context context-type="linenumber">142</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9066319854608270526" datatype="html">
@@ -2495,7 +2495,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">338</context>
+          <context context-type="linenumber">339</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7377728350294749129" datatype="html">
@@ -2507,7 +2507,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8768104874317770689" datatype="html">
@@ -2519,7 +2519,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">361</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7304247106520037555" datatype="html">
@@ -2531,7 +2531,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">385</context>
+          <context context-type="linenumber">386</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3667949571823271511" datatype="html">
@@ -2543,7 +2543,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">391</context>
+          <context context-type="linenumber">392</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4190182554887994764" datatype="html">
@@ -2607,7 +2607,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">202</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7136888919962092730" datatype="html">
@@ -2615,7 +2615,7 @@
         <target state="translated">Değişiklik Günlüğü</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">165</context>
+          <context context-type="linenumber">170</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6877113876835666202" datatype="html">
@@ -2623,7 +2623,7 @@
         <target state="translated">Lisans</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">173</context>
+          <context context-type="linenumber">178</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8439955599488894226" datatype="html">
@@ -2631,7 +2631,7 @@
         <target state="translated">Gizlilik Politikası</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">191</context>
         </context-group>
       </trans-unit>
       <trans-unit id="bc5d27ff889e9ac6d1f33ba419ec2d5fe923cfe3" datatype="html">
@@ -2663,7 +2663,7 @@
         <target state="translated">Hesaplar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit id="220a4641dcde60d1d86ceec62886b1878f1578d3" datatype="html">
@@ -2695,7 +2695,7 @@
         <target state="translated">Yönetici Denetimleri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4798457301875181136" datatype="html">
@@ -2703,7 +2703,7 @@
         <target state="translated">Piyasa Verileri</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
@@ -2711,11 +2711,11 @@
         <target state="translated">Ayarlar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4555457172864212828" datatype="html">
@@ -2723,7 +2723,7 @@
         <target state="translated">Kullanıcılar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2614607010577950577" datatype="html">
@@ -2739,11 +2739,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">155</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7751010942038334793" datatype="html">
@@ -2751,7 +2751,7 @@
         <target state="translated">Blog</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">202</context>
+          <context context-type="linenumber">207</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6b49028880d0af1ba78f1c4b8fdc601e23f061fb" datatype="html">
@@ -2779,7 +2779,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">227</context>
+          <context context-type="linenumber">232</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4a5c9b07abc085e962577404378b1fac1af7ae4d" datatype="html">
@@ -2803,7 +2803,7 @@
         <target state="translated">Özellikler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">237</context>
         </context-group>
       </trans-unit>
       <trans-unit id="b942ec19956854206b38d6bbd66eddb69f09c135" datatype="html">
@@ -2947,11 +2947,11 @@
         <target state="translated">Varlıklar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">147</context>
+          <context context-type="linenumber">152</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4739818603756173797" datatype="html">
@@ -2959,7 +2959,7 @@
         <target state="translated">Özet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7307236732616849044" datatype="html">
@@ -2971,15 +2971,15 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">237</context>
+          <context context-type="linenumber">242</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">284</context>
+          <context context-type="linenumber">289</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7b3c319feef05dcc1f487d09dd2a59eb4c50e6d6" datatype="html">
@@ -3351,7 +3351,7 @@
         <target state="translated">İşlemler</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4239552960465242484" datatype="html">
@@ -3583,7 +3583,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">113</context>
+          <context context-type="linenumber">118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4e1990e98cbaad9d73fd81e20430a7fc1b06d11a" datatype="html">
@@ -3755,7 +3755,7 @@
         <target state="translated">Analiz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7765499580020598783" datatype="html">
@@ -3911,7 +3911,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">247</context>
+          <context context-type="linenumber">252</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9ba87e803f0b976584dc2a4dd69d32090cdfc229" datatype="html">
@@ -4151,7 +4151,7 @@
         <target state="translated">Kayıt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">256</context>
+          <context context-type="linenumber">261</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html">
@@ -4203,7 +4203,7 @@
         <target state="translated">Kişisel Finans Araçları</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">298</context>
+          <context context-type="linenumber">303</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5827613432388799534" datatype="html">
@@ -4212,7 +4212,7 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">294</context>
+          <context context-type="linenumber">299</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d1db8b2ae4504dc216afb401317392fa0fca7d63" datatype="html">
@@ -4484,7 +4484,7 @@
         <target state="translated">Kaynaklar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">301</context>
+          <context context-type="linenumber">306</context>
         </context-group>
       </trans-unit>
       <trans-unit id="464e2dd48454ce55302532bf14e73bb0650480ac" datatype="html">
@@ -5568,7 +5568,7 @@
         <target state="translated">Üyelik</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5278627882107105833" datatype="html">
@@ -5576,7 +5576,7 @@
         <target state="translated">Erişim</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cd206f0509271d9e611747bef0713c7df048d3af" datatype="html">
@@ -5852,7 +5852,7 @@
         <target state="translated">İş Kuyruğu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7754789218064641822" datatype="html">
@@ -5932,7 +5932,7 @@
         <target state="translated">Hafta içi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">343</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7451343426685730864" datatype="html">
@@ -5940,7 +5940,7 @@
         <target state="translated">WTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">342</context>
+          <context context-type="linenumber">343</context>
         </context-group>
       </trans-unit>
       <trans-unit id="358501326846847310" datatype="html">
@@ -5948,7 +5948,7 @@
         <target state="translated">Ay içi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">347</context>
         </context-group>
       </trans-unit>
       <trans-unit id="399380803601269035" datatype="html">
@@ -5956,7 +5956,7 @@
         <target state="translated">MTD</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">346</context>
+          <context context-type="linenumber">347</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2593751087640318641" datatype="html">
@@ -5964,7 +5964,7 @@
         <target state="translated">Yıl içi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">350</context>
+          <context context-type="linenumber">351</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6829218544e108e152f5fa72cb79c4ccb82e0d06" datatype="html">
@@ -6008,7 +6008,7 @@
         <target state="translated">Yıl</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">360</context>
+          <context context-type="linenumber">361</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7658073495909471632" datatype="html">
@@ -6016,7 +6016,7 @@
         <target state="translated">Yıllar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">385</context>
+          <context context-type="linenumber">386</context>
         </context-group>
       </trans-unit>
       <trans-unit id="73864299814955e733ade6e3e7204548b7b9adae" datatype="html">
@@ -6056,7 +6056,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">216</context>
+          <context context-type="linenumber">221</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3148027764877909511" datatype="html">
@@ -6068,7 +6068,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">224</context>
+          <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1677491810118195784" datatype="html">
@@ -6077,11 +6077,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">224</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">227</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2998033970178753887" datatype="html">
@@ -6193,7 +6193,7 @@
         <target state="translated">İnternasyonalizasyon</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">104</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4941836956820527118" datatype="html">
@@ -6925,7 +6925,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">268</context>
+          <context context-type="linenumber">273</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7423212324650924366" datatype="html">
@@ -6937,7 +6937,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">276</context>
+          <context context-type="linenumber">281</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7491998780064454778" datatype="html">
@@ -6946,11 +6946,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">271</context>
+          <context context-type="linenumber">276</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">274</context>
+          <context context-type="linenumber">279</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6255655462254999912" datatype="html">
@@ -6959,11 +6959,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">263</context>
+          <context context-type="linenumber">268</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">266</context>
+          <context context-type="linenumber">271</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9e4b86d0c90183298e882b02d41aab3c2017f8e8" datatype="html">
@@ -7424,11 +7424,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">192</context>
+          <context context-type="linenumber">197</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2029980907058777630" datatype="html">
@@ -7436,7 +7436,7 @@
         <target state="translated">Hizmet Koşulları</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">194</context>
+          <context context-type="linenumber">199</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a684aee80d027f65327cd8c6e45ea8b91cf5d054" datatype="html">
@@ -7560,7 +7560,7 @@
         <target state="translated">İzleme Listesi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit id="e9d59bb8bf6c08243d5411c55ddbdf925c7c799c" datatype="html">
@@ -7601,11 +7601,11 @@
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">160</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">163</context>
+          <context context-type="linenumber">168</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3920411961658116502" datatype="html">
@@ -7685,7 +7685,7 @@
         <target state="translated">Holding veya sayfayı bulun...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.component.ts</context>
-          <context context-type="linenumber">153</context>
+          <context context-type="linenumber">154</context>
         </context-group>
       </trans-unit>
       <trans-unit id="a8e9d1a0734e578e187c8a2837dcfb6e80534f5e" datatype="html">
@@ -7709,7 +7709,7 @@
         <target state="new">Live Demo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5263776643657358606" datatype="html">
@@ -7717,7 +7717,7 @@
         <target state="new">Open Source Alternative to</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
-          <context context-type="linenumber">295</context>
+          <context context-type="linenumber">300</context>
         </context-group>
       </trans-unit>
     </body>

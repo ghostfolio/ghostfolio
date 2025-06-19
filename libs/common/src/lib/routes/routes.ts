@@ -1,3 +1,6 @@
+import { User } from '@ghostfolio/common/interfaces';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+
 import '@angular/localize/init';
 
 import { IRoute } from './interfaces/interfaces';
@@ -21,7 +24,9 @@ export const internalRoutes: Record<string, IRoute> = {
     title: $localize`Settings`
   },
   adminControl: {
-    excludeFromAssistant: true,
+    excludeFromAssistant: (aUser: User) => {
+      return hasPermission(aUser?.permissions, permissions.accessAdminControl);
+    },
     path: 'admin',
     routerLink: ['/admin'],
     subRoutes: {

@@ -10,13 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Set up the language localization for the static portfolio analysis rule: _Account Cluster Risks_ (Single Account)
+- Included the admin control panel in the quick links of the assistant
 
 ### Changed
 
 - Adapted the options of the date range selector in the assistant dynamically based on the user’s first activity
+- Switched the data provider service to `OnModuleInit`, ensuring (currency) quotes are fetched only once
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Improved the language localization for Chinese (`zh`)
+- Improved the language localization for Español (`es`)
 - Improved the language localization for Portuguese (`pt`)
 
 ## 2.171.0 - 2025-06-15
