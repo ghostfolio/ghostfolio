@@ -16,17 +16,17 @@ const routes: Routes = [
       {
         path: '',
         component: UserAccountSettingsComponent,
-        title: internalRoutes.userAccount.title
+        title: internalRoutes.account.title
       },
       {
-        path: internalRoutes.userAccount.subRoutes.membership.path,
+        path: internalRoutes.account.subRoutes.membership.path,
         component: UserAccountMembershipComponent,
-        title: internalRoutes.userAccount.subRoutes.membership.title
+        title: internalRoutes.account.subRoutes.membership.title
       },
       {
-        path: internalRoutes.userAccount.subRoutes.access.path,
+        path: internalRoutes.account.subRoutes.access.path,
         component: UserAccountAccessComponent,
-        title: internalRoutes.userAccount.subRoutes.access.title
+        title: internalRoutes.account.subRoutes.access.title
       }
     ],
     component: UserAccountPageComponent,
