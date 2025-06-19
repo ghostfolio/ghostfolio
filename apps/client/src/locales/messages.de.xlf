@@ -4835,7 +4835,7 @@
       </trans-unit>
       <trans-unit id="f251aca95a00756de48b14172b02d33f175661fc" datatype="html">
         <source> Ghostfolio is a privacy-first, open source dashboard for your personal finances. Break down your asset allocation, know your net worth and make solid, data-driven investment decisions. </source>
-        <target state="translated"> Ghostfolio ist ein Open Source Dashboard für deine persönlichen Finanzen mit Fokus auf Datenschutz. Analysiere deine Vermögensverteilung, ermittle dein Nettovermögen und treffe fundierte, datengestützte Investitionsentscheidungen. </target>
+        <target state="translated"> Ghostfolio ist ein Open Source Dashboard für deine persönlichen Finanzen mit Fokus auf Datenschutz. Analysiere deine Vermögensverteilung, ermittle dein Gesamtvermögen und treffe fundierte, datengestützte Investitionsentscheidungen. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">9</context>
@@ -5684,7 +5684,7 @@
         <target state="translated">Open Source Software für die Vermögensverwaltung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit>
       <trans-unit id="metaKeywords" datatype="html">
@@ -7629,7 +7629,7 @@
         <target state="translated">Notfallfonds: Einrichtung</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.false" datatype="html">
@@ -7637,7 +7637,7 @@
         <target state="translated"> Es wurde kein Notfallfonds eingerichtet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.emergencyFundSetup.true" datatype="html">
@@ -7645,7 +7645,7 @@
         <target state="translated"> Ein Notfallfonds wurde eingerichtet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment" datatype="html">
@@ -7653,7 +7653,7 @@
         <target state="translated">Gebührenverhältnis</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.false" datatype="html">
@@ -7661,7 +7661,7 @@
         <target state="translated"> Die Gebühren übersteigen ${thresholdMax}% deiner ursprünglichen Investition (${feeRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="rule.feeRatioInitialInvestment.true" datatype="html">
@@ -7669,7 +7669,7 @@
         <target state="translated"> Die Gebühren übersteigen ${thresholdMax}% deiner ursprünglichen Investition (${feeRatio}%) nicht </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit>
       <trans-unit id="253d612b439c367d21c4ba59763df303a6106968" datatype="html">
@@ -7718,6 +7718,30 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">300</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
+        <source>Single Account</source>
+        <target state="translated">Einzelkonto</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
+        <source> Your net worth is managed by a single account </source>
+        <target state="translated"> Dein Gesamtvermögen wird von einem einzigen Konto verwaltet </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
+        <source> Your net worth is managed by ${accountsLength} accounts </source>
+        <target state="translated"> Dein Gesamtvermögen wird von ${accountsLength} Konten verwaltet </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
     </body>
