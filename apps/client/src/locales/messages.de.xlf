@@ -4835,7 +4835,7 @@
       </trans-unit>
       <trans-unit id="f251aca95a00756de48b14172b02d33f175661fc" datatype="html">
         <source> Ghostfolio is a privacy-first, open source dashboard for your personal finances. Break down your asset allocation, know your net worth and make solid, data-driven investment decisions. </source>
-        <target state="translated"> Ghostfolio ist ein Open Source Dashboard für deine persönlichen Finanzen mit Fokus auf Datenschutz. Analysiere deine Vermögensverteilung, ermittle dein Nettovermögen und treffe fundierte, datengestützte Investitionsentscheidungen. </target>
+        <target state="translated"> Ghostfolio ist ein Open Source Dashboard für deine persönlichen Finanzen mit Fokus auf Datenschutz. Analysiere deine Vermögensverteilung, ermittle dein Gesamtvermögen und treffe fundierte, datengestützte Investitionsentscheidungen. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/landing/landing-page.html</context>
           <context context-type="linenumber">9</context>
@@ -7722,7 +7722,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
         <source>Single Account</source>
-        <target state="new">Single Account</target>
+        <target state="translated">Einzelkonto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7730,7 +7730,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
-        <target state="new"> Your net worth is managed by a single account </target>
+        <target state="translated"> Dein Gesamtvermögen wird von einem einzigen Konto verwaltet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7738,7 +7738,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
-        <target state="new"> Your net worth is managed by ${accountsLength} accounts </target>
+        <target state="translated"> Dein Gesamtvermögen wird von ${accountsLength} Konten verwaltet </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">18</context>
