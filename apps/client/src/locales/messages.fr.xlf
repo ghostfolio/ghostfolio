@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
         <source>Asset Profiles</source>
-        <target state="translated">Profil d’Actifs</target>
+        <target state="translated">Profils d’Actifs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">52</context>
@@ -7698,7 +7698,7 @@
       </trans-unit>
       <trans-unit id="0b32dc4e5c3501141b8c7c0eed65a431bc8ab76b" datatype="html">
         <source> Asset Profiles </source>
-        <target state="new"> Asset Profiles </target>
+        <target state="translated"> Profils d’Actifs </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">97</context>
@@ -7706,7 +7706,7 @@
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
         <source>Live Demo</source>
-        <target state="new">Live Demo</target>
+        <target state="translated">Démo Live</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">212</context>
@@ -7722,7 +7722,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount" datatype="html">
         <source>Single Account</source>
-        <target state="new">Single Account</target>
+        <target state="translated">Compte Unique</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7730,7 +7730,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.false" datatype="html">
         <source> Your net worth is managed by a single account </source>
-        <target state="new"> Your net worth is managed by a single account </target>
+        <target state="translated"> Votre patrimoine est géré par un compte unique </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7738,7 +7738,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskSingleAccount.true" datatype="html">
         <source> Your net worth is managed by ${accountsLength} accounts </source>
-        <target state="new"> Your net worth is managed by ${accountsLength} accounts </target>
+        <target state="translated"> Votre patrimoine est géré par ${accountsLength} comptes </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">18</context>
