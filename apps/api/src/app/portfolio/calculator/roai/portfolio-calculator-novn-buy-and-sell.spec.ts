@@ -65,7 +65,7 @@ describe('PortfolioCalculator', () => {
     activityDtos = loadActivityExportFile(
       join(
         __dirname,
-        '../../../../../../../test/import/ok-novn-buy-and-sell.json'
+        '../../../../../../../test/import/ok/novn-buy-and-sell.json'
       )
     );
   });
