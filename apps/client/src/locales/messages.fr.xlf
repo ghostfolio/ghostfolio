@@ -455,7 +455,7 @@
       </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
         <source>Asset Profiles</source>
-        <target state="translated">Profil d’Actifs</target>
+        <target state="translated">Profils d’Actifs</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">52</context>
@@ -7698,7 +7698,7 @@
       </trans-unit>
       <trans-unit id="0b32dc4e5c3501141b8c7c0eed65a431bc8ab76b" datatype="html">
         <source> Asset Profiles </source>
-        <target state="translated"> Profil d’Actifs </target>
+        <target state="translated"> Profils d’Actifs </target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">97</context>
