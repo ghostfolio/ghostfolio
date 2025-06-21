@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `GranteeUser` to `granteeUser` in the `Access` database schema
 - Improved the language localization for French (`fr`)
 - Upgraded `class-validator` from version `0.14.1` to `0.14.2`
+- Upgraded `prisma` from version `6.9.0` to `6.10.1`
 
 ### Fixed
 
