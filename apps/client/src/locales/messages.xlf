@@ -6976,13 +6976,6 @@
           <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="842ab6c8fed9d39819bf19ce53a86cd92d0c3df5" datatype="html">
-        <source>Ghostfolio Premium <x id="START_TAG_GF_PREMIUM_INDICATOR" ctype="x-gf_premium_indicator" equiv-text="&lt;gf-premium-indicator class=&quot;d-inline-block mx-1&quot; [enableLink]=&quot;false&quot; /&gt;"/><x id="CLOSE_TAG_GF_PREMIUM_INDICATOR" ctype="x-gf_premium_indicator" equiv-text="&lt;gf-premium-indicator class=&quot;d-inline-block mx-1&quot; [enableLink]=&quot;false&quot; /&gt;"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="df98e97764e5a97f077f8a565189b670eff41300" datatype="html">
         <source> Fuel your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>powerful data provider<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to access <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> from over <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 exchanges<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> worldwide. </source>
         <context-group purpose="location">
