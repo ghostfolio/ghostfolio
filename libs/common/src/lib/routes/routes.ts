@@ -158,43 +158,46 @@ export const internalRoutes: Record<string, IRoute> = {
 
 export const publicRoutes = {
   about: {
-    path: $localize`:kebab-case:about`,
-    routerLink: ['/' + $localize`:kebab-case:about`],
+    path: $localize`:kebab-case@@routes.about:about`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.about:about`],
     subRoutes: {
       changelog: {
-        path: $localize`:kebab-case:changelog`,
+        path: $localize`:kebab-case@@routes.about.changelog:changelog`,
         routerLink: [
-          '/' + $localize`:kebab-case:about`,
-          $localize`:kebab-case:changelog`
+          '/' + $localize`:kebab-case@@routes.about:about`,
+          $localize`:kebab-case@@routes.about.changelog:changelog`
         ],
         title: $localize`Changelog`
       },
       license: {
-        path: $localize`:kebab-case:license`,
+        path: $localize`:kebab-case@@routes.about.license:license`,
         routerLink: [
-          '/' + $localize`:kebab-case:about`,
-          $localize`:kebab-case:license`
+          '/' + $localize`:kebab-case@@routes.about:about`,
+          $localize`:kebab-case@@routes.about.license:license`
         ],
         title: $localize`License`
       },
       ossFriends: {
         path: 'oss-friends',
-        routerLink: ['/' + $localize`:kebab-case:about`, 'oss-friends'],
+        routerLink: [
+          '/' + $localize`:kebab-case@@routes.about:about`,
+          'oss-friends'
+        ],
         title: 'OSS Friends'
       },
       privacyPolicy: {
-        path: $localize`:kebab-case:privacy-policy`,
+        path: $localize`:kebab-case@@routes.about.privacyPolicy:privacy-policy`,
         routerLink: [
-          '/' + $localize`:kebab-case:about`,
-          $localize`:kebab-case:privacy-policy`
+          '/' + $localize`:kebab-case@@routes.about:about`,
+          $localize`:kebab-case@@routes.about.privacyPolicy:privacy-policy`
         ],
         title: $localize`Privacy Policy`
       },
       termsOfService: {
-        path: $localize`:kebab-case:terms-of-service`,
+        path: $localize`:kebab-case@@routes.about.termsOfService:terms-of-service`,
         routerLink: [
-          '/' + $localize`:kebab-case:about`,
-          $localize`:kebab-case:terms-of-service`
+          '/' + $localize`:kebab-case@@routes.about:about`,
+          $localize`:kebab-case@@routes.about.termsOfService:terms-of-service`
         ],
         title: $localize`Terms of Service`
       }
@@ -207,24 +210,25 @@ export const publicRoutes = {
     title: $localize`Blog`
   },
   demo: {
-    path: 'demo',
-    routerLink: ['/demo'],
+    excludeFromSitemap: true,
+    path: $localize`:kebab-case@@routes.demo:demo`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.demo:demo`],
     title: $localize`Live Demo`
   },
   faq: {
-    path: $localize`:kebab-case:faq`,
-    routerLink: ['/' + $localize`:kebab-case:faq`],
+    path: $localize`:kebab-case@@routes.faq:faq`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.faq:faq`],
     subRoutes: {
       saas: {
         path: 'saas',
-        routerLink: ['/' + $localize`:kebab-case:faq`, 'saas'],
+        routerLink: ['/' + $localize`:kebab-case@@routes.faq:faq`, 'saas'],
         title: $localize`Cloud` + ' (SaaS)'
       },
       selfHosting: {
-        path: $localize`:kebab-case:self-hosting`,
+        path: $localize`:kebab-case@@routes.faq.selfHosting:self-hosting`,
         routerLink: [
-          '/' + $localize`:kebab-case:faq`,
-          $localize`:kebab-case:self-hosting`
+          '/' + $localize`:kebab-case@@routes.faq:faq`,
+          $localize`:kebab-case@@routes.faq.selfHosting:self-hosting`
         ],
         title: $localize`Self-Hosting`
       }
@@ -232,13 +236,13 @@ export const publicRoutes = {
     title: $localize`Frequently Asked Questions (FAQ)`
   },
   features: {
-    path: $localize`:kebab-case:features`,
-    routerLink: ['/' + $localize`:kebab-case:features`],
+    path: $localize`:kebab-case@@routes.features:features`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.features:features`],
     title: $localize`Features`
   },
   markets: {
-    path: $localize`:kebab-case:markets`,
-    routerLink: ['/' + $localize`:kebab-case:markets`],
+    path: $localize`:kebab-case@@routes.markets:markets`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.markets:markets`],
     title: $localize`Markets`
   },
   openStartup: {
@@ -247,17 +251,18 @@ export const publicRoutes = {
     title: 'Open Startup'
   },
   pricing: {
-    path: $localize`:kebab-case:pricing`,
-    routerLink: ['/' + $localize`:kebab-case:pricing`],
+    path: $localize`:kebab-case@@routes.pricing:pricing`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.pricing:pricing`],
     title: $localize`Pricing`
   },
   public: {
+    excludeFromSitemap: true,
     path: 'p',
     routerLink: ['/p']
   },
   register: {
-    path: $localize`:kebab-case:register`,
-    routerLink: ['/' + $localize`:kebab-case:register`],
+    path: $localize`:kebab-case@@routes.register:register`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.register:register`],
     title: $localize`Registration`
   },
   resources: {
@@ -265,26 +270,26 @@ export const publicRoutes = {
     routerLink: ['/' + $localize`:kebab-case@@routes.resources:resources`],
     subRoutes: {
       glossary: {
-        path: $localize`:kebab-case:glossary`,
+        path: $localize`:kebab-case@@routes.resources.glossary:glossary`,
         routerLink: [
           '/' + $localize`:kebab-case@@routes.resources:resources`,
-          $localize`:kebab-case:glossary`
+          $localize`:kebab-case@@routes.resources.glossary:glossary`
         ],
         title: $localize`Glossary`
       },
       guides: {
-        path: $localize`:kebab-case:guides`,
+        path: $localize`:kebab-case@@routes.resources.guides:guides`,
         routerLink: [
           '/' + $localize`:kebab-case@@routes.resources:resources`,
-          $localize`:kebab-case:guides`
+          $localize`:kebab-case@@routes.resources.guides:guides`
         ],
         title: $localize`Guides`
       },
       markets: {
-        path: $localize`:kebab-case:markets`,
+        path: $localize`:kebab-case@@routes.resources.markets:markets`,
         routerLink: [
           '/' + $localize`:kebab-case@@routes.resources:resources`,
-          $localize`:kebab-case:markets`
+          $localize`:kebab-case@@routes.resources.markets:markets`
         ],
         title: $localize`Markets`
       },
@@ -295,6 +300,7 @@ export const publicRoutes = {
           $localize`:kebab-case@@routes.resources.personalFinanceTools:personal-finance-tools`
         ],
         subRoutes: {
+          excludeFromSitemap: true,
           product: {
             path: $localize`:kebab-case@@routes.resources.personalFinanceTools.openSourceAlternativeTo:open-source-alternative-to`,
             title: $localize`Open Source Alternative to`
