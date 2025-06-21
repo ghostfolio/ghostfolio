@@ -48,6 +48,7 @@ async function bootstrap() {
     exclude: [
       'sitemap.xml',
       ...SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
+        // Exclude language-specific routes with an optional wildcard
         return `/${languageCode}{/*wildcard}`;
       })
     ]
