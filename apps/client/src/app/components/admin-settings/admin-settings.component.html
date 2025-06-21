@@ -2,6 +2,42 @@
   <div class="mb-5 row">
     <div class="col">
       <h2 class="text-center" i18n>Data Providers</h2>
+      @if (isGhostfolioApiKeyValid === false) {
+        <mat-card appearance="outlined" class="my-3 special">
+          <mat-card-header>
+            <mat-card-title class="align-items-center d-flex" i18n
+              >Ghostfolio Premium
+              <gf-premium-indicator
+                class="d-inline-block mx-1"
+                [enableLink]="false"
+            /></mat-card-title>
+          </mat-card-header>
+          <mat-card-content class="gf-text-wrap-balance" i18n>
+            The <strong>professional data provider</strong> for
+            <strong>self-hosters</strong>, offering
+            <strong>80’000+ tickers</strong> from over
+            <strong>50 exchanges</strong>.
+          </mat-card-content>
+          <mat-card-actions class="px-3">
+            <a
+              class="special"
+              href="mailto:hi@ghostfol.io?Subject=Ghostfolio Premium Data Provider&body=Hello,%0D%0DI am interested in the Ghostfolio Premium data provider. Could you please give me access so I can try it for some time?%0D%0DKind regards"
+              mat-flat-button
+            >
+              <ng-container i18n>Get Access</ng-container>
+            </a>
+            <div class="mx-3 text-muted" i18n>or</div>
+            <a
+              color="accent"
+              mat-stroked-button
+              target="_blank"
+              [href]="pricingUrl"
+            >
+              <ng-container i18n>Learn more</ng-container>
+            </a>
+          </mat-card-actions>
+        </mat-card>
+      }
       <table class="gf-table w-100" mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
           <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
@@ -23,8 +59,10 @@
                       [enableLink]="false"
                     />
                     @if (isGhostfolioApiKeyValid === false) {
-                      <span class="badge badge-light early-access ml-2" i18n
-                        >Early Access</span
+                      <span
+                        class="badge badge-light ml-2 new text-uppercase"
+                        i18n
+                        >new</span
                       >
                     }
                   </a>
