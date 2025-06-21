@@ -4,11 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class SitemapService {
-  public getPersonalFinanceTools({
-    currentDate
-  }: {
-    currentDate: string;
-  }): string {
+  public getPersonalFinanceTools({ currentDate }: { currentDate: string }) {
     return personalFinanceTools
       .map(({ alias, key }) => {
         return [
