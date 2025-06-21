@@ -10,7 +10,7 @@
       class="align-items-center d-flex"
       [ngClass]="position === 'end' ? 'justify-content-end' : ''"
     >
-      <ng-container *ngIf="isNumber || value === null">
+      @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue) {
           @if (+value > 0) {
             <div class="mr-1 text-success">+</div>
@@ -59,7 +59,7 @@
             </div>
           }
         }
-      </ng-container>
+      }
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
