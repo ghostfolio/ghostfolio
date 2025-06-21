@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for French (`fr`)
 - Upgraded `class-validator` from version `0.14.1` to `0.14.2`
 
+### Fixed
+
+- Fixed an issue in the `HtmlTemplateMiddleware` related to incorrect variable resolution
+
 ## 2.172.0 - 2025-06-19
 
 ### Added
