@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Renamed `GranteeUser` to `granteeUser` in the `Access` database schema
 - Improved the language localization for French (`fr`)
+- Improved the language localization for German (`de`)
 - Upgraded `class-validator` from version `0.14.1` to `0.14.2`
 
 ### Fixed
