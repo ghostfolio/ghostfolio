@@ -19,13 +19,8 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
-
-import { GfGhostfolioPremiumApiDialogComponent } from './ghostfolio-premium-api-dialog/ghostfolio-premium-api-dialog.component';
-import { GhostfolioPremiumApiDialogParams } from './ghostfolio-premium-api-dialog/interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,7 +38,6 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
   public isLoading = false;
   public pricingUrl: string;
 
-  private deviceType: string;
   private unsubscribeSubject = new Subject<void>();
   private user: User;
 
@@ -51,15 +45,11 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
     private adminService: AdminService,
     private changeDetectorRef: ChangeDetectorRef,
     private dataService: DataService,
-    private deviceService: DeviceDetectorService,
-    private matDialog: MatDialog,
     private notificationService: NotificationService,
     private userService: UserService
   ) {}
 
   public ngOnInit() {
-    this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((state) => {
@@ -100,25 +90,22 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
   }
 
   public onSetGhostfolioApiKey() {
-    const dialogRef = this.matDialog.open(
-      GfGhostfolioPremiumApiDialogComponent,
-      {
-        autoFocus: false,
-        data: {
-          deviceType: this.deviceType,
-          pricingUrl: this.pricingUrl
-        } as GhostfolioPremiumApiDialogParams,
-        height: this.deviceType === 'mobile' ? '98vh' : undefined,
-        width: this.deviceType === 'mobile' ? '100vw' : '50rem'
-      }
-    );
+    this.notificationService.prompt({
+      confirmFn: (value) => {
+        const ghostfolioApiKey = value?.trim();
 
-    dialogRef
-      .afterClosed()
-      .pipe(takeUntil(this.unsubscribeSubject))
-      .subscribe(() => {
-        this.initialize();
-      });
+        if (ghostfolioApiKey) {
+          this.dataService
+            .putAdminSetting(PROPERTY_API_KEY_GHOSTFOLIO, {
+              value: ghostfolioApiKey
+            })
+            .subscribe(() => {
+              this.initialize();
+            });
+        }
+      },
+      title: $localize`Please enter your Ghostfolio API key.`
+    });
   }
 
   public ngOnDestroy() {
