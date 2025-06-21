@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up _Open color_ for CSS variables usage
+
 ### Changed
 
+- Simplified the data providers management of the admin control panel
 - Migrated the `@ghostfolio/ui/assistant` component to control flow
 - Migrated the `@ghostfolio/ui/value` component to control flow
 - Renamed `GranteeUser` to `granteeUser` in the `Access` database schema
