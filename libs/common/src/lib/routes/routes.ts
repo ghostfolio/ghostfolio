@@ -211,8 +211,8 @@ export const publicRoutes = {
   },
   demo: {
     excludeFromSitemap: true,
-    path: $localize`:kebab-case@@routes.demo:demo`,
-    routerLink: ['/' + $localize`:kebab-case@@routes.demo:demo`],
+    path: 'demo',
+    routerLink: ['/demo'],
     title: $localize`Live Demo`
   },
   faq: {
