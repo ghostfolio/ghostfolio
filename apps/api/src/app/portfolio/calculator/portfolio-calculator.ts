@@ -910,65 +910,72 @@ export abstract class PortfolioCalculator {
       type,
       unitPrice
     } of this.activities) {
-      let currentTransactionPointItem: TransactionPointSymbol;
-      const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
-
       const factor = getFactor(type);
 
-      if (oldAccumulatedSymbol) {
-        let investment = oldAccumulatedSymbol.investment;
-
-        const newQuantity = quantity
-          .mul(factor)
-          .plus(oldAccumulatedSymbol.quantity);
-
-        if (type === 'BUY') {
-          investment = oldAccumulatedSymbol.investment.plus(
-            quantity.mul(unitPrice)
-          );
-        } else if (type === 'SELL') {
-          investment = oldAccumulatedSymbol.investment.minus(
-            quantity.mul(oldAccumulatedSymbol.averagePrice)
-          );
-        }
-
-        currentTransactionPointItem = {
-          investment,
-          averagePrice: newQuantity.gt(0)
-            ? investment.div(newQuantity)
-            : new Big(0),
-          currency: SymbolProfile.currency,
-          dataSource: SymbolProfile.dataSource,
-          dividend: new Big(0),
-          fee: oldAccumulatedSymbol.fee.plus(fee),
-          firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
-          quantity: newQuantity,
-          symbol: SymbolProfile.symbol,
-          tags: oldAccumulatedSymbol.tags.concat(tags),
-          transactionCount: oldAccumulatedSymbol.transactionCount + 1
-        };
-      } else {
-        currentTransactionPointItem = {
-          fee,
-          tags,
-          averagePrice: unitPrice,
-          currency: SymbolProfile.currency,
-          dataSource: SymbolProfile.dataSource,
-          dividend: new Big(0),
-          firstBuyDate: date,
-          investment: unitPrice.mul(quantity).mul(factor),
-          quantity: quantity.mul(factor),
-          symbol: SymbolProfile.symbol,
-          transactionCount: 1
-        };
-      }
-
-      currentTransactionPointItem.tags = uniqBy(
-        currentTransactionPointItem.tags,
-        'id'
+      // Only create transaction point symbols for investment activities
+      let currentTransactionPointItem: TransactionPointSymbol;
+      const shouldCreateSymbol = ['BUY', 'SELL', 'DIVIDEND'].includes(
+        type as string
       );
 
-      symbols[SymbolProfile.symbol] = currentTransactionPointItem;
+      if (shouldCreateSymbol) {
+        const oldAccumulatedSymbol = symbols[SymbolProfile.symbol];
+
+        if (oldAccumulatedSymbol) {
+          let investment = oldAccumulatedSymbol.investment;
+
+          const newQuantity = quantity
+            .mul(factor)
+            .plus(oldAccumulatedSymbol.quantity);
+
+          if (type === 'BUY') {
+            investment = oldAccumulatedSymbol.investment.plus(
+              quantity.mul(unitPrice)
+            );
+          } else if (type === 'SELL') {
+            investment = oldAccumulatedSymbol.investment.minus(
+              quantity.mul(oldAccumulatedSymbol.averagePrice)
+            );
+          }
+
+          currentTransactionPointItem = {
+            investment,
+            averagePrice: newQuantity.gt(0)
+              ? investment.div(newQuantity)
+              : new Big(0),
+            currency: SymbolProfile.currency,
+            dataSource: SymbolProfile.dataSource,
+            dividend: new Big(0),
+            fee: oldAccumulatedSymbol.fee.plus(fee),
+            firstBuyDate: oldAccumulatedSymbol.firstBuyDate,
+            quantity: newQuantity,
+            symbol: SymbolProfile.symbol,
+            tags: oldAccumulatedSymbol.tags.concat(tags),
+            transactionCount: oldAccumulatedSymbol.transactionCount + 1
+          };
+        } else {
+          currentTransactionPointItem = {
+            fee,
+            tags,
+            averagePrice: unitPrice,
+            currency: SymbolProfile.currency,
+            dataSource: SymbolProfile.dataSource,
+            dividend: new Big(0),
+            firstBuyDate: date,
+            investment: unitPrice.mul(quantity).mul(factor),
+            quantity: quantity.mul(factor),
+            symbol: SymbolProfile.symbol,
+            transactionCount: 1
+          };
+        }
+
+        currentTransactionPointItem.tags = uniqBy(
+          currentTransactionPointItem.tags,
+          'id'
+        );
+
+        symbols[SymbolProfile.symbol] = currentTransactionPointItem;
+      }
 
       const items = lastTransactionPoint?.items ?? [];
 
@@ -976,7 +983,10 @@ export abstract class PortfolioCalculator {
         return symbol !== SymbolProfile.symbol;
       });
 
-      newItems.push(currentTransactionPointItem);
+      // Only add the symbol if it was created (i.e., for investment activities)
+      if (shouldCreateSymbol && currentTransactionPointItem) {
+        newItems.push(currentTransactionPointItem);
+      }
 
       newItems.sort((a, b) => {
         return a.symbol?.localeCompare(b.symbol);
