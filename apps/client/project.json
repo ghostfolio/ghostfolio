@@ -73,7 +73,8 @@
         "styles": [
           "apps/client/src/assets/fonts/inter.css",
           "apps/client/src/styles/theme.scss",
-          "apps/client/src/styles.scss"
+          "apps/client/src/styles.scss",
+          "node_modules/open-color/open-color.css"
         ],
         "scripts": ["node_modules/marked/marked.min.js"],
         "vendorChunk": true,
