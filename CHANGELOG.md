@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up _Open color_ for CSS variables usage
+- Set up `open-color` for CSS variable usage
 
 ### Changed
 
