@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue in the `HtmlTemplateMiddleware` related to incorrect variable resolution
+- Eliminated the _Unsupported route path_ warning of the `LegacyRouteConverter` on startup
 
 ## 2.172.0 - 2025-06-19
 
