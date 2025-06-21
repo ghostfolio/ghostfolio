@@ -261,13 +261,13 @@ export const publicRoutes = {
     title: $localize`Registration`
   },
   resources: {
-    path: $localize`:kebab-case:resources`,
-    routerLink: ['/' + $localize`:kebab-case:resources`],
+    path: $localize`:kebab-case@@routes.resources:resources`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.resources:resources`],
     subRoutes: {
       glossary: {
         path: $localize`:kebab-case:glossary`,
         routerLink: [
-          '/' + $localize`:kebab-case:resources`,
+          '/' + $localize`:kebab-case@@routes.resources:resources`,
           $localize`:kebab-case:glossary`
         ],
         title: $localize`Glossary`
@@ -275,7 +275,7 @@ export const publicRoutes = {
       guides: {
         path: $localize`:kebab-case:guides`,
         routerLink: [
-          '/' + $localize`:kebab-case:resources`,
+          '/' + $localize`:kebab-case@@routes.resources:resources`,
           $localize`:kebab-case:guides`
         ],
         title: $localize`Guides`
@@ -283,20 +283,20 @@ export const publicRoutes = {
       markets: {
         path: $localize`:kebab-case:markets`,
         routerLink: [
-          '/' + $localize`:kebab-case:resources`,
+          '/' + $localize`:kebab-case@@routes.resources:resources`,
           $localize`:kebab-case:markets`
         ],
         title: $localize`Markets`
       },
       personalFinanceTools: {
-        path: 'personal-finance-tools',
+        path: $localize`:kebab-case@@routes.resources.personalFinanceTools:personal-finance-tools`,
         routerLink: [
-          '/' + $localize`:kebab-case:resources`,
-          'personal-finance-tools'
+          '/' + $localize`:kebab-case@@routes.resources:resources`,
+          $localize`:kebab-case@@routes.resources.personalFinanceTools:personal-finance-tools`
         ],
         subRoutes: {
           product: {
-            path: $localize`:kebab-case:open-source-alternative-to`,
+            path: $localize`:kebab-case@@routes.resources.personalFinanceTools.openSourceAlternativeTo:open-source-alternative-to`,
             title: $localize`Open Source Alternative to`
           }
         },
