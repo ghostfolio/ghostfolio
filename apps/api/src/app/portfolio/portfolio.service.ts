@@ -165,7 +165,8 @@ export class PortfolioService {
         filters,
         withExcludedAccounts,
         impersonationId: userId,
-        userId: this.request.user.id
+        userId: this.request.user.id,
+        withSummary: true
       })
     ]);
 
@@ -187,6 +188,10 @@ export class PortfolioService {
         ...account,
         transactionCount,
         valueInBaseCurrency,
+        allocationInPercentage:
+          details.summary.totalValueInBaseCurrency > 0
+            ? valueInBaseCurrency / details.summary.totalValueInBaseCurrency
+            : 0,
         balanceInBaseCurrency: this.exchangeRateDataService.toCurrency(
           account.balance,
           account.currency,
@@ -2101,50 +2106,36 @@ export class PortfolioService {
     userCurrency: string;
     userId: string;
     withExcludedAccounts?: boolean;
-  }) {
-    const accounts: PortfolioDetails['accounts'] = {};
-    const platforms: PortfolioDetails['platforms'] = {};
+  }): Promise<{
+    accounts: { [key: string]: AccountWithValue };
+    platforms: { [key: string]: AccountWithValue };
+  }> {
+    const accounts: { [key: string]: AccountWithValue } = {};
+    const platforms: { [key: string]: AccountWithValue } = {};
 
-    let currentAccounts: (Account & {
-      Order?: Order[];
-      Platform?: Platform;
-    })[] = [];
-
-    if (filters.length === 0) {
-      currentAccounts = await this.accountService.getAccounts(userId);
-    } else if (filters.length === 1 && filters[0].type === 'ACCOUNT') {
-      currentAccounts = await this.accountService.accounts({
-        include: { Platform: true },
-        where: { id: filters[0].id }
-      });
-    } else {
-      const accountIds = Array.from(
-        new Set(
-          activities
-            .filter(({ accountId }) => {
-              return accountId;
-            })
-            .map(({ accountId }) => {
-              return accountId;
-            })
-        )
-      );
-
-      currentAccounts = await this.accountService.accounts({
-        include: { Platform: true },
-        where: { id: { in: accountIds } }
-      });
-    }
-
-    currentAccounts = currentAccounts.filter((account) => {
-      return withExcludedAccounts || account.isExcluded === false;
+    const { accounts: accountList } = await this.accountService.getAccounts({
+      withExcludedAccounts,
+      userId
     });
 
-    for (const account of currentAccounts) {
-      const ordersByAccount = activities.filter(({ accountId }) => {
-        return accountId === account.id;
-      });
+    const ordersByAccount = activities.filter((activity) => {
+      // Apply filters if they exist
+      if (filters?.length > 0) {
+        const symbolFilter = filters.find(
+          (filter) =>
+            filter.type === 'SYMBOL' &&
+            filter.id === activity.SymbolProfile.symbol
+        );
+        if (symbolFilter) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    });
 
+    // Initialize accounts with their cash balances
+    for (const account of accountList) {
       accounts[account.id] = {
         balance: account.balance,
         currency: account.currency,
@@ -2155,64 +2146,71 @@ export class PortfolioService {
           userCurrency
         )
       };
+    }
 
-      if (platforms[account.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-        platforms[account.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
-          this.exchangeRateDataService.toCurrency(
-            account.balance,
-            account.currency,
-            userCurrency
-          );
-      } else {
-        platforms[account.Platform?.id || UNKNOWN_KEY] = {
-          balance: account.balance,
-          currency: account.currency,
-          name: account.Platform?.name,
-          valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
-            account.balance,
-            account.currency,
-            userCurrency
-          )
-        };
+    // Calculate total filtered value for percentage calculation
+    let totalFilteredValue = new Big(0);
+
+    for (const {
+      Account,
+      quantity,
+      SymbolProfile,
+      type
+    } of ordersByAccount) {
+      const currentValueOfSymbolInBaseCurrency =
+        getFactor(type) *
+        quantity *
+        (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
+          0);
+
+      if (Account?.id) {
+        if (accounts[Account.id]) {
+          accounts[Account.id].valueInBaseCurrency +=
+            currentValueOfSymbolInBaseCurrency;
+        } else {
+          accounts[Account.id] = {
+            balance: 0,
+            currency: Account.currency,
+            name: Account.name,
+            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
+          };
+        }
+        totalFilteredValue = totalFilteredValue.plus(
+          currentValueOfSymbolInBaseCurrency
+        );
       }
 
-      for (const {
-        Account,
-        quantity,
-        SymbolProfile,
-        type
-      } of ordersByAccount) {
-        const currentValueOfSymbolInBaseCurrency =
-          getFactor(type) *
-          quantity *
-          (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
-            0);
-
-        if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          accounts[Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+      if (Account?.Platform?.id) {
+        if (platforms[Account.Platform.id]) {
+          platforms[Account.Platform.id].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
         } else {
-          accounts[Account?.id || UNKNOWN_KEY] = {
+          platforms[Account.Platform.id] = {
             balance: 0,
-            currency: Account?.currency,
-            name: account.name,
+            currency: Account.currency,
+            name: Account.Platform.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
+      }
+    }
 
-        if (
-          platforms[Account?.Platform?.id || UNKNOWN_KEY]?.valueInBaseCurrency
-        ) {
-          platforms[Account?.Platform?.id || UNKNOWN_KEY].valueInBaseCurrency +=
-            currentValueOfSymbolInBaseCurrency;
-        } else {
-          platforms[Account?.Platform?.id || UNKNOWN_KEY] = {
-            balance: 0,
-            currency: Account?.currency,
-            name: account.Platform?.name,
-            valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
-          };
-        }
+    // Calculate allocation percentages based on filtered total
+    if (!totalFilteredValue.eq(0)) {
+      for (const accountId in accounts) {
+        accounts[accountId].allocationInPercentage = new Big(
+          accounts[accountId].valueInBaseCurrency
+        )
+          .div(totalFilteredValue)
+          .toNumber();
+      }
+
+      for (const platformId in platforms) {
+        platforms[platformId].allocationInPercentage = new Big(
+          platforms[platformId].valueInBaseCurrency
+        )
+          .div(totalFilteredValue)
+          .toNumber();
       }
     }
 
