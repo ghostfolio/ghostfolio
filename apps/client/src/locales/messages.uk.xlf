@@ -509,7 +509,7 @@
           <context context-type="linenumber">260</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="4002166200801232073" datatype="html">
+      <trans-unit id="routes.resources" datatype="html">
         <source>resources</source>
         <target state="translated">resources</target>
         <note priority="1" from="description">kebab-case</note>
@@ -5521,7 +5521,7 @@
           <context context-type="linenumber">303</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5827613432388799534" datatype="html">
+      <trans-unit id="routes.resources.personalFinanceTools.openSourceAlternativeTo" datatype="html">
         <source>open-source-alternative-to</source>
         <target state="translated">відкритий-альтернативний-для</target>
         <note priority="1" from="description">kebab-case</note>
@@ -7746,6 +7746,19 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
           <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
+        <source>personal-finance-tools</source>
+        <target state="new">personal-finance-tools</target>
+        <note priority="1" from="description">kebab-case</note>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">292</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
+          <context context-type="linenumber">295</context>
         </context-group>
       </trans-unit>
     </body>
