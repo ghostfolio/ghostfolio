@@ -141,6 +141,6 @@ import { UserModule } from './user/user.module';
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer) {
-    consumer.apply(HtmlTemplateMiddleware).forRoutes('*path');
+    consumer.apply(HtmlTemplateMiddleware).forRoutes('*wildcard');
   }
 }
