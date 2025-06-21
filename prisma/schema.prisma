@@ -12,12 +12,12 @@ datasource db {
 model Access {
   alias         String?
   createdAt     DateTime           @default(now())
+  granteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   granteeUserId String?
   id            String             @id @default(uuid())
   permissions   AccessPermission[] @default([READ_RESTRICTED])
   updatedAt     DateTime           @updatedAt
   userId        String
-  GranteeUser   User?              @relation("accessGet", fields: [granteeUserId], onDelete: Cascade, references: [id])
   user          User               @relation("accessGive", fields: [userId], onDelete: Cascade, references: [id])
 
   @@index([alias])
