@@ -30,6 +30,7 @@ import {
   AssetProfileIdentifier,
   BenchmarkMarketDataDetails,
   BenchmarkResponse,
+  DataProviderHealthResponse,
   Export,
   Filter,
   ImportResponse,
@@ -381,7 +382,9 @@ export class DataService {
   }
 
   public fetchDataProviderHealth(dataSource: DataSource) {
-    return this.http.get(`/api/v1/health/data-provider/${dataSource}`);
+    return this.http.get<DataProviderHealthResponse>(
+      `/api/v1/health/data-provider/${dataSource}`
+    );
   }
 
   public fetchExport({
