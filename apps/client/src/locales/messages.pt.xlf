@@ -3654,7 +3654,7 @@
         <target state="translated">É gratuito.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">348</context>
+          <context context-type="linenumber">352</context>
         </context-group>
       </trans-unit>
       <trans-unit id="c20172223f84462032664d717d739297e5a9e2fe" datatype="html">
@@ -4822,7 +4822,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
-          <context context-type="linenumber">345</context>
+          <context context-type="linenumber">349</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1d6f11238819cf97ea87ab54714deda567d83f5c" datatype="html">
@@ -7772,6 +7772,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2b3030c13e8ffdfbfcaf6d487dbe23e4f9b8f4d7" datatype="html">
+        <source>Limited Offer!</source>
+        <target state="new">Limited Offer!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">311</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="48a079ff7a0ed08569e9ee315a387efeaa05f09c" datatype="html">
+        <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
+        <target state="new">Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
+          <context context-type="linenumber">313</context>
         </context-group>
       </trans-unit>
     </body>
