@@ -380,6 +380,10 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmarks');
   }
 
+  public fetchDataProviderHealth(dataSource: DataSource): Observable<Object> {
+    return this.http.get(`/api/v1/health/data-provider/${dataSource}`);
+  }
+
   public fetchExport({
     activityIds,
     filters
