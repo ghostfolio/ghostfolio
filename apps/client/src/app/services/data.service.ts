@@ -380,7 +380,7 @@ export class DataService {
     return this.http.get<BenchmarkResponse>('/api/v1/benchmarks');
   }
 
-  public fetchDataProviderHealth(dataSource: DataSource): Observable<Object> {
+  public fetchDataProviderHealth(dataSource: DataSource) {
     return this.http.get(`/api/v1/health/data-provider/${dataSource}`);
   }
 

@@ -5,22 +5,28 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import type { DataSource } from '@prisma/client';
-import { catchError, map, type Observable, of } from 'rxjs';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { catchError, map, type Observable, of, Subject, takeUntil } from 'rxjs';
+
+import { DataProviderStatus } from './interfaces/interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule],
+  imports: [CommonModule, NgxSkeletonLoaderModule],
   selector: 'gf-data-provider-status',
   standalone: true,
   templateUrl: './data-provider-status.component.html'
 })
-export class GfDataProviderStatusComponent implements OnInit {
+export class GfDataProviderStatusComponent implements OnDestroy, OnInit {
   @Input() dataSource: DataSource;
 
-  public status$: Observable<{ isHealthy: boolean }>;
+  public status$: Observable<DataProviderStatus>;
+
+  private unsubscribeSubject = new Subject<void>();
 
   public constructor(private dataService: DataService) {}
 
@@ -29,7 +35,13 @@ export class GfDataProviderStatusComponent implements OnInit {
       .fetchDataProviderHealth(this.dataSource)
       .pipe(
         map(() => ({ isHealthy: true })),
-        catchError(() => of({ isHealthy: false }))
+        catchError(() => of({ isHealthy: false })),
+        takeUntil(this.unsubscribeSubject)
       );
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribeSubject.next();
+    this.unsubscribeSubject.complete();
   }
 }

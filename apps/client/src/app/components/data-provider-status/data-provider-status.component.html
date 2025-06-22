@@ -4,4 +4,13 @@
   } @else {
     <span class="text-danger" i18n>Offline</span>
   }
+} @else {
+  <ngx-skeleton-loader
+    animation="pulse"
+    class="px-4 py-3"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
 }
