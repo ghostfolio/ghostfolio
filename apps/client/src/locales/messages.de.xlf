@@ -7776,7 +7776,7 @@
       </trans-unit>
       <trans-unit id="2b3030c13e8ffdfbfcaf6d487dbe23e4f9b8f4d7" datatype="html">
         <source>Limited Offer!</source>
-        <target state="new">Limited Offer!</target>
+        <target state="translated">Begrenztes Angebot!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">311</context>
@@ -7784,7 +7784,7 @@
       </trans-unit>
       <trans-unit id="48a079ff7a0ed08569e9ee315a387efeaa05f09c" datatype="html">
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
-        <target state="new">Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
+        <target state="translated">Erhalte <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">313</context>
