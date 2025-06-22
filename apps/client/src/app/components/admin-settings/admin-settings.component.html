@@ -40,10 +40,10 @@
       }
       <table class="gf-table w-100" mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="name">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Name</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2" mat-cell>
+          <td *matCellDef="let element" class="px-1" mat-cell>
             <div class="d-flex align-items-center">
               <gf-entity-logo class="mr-1" [url]="element.url" />
               <div>
@@ -86,10 +86,10 @@
         </ng-container>
 
         <ng-container matColumnDef="status">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell>
             <ng-container i18n>Status</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2" mat-cell>
+          <td *matCellDef="let element" class="px-1" mat-cell>
             @if (
               !isGhostfolioDataProvider(element) ||
               isGhostfolioApiKeyValid === true
@@ -100,10 +100,10 @@
         </ng-container>
 
         <ng-container matColumnDef="assetProfileCount">
-          <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
+          <th *matHeaderCellDef class="px-1 text-right" mat-header-cell>
             <ng-container i18n>Asset Profiles</ng-container>
           </th>
-          <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
             <gf-value
               class="d-inline-block justify-content-end"
               [locale]="user?.settings?.locale"
@@ -113,8 +113,8 @@
         </ng-container>
 
         <ng-container matColumnDef="usage">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell></th>
-          <td *matCellDef="let element" class="px-1 py-2" mat-cell>
+          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
+          <td *matCellDef="let element" class="px-1" mat-cell>
             @if (
               isGhostfolioDataProvider(element) &&
               isGhostfolioApiKeyValid === true
@@ -139,9 +139,9 @@
         </ng-container>
 
         <ng-container matColumnDef="actions">
-          <th *matHeaderCellDef class="px-1 py-2" mat-header-cell></th>
+          <th *matHeaderCellDef class="px-1" mat-header-cell></th>
 
-          <td *matCellDef="let element" class="px-1 py-2 text-right" mat-cell>
+          <td *matCellDef="let element" class="px-1 text-right" mat-cell>
             @if (isGhostfolioDataProvider(element)) {
               @if (isGhostfolioApiKeyValid === true) {
                 <button
