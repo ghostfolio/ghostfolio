@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrated the `@ghostfolio/ui/value` component to control flow
+- Refactored the health check endpoint for data enhancers
+- Refactored the health check endpoint for data providers
 
 ## 2.173.0 - 2025-06-21
 
