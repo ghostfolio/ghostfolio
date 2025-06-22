@@ -196,7 +196,7 @@ export class UserService {
       include: {
         Access: true,
         accounts: {
-          include: { Platform: true }
+          include: { platform: true }
         },
         Analytics: true,
         Settings: true,

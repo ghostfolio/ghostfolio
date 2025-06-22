@@ -174,7 +174,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           balance,
           currency,
           name,
-          Platform,
+          platform,
           transactionCount,
           value,
           valueInBaseCurrency
@@ -189,7 +189,7 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           }
 
           this.name = name;
-          this.platformName = Platform?.name ?? '-';
+          this.platformName = platform?.name ?? '-';
           this.transactionCount = transactionCount;
           this.valueInBaseCurrency = valueInBaseCurrency;
 

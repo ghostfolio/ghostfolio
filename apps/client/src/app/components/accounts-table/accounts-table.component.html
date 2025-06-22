@@ -43,11 +43,11 @@
         <ng-container i18n>Name</ng-container>
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
-        @if (element.Platform?.url) {
+        @if (element.platform?.url) {
           <gf-entity-logo
             class="d-inline d-sm-none mr-1"
-            [tooltip]="element.Platform?.name"
-            [url]="element.Platform.url"
+            [tooltip]="element.platform?.name"
+            [url]="element.platform.url"
           />
         }
         <span>{{ element.name }}</span>
@@ -81,7 +81,7 @@
         *matHeaderCellDef
         class="d-none d-lg-table-cell px-1"
         mat-header-cell
-        mat-sort-header="Platform.name"
+        mat-sort-header="platform.name"
       >
         <ng-container i18n>Platform</ng-container>
       </th>
@@ -91,14 +91,14 @@
         mat-cell
       >
         <div class="d-flex">
-          @if (element.Platform?.url) {
+          @if (element.platform?.url) {
             <gf-entity-logo
               class="mr-1"
-              [tooltip]="element.Platform?.name"
-              [url]="element.Platform.url"
+              [tooltip]="element.platform?.name"
+              [url]="element.platform.url"
             />
           }
-          <span>{{ element.Platform?.name }}</span>
+          <span>{{ element.platform?.name }}</span>
         </div>
       </td>
       <td
