@@ -85,6 +85,15 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="status">
+          <th *matHeaderCellDef class="px-1 py-2 text-center" mat-header-cell>
+            <ng-container i18n>Status</ng-container>
+          </th>
+          <td *matCellDef="let element" class="px-1 py-2 text-center" mat-cell>
+            <gf-data-provider-status [dataSource]="element.dataSource" />
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="assetProfileCount">
           <th *matHeaderCellDef class="px-1 py-2 text-right" mat-header-cell>
             <ng-container i18n>Asset Profiles</ng-container>
@@ -98,7 +107,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="status">
+        <ng-container matColumnDef="usage">
           <th *matHeaderCellDef class="px-1 py-2" mat-header-cell></th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
             @if (isGhostfolioDataProvider(element)) {

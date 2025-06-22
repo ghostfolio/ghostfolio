@@ -32,7 +32,13 @@ import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 export class AdminSettingsComponent implements OnDestroy, OnInit {
   public dataSource = new MatTableDataSource<DataProviderInfo>();
   public defaultDateFormat: string;
-  public displayedColumns = ['name', 'assetProfileCount', 'status', 'actions'];
+  public displayedColumns = [
+    'name',
+    'status',
+    'assetProfileCount',
+    'usage',
+    'actions'
+  ];
   public ghostfolioApiStatus: DataProviderGhostfolioStatusResponse;
   public isGhostfolioApiKeyValid: boolean;
   public isLoading = false;
