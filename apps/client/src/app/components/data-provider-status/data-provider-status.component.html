@@ -1,0 +1,7 @@
+@if (status$ | async; as status) {
+  @if (status.isHealthy) {
+    <span class="text-success" i18n>Online</span>
+  } @else {
+    <span class="text-danger" i18n>Offline</span>
+  }
+}
