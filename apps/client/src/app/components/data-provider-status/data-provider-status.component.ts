@@ -34,8 +34,12 @@ export class GfDataProviderStatusComponent implements OnDestroy, OnInit {
     this.status$ = this.dataService
       .fetchDataProviderHealth(this.dataSource)
       .pipe(
-        map(() => ({ isHealthy: true })),
-        catchError(() => of({ isHealthy: false })),
+        catchError(() => {
+          return of({ isHealthy: false });
+        }),
+        map(() => {
+          return { isHealthy: true };
+        }),
         takeUntil(this.unsubscribeSubject)
       );
   }

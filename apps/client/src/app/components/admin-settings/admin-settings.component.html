@@ -90,7 +90,12 @@
             <ng-container i18n>Status</ng-container>
           </th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            <gf-data-provider-status [dataSource]="element.dataSource" />
+            @if (
+              !isGhostfolioDataProvider(element) ||
+              isGhostfolioApiKeyValid === true
+            ) {
+              <gf-data-provider-status [dataSource]="element.dataSource" />
+            }
           </td>
         </ng-container>
 
@@ -110,24 +115,25 @@
         <ng-container matColumnDef="usage">
           <th *matHeaderCellDef class="px-1 py-2" mat-header-cell></th>
           <td *matCellDef="let element" class="px-1 py-2" mat-cell>
-            @if (isGhostfolioDataProvider(element)) {
-              @if (isGhostfolioApiKeyValid === true) {
-                <mat-progress-bar
-                  mode="determinate"
-                  [value]="
-                    100 -
-                    (ghostfolioApiStatus.dailyRequests /
-                      ghostfolioApiStatus.dailyRequestsMax) *
-                      100
-                  "
-                />
-                <small class="text-muted">
-                  {{ ghostfolioApiStatus.dailyRequests }}
-                  <ng-container i18n>of</ng-container>
-                  {{ ghostfolioApiStatus.dailyRequestsMax }}
-                  <ng-container i18n>daily requests</ng-container>
-                </small>
-              }
+            @if (
+              isGhostfolioDataProvider(element) &&
+              isGhostfolioApiKeyValid === true
+            ) {
+              <mat-progress-bar
+                mode="determinate"
+                [value]="
+                  100 -
+                  (ghostfolioApiStatus.dailyRequests /
+                    ghostfolioApiStatus.dailyRequestsMax) *
+                    100
+                "
+              />
+              <small class="text-muted">
+                {{ ghostfolioApiStatus.dailyRequests }}
+                <ng-container i18n>of</ng-container>
+                {{ ghostfolioApiStatus.dailyRequestsMax }}
+                <ng-container i18n>daily requests</ng-container>
+              </small>
             }
           </td>
         </ng-container>

@@ -5,5 +5,11 @@
     <span class="text-danger" i18n>Offline</span>
   }
 } @else {
-  <ngx-skeleton-loader animation="pulse" [theme]="{ height: '1rem' }" />
+  <ngx-skeleton-loader
+    animation="pulse"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
 }
