@@ -44,7 +44,7 @@ import type { BenchmarkResponse } from './responses/benchmark-response.interface
 import type { DataEnhancerHealthResponse } from './responses/data-enhancer-health-response.interface';
 import type { DataProviderGhostfolioAssetProfileResponse } from './responses/data-provider-ghostfolio-asset-profile-response.interface';
 import type { DataProviderGhostfolioStatusResponse } from './responses/data-provider-ghostfolio-status-response.interface';
-import { DataProviderHealthResponse } from './responses/data-provider-health-response.interface';
+import type { DataProviderHealthResponse } from './responses/data-provider-health-response.interface';
 import type { DividendsResponse } from './responses/dividends-response.interface';
 import type { ResponseError } from './responses/errors.interface';
 import type { HistoricalResponse } from './responses/historical-response.interface';
