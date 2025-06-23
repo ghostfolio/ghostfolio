@@ -1260,6 +1260,8 @@ export class PortfolioService {
               [
                 new AccountClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   accounts
                 ),
                 new AccountClusterRiskSingleAccount(

@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import {
   PortfolioDetails,
   PortfolioPosition,
@@ -12,9 +13,12 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     accounts: PortfolioDetails['accounts']
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: AccountClusterRiskCurrentInvestment.name
     });
 
@@ -56,21 +60,29 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
 
     if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `Over ${
-          ruleSettings.thresholdMax * 100
-        }% of your current investment is at ${maxItem.name} (${(
-          maxInvestmentRatio * 100
-        ).toPrecision(3)}%)`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.accountClusterRiskCurrentInvestment.false',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
+            maxItemName: maxItem.name,
+            thresholdMax: ruleSettings.thresholdMax * 100
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The major part of your current investment is at ${
-        maxItem.name
-      } (${(maxInvestmentRatio * 100).toPrecision(3)}%) and does not exceed ${
-        ruleSettings.thresholdMax * 100
-      }%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.accountClusterRiskCurrentInvestment.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
+          maxItemName: maxItem.name,
+          thresholdMax: ruleSettings.thresholdMax * 100
+        }
+      }),
       value: true
     };
   }
@@ -88,7 +100,10 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   }
 
   public getName() {
-    return 'Investment';
+    return this.i18nService.getTranslation({
+      id: 'rule.accountClusterRiskCurrentInvestment',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
