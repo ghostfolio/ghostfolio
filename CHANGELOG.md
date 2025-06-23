@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for German (`de`)
 - Refreshed the cryptocurrencies list
 
+### Fixed
+
+- Fixed an issue with the locale in the scraper configuration
+
 ## 2.173.0 - 2025-06-21
 
 ### Added
