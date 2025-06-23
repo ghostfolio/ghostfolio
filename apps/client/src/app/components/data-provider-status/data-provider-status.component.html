@@ -1,8 +1,8 @@
 @if (status$ | async; as status) {
   @if (status.isHealthy) {
-    <span class="text-success" i18n>Online</span>
+    <span class="text-success" i18n>Available</span>
   } @else {
-    <span class="text-danger" i18n>Offline</span>
+    <span class="text-danger" i18n>Unavailable</span>
   }
 } @else {
   <ngx-skeleton-loader
