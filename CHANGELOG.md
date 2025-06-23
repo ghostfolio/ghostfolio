@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Set up the language localization for the static portfolio analysis rule: _Account Cluster Risks_ (Current Investment)
 - Extended the data providers management of the admin control panel by the online status
 
 ### Changed
