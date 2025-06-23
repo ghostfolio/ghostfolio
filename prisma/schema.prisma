@@ -35,11 +35,11 @@ model Account {
   id         String           @default(uuid())
   isExcluded Boolean          @default(false)
   name       String?
+  platform   Platform?        @relation(fields: [platformId], references: [id])
   platformId String?
   updatedAt  DateTime         @updatedAt
   user       User             @relation(fields: [userId], onDelete: Cascade, references: [id])
   userId     String
-  Platform   Platform?        @relation(fields: [platformId], references: [id])
 
   @@id([id, userId])
   @@index([currency])

@@ -93,11 +93,11 @@
           @for (account of data.accounts; track account) {
             <mat-option [value]="account.id">
               <div class="d-flex">
-                @if (account.Platform?.url) {
+                @if (account.platform?.url) {
                   <gf-entity-logo
                     class="mr-1"
-                    [tooltip]="account.Platform?.name"
-                    [url]="account.Platform?.url"
+                    [tooltip]="account.platform?.name"
+                    [url]="account.platform?.url"
                   />
                 }
                 <span>{{ account.name }}</span>
