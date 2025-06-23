@@ -1,5 +1,6 @@
 import { GfAdminPlatformModule } from '@ghostfolio/client/components/admin-platform/admin-platform.module';
 import { GfAdminTagModule } from '@ghostfolio/client/components/admin-tag/admin-tag.module';
+import { GfDataProviderStatusComponent } from '@ghostfolio/client/components/data-provider-status/data-provider-status.component';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 import { GfValueComponent } from '@ghostfolio/ui/value';
@@ -22,6 +23,7 @@ import { AdminSettingsComponent } from './admin-settings.component';
     CommonModule,
     GfAdminPlatformModule,
     GfAdminTagModule,
+    GfDataProviderStatusComponent,
     GfEntityLogoComponent,
     GfPremiumIndicatorComponent,
     GfValueComponent,
