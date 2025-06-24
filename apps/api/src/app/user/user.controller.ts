@@ -33,6 +33,7 @@ import { merge, size } from 'lodash';
 
 import { DeleteOwnUserDto } from './delete-own-user.dto';
 import { UserItem } from './interfaces/user-item.interface';
+import { UpdateOwnAccessTokenDto } from './update-own-access-token.dto';
 import { UpdateUserSettingDto } from './update-user-setting.dto';
 import { UserService } from './user.service';
 
@@ -94,7 +95,7 @@ export class UserController {
   @HasPermission(permissions.accessAdminControl)
   @Post(':id/access-token')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
-  public async generateAccessToken(
+  public async updateUserAccessToken(
     @Param('id') id: string
   ): Promise<AccessTokenResponse> {
     const { accessToken, hashedAccessToken } =
@@ -105,6 +106,41 @@ export class UserController {
     await this.prismaService.user.update({
       data: { accessToken: hashedAccessToken },
       where: { id }
+    });
+
+    return { accessToken };
+  }
+
+  @HasPermission(permissions.updateOwnAccess)
+  @Post('access-token')
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async updateOwnAccessToken(
+    @Body() data: UpdateOwnAccessTokenDto
+  ): Promise<AccessTokenResponse> {
+    const currentHashedAccessToken = this.userService.createAccessToken({
+      password: data.accessToken,
+      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
+    });
+
+    const [user] = await this.userService.users({
+      where: { accessToken: currentHashedAccessToken, id: this.request.user.id }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    const { accessToken, hashedAccessToken } =
+      this.userService.generateAccessToken({
+        userId: this.request.user.id
+      });
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: this.request.user.id }
     });
 
     return { accessToken };

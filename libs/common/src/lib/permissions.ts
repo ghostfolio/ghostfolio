@@ -52,6 +52,7 @@ export const permissions = {
   updateMarketData: 'updateMarketData',
   updateMarketDataOfOwnAssetProfile: 'updateMarketDataOfOwnAssetProfile',
   updateOrder: 'updateOrder',
+  updateOwnAccess: 'updateOwnAccess',
   updatePlatform: 'updatePlatform',
   updateTag: 'updateTag',
   updateUserSettings: 'updateUserSettings',
@@ -136,6 +137,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.updateAuthDevice,
         permissions.updateMarketDataOfOwnAssetProfile,
         permissions.updateOrder,
+        permissions.updateOwnAccess,
         permissions.updateUserSettings,
         permissions.updateViewMode
       ];
