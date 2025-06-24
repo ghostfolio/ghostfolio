@@ -7,14 +7,13 @@ import {
 import { primaryColorRgb, secondaryColorRgb } from '@ghostfolio/common/config';
 import {
   getBackgroundColor,
-  getDateFormatString,
   getLocale,
   getTextColor,
   parseDate
 } from '@ghostfolio/common/helper';
 import { LineChartItem } from '@ghostfolio/common/interfaces';
 import { InvestmentItem } from '@ghostfolio/common/interfaces/investment-item.interface';
-import { ColorScheme, GroupBy } from '@ghostfolio/common/types';
+import { ColorScheme, DateRange, GroupBy } from '@ghostfolio/common/types';
 
 import {
   ChangeDetectionStrategy,
@@ -39,7 +38,14 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { isAfter } from 'date-fns';
+import {
+  isAfter,
+  subDays,
+  subYears,
+  startOfMonth,
+  startOfYear,
+  startOfWeek
+} from 'date-fns';
 
 @Component({
   selector: 'gf-investment-chart',
@@ -50,9 +56,10 @@ import { isAfter } from 'date-fns';
 })
 export class InvestmentChartComponent implements OnChanges, OnDestroy {
   @Input() benchmarkDataItems: InvestmentItem[] = [];
-  @Input() benchmarkDataLabel = '';
+  @Input() benchmarkDataLabel = $localize`Benchmark`;
   @Input() colorScheme: ColorScheme;
   @Input() currency: string;
+  @Input() dateRange: DateRange;
   @Input() groupBy: GroupBy;
   @Input() historicalDataItems: LineChartItem[] = [];
   @Input() isInPercent = false;
@@ -158,6 +165,8 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         this.chart.options.plugins.tooltip =
           this.getTooltipPluginConfiguration() as unknown;
 
+        this.chart.options.scales.x = this.getChartXAxis() as any;
+
         if (
           this.savingsRate &&
           // @ts-ignore
@@ -230,21 +239,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
             } as unknown,
             responsive: true,
             scales: {
-              x: {
-                border: {
-                  color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
-                  width: this.groupBy ? 0 : 1
-                },
-                display: true,
-                grid: {
-                  display: false
-                },
-                type: 'time',
-                time: {
-                  tooltipFormat: getDateFormatString(this.locale),
-                  unit: 'year'
-                }
-              },
+              x: this.getChartXAxis() as any,
               y: {
                 border: {
                   display: false
@@ -282,6 +277,54 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         });
       }
     }
+  }
+
+  private getChartXAxis() {
+    let min: number;
+    let unit: 'day' | 'month' | 'week' | 'year' = 'year';
+
+    switch (this.dateRange) {
+      case '1d':
+        min = subDays(new Date(), 1).getTime();
+        unit = 'day';
+        break;
+      case 'mtd':
+        min = startOfMonth(new Date()).getTime();
+        unit = 'day';
+        break;
+      case 'wtd':
+        min = startOfWeek(new Date()).getTime();
+        unit = 'day';
+        break;
+      case 'ytd':
+        min = startOfYear(new Date()).getTime();
+        unit = 'month';
+        break;
+      case '1y':
+        min = subYears(new Date(), 1).getTime();
+        unit = 'month';
+        break;
+      case '5y':
+        min = subYears(new Date(), 5).getTime();
+        unit = 'year';
+        break;
+    }
+
+    return {
+      border: {
+        color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
+        width: this.groupBy ? 0 : 1
+      },
+      display: true,
+      grid: {
+        display: false
+      },
+      min,
+      type: 'time',
+      time: {
+        unit
+      }
+    };
   }
 
   private getTooltipPluginConfiguration() {
