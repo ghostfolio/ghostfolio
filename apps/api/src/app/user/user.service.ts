@@ -259,9 +259,12 @@ export class UserService {
 
     (user.Settings.settings as UserSettings).xRayRules = {
       AccountClusterRiskCurrentInvestment:
-        new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
-          user.Settings.settings
-        ),
+        new AccountClusterRiskCurrentInvestment(
+          undefined,
+          undefined,
+          undefined,
+          {}
+        ).getSettings(user.Settings.settings),
       AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
         undefined,
         undefined,
