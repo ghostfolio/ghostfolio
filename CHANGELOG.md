@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the health check endpoint for data enhancers
 - Refactored the health check endpoint for data providers
 - Improved the language localization for German (`de`)
+- Improved the language localization for French (`fr`)
 
 ## 2.173.0 - 2025-06-21
 
