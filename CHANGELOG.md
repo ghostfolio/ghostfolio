@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the health check endpoint for data providers
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
+- Refreshed the cryptocurrencies list
 
 ## 2.173.0 - 2025-06-21
 
