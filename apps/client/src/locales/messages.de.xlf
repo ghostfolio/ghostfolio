@@ -1179,7 +1179,7 @@
       </trans-unit>
       <trans-unit id="9bbc9e4cebf91162be7d3e324ca5984d576e462c" datatype="html">
         <source>Investment</source>
-        <target state="translated">Einlage</target>
+        <target state="translated">Investition</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/holding-detail-dialog/holding-detail-dialog.html</context>
           <context context-type="linenumber">152</context>
@@ -5881,7 +5881,7 @@
       </trans-unit>
       <trans-unit id="8580549503047096056" datatype="html">
         <source>Investment</source>
-        <target state="translated">Einlage</target>
+        <target state="translated">Investition</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/portfolio/analysis/analysis-page.component.ts</context>
           <context context-type="linenumber">56</context>
@@ -7812,7 +7812,7 @@
       </trans-unit>
       <trans-unit id="7387635272539030076" datatype="html">
         <source>new</source>
-        <target state="new">new</target>
+        <target state="translated">neu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/admin/admin-page.component.ts</context>
           <context context-type="linenumber">37</context>
@@ -7820,7 +7820,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment" datatype="html">
         <source>Investment</source>
-        <target state="new">Investment</target>
+        <target state="translated">Investition</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">14</context>
@@ -7828,7 +7828,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.false" datatype="html">
         <source> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </source>
-        <target state="new"> Over ${thresholdMax}% of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) </target>
+        <target state="translated"> Über ${thresholdMax}% deiner aktuellen Investition ist bei ${maxAccountName} (${maxInvestmentRatio}%) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">15</context>
@@ -7836,7 +7836,7 @@
       </trans-unit>
       <trans-unit id="rule.accountClusterRiskCurrentInvestment.true" datatype="html">
         <source> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </source>
-        <target state="new"> The major part of your current investment is at ${maxAccountName} (${maxInvestmentRatio}%) and does not exceed ${thresholdMax}% </target>
+        <target state="translated"> Der Hauptteil deiner aktuellen Investition ist bei ${maxAccountName} (${maxInvestmentRatio}%) und übersteigt ${thresholdMax}% nicht </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">19</context>
