@@ -2,11 +2,9 @@ import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.in
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
 import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
-import {
-  PortfolioDetails,
-  PortfolioPosition,
-  UserSettings
-} from '@ghostfolio/common/interfaces';
+import { PortfolioDetails, UserSettings } from '@ghostfolio/common/interfaces';
+
+import { Account } from '@prisma/client';
 
 export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
   private accounts: PortfolioDetails['accounts'];
@@ -27,36 +25,36 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
 
   public evaluate(ruleSettings: Settings) {
     const accounts: {
-      [symbol: string]: Pick<PortfolioPosition, 'name'> & {
+      [symbol: string]: Pick<Account, 'name'> & {
         investment: number;
       };
     } = {};
 
     for (const [accountId, account] of Object.entries(this.accounts)) {
       accounts[accountId] = {
-        name: account.name,
-        investment: account.valueInBaseCurrency
+        investment: account.valueInBaseCurrency,
+        name: account.name
       };
     }
 
-    let maxItem: (typeof accounts)[0];
+    let maxAccount: (typeof accounts)[0];
     let totalInvestment = 0;
 
     for (const account of Object.values(accounts)) {
-      if (!maxItem) {
-        maxItem = account;
+      if (!maxAccount) {
+        maxAccount = account;
       }
 
       // Calculate total investment
       totalInvestment += account.investment;
 
       // Find maximum
-      if (account.investment > maxItem?.investment) {
-        maxItem = account;
+      if (account.investment > maxAccount?.investment) {
+        maxAccount = account;
       }
     }
 
-    const maxInvestmentRatio = maxItem?.investment / totalInvestment || 0;
+    const maxInvestmentRatio = maxAccount?.investment / totalInvestment || 0;
 
     if (maxInvestmentRatio > ruleSettings.thresholdMax) {
       return {
@@ -64,8 +62,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
           id: 'rule.accountClusterRiskCurrentInvestment.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
+            maxAccountName: maxAccount.name,
             maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
-            maxItemName: maxItem.name,
             thresholdMax: ruleSettings.thresholdMax * 100
           }
         }),
@@ -78,8 +76,8 @@ export class AccountClusterRiskCurrentInvestment extends Rule<Settings> {
         id: 'rule.accountClusterRiskCurrentInvestment.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
+          maxAccountName: maxAccount.name,
           maxInvestmentRatio: (maxInvestmentRatio * 100).toPrecision(3),
-          maxItemName: maxItem.name,
           thresholdMax: ruleSettings.thresholdMax * 100
         }
       }),
