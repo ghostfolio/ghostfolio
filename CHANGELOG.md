@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Platform` to `platform` in the `Account` database schema
 - Refactored the health check endpoint for data enhancers
 - Refactored the health check endpoint for data providers
+- Improved the language localization for Español (`es`)
 - Improved the language localization for French (`fr`)
 - Improved the language localization for German (`de`)
 - Refreshed the cryptocurrencies list
