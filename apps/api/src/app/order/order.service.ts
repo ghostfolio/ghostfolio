@@ -536,7 +536,7 @@ export class OrderService {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           Account: {
             include: {
-              Platform: true
+              platform: true
             }
           },
           // eslint-disable-next-line @typescript-eslint/naming-convention

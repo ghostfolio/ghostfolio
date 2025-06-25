@@ -309,11 +309,11 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.Account?.Platform?.url) {
+          @if (element.Account?.platform?.url) {
             <gf-entity-logo
               class="mr-1"
-              [tooltip]="element.Account?.Platform?.name"
-              [url]="element.Account?.Platform?.url"
+              [tooltip]="element.Account?.platform?.name"
+              [url]="element.Account?.platform?.url"
             />
           }
           <span class="d-none d-lg-block">{{ element.Account?.name }}</span>

@@ -5,12 +5,12 @@
 }
 <div class="d-flex flex-column w-100">
   <ng-template #label><ng-content></ng-content></ng-template>
-  <ng-container *ngIf="value || value === 0 || value === null">
+  @if (value || value === 0 || value === null) {
     <div
       class="align-items-center d-flex"
       [ngClass]="position === 'end' ? 'justify-content-end' : ''"
     >
-      <ng-container *ngIf="isNumber || value === null">
+      @if (isNumber || value === null) {
         @if (colorizeSign && !useAbsoluteValue) {
           @if (+value > 0) {
             <div class="mr-1 text-success">+</div>
@@ -59,7 +59,7 @@
             </div>
           }
         }
-      </ng-container>
+      }
       @if (isString) {
         <div
           class="mb-0 text-truncate value"
@@ -72,7 +72,7 @@
         </div>
       }
     </div>
-  </ng-container>
+  }
 
   @if (value === undefined) {
     <ngx-skeleton-loader
@@ -94,7 +94,8 @@
         <span class="text-muted"> {{ subLabel }}</span>
       }
     </div>
-    <small *ngIf="size !== 'large'" class="d-block text-truncate">
+  } @else {
+    <small class="d-block text-truncate">
       <ng-container *ngTemplateOutlet="label"></ng-container>
     </small>
   }

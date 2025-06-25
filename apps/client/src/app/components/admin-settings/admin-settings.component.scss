@@ -1,16 +1,26 @@
 :host {
   display: block;
 
+  a,
   button {
     &.special {
-      background: linear-gradient(45deg, rgb(228, 94, 237), rgb(104, 94, 237));
+      background: linear-gradient(45deg, var(--oc-pink-5), var(--oc-violet-5));
       color: #fff;
     }
   }
 
   .badge {
-    &.early-access {
+    &.new {
       border: 1px solid var(--mat-table-row-item-outline-color);
+      padding-bottom: 0.05rem;
+    }
+  }
+
+  .mat-mdc-card {
+    --mdc-outlined-card-container-color: whitesmoke;
+
+    .mat-mdc-card-actions {
+      min-height: 0;
     }
   }
 
@@ -24,5 +34,11 @@
         background-color: rgb(var(--palette-background-unselected-chip));
       }
     }
+  }
+}
+
+:host-context(.theme-dark) {
+  .mat-mdc-card {
+    --mdc-outlined-card-container-color: #222222;
   }
 }

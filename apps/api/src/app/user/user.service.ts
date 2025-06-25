@@ -104,7 +104,7 @@ export class UserService {
           user: true
         },
         orderBy: { alias: 'asc' },
-        where: { GranteeUser: { id } }
+        where: { granteeUserId: id }
       }),
       this.prismaService.order.count({
         where: { userId: id }
@@ -196,7 +196,7 @@ export class UserService {
       include: {
         Access: true,
         accounts: {
-          include: { Platform: true }
+          include: { platform: true }
         },
         Analytics: true,
         Settings: true,
@@ -259,10 +259,15 @@ export class UserService {
 
     (user.Settings.settings as UserSettings).xRayRules = {
       AccountClusterRiskCurrentInvestment:
-        new AccountClusterRiskCurrentInvestment(undefined, {}).getSettings(
-          user.Settings.settings
-        ),
+        new AccountClusterRiskCurrentInvestment(
+          undefined,
+          undefined,
+          undefined,
+          {}
+        ).getSettings(user.Settings.settings),
       AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
+        undefined,
+        undefined,
         undefined,
         {}
       ).getSettings(user.Settings.settings),

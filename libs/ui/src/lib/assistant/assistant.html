@@ -36,17 +36,40 @@
         </button>
       }
     </div>
-    <div
-      *ngIf="searchFormControl.value"
-      class="overflow-auto py-2 result-container"
-    >
-      @if (searchResults?.quickLinks?.length !== 0 || isLoading.quickLinks) {
-        <div class="mb-2">
+    @if (searchFormControl.value) {
+      <div class="overflow-auto py-2 result-container">
+        @if (searchResults?.quickLinks?.length !== 0 || isLoading.quickLinks) {
+          <div class="mb-2">
+            <div class="font-weight-bold px-3 text-muted title" i18n>
+              Quick Links
+            </div>
+            @for (
+              searchResultItem of searchResults?.quickLinks;
+              track searchResultItem
+            ) {
+              <gf-assistant-list-item
+                [item]="searchResultItem"
+                (clicked)="onCloseAssistant()"
+              />
+            }
+            @if (isLoading.quickLinks) {
+              <ngx-skeleton-loader
+                animation="pulse"
+                class="mx-3"
+                [theme]="{
+                  height: '1.5rem',
+                  width: '100%'
+                }"
+              />
+            }
+          </div>
+        }
+        <div>
           <div class="font-weight-bold px-3 text-muted title" i18n>
-            Quick Links
+            Holdings
           </div>
           @for (
-            searchResultItem of searchResults?.quickLinks;
+            searchResultItem of searchResults?.holdings;
             track searchResultItem
           ) {
             <gf-assistant-list-item
@@ -54,60 +77,8 @@
               (clicked)="onCloseAssistant()"
             />
           }
-          @if (isLoading.quickLinks) {
-            <ngx-skeleton-loader
-              animation="pulse"
-              class="mx-3"
-              [theme]="{
-                height: '1.5rem',
-                width: '100%'
-              }"
-            />
-          }
-        </div>
-      }
-      <div>
-        <div class="font-weight-bold px-3 text-muted title" i18n>Holdings</div>
-        @for (
-          searchResultItem of searchResults?.holdings;
-          track searchResultItem
-        ) {
-          <gf-assistant-list-item
-            [item]="searchResultItem"
-            (clicked)="onCloseAssistant()"
-          />
-        }
-        @if (searchResults?.holdings?.length === 0) {
-          @if (isLoading.holdings) {
-            <ngx-skeleton-loader
-              animation="pulse"
-              class="mx-3"
-              [theme]="{
-                height: '1.5rem',
-                width: '100%'
-              }"
-            />
-          } @else {
-            <div class="px-3 py-1 text-muted" i18n>No entries...</div>
-          }
-        }
-      </div>
-      @if (hasPermissionToAccessAdminControl) {
-        <div class="mt-2">
-          <div class="font-weight-bold px-3 text-muted title" i18n>
-            Asset Profiles
-          </div>
-          @for (
-            searchResultItem of searchResults?.assetProfiles;
-            track searchResultItem
-          ) {
-            <gf-assistant-list-item
-              [item]="searchResultItem"
-              (clicked)="onCloseAssistant()"
-            />
-          }
-          @if (searchResults?.assetProfiles?.length === 0) {
-            @if (isLoading.assetProfiles) {
+          @if (searchResults?.holdings?.length === 0) {
+            @if (isLoading.holdings) {
               <ngx-skeleton-loader
                 animation="pulse"
                 class="mx-3"
@@ -121,8 +92,38 @@
             }
           }
         </div>
-      }
-    </div>
+        @if (hasPermissionToAccessAdminControl) {
+          <div class="mt-2">
+            <div class="font-weight-bold px-3 text-muted title" i18n>
+              Asset Profiles
+            </div>
+            @for (
+              searchResultItem of searchResults?.assetProfiles;
+              track searchResultItem
+            ) {
+              <gf-assistant-list-item
+                [item]="searchResultItem"
+                (clicked)="onCloseAssistant()"
+              />
+            }
+            @if (searchResults?.assetProfiles?.length === 0) {
+              @if (isLoading.assetProfiles) {
+                <ngx-skeleton-loader
+                  animation="pulse"
+                  class="mx-3"
+                  [theme]="{
+                    height: '1.5rem',
+                    width: '100%'
+                  }"
+                />
+              } @else {
+                <div class="px-3 py-1 text-muted" i18n>No entries...</div>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
   </div>
   <form [formGroup]="filterForm">
     @if (!searchFormControl.value) {
@@ -148,11 +149,11 @@
               @for (account of accounts; track account.id) {
                 <mat-option [value]="account.id">
                   <div class="d-flex">
-                    @if (account.Platform?.url) {
+                    @if (account.platform?.url) {
                       <gf-entity-logo
                         class="mr-1"
-                        [tooltip]="account.Platform?.name"
-                        [url]="account.Platform?.url"
+                        [tooltip]="account.platform?.name"
+                        [url]="account.platform?.url"
                       />
                     }
                     <span>{{ account.name }}</span>

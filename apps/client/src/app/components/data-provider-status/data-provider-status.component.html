@@ -1,0 +1,15 @@
+@if (status$ | async; as status) {
+  @if (status.isHealthy) {
+    <span class="text-success" i18n>Available</span>
+  } @else {
+    <span class="text-danger" i18n>Unavailable</span>
+  }
+} @else {
+  <ngx-skeleton-loader
+    animation="pulse"
+    [theme]="{
+      height: '1.5rem',
+      width: '100%'
+    }"
+  />
+}

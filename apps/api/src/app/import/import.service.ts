@@ -207,7 +207,7 @@ export class ImportService {
           ) {
             accountObject = {
               ...accountObject,
-              Platform: { connect: { id: platformId } }
+              platform: { connect: { id: platformId } }
             };
           }
 
