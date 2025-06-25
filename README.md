@@ -86,11 +86,13 @@ We provide official container images hosted on [Docker Hub](https://hub.docker.c
 ### Supported Environment Variables
 
 | Name                     | Type                  | Default Value | Description                                                                                                                         |
-| ------------------------ | --------------------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+|--------------------------| --------------------- |---------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | `ACCESS_TOKEN_SALT`      | `string`              |               | A random string used as salt for access tokens                                                                                      |
 | `API_KEY_COINGECKO_DEMO` | `string` (optional)   |               | The _CoinGecko_ Demo API key                                                                                                        |
 | `API_KEY_COINGECKO_PRO`  | `string` (optional)   |               | The _CoinGecko_ Pro API key                                                                                                         |
 | `DATABASE_URL`           | `string`              |               | The database connection URL, e.g. `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=prefer` |
+| `EXPOSE_HOST`            | `string` (optional)   | `0.0.0.0`     | The host where the Ghostfolio application will be exposed by Docker                                                                 |
+| `EXPOSE_PORT`            | `string` (optional)   | `3333`        | The port where the Ghostfolio application will be exposed by Docker                                                                 |
 | `HOST`                   | `string` (optional)   | `0.0.0.0`     | The host where the Ghostfolio application will run on                                                                               |
 | `JWT_SECRET_KEY`         | `string`              |               | A random string used for _JSON Web Tokens_ (JWT)                                                                                    |
 | `LOG_LEVELS`             | `string[]` (optional) |               | The logging levels for the Ghostfolio application, e.g. `["debug","error","log","warn"]`                                            |
