@@ -11,8 +11,8 @@ import {
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, hasReadRestrictedAccessPermission, permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, GroupBy, UserWithSettings } from '@ghostfolio/common/types';
+import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -51,7 +51,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   public dividendTimelineDataLabel = $localize`Dividend`;
   public firstOrderDate: Date;
   public hasImpersonationId: boolean;
-  public hasRestrictedAccess = false;
   public hasPermissionToReadAiPrompt: boolean;
   public investments: InvestmentItem[];
   public investmentTimelineDataLabel = $localize`Investment`;
@@ -94,34 +93,13 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
 
   get savingsRate() {
     const savingsRatePerMonth =
-      (this.hasImpersonationId && this.hasRestrictedAccess) || this.user.settings.isRestrictedView
+      this.hasImpersonationId || this.user.settings.isRestrictedView
         ? undefined
         : this.user?.settings?.savingsRate;
 
     return this.mode === 'year'
       ? savingsRatePerMonth * 12
       : savingsRatePerMonth;
-  }
-
-  // Helper method to convert User to UserWithSettings format required by hasReadRestrictedAccessPermission
-  private convertUserToUserWithSettings(user: User): UserWithSettings {
-    return {
-      ...user,
-      Access: user.access.map(access => ({
-        ...access,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        granteeUserId: '',
-        userId: ''
-      })),
-      Settings: {
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        id: user.id,
-        settings: user.settings,
-        userId: user.id
-      }
-    } as UserWithSettings;
   }
 
   public ngOnInit() {
@@ -132,15 +110,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((impersonationId) => {
         this.hasImpersonationId = !!impersonationId;
-        
-        if (this.hasImpersonationId && this.user) {
-          this.hasRestrictedAccess = hasReadRestrictedAccessPermission({
-            impersonationId,
-            user: this.convertUserToUserWithSettings(this.user)
-          });
-        } else {
-          this.hasRestrictedAccess = false;
-        }
       });
 
     this.userService.stateChanged
@@ -148,15 +117,6 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       .subscribe((state) => {
         if (state?.user) {
           this.user = state.user;
-
-          // Update hasRestrictedAccess when user changes
-          const impersonationId = this.impersonationStorageService.getId();
-          if (impersonationId) {
-            this.hasRestrictedAccess = hasReadRestrictedAccessPermission({
-              impersonationId,
-              user: this.convertUserToUserWithSettings(this.user)
-            });
-          }
 
           this.benchmark = this.benchmarks.find(({ id }) => {
             return id === this.user.settings?.benchmark;
