@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risk_ (Equity and Fixed Income)
+
 ### Changed
 
 - Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
