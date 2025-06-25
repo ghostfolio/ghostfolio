@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the language localization for Catalan (`ca`)
 
+### Fixed
+
+- Fixed an issue with the locale in the scraper configuration
+
 ## 2.174.0 - 2025-06-24
 
 ### Added
