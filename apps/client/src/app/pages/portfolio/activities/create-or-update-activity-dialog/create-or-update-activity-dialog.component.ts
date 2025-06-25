@@ -301,6 +301,10 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
+        if (type === 'STAKE') {
+          this.activityForm.get('unitPrice').setValue(0);
+        }
+
         if (type === 'ITEM') {
           this.activityForm
             .get('accountId')
