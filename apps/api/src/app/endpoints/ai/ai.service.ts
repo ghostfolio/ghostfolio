@@ -1,4 +1,5 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { OpenRouterService } from '@ghostfolio/api/services/data-provider/openrouter/openrouter.service';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
@@ -6,7 +7,37 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AiService {
-  public constructor(private readonly portfolioService: PortfolioService) {}
+  public constructor(
+    private readonly openRouterService: OpenRouterService,
+    private readonly portfolioService: PortfolioService
+  ) {}
+
+  public async getCompletion({
+    filters,
+    impersonationId,
+    languageCode,
+    mode,
+    userCurrency,
+    userId
+  }: {
+    filters?: Filter[];
+    impersonationId: string;
+    languageCode: string;
+    mode: AiPromptMode;
+    userCurrency: string;
+    userId: string;
+  }) {
+    const prompt = await this.getPrompt({
+      filters,
+      impersonationId,
+      languageCode,
+      mode,
+      userCurrency,
+      userId
+    });
+
+    return this.openRouterService.getCompletion(prompt);
+  }
 
   public async getPrompt({
     filters,
@@ -58,7 +89,7 @@ export class AiService {
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
       ...holdingsTable,
       'Structure your answer with these sections:',
-      'Overview: Briefly summarize the portfolio’s composition and allocation rationale.',
+      "Overview: Briefly summarize the portfolio's composition and allocation rationale.",
       'Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.',
       'Advantages: Highlight strengths, focusing on growth potential, diversification, or other benefits.',
       'Disadvantages: Point out weaknesses, such as overexposure or lack of defensive assets.',
