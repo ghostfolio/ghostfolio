@@ -54,24 +54,9 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const hashedAccessToken = this.userService.createAccessToken({
-      password: data.accessToken,
-      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
-    });
-
-    const [user] = await this.userService.users({
-      where: { accessToken: hashedAccessToken, id: this.request.user.id }
-    });
-
-    if (!user) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
+    const user = await this.validateOwnAccessToken(data.accessToken);
 
     return this.userService.deleteUser({
-      accessToken: hashedAccessToken,
       id: user.id
     });
   }
@@ -107,21 +92,7 @@ export class UserController {
   public async updateOwnAccessToken(
     @Body() data: UpdateOwnAccessTokenDto
   ): Promise<AccessTokenResponse> {
-    const currentHashedAccessToken = this.userService.createAccessToken({
-      password: data.accessToken,
-      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
-    });
-
-    const [user] = await this.userService.users({
-      where: { accessToken: currentHashedAccessToken, id: this.request.user.id }
-    });
-
-    if (!user) {
-      throw new HttpException(
-        getReasonPhrase(StatusCodes.FORBIDDEN),
-        StatusCodes.FORBIDDEN
-      );
-    }
+    const user = await this.validateOwnAccessToken(data.accessToken);
 
     return await this.rotateUserAccessToken(user.id);
   }
@@ -204,6 +175,28 @@ export class UserController {
       userSettings,
       userId: this.request.user.id
     });
+  }
+
+  private async validateOwnAccessToken(
+    accessToken: string
+  ): Promise<UserModel> {
+    const hashedAccessToken = this.userService.createAccessToken({
+      password: accessToken,
+      salt: this.configurationService.get('ACCESS_TOKEN_SALT')
+    });
+
+    const [user] = await this.userService.users({
+      where: { accessToken: hashedAccessToken, id: this.request.user.id }
+    });
+
+    if (!user) {
+      throw new HttpException(
+        getReasonPhrase(StatusCodes.FORBIDDEN),
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return user;
   }
 
   private async rotateUserAccessToken(
