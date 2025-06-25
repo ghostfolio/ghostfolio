@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class AssetClassClusterRiskEquity extends Rule<Settings> {
@@ -8,9 +9,12 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
+    private i18nService: I18nService,
+    languageCode: string,
     holdings: PortfolioPosition[]
   ) {
     super(exchangeRateDataService, {
+      languageCode,
       key: AssetClassClusterRiskEquity.name
     });
 
@@ -40,26 +44,39 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
 
     if (equityValueRatio > ruleSettings.thresholdMax) {
       return {
-        evaluation: `The equity contribution of your current investment (${(equityValueRatio * 100).toPrecision(3)}%) exceeds ${(
-          ruleSettings.thresholdMax * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRiskEquity.false.max',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            equityValueRatio: (equityValueRatio * 100).toPrecision(3),
+            thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     } else if (equityValueRatio < ruleSettings.thresholdMin) {
       return {
-        evaluation: `The equity contribution of your current investment (${(equityValueRatio * 100).toPrecision(3)}%) is below ${(
-          ruleSettings.thresholdMin * 100
-        ).toPrecision(3)}%`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.assetClassClusterRiskEquity.false.min',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            equityValueRatio: (equityValueRatio * 100).toPrecision(3),
+            thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+          }
+        }),
         value: false
       };
     }
-
     return {
-      evaluation: `The equity contribution of your current investment (${(equityValueRatio * 100).toPrecision(3)}%) is within the range of ${(
-        ruleSettings.thresholdMin * 100
-      ).toPrecision(
-        3
-      )}% and ${(ruleSettings.thresholdMax * 100).toPrecision(3)}%`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.assetClassClusterRiskEquity.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          equityValueRatio: (equityValueRatio * 100).toPrecision(3),
+          thresholdMax: (ruleSettings.thresholdMax * 100).toPrecision(3),
+          thresholdMin: (ruleSettings.thresholdMin * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -78,7 +95,10 @@ export class AssetClassClusterRiskEquity extends Rule<Settings> {
   }
 
   public getName() {
-    return 'Equity';
+    return this.i18nService.getTranslation({
+      id: 'rule.assetClassClusterRiskEquity',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {

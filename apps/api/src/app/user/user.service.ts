@@ -273,9 +273,13 @@ export class UserService {
       ).getSettings(user.Settings.settings),
       AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(
         undefined,
+        undefined,
+        undefined,
         undefined
       ).getSettings(user.Settings.settings),
       AssetClassClusterRiskFixedIncome: new AssetClassClusterRiskFixedIncome(
+        undefined,
+        undefined,
         undefined,
         undefined
       ).getSettings(user.Settings.settings),
