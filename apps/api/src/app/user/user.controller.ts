@@ -98,17 +98,7 @@ export class UserController {
   public async updateUserAccessToken(
     @Param('id') id: string
   ): Promise<AccessTokenResponse> {
-    const { accessToken, hashedAccessToken } =
-      this.userService.generateAccessToken({
-        userId: id
-      });
-
-    await this.prismaService.user.update({
-      data: { accessToken: hashedAccessToken },
-      where: { id }
-    });
-
-    return { accessToken };
+    return await this.rotateUserAccessToken(id);
   }
 
   @HasPermission(permissions.updateOwnAccess)
@@ -133,17 +123,7 @@ export class UserController {
       );
     }
 
-    const { accessToken, hashedAccessToken } =
-      this.userService.generateAccessToken({
-        userId: this.request.user.id
-      });
-
-    await this.prismaService.user.update({
-      data: { accessToken: hashedAccessToken },
-      where: { id: this.request.user.id }
-    });
-
-    return { accessToken };
+    return await this.rotateUserAccessToken(user.id);
   }
 
   @Get()
@@ -224,5 +204,21 @@ export class UserController {
       userSettings,
       userId: this.request.user.id
     });
+  }
+
+  private async rotateUserAccessToken(
+    userId: string
+  ): Promise<AccessTokenResponse> {
+    const { accessToken, hashedAccessToken } =
+      this.userService.generateAccessToken({
+        userId
+      });
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: userId }
+    });
+
+    return { accessToken };
   }
 }
