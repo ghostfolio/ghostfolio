@@ -12,7 +12,7 @@ import {
   User
 } from '@ghostfolio/common/interfaces';
 import { hasPermission, hasReadRestrictedAccessPermission, permissions } from '@ghostfolio/common/permissions';
-import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
+import type { AiPromptMode, GroupBy, UserWithSettings } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
 
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -103,6 +103,27 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
       : savingsRatePerMonth;
   }
 
+  // Helper method to convert User to UserWithSettings format required by hasReadRestrictedAccessPermission
+  private convertUserToUserWithSettings(user: User): UserWithSettings {
+    return {
+      ...user,
+      Access: user.access.map(access => ({
+        ...access,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        granteeUserId: '',
+        userId: ''
+      })),
+      Settings: {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        id: user.id,
+        settings: user.settings,
+        userId: user.id
+      }
+    } as UserWithSettings;
+  }
+
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
 
@@ -115,7 +136,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
         if (this.hasImpersonationId && this.user) {
           this.hasRestrictedAccess = hasReadRestrictedAccessPermission({
             impersonationId,
-            user: this.user as any
+            user: this.convertUserToUserWithSettings(this.user)
           });
         } else {
           this.hasRestrictedAccess = false;
@@ -133,7 +154,7 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
           if (impersonationId) {
             this.hasRestrictedAccess = hasReadRestrictedAccessPermission({
               impersonationId,
-              user: this.user as any
+              user: this.convertUserToUserWithSettings(this.user)
             });
           }
 
