@@ -377,11 +377,15 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         selector:
           this.assetProfileForm.controls['scraperConfiguration'].controls[
             'selector'
-          ].value || undefined,
-        url:
-          this.assetProfileForm.controls['scraperConfiguration'].controls['url']
-            .value || undefined
+          ].value,
+        url: this.assetProfileForm.controls['scraperConfiguration'].controls[
+          'url'
+        ].value
       };
+
+      if (!scraperConfiguration.selector || !scraperConfiguration.url) {
+        scraperConfiguration = undefined;
+      }
     } catch {}
 
     try {
