@@ -252,7 +252,7 @@
     <tr
       *matFooterRowDef="displayedColumns"
       mat-footer-row
-      [ngClass]="{ 'd-none': isLoading }"
+      [ngClass]="{ 'd-none': isLoading || !performance }"
     ></tr>
   </table>
 </div>
