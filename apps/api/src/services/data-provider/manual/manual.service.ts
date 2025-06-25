@@ -104,7 +104,7 @@ export class ManualService implements DataProviderInterface {
         }
 
         return historical;
-      } else if (selector === undefined || url === undefined) {
+      } else if (!selector || !url) {
         return {};
       }
 
@@ -162,7 +162,11 @@ export class ManualService implements DataProviderInterface {
 
       const symbolProfilesWithScraperConfigurationAndInstantMode =
         symbolProfiles.filter(({ scraperConfiguration }) => {
-          return scraperConfiguration?.mode === 'instant';
+          return (
+            scraperConfiguration?.mode === 'instant' &&
+            scraperConfiguration?.selector &&
+            scraperConfiguration?.url
+          );
         });
 
       const scraperResultPromises =
