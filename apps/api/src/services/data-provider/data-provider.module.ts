@@ -8,7 +8,6 @@ import { FinancialModelingPrepService } from '@ghostfolio/api/services/data-prov
 import { GhostfolioService } from '@ghostfolio/api/services/data-provider/ghostfolio/ghostfolio.service';
 import { GoogleSheetsService } from '@ghostfolio/api/services/data-provider/google-sheets/google-sheets.service';
 import { ManualService } from '@ghostfolio/api/services/data-provider/manual/manual.service';
-import { OpenRouterService } from '@ghostfolio/api/services/data-provider/openrouter/openrouter.service';
 import { RapidApiService } from '@ghostfolio/api/services/data-provider/rapid-api/rapid-api.service';
 import { YahooFinanceService } from '@ghostfolio/api/services/data-provider/yahoo-finance/yahoo-finance.service';
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
@@ -42,7 +41,6 @@ import { DataProviderService } from './data-provider.service';
     GhostfolioService,
     GoogleSheetsService,
     ManualService,
-    OpenRouterService,
     RapidApiService,
     YahooFinanceService,
     {
@@ -83,16 +81,9 @@ import { DataProviderService } from './data-provider.service';
     YahooFinanceDataEnhancerService
   ],
   exports: [
-    AlphaVantageService,
-    CoinGeckoService,
     DataProviderService,
-    EodHistoricalDataService,
-    FinancialModelingPrepService,
-    GhostfolioService,
-    GoogleSheetsService,
     ManualService,
-    OpenRouterService,
-    RapidApiService,
+    YahooFinanceDataEnhancerService,
     YahooFinanceService
   ]
 })

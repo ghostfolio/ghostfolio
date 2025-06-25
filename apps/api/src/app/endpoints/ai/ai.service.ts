@@ -3,7 +3,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
-} from '@ghostfolio/common/config.ts';
+} from '@ghostfolio/common/config/properties';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
