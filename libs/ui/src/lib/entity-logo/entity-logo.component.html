@@ -1,4 +1,6 @@
-@if (src) {
+@if (useLogo) {
+  <gf-logo [showLabel]="true" [size]="size || 'medium'"></gf-logo>
+} @else if (src) {
   <img
     onerror="this.style.display='none'"
     [ngClass]="{ large: size === 'large' }"
