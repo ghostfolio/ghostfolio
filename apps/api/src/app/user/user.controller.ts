@@ -54,7 +54,10 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const user = await this.validateOwnAccessToken(data.accessToken);
+    const user = await this.validateOwnAccessToken(
+      data.accessToken,
+      this.request.user.id
+    );
 
     return this.userService.deleteUser({
       id: user.id
@@ -83,18 +86,21 @@ export class UserController {
   public async updateUserAccessToken(
     @Param('id') id: string
   ): Promise<AccessTokenResponse> {
-    return await this.rotateUserAccessToken(id);
+    return this.rotateUserAccessToken(id);
   }
 
-  @HasPermission(permissions.updateOwnAccess)
+  @HasPermission(permissions.updateOwnAccessToken)
   @Post('access-token')
   @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
   public async updateOwnAccessToken(
     @Body() data: UpdateOwnAccessTokenDto
   ): Promise<AccessTokenResponse> {
-    const user = await this.validateOwnAccessToken(data.accessToken);
+    const user = await this.validateOwnAccessToken(
+      data.accessToken,
+      this.request.user.id
+    );
 
-    return await this.rotateUserAccessToken(user.id);
+    return this.rotateUserAccessToken(user.id);
   }
 
   @Get()
@@ -178,7 +184,8 @@ export class UserController {
   }
 
   private async validateOwnAccessToken(
-    accessToken: string
+    accessToken: string,
+    userId: string
   ): Promise<UserModel> {
     const hashedAccessToken = this.userService.createAccessToken({
       password: accessToken,
@@ -186,7 +193,7 @@ export class UserController {
     });
 
     const [user] = await this.userService.users({
-      where: { accessToken: hashedAccessToken, id: this.request.user.id }
+      where: { accessToken: hashedAccessToken, id: userId }
     });
 
     if (!user) {

@@ -704,20 +704,6 @@ export class DataService {
     return this.http.get<WatchlistResponse>('/api/v1/watchlist');
   }
 
-  public updateUserAccessToken(aUserId: string) {
-    return this.http.post<AccessTokenResponse>(
-      `/api/v1/user/${aUserId}/access-token`,
-      {}
-    );
-  }
-
-  public updateOwnAccessToken(aAccessToken: UpdateOwnAccessTokenDto) {
-    return this.http.post<AccessTokenResponse>(
-      `/api/v1/user/access-token`,
-      aAccessToken
-    );
-  }
-
   public loginAnonymous(accessToken: string) {
     return this.http.post<OAuthResponse>('/api/v1/auth/anonymous', {
       accessToken
@@ -824,6 +810,20 @@ export class DataService {
       accountIdTo,
       balance
     });
+  }
+
+  public updateOwnAccessToken(aAccessToken: UpdateOwnAccessTokenDto) {
+    return this.http.post<AccessTokenResponse>(
+      '/api/v1/user/access-token',
+      aAccessToken
+    );
+  }
+
+  public updateUserAccessToken(aUserId: string) {
+    return this.http.post<AccessTokenResponse>(
+      `/api/v1/user/${aUserId}/access-token`,
+      {}
+    );
   }
 
   public updateInfo() {
