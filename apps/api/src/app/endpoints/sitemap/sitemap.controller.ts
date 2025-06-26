@@ -37,7 +37,9 @@ export class SitemapController {
     response.setHeader('content-type', 'application/xml');
     response.send(
       interpolate(this.sitemapXml, {
-        currentDate,
+        publicRoutes: this.sitemapService.getPublicRoutes({
+          currentDate
+        }),
         personalFinanceTools: this.configurationService.get(
           'ENABLE_FEATURE_SUBSCRIPTION'
         )
