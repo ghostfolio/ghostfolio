@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risk_ (Equity and Fixed Income)
+- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risks_ (Equity)
+- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risks_ (Fixed Income)
 
 ### Changed
 
