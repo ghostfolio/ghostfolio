@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Turkish (`tr`)
+- Enhanced sitemap to dynamically compose public routes
 
 ### Fixed
 
