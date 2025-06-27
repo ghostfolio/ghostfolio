@@ -1,6 +1,7 @@
 import { RuleSettings } from '@ghostfolio/api/models/interfaces/rule-settings.interface';
 import { Rule } from '@ghostfolio/api/models/rule';
 import { ExchangeRateDataService } from '@ghostfolio/api/services/exchange-rate-data/exchange-rate-data.service';
+import { I18nService } from '@ghostfolio/api/services/i18n/i18n.service';
 import { PortfolioPosition, UserSettings } from '@ghostfolio/common/interfaces';
 
 export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Settings> {
@@ -8,10 +9,13 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 
   public constructor(
     protected exchangeRateDataService: ExchangeRateDataService,
-    holdings: PortfolioPosition[]
+    private i18nService: I18nService,
+    holdings: PortfolioPosition[],
+    languageCode: string
   ) {
     super(exchangeRateDataService, {
-      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name
+      key: CurrencyClusterRiskBaseCurrencyCurrentInvestment.name,
+      languageCode
     });
 
     this.holdings = holdings;
@@ -48,17 +52,29 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
 
     if (maxItem?.groupKey !== ruleSettings.baseCurrency) {
       return {
-        evaluation: `The major part of your current investment is not in your base currency (${(
-          baseCurrencyValueRatio * 100
-        ).toPrecision(3)}% in ${ruleSettings.baseCurrency})`,
+        evaluation: this.i18nService.getTranslation({
+          id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false',
+          languageCode: this.getLanguageCode(),
+          placeholders: {
+            baseCurrency: ruleSettings.baseCurrency,
+            baseCurrencyValueRatio: (baseCurrencyValueRatio * 100).toPrecision(
+              3
+            )
+          }
+        }),
         value: false
       };
     }
 
     return {
-      evaluation: `The major part of your current investment is in your base currency (${(
-        baseCurrencyValueRatio * 100
-      ).toPrecision(3)}% in ${ruleSettings.baseCurrency})`,
+      evaluation: this.i18nService.getTranslation({
+        id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true',
+        languageCode: this.getLanguageCode(),
+        placeholders: {
+          baseCurrency: ruleSettings.baseCurrency,
+          baseCurrencyValueRatio: (baseCurrencyValueRatio * 100).toPrecision(3)
+        }
+      }),
       value: true
     };
   }
@@ -68,7 +84,10 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
   }
 
   public getName() {
-    return 'Investment: Base Currency';
+    return this.i18nService.getTranslation({
+      id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment',
+      languageCode: this.getLanguageCode()
+    });
   }
 
   public getSettings({ baseCurrency, xRayRules }: UserSettings): Settings {
