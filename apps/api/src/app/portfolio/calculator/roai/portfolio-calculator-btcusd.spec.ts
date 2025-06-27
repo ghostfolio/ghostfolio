@@ -63,7 +63,7 @@ describe('PortfolioCalculator', () => {
 
   beforeAll(() => {
     activityDtos = loadActivityExportFile(
-      join(__dirname, '../../../../../../../test/import/ok-btcusd.json')
+      join(__dirname, '../../../../../../../test/import/ok/btcusd.json')
     );
   });
 
