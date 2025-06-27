@@ -7396,7 +7396,7 @@
       </trans-unit>
       <trans-unit id="routes.about.termsOfService" datatype="html">
         <source>terms-of-service</source>
-        <target state="translated">termos-de-serviço</target>
+        <target state="translated">termos-de-servico</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
