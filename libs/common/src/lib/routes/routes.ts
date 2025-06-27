@@ -313,7 +313,7 @@ export const publicRoutes = {
   },
   start: {
     excludeFromSitemap: true,
-    path: $localize`:kebab-case:start`,
-    routerLink: ['/' + $localize`:kebab-case:start`]
+    path: $localize`:kebab-case@@routes.start:start`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.start:start`]
   }
 };
