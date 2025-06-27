@@ -1300,11 +1300,15 @@ export class PortfolioService {
               [
                 new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
                   this.exchangeRateDataService,
-                  Object.values(holdings)
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
                 ),
                 new CurrencyClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
-                  Object.values(holdings)
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
                 )
               ],
               userSettings

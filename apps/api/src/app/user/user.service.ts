@@ -286,10 +286,14 @@ export class UserService {
       CurrencyClusterRiskBaseCurrencyCurrentInvestment:
         new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
           undefined,
+          undefined,
+          undefined,
           undefined
         ).getSettings(user.Settings.settings),
       CurrencyClusterRiskCurrentInvestment:
         new CurrencyClusterRiskCurrentInvestment(
+          undefined,
+          undefined,
           undefined,
           undefined
         ).getSettings(user.Settings.settings),
