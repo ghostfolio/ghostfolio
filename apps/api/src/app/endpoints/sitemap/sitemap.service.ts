@@ -17,34 +17,23 @@ export class SitemapService {
   public getPersonalFinanceTools({ currentDate }: { currentDate: string }) {
     const rootUrl = this.configurationService.get('ROOT_URL');
 
-    return personalFinanceTools
-      .map(({ alias, key }) => {
-        return SUPPORTED_LANGUAGE_CODES.map((languageCode) => {
-          const resourcesPath = this.i18nService.getTranslation({
-            languageCode,
-            id: 'routes.resources'
-          });
+    return SUPPORTED_LANGUAGE_CODES.flatMap((languageCode) => {
+      return personalFinanceTools.map(({ alias, key }) => {
+        const pathSegments = [
+          'resources',
+          'personalFinanceTools',
+          'openSourceAlternativeTo'
+        ];
+        const params = {
+          rootUrl,
+          languageCode,
+          currentDate,
+          urlPostfix: alias ?? key
+        };
 
-          const personalFinanceToolsPath = this.i18nService.getTranslation({
-            languageCode,
-            id: 'routes.resources.personalFinanceTools'
-          });
-
-          const openSourceAlternativeToPath = this.i18nService.getTranslation({
-            languageCode,
-            id: 'routes.resources.personalFinanceTools.openSourceAlternativeTo'
-          });
-
-          return [
-            '  <url>',
-            `    <loc>${rootUrl}/${languageCode}/${resourcesPath}/${personalFinanceToolsPath}/${openSourceAlternativeToPath}-${alias ?? key}</loc>`,
-            `    <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
-            '  </url>'
-          ].join('\n');
-        });
-      })
-      .flat()
-      .join('\n');
+        return this.createSitemapUrl(pathSegments, params);
+      });
+    }).join('\n');
   }
 
   public getPublicRoutes({ currentDate }: { currentDate: string }) {
@@ -59,7 +48,7 @@ export class SitemapService {
       };
 
       // add language specific root URL
-      const urls = [this.createRouteSitemapUrl(pathSegments, params)];
+      const urls = [this.createSitemapUrl(pathSegments, params)];
 
       urls.push(...this.createSitemapUrls(publicRoutes, pathSegments, params));
 
@@ -80,7 +69,7 @@ export class SitemapService {
         this.kebabToCamel(route.path)
       ];
 
-      const urls = [this.createRouteSitemapUrl(currentPathSegments, params)];
+      const urls = [this.createSitemapUrl(currentPathSegments, params)];
 
       if (route.subRoutes) {
         urls.push(
@@ -96,13 +85,19 @@ export class SitemapService {
     });
   }
 
-  private createRouteSitemapUrl(
+  private createSitemapUrl(
     pathSegments: string[],
     {
       rootUrl,
       languageCode,
-      currentDate
-    }: { rootUrl: string; languageCode: string; currentDate: string }
+      currentDate,
+      urlPostfix
+    }: {
+      rootUrl: string;
+      languageCode: string;
+      currentDate: string;
+      urlPostfix?: string;
+    }
   ): string {
     const segments = pathSegments.map((_, index, segments) => {
       const translationId = ['routes', ...segments.slice(0, index + 1)].join(
@@ -114,7 +109,9 @@ export class SitemapService {
         id: translationId
       });
     });
-    const location = [rootUrl, languageCode, ...segments].join('/');
+    const location =
+      [rootUrl, languageCode, ...segments].join('/') +
+      (urlPostfix ? `-${urlPostfix}` : '');
 
     return [
       '  <url>',
