@@ -56,10 +56,10 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
           id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment.false',
           languageCode: this.getLanguageCode(),
           placeholders: {
+            baseCurrency: ruleSettings.baseCurrency,
             baseCurrencyValueRatio: (baseCurrencyValueRatio * 100).toPrecision(
               3
-            ),
-            baseCurrency: ruleSettings.baseCurrency
+            )
           }
         }),
         value: false
@@ -71,8 +71,8 @@ export class CurrencyClusterRiskBaseCurrencyCurrentInvestment extends Rule<Setti
         id: 'rule.currencyClusterRiskBaseCurrencyCurrentInvestment.true',
         languageCode: this.getLanguageCode(),
         placeholders: {
-          baseCurrencyValueRatio: (baseCurrencyValueRatio * 100).toPrecision(3),
-          baseCurrency: ruleSettings.baseCurrency
+          baseCurrency: ruleSettings.baseCurrency,
+          baseCurrencyValueRatio: (baseCurrencyValueRatio * 100).toPrecision(3)
         }
       }),
       value: true
