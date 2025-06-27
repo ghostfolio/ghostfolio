@@ -404,7 +404,7 @@
       </trans-unit>
       <trans-unit id="routes.about.license" datatype="html">
         <source>license</source>
-        <target state="translated">llicències</target>
+        <target state="translated">llicencies</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -417,7 +417,7 @@
       </trans-unit>
       <trans-unit id="routes.about.privacyPolicy" datatype="html">
         <source>privacy-policy</source>
-        <target state="translated">política de privacitat</target>
+        <target state="translated">politica-de-privacitat</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -451,7 +451,7 @@
       </trans-unit>
       <trans-unit id="routes.features" datatype="html">
         <source>features</source>
-        <target state="translated">característiques</target>
+        <target state="translated">caracteristiques</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
