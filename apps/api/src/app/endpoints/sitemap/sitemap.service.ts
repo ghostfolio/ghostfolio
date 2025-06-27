@@ -7,6 +7,9 @@ import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Injectable } from '@nestjs/common';
 
+const translationTaggedMessageRegex =
+  /:.*@@(?<id>[a-zA-Z0-9.]+):(?<message>.+)/;
+
 @Injectable()
 export class SitemapService {
   public constructor(
@@ -19,11 +22,9 @@ export class SitemapService {
 
     return SUPPORTED_LANGUAGE_CODES.flatMap((languageCode) => {
       return personalFinanceTools.map(({ alias, key }) => {
-        const pathSegments = [
-          'resources',
-          'personalFinanceTools',
-          'openSourceAlternativeTo'
-        ];
+        const route =
+          publicRoutes.resources.subRoutes.personalFinanceTools.subRoutes
+            .product;
         const params = {
           rootUrl,
           languageCode,
@@ -31,7 +32,7 @@ export class SitemapService {
           urlPostfix: alias ?? key
         };
 
-        return this.createSitemapUrl(pathSegments, params);
+        return this.createRouteSitemapUrl({ route, ...params });
       });
     }).join('\n');
   }
@@ -40,7 +41,6 @@ export class SitemapService {
     const rootUrl = this.configurationService.get('ROOT_URL');
 
     return SUPPORTED_LANGUAGE_CODES.flatMap((languageCode) => {
-      const pathSegments = [];
       const params = {
         rootUrl,
         languageCode,
@@ -48,9 +48,9 @@ export class SitemapService {
       };
 
       // add language specific root URL
-      const urls = [this.createSitemapUrl(pathSegments, params)];
+      const urls = [this.createRouteSitemapUrl(params)];
 
-      urls.push(...this.createSitemapUrls(publicRoutes, pathSegments, params));
+      urls.push(...this.createSitemapUrls(publicRoutes, params));
 
       return urls;
     }).join('\n');
@@ -58,57 +58,46 @@ export class SitemapService {
 
   private createSitemapUrls(
     routes: Record<string, PublicRoute>,
-    pathSegments: string[],
     params: { rootUrl: string; languageCode: string; currentDate: string }
   ): string[] {
     return Object.values(routes).flatMap((route) => {
       if (route.excludeFromSitemap) return [];
 
-      const currentPathSegments = [
-        ...pathSegments,
-        this.kebabToCamel(route.path)
-      ];
-
-      const urls = [this.createSitemapUrl(currentPathSegments, params)];
+      const urls = [this.createRouteSitemapUrl({ route, ...params })];
 
       if (route.subRoutes) {
-        urls.push(
-          ...this.createSitemapUrls(
-            route.subRoutes,
-            currentPathSegments,
-            params
-          )
-        );
+        urls.push(...this.createSitemapUrls(route.subRoutes, params));
       }
 
       return urls;
     });
   }
 
-  private createSitemapUrl(
-    pathSegments: string[],
-    {
-      rootUrl,
-      languageCode,
-      currentDate,
-      urlPostfix
-    }: {
-      rootUrl: string;
-      languageCode: string;
-      currentDate: string;
-      urlPostfix?: string;
-    }
-  ): string {
-    const segments = pathSegments.map((_, index, segments) => {
-      const translationId = ['routes', ...segments.slice(0, index + 1)].join(
-        '.'
-      );
+  private createRouteSitemapUrl({
+    route,
+    rootUrl,
+    languageCode,
+    currentDate,
+    urlPostfix
+  }: {
+    route?: PublicRoute;
+    rootUrl: string;
+    languageCode: string;
+    currentDate: string;
+    urlPostfix?: string;
+  }): string {
+    const segments =
+      route?.routerLink.map((link) => {
+        const match = link.match(translationTaggedMessageRegex);
+        const segment = match
+          ? (this.i18nService.getTranslation({
+              languageCode,
+              id: match.groups.id
+            }) ?? match.groups.message)
+          : link;
 
-      return this.i18nService.getTranslation({
-        languageCode,
-        id: translationId
-      });
-    });
+        return segment.replace(/^\/+|\/+$/, '');
+      }) ?? [];
     const location =
       [rootUrl, languageCode, ...segments].join('/') +
       (urlPostfix ? `-${urlPostfix}` : '');
@@ -119,9 +108,5 @@ export class SitemapService {
       `    <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
       '  </url>'
     ].join('\n');
-  }
-
-  private kebabToCamel(str: string): string {
-    return str.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
   }
 }

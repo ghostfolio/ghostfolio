@@ -1,10 +1,17 @@
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import '@angular/localize/init';
-
 import { InternalRoute } from './interfaces/internal-route.interface';
 import { PublicRoute } from './interfaces/public-route.interface';
+
+if (typeof window !== 'undefined') {
+  import('@angular/localize/init');
+} else {
+  (global as any).$localize = (
+    messageParts: TemplateStringsArray,
+    ...expressions: any[]
+  ) => String.raw({ raw: messageParts }, ...expressions);
+}
 
 export const internalRoutes: Record<string, InternalRoute> = {
   account: {
