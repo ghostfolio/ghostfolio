@@ -133,11 +133,11 @@ export class InfoService {
         AND: [
           {
             NOT: {
-              Analytics: null
+              analytics: null
             }
           },
           {
-            Analytics: {
+            analytics: {
               lastRequestAt: {
                 gt: subDays(new Date(), aDays)
               }
@@ -216,7 +216,7 @@ export class InfoService {
         AND: [
           {
             NOT: {
-              Analytics: null
+              analytics: null
             }
           },
           {

@@ -247,6 +247,7 @@ model User {
   accessToken   String?
   accounts      Account[]
   activities    Order[]
+  analytics     Analytics?
   apiKeys       ApiKey[]
   authChallenge String?
   createdAt     DateTime        @default(now())
@@ -260,7 +261,6 @@ model User {
   watchlist     SymbolProfile[] @relation("UserWatchlist")
   Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
-  Analytics     Analytics?
   AuthDevice    AuthDevice[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]

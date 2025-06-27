@@ -182,7 +182,7 @@ export class UserService {
       Access,
       accessToken,
       accounts,
-      Analytics,
+      analytics,
       authChallenge,
       createdAt,
       id,
@@ -198,7 +198,7 @@ export class UserService {
         accounts: {
           include: { platform: true }
         },
-        Analytics: true,
+        analytics: true,
         Settings: true,
         subscriptions: true
       },
@@ -217,9 +217,9 @@ export class UserService {
       Settings: Settings as UserWithSettings['Settings'],
       thirdPartyId,
       updatedAt,
-      activityCount: Analytics?.activityCount,
+      activityCount: analytics?.activityCount,
       dataProviderGhostfolioDailyRequests:
-        Analytics?.dataProviderGhostfolioDailyRequests
+        analytics?.dataProviderGhostfolioDailyRequests
     };
 
     if (user?.Settings) {
@@ -388,7 +388,7 @@ export class UserService {
           frequency = 6;
         }
 
-        if (Analytics?.activityCount % frequency === 1) {
+        if (analytics?.activityCount % frequency === 1) {
           currentPermissions.push(permissions.enableSubscriptionInterstitial);
         }
 
