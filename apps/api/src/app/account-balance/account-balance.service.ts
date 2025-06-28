@@ -30,7 +30,7 @@ export class AccountBalanceService {
   ): Promise<AccountBalance | null> {
     return this.prismaService.accountBalance.findFirst({
       include: {
-        Account: true
+        account: true
       },
       where: accountBalanceWhereInput
     });
@@ -46,7 +46,7 @@ export class AccountBalanceService {
   }): Promise<AccountBalance> {
     const accountBalance = await this.prismaService.accountBalance.upsert({
       create: {
-        Account: {
+        account: {
           connect: {
             id_userId: {
               userId,
@@ -154,7 +154,7 @@ export class AccountBalanceService {
     }
 
     if (withExcludedAccounts === false) {
-      where.Account = { isExcluded: false };
+      where.account = { isExcluded: false };
     }
 
     const balances = await this.prismaService.accountBalance.findMany({
@@ -163,7 +163,7 @@ export class AccountBalanceService {
         date: 'asc'
       },
       select: {
-        Account: true,
+        account: true,
         date: true,
         id: true,
         value: true
@@ -174,10 +174,10 @@ export class AccountBalanceService {
       balances: balances.map((balance) => {
         return {
           ...balance,
-          accountId: balance.Account.id,
+          accountId: balance.account.id,
           valueInBaseCurrency: this.exchangeRateDataService.toCurrency(
             balance.value,
-            balance.Account.currency,
+            balance.account.currency,
             userCurrency
           )
         };
