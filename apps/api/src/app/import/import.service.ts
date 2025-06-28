@@ -71,14 +71,14 @@ export class ImportService {
       ]);
 
       const accounts = activities
-        .filter(({ Account }) => {
-          return !!Account;
+        .filter(({ account }) => {
+          return !!account;
         })
-        .map(({ Account }) => {
-          return Account;
+        .map(({ account }) => {
+          return account;
         });
 
-      const Account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
+      const account = this.isUniqueAccount(accounts) ? accounts[0] : undefined;
 
       return await Promise.all(
         Object.entries(dividends).map(async ([dateString, { marketPrice }]) => {
@@ -92,7 +92,7 @@ export class ImportService {
           const date = parseDate(dateString);
           const isDuplicate = activities.some((activity) => {
             return (
-              activity.accountId === Account?.id &&
+              activity.accountId === account?.id &&
               activity.SymbolProfile.currency === assetProfile.currency &&
               activity.SymbolProfile.dataSource === assetProfile.dataSource &&
               isSameSecond(activity.date, date) &&
@@ -108,12 +108,12 @@ export class ImportService {
             : undefined;
 
           return {
-            Account,
+            account,
             date,
             error,
             quantity,
             value,
-            accountId: Account?.id,
+            accountId: account?.id,
             accountUserId: undefined,
             comment: undefined,
             currency: undefined,
@@ -129,7 +129,7 @@ export class ImportService {
             unitPrice: marketPrice,
             unitPriceInAssetProfileCurrency: marketPrice,
             updatedAt: undefined,
-            userId: Account?.userId,
+            userId: account?.userId,
             valueInBaseCurrency: value
           };
         })

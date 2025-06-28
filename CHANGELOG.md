@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the search results of the assistant to only display categories with content
+- Renamed `Account` to `account` in the `Order` database schema
 
 ## 2.175.0 - 2025-06-28
 

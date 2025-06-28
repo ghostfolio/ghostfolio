@@ -1883,7 +1883,7 @@ export class PortfolioService {
     const nonExcludedActivities: Activity[] = [];
 
     for (const activity of activities) {
-      if (activity.Account?.isExcluded) {
+      if (activity.account?.isExcluded) {
         excludedActivities.push(activity);
       } else {
         nonExcludedActivities.push(activity);
@@ -2190,7 +2190,7 @@ export class PortfolioService {
       }
 
       for (const {
-        Account,
+        account,
         quantity,
         SymbolProfile,
         type
@@ -2201,27 +2201,27 @@ export class PortfolioService {
           (portfolioItemsNow[SymbolProfile.symbol]?.marketPriceInBaseCurrency ??
             0);
 
-        if (accounts[Account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
-          accounts[Account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
+        if (accounts[account?.id || UNKNOWN_KEY]?.valueInBaseCurrency) {
+          accounts[account?.id || UNKNOWN_KEY].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
         } else {
-          accounts[Account?.id || UNKNOWN_KEY] = {
+          accounts[account?.id || UNKNOWN_KEY] = {
             balance: 0,
-            currency: Account?.currency,
+            currency: account?.currency,
             name: account.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };
         }
 
         if (
-          platforms[Account?.platformId || UNKNOWN_KEY]?.valueInBaseCurrency
+          platforms[account?.platformId || UNKNOWN_KEY]?.valueInBaseCurrency
         ) {
-          platforms[Account?.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
+          platforms[account?.platformId || UNKNOWN_KEY].valueInBaseCurrency +=
             currentValueOfSymbolInBaseCurrency;
         } else {
-          platforms[Account?.platformId || UNKNOWN_KEY] = {
+          platforms[account?.platformId || UNKNOWN_KEY] = {
             balance: 0,
-            currency: Account?.currency,
+            currency: account?.currency,
             name: account.platform?.name,
             valueInBaseCurrency: currentValueOfSymbolInBaseCurrency
           };

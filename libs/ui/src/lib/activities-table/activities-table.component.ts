@@ -195,7 +195,7 @@ export class GfActivitiesTableComponent
       }
     } else if (
       this.hasPermissionToOpenDetails &&
-      activity.Account?.isExcluded !== true &&
+      activity.account?.isExcluded !== true &&
       activity.isDraft === false &&
       ['BUY', 'DIVIDEND', 'SELL'].includes(activity.type)
     ) {
