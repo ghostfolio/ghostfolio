@@ -7956,7 +7956,7 @@
       </trans-unit>
       <trans-unit id="routes.start" datatype="html">
         <source>start</source>
-        <target state="new">start</target>
+        <target state="translated">start</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
