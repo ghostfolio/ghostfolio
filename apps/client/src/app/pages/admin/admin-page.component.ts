@@ -33,7 +33,7 @@ export class AdminPageComponent implements OnDestroy, OnInit {
         iconName: 'settings-outline',
         label:
           internalRoutes.adminControl.subRoutes.settings.title +
-          '<span class="badge badge-secondary badge-pill ml-2 text-uppercase">' +
+          '<span class="badge badge-pill badge-secondary ml-2 text-uppercase">' +
           $localize`new` +
           '</span>',
         routerLink: internalRoutes.adminControl.subRoutes.settings.routerLink
