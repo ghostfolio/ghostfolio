@@ -303,9 +303,21 @@ export class ManualService implements DataProviderInterface {
         } catch {}
       }
 
+      let value = $(scraperConfiguration.selector).first().text();
+
+      const lines = value?.split('\n') ?? [];
+
+      const lineWithDigits = lines.find((line) => {
+        return /\d/.test(line);
+      });
+
+      if (lineWithDigits) {
+        value = lineWithDigits;
+      }
+
       return extractNumberFromString({
         locale,
-        value: $(scraperConfiguration.selector).first().text()
+        value
       });
     }
   }
