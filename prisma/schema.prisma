@@ -50,6 +50,7 @@ model Account {
 }
 
 model AccountBalance {
+  account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
   accountId String
   createdAt DateTime @default(now())
   date      DateTime @default(now())
@@ -57,7 +58,6 @@ model AccountBalance {
   updatedAt DateTime @updatedAt
   userId    String
   value     Float
-  Account   Account  @relation(fields: [accountId, userId], onDelete: Cascade, references: [id, userId])
 
   @@unique([accountId, date])
   @@index([accountId])
