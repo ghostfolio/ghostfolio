@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
-import { DataSource } from '@prisma/client';
-import { applicationConfig, Meta, StoryObj } from '@storybook/angular';
+import {
+  applicationConfig,
+  Meta,
+  moduleMetadata,
+  StoryObj
+} from '@storybook/angular';
 
+import { GfLogoComponent } from '../logo/logo.component';
 import { HttpClientMock } from '../mocks/httpClient.mock';
 import { GfEntityLogoComponent } from './entity-logo.component';
 
@@ -11,49 +15,69 @@ export default {
   title: 'Entity Logo',
   component: GfEntityLogoComponent,
   decorators: [
+    moduleMetadata({
+      imports: [CommonModule, HttpClientModule, GfLogoComponent]
+    }),
     applicationConfig({
       providers: [
-        importProvidersFrom(CommonModule, HttpClientModule),
         {
           provide: HttpClient,
           useValue: new HttpClientMock(
-            new Map([
-              [
-                '../api/v1/logo/MANUAL/GHOST',
-                {
-                  logoUrl: '/assets/ghost.svg'
-                }
-              ],
+            new Map<string, any>([
               [
                 '../api/v1/logo?url=https://ghostfol.io',
-                {
-                  logoUrl: '/assets/ghost.svg'
-                }
+                { logoUrl: '/assets/ghost.svg' }
               ]
             ])
           )
         }
       ]
     })
-  ]
+  ],
+  parameters: {
+    backgrounds: {
+      default: 'light'
+    }
+  },
+  argTypes: {
+    size: {
+      control: 'select',
+      options: ['large', 'medium'],
+      description: 'Size of the logo'
+    },
+    tooltip: {
+      control: 'text',
+      description: 'Tooltip text for the logo'
+    },
+    url: {
+      control: 'text',
+      description: 'URL for the logo'
+    }
+  }
 } as Meta<GfEntityLogoComponent>;
 
 type Story = StoryObj<GfEntityLogoComponent>;
 
 export const Default: Story = {
   args: {
-    dataSource: DataSource.MANUAL,
-    symbol: 'GHOST',
-    useLogo: true,
-    size: 'large'
-  }
-};
-
-export const WithUrl: Story = {
-  args: {
     size: 'large',
     tooltip: 'Ghostfolio',
-    url: 'https://ghostfol.io',
-    useLogo: true
-  }
+    url: 'https://ghostfol.io'
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Entity logo component with size ("large"), tooltip ("Ghostfolio") and url ("https://ghostfol.io") inputs.'
+      }
+    }
+  },
+  render: (args) => ({
+    props: args,
+    template: `
+      <div>
+        <gf-logo [showLabel]="true" [size]="size"></gf-logo>
+      </div>
+    `
+  })
 };
