@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Extended the selector handling of the scraper configuration for more use cases
+- Extended the _AI_ service by an access to _OpenRouter_ (experimental)
 - Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
 - Renamed `Account` to `account` in the `AccountBalance` database schema
 - Improved the language localization for Catalan (`ca`)

@@ -1,12 +1,41 @@
 import { PortfolioService } from '@ghostfolio/api/app/portfolio/portfolio.service';
+import { PropertyService } from '@ghostfolio/api/services/property/property.service';
+import {
+  PROPERTY_API_KEY_OPENROUTER,
+  PROPERTY_OPENROUTER_MODEL
+} from '@ghostfolio/common/config';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+import { generateText } from 'ai';
 
 @Injectable()
 export class AiService {
-  public constructor(private readonly portfolioService: PortfolioService) {}
+  public constructor(
+    private readonly portfolioService: PortfolioService,
+    private readonly propertyService: PropertyService
+  ) {}
+
+  public async generateText({ prompt }: { prompt: string }) {
+    const openRouterApiKey = (await this.propertyService.getByKey(
+      PROPERTY_API_KEY_OPENROUTER
+    )) as string;
+
+    const openRouterModel = (await this.propertyService.getByKey(
+      PROPERTY_OPENROUTER_MODEL
+    )) as string;
+
+    const openRouterService = createOpenRouter({
+      apiKey: openRouterApiKey
+    });
+
+    return generateText({
+      prompt,
+      model: openRouterService.chat(openRouterModel)
+    });
+  }
 
   public async getPrompt({
     filters,
