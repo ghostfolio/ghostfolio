@@ -3,7 +3,7 @@ import { PropertyService } from '@ghostfolio/api/services/property/property.serv
 import {
   PROPERTY_API_KEY_OPENROUTER,
   PROPERTY_OPENROUTER_MODEL
-} from '@ghostfolio/common/config/properties';
+} from '@ghostfolio/common/config';
 import { Filter } from '@ghostfolio/common/interfaces';
 import type { AiPromptMode } from '@ghostfolio/common/types';
 
@@ -55,8 +55,8 @@ export class AiService {
     });
 
     return streamText({
-      model: chat(openRouterModel as string),
-      prompt
+      prompt,
+      model: chat(openRouterModel as string)
     });
   }
 
@@ -110,7 +110,7 @@ export class AiService {
       `You are a neutral financial assistant. Please analyze the following investment portfolio (base currency being ${userCurrency}) in simple words.`,
       ...holdingsTable,
       'Structure your answer with these sections:',
-      "Overview: Briefly summarize the portfolio's composition and allocation rationale.",
+      'Overview: Briefly summarize the portfolio’s composition and allocation rationale.',
       'Risk Assessment: Identify potential risks, including market volatility, concentration, and sectoral imbalances.',
       'Advantages: Highlight strengths, focusing on growth potential, diversification, or other benefits.',
       'Disadvantages: Point out weaknesses, such as overexposure or lack of defensive assets.',
