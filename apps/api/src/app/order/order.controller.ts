@@ -269,7 +269,7 @@ export class OrderController {
       data: {
         ...data,
         date,
-        Account: {
+        account: {
           connect: {
             id_userId: { id: accountId, userId: this.request.user.id }
           }

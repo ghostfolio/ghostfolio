@@ -309,14 +309,14 @@
       </th>
       <td *matCellDef="let element" class="px-1" mat-cell>
         <div class="d-flex">
-          @if (element.Account?.platform?.url) {
+          @if (element.account?.platform?.url) {
             <gf-entity-logo
               class="mr-1"
-              [tooltip]="element.Account?.platform?.name"
-              [url]="element.Account?.platform?.url"
+              [tooltip]="element.account?.platform?.name"
+              [url]="element.account?.platform?.url"
             />
           }
-          <span class="d-none d-lg-block">{{ element.Account?.name }}</span>
+          <span class="d-none d-lg-block">{{ element.account?.name }}</span>
         </div>
       </td>
     </ng-container>
@@ -468,7 +468,7 @@
       [ngClass]="{
         'cursor-pointer':
           hasPermissionToOpenDetails &&
-          row.Account?.isExcluded !== true &&
+          row.account?.isExcluded !== true &&
           row.isDraft === false &&
           ['BUY', 'DIVIDEND', 'SELL'].includes(row.type)
       }"
