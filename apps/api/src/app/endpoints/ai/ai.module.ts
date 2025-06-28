@@ -17,6 +17,7 @@ import { ImpersonationModule } from '@ghostfolio/api/services/impersonation/impe
 import { MarketDataModule } from '@ghostfolio/api/services/market-data/market-data.module';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { PrismaModule } from '@ghostfolio/api/services/prisma/prisma.module';
+import { PropertyModule } from '@ghostfolio/api/services/property/property.module';
 import { PortfolioSnapshotQueueModule } from '@ghostfolio/api/services/queues/portfolio-snapshot/portfolio-snapshot.module';
 import { SymbolProfileModule } from '@ghostfolio/api/services/symbol-profile/symbol-profile.module';
 
@@ -39,6 +40,7 @@ import { AiService } from './ai.service';
     OrderModule,
     PortfolioSnapshotQueueModule,
     PrismaModule,
+    PropertyModule,
     RedisCacheModule,
     SymbolProfileModule,
     UserModule

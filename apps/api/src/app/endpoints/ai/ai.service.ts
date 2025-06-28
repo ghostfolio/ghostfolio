@@ -9,7 +9,7 @@ import type { AiPromptMode } from '@ghostfolio/common/types';
 
 import { Injectable } from '@nestjs/common';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
-import { streamText } from 'ai';
+import { generateText } from 'ai';
 
 @Injectable()
 export class AiService {
@@ -18,45 +18,22 @@ export class AiService {
     private readonly propertyService: PropertyService
   ) {}
 
-  public async getCompletion({
-    filters,
-    impersonationId,
-    languageCode,
-    mode,
-    userCurrency,
-    userId
-  }: {
-    filters?: Filter[];
-    impersonationId: string;
-    languageCode: string;
-    mode: AiPromptMode;
-    userCurrency: string;
-    userId: string;
-  }) {
-    const prompt = await this.getPrompt({
-      filters,
-      impersonationId,
-      languageCode,
-      mode,
-      userCurrency,
-      userId
-    });
-
-    const openRouterApiKey = await this.propertyService.getByKey(
+  public async generateText({ prompt }: { prompt: string }) {
+    const openRouterApiKey = (await this.propertyService.getByKey(
       PROPERTY_API_KEY_OPENROUTER
-    );
+    )) as string;
 
-    const openRouterModel = await this.propertyService.getByKey(
+    const openRouterModel = (await this.propertyService.getByKey(
       PROPERTY_OPENROUTER_MODEL
-    );
+    )) as string;
 
-    const { chat } = createOpenRouter({
-      apiKey: openRouterApiKey as string
+    const openRouterService = createOpenRouter({
+      apiKey: openRouterApiKey
     });
 
-    return streamText({
+    return generateText({
       prompt,
-      model: chat(openRouterModel as string)
+      model: openRouterService.chat(openRouterModel)
     });
   }
 
