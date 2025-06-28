@@ -1280,10 +1280,14 @@ export class PortfolioService {
               [
                 new AssetClassClusterRiskEquity(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   Object.values(holdings)
                 ),
                 new AssetClassClusterRiskFixedIncome(
                   this.exchangeRateDataService,
+                  this.i18nService,
+                  userSettings.language,
                   Object.values(holdings)
                 )
               ],
@@ -1296,11 +1300,15 @@ export class PortfolioService {
               [
                 new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
                   this.exchangeRateDataService,
-                  Object.values(holdings)
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
                 ),
                 new CurrencyClusterRiskCurrentInvestment(
                   this.exchangeRateDataService,
-                  Object.values(holdings)
+                  this.i18nService,
+                  Object.values(holdings),
+                  userSettings.language
                 )
               ],
               userSettings

@@ -7,9 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risks_ (Equity)
+- Set up the language localization for the static portfolio analysis rule: _Asset Class Cluster Risks_ (Fixed Income)
+- Set up the language localization for the static portfolio analysis rule: _Currency Cluster Risks_ (Investment)
+- Set up the language localization for the static portfolio analysis rule: _Currency Cluster Risks_ (Investment: Base Currency)
+
 ### Changed
 
+- Extended the selector handling of the scraper configuration for more use cases
 - Extended the _AI_ service by an access to _OpenRouter_ (experimental)
+- Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
+- Improved the language localization for Catalan (`ca`)
+- Improved the language localization for Dutch (`nl`)
+- Improved the language localization for Español (`es`)
+- Improved the language localization for German (`de`)
+- Improved the language localization for Turkish (`tr`)
+
+### Fixed
+
+- Fixed an issue with the locale in the scraper configuration
 
 ## 2.174.0 - 2025-06-24
 

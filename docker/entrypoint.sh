@@ -9,4 +9,4 @@ echo "Seeding the database"
 npx prisma db seed
 
 echo "Starting the server"
-node main
+exec node main

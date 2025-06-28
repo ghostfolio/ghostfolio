@@ -312,7 +312,8 @@ export const publicRoutes = {
     title: $localize`Resources`
   },
   start: {
-    path: 'start',
-    routerLink: ['/start']
+    excludeFromSitemap: true,
+    path: $localize`:kebab-case@@routes.start:start`,
+    routerLink: ['/' + $localize`:kebab-case@@routes.start:start`]
   }
 };

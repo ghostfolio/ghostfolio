@@ -9,13 +9,6 @@
     }
   }
 
-  .badge {
-    &.new {
-      border: 1px solid var(--mat-table-row-item-outline-color);
-      padding-bottom: 0.05rem;
-    }
-  }
-
   .mat-mdc-card {
     --mdc-outlined-card-container-color: whitesmoke;
 
