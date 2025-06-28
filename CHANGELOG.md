@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Extended the selector handling of the scraper configuration for more use cases
 - Changed `node main` to `exec node main` in the `entrypoint.sh` file to improve the container signal handling
+- Renamed `Account` to `account` in the `AccountBalance` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Español (`es`)
