@@ -307,12 +307,12 @@ export class ManualService implements DataProviderInterface {
 
       const lines = value?.split('\n') ?? [];
 
-      const lineWithNumber = lines.find((line) => {
+      const lineWithDigits = lines.find((line) => {
         return /\d/.test(line);
       });
 
-      if (lineWithNumber) {
-        value = lineWithNumber;
+      if (lineWithDigits) {
+        value = lineWithDigits;
       }
 
       return extractNumberFromString({
