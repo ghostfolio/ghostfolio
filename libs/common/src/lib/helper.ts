@@ -444,12 +444,3 @@ export function resolveMarketCondition(
     return { emoji: undefined };
   }
 }
-
-export function isBenchmark(
-  aSymbol: string,
-  aBenchmarks: AssetProfileIdentifier[]
-) {
-  return aBenchmarks.some(({ symbol }) => {
-    return symbol === aSymbol;
-  });
-}

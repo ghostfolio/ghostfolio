@@ -40,11 +40,11 @@ import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
   isAfter,
-  subDays,
-  subYears,
   startOfMonth,
+  startOfWeek,
   startOfYear,
-  startOfWeek
+  subDays,
+  subYears
 } from 'date-fns';
 
 @Component({
@@ -280,7 +280,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
   }
 
   private getChartXAxis() {
-    let min: number;
+    let min: number | undefined;
     let unit: 'day' | 'month' | 'week' | 'year' = 'year';
 
     switch (this.dateRange) {
@@ -293,7 +293,7 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         unit = 'day';
         break;
       case 'wtd':
-        min = startOfWeek(new Date()).getTime();
+        min = startOfWeek(new Date(), { weekStartsOn: 1 }).getTime();
         unit = 'day';
         break;
       case 'ytd':
@@ -308,9 +308,28 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
         min = subYears(new Date(), 5).getTime();
         unit = 'year';
         break;
+      case 'max':
+        // For 'max', we don't set a min value to show all available data
+        // Use 'year' unit for better scale with long-term data
+        unit = 'year';
+        break;
+      default:
+        // For any other value (like specific years), use year unit
+        unit = 'year';
+        break;
     }
 
-    return {
+    const config: any = {
+      type: 'time',
+      time: {
+        unit,
+        // Add display formats for better readability
+        displayFormats: {
+          day: 'MMM d',
+          month: 'MMM yyyy',
+          year: 'yyyy'
+        }
+      },
       border: {
         color: `rgba(${getTextColor(this.colorScheme)}, 0.1)`,
         width: this.groupBy ? 0 : 1
@@ -318,13 +337,15 @@ export class InvestmentChartComponent implements OnChanges, OnDestroy {
       display: true,
       grid: {
         display: false
-      },
-      min,
-      type: 'time',
-      time: {
-        unit
       }
     };
+
+    // Only add min if it's defined (not for 'max' range)
+    if (min !== undefined) {
+      config.min = min;
+    }
+
+    return config;
   }
 
   private getTooltipPluginConfiguration() {
