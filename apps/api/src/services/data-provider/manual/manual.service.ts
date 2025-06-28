@@ -286,14 +286,12 @@ export class ManualService implements DataProviderInterface {
       )
     });
 
+    let value: string;
+
     if (response.headers.get('content-type')?.includes('application/json')) {
       const data = await response.json();
 
-      const value = String(
-        jsonpath.query(data, scraperConfiguration.selector)[0]
-      );
-
-      return extractNumberFromString({ locale, value });
+      value = String(jsonpath.query(data, scraperConfiguration.selector)[0]);
     } else {
       const $ = cheerio.load(await response.text());
 
@@ -303,7 +301,7 @@ export class ManualService implements DataProviderInterface {
         } catch {}
       }
 
-      let value = $(scraperConfiguration.selector).first().text();
+      value = $(scraperConfiguration.selector).first().text();
 
       const lines = value?.split('\n') ?? [];
 
@@ -320,5 +318,7 @@ export class ManualService implements DataProviderInterface {
         value
       });
     }
+
+    return extractNumberFromString({ locale, value });
   }
 }
