@@ -44,7 +44,7 @@
               Quick Links
             </div>
             @for (
-              searchResultItem of searchResults?.quickLinks;
+              searchResultItem of searchResults.quickLinks;
               track searchResultItem
             ) {
               <gf-assistant-list-item
@@ -64,20 +64,20 @@
             }
           </div>
         }
-        <div>
-          <div class="font-weight-bold px-3 text-muted title" i18n>
-            Holdings
-          </div>
-          @for (
-            searchResultItem of searchResults?.holdings;
-            track searchResultItem
-          ) {
-            <gf-assistant-list-item
-              [item]="searchResultItem"
-              (clicked)="onCloseAssistant()"
-            />
-          }
-          @if (searchResults?.holdings?.length === 0) {
+        @if (searchResults?.holdings?.length !== 0 || isLoading.holdings) {
+          <div>
+            <div class="font-weight-bold px-3 text-muted title" i18n>
+              Holdings
+            </div>
+            @for (
+              searchResultItem of searchResults.holdings;
+              track searchResultItem
+            ) {
+              <gf-assistant-list-item
+                [item]="searchResultItem"
+                (clicked)="onCloseAssistant()"
+              />
+            }
             @if (isLoading.holdings) {
               <ngx-skeleton-loader
                 animation="pulse"
@@ -87,18 +87,20 @@
                   width: '100%'
                 }"
               />
-            } @else {
-              <div class="px-3 py-1 text-muted" i18n>No entries...</div>
             }
-          }
-        </div>
-        @if (hasPermissionToAccessAdminControl) {
+          </div>
+        }
+        @if (
+          hasPermissionToAccessAdminControl &&
+          (searchResults?.assetProfiles?.length !== 0 ||
+            isLoading.assetProfiles)
+        ) {
           <div class="mt-2">
             <div class="font-weight-bold px-3 text-muted title" i18n>
               Asset Profiles
             </div>
             @for (
-              searchResultItem of searchResults?.assetProfiles;
+              searchResultItem of searchResults.assetProfiles;
               track searchResultItem
             ) {
               <gf-assistant-list-item
@@ -106,19 +108,15 @@
                 (clicked)="onCloseAssistant()"
               />
             }
-            @if (searchResults?.assetProfiles?.length === 0) {
-              @if (isLoading.assetProfiles) {
-                <ngx-skeleton-loader
-                  animation="pulse"
-                  class="mx-3"
-                  [theme]="{
-                    height: '1.5rem',
-                    width: '100%'
-                  }"
-                />
-              } @else {
-                <div class="px-3 py-1 text-muted" i18n>No entries...</div>
-              }
+            @if (isLoading.assetProfiles) {
+              <ngx-skeleton-loader
+                animation="pulse"
+                class="mx-3"
+                [theme]="{
+                  height: '1.5rem',
+                  width: '100%'
+                }"
+              />
             }
           </div>
         }
