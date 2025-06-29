@@ -54,25 +54,6 @@ export class SitemapService {
     }).join('\n');
   }
 
-  private createSitemapUrls(
-    params: { currentDate: string; languageCode: string; rootUrl: string },
-    routes: Record<string, PublicRoute>
-  ): string[] {
-    return Object.values(routes).flatMap((route) => {
-      if (route.excludeFromSitemap) {
-        return [];
-      }
-
-      const urls = [this.createRouteSitemapUrl({ ...params, route })];
-
-      if (route.subRoutes) {
-        urls.push(...this.createSitemapUrls(params, route.subRoutes));
-      }
-
-      return urls;
-    });
-  }
-
   private createRouteSitemapUrl({
     currentDate,
     languageCode,
@@ -112,5 +93,24 @@ export class SitemapService {
       `    <lastmod>${currentDate}T00:00:00+00:00</lastmod>`,
       '  </url>'
     ].join('\n');
+  }
+
+  private createSitemapUrls(
+    params: { currentDate: string; languageCode: string; rootUrl: string },
+    routes: Record<string, PublicRoute>
+  ): string[] {
+    return Object.values(routes).flatMap((route) => {
+      if (route.excludeFromSitemap) {
+        return [];
+      }
+
+      const urls = [this.createRouteSitemapUrl({ ...params, route })];
+
+      if (route.subRoutes) {
+        urls.push(...this.createSitemapUrls(params, route.subRoutes));
+      }
+
+      return urls;
+    });
   }
 }
