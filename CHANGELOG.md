@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Introduced fuzzy search for the quick links of the assistant
 - Improved the search results of the assistant to only display categories with content
+- Enhanced the sitemap to dynamically compose public routes
 - Renamed `Account` to `account` in the `Order` database schema
 - Improved the language localization for German (`de`)
 
@@ -38,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Español (`es`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Turkish (`tr`)
-- Enhanced sitemap to dynamically compose public routes
 
 ### Fixed
 
