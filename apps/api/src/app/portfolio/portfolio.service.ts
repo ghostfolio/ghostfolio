@@ -720,7 +720,16 @@ export class PortfolioService {
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
+        grossPerformance,
+        grossPerformancePercentage,
+        grossPerformancePercentageWithCurrencyEffect,
+        grossPerformanceWithCurrencyEffect,
+        investmentWithCurrencyEffect,
         marketPrice,
+        netPerformance,
+        netPerformancePercentage,
+        netPerformancePercentageWithCurrencyEffectMap,
+        netPerformanceWithCurrencyEffectMap,
         quantity,
         tags,
         timeWeightedInvestment,
@@ -856,23 +865,21 @@ export class PortfolioService {
           SymbolProfile.currency,
           userCurrency
         ),
-        grossPerformance: holding.grossPerformance?.toNumber(),
-        grossPerformancePercent: holding.grossPerformancePercentage?.toNumber(),
+        grossPerformance: grossPerformance?.toNumber(),
+        grossPerformancePercent: grossPerformancePercentage?.toNumber(),
         grossPerformancePercentWithCurrencyEffect:
-          holding.grossPerformancePercentageWithCurrencyEffect?.toNumber(),
+          grossPerformancePercentageWithCurrencyEffect?.toNumber(),
         grossPerformanceWithCurrencyEffect:
-          holding.grossPerformanceWithCurrencyEffect?.toNumber(),
+          grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
         investmentInBaseCurrencyWithCurrencyEffect:
-          holding.investmentWithCurrencyEffect?.toNumber(),
-        netPerformance: holding.netPerformance?.toNumber(),
-        netPerformancePercent: holding.netPerformancePercentage?.toNumber(),
+          investmentWithCurrencyEffect?.toNumber(),
+        netPerformance: netPerformance?.toNumber(),
+        netPerformancePercent: netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
-          holding.netPerformancePercentageWithCurrencyEffectMap?.[
-            'max'
-          ]?.toNumber(),
+          netPerformancePercentageWithCurrencyEffectMap?.['max']?.toNumber(),
         netPerformanceWithCurrencyEffect:
-          holding.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+          netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
         performances: {
           allTimeHigh: {
             performancePercent,
