@@ -86,6 +86,7 @@ import {
   parseISO,
   set
 } from 'date-fns';
+import Fuse from 'fuse.js';
 import { isEmpty } from 'lodash';
 
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
@@ -1049,14 +1050,17 @@ export class PortfolioService {
     }
 
     if (searchQuery) {
-      positions = positions.filter(({ symbol }) => {
-        const enhancedSymbolProfile = symbolProfileMap[symbol];
+      const fuse = new Fuse(Object.values(symbolProfileMap), {
+        keys: ['isin', 'name', 'symbol'],
+        threshold: 0.3
+      });
 
-        return (
-          enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
-        );
+      const symbolSearchResults = fuse
+        .search(searchQuery)
+        .map(({ item }) => item.symbol);
+
+      positions = positions.filter(({ symbol }) => {
+        return symbolSearchResults.includes(symbol);
       });
     }
 
