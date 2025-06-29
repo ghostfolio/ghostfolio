@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { differenceInYears } from 'date-fns';
+import Fuse from 'fuse.js';
 import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
@@ -642,20 +643,18 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
         return acc;
       }, [] as IRoute[]);
 
-    return allRoutes
-      .filter(({ title }) => {
-        return title.toLowerCase().includes(searchTerm);
-      })
-      .map(({ routerLink, title }) => {
-        return {
-          routerLink,
-          mode: SearchMode.QUICK_LINK as const,
-          name: title
-        };
-      })
-      .sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
+    const fuse = new Fuse(allRoutes, {
+      keys: ['title'],
+      threshold: 0.3
+    });
+
+    return fuse.search(searchTerm).map(({ item: { routerLink, title } }) => {
+      return {
+        routerLink,
+        mode: SearchMode.QUICK_LINK as const,
+        name: title
+      };
+    });
   }
 
   private setFilterFormValues() {
