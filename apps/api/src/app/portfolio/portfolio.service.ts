@@ -49,7 +49,6 @@ import {
   PortfolioPosition,
   PortfolioReportResponse,
   PortfolioSummary,
-  Position,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
@@ -91,6 +90,8 @@ import { isEmpty } from 'lodash';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { RulesService } from './rules.service';
+
+const Fuse = require('fuse.js');
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
@@ -267,6 +268,43 @@ export class PortfolioService {
     }
 
     return dividends;
+  }
+
+  public async getHoldings({
+    dateRange,
+    filters,
+    impersonationId,
+    query,
+    userId
+  }: {
+    dateRange: DateRange;
+    filters?: Filter[];
+    impersonationId: string;
+    query?: string;
+    userId: string;
+  }) {
+    userId = await this.getUserId(impersonationId, userId);
+    const { holdings: holdingsMap } = await this.getDetails({
+      dateRange,
+      filters,
+      impersonationId,
+      userId
+    });
+
+    let holdings = Object.values(holdingsMap);
+
+    if (query) {
+      const fuse = new Fuse(holdings, {
+        keys: ['isin', 'name', 'symbol'],
+        threshold: 0.3
+      });
+
+      holdings = fuse.search(query).map(({ item }) => {
+        return item;
+      });
+    }
+
+    return holdings;
   }
 
   public async getInvestments({
@@ -975,155 +1013,6 @@ export class PortfolioService {
         value: 0
       };
     }
-  }
-
-  public async getHoldings({
-    dateRange = 'max',
-    filters,
-    impersonationId
-  }: {
-    dateRange?: DateRange;
-    filters?: Filter[];
-    impersonationId: string;
-  }): Promise<{ hasErrors: boolean; positions: Position[] }> {
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-    const userCurrency = this.getUserCurrency(user);
-
-    const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
-        filters,
-        userCurrency,
-        userId
-      });
-
-    if (activities.length === 0) {
-      return {
-        hasErrors: false,
-        positions: []
-      };
-    }
-
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
-      filters,
-      userId,
-      calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
-    });
-
-    const portfolioSnapshot = await portfolioCalculator.getSnapshot();
-    const hasErrors = portfolioSnapshot.hasErrors;
-    let positions = portfolioSnapshot.positions;
-
-    positions = positions.filter(({ quantity }) => {
-      return !quantity.eq(0);
-    });
-
-    const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
-      return {
-        dataSource,
-        symbol
-      };
-    });
-
-    const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({
-        user,
-        items: assetProfileIdentifiers
-      }),
-      this.symbolProfileService.getSymbolProfiles(
-        positions.map(({ dataSource, symbol }) => {
-          return { dataSource, symbol };
-        })
-      )
-    ]);
-
-    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
-
-    for (const symbolProfile of symbolProfiles) {
-      symbolProfileMap[symbolProfile.symbol] = symbolProfile;
-    }
-
-    if (searchQuery) {
-      positions = positions.filter(({ symbol }) => {
-        const enhancedSymbolProfile = symbolProfileMap[symbol];
-
-        return (
-          enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
-        );
-      });
-    }
-
-    return {
-      hasErrors,
-      positions: positions.map(
-        ({
-          averagePrice,
-          currency,
-          dataSource,
-          firstBuyDate,
-          grossPerformance,
-          grossPerformancePercentage,
-          grossPerformancePercentageWithCurrencyEffect,
-          grossPerformanceWithCurrencyEffect,
-          investment,
-          investmentWithCurrencyEffect,
-          netPerformance,
-          netPerformancePercentage,
-          netPerformancePercentageWithCurrencyEffectMap,
-          netPerformanceWithCurrencyEffectMap,
-          quantity,
-          symbol,
-          timeWeightedInvestment,
-          timeWeightedInvestmentWithCurrencyEffect,
-          transactionCount
-        }) => {
-          return {
-            currency,
-            dataSource,
-            firstBuyDate,
-            symbol,
-            transactionCount,
-            assetClass: symbolProfileMap[symbol].assetClass,
-            assetSubClass: symbolProfileMap[symbol].assetSubClass,
-            averagePrice: averagePrice.toNumber(),
-            grossPerformance: grossPerformance?.toNumber() ?? null,
-            grossPerformancePercentage:
-              grossPerformancePercentage?.toNumber() ?? null,
-            grossPerformancePercentageWithCurrencyEffect:
-              grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? null,
-            grossPerformanceWithCurrencyEffect:
-              grossPerformanceWithCurrencyEffect?.toNumber() ?? null,
-            investment: investment.toNumber(),
-            investmentWithCurrencyEffect:
-              investmentWithCurrencyEffect?.toNumber(),
-            marketState:
-              dataProviderResponses[symbol]?.marketState ?? 'delayed',
-            name: symbolProfileMap[symbol].name,
-            netPerformance: netPerformance?.toNumber() ?? null,
-            netPerformancePercentage:
-              netPerformancePercentage?.toNumber() ?? null,
-            netPerformancePercentageWithCurrencyEffect:
-              netPerformancePercentageWithCurrencyEffectMap?.[
-                dateRange
-              ]?.toNumber() ?? null,
-            netPerformanceWithCurrencyEffect:
-              netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ??
-              null,
-            quantity: quantity.toNumber(),
-            timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
-            timeWeightedInvestmentWithCurrencyEffect:
-              timeWeightedInvestmentWithCurrencyEffect?.toNumber()
-          };
-        }
-      )
-    };
   }
 
   public async getPerformance({

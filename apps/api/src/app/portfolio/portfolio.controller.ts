@@ -412,19 +412,19 @@ export class PortfolioController {
       filterByAssetClasses,
       filterByDataSource,
       filterByHoldingType,
-      filterBySearchQuery,
       filterBySymbol,
       filterByTags
     });
 
-    const { holdings } = await this.portfolioService.getDetails({
+    const holdings = await this.portfolioService.getHoldings({
       dateRange,
       filters,
       impersonationId,
+      query: filterBySearchQuery,
       userId: this.request.user.id
     });
 
-    return { holdings: Object.values(holdings) };
+    return { holdings };
   }
 
   @Get('investments')
