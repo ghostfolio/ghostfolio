@@ -112,6 +112,7 @@
     "countup.js": "2.8.2",
     "date-fns": "4.1.0",
     "envalid": "8.0.0",
+    "fuse.js": "7.1.0",
     "google-spreadsheet": "3.2.0",
     "helmet": "7.0.0",
     "http-status-codes": "2.3.0",
