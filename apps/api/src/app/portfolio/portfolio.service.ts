@@ -91,6 +91,8 @@ import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { RulesService } from './rules.service';
 
+const Fuse = require('fuse.js');
+
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
 const emergingMarkets = require('../../assets/countries/emerging-markets.json');
@@ -266,6 +268,43 @@ export class PortfolioService {
     }
 
     return dividends;
+  }
+
+  public async getHoldings({
+    dateRange,
+    filters,
+    impersonationId,
+    query,
+    userId
+  }: {
+    dateRange: DateRange;
+    filters?: Filter[];
+    impersonationId: string;
+    query?: string;
+    userId: string;
+  }) {
+    userId = await this.getUserId(impersonationId, userId);
+    const { holdings: holdingsMap } = await this.getDetails({
+      dateRange,
+      filters,
+      impersonationId,
+      userId
+    });
+
+    let holdings = Object.values(holdingsMap);
+
+    if (query) {
+      const fuse = new Fuse(holdings, {
+        keys: ['isin', 'name', 'symbol'],
+        threshold: 0.3
+      });
+
+      holdings = fuse.search(query).map(({ item }) => {
+        return item;
+      });
+    }
+
+    return holdings;
   }
 
   public async getInvestments({
