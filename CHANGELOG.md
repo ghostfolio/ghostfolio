@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added support for generating a new _Security Token_ via the user's account access panel
+- Added support for generating a new _Security Token_ via the user’s account access panel
 
 ### Changed
 
@@ -6118,7 +6118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Changed the navigation to always show the portfolio page
 - Migrated the data type of currencies from `enum` to `string` in the database
 - Supported unlimited currencies (instead of `CHF`, `EUR`, `GBP` and `USD`)
-- Respected the accounts' currencies in the exchange rate service
+- Respected the accounts’ currencies in the exchange rate service
 
 ### Fixed
 
