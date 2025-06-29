@@ -54,7 +54,7 @@ export class UserController {
   public async deleteOwnUser(
     @Body() data: DeleteOwnUserDto
   ): Promise<UserModel> {
-    const user = await this.validateOwnAccessToken(
+    const user = await this.validateAccessToken(
       data.accessToken,
       this.request.user.id
     );
@@ -95,7 +95,7 @@ export class UserController {
   public async updateOwnAccessToken(
     @Body() data: UpdateOwnAccessTokenDto
   ): Promise<AccessTokenResponse> {
-    const user = await this.validateOwnAccessToken(
+    const user = await this.validateAccessToken(
       data.accessToken,
       this.request.user.id
     );
@@ -183,7 +183,23 @@ export class UserController {
     });
   }
 
-  private async validateOwnAccessToken(
+  private async rotateUserAccessToken(
+    userId: string
+  ): Promise<AccessTokenResponse> {
+    const { accessToken, hashedAccessToken } =
+      this.userService.generateAccessToken({
+        userId
+      });
+
+    await this.prismaService.user.update({
+      data: { accessToken: hashedAccessToken },
+      where: { id: userId }
+    });
+
+    return { accessToken };
+  }
+
+  private async validateAccessToken(
     accessToken: string,
     userId: string
   ): Promise<UserModel> {
@@ -204,21 +220,5 @@ export class UserController {
     }
 
     return user;
-  }
-
-  private async rotateUserAccessToken(
-    userId: string
-  ): Promise<AccessTokenResponse> {
-    const { accessToken, hashedAccessToken } =
-      this.userService.generateAccessToken({
-        userId
-      });
-
-    await this.prismaService.user.update({
-      data: { accessToken: hashedAccessToken },
-      where: { id: userId }
-    });
-
-    return { accessToken };
   }
 }

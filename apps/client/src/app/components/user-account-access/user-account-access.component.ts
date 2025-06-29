@@ -1,4 +1,6 @@
 import { CreateAccessDto } from '@ghostfolio/api/app/access/create-access.dto';
+import { ConfirmationDialogType } from '@ghostfolio/client/core/notification/confirmation-dialog/confirmation-dialog.type';
+import { NotificationService } from '@ghostfolio/client/core/notification/notification.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { TokenStorageService } from '@ghostfolio/client/services/token-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -19,8 +21,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
-import { ConfirmationDialogType } from '../../core/notification/confirmation-dialog/confirmation-dialog.type';
-import { NotificationService } from '../../core/notification/notification.service';
 import { CreateOrUpdateAccessDialog } from './create-or-update-access-dialog/create-or-update-access-dialog.component';
 
 @Component({
@@ -37,6 +37,7 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
   public deviceType: string;
   public hasPermissionToCreateAccess: boolean;
   public hasPermissionToDeleteAccess: boolean;
+  public hasPermissionToUpdateOwnAccessToken: boolean;
   public isAccessTokenHidden = true;
   public updateOwnAccessTokenForm = this.formBuilder.group({
     accessToken: ['', Validators.required]
@@ -78,6 +79,11 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
           this.hasPermissionToDeleteAccess = hasPermission(
             this.user.permissions,
             permissions.deleteAccess
+          );
+
+          this.hasPermissionToUpdateOwnAccessToken = hasPermission(
+            this.user.permissions,
+            permissions.updateOwnAccessToken
           );
 
           this.changeDetectorRef.markForCheck();

@@ -82,7 +82,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccount,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
-        permissions.deleteOwnUser,
         permissions.deletePlatform,
         permissions.deleteTag,
         permissions.deleteUser,
@@ -128,7 +127,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteAccountBalance,
         permissions.deleteAuthDevice,
         permissions.deleteOrder,
-        permissions.deleteOwnUser,
         permissions.deleteWatchlistItem,
         permissions.readAiPrompt,
         permissions.readMarketDataOfOwnAssetProfile,
@@ -137,7 +135,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.updateAuthDevice,
         permissions.updateMarketDataOfOwnAssetProfile,
         permissions.updateOrder,
-        permissions.updateOwnAccessToken,
         permissions.updateUserSettings,
         permissions.updateViewMode
       ];

@@ -1,50 +1,53 @@
-<form
-  class="w-100 mb-3"
-  [formGroup]="updateOwnAccessTokenForm"
-  (ngSubmit)="onGenerateAccessToken()"
->
+@if (hasPermissionToUpdateOwnAccessToken) {
   <div class="container">
-    <h1 class="d-flex align-items-center justify-content-center h3 mb-3" i18n>
-      Security Token
-    </h1>
-    <div class="d-flex align-items-center justify-content-center">
-      <mat-form-field
-        appearance="outline"
-        class="without-hint w-50"
-        [hideRequiredMarker]="true"
-      >
-        <mat-label i18n>Security Token</mat-label>
-        <input
-          formControlName="accessToken"
-          matInput
-          [type]="isAccessTokenHidden ? 'password' : 'text'"
-        />
-        <button
-          mat-button
-          matSuffix
-          type="button"
-          (click)="isAccessTokenHidden = !isAccessTokenHidden"
+    <h1 class="h3 mb-3 text-center" i18n>Security Token</h1>
+    <form
+      class="w-100"
+      [formGroup]="updateOwnAccessTokenForm"
+      (ngSubmit)="onGenerateAccessToken()"
+    >
+      <div class="align-items-center d-flex justify-content-center mb-5">
+        <mat-form-field
+          appearance="outline"
+          class="without-hint w-50"
+          [hideRequiredMarker]="true"
         >
-          <ion-icon
-            [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+          <mat-label i18n>Security Token</mat-label>
+          <input
+            formControlName="accessToken"
+            matInput
+            [type]="isAccessTokenHidden ? 'password' : 'text'"
           />
-        </button>
-      </mat-form-field>
-      <div class="pl-2">
-        <button
-          color="warn"
-          mat-flat-button
-          type="submit"
-          [disabled]="
-            !(updateOwnAccessTokenForm.dirty && updateOwnAccessTokenForm.valid)
-          "
-        >
-          <span i18n>Generate</span>
-        </button>
+          <button
+            mat-button
+            matSuffix
+            type="button"
+            (click)="isAccessTokenHidden = !isAccessTokenHidden"
+          >
+            <ion-icon
+              [name]="isAccessTokenHidden ? 'eye-outline' : 'eye-off-outline'"
+            />
+          </button>
+        </mat-form-field>
+        <div class="pl-2">
+          <button
+            color="warn"
+            mat-flat-button
+            type="submit"
+            [disabled]="
+              !(
+                updateOwnAccessTokenForm.dirty && updateOwnAccessTokenForm.valid
+              )
+            "
+          >
+            <span i18n>Generate</span>
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
+}
+
 <div class="container">
   @if (accessesGet.length > 0) {
     <h1 class="h3 mb-3 text-center" i18n>Received Access</h1>
