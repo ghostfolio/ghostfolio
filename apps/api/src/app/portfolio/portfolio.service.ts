@@ -709,26 +709,24 @@ export class PortfolioService {
 
     const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = positions.find((position) => {
+    const holding = positions.find((position) => {
       return position.dataSource === dataSource && position.symbol === symbol;
     });
 
-    if (position) {
+    if (holding) {
       const {
         averagePrice,
         currency,
-        dataSource,
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
         marketPrice,
         quantity,
-        symbol,
         tags,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
-      } = position;
+      } = holding;
 
       const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
         return (
@@ -858,24 +856,23 @@ export class PortfolioService {
           SymbolProfile.currency,
           userCurrency
         ),
-        grossPerformance: position.grossPerformance?.toNumber(),
-        grossPerformancePercent:
-          position.grossPerformancePercentage?.toNumber(),
+        grossPerformance: holding.grossPerformance?.toNumber(),
+        grossPerformancePercent: holding.grossPerformancePercentage?.toNumber(),
         grossPerformancePercentWithCurrencyEffect:
-          position.grossPerformancePercentageWithCurrencyEffect?.toNumber(),
+          holding.grossPerformancePercentageWithCurrencyEffect?.toNumber(),
         grossPerformanceWithCurrencyEffect:
-          position.grossPerformanceWithCurrencyEffect?.toNumber(),
+          holding.grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
         investmentInBaseCurrencyWithCurrencyEffect:
-          position.investmentWithCurrencyEffect?.toNumber(),
-        netPerformance: position.netPerformance?.toNumber(),
-        netPerformancePercent: position.netPerformancePercentage?.toNumber(),
+          holding.investmentWithCurrencyEffect?.toNumber(),
+        netPerformance: holding.netPerformance?.toNumber(),
+        netPerformancePercent: holding.netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
-          position.netPerformancePercentageWithCurrencyEffectMap?.[
+          holding.netPerformancePercentageWithCurrencyEffectMap?.[
             'max'
           ]?.toNumber(),
         netPerformanceWithCurrencyEffect:
-          position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+          holding.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
         performances: {
           allTimeHigh: {
             performancePercent,
