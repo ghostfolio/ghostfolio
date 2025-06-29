@@ -1158,7 +1158,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">205</context>
         </context-group>
       </trans-unit>
       <trans-unit id="27fe3d097c64eaec7ff564358f80fb7ba795f484" datatype="html">
@@ -1891,6 +1891,10 @@
           <context context-type="linenumber">252</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
+          <context context-type="linenumber">129</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.component.ts</context>
           <context context-type="linenumber">159</context>
         </context-group>
@@ -2031,6 +2035,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/login-with-access-token-dialog/login-with-access-token-dialog.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-settings/user-account-settings.html</context>
@@ -2544,7 +2556,7 @@
         <source>Granted Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
-          <context context-type="linenumber">7</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1257540657265073416" datatype="html">
@@ -3613,7 +3625,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f4e44195c1fc545934be51e9abfba1202911462a" datatype="html">
@@ -3702,7 +3714,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">168</context>
+          <context context-type="linenumber">166</context>
         </context-group>
       </trans-unit>
       <trans-unit id="050be0e7937dec05c8c8ded71cebc0bb027b38f6" datatype="html">
@@ -4727,17 +4739,6 @@
           <context context-type="linenumber">229</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="cd206f0509271d9e611747bef0713c7df048d3af" datatype="html">
-        <source>No entries...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">120</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="db287ecf48f50d8a83c1dbdcee6282723b4cd9ad" datatype="html">
         <source>Asset Profiles</source>
         <context-group purpose="location">
@@ -5256,7 +5257,7 @@
         <source>Date Range</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">130</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4405333887341433096" datatype="html">
@@ -5437,7 +5438,7 @@
         <source> Reset Filters </source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">226</context>
+          <context context-type="linenumber">224</context>
         </context-group>
       </trans-unit>
       <trans-unit id="f42ea256db85ae2dba48b04a7bf0eb1614abac2f" datatype="html">
@@ -5465,7 +5466,7 @@
         <source> Apply Filters </source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">236</context>
+          <context context-type="linenumber">234</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.faq.selfHosting" datatype="html">
@@ -6368,7 +6369,7 @@
         <source>Tag</source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">196</context>
+          <context context-type="linenumber">194</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4405ffa42898e217fcb92b7d1f08bb91ef895ed8" datatype="html">
@@ -6438,14 +6439,14 @@
         <source>Received Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7156797854368699223" datatype="html">
         <source>Me</source>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">187</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4068738931505527681" datatype="html">
@@ -6653,6 +6654,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-users/admin-users.component.ts</context>
           <context context-type="linenumber">163</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit id="bb9188e6fbfd19db7f6ba5433592beaff50da35d" datatype="html">
@@ -6897,7 +6902,7 @@
         <source> Asset Profiles </source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit id="440264111109852789" datatype="html">
@@ -6935,11 +6940,11 @@
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="e52bbefa89875d7d53fb43d5f0cf56c6654b50ba" datatype="html">
+      <trans-unit id="0a1fd4a1825c34244edae54609c766dc27593e2c" datatype="html">
         <source> Holdings </source>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/ui/src/lib/assistant/assistant.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
@@ -7158,6 +7163,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">317</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1b258b258b4cc475ceb2871305b61756b0134f4a" datatype="html">
+        <source>Generate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5608465303990699628" datatype="html">
+        <source>Do you really want to generate a new security token?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">apps/client/src/app/components/user-account-access/user-account-access.component.ts</context>
+          <context context-type="linenumber">150</context>
         </context-group>
       </trans-unit>
     </body>
