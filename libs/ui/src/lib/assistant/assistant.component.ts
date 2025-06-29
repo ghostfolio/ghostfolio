@@ -3,7 +3,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
-import { IRoute } from '@ghostfolio/common/routes/interfaces/interfaces';
+import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
@@ -641,7 +641,7 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           acc.push(...Object.values(route.subRoutes));
         }
         return acc;
-      }, [] as IRoute[]);
+      }, [] as InternalRoute[]);
 
     const fuse = new Fuse(allRoutes, {
       keys: ['title'],
