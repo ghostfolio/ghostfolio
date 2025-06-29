@@ -10,7 +10,9 @@ if (typeof window !== 'undefined') {
   (global as any).$localize = (
     messageParts: TemplateStringsArray,
     ...expressions: any[]
-  ) => String.raw({ raw: messageParts }, ...expressions);
+  ) => {
+    return String.raw({ raw: messageParts }, ...expressions);
+  };
 }
 
 export const internalRoutes: Record<string, InternalRoute> = {

@@ -32,7 +32,7 @@ export class SitemapService {
           urlPostfix: alias ?? key
         };
 
-        return this.createRouteSitemapUrl({ route, ...params });
+        return this.createRouteSitemapUrl({ ...params, route });
       });
     }).join('\n');
   }
@@ -48,7 +48,7 @@ export class SitemapService {
       };
 
       return [
-        this.createRouteSitemapUrl(params), // create language specific root URL
+        this.createRouteSitemapUrl(params),
         ...this.createSitemapUrls(params, publicRoutes)
       ];
     }).join('\n');
@@ -63,7 +63,7 @@ export class SitemapService {
         return [];
       }
 
-      const urls = [this.createRouteSitemapUrl({ route, ...params })];
+      const urls = [this.createRouteSitemapUrl({ ...params, route })];
 
       if (route.subRoutes) {
         urls.push(...this.createSitemapUrls(params, route.subRoutes));
@@ -91,6 +91,7 @@ export class SitemapService {
         const match = link.match(
           SitemapService.TRANSLATION_TAGGED_MESSAGE_REGEX
         );
+
         const segment = match
           ? (this.i18nService.getTranslation({
               languageCode,
@@ -100,6 +101,7 @@ export class SitemapService {
 
         return segment.replace(/^\/+|\/+$/, '');
       }) ?? [];
+
     const location =
       [rootUrl, languageCode, ...segments].join('/') +
       (urlPostfix ? `-${urlPostfix}` : '');
