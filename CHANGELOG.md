@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved the search results of the assistant to only display categories with content
 - Renamed `Account` to `account` in the `Order` database schema
+- Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.5.3` to `3.6.2`
 
 ## 2.175.0 - 2025-06-28
