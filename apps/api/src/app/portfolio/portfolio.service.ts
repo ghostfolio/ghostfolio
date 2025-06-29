@@ -274,15 +274,17 @@ export class PortfolioService {
     filters,
     groupBy,
     impersonationId,
-    savingsRate
+    savingsRate,
+    userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
     savingsRate: number;
+    userId: string;
   }): Promise<PortfolioInvestments> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -638,12 +640,18 @@ export class PortfolioService {
     };
   }
 
-  public async getHolding(
-    aDataSource: DataSource,
-    aImpersonationId: string,
-    aSymbol: string
-  ): Promise<PortfolioHoldingResponse> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getHolding({
+    dataSource,
+    impersonationId,
+    symbol,
+    userId
+  }: {
+    dataSource: DataSource;
+    impersonationId: string;
+    symbol: string;
+    userId: string;
+  }): Promise<PortfolioHoldingResponse> {
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -686,7 +694,7 @@ export class PortfolioService {
     }
 
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      { dataSource: aDataSource, symbol: aSymbol }
+      { dataSource, symbol }
     ]);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
@@ -701,8 +709,8 @@ export class PortfolioService {
 
     const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = positions.find(({ dataSource, symbol }) => {
-      return dataSource === aDataSource && symbol === aSymbol;
+    const position = positions.find((position) => {
+      return position.dataSource === dataSource && position.symbol === symbol;
     });
 
     if (position) {
@@ -749,7 +757,7 @@ export class PortfolioService {
         });
 
       const historicalData = await this.dataProviderService.getHistorical(
-        [{ dataSource, symbol: aSymbol }],
+        [{ dataSource, symbol }],
         'day',
         parseISO(firstBuyDate),
         new Date()
@@ -769,10 +777,10 @@ export class PortfolioService {
         marketPrice
       );
 
-      if (historicalData[aSymbol]) {
+      if (historicalData[symbol]) {
         let j = -1;
         for (const [date, { marketPrice }] of Object.entries(
-          historicalData[aSymbol]
+          historicalData[symbol]
         )) {
           while (
             j + 1 < transactionPoints.length &&
@@ -785,8 +793,8 @@ export class PortfolioService {
           let currentQuantity = 0;
 
           const currentSymbol = transactionPoints[j]?.items.find(
-            ({ symbol }) => {
-              return symbol === aSymbol;
+            (transactionPointSymbol) => {
+              return transactionPointSymbol.symbol === symbol;
             }
           );
 
@@ -884,12 +892,12 @@ export class PortfolioService {
     } else {
       const currentData = await this.dataProviderService.getQuotes({
         user,
-        items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
+        items: [{ symbol, dataSource: DataSource.YAHOO }]
       });
-      const marketPrice = currentData[aSymbol]?.marketPrice;
+      const marketPrice = currentData[symbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
-        [{ dataSource: DataSource.YAHOO, symbol: aSymbol }],
+        [{ symbol, dataSource: DataSource.YAHOO }],
         'day',
         portfolioStart,
         new Date()
@@ -898,15 +906,13 @@ export class PortfolioService {
       if (isEmpty(historicalData)) {
         try {
           historicalData = await this.dataProviderService.getHistoricalRaw({
-            assetProfileIdentifiers: [
-              { dataSource: DataSource.YAHOO, symbol: aSymbol }
-            ],
+            assetProfileIdentifiers: [{ symbol, dataSource: DataSource.YAHOO }],
             from: portfolioStart,
             to: new Date()
           });
         } catch {
           historicalData = {
-            [aSymbol]: {}
+            [symbol]: {}
           };
         }
       }
@@ -917,7 +923,7 @@ export class PortfolioService {
       let marketPriceMin = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
-        historicalData[aSymbol]
+        historicalData[symbol]
       )) {
         historicalDataArray.push({
           date,
@@ -1227,10 +1233,14 @@ export class PortfolioService {
     };
   }
 
-  public async getReport(
-    impersonationId: string
-  ): Promise<PortfolioReportResponse> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+  public async getReport({
+    impersonationId,
+    userId
+  }: {
+    impersonationId: string;
+    userId: string;
+  }): Promise<PortfolioReportResponse> {
+    userId = await this.getUserId(impersonationId, userId);
     const userSettings = this.request.user.Settings.settings as UserSettings;
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =

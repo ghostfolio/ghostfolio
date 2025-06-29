@@ -100,7 +100,8 @@ export class ImportController {
   ): Promise<ImportResponse> {
     const activities = await this.importService.getDividends({
       dataSource,
-      symbol
+      symbol,
+      userId: this.request.user.id
     });
 
     return { activities };
