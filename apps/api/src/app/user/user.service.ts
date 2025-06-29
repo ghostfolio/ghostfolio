@@ -354,6 +354,11 @@ export class UserService {
 
     let currentPermissions = getPermissions(user.role);
 
+    if (user.provider === 'ANONYMOUS') {
+      currentPermissions.push(permissions.deleteOwnUser);
+      currentPermissions.push(permissions.updateOwnAccessToken);
+    }
+
     if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
       // currentPermissions = without(
       //   currentPermissions,
