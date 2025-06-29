@@ -60,6 +60,8 @@ import { StatusCodes, getReasonPhrase } from 'http-status-codes';
 import { PortfolioService } from './portfolio.service';
 import { UpdateHoldingTagsDto } from './update-holding-tags.dto';
 
+const Fuse = require('fuse.js');
+
 @Controller('portfolio')
 export class PortfolioController {
   public constructor(
@@ -412,19 +414,31 @@ export class PortfolioController {
       filterByAssetClasses,
       filterByDataSource,
       filterByHoldingType,
-      filterBySearchQuery,
       filterBySymbol,
       filterByTags
     });
 
-    const { holdings } = await this.portfolioService.getDetails({
+    const { holdings: holdingsMap } = await this.portfolioService.getDetails({
       dateRange,
       filters,
       impersonationId,
       userId: this.request.user.id
     });
 
-    return { holdings: Object.values(holdings) };
+    let holdings = Object.values(holdingsMap);
+
+    if (filterBySearchQuery) {
+      const fuse = new Fuse(holdings, {
+        keys: ['isin', 'name', 'symbol'],
+        threshold: 0.3
+      });
+
+      holdings = fuse.search(filterBySearchQuery).map(({ item }) => {
+        return item;
+      });
+    }
+
+    return { holdings };
   }
 
   @Get('investments')
