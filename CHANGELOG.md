@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Introduced fuzzy search for the quick links of the assistant
 - Renamed `Account` to `account` in the `Order` database schema
 
 ## 2.175.0 - 2025-06-28
