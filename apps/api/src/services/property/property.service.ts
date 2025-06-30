@@ -38,9 +38,9 @@ export class PropertyService {
     return response;
   }
 
-  public async getByKey(aKey: string) {
+  public async getByKey<TKey>(aKey: string): Promise<TKey | undefined> {
     const properties = await this.get();
-    return properties?.[aKey];
+    return properties?.[aKey] as TKey;
   }
 
   public async isUserSignupEnabled() {
