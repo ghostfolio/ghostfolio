@@ -12,12 +12,13 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
