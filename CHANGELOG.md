@@ -13,10 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the main content of the holding detail dialog to a new overview tab
 - Improved the search results of the assistant to only display categories with content
 - Renamed `Account` to `account` in the `Order` database schema
 - Improved the language localization for German (`de`)
-- Restructured _Holding Detail_ dialog by moving the content (below the chart) into a new tab (Overview)
 
 ## 2.175.0 - 2025-06-28
 
