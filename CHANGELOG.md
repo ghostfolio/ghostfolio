@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Moved the main content of the holding detail dialog to a new overview tab
 - Introduced fuzzy search for the holdings of the assistant
 - Introduced fuzzy search for the quick links of the assistant
 - Improved the search results of the assistant to only display categories with content
