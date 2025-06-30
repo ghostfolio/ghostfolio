@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed `Account` to `account` in the `Order` database schema
 - Improved the language localization for German (`de`)
 - Upgraded `prettier` from version `3.5.3` to `3.6.2`
+- Improved `PropertyService` by making `getByKey()` function generic
 
 ## 2.175.0 - 2025-06-28
 
