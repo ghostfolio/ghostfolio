@@ -1,11 +1,21 @@
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
-import '@angular/localize/init';
+import { InternalRoute } from './interfaces/internal-route.interface';
+import { PublicRoute } from './interfaces/public-route.interface';
 
-import { IRoute } from './interfaces/interfaces';
+if (typeof window !== 'undefined') {
+  import('@angular/localize/init');
+} else {
+  (global as any).$localize = (
+    messageParts: TemplateStringsArray,
+    ...expressions: any[]
+  ) => {
+    return String.raw({ raw: messageParts }, ...expressions);
+  };
+}
 
-export const internalRoutes: Record<string, IRoute> = {
+export const internalRoutes: Record<string, InternalRoute> = {
   account: {
     path: 'account',
     routerLink: ['/account'],
@@ -156,7 +166,7 @@ export const internalRoutes: Record<string, IRoute> = {
   }
 };
 
-export const publicRoutes = {
+export const publicRoutes: Record<string, PublicRoute> = {
   about: {
     path: $localize`:kebab-case@@routes.about:about`,
     routerLink: ['/' + $localize`:kebab-case@@routes.about:about`],
@@ -300,9 +310,14 @@ export const publicRoutes = {
           $localize`:kebab-case@@routes.resources.personalFinanceTools:personal-finance-tools`
         ],
         subRoutes: {
-          excludeFromSitemap: true,
           product: {
+            excludeFromSitemap: true,
             path: $localize`:kebab-case@@routes.resources.personalFinanceTools.openSourceAlternativeTo:open-source-alternative-to`,
+            routerLink: [
+              '/' + $localize`:kebab-case@@routes.resources:resources`,
+              $localize`:kebab-case@@routes.resources.personalFinanceTools:personal-finance-tools`,
+              $localize`:kebab-case@@routes.resources.personalFinanceTools.openSourceAlternativeTo:open-source-alternative-to`
+            ],
             title: $localize`Open Source Alternative to`
           }
         },

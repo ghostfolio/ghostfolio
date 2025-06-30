@@ -49,7 +49,6 @@ import {
   PortfolioPosition,
   PortfolioReportResponse,
   PortfolioSummary,
-  Position,
   UserSettings
 } from '@ghostfolio/common/interfaces';
 import { TimelinePosition } from '@ghostfolio/common/models';
@@ -91,6 +90,8 @@ import { isEmpty } from 'lodash';
 import { PortfolioCalculator } from './calculator/portfolio-calculator';
 import { PortfolioCalculatorFactory } from './calculator/portfolio-calculator.factory';
 import { RulesService } from './rules.service';
+
+const Fuse = require('fuse.js');
 
 const asiaPacificMarkets = require('../../assets/countries/asia-pacific-markets.json');
 const developedMarkets = require('../../assets/countries/developed-markets.json');
@@ -269,20 +270,59 @@ export class PortfolioService {
     return dividends;
   }
 
+  public async getHoldings({
+    dateRange,
+    filters,
+    impersonationId,
+    query,
+    userId
+  }: {
+    dateRange: DateRange;
+    filters?: Filter[];
+    impersonationId: string;
+    query?: string;
+    userId: string;
+  }) {
+    userId = await this.getUserId(impersonationId, userId);
+    const { holdings: holdingsMap } = await this.getDetails({
+      dateRange,
+      filters,
+      impersonationId,
+      userId
+    });
+
+    let holdings = Object.values(holdingsMap);
+
+    if (query) {
+      const fuse = new Fuse(holdings, {
+        keys: ['isin', 'name', 'symbol'],
+        threshold: 0.3
+      });
+
+      holdings = fuse.search(query).map(({ item }) => {
+        return item;
+      });
+    }
+
+    return holdings;
+  }
+
   public async getInvestments({
     dateRange,
     filters,
     groupBy,
     impersonationId,
-    savingsRate
+    savingsRate,
+    userId
   }: {
     dateRange: DateRange;
     filters?: Filter[];
     groupBy?: GroupBy;
     impersonationId: string;
     savingsRate: number;
+    userId: string;
   }): Promise<PortfolioInvestments> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -638,12 +678,18 @@ export class PortfolioService {
     };
   }
 
-  public async getHolding(
-    aDataSource: DataSource,
-    aImpersonationId: string,
-    aSymbol: string
-  ): Promise<PortfolioHoldingResponse> {
-    const userId = await this.getUserId(aImpersonationId, this.request.user.id);
+  public async getHolding({
+    dataSource,
+    impersonationId,
+    symbol,
+    userId
+  }: {
+    dataSource: DataSource;
+    impersonationId: string;
+    symbol: string;
+    userId: string;
+  }): Promise<PortfolioHoldingResponse> {
+    userId = await this.getUserId(impersonationId, userId);
     const user = await this.userService.user({ id: userId });
     const userCurrency = this.getUserCurrency(user);
 
@@ -686,7 +732,7 @@ export class PortfolioService {
     }
 
     const [SymbolProfile] = await this.symbolProfileService.getSymbolProfiles([
-      { dataSource: aDataSource, symbol: aSymbol }
+      { dataSource, symbol }
     ]);
 
     const portfolioCalculator = this.calculatorFactory.createCalculator({
@@ -701,26 +747,33 @@ export class PortfolioService {
 
     const { positions } = await portfolioCalculator.getSnapshot();
 
-    const position = positions.find(({ dataSource, symbol }) => {
-      return dataSource === aDataSource && symbol === aSymbol;
+    const holding = positions.find((position) => {
+      return position.dataSource === dataSource && position.symbol === symbol;
     });
 
-    if (position) {
+    if (holding) {
       const {
         averagePrice,
         currency,
-        dataSource,
         dividendInBaseCurrency,
         fee,
         firstBuyDate,
+        grossPerformance,
+        grossPerformancePercentage,
+        grossPerformancePercentageWithCurrencyEffect,
+        grossPerformanceWithCurrencyEffect,
+        investmentWithCurrencyEffect,
         marketPrice,
+        netPerformance,
+        netPerformancePercentage,
+        netPerformancePercentageWithCurrencyEffectMap,
+        netPerformanceWithCurrencyEffectMap,
         quantity,
-        symbol,
         tags,
         timeWeightedInvestment,
         timeWeightedInvestmentWithCurrencyEffect,
         transactionCount
-      } = position;
+      } = holding;
 
       const activitiesOfHolding = activities.filter(({ SymbolProfile }) => {
         return (
@@ -749,7 +802,7 @@ export class PortfolioService {
         });
 
       const historicalData = await this.dataProviderService.getHistorical(
-        [{ dataSource, symbol: aSymbol }],
+        [{ dataSource, symbol }],
         'day',
         parseISO(firstBuyDate),
         new Date()
@@ -769,10 +822,10 @@ export class PortfolioService {
         marketPrice
       );
 
-      if (historicalData[aSymbol]) {
+      if (historicalData[symbol]) {
         let j = -1;
         for (const [date, { marketPrice }] of Object.entries(
-          historicalData[aSymbol]
+          historicalData[symbol]
         )) {
           while (
             j + 1 < transactionPoints.length &&
@@ -785,8 +838,8 @@ export class PortfolioService {
           let currentQuantity = 0;
 
           const currentSymbol = transactionPoints[j]?.items.find(
-            ({ symbol }) => {
-              return symbol === aSymbol;
+            (transactionPointSymbol) => {
+              return transactionPointSymbol.symbol === symbol;
             }
           );
 
@@ -850,24 +903,21 @@ export class PortfolioService {
           SymbolProfile.currency,
           userCurrency
         ),
-        grossPerformance: position.grossPerformance?.toNumber(),
-        grossPerformancePercent:
-          position.grossPerformancePercentage?.toNumber(),
+        grossPerformance: grossPerformance?.toNumber(),
+        grossPerformancePercent: grossPerformancePercentage?.toNumber(),
         grossPerformancePercentWithCurrencyEffect:
-          position.grossPerformancePercentageWithCurrencyEffect?.toNumber(),
+          grossPerformancePercentageWithCurrencyEffect?.toNumber(),
         grossPerformanceWithCurrencyEffect:
-          position.grossPerformanceWithCurrencyEffect?.toNumber(),
+          grossPerformanceWithCurrencyEffect?.toNumber(),
         historicalData: historicalDataArray,
         investmentInBaseCurrencyWithCurrencyEffect:
-          position.investmentWithCurrencyEffect?.toNumber(),
-        netPerformance: position.netPerformance?.toNumber(),
-        netPerformancePercent: position.netPerformancePercentage?.toNumber(),
+          investmentWithCurrencyEffect?.toNumber(),
+        netPerformance: netPerformance?.toNumber(),
+        netPerformancePercent: netPerformancePercentage?.toNumber(),
         netPerformancePercentWithCurrencyEffect:
-          position.netPerformancePercentageWithCurrencyEffectMap?.[
-            'max'
-          ]?.toNumber(),
+          netPerformancePercentageWithCurrencyEffectMap?.['max']?.toNumber(),
         netPerformanceWithCurrencyEffect:
-          position.netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
+          netPerformanceWithCurrencyEffectMap?.['max']?.toNumber(),
         performances: {
           allTimeHigh: {
             performancePercent,
@@ -884,12 +934,12 @@ export class PortfolioService {
     } else {
       const currentData = await this.dataProviderService.getQuotes({
         user,
-        items: [{ dataSource: DataSource.YAHOO, symbol: aSymbol }]
+        items: [{ symbol, dataSource: DataSource.YAHOO }]
       });
-      const marketPrice = currentData[aSymbol]?.marketPrice;
+      const marketPrice = currentData[symbol]?.marketPrice;
 
       let historicalData = await this.dataProviderService.getHistorical(
-        [{ dataSource: DataSource.YAHOO, symbol: aSymbol }],
+        [{ symbol, dataSource: DataSource.YAHOO }],
         'day',
         portfolioStart,
         new Date()
@@ -898,15 +948,13 @@ export class PortfolioService {
       if (isEmpty(historicalData)) {
         try {
           historicalData = await this.dataProviderService.getHistoricalRaw({
-            assetProfileIdentifiers: [
-              { dataSource: DataSource.YAHOO, symbol: aSymbol }
-            ],
+            assetProfileIdentifiers: [{ symbol, dataSource: DataSource.YAHOO }],
             from: portfolioStart,
             to: new Date()
           });
         } catch {
           historicalData = {
-            [aSymbol]: {}
+            [symbol]: {}
           };
         }
       }
@@ -917,7 +965,7 @@ export class PortfolioService {
       let marketPriceMin = marketPrice;
 
       for (const [date, { marketPrice }] of Object.entries(
-        historicalData[aSymbol]
+        historicalData[symbol]
       )) {
         historicalDataArray.push({
           date,
@@ -975,155 +1023,6 @@ export class PortfolioService {
         value: 0
       };
     }
-  }
-
-  public async getHoldings({
-    dateRange = 'max',
-    filters,
-    impersonationId
-  }: {
-    dateRange?: DateRange;
-    filters?: Filter[];
-    impersonationId: string;
-  }): Promise<{ hasErrors: boolean; positions: Position[] }> {
-    const searchQuery = filters.find(({ type }) => {
-      return type === 'SEARCH_QUERY';
-    })?.id;
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
-    const user = await this.userService.user({ id: userId });
-    const userCurrency = this.getUserCurrency(user);
-
-    const { activities } =
-      await this.orderService.getOrdersForPortfolioCalculator({
-        filters,
-        userCurrency,
-        userId
-      });
-
-    if (activities.length === 0) {
-      return {
-        hasErrors: false,
-        positions: []
-      };
-    }
-
-    const portfolioCalculator = this.calculatorFactory.createCalculator({
-      activities,
-      filters,
-      userId,
-      calculationType: this.getUserPerformanceCalculationType(user),
-      currency: userCurrency
-    });
-
-    const portfolioSnapshot = await portfolioCalculator.getSnapshot();
-    const hasErrors = portfolioSnapshot.hasErrors;
-    let positions = portfolioSnapshot.positions;
-
-    positions = positions.filter(({ quantity }) => {
-      return !quantity.eq(0);
-    });
-
-    const assetProfileIdentifiers = positions.map(({ dataSource, symbol }) => {
-      return {
-        dataSource,
-        symbol
-      };
-    });
-
-    const [dataProviderResponses, symbolProfiles] = await Promise.all([
-      this.dataProviderService.getQuotes({
-        user,
-        items: assetProfileIdentifiers
-      }),
-      this.symbolProfileService.getSymbolProfiles(
-        positions.map(({ dataSource, symbol }) => {
-          return { dataSource, symbol };
-        })
-      )
-    ]);
-
-    const symbolProfileMap: { [symbol: string]: EnhancedSymbolProfile } = {};
-
-    for (const symbolProfile of symbolProfiles) {
-      symbolProfileMap[symbolProfile.symbol] = symbolProfile;
-    }
-
-    if (searchQuery) {
-      positions = positions.filter(({ symbol }) => {
-        const enhancedSymbolProfile = symbolProfileMap[symbol];
-
-        return (
-          enhancedSymbolProfile.isin?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.name?.toLowerCase().startsWith(searchQuery) ||
-          enhancedSymbolProfile.symbol?.toLowerCase().startsWith(searchQuery)
-        );
-      });
-    }
-
-    return {
-      hasErrors,
-      positions: positions.map(
-        ({
-          averagePrice,
-          currency,
-          dataSource,
-          firstBuyDate,
-          grossPerformance,
-          grossPerformancePercentage,
-          grossPerformancePercentageWithCurrencyEffect,
-          grossPerformanceWithCurrencyEffect,
-          investment,
-          investmentWithCurrencyEffect,
-          netPerformance,
-          netPerformancePercentage,
-          netPerformancePercentageWithCurrencyEffectMap,
-          netPerformanceWithCurrencyEffectMap,
-          quantity,
-          symbol,
-          timeWeightedInvestment,
-          timeWeightedInvestmentWithCurrencyEffect,
-          transactionCount
-        }) => {
-          return {
-            currency,
-            dataSource,
-            firstBuyDate,
-            symbol,
-            transactionCount,
-            assetClass: symbolProfileMap[symbol].assetClass,
-            assetSubClass: symbolProfileMap[symbol].assetSubClass,
-            averagePrice: averagePrice.toNumber(),
-            grossPerformance: grossPerformance?.toNumber() ?? null,
-            grossPerformancePercentage:
-              grossPerformancePercentage?.toNumber() ?? null,
-            grossPerformancePercentageWithCurrencyEffect:
-              grossPerformancePercentageWithCurrencyEffect?.toNumber() ?? null,
-            grossPerformanceWithCurrencyEffect:
-              grossPerformanceWithCurrencyEffect?.toNumber() ?? null,
-            investment: investment.toNumber(),
-            investmentWithCurrencyEffect:
-              investmentWithCurrencyEffect?.toNumber(),
-            marketState:
-              dataProviderResponses[symbol]?.marketState ?? 'delayed',
-            name: symbolProfileMap[symbol].name,
-            netPerformance: netPerformance?.toNumber() ?? null,
-            netPerformancePercentage:
-              netPerformancePercentage?.toNumber() ?? null,
-            netPerformancePercentageWithCurrencyEffect:
-              netPerformancePercentageWithCurrencyEffectMap?.[
-                dateRange
-              ]?.toNumber() ?? null,
-            netPerformanceWithCurrencyEffect:
-              netPerformanceWithCurrencyEffectMap?.[dateRange]?.toNumber() ??
-              null,
-            quantity: quantity.toNumber(),
-            timeWeightedInvestment: timeWeightedInvestment?.toNumber(),
-            timeWeightedInvestmentWithCurrencyEffect:
-              timeWeightedInvestmentWithCurrencyEffect?.toNumber()
-          };
-        }
-      )
-    };
   }
 
   public async getPerformance({
@@ -1227,10 +1126,14 @@ export class PortfolioService {
     };
   }
 
-  public async getReport(
-    impersonationId: string
-  ): Promise<PortfolioReportResponse> {
-    const userId = await this.getUserId(impersonationId, this.request.user.id);
+  public async getReport({
+    impersonationId,
+    userId
+  }: {
+    impersonationId: string;
+    userId: string;
+  }): Promise<PortfolioReportResponse> {
+    userId = await this.getUserId(impersonationId, userId);
     const userSettings = this.request.user.Settings.settings as UserSettings;
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =

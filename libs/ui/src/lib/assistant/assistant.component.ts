@@ -3,7 +3,7 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { getAssetProfileIdentifier } from '@ghostfolio/common/helper';
 import { Filter, PortfolioPosition, User } from '@ghostfolio/common/interfaces';
-import { IRoute } from '@ghostfolio/common/routes/interfaces/interfaces';
+import { InternalRoute } from '@ghostfolio/common/routes/interfaces/internal-route.interface';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 import { DateRange } from '@ghostfolio/common/types';
 import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
@@ -41,6 +41,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { Account, AssetClass, DataSource } from '@prisma/client';
 import { differenceInYears } from 'date-fns';
+import Fuse from 'fuse.js';
 import { isFunction } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
@@ -640,22 +641,20 @@ export class GfAssistantComponent implements OnChanges, OnDestroy, OnInit {
           acc.push(...Object.values(route.subRoutes));
         }
         return acc;
-      }, [] as IRoute[]);
+      }, [] as InternalRoute[]);
 
-    return allRoutes
-      .filter(({ title }) => {
-        return title.toLowerCase().includes(searchTerm);
-      })
-      .map(({ routerLink, title }) => {
-        return {
-          routerLink,
-          mode: SearchMode.QUICK_LINK as const,
-          name: title
-        };
-      })
-      .sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
+    const fuse = new Fuse(allRoutes, {
+      keys: ['title'],
+      threshold: 0.3
+    });
+
+    return fuse.search(searchTerm).map(({ item: { routerLink, title } }) => {
+      return {
+        routerLink,
+        mode: SearchMode.QUICK_LINK as const,
+        name: title
+      };
+    });
   }
 
   private setFilterFormValues() {
