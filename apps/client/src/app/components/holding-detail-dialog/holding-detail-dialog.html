@@ -37,7 +37,7 @@
 
     <mat-tab-group
       animationDuration="0ms"
-      class="mb-5"
+      class="mb-4"
       [mat-stretch-tabs]="false"
       [ngClass]="{ 'd-none': !dataSource?.data.length }"
     >
@@ -46,289 +46,287 @@
           <ion-icon name="reader-outline" />
           <div class="d-none d-sm-block ml-2" i18n>Overview</div>
         </ng-template>
-        <div class="flex-grow-1" mat-dialog-content>
-          <div class="container p-0">
-            <div class="row">
+        <div class="container mt-3 p-0">
+          <div class="row w-100">
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [colorizeSign]="true"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [precision]="netPerformanceWithCurrencyEffectPrecision"
+                [unit]="data.baseCurrency"
+                [value]="netPerformanceWithCurrencyEffect"
+              >
+                @if (
+                  SymbolProfile?.currency &&
+                  data.baseCurrency !== SymbolProfile?.currency
+                ) {
+                  Change with currency effect
+                } @else {
+                  Change
+                }
+              </gf-value>
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [colorizeSign]="true"
+                [isPercent]="true"
+                [locale]="data.locale"
+                [value]="netPerformancePercentWithCurrencyEffect"
+              >
+                @if (
+                  SymbolProfile?.currency &&
+                  data.baseCurrency !== SymbolProfile?.currency
+                ) {
+                  Performance with currency effect
+                } @else {
+                  Performance
+                }
+              </gf-value>
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [unit]="SymbolProfile?.currency"
+                [value]="averagePrice"
+                >Average Unit Price</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [unit]="SymbolProfile?.currency"
+                [value]="marketPrice"
+                >Market Price</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [ngClass]="{
+                  'text-danger':
+                    marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
+                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                }"
+                [unit]="SymbolProfile?.currency"
+                [value]="marketPriceMin"
+                >Minimum Price</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [ngClass]="{
+                  'text-success':
+                    marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
+                    marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
+                }"
+                [unit]="SymbolProfile?.currency"
+                [value]="marketPriceMax"
+                >Maximum Price</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [locale]="data.locale"
+                [precision]="quantityPrecision"
+                [value]="quantity"
+                >Quantity</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [precision]="
+                  investmentInBaseCurrencyWithCurrencyEffectPrecision
+                "
+                [unit]="data.baseCurrency"
+                [value]="investmentInBaseCurrencyWithCurrencyEffect"
+                >Investment</gf-value
+              >
+            </div>
+            @if (
+              dividendInBaseCurrency && user?.settings?.isExperimentalFeatures
+            ) {
               <div class="col-6 mb-3">
                 <gf-value
                   i18n
                   size="medium"
-                  [colorizeSign]="true"
                   [isCurrency]="true"
                   [locale]="data.locale"
-                  [precision]="netPerformanceWithCurrencyEffectPrecision"
+                  [precision]="dividendInBaseCurrencyPrecision"
                   [unit]="data.baseCurrency"
-                  [value]="netPerformanceWithCurrencyEffect"
+                  [value]="dividendInBaseCurrency"
+                  >Dividend</gf-value
                 >
-                  @if (
-                    SymbolProfile?.currency &&
-                    data.baseCurrency !== SymbolProfile?.currency
-                  ) {
-                    Change with currency effect
-                  } @else {
-                    Change
-                  }
-                </gf-value>
               </div>
               <div class="col-6 mb-3">
                 <gf-value
                   i18n
                   size="medium"
-                  [colorizeSign]="true"
                   [isPercent]="true"
                   [locale]="data.locale"
-                  [value]="netPerformancePercentWithCurrencyEffect"
-                >
-                  @if (
-                    SymbolProfile?.currency &&
-                    data.baseCurrency !== SymbolProfile?.currency
-                  ) {
-                    Performance with currency effect
-                  } @else {
-                    Performance
-                  }
-                </gf-value>
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [unit]="SymbolProfile?.currency"
-                  [value]="averagePrice"
-                  >Average Unit Price</gf-value
+                  [value]="dividendYieldPercentWithCurrencyEffect"
+                  >Dividend Yield</gf-value
                 >
               </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [unit]="SymbolProfile?.currency"
-                  [value]="marketPrice"
-                  >Market Price</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [ngClass]="{
-                    'text-danger':
-                      marketPriceMin?.toFixed(2) === marketPrice?.toFixed(2) &&
-                      marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                  }"
-                  [unit]="SymbolProfile?.currency"
-                  [value]="marketPriceMin"
-                  >Minimum Price</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [ngClass]="{
-                    'text-success':
-                      marketPriceMax?.toFixed(2) === marketPrice?.toFixed(2) &&
-                      marketPriceMax?.toFixed(2) !== marketPriceMin?.toFixed(2)
-                  }"
-                  [unit]="SymbolProfile?.currency"
-                  [value]="marketPriceMax"
-                  >Maximum Price</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [locale]="data.locale"
-                  [precision]="quantityPrecision"
-                  [value]="quantity"
-                  >Quantity</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [precision]="
-                    investmentInBaseCurrencyWithCurrencyEffectPrecision
-                  "
-                  [unit]="data.baseCurrency"
-                  [value]="investmentInBaseCurrencyWithCurrencyEffect"
-                  >Investment</gf-value
-                >
-              </div>
+            }
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isCurrency]="true"
+                [locale]="data.locale"
+                [unit]="data.baseCurrency"
+                [value]="feeInBaseCurrency"
+                >Fees</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [isDate]="true"
+                [locale]="data.locale"
+                [value]="firstBuyDate"
+                >First Activity</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                size="medium"
+                [locale]="data.locale"
+                [value]="transactionCount"
+              >
+                @if (transactionCount === 1) {
+                  <ng-container i18n>Activity</ng-container>
+                } @else {
+                  <ng-container i18n>Activities</ng-container>
+                }
+              </gf-value>
+            </div>
+            <div class="col-6 mb-3"></div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [hidden]="!assetClass"
+                [value]="assetClass"
+                >Asset Class</gf-value
+              >
+            </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [hidden]="!assetSubClass"
+                [value]="assetSubClass"
+                >Asset Sub Class</gf-value
+              >
+            </div>
+            @if (
+              SymbolProfile?.countries?.length > 0 ||
+              SymbolProfile?.sectors?.length > 0
+            ) {
               @if (
-                dividendInBaseCurrency && user?.settings?.isExperimentalFeatures
+                SymbolProfile?.countries?.length === 1 &&
+                SymbolProfile?.sectors?.length === 1
               ) {
                 <div class="col-6 mb-3">
                   <gf-value
                     i18n
                     size="medium"
-                    [isCurrency]="true"
                     [locale]="data.locale"
-                    [precision]="dividendInBaseCurrencyPrecision"
-                    [unit]="data.baseCurrency"
-                    [value]="dividendInBaseCurrency"
-                    >Dividend</gf-value
+                    [value]="SymbolProfile.sectors[0].name"
+                    >Sector</gf-value
                   >
                 </div>
-                <div class="col-6 mb-3">
-                  <gf-value
-                    i18n
-                    size="medium"
-                    [isPercent]="true"
-                    [locale]="data.locale"
-                    [value]="dividendYieldPercentWithCurrencyEffect"
-                    >Dividend Yield</gf-value
-                  >
-                </div>
-              }
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isCurrency]="true"
-                  [locale]="data.locale"
-                  [unit]="data.baseCurrency"
-                  [value]="feeInBaseCurrency"
-                  >Fees</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [isDate]="true"
-                  [locale]="data.locale"
-                  [value]="firstBuyDate"
-                  >First Activity</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  size="medium"
-                  [locale]="data.locale"
-                  [value]="transactionCount"
-                >
-                  @if (transactionCount === 1) {
-                    <ng-container i18n>Activity</ng-container>
-                  } @else {
-                    <ng-container i18n>Activities</ng-container>
-                  }
-                </gf-value>
-              </div>
-              <div class="col-6 mb-3"></div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [hidden]="!assetClass"
-                  [value]="assetClass"
-                  >Asset Class</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [hidden]="!assetSubClass"
-                  [value]="assetSubClass"
-                  >Asset Sub Class</gf-value
-                >
-              </div>
-              @if (
-                SymbolProfile?.countries?.length > 0 ||
-                SymbolProfile?.sectors?.length > 0
-              ) {
-                @if (
-                  SymbolProfile?.countries?.length === 1 &&
-                  SymbolProfile?.sectors?.length === 1
-                ) {
+                @if (SymbolProfile?.countries?.length === 1) {
                   <div class="col-6 mb-3">
                     <gf-value
                       i18n
                       size="medium"
                       [locale]="data.locale"
-                      [value]="SymbolProfile.sectors[0].name"
-                      >Sector</gf-value
+                      [value]="SymbolProfile.countries[0].name"
+                      >Country</gf-value
                     >
                   </div>
-                  @if (SymbolProfile?.countries?.length === 1) {
-                    <div class="col-6 mb-3">
-                      <gf-value
-                        i18n
-                        size="medium"
-                        [locale]="data.locale"
-                        [value]="SymbolProfile.countries[0].name"
-                        >Country</gf-value
-                      >
-                    </div>
-                  }
-                } @else {
-                  <div class="col-md-6 mb-3">
-                    <div class="h5" i18n>Sectors</div>
-                    <gf-portfolio-proportion-chart
-                      [baseCurrency]="data.baseCurrency"
-                      [colorScheme]="data.colorScheme"
-                      [data]="sectors"
-                      [isInPercent]="true"
-                      [keys]="['name']"
-                      [locale]="data.locale"
-                      [maxItems]="10"
-                    />
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <div class="h5" i18n>Countries</div>
-                    <gf-portfolio-proportion-chart
-                      [baseCurrency]="data.baseCurrency"
-                      [colorScheme]="data.colorScheme"
-                      [data]="countries"
-                      [isInPercent]="true"
-                      [keys]="['name']"
-                      [locale]="data.locale"
-                      [maxItems]="10"
-                    />
-                  </div>
                 }
-              }
-              <div class="col-6 mb-3">
-                <gf-value
-                  i18n
-                  size="medium"
-                  [hidden]="!SymbolProfile?.symbol"
-                  [value]="SymbolProfile?.symbol"
-                  >Symbol</gf-value
-                >
-              </div>
-              <div class="col-6 mb-3">
-                <gf-value
-                  size="medium"
-                  [hidden]="!SymbolProfile?.isin"
-                  [value]="SymbolProfile?.isin"
-                  >ISIN</gf-value
-                >
-              </div>
-
-              @if (dataProviderInfo) {
-                <div class="col-md-12 mb-3 text-center">
-                  <hr />
-                  <gf-data-provider-credits
-                    [dataProviderInfos]="[dataProviderInfo]"
+              } @else {
+                <div class="col-md-6 mb-3">
+                  <div class="h5" i18n>Sectors</div>
+                  <gf-portfolio-proportion-chart
+                    [baseCurrency]="data.baseCurrency"
+                    [colorScheme]="data.colorScheme"
+                    [data]="sectors"
+                    [isInPercent]="true"
+                    [keys]="['name']"
+                    [locale]="data.locale"
+                    [maxItems]="10"
                   />
-                  <hr />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="h5" i18n>Countries</div>
+                  <gf-portfolio-proportion-chart
+                    [baseCurrency]="data.baseCurrency"
+                    [colorScheme]="data.colorScheme"
+                    [data]="countries"
+                    [isInPercent]="true"
+                    [keys]="['name']"
+                    [locale]="data.locale"
+                    [maxItems]="10"
+                  />
                 </div>
               }
+            }
+            <div class="col-6 mb-3">
+              <gf-value
+                i18n
+                size="medium"
+                [hidden]="!SymbolProfile?.symbol"
+                [value]="SymbolProfile?.symbol"
+                >Symbol</gf-value
+              >
             </div>
+            <div class="col-6 mb-3">
+              <gf-value
+                size="medium"
+                [hidden]="!SymbolProfile?.isin"
+                [value]="SymbolProfile?.isin"
+                >ISIN</gf-value
+              >
+            </div>
+
+            @if (dataProviderInfo) {
+              <div class="col-md-12 mb-3 text-center">
+                <hr />
+                <gf-data-provider-credits
+                  [dataProviderInfos]="[dataProviderInfo]"
+                />
+                <hr />
+              </div>
+            }
           </div>
         </div>
       </mat-tab>
