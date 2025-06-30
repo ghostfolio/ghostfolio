@@ -19,7 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { MarkdownModule } from 'ngx-markdown';
+import { provideMarkdown } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 
@@ -50,7 +50,6 @@ export function NgxStripeFactory(): string {
     GfLogoComponent,
     GfNotificationModule,
     GfSubscriptionInterstitialDialogModule,
-    MarkdownModule.forRoot(),
     MatAutocompleteModule,
     MatChipsModule,
     MatNativeDateModule,
@@ -73,6 +72,7 @@ export function NgxStripeFactory(): string {
       useClass: CustomDateAdapter,
       deps: [LanguageService, MAT_DATE_LOCALE, Platform]
     },
+    provideMarkdown(),
     { provide: MAT_DATE_FORMATS, useValue: DateFormats },
     {
       provide: STRIPE_PUBLISHABLE_KEY,
