@@ -20,7 +20,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideMarkdown } from 'ngx-markdown';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { provideNgxSkeletonLoader } from 'ngx-skeleton-loader';
 import { NgxStripeModule, STRIPE_PUBLISHABLE_KEY } from 'ngx-stripe';
 
 import { environment } from '../environments/environment';
@@ -55,7 +55,6 @@ export function NgxStripeFactory(): string {
     MatNativeDateModule,
     MatSnackBarModule,
     MatTooltipModule,
-    NgxSkeletonLoaderModule,
     NgxStripeModule.forRoot(environment.stripePublicKey),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
@@ -73,6 +72,7 @@ export function NgxStripeFactory(): string {
       deps: [LanguageService, MAT_DATE_LOCALE, Platform]
     },
     provideMarkdown(),
+    provideNgxSkeletonLoader(),
     { provide: MAT_DATE_FORMATS, useValue: DateFormats },
     {
       provide: STRIPE_PUBLISHABLE_KEY,
