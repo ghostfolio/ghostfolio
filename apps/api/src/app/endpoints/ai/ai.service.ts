@@ -19,13 +19,13 @@ export class AiService {
   ) {}
 
   public async generateText({ prompt }: { prompt: string }) {
-    const openRouterApiKey = (await this.propertyService.getByKey(
+    const openRouterApiKey = await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_OPENROUTER
-    )) as string;
+    );
 
-    const openRouterModel = (await this.propertyService.getByKey(
+    const openRouterModel = await this.propertyService.getByKey<string>(
       PROPERTY_OPENROUTER_MODEL
-    )) as string;
+    );
 
     const openRouterService = createOpenRouter({
       apiKey: openRouterApiKey

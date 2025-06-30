@@ -45,8 +45,7 @@ export class PropertyService {
 
   public async isUserSignupEnabled() {
     return (
-      ((await this.getByKey(PROPERTY_IS_USER_SIGNUP_ENABLED)) as boolean) ??
-      true
+      (await this.getByKey<boolean>(PROPERTY_IS_USER_SIGNUP_ENABLED)) ?? true
     );
   }
 

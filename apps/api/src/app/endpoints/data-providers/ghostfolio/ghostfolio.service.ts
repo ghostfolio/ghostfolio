@@ -164,9 +164,9 @@ export class GhostfolioService {
 
   public async getMaxDailyRequests() {
     return parseInt(
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<string>(
         PROPERTY_DATA_SOURCES_GHOSTFOLIO_DATA_PROVIDER_MAX_REQUESTS
-      )) as string) || '0',
+      )) || '0',
       10
     );
   }

@@ -406,9 +406,9 @@ export class DataGatheringService {
   private async getSymbolsMax(): Promise<IDataGatheringItem[]> {
     const benchmarkAssetProfileIdMap: { [key: string]: boolean } = {};
     (
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
-      )) as BenchmarkProperty[]) ?? []
+      )) ?? []
     ).forEach(({ symbolProfileId }) => {
       benchmarkAssetProfileIdMap[symbolProfileId] = true;
     });

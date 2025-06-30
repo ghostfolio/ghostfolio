@@ -106,9 +106,9 @@ export class BenchmarkService {
     enableSharing = false
   } = {}): Promise<Partial<SymbolProfile>[]> {
     const symbolProfileIds: string[] = (
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
-      )) as BenchmarkProperty[]) ?? []
+      )) ?? []
     )
       .filter((benchmark) => {
         if (enableSharing) {
@@ -154,9 +154,9 @@ export class BenchmarkService {
     }
 
     let benchmarks =
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
-      )) as BenchmarkProperty[]) ?? [];
+      )) ?? [];
 
     benchmarks.push({ symbolProfileId: assetProfile.id });
 
@@ -191,9 +191,9 @@ export class BenchmarkService {
     }
 
     let benchmarks =
-      ((await this.propertyService.getByKey(
+      (await this.propertyService.getByKey<BenchmarkProperty[]>(
         PROPERTY_BENCHMARKS
-      )) as BenchmarkProperty[]) ?? [];
+      )) ?? [];
 
     benchmarks = benchmarks.filter(({ symbolProfileId }) => {
       return symbolProfileId !== assetProfile.id;

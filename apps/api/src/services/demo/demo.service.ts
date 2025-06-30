@@ -17,10 +17,10 @@ export class DemoService {
   ) {}
 
   public async syncDemoUserAccount() {
-    const [demoAccountId, demoUserId] = (await Promise.all([
-      this.propertyService.getByKey(PROPERTY_DEMO_ACCOUNT_ID),
-      this.propertyService.getByKey(PROPERTY_DEMO_USER_ID)
-    ])) as [string, string];
+    const [demoAccountId, demoUserId] = await Promise.all([
+      this.propertyService.getByKey<string>(PROPERTY_DEMO_ACCOUNT_ID),
+      this.propertyService.getByKey<string>(PROPERTY_DEMO_USER_ID)
+    ]);
 
     let activities = await this.prismaService.order.findMany({
       orderBy: {

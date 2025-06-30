@@ -295,9 +295,9 @@ export class GhostfolioService implements DataProviderInterface {
   }
 
   private async getRequestHeaders() {
-    const apiKey = (await this.propertyService.getByKey(
+    const apiKey = await this.propertyService.getByKey<string>(
       PROPERTY_API_KEY_GHOSTFOLIO
-    )) as string;
+    );
 
     return {
       [HEADER_KEY_TOKEN]: `Api-Key ${apiKey}`

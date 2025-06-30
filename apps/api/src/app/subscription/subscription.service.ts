@@ -50,8 +50,7 @@ export class SubscriptionService {
     const subscriptionOffers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
-      ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
-      {};
+      (await this.propertyService.getByKey<any>(PROPERTY_STRIPE_CONFIG)) ?? {};
 
     const subscriptionOffer = Object.values(subscriptionOffers).find(
       (subscriptionOffer) => {
@@ -213,8 +212,7 @@ export class SubscriptionService {
     const offers: {
       [offer in SubscriptionOfferKey]: SubscriptionOffer;
     } =
-      ((await this.propertyService.getByKey(PROPERTY_STRIPE_CONFIG)) as any) ??
-      {};
+      (await this.propertyService.getByKey<any>(PROPERTY_STRIPE_CONFIG)) ?? {};
 
     return {
       ...offers[key],
