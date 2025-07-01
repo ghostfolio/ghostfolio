@@ -125,9 +125,10 @@ export class UserService {
 
     let systemMessage: SystemMessage;
 
-    const systemMessageProperty = (await this.propertyService.getByKey(
-      PROPERTY_SYSTEM_MESSAGE
-    )) as SystemMessage;
+    const systemMessageProperty =
+      await this.propertyService.getByKey<SystemMessage>(
+        PROPERTY_SYSTEM_MESSAGE
+      );
 
     if (systemMessageProperty?.targetGroups?.includes(subscription?.type)) {
       systemMessage = systemMessageProperty;
@@ -443,9 +444,9 @@ export class UserService {
         currentPermissions.push(permissions.toggleReadOnlyMode);
       }
 
-      const isReadOnlyMode = (await this.propertyService.getByKey(
+      const isReadOnlyMode = await this.propertyService.getByKey<boolean>(
         PROPERTY_IS_READ_ONLY_MODE
-      )) as boolean;
+      );
 
       if (isReadOnlyMode) {
         currentPermissions = currentPermissions.filter((permission) => {

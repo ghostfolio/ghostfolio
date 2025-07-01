@@ -497,9 +497,8 @@ export class ExchangeRateDataService {
       currencies.push(currency);
     });
 
-    const customCurrencies = (await this.propertyService.getByKey(
-      PROPERTY_CURRENCIES
-    )) as string[];
+    const customCurrencies =
+      await this.propertyService.getByKey<string[]>(PROPERTY_CURRENCIES);
 
     if (customCurrencies?.length > 0) {
       currencies = currencies.concat(customCurrencies);
