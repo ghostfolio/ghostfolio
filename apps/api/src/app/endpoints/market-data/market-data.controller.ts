@@ -1,8 +1,18 @@
 import { AdminService } from '@ghostfolio/api/app/admin/admin.service';
+import { SymbolService } from '@ghostfolio/api/app/symbol/symbol.service';
+import { HasPermission } from '@ghostfolio/api/decorators/has-permission.decorator';
+import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard';
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
+import {
+  ghostfolioFearAndGreedIndexDataSource,
+  ghostfolioFearAndGreedIndexSymbol
+} from '@ghostfolio/common/config';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
-import { MarketDataDetailsResponse } from '@ghostfolio/common/interfaces';
+import {
+  MarketDataDetailsResponse,
+  MarketDataOfMarketsResponse
+} from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { RequestWithUser } from '@ghostfolio/common/types';
 
@@ -14,6 +24,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   UseGuards
 } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
@@ -30,8 +41,45 @@ export class MarketDataController {
     private readonly adminService: AdminService,
     private readonly marketDataService: MarketDataService,
     @Inject(REQUEST) private readonly request: RequestWithUser,
-    private readonly symbolProfileService: SymbolProfileService
+    private readonly symbolProfileService: SymbolProfileService,
+    private readonly symbolService: SymbolService
   ) {}
+
+  @Get('markets')
+  @HasPermission(permissions.readMarketDataOfMarkets)
+  @UseGuards(AuthGuard('jwt'), HasPermissionGuard)
+  public async getMarketDataOfMarkets(
+    @Query('includeHistoricalData') includeHistoricalData = 0
+  ): Promise<MarketDataOfMarketsResponse> {
+    const [
+      marketDataFearAndGreedIndexCryptocurrencies,
+      marketDataFearAndGreedIndexStocks
+    ] = await Promise.all([
+      this.symbolService.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource: 'MANUAL',
+          symbol: 'GF_FEAR_AND_GREED_INDEX_CRYPTO'
+        }
+      }),
+      this.symbolService.get({
+        includeHistoricalData,
+        dataGatheringItem: {
+          dataSource: ghostfolioFearAndGreedIndexDataSource,
+          symbol: ghostfolioFearAndGreedIndexSymbol
+        }
+      })
+    ]);
+
+    return {
+      CRYPTOCURRENCIES: {
+        ...marketDataFearAndGreedIndexCryptocurrencies
+      },
+      STOCKS: {
+        ...marketDataFearAndGreedIndexStocks
+      }
+    };
+  }
 
   @Get(':dataSource/:symbol')
   @UseGuards(AuthGuard('jwt'))

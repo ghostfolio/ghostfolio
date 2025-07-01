@@ -58,6 +58,11 @@ export class HomePageComponent implements OnDestroy, OnInit {
               iconName: 'newspaper-outline',
               label: internalRoutes.home.subRoutes.markets.title,
               routerLink: internalRoutes.home.subRoutes.markets.routerLink
+            },
+            {
+              iconName: 'newspaper-outline',
+              label: internalRoutes.home.subRoutes.markets.title + ' (new)',
+              routerLink: ['/home', 'markets-new'] // TODO
             }
           ];
 

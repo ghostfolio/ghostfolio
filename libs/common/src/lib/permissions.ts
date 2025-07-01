@@ -40,6 +40,7 @@ export const permissions = {
   impersonateAllUsers: 'impersonateAllUsers',
   readAiPrompt: 'readAiPrompt',
   readMarketData: 'readMarketData',
+  readMarketDataOfMarkets: 'readMarketDataOfMarkets', // TODO
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
   readTags: 'readTags',
@@ -87,6 +88,7 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteUser,
         permissions.readAiPrompt,
         permissions.readMarketData,
+        permissions.readMarketDataOfMarkets,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
         permissions.readTags,

@@ -3,6 +3,7 @@ import { HomeMarketComponent } from '@ghostfolio/client/components/home-market/h
 import { HomeOverviewComponent } from '@ghostfolio/client/components/home-overview/home-overview.component';
 import { HomeSummaryComponent } from '@ghostfolio/client/components/home-summary/home-summary.component';
 import { HomeWatchlistComponent } from '@ghostfolio/client/components/home-watchlist/home-watchlist.component';
+import { MarketsComponent } from '@ghostfolio/client/components/markets/markets.component';
 import { AuthGuard } from '@ghostfolio/client/core/auth.guard';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
@@ -32,6 +33,11 @@ const routes: Routes = [
       {
         path: internalRoutes.home.subRoutes.markets.path,
         component: HomeMarketComponent,
+        title: internalRoutes.home.subRoutes.markets.title
+      },
+      {
+        path: internalRoutes.home.subRoutes.markets.path + '-new', // TODO
+        component: MarketsComponent,
         title: internalRoutes.home.subRoutes.markets.title
       },
       {
