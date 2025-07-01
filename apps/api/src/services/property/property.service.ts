@@ -6,7 +6,7 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
-type Value = boolean | object | string | string[];
+import { PropertyValue } from './interfaces/interfaces';
 
 @Injectable()
 export class PropertyService {
@@ -20,7 +20,7 @@ export class PropertyService {
 
   public async get() {
     const response: {
-      [key: string]: Value;
+      [key: string]: PropertyValue;
     } = {
       [PROPERTY_CURRENCIES]: []
     };
@@ -40,7 +40,7 @@ export class PropertyService {
     return response;
   }
 
-  public async getByKey<TValue extends Value>(aKey: string) {
+  public async getByKey<TValue extends PropertyValue>(aKey: string) {
     const properties = await this.get();
     return properties[aKey] as TValue;
   }
