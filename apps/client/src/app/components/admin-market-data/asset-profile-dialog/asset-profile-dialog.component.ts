@@ -5,7 +5,10 @@ import { AdminService } from '@ghostfolio/client/services/admin.service';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { validateObjectForForm } from '@ghostfolio/client/util/form.util';
-import { ghostfolioScraperApiSymbolPrefix } from '@ghostfolio/common/config';
+import {
+  ghostfolioScraperApiSymbolPrefix,
+  PROPERTY_IS_DATA_GATHERING_ENABLED
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT } from '@ghostfolio/common/helper';
 import {
   AdminMarketDataDetails,
@@ -133,6 +136,7 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
   public ghostfolioScraperApiSymbolPrefix = ghostfolioScraperApiSymbolPrefix;
   public historicalDataItems: LineChartItem[];
   public isBenchmark = false;
+  public isDataGatheringEnabled: boolean;
   public isEditAssetProfileIdentifierMode = false;
   public marketDataItems: MarketData[] = [];
 
@@ -282,6 +286,16 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
         });
 
         this.assetProfileForm.markAsPristine();
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.adminService
+      .fetchAdminData()
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ settings }) => {
+        this.isDataGatheringEnabled =
+          settings[PROPERTY_IS_DATA_GATHERING_ENABLED] === false ? false : true;
 
         this.changeDetectorRef.markForCheck();
       });
