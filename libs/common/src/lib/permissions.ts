@@ -40,7 +40,7 @@ export const permissions = {
   impersonateAllUsers: 'impersonateAllUsers',
   readAiPrompt: 'readAiPrompt',
   readMarketData: 'readMarketData',
-  readMarketDataOfMarkets: 'readMarketDataOfMarkets', // TODO
+  readMarketDataOfMarkets: 'readMarketDataOfMarkets',
   readMarketDataOfOwnAssetProfile: 'readMarketDataOfOwnAssetProfile',
   readPlatforms: 'readPlatforms',
   readTags: 'readTags',
