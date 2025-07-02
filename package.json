@@ -138,7 +138,7 @@
     "svgmap": "2.12.2",
     "twitter-api-v2": "1.23.0",
     "uuid": "11.1.0",
-    "yahoo-finance2": "3.3.5",
+    "yahoo-finance2": "3.4.1",
     "zone.js": "0.15.1"
   },
   "devDependencies": {
