@@ -6,7 +6,8 @@ import { MarketDataService } from '@ghostfolio/api/services/market-data/market-d
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
   ghostfolioFearAndGreedIndexDataSource,
-  ghostfolioFearAndGreedIndexSymbol
+  ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
+  ghostfolioFearAndGreedIndexSymbolStocks
 } from '@ghostfolio/common/config';
 import { getCurrencyFromSymbol, isCurrency } from '@ghostfolio/common/helper';
 import {
@@ -59,14 +60,14 @@ export class MarketDataController {
         includeHistoricalData,
         dataGatheringItem: {
           dataSource: 'MANUAL',
-          symbol: 'GF_FEAR_AND_GREED_INDEX_CRYPTO'
+          symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
         }
       }),
       this.symbolService.get({
         includeHistoricalData,
         dataGatheringItem: {
           dataSource: ghostfolioFearAndGreedIndexDataSource,
-          symbol: ghostfolioFearAndGreedIndexSymbol
+          symbol: ghostfolioFearAndGreedIndexSymbolStocks
         }
       })
     ]);

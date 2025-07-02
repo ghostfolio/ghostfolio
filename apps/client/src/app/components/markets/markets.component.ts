@@ -102,10 +102,11 @@ export class MarketsComponent implements OnDestroy, OnInit {
 
   public initialize() {
     this.fearAndGreedIndex =
-      this.fearAndGreedIndexData[this.fearAndGreedIndexMode].marketPrice;
+      this.fearAndGreedIndexData[this.fearAndGreedIndexMode]?.marketPrice;
 
     this.historicalDataItems = [
-      ...this.fearAndGreedIndexData[this.fearAndGreedIndexMode].historicalData,
+      ...(this.fearAndGreedIndexData[this.fearAndGreedIndexMode]
+        ?.historicalData ?? []),
       {
         date: resetHours(new Date()).toISOString(),
         value: this.fearAndGreedIndex
