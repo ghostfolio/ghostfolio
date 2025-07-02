@@ -88,7 +88,6 @@ export function getPermissions(aRole: Role): string[] {
         permissions.deleteUser,
         permissions.readAiPrompt,
         permissions.readMarketData,
-        permissions.readMarketDataOfMarkets,
         permissions.readMarketDataOfOwnAssetProfile,
         permissions.readPlatforms,
         permissions.readTags,

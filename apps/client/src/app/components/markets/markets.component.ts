@@ -125,7 +125,6 @@ export class MarketsComponent implements OnDestroy, OnInit {
     ];
   }
 
-  // TODO
   public onChangeFearAndGreedIndexMode(
     aFearAndGreedIndexMode: FearAndGreedIndexMode
   ) {

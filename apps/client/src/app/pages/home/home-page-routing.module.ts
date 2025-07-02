@@ -36,9 +36,9 @@ const routes: Routes = [
         title: internalRoutes.home.subRoutes.markets.title
       },
       {
-        path: internalRoutes.home.subRoutes.markets.path + '-new', // TODO
+        path: internalRoutes.home.subRoutes.marketsPremium.path,
         component: MarketsComponent,
-        title: internalRoutes.home.subRoutes.markets.title
+        title: internalRoutes.home.subRoutes.marketsPremium.title
       },
       {
         path: internalRoutes.home.subRoutes.watchlist.path,
