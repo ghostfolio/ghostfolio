@@ -497,11 +497,12 @@ export class DataService {
 
     return this.http.get<any>('/api/v1/market-data/markets', { params }).pipe(
       map((data) => {
-        for (const item of data.CRYPTOCURRENCIES.historicalData) {
+        for (const item of data.fearAndGreedIndex.CRYPTOCURRENCIES
+          .historicalData) {
           item.date = parseISO(item.date);
         }
 
-        for (const item of data.STOCKS.historicalData) {
+        for (const item of data.fearAndGreedIndex.STOCKS.historicalData) {
           item.date = parseISO(item.date);
         }
 

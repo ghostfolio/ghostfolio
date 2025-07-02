@@ -72,11 +72,13 @@ export class MarketDataController {
     ]);
 
     return {
-      CRYPTOCURRENCIES: {
-        ...marketDataFearAndGreedIndexCryptocurrencies
-      },
-      STOCKS: {
-        ...marketDataFearAndGreedIndexStocks
+      fearAndGreedIndex: {
+        CRYPTOCURRENCIES: {
+          ...marketDataFearAndGreedIndexCryptocurrencies
+        },
+        STOCKS: {
+          ...marketDataFearAndGreedIndexStocks
+        }
       }
     };
   }

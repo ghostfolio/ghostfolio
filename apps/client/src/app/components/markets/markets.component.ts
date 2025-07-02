@@ -6,12 +6,10 @@ import { resetHours } from '@ghostfolio/common/helper';
 import {
   Benchmark,
   HistoricalDataItem,
-  InfoItem,
   MarketDataOfMarketsResponse,
   ToggleOption,
   User
 } from '@ghostfolio/common/interfaces';
-import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { FearAndGreedIndexMode } from '@ghostfolio/common/types';
 import { GfBenchmarkComponent } from '@ghostfolio/ui/benchmark';
 import { GfLineChartComponent } from '@ghostfolio/ui/line-chart';
@@ -47,17 +45,15 @@ export class MarketsComponent implements OnDestroy, OnInit {
   public benchmarks: Benchmark[];
   public deviceType: string;
   public fearAndGreedIndex: number;
-  public fearAndGreedIndexData: MarketDataOfMarketsResponse;
+  public fearAndGreedIndexData: MarketDataOfMarketsResponse['fearAndGreedIndex'];
   public fearLabel = $localize`Fear`;
   public greedLabel = $localize`Greed`;
-  public hasPermissionToAccessFearAndGreedIndex: boolean;
   public historicalDataItems: HistoricalDataItem[];
   public fearAndGreedIndexMode: FearAndGreedIndexMode = 'STOCKS';
   public fearAndGreedIndexModeOptions: ToggleOption[] = [
     { label: $localize`Stocks`, value: 'STOCKS' },
     { label: $localize`Cryptocurrencies`, value: 'CRYPTOCURRENCIES' }
   ];
-  public info: InfoItem;
   public readonly numberOfDays = 365;
   public user: User;
 
@@ -70,7 +66,6 @@ export class MarketsComponent implements OnDestroy, OnInit {
     private userService: UserService
   ) {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;
-    this.info = this.dataService.fetchInfo();
 
     this.userService.stateChanged
       .pipe(takeUntil(this.unsubscribeSubject))
@@ -84,23 +79,16 @@ export class MarketsComponent implements OnDestroy, OnInit {
   }
 
   public ngOnInit() {
-    this.hasPermissionToAccessFearAndGreedIndex = hasPermission(
-      this.info?.globalPermissions,
-      permissions.enableFearAndGreedIndex
-    );
+    this.dataService
+      .fetchMarketDataOfMarkets({ includeHistoricalData: this.numberOfDays })
+      .pipe(takeUntil(this.unsubscribeSubject))
+      .subscribe(({ fearAndGreedIndex }) => {
+        this.fearAndGreedIndexData = fearAndGreedIndex;
 
-    if (this.hasPermissionToAccessFearAndGreedIndex) {
-      this.dataService
-        .fetchMarketDataOfMarkets({ includeHistoricalData: this.numberOfDays })
-        .pipe(takeUntil(this.unsubscribeSubject))
-        .subscribe((fearAndGreedIndexData) => {
-          this.fearAndGreedIndexData = fearAndGreedIndexData;
+        this.initialize();
 
-          this.initialize();
-
-          this.changeDetectorRef.markForCheck();
-        });
-    }
+        this.changeDetectorRef.markForCheck();
+      });
 
     this.dataService
       .fetchBenchmarks()
