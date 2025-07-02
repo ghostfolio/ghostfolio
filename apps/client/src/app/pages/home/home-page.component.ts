@@ -65,7 +65,6 @@ export class HomePageComponent implements OnDestroy, OnInit {
               )
                 ? internalRoutes.home.subRoutes.marketsPremium.title
                 : internalRoutes.home.subRoutes.markets.title,
-
               routerLink: hasPermission(
                 this.user?.permissions,
                 permissions.readMarketDataOfMarkets
