@@ -14,7 +14,7 @@ import {
   PROPERTY_DEMO_USER_ID,
   PROPERTY_IS_READ_ONLY_MODE,
   PROPERTY_SLACK_COMMUNITY_USERS,
-  ghostfolioFearAndGreedIndexDataSource
+  ghostfolioFearAndGreedIndexDataSourceStocks
 } from '@ghostfolio/common/config';
 import {
   DATE_FORMAT,
@@ -54,10 +54,11 @@ export class InfoService {
     if (this.configurationService.get('ENABLE_FEATURE_FEAR_AND_GREED_INDEX')) {
       if (this.configurationService.get('ENABLE_FEATURE_SUBSCRIPTION')) {
         info.fearAndGreedDataSource = encodeDataSource(
-          ghostfolioFearAndGreedIndexDataSource
+          ghostfolioFearAndGreedIndexDataSourceStocks
         );
       } else {
-        info.fearAndGreedDataSource = ghostfolioFearAndGreedIndexDataSource;
+        info.fearAndGreedDataSource =
+          ghostfolioFearAndGreedIndexDataSourceStocks;
       }
 
       globalPermissions.push(permissions.enableFearAndGreedIndex);

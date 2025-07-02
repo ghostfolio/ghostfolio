@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+- Extended the _Fear & Greed Index_ (market mood) in the markets overview by cryptocurrencies (experimental)
+
 ### Changed
 
 - Made the `getByKey()` function generic in the property service
