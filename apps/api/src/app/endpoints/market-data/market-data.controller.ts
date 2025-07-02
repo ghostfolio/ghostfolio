@@ -5,7 +5,8 @@ import { HasPermissionGuard } from '@ghostfolio/api/guards/has-permission.guard'
 import { MarketDataService } from '@ghostfolio/api/services/market-data/market-data.service';
 import { SymbolProfileService } from '@ghostfolio/api/services/symbol-profile/symbol-profile.service';
 import {
-  ghostfolioFearAndGreedIndexDataSource,
+  ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
+  ghostfolioFearAndGreedIndexDataSourceStocks,
   ghostfolioFearAndGreedIndexSymbolCryptocurrencies,
   ghostfolioFearAndGreedIndexSymbolStocks
 } from '@ghostfolio/common/config';
@@ -59,14 +60,14 @@ export class MarketDataController {
       this.symbolService.get({
         includeHistoricalData,
         dataGatheringItem: {
-          dataSource: 'MANUAL',
+          dataSource: ghostfolioFearAndGreedIndexDataSourceCryptocurrencies,
           symbol: ghostfolioFearAndGreedIndexSymbolCryptocurrencies
         }
       }),
       this.symbolService.get({
         includeHistoricalData,
         dataGatheringItem: {
-          dataSource: ghostfolioFearAndGreedIndexDataSource,
+          dataSource: ghostfolioFearAndGreedIndexDataSourceStocks,
           symbol: ghostfolioFearAndGreedIndexSymbolStocks
         }
       })
