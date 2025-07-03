@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Made the `getByKey()` function generic in the property service
 - Improved the language localization for Catalan (`ca`)
-- Upgraded `@internationalized/number` from version `3.6.0` to `3.6.3`
 - Improved the language localization for Portuguese (`pt`)
+- Upgraded `@internationalized/number` from version `3.6.0` to `3.6.3`
 
 ## 2.176.0 - 2025-06-30
 
