@@ -5149,7 +5149,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools.openSourceAlternativeTo" datatype="html">
         <source>open-source-alternative-to</source>
-        <target state="translated">alternativa-codi obert a</target>
+        <target state="translated">alternativa-codi-obert-a</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
