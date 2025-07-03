@@ -11,7 +11,10 @@ import {
   IDataProviderHistoricalResponse,
   IDataProviderResponse
 } from '@ghostfolio/api/services/interfaces/interfaces';
-import { ghostfolioFearAndGreedIndexSymbol } from '@ghostfolio/common/config';
+import {
+  ghostfolioFearAndGreedIndexSymbol,
+  ghostfolioFearAndGreedIndexSymbolStocks
+} from '@ghostfolio/common/config';
 import { DATE_FORMAT, getYesterday } from '@ghostfolio/common/helper';
 import {
   DataProviderInfo,
@@ -99,11 +102,16 @@ export class RapidApiService implements DataProviderInterface {
     try {
       const symbol = symbols[0];
 
-      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
-          [ghostfolioFearAndGreedIndexSymbol]: {
+          [symbol]: {
             currency: undefined,
             dataSource: this.getName(),
             marketPrice: fgi.now.value,
