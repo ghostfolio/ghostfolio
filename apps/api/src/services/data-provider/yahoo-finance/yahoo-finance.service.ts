@@ -38,7 +38,9 @@ import { SearchQuoteNonYahoo } from 'yahoo-finance2/esm/src/modules/search';
 
 @Injectable()
 export class YahooFinanceService implements DataProviderInterface {
-  private readonly yahooFinance = new YahooFinance();
+  private readonly yahooFinance = new YahooFinance({
+    suppressNotices: ['yahooSurvey']
+  });
 
   public constructor(
     private readonly cryptocurrencyService: CryptocurrencyService,

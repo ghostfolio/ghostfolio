@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved the language localization for Portuguese (`pt`)
 - Upgraded `@internationalized/number` from version `3.6.0` to `3.6.3`
 - Upgraded `ngx-skeleton-loader` from version `11.0.0` to `11.2.1`
+- Upgraded `yahoo-finance2` from version `3.3.5` to `3.4.1`
 
 ## 2.176.0 - 2025-06-30
 
