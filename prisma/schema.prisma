@@ -250,6 +250,7 @@ model User {
   analytics     Analytics?
   apiKeys       ApiKey[]
   authChallenge String?
+  authDevices   AuthDevice[]
   createdAt     DateTime        @default(now())
   id            String          @id @default(uuid())
   provider      Provider        @default(ANONYMOUS)
@@ -261,7 +262,6 @@ model User {
   watchlist     SymbolProfile[] @relation("UserWatchlist")
   Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
-  AuthDevice    AuthDevice[]
   Settings      Settings?
   SymbolProfile SymbolProfile[]
 
