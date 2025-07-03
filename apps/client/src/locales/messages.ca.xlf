@@ -5141,7 +5141,7 @@
       </trans-unit>
       <trans-unit id="1914201149277662818" datatype="html">
         <source>Personal Finance Tools</source>
-        <target state="new">Personal Finance Tools</target>
+        <target state="translated">Eines de finances personals</target>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
           <context context-type="linenumber">324</context>
@@ -5149,7 +5149,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools.openSourceAlternativeTo" datatype="html">
         <source>open-source-alternative-to</source>
-        <target state="new">open-source-alternative-to</target>
+        <target state="translated">alternativa-codi obert a</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -5162,7 +5162,7 @@
       </trans-unit>
       <trans-unit id="d1db8b2ae4504dc216afb401317392fa0fca7d63" datatype="html">
         <source> Discover Open Source Alternatives for Personal Finance Tools </source>
-        <target state="new"> Discover Open Source Alternatives for Personal Finance Tools </target>
+        <target state="translated"> Descobriu alternatives de codi obert per a les eines de finances personals </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">4</context>
@@ -5178,7 +5178,7 @@
       </trans-unit>
       <trans-unit id="bd90980cf63dc92053b4b209cc82b609fded14e9" datatype="html">
         <source> Explore the links below to compare a variety of personal finance tools with Ghostfolio. </source>
-        <target state="new"> Explore the links below to compare a variety of personal finance tools with Ghostfolio. </target>
+        <target state="translated"> Exploreu els enllaços següents per comparar una varietat d'eines de finances personals amb Ghostfolio. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">16</context>
@@ -5186,7 +5186,7 @@
       </trans-unit>
       <trans-unit id="6264b47d8cbc74a3a411c1910964285bb0c8cc5e" datatype="html">
         <source> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </source>
-        <target state="new"> Open Source Alternative to <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </target>
+        <target state="translated"> Alternativa de codi obert a <x id="INTERPOLATION" equiv-text="{{ personalFinanceTool.name }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/personal-finance-tools-page.html</context>
           <context context-type="linenumber">42</context>
@@ -5194,7 +5194,7 @@
       </trans-unit>
       <trans-unit id="6173123073967909836" datatype="html">
         <source>Switzerland</source>
-        <target state="new">Switzerland</target>
+        <target state="translated">Suïssa</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -5206,7 +5206,7 @@
       </trans-unit>
       <trans-unit id="3437679369074503203" datatype="html">
         <source>Global</source>
-        <target state="new">Global</target>
+        <target state="translated">Global</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">58</context>
@@ -5218,7 +5218,7 @@
       </trans-unit>
       <trans-unit id="59aece48b4cff51f656b88e8f6c4061bb03410dc" datatype="html">
         <source>The Open Source Alternative to</source>
-        <target state="new">The Open Source Alternative to</target>
+        <target state="translated">L’alternativa de codi obert a</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">8</context>
@@ -5258,7 +5258,7 @@
       </trans-unit>
       <trans-unit id="e174910a7abd2793d04bba1c3971a0c7fafd7b79" datatype="html">
         <source>Founded</source>
-        <target state="new">Founded</target>
+        <target state="translated">Fundat</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">77</context>
@@ -5266,7 +5266,7 @@
       </trans-unit>
       <trans-unit id="950b5f04a2efd3f11c0f76418d5a4212381e792e" datatype="html">
         <source>Origin</source>
-        <target state="new">Origin</target>
+        <target state="translated">Origen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">82</context>
@@ -5274,7 +5274,7 @@
       </trans-unit>
       <trans-unit id="2ae797460f17fe72086256ec5e2da35ddc6e1614" datatype="html">
         <source>Region</source>
-        <target state="new">Region</target>
+        <target state="translated">Regió</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">87</context>
@@ -5282,7 +5282,7 @@
       </trans-unit>
       <trans-unit id="c5a2349fd1775501aa7a16c423816a734b959db4" datatype="html">
         <source> Available in </source>
-        <target state="new"> Available in </target>
+        <target state="translated"> Disponible a </target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">108</context>
@@ -5290,7 +5290,7 @@
       </trans-unit>
       <trans-unit id="72aebdb25074909ed3dcb0866e277a1bef1a6916" datatype="html">
         <source>✅ Yes</source>
-        <target state="new">✅ Yes</target>
+        <target state="translated">✅ Sí</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.html</context>
           <context context-type="linenumber">140</context>
