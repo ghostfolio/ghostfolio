@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refactored the about pages to standalone
 - Made the `getByKey()` function generic in the property service
+- Renamed `AuthDevice` to `authDevices` in the `User` database schema
 - Improved the language localization for Catalan (`ca`)
 - Improved the language localization for German (`de`)
 - Improved the language localization for Portuguese (`pt`)
