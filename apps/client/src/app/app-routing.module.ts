@@ -11,7 +11,7 @@ const routes: Routes = [
   {
     path: publicRoutes.about.path,
     loadChildren: () =>
-      import('./pages/about/about-page.module').then((m) => m.AboutPageModule)
+      import('./pages/about/about-page.routes').then((m) => m.routes)
   },
   {
     path: internalRoutes.account.path,
