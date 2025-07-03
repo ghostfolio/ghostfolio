@@ -8029,7 +8029,7 @@
       </trans-unit>
       <trans-unit id="2732382861635368484" datatype="html">
         <source>Stocks</source>
-        <target state="new">Stocks</target>
+        <target state="translated">Aktien</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -8037,7 +8037,7 @@
       </trans-unit>
       <trans-unit id="1419479195323304896" datatype="html">
         <source>Cryptocurrencies</source>
-        <target state="new">Cryptocurrencies</target>
+        <target state="translated">Kryptowährungen</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/markets/markets.component.ts</context>
           <context context-type="linenumber">55</context>
