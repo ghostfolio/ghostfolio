@@ -6370,7 +6370,7 @@
       </trans-unit>
       <trans-unit id="6984983607470794786" datatype="html">
         <source>Open Source</source>
-        <target state="new">Open Source</target>
+        <target state="translated">Código aberto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">88</context>
@@ -6378,7 +6378,7 @@
       </trans-unit>
       <trans-unit id="4852914940817689575" datatype="html">
         <source>Personal Finance</source>
-        <target state="new">Personal Finance</target>
+        <target state="translated">Finanças Pessoais</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">90</context>
@@ -6386,7 +6386,7 @@
       </trans-unit>
       <trans-unit id="8440128775129354214" datatype="html">
         <source>Privacy</source>
-        <target state="new">Privacy</target>
+        <target state="translated">Privacidade</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -6394,7 +6394,7 @@
       </trans-unit>
       <trans-unit id="5093701986340458388" datatype="html">
         <source>Software</source>
-        <target state="new">Software</target>
+        <target state="translated">Programas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">93</context>
@@ -6402,7 +6402,7 @@
       </trans-unit>
       <trans-unit id="2932360890997178383" datatype="html">
         <source>Tool</source>
-        <target state="new">Tool</target>
+        <target state="translated">Ferramenta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">94</context>
@@ -6410,7 +6410,7 @@
       </trans-unit>
       <trans-unit id="2657610384052021428" datatype="html">
         <source>User Experience</source>
-        <target state="new">User Experience</target>
+        <target state="translated">Experiência do usuário</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">95</context>
@@ -6418,7 +6418,7 @@
       </trans-unit>
       <trans-unit id="1099393285611854080" datatype="html">
         <source>Wealth</source>
-        <target state="new">Wealth</target>
+        <target state="translated">Fortuna</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -6426,7 +6426,7 @@
       </trans-unit>
       <trans-unit id="3311387105238837884" datatype="html">
         <source>Wealth Management</source>
-        <target state="new">Wealth Management</target>
+        <target state="translated">Gestão de patrimônio</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/resources/personal-finance-tools/product-page.component.ts</context>
           <context context-type="linenumber">97</context>
@@ -6578,7 +6578,7 @@
       </trans-unit>
       <trans-unit id="1519954996184640001" datatype="html">
         <source>Error</source>
-        <target state="new">Error</target>
+        <target state="translated">Erro</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-market-data/asset-profile-dialog/asset-profile-dialog.component.ts</context>
           <context context-type="linenumber">536</context>
@@ -6586,7 +6586,7 @@
       </trans-unit>
       <trans-unit id="c95505b5a74151a0c235b19b9c41db7983205ba7" datatype="html">
         <source>Deactivate</source>
-        <target state="new">Deactivate</target>
+        <target state="translated">Desativar</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/rule/rule.component.html</context>
           <context context-type="linenumber">72</context>
