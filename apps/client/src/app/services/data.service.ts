@@ -38,6 +38,7 @@ import {
   InfoItem,
   LookupResponse,
   MarketDataDetailsResponse,
+  MarketDataOfMarketsResponse,
   OAuthResponse,
   PortfolioDetails,
   PortfolioDividends,
@@ -481,6 +482,34 @@ export class DataService {
           return data;
         })
       );
+  }
+
+  public fetchMarketDataOfMarkets({
+    includeHistoricalData
+  }: {
+    includeHistoricalData?: number;
+  }): Observable<MarketDataOfMarketsResponse> {
+    let params = new HttpParams();
+
+    if (includeHistoricalData) {
+      params = params.append('includeHistoricalData', includeHistoricalData);
+    }
+
+    return this.http.get<any>('/api/v1/market-data/markets', { params }).pipe(
+      map((data) => {
+        for (const item of data.fearAndGreedIndex.CRYPTOCURRENCIES
+          ?.historicalData ?? []) {
+          item.date = parseISO(item.date);
+        }
+
+        for (const item of data.fearAndGreedIndex.STOCKS?.historicalData ??
+          []) {
+          item.date = parseISO(item.date);
+        }
+
+        return data;
+      })
+    );
   }
 
   public fetchSymbolItem({

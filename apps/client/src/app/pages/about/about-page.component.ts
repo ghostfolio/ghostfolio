@@ -4,17 +4,26 @@ import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [MatTabsModule, RouterModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
-  templateUrl: './about-page.html',
-  standalone: false
+  templateUrl: './about-page.html'
 })
 export class AboutPageComponent implements OnDestroy, OnInit {
   public deviceType: string;

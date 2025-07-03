@@ -419,6 +419,7 @@ export class UserService {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
           currentPermissions.push(permissions.enableDataProviderGhostfolio);
+          currentPermissions.push(permissions.readMarketDataOfMarkets);
           currentPermissions.push(permissions.reportDataGlitch);
         }
 
