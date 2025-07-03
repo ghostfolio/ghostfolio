@@ -65,11 +65,16 @@ export class RapidApiService implements DataProviderInterface {
     [symbol: string]: { [date: string]: IDataProviderHistoricalResponse };
   }> {
     try {
-      if (symbol === ghostfolioFearAndGreedIndexSymbol) {
+      if (
+        [
+          ghostfolioFearAndGreedIndexSymbol,
+          ghostfolioFearAndGreedIndexSymbolStocks
+        ].includes(symbol)
+      ) {
         const fgi = await this.getFearAndGreedIndex();
 
         return {
-          [ghostfolioFearAndGreedIndexSymbol]: {
+          [symbol]: {
             [format(getYesterday(), DATE_FORMAT)]: {
               marketPrice: fgi.previousClose.value
             }
