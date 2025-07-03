@@ -66,13 +66,13 @@ export function NgxStripeFactory(): string {
     httpResponseInterceptorProviders,
     LanguageService,
     provideHttpClient(withInterceptorsFromDi()),
+    provideMarkdown(),
+    provideNgxSkeletonLoader(),
     {
       provide: DateAdapter,
       useClass: CustomDateAdapter,
       deps: [LanguageService, MAT_DATE_LOCALE, Platform]
     },
-    provideMarkdown(),
-    provideNgxSkeletonLoader(),
     { provide: MAT_DATE_FORMATS, useValue: DateFormats },
     {
       provide: STRIPE_PUBLISHABLE_KEY,
