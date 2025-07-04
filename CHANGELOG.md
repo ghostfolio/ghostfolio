@@ -13,12 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Increased the width of the watchlist
 - Renamed `Access` to `accessesGet` in the `User` database schema
 - Improved the language localization for Italian (`it`)
+- Improved the language localization for Nederlands (`nl`)
 - Upgraded `prisma` from version `6.10.1` to `6.11.1`
 
 ### Fixed
 
 - Set the name column to sticky in the table of the benchmark component
-
+  
 ## 2.177.0 - 2025-07-03
 
 ### Added
