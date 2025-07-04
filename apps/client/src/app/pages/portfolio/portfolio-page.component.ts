@@ -3,6 +3,8 @@ import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   analyticsOutline,
@@ -17,10 +19,10 @@ import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
+  imports: [MatTabsModule, RouterModule],
   selector: 'gf-portfolio-page',
   styleUrls: ['./portfolio-page.scss'],
-  templateUrl: './portfolio-page.html',
-  standalone: false
+  templateUrl: './portfolio-page.html'
 })
 export class PortfolioPageComponent implements OnDestroy, OnInit {
   public deviceType: string;
