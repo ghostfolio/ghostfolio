@@ -42,8 +42,23 @@ import {
 } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { IonIcon } from '@ionic/angular/standalone';
 import { isUUID } from 'class-validator';
 import { endOfToday, isAfter } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  alertCircleOutline,
+  calendarClearOutline,
+  cloudDownloadOutline,
+  cloudUploadOutline,
+  colorWandOutline,
+  copyOutline,
+  createOutline,
+  documentTextOutline,
+  ellipsisHorizontal,
+  ellipsisVertical,
+  trashOutline
+} from 'ionicons/icons';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 
@@ -56,6 +71,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
     GfNoTransactionsInfoComponent,
     GfSymbolModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatMenuModule,
@@ -121,7 +137,21 @@ export class GfActivitiesTableComponent
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private notificationService: NotificationService) {}
+  public constructor(private notificationService: NotificationService) {
+    addIcons({
+      alertCircleOutline,
+      calendarClearOutline,
+      cloudDownloadOutline,
+      cloudUploadOutline,
+      colorWandOutline,
+      copyOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      ellipsisVertical,
+      trashOutline
+    });
+  }
 
   public ngOnInit() {
     if (this.showCheckbox) {

@@ -17,6 +17,8 @@ import { Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { format, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -86,6 +88,8 @@ export class ActivitiesPageComponent implements OnDestroy, OnInit {
           }
         }
       });
+
+    addIcons({ addOutline });
   }
 
   public ngOnInit() {

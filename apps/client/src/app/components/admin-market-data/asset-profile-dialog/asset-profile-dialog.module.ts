@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { AssetProfileDialog } from './asset-profile-dialog.component';
 
@@ -34,6 +35,7 @@ import { AssetProfileDialog } from './asset-profile-dialog.component';
     GfPortfolioProportionChartComponent,
     GfSymbolAutocompleteComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCheckboxModule,
     MatDialogModule,

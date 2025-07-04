@@ -16,6 +16,15 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import {
+  arrowRedoOutline,
+  createOutline,
+  documentTextOutline,
+  ellipsisHorizontalOutline,
+  eyeOffOutline,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 
@@ -58,7 +67,16 @@ export class AccountsTableComponent implements OnChanges, OnDestroy {
   public constructor(
     private notificationService: NotificationService,
     private router: Router
-  ) {}
+  ) {
+    addIcons({
+      arrowRedoOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontalOutline,
+      eyeOffOutline,
+      trashOutline
+    });
+  }
 
   public ngOnChanges() {
     this.displayedColumns = ['status', 'account', 'platform'];

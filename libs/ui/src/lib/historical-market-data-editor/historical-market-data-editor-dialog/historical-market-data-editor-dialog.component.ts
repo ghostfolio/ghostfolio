@@ -21,6 +21,9 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { Subject, takeUntil } from 'rxjs';
 
 import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces';
@@ -30,6 +33,7 @@ import { HistoricalMarketDataEditorDialogParams } from './interfaces/interfaces'
   host: { class: 'h-100' },
   imports: [
     FormsModule,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatDialogModule,
@@ -56,7 +60,9 @@ export class GfHistoricalMarketDataEditorDialogComponent
     private dateAdapter: DateAdapter<any>,
     public dialogRef: MatDialogRef<GfHistoricalMarketDataEditorDialogComponent>,
     @Inject(MAT_DATE_LOCALE) private locale: string
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, refreshOutline });
+  }
 
   public ngOnInit() {
     this.locale = this.data.user?.settings?.locale;

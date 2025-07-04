@@ -24,6 +24,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { format, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import ms from 'ms';
 import { EMPTY, Subject, throwError } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -112,6 +114,8 @@ export class UserAccountSettingsComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({ eyeOffOutline, eyeOutline });
   }
 
   public ngOnInit() {

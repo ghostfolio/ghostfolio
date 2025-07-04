@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { ImportActivitiesDialog } from './import-activities-dialog.component';
 
@@ -27,6 +28,7 @@ import { ImportActivitiesDialog } from './import-activities-dialog.component';
     GfDialogHeaderModule,
     GfFileDropModule,
     GfSymbolModule,
+    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatExpansionModule,

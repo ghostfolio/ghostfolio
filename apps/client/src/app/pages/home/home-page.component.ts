@@ -5,6 +5,14 @@ import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import {
+  analyticsOutline,
+  bookmarkOutline,
+  newspaperOutline,
+  readerOutline,
+  walletOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -77,6 +85,14 @@ export class HomePageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({
+      analyticsOutline,
+      bookmarkOutline,
+      newspaperOutline,
+      readerOutline,
+      walletOutline
+    });
   }
 
   public ngOnInit() {

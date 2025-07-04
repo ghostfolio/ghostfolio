@@ -2,6 +2,13 @@ import { TabConfiguration } from '@ghostfolio/common/interfaces';
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import {
+  bookOutline,
+  libraryOutline,
+  newspaperOutline,
+  readerOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 
@@ -39,7 +46,9 @@ export class ResourcesPageComponent implements OnInit {
 
   private unsubscribeSubject = new Subject<void>();
 
-  public constructor(private deviceService: DeviceDetectorService) {}
+  public constructor(private deviceService: DeviceDetectorService) {
+    addIcons({ bookOutline, libraryOutline, newspaperOutline, readerOutline });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

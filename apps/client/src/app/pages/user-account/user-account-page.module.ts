@@ -5,6 +5,7 @@ import { GfUserAccountSettingsModule } from '@ghostfolio/client/components/user-
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { UserAccountPageRoutingModule } from './user-account-page-routing.module';
 import { UserAccountPageComponent } from './user-account-page.component';
@@ -16,6 +17,7 @@ import { UserAccountPageComponent } from './user-account-page.component';
     GfUserAccountAccessModule,
     GfUserAccountMembershipModule,
     GfUserAccountSettingsModule,
+    IonIcon,
     MatTabsModule,
     UserAccountPageRoutingModule
   ],

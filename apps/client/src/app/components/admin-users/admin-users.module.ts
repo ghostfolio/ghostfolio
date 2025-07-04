@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AdminUsersComponent } from './admin-users.component';
@@ -18,6 +19,7 @@ import { AdminUsersComponent } from './admin-users.component';
     CommonModule,
     GfPremiumIndicatorComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatMenuModule,
     MatPaginatorModule,

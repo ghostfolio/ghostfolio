@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { UserAccountSettingsComponent } from './user-account-settings.component';
 
@@ -20,6 +21,7 @@ import { UserAccountSettingsComponent } from './user-account-settings.component'
     CommonModule,
     FormsModule,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,

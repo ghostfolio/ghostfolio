@@ -28,6 +28,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { get, isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
@@ -41,6 +44,7 @@ import { BenchmarkDetailDialogParams } from './benchmark-detail-dialog/interface
     CommonModule,
     GfTrendIndicatorComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,
@@ -99,6 +103,8 @@ export class GfBenchmarkComponent implements OnChanges, OnDestroy {
           });
         }
       });
+
+    addIcons({ ellipsisHorizontal, trashOutline });
   }
 
   public ngOnChanges() {

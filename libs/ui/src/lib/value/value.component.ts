@@ -8,12 +8,13 @@ import {
   Input,
   OnChanges
 } from '@angular/core';
+import { IonIcon } from '@ionic/angular/standalone';
 import { isNumber } from 'lodash';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgxSkeletonLoaderModule],
+  imports: [CommonModule, IonIcon, NgxSkeletonLoaderModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-value',
   styleUrls: ['./value.component.scss'],
