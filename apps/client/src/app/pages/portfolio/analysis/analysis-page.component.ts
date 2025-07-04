@@ -1,4 +1,7 @@
+import { GfBenchmarkComparatorModule } from '@ghostfolio/client/components/benchmark-comparator/benchmark-comparator.module';
+import { GfInvestmentChartModule } from '@ghostfolio/client/components/investment-chart/investment-chart.module';
 import { ToggleComponent } from '@ghostfolio/client/components/toggle/toggle.component';
+import { GfToggleModule } from '@ghostfolio/client/components/toggle/toggle.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -14,6 +17,8 @@ import {
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 import type { AiPromptMode, GroupBy } from '@ghostfolio/common/types';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
 import { Clipboard } from '@angular/cdk/clipboard';
 import {
@@ -23,22 +28,39 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IonIcon } from '@ionic/angular/standalone';
 import { SymbolProfile } from '@prisma/client';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical } from 'ionicons/icons';
 import { isNumber, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    GfBenchmarkComparatorModule,
+    GfInvestmentChartModule,
+    GfPremiumIndicatorComponent,
+    GfToggleModule,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatProgressSpinnerModule,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-analysis-page',
   styleUrls: ['./analysis-page.scss'],
-  templateUrl: './analysis-page.html',
-  standalone: false
+  templateUrl: './analysis-page.html'
 })
 export class AnalysisPageComponent implements OnDestroy, OnInit {
   @ViewChild(MatMenuTrigger) actionsMenuButton!: MatMenuTrigger;

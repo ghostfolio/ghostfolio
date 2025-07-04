@@ -1,4 +1,5 @@
 import { UpdateUserSettingDto } from '@ghostfolio/api/app/user/update-user-setting.dto';
+import { GfRulesModule } from '@ghostfolio/client/components/rules/rules.module';
 import { DataService } from '@ghostfolio/client/services/data.service';
 import { ImpersonationStorageService } from '@ghostfolio/client/services/impersonation-storage.service';
 import { UserService } from '@ghostfolio/client/services/user/user.service';
@@ -8,21 +9,31 @@ import {
 } from '@ghostfolio/common/interfaces';
 import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
 
+import { NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
   checkmarkCircleOutline,
   removeCircleOutline,
   warningOutline
 } from 'ionicons/icons';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
+  imports: [
+    GfPremiumIndicatorComponent,
+    GfRulesModule,
+    IonIcon,
+    NgClass,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-x-ray-page',
   styleUrl: './x-ray-page.component.scss',
-  templateUrl: './x-ray-page.component.html',
-  standalone: false
+  templateUrl: './x-ray-page.component.html'
 })
 export class XRayPageComponent {
   public accountClusterRiskRules: PortfolioReportRule[];
