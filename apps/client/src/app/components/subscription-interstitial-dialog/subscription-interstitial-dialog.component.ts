@@ -8,6 +8,8 @@ import {
   OnInit
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import ms from 'ms';
 import { interval, Subject } from 'rxjs';
 import { take, takeUntil, tap } from 'rxjs/operators';
@@ -41,6 +43,8 @@ export class SubscriptionInterstitialDialog implements OnInit {
     this.variantIndex = Math.floor(
       Math.random() * SubscriptionInterstitialDialog.VARIANTS_COUNT
     );
+
+    addIcons({ arrowForwardOutline, checkmarkCircleOutline });
   }
 
   public ngOnInit() {

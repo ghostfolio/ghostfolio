@@ -14,11 +14,20 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  logoGithub,
+  logoLinkedin,
+  logoStackoverflow,
+  logoX,
+  mail
+} from 'ionicons/icons';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  imports: [CommonModule, MatButtonModule, RouterModule],
+  imports: [CommonModule, IonIcon, MatButtonModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-overview-page',
   styleUrls: ['./about-overview-page.scss'],
@@ -52,6 +61,8 @@ export class AboutOverviewPageComponent implements OnDestroy, OnInit {
       globalPermissions,
       permissions.enableSubscription
     );
+
+    addIcons({ logoGithub, logoLinkedin, logoStackoverflow, logoX, mail });
   }
 
   public ngOnInit() {

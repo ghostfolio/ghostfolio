@@ -2,6 +2,8 @@ import { DataService } from '@ghostfolio/client/services/data.service';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { Component, OnDestroy } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { chevronForwardOutline } from 'ionicons/icons';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -23,6 +25,8 @@ export class BlogPageComponent implements OnDestroy {
       info?.globalPermissions,
       permissions.enableSubscription
     );
+
+    addIcons({ chevronForwardOutline });
   }
 
   public ngOnDestroy() {

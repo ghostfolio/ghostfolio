@@ -26,6 +26,8 @@ import {
 import { MatMenuTrigger } from '@angular/material/menu';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SymbolProfile } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { copyOutline, ellipsisVertical } from 'ionicons/icons';
 import { isNumber, sortBy } from 'lodash';
 import ms from 'ms';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -89,6 +91,8 @@ export class AnalysisPageComponent implements OnDestroy, OnInit {
   ) {
     const { benchmarks } = this.dataService.fetchInfo();
     this.benchmarks = benchmarks;
+
+    addIcons({ copyOutline, ellipsisVertical });
   }
 
   get savingsRate() {

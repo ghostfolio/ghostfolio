@@ -14,6 +14,13 @@ import {
   Output
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { addIcons } from 'ionicons';
+import {
+  checkmarkCircleOutline,
+  ellipsisHorizontal,
+  removeCircleOutline,
+  warningOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -41,7 +48,14 @@ export class RuleComponent implements OnInit {
   public constructor(
     private deviceService: DeviceDetectorService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    addIcons({
+      checkmarkCircleOutline,
+      ellipsisHorizontal,
+      removeCircleOutline,
+      warningOutline
+    });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

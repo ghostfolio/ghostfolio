@@ -14,6 +14,8 @@ import { HoldingType, HoldingsViewMode } from '@ghostfolio/common/types';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { gridOutline, reorderFourOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -53,7 +55,9 @@ export class HomeHoldingsComponent implements OnDestroy, OnInit {
     private impersonationStorageService: ImpersonationStorageService,
     private router: Router,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ gridOutline, reorderFourOutline });
+  }
 
   public ngOnInit() {
     this.deviceType = this.deviceService.getDeviceInfo().deviceType;

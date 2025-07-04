@@ -5,6 +5,8 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { close } from 'ionicons/icons';
 
 @Component({
   host: { class: 'justify-content-center' },
@@ -18,6 +20,10 @@ export class DialogFooterComponent {
   @Input() deviceType: string;
 
   @Output() closeButtonClicked = new EventEmitter<void>();
+
+  public constructor() {
+    addIcons({ close });
+  }
 
   public onClickCloseButton() {
     this.closeButtonClicked.emit();

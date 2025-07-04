@@ -14,6 +14,8 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Account as AccountModel } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { addOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject, Subscription } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -77,6 +79,8 @@ export class AccountsPageComponent implements OnDestroy, OnInit {
           this.openTransferBalanceDialog();
         }
       });
+
+    addIcons({ addOutline });
   }
 
   public ngOnInit() {

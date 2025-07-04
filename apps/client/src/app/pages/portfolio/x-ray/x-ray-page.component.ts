@@ -10,6 +10,12 @@ import { User } from '@ghostfolio/common/interfaces/user.interface';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
 
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { addIcons } from 'ionicons';
+import {
+  checkmarkCircleOutline,
+  removeCircleOutline,
+  warningOutline
+} from 'ionicons/icons';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -40,7 +46,9 @@ export class XRayPageComponent {
     private dataService: DataService,
     private impersonationStorageService: ImpersonationStorageService,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ checkmarkCircleOutline, removeCircleOutline, warningOutline });
+  }
 
   public ngOnInit() {
     this.impersonationStorageService

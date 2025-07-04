@@ -18,6 +18,8 @@ import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
@@ -67,7 +69,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, refreshOutline });
+  }
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;

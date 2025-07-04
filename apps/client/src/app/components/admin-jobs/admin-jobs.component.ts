@@ -20,6 +20,20 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { JobStatus } from 'bull';
+import { addIcons } from 'ionicons';
+import {
+  alertCircleOutline,
+  cafeOutline,
+  checkmarkCircleOutline,
+  chevronDownCircleOutline,
+  chevronUpCircleOutline,
+  ellipsisHorizontal,
+  ellipsisVertical,
+  pauseOutline,
+  playOutline,
+  removeCircleOutline,
+  timeOutline
+} from 'ionicons/icons';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -76,6 +90,20 @@ export class AdminJobsComponent implements OnDestroy, OnInit {
           );
         }
       });
+
+    addIcons({
+      alertCircleOutline,
+      cafeOutline,
+      checkmarkCircleOutline,
+      chevronDownCircleOutline,
+      chevronUpCircleOutline,
+      ellipsisHorizontal,
+      ellipsisVertical,
+      pauseOutline,
+      playOutline,
+      removeCircleOutline,
+      timeOutline
+    });
   }
 
   public ngOnInit() {

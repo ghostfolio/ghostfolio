@@ -6,6 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { ActivitiesPageRoutingModule } from './activities-page-routing.module';
 import { ActivitiesPageComponent } from './activities-page.component';
@@ -20,6 +21,7 @@ import { GfImportActivitiesDialogModule } from './import-activities-dialog/impor
     GfActivitiesTableComponent,
     GfCreateOrUpdateActivityDialogModule,
     GfImportActivitiesDialogModule,
+    IonIcon,
     MatButtonModule,
     MatSnackBarModule,
     RouterModule

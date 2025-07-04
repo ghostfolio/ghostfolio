@@ -2,6 +2,8 @@ import { personalFinanceTools } from '@ghostfolio/common/personal-finance-tools'
 import { publicRoutes } from '@ghostfolio/common/routes/routes';
 
 import { Component, OnDestroy } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { chevronForwardOutline } from 'ionicons/icons';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -24,6 +26,10 @@ export class PersonalFinanceToolsPageComponent implements OnDestroy {
   public routerLinkAbout = publicRoutes.about.routerLink;
 
   private unsubscribeSubject = new Subject<void>();
+
+  public constructor() {
+    addIcons({ chevronForwardOutline });
+  }
 
   public ngOnDestroy() {
     this.unsubscribeSubject.next();

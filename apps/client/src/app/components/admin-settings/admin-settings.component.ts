@@ -20,6 +20,8 @@ import {
   OnInit
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { addIcons } from 'ionicons';
+import { ellipsisHorizontal, trashOutline } from 'ionicons/icons';
 import { catchError, filter, of, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -53,7 +55,9 @@ export class AdminSettingsComponent implements OnDestroy, OnInit {
     private dataService: DataService,
     private notificationService: NotificationService,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ ellipsisHorizontal, trashOutline });
+  }
 
   public ngOnInit() {
     this.userService.stateChanged

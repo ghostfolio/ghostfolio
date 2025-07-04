@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { PricingPageRoutingModule } from './pricing-page-routing.module';
 import { PricingPageComponent } from './pricing-page.component';
@@ -15,6 +16,7 @@ import { PricingPageComponent } from './pricing-page.component';
   imports: [
     CommonModule,
     GfPremiumIndicatorComponent,
+    IonIcon,
     MatButtonModule,
     MatCardModule,
     MatTooltipModule,

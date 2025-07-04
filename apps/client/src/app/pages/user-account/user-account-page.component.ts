@@ -3,6 +3,8 @@ import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { diamondOutline, keyOutline, settingsOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -54,6 +56,8 @@ export class UserAccountPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({ diamondOutline, keyOutline, settingsOutline });
   }
 
   public ngOnInit() {

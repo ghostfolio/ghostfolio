@@ -33,6 +33,16 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssetSubClass, DataSource, SymbolProfile } from '@prisma/client';
 import { isUUID } from 'class-validator';
+import { addIcons } from 'ionicons';
+import {
+  addOutline,
+  banOutline,
+  createOutline,
+  documentTextOutline,
+  ellipsisHorizontal,
+  ellipsisVertical,
+  trashOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
@@ -194,6 +204,16 @@ export class AdminMarketDataComponent
 
         this.loadData();
       });
+
+    addIcons({
+      addOutline,
+      banOutline,
+      createOutline,
+      documentTextOutline,
+      ellipsisHorizontal,
+      ellipsisVertical,
+      trashOutline
+    });
   }
 
   public ngAfterViewInit() {

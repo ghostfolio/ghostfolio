@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { AdminPlatformComponent } from './admin-platform.component';
 import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platform-dialog/create-or-update-platform-dialog.module';
@@ -18,6 +19,7 @@ import { GfCreateOrUpdatePlatformDialogModule } from './create-or-update-platfor
     CommonModule,
     GfCreateOrUpdatePlatformDialogModule,
     GfEntityLogoComponent,
+    IonIcon,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,

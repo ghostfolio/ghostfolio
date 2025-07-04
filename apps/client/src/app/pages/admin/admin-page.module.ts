@@ -8,6 +8,7 @@ import { CacheService } from '@ghostfolio/client/services/cache.service';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { AdminPageRoutingModule } from './admin-page-routing.module';
 import { AdminPageComponent } from './admin-page.component';
@@ -23,6 +24,7 @@ import { AdminPageComponent } from './admin-page.component';
     GfAdminOverviewModule,
     GfAdminSettingsModule,
     GfAdminUsersModule,
+    IonIcon,
     MatTabsModule
   ],
   providers: [CacheService],
