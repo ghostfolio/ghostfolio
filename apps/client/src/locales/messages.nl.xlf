@@ -7762,7 +7762,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="translated">hulpmiddelen-voor-persoonlijke-financiën</target>
+        <target state="translated">hulpmiddelen-voor-persoonlijke-financien</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7904,7 +7904,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="translated">De inbreng in eigen vermogen van uw huidige investering (${equityValueRatio} %) ligt onder de ${thresholdMin}%</target>
+        <target state="translated">De inbreng in eigen vermogen van uw huidige investering (${equityValueRatio}%) ligt onder de ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7912,7 +7912,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}% ) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">40</context>
@@ -7928,7 +7928,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}% ) overschrijdt ${thresholdMax}%</target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">46</context>
@@ -7936,7 +7936,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}% ) ligt onder ${thresholdMin}%</target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">50</context>
@@ -7944,7 +7944,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}% ) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">55</context>
