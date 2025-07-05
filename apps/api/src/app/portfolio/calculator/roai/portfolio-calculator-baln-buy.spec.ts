@@ -170,8 +170,7 @@ describe('PortfolioCalculator', () => {
         totalInterestWithCurrencyEffect: new Big('0'),
         totalInvestment: new Big('273.2'),
         totalInvestmentWithCurrencyEffect: new Big('273.2'),
-        totalLiabilitiesWithCurrencyEffect: new Big('0'),
-        totalValuablesWithCurrencyEffect: new Big('0')
+        totalLiabilitiesWithCurrencyEffect: new Big('0')
       });
 
       expect(portfolioSnapshot.historicalData.at(-1)).toMatchObject(

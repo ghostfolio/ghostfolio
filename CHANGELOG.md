@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Increased the width of the markets overview
 - Increased the width of the watchlist
+- Deprecated the `ITEM` activity type in favor of `BUY`
 - Renamed `Access` to `accessesGet` in the `User` database schema
 - Improved the language localization for Dutch (`nl`)
 - Improved the language localization for Italian (`it`)

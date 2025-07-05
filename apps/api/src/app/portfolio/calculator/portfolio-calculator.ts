@@ -187,8 +187,7 @@ export abstract class PortfolioCalculator {
         totalInterestWithCurrencyEffect: new Big(0),
         totalInvestment: new Big(0),
         totalInvestmentWithCurrencyEffect: new Big(0),
-        totalLiabilitiesWithCurrencyEffect: new Big(0),
-        totalValuablesWithCurrencyEffect: new Big(0)
+        totalLiabilitiesWithCurrencyEffect: new Big(0)
       };
     }
 
@@ -198,7 +197,6 @@ export abstract class PortfolioCalculator {
     let firstTransactionPoint: TransactionPoint = null;
     let totalInterestWithCurrencyEffect = new Big(0);
     let totalLiabilitiesWithCurrencyEffect = new Big(0);
-    let totalValuablesWithCurrencyEffect = new Big(0);
 
     for (const { currency, dataSource, symbol } of transactionPoints[
       firstIndex - 1
@@ -364,8 +362,7 @@ export abstract class PortfolioCalculator {
         totalInterestInBaseCurrency,
         totalInvestment,
         totalInvestmentWithCurrencyEffect,
-        totalLiabilitiesInBaseCurrency,
-        totalValuablesInBaseCurrency
+        totalLiabilitiesInBaseCurrency
       } = this.getSymbolMetrics({
         chartDateMap,
         marketSymbolMap,
@@ -443,10 +440,6 @@ export abstract class PortfolioCalculator {
 
       totalLiabilitiesWithCurrencyEffect =
         totalLiabilitiesWithCurrencyEffect.plus(totalLiabilitiesInBaseCurrency);
-
-      totalValuablesWithCurrencyEffect = totalValuablesWithCurrencyEffect.plus(
-        totalValuablesInBaseCurrency
-      );
 
       if (
         (hasErrors ||
@@ -597,7 +590,6 @@ export abstract class PortfolioCalculator {
         netPerformance: totalNetPerformanceValue.toNumber(),
         netPerformanceWithCurrencyEffect:
           totalNetPerformanceValueWithCurrencyEffect.toNumber(),
-        // TODO: Add valuables
         netWorth: totalCurrentValueWithCurrencyEffect
           .plus(totalAccountBalanceWithCurrencyEffect)
           .toNumber(),
@@ -619,7 +611,6 @@ export abstract class PortfolioCalculator {
       positions,
       totalInterestWithCurrencyEffect,
       totalLiabilitiesWithCurrencyEffect,
-      totalValuablesWithCurrencyEffect,
       hasErrors: hasAnySymbolMetricsErrors || overall.hasErrors
     };
   }
@@ -754,7 +745,7 @@ export abstract class PortfolioCalculator {
               ? 0
               : netPerformanceWithCurrencyEffectSinceStartDate /
                 timeWeightedInvestmentValue
-          // TODO: Add net worth with valuables
+          // TODO: Add net worth
           // netWorth: totalCurrentValueWithCurrencyEffect
           //   .plus(totalAccountBalanceWithCurrencyEffect)
           //   .toNumber()
@@ -817,12 +808,6 @@ export abstract class PortfolioCalculator {
 
   public getTransactionPoints() {
     return this.transactionPoints;
-  }
-
-  public async getValuablesInBaseCurrency() {
-    await this.snapshotPromise;
-
-    return this.snapshot.totalValuablesWithCurrencyEffect;
   }
 
   private getChartDateMap({
@@ -1000,19 +985,12 @@ export abstract class PortfolioCalculator {
         liabilities = quantity.mul(unitPrice);
       }
 
-      let valuables = new Big(0);
-
-      if (type === 'ITEM') {
-        valuables = quantity.mul(unitPrice);
-      }
-
       if (lastDate !== date || lastTransactionPoint === null) {
         lastTransactionPoint = {
           date,
           fees,
           interest,
           liabilities,
-          valuables,
           items: newItems
         };
 
@@ -1024,8 +1002,6 @@ export abstract class PortfolioCalculator {
         lastTransactionPoint.items = newItems;
         lastTransactionPoint.liabilities =
           lastTransactionPoint.liabilities.plus(liabilities);
-        lastTransactionPoint.valuables =
-          lastTransactionPoint.valuables.plus(valuables);
       }
 
       lastDate = date;

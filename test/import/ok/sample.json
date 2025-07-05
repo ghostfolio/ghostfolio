@@ -41,7 +41,7 @@
       "comment": null,
       "fee": 0,
       "quantity": 1,
-      "type": "ITEM",
+      "type": "BUY",
       "unitPrice": 500000,
       "currency": "USD",
       "dataSource": "MANUAL",

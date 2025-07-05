@@ -8,5 +8,4 @@ export interface TransactionPoint {
   interest: Big;
   items: TransactionPointSymbol[];
   liabilities: Big;
-  valuables: Big;
 }
