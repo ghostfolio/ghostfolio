@@ -185,7 +185,7 @@ export function hasReadRestrictedAccessPermission({
     return false;
   }
 
-  const access = user.Access?.find(({ id }) => {
+  const access = user.accessesGet?.find(({ id }) => {
     return id === impersonationId;
   });
 
