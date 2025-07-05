@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Increased the width of the markets overview
+- Increased the width of the watchlist
 - Improved the language localization for Italian (`it`)
 
 ## 2.177.0 - 2025-07-03
