@@ -652,11 +652,12 @@ export class OrderService {
       (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
-      delete data.SymbolProfile.connect;
-
       if (data.account?.connect?.id_userId?.id === null) {
         data.account = { disconnect: true };
       }
+
+      delete data.SymbolProfile.connect;
+      delete data.SymbolProfile.update.name;
     } else {
       delete data.SymbolProfile.update;
 
@@ -685,11 +686,12 @@ export class OrderService {
 
     // Remove existing tags
     await this.prismaService.order.update({
-      data: { tags: { set: [] } },
-      where
+      where,
+      data: { tags: { set: [] } }
     });
 
     const order = await this.prismaService.order.update({
+      where,
       data: {
         ...data,
         isDraft,
@@ -698,8 +700,7 @@ export class OrderService {
             return { id };
           })
         }
-      },
-      where
+      }
     });
 
     this.eventEmitter.emit(

@@ -290,7 +290,11 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
       .get('type')
       .valueChanges.pipe(takeUntil(this.unsubscribeSubject))
       .subscribe((type: Type) => {
-        if (type === 'ITEM') {
+        if (
+          type === 'ITEM' ||
+          (this.activityForm.get('dataSource').value === 'MANUAL' &&
+            type === 'BUY')
+        ) {
           this.activityForm
             .get('accountId')
             .removeValidators(Validators.required);
