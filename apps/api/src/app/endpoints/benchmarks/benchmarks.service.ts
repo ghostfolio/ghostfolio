@@ -45,7 +45,7 @@ export class BenchmarksService {
     withExcludedAccounts?: boolean;
   } & AssetProfileIdentifier): Promise<BenchmarkMarketDataDetails> {
     const marketData: { date: string; value: number }[] = [];
-    const userCurrency = user.Settings.settings.baseCurrency;
+    const userCurrency = user.settings.settings.baseCurrency;
     const userId = user.id;
 
     const { chart } = await this.portfolioService.getPerformance({

@@ -317,7 +317,7 @@ export class PortfolioController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { endDate, startDate } = getIntervalFromDateRange(dateRange);
 
@@ -454,7 +454,7 @@ export class PortfolioController {
       filters,
       groupBy,
       impersonationId,
-      savingsRate: this.request.user?.Settings?.settings.savingsRate,
+      savingsRate: this.request.user?.settings?.settings.savingsRate,
       userId: this.request.user.id
     });
 
@@ -538,7 +538,7 @@ export class PortfolioController {
         user: this.request.user
       }) ||
       isRestrictedView(this.request.user) ||
-      this.request.user.Settings.settings.viewMode === 'ZEN'
+      this.request.user.settings.settings.viewMode === 'ZEN'
     ) {
       performanceInformation.chart = performanceInformation.chart.map(
         ({

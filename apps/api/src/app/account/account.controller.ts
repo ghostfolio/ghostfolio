@@ -134,7 +134,7 @@ export class AccountController {
   ): Promise<AccountBalancesResponse> {
     return this.accountBalanceService.getAccountBalances({
       filters: [{ id, type: 'ACCOUNT' }],
-      userCurrency: this.request.user.Settings.settings.baseCurrency,
+      userCurrency: this.request.user.settings.settings.baseCurrency,
       userId: this.request.user.id
     });
   }

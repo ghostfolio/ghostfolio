@@ -95,7 +95,7 @@ export class UserService {
   }
 
   public async getUser(
-    { accounts, id, permissions, Settings, subscription }: UserWithSettings,
+    { accounts, id, permissions, settings, subscription }: UserWithSettings,
     aLocale = locale
   ): Promise<IUser> {
     const userData = await Promise.all([
@@ -158,8 +158,8 @@ export class UserService {
       }),
       dateOfFirstActivity: firstActivity?.date ?? new Date(),
       settings: {
-        ...(Settings.settings as UserSettings),
-        locale: (Settings.settings as UserSettings)?.locale ?? aLocale
+        ...(settings.settings as UserSettings),
+        locale: (settings.settings as UserSettings)?.locale ?? aLocale
       }
     };
   }
@@ -189,7 +189,7 @@ export class UserService {
       id,
       provider,
       role,
-      Settings,
+      settings,
       subscriptions,
       thirdPartyId,
       updatedAt
@@ -200,7 +200,7 @@ export class UserService {
           include: { platform: true }
         },
         analytics: true,
-        Settings: true,
+        settings: true,
         subscriptions: true
       },
       where: userWhereUniqueInput
@@ -215,7 +215,7 @@ export class UserService {
       id,
       provider,
       role,
-      Settings: Settings as UserWithSettings['Settings'],
+      settings: settings as UserWithSettings['settings'],
       thirdPartyId,
       updatedAt,
       activityCount: analytics?.activityCount,
@@ -223,13 +223,13 @@ export class UserService {
         analytics?.dataProviderGhostfolioDailyRequests
     };
 
-    if (user?.Settings) {
-      if (!user.Settings.settings) {
-        user.Settings.settings = {};
+    if (user?.settings) {
+      if (!user.settings.settings) {
+        user.settings.settings = {};
       }
     } else if (user) {
       // Set default settings if needed
-      user.Settings = {
+      user.settings = {
         settings: {},
         updatedAt: new Date(),
         userId: user?.id
@@ -237,120 +237,120 @@ export class UserService {
     }
 
     // Set default value for base currency
-    if (!(user.Settings.settings as UserSettings)?.baseCurrency) {
-      (user.Settings.settings as UserSettings).baseCurrency = DEFAULT_CURRENCY;
+    if (!(user.settings.settings as UserSettings)?.baseCurrency) {
+      (user.settings.settings as UserSettings).baseCurrency = DEFAULT_CURRENCY;
     }
 
     // Set default value for date range
-    (user.Settings.settings as UserSettings).dateRange =
-      (user.Settings.settings as UserSettings).viewMode === 'ZEN'
+    (user.settings.settings as UserSettings).dateRange =
+      (user.settings.settings as UserSettings).viewMode === 'ZEN'
         ? 'max'
-        : ((user.Settings.settings as UserSettings)?.dateRange ?? 'max');
+        : ((user.settings.settings as UserSettings)?.dateRange ?? 'max');
 
     // Set default value for performance calculation type
-    if (!(user.Settings.settings as UserSettings)?.performanceCalculationType) {
-      (user.Settings.settings as UserSettings).performanceCalculationType =
+    if (!(user.settings.settings as UserSettings)?.performanceCalculationType) {
+      (user.settings.settings as UserSettings).performanceCalculationType =
         PerformanceCalculationType.ROAI;
     }
 
     // Set default value for view mode
-    if (!(user.Settings.settings as UserSettings).viewMode) {
-      (user.Settings.settings as UserSettings).viewMode = 'DEFAULT';
+    if (!(user.settings.settings as UserSettings).viewMode) {
+      (user.settings.settings as UserSettings).viewMode = 'DEFAULT';
     }
 
-    (user.Settings.settings as UserSettings).xRayRules = {
+    (user.settings.settings as UserSettings).xRayRules = {
       AccountClusterRiskCurrentInvestment:
         new AccountClusterRiskCurrentInvestment(
           undefined,
           undefined,
           undefined,
           {}
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       AccountClusterRiskSingleAccount: new AccountClusterRiskSingleAccount(
         undefined,
         undefined,
         undefined,
         {}
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       AssetClassClusterRiskEquity: new AssetClassClusterRiskEquity(
         undefined,
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       AssetClassClusterRiskFixedIncome: new AssetClassClusterRiskFixedIncome(
         undefined,
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       CurrencyClusterRiskBaseCurrencyCurrentInvestment:
         new CurrencyClusterRiskBaseCurrencyCurrentInvestment(
           undefined,
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       CurrencyClusterRiskCurrentInvestment:
         new CurrencyClusterRiskCurrentInvestment(
           undefined,
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       EconomicMarketClusterRiskDevelopedMarkets:
         new EconomicMarketClusterRiskDevelopedMarkets(
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       EconomicMarketClusterRiskEmergingMarkets:
         new EconomicMarketClusterRiskEmergingMarkets(
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       EmergencyFundSetup: new EmergencyFundSetup(
         undefined,
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       FeeRatioInitialInvestment: new FeeRatioInitialInvestment(
         undefined,
         undefined,
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       RegionalMarketClusterRiskAsiaPacific:
         new RegionalMarketClusterRiskAsiaPacific(
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       RegionalMarketClusterRiskEmergingMarkets:
         new RegionalMarketClusterRiskEmergingMarkets(
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings),
+        ).getSettings(user.settings.settings),
       RegionalMarketClusterRiskEurope: new RegionalMarketClusterRiskEurope(
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       RegionalMarketClusterRiskJapan: new RegionalMarketClusterRiskJapan(
         undefined,
         undefined,
         undefined
-      ).getSettings(user.Settings.settings),
+      ).getSettings(user.settings.settings),
       RegionalMarketClusterRiskNorthAmerica:
         new RegionalMarketClusterRiskNorthAmerica(
           undefined,
           undefined,
           undefined
-        ).getSettings(user.Settings.settings)
+        ).getSettings(user.settings.settings)
     };
 
     let currentPermissions = getPermissions(user.role);
@@ -360,7 +360,7 @@ export class UserService {
       currentPermissions.push(permissions.updateOwnAccessToken);
     }
 
-    if (!(user.Settings.settings as UserSettings).isExperimentalFeatures) {
+    if (!(user.settings.settings as UserSettings).isExperimentalFeatures) {
       // currentPermissions = without(
       //   currentPermissions,
       //   permissions.xyz
@@ -411,10 +411,10 @@ export class UserService {
         );
 
         // Reset benchmark
-        user.Settings.settings.benchmark = undefined;
+        user.settings.settings.benchmark = undefined;
 
         // Reset holdings view mode
-        user.Settings.settings.holdingsViewMode = undefined;
+        user.settings.settings.holdingsViewMode = undefined;
       } else if (user.subscription?.type === 'Premium') {
         if (!hasRole(user, Role.DEMO)) {
           currentPermissions.push(permissions.createApiKey);
@@ -510,7 +510,7 @@ export class UserService {
             })
           }
         },
-        Settings: {
+        settings: {
           create: {
             settings: {
               currency: DEFAULT_CURRENCY

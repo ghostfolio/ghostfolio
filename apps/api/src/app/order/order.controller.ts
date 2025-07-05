@@ -131,7 +131,7 @@ export class OrderController {
 
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities, count } = await this.orderService.getOrders({
       endDate,
@@ -160,7 +160,7 @@ export class OrderController {
   ): Promise<Activity> {
     const impersonationUserId =
       await this.impersonationService.validateImpersonationId(impersonationId);
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     const { activities } = await this.orderService.getOrders({
       userCurrency,

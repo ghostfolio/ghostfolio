@@ -173,7 +173,7 @@ export class PortfolioService {
       })
     ]);
 
-    const userCurrency = this.request.user.Settings.settings.baseCurrency;
+    const userCurrency = this.request.user.settings.settings.baseCurrency;
 
     return accounts.map((account) => {
       let transactionCount = 0;
@@ -409,7 +409,7 @@ export class PortfolioService {
     const userCurrency = this.getUserCurrency(user);
 
     const emergencyFund = new Big(
-      (user.Settings?.settings as UserSettings)?.emergencyFund ?? 0
+      (user.settings?.settings as UserSettings)?.emergencyFund ?? 0
     );
 
     const { activities } =
@@ -1134,7 +1134,7 @@ export class PortfolioService {
     userId: string;
   }): Promise<PortfolioReportResponse> {
     userId = await this.getUserId(impersonationId, userId);
-    const userSettings = this.request.user.Settings.settings as UserSettings;
+    const userSettings = this.request.user.settings.settings as UserSettings;
 
     const { accounts, holdings, markets, marketsAdvanced, summary } =
       await this.getDetails({
@@ -1813,7 +1813,7 @@ export class PortfolioService {
 
     const totalEmergencyFund = this.getTotalEmergencyFund({
       emergencyFundHoldingsValueInBaseCurrency,
-      userSettings: user.Settings?.settings as UserSettings
+      userSettings: user.settings?.settings as UserSettings
     });
 
     const fees = await portfolioCalculator.getFeesInBaseCurrency();
@@ -1980,8 +1980,8 @@ export class PortfolioService {
 
   private getUserCurrency(aUser?: UserWithSettings) {
     return (
-      aUser?.Settings?.settings.baseCurrency ??
-      this.request.user?.Settings?.settings.baseCurrency ??
+      aUser?.settings?.settings.baseCurrency ??
+      this.request.user?.settings?.settings.baseCurrency ??
       DEFAULT_CURRENCY
     );
   }
@@ -1996,7 +1996,7 @@ export class PortfolioService {
   private getUserPerformanceCalculationType(
     aUser: UserWithSettings
   ): PerformanceCalculationType {
-    return aUser?.Settings?.settings.performanceCalculationType;
+    return aUser?.settings?.settings.performanceCalculationType;
   }
 
   private async getValueOfAccountsAndPlatforms({
