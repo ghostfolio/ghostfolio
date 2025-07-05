@@ -244,6 +244,7 @@ model Tag {
 }
 
 model User {
+  accessesGet   Access[]        @relation("accessGet")
   accessToken   String?
   accounts      Account[]
   activities    Order[]
@@ -260,7 +261,6 @@ model User {
   thirdPartyId  String?
   updatedAt     DateTime        @updatedAt
   watchlist     SymbolProfile[] @relation("UserWatchlist")
-  Access        Access[]        @relation("accessGet")
   AccessGive    Access[]        @relation("accessGive")
   Settings      Settings?
   SymbolProfile SymbolProfile[]

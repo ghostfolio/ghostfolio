@@ -180,7 +180,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<UserWithSettings | null> {
     const {
-      Access,
+      accessesGet,
       accessToken,
       accounts,
       analytics,
@@ -195,7 +195,7 @@ export class UserService {
       updatedAt
     } = await this.prismaService.user.findUnique({
       include: {
-        Access: true,
+        accessesGet: true,
         accounts: {
           include: { platform: true }
         },
@@ -207,7 +207,7 @@ export class UserService {
     });
 
     const user: UserWithSettings = {
-      Access,
+      accessesGet,
       accessToken,
       accounts,
       authChallenge,

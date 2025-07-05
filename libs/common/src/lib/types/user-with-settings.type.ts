@@ -5,7 +5,7 @@ import { Access, Account, Settings, User } from '@prisma/client';
 
 // TODO: Compare with User interface
 export type UserWithSettings = User & {
-  Access: Access[];
+  accessesGet: Access[];
   accounts: Account[];
   activityCount: number;
   dataProviderGhostfolioDailyRequests: number;
