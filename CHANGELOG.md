@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved the language localization for Italian (`it`)
+- Upgraded `ionicons` from version `7.4.0` to `8.0.10`
+- Refactored the portfolio pages to standalone
 
 ## 2.177.0 - 2025-07-03
 

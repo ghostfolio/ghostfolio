@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { AccountsPageRoutingModule } from './accounts-page-routing.module';
 import { AccountsPageComponent } from './accounts-page.component';
@@ -20,6 +21,7 @@ import { GfTransferBalanceDialogModule } from './transfer-balance/transfer-balan
     GfAccountsTableModule,
     GfCreateOrUpdateAccountDialogModule,
     GfTransferBalanceDialogModule,
+    IonIcon,
     MatButtonModule,
     RouterModule
   ],

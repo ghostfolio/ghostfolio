@@ -13,13 +13,23 @@ import {
 } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import {
+  documentTextOutline,
+  happyOutline,
+  informationCircleOutline,
+  ribbonOutline,
+  shieldCheckmarkOutline,
+  sparklesOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
   host: { class: 'page has-tabs' },
-  imports: [MatTabsModule, RouterModule],
+  imports: [IonIcon, MatTabsModule, RouterModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-about-page',
   styleUrls: ['./about-page.scss'],
@@ -94,6 +104,15 @@ export class AboutPageComponent implements OnDestroy, OnInit {
           routerLink: publicRoutes.about.subRoutes.ossFriends.routerLink
         });
       });
+
+    addIcons({
+      documentTextOutline,
+      happyOutline,
+      informationCircleOutline,
+      ribbonOutline,
+      shieldCheckmarkOutline,
+      sparklesOutline
+    });
   }
 
   public ngOnInit() {

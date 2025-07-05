@@ -17,6 +17,8 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { addOutline, eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -97,6 +99,8 @@ export class UserAccountAccessComponent implements OnDestroy, OnInit {
           this.openCreateAccessDialog();
         }
       });
+
+    addIcons({ addOutline, eyeOffOutline, eyeOutline });
   }
 
   public ngOnInit() {

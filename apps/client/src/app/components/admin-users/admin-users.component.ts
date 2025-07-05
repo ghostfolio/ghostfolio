@@ -18,6 +18,13 @@ import {
   formatDistanceToNowStrict,
   parseISO
 } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  contractOutline,
+  ellipsisHorizontal,
+  keyOutline,
+  trashOutline
+} from 'ionicons/icons';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -107,6 +114,8 @@ export class AdminUsersComponent implements OnDestroy, OnInit {
           );
         }
       });
+
+    addIcons({ contractOutline, ellipsisHorizontal, keyOutline, trashOutline });
   }
 
   public ngOnInit() {

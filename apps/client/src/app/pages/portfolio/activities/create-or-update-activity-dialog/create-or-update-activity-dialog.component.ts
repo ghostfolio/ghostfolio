@@ -4,8 +4,13 @@ import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { getDateFormatString } from '@ghostfolio/common/helper';
 import { LookupItem } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfEntityLogoComponent } from '@ghostfolio/ui/entity-logo';
 import { translate } from '@ghostfolio/ui/i18n';
+import { GfSymbolAutocompleteComponent } from '@ghostfolio/ui/symbol-autocomplete';
+import { GfTagsSelectorComponent } from '@ghostfolio/ui/tags-selector';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,11 +18,29 @@ import {
   Inject,
   OnDestroy
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { IonIcon } from '@ionic/angular/standalone';
 import { AssetClass, AssetSubClass, Tag, Type } from '@prisma/client';
 import { isAfter, isToday } from 'date-fns';
+import { addIcons } from 'ionicons';
+import { calendarClearOutline, refreshOutline } from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, delay, takeUntil } from 'rxjs/operators';
 
@@ -27,11 +50,26 @@ import { CreateOrUpdateActivityDialogParams } from './interfaces/interfaces';
 
 @Component({
   host: { class: 'h-100' },
+  imports: [
+    GfEntityLogoComponent,
+    GfSymbolAutocompleteComponent,
+    GfTagsSelectorComponent,
+    GfValueComponent,
+    IonIcon,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    NgClass,
+    ReactiveFormsModule
+  ],
   selector: 'gf-create-or-update-activity-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./create-or-update-activity-dialog.scss'],
-  templateUrl: 'create-or-update-activity-dialog.html',
-  standalone: false
+  templateUrl: 'create-or-update-activity-dialog.html'
 })
 export class CreateOrUpdateActivityDialog implements OnDestroy {
   public activityForm: FormGroup;
@@ -67,7 +105,9 @@ export class CreateOrUpdateActivityDialog implements OnDestroy {
     private formBuilder: FormBuilder,
     @Inject(MAT_DATE_LOCALE) private locale: string,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, refreshOutline });
+  }
 
   public ngOnInit() {
     this.currencyOfAssetProfile = this.data.activity?.SymbolProfile?.currency;

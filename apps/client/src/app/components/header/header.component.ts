@@ -29,6 +29,16 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import {
+  closeOutline,
+  logoGithub,
+  menuOutline,
+  optionsOutline,
+  personCircleOutline,
+  radioButtonOffOutline,
+  radioButtonOnOutline
+} from 'ionicons/icons';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
 
@@ -116,6 +126,16 @@ export class HeaderComponent implements OnChanges {
       .subscribe((impersonationId) => {
         this.impersonationId = impersonationId;
       });
+
+    addIcons({
+      closeOutline,
+      logoGithub,
+      menuOutline,
+      optionsOutline,
+      personCircleOutline,
+      radioButtonOffOutline,
+      radioButtonOnOutline
+    });
   }
 
   public ngOnChanges() {

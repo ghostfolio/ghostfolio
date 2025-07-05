@@ -47,6 +47,8 @@ import {
 } from '@prisma/client';
 import { format } from 'date-fns';
 import { StatusCodes } from 'http-status-codes';
+import { addIcons } from 'ionicons';
+import { createOutline, ellipsisVertical } from 'ionicons/icons';
 import ms from 'ms';
 import { EMPTY, Subject } from 'rxjs';
 import { catchError, takeUntil } from 'rxjs/operators';
@@ -166,7 +168,9 @@ export class AssetProfileDialog implements OnDestroy, OnInit {
     private notificationService: NotificationService,
     private snackBar: MatSnackBar,
     private userService: UserService
-  ) {}
+  ) {
+    addIcons({ createOutline, ellipsisVertical });
+  }
 
   public get canEditAssetProfileIdentifier() {
     return (

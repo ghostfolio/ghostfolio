@@ -8,6 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { HomeHoldingsComponent } from './home-holdings.component';
 
@@ -19,6 +20,7 @@ import { HomeHoldingsComponent } from './home-holdings.component';
     GfHoldingsTableComponent,
     GfToggleModule,
     GfTreemapChartComponent,
+    IonIcon,
     MatButtonModule,
     MatButtonToggleModule,
     ReactiveFormsModule,

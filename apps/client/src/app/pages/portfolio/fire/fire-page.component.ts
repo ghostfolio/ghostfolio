@@ -3,18 +3,29 @@ import { ImpersonationStorageService } from '@ghostfolio/client/services/imperso
 import { UserService } from '@ghostfolio/client/services/user/user.service';
 import { User } from '@ghostfolio/common/interfaces';
 import { hasPermission, permissions } from '@ghostfolio/common/permissions';
+import { GfFireCalculatorComponent } from '@ghostfolio/ui/fire-calculator';
+import { GfPremiumIndicatorComponent } from '@ghostfolio/ui/premium-indicator';
+import { GfValueComponent } from '@ghostfolio/ui/value';
 
+import { NgStyle } from '@angular/common';
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Big } from 'big.js';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
+  imports: [
+    GfFireCalculatorComponent,
+    GfPremiumIndicatorComponent,
+    GfValueComponent,
+    NgStyle,
+    NgxSkeletonLoaderModule
+  ],
   selector: 'gf-fire-page',
   styleUrls: ['./fire-page.scss'],
-  templateUrl: './fire-page.html',
-  standalone: false
+  templateUrl: './fire-page.html'
 })
 export class FirePageComponent implements OnDestroy, OnInit {
   public deviceType: string;

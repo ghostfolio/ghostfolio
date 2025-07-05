@@ -5,6 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { AdminTagComponent } from './admin-tag.component';
 import { GfCreateOrUpdateTagDialogModule } from './create-or-update-tag-dialog/create-or-update-tag-dialog.module';
@@ -15,6 +16,7 @@ import { GfCreateOrUpdateTagDialogModule } from './create-or-update-tag-dialog/c
   imports: [
     CommonModule,
     GfCreateOrUpdateTagDialogModule,
+    IonIcon,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,

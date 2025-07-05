@@ -12,10 +12,13 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { chevronBackOutline, chevronForwardOutline } from 'ionicons/icons';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule],
+  imports: [IonIcon, MatButtonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   selector: 'gf-carousel',
   styleUrls: ['./carousel.component.scss'],
@@ -40,6 +43,8 @@ export class GfCarouselComponent {
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationsModule?: string
   ) {
     this.animationsDisabled = animationsModule === 'NoopAnimations';
+
+    addIcons({ chevronBackOutline, chevronForwardOutline });
   }
 
   public next() {
