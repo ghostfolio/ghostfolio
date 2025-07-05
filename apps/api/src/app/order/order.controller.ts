@@ -218,6 +218,7 @@ export class OrderController {
       userId: this.request.user.id
     });
 
+    // TODO: Really needed or done in createOrder method?
     if (data.dataSource && !order.isDraft) {
       // Gather symbol data in the background, if data source is set
       // (not MANUAL) and not draft

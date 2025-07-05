@@ -436,6 +436,7 @@ export class ImportService {
         });
       });
 
+      // TODO: Really needed or done in createOrder method?
       this.dataGatheringService.gatherSymbols({
         dataGatheringItems: uniqueActivities.map(({ date, SymbolProfile }) => {
           return {
