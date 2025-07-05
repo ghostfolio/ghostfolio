@@ -82,7 +82,7 @@ describe('PortfolioCalculator', () => {
   });
 
   describe('compute portfolio snapshot', () => {
-    it.only('with item activity', async () => {
+    it.only('with valuable activity', async () => {
       jest.useFakeTimers().setSystemTime(parseDate('2022-01-31').getTime());
 
       const activities: Activity[] = [
@@ -98,7 +98,7 @@ describe('PortfolioCalculator', () => {
             name: 'Penthouse Apartment',
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
           },
-          type: 'ITEM',
+          type: 'BUY',
           unitPriceInAssetProfileCurrency: 500000
         }
       ];
@@ -113,8 +113,15 @@ describe('PortfolioCalculator', () => {
       const portfolioSnapshot = await portfolioCalculator.computeSnapshot();
 
       expect(portfolioSnapshot).toMatchObject({
-        currentValueInBaseCurrency: new Big('0'),
-        errors: [],
+        currentValueInBaseCurrency: new Big('500000'),
+        // TODO
+        errors: [
+          {
+            dataSource: 'MANUAL',
+            symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde'
+          }
+        ],
+        // TODO
         hasErrors: true,
         positions: [
           {
@@ -130,21 +137,21 @@ describe('PortfolioCalculator', () => {
             grossPerformancePercentage: null,
             grossPerformancePercentageWithCurrencyEffect: null,
             grossPerformanceWithCurrencyEffect: null,
-            investment: new Big('0'),
-            investmentWithCurrencyEffect: new Big('0'),
+            investment: new Big('0'), // TODO
+            investmentWithCurrencyEffect: new Big('0'), // TODO
             marketPrice: null,
             marketPriceInBaseCurrency: 500000,
             netPerformance: null,
             netPerformancePercentage: null,
             netPerformancePercentageWithCurrencyEffectMap: null,
             netPerformanceWithCurrencyEffectMap: null,
-            quantity: new Big('0'),
+            quantity: new Big('1'),
             symbol: 'dac95060-d4f2-4653-a253-2c45e6fb5cde',
             tags: [],
             timeWeightedInvestment: new Big('0'),
             timeWeightedInvestmentWithCurrencyEffect: new Big('0'),
             transactionCount: 1,
-            valueInBaseCurrency: new Big('0')
+            valueInBaseCurrency: new Big('500000')
           }
         ],
         totalFeesWithCurrencyEffect: new Big('0'),

@@ -141,9 +141,11 @@ export class ExportService {
             currency: currency ?? SymbolProfile.currency,
             dataSource: SymbolProfile.dataSource,
             date: date.toISOString(),
-            symbol: ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(type)
-              ? SymbolProfile.name
-              : SymbolProfile.symbol,
+            symbol:
+              ['FEE', 'INTEREST', 'LIABILITY'].includes(type) ||
+              (SymbolProfile.dataSource === 'MANUAL' && type === 'BUY')
+                ? SymbolProfile.name
+                : SymbolProfile.symbol,
             tags: currentTags.map(({ id: tagId }) => {
               return tagId;
             })

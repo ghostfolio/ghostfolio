@@ -118,7 +118,7 @@ export class OrderService {
     const userId = data.userId;
 
     if (
-      ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type) ||
+      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
       (data.SymbolProfile.connectOrCreate.create.dataSource === 'MANUAL' &&
         data.type === 'BUY')
     ) {
@@ -174,7 +174,7 @@ export class OrderService {
 
     const orderData: Prisma.OrderCreateInput = data;
 
-    const isDraft = ['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)
+    const isDraft = ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type)
       ? false
       : isAfter(data.date as Date, endOfToday());
 
@@ -647,7 +647,11 @@ export class OrderService {
 
     let isDraft = false;
 
-    if (['FEE', 'INTEREST', 'ITEM', 'LIABILITY'].includes(data.type)) {
+    if (
+      ['FEE', 'INTEREST', 'LIABILITY'].includes(data.type) ||
+      (data.SymbolProfile.connect.dataSource_symbol.dataSource === 'MANUAL' &&
+        data.type === 'BUY')
+    ) {
       delete data.SymbolProfile.connect;
 
       if (data.account?.connect?.id_userId?.id === null) {
