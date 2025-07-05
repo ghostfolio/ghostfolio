@@ -7,7 +7,7 @@
     matSortDirection="asc"
     [dataSource]="dataSource"
   >
-    <ng-container matColumnDef="name">
+    <ng-container matColumnDef="name" sticky>
       <th *matHeaderCellDef class="px-2" i18n mat-header-cell mat-sort-header>
         Name
       </th>
