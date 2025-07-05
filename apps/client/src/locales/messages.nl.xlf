@@ -7762,7 +7762,7 @@
       </trans-unit>
       <trans-unit id="routes.resources.personalFinanceTools" datatype="html">
         <source>personal-finance-tools</source>
-        <target state="new">personal-finance-tools</target>
+        <target state="translated">hulpmiddelen-voor-persoonlijke-financien</target>
         <note priority="1" from="description">kebab-case</note>
         <context-group purpose="location">
           <context context-type="sourcefile">libs/common/src/lib/routes/routes.ts</context>
@@ -7792,7 +7792,7 @@
       </trans-unit>
       <trans-unit id="df98e97764e5a97f077f8a565189b670eff41300" datatype="html">
         <source> Fuel your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>powerful data provider<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to access <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> from over <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 exchanges<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> worldwide. </source>
-        <target state="new"> Fuel your <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> with a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>powerful data provider<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> to access <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80,000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> from over <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 exchanges<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> worldwide. </target>
+        <target state="translated">Vul je <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>self-hosted Ghostfolio<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> met een <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>krachtige dataleverancier<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> om toegang te krijgen tot <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>80.000+ tickers<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> van meer dan <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>50 beurzen<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> wereldwijd.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/components/admin-settings/admin-settings.component.html</context>
           <context context-type="linenumber">15</context>
@@ -7832,7 +7832,7 @@
       </trans-unit>
       <trans-unit id="48a079ff7a0ed08569e9ee315a387efeaa05f09c" datatype="html">
         <source>Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</source>
-        <target state="new">Get <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
+        <target state="translated">Krijg <x id="INTERPOLATION" equiv-text="{{ durationExtension }}"/> extra</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/pricing/pricing-page.html</context>
           <context context-type="linenumber">313</context>
@@ -7896,7 +7896,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.max" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">32</context>
@@ -7904,7 +7904,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.false.min" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated">De inbreng in eigen vermogen van uw huidige investering (${equityValueRatio}%) ligt onder de ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">36</context>
@@ -7912,7 +7912,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskEquity.true" datatype="html">
         <source> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The equity contribution of your current investment (${equityValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated">De aandelenbijdrage van uw huidige investering (${equityValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">40</context>
@@ -7920,7 +7920,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome" datatype="html">
         <source>Fixed Income</source>
-        <target state="new">Fixed Income</target>
+        <target state="translated">Vastrentende waarden</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">45</context>
@@ -7928,7 +7928,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.max" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) exceeds ${thresholdMax}% </target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) overschrijdt ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">46</context>
@@ -7936,7 +7936,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.false.min" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is below ${thresholdMin}% </target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt onder ${thresholdMin}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">50</context>
@@ -7944,7 +7944,7 @@
       </trans-unit>
       <trans-unit id="rule.assetClassClusterRiskFixedIncome.true" datatype="html">
         <source> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </source>
-        <target state="new"> The fixed income contribution of your current investment (${fixedIncomeValueRatio}%) is within the range of ${thresholdMin}% and ${thresholdMax}% </target>
+        <target state="translated">De bijdrage van vastrentende waarden in uw huidige investering (${fixedIncomeValueRatio}%) ligt binnen het bereik van ${thresholdMin}% en ${thresholdMax}%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">55</context>
@@ -7952,7 +7952,7 @@
       </trans-unit>
       <trans-unit id="rule.currencyClusterRiskBaseCurrencyCurrentInvestment" datatype="html">
         <source> Investment: Base Currency </source>
-        <target state="new"> Investment: Base Currency </target>
+        <target state="translated">Investering: basisvaluta</target>
         <context-group purpose="location">
           <context context-type="sourcefile">apps/client/src/app/pages/i18n/i18n-page.html</context>
           <context context-type="linenumber">60</context>
