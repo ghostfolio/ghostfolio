@@ -19,6 +19,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Platform } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import {
+  createOutline,
+  ellipsisHorizontal,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject, takeUntil } from 'rxjs';
@@ -70,6 +76,8 @@ export class AdminPlatformComponent implements OnInit, OnDestroy {
           }
         }
       });
+
+    addIcons({ createOutline, ellipsisHorizontal, trashOutline });
   }
 
   public ngOnInit() {

@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { HomePageRoutingModule } from './home-page-routing.module';
 import { HomePageComponent } from './home-page.component';
@@ -20,6 +21,7 @@ import { HomePageComponent } from './home-page.component';
     GfHomeMarketModule,
     GfHomeOverviewModule,
     GfHomeSummaryModule,
+    IonIcon,
     HomePageRoutingModule,
     HomeWatchlistComponent,
     MatTabsModule,

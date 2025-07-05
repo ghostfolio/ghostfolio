@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 import { AccountsTableComponent } from './accounts-table.component';
@@ -19,6 +20,7 @@ import { AccountsTableComponent } from './accounts-table.component';
     CommonModule,
     GfEntityLogoComponent,
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatMenuModule,
     MatSortModule,

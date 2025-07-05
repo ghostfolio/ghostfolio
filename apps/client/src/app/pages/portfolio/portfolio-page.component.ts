@@ -3,6 +3,14 @@ import { TabConfiguration, User } from '@ghostfolio/common/interfaces';
 import { internalRoutes } from '@ghostfolio/common/routes/routes';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { addIcons } from 'ionicons';
+import {
+  analyticsOutline,
+  calculatorOutline,
+  pieChartOutline,
+  scanOutline,
+  swapVerticalOutline
+} from 'ionicons/icons';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -64,6 +72,14 @@ export class PortfolioPageComponent implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({
+      analyticsOutline,
+      calculatorOutline,
+      pieChartOutline,
+      scanOutline,
+      swapVerticalOutline
+    });
   }
 
   public ngOnInit() {

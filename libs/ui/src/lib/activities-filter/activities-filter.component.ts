@@ -27,6 +27,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { closeOutline, searchOutline } from 'ionicons/icons';
 import { groupBy } from 'lodash';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -36,6 +39,7 @@ import { takeUntil } from 'rxjs/operators';
   imports: [
     CommonModule,
     GfSymbolModule,
+    IonIcon,
     MatAutocompleteModule,
     MatButtonModule,
     MatChipsModule,
@@ -82,6 +86,8 @@ export class GfActivitiesFilterComponent implements OnChanges, OnDestroy {
           this.filterGroups$.next(this.getGroupedFilters());
         }
       });
+
+    addIcons({ closeOutline, searchOutline });
   }
 
   public ngOnChanges(changes: SimpleChanges) {

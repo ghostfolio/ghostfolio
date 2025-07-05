@@ -31,7 +31,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { IonIcon } from '@ionic/angular/standalone';
 import { format } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  calendarClearOutline,
+  ellipsisHorizontal,
+  trashOutline
+} from 'ionicons/icons';
 import { get } from 'lodash';
 import { Subject } from 'rxjs';
 
@@ -41,6 +48,7 @@ import { GfValueComponent } from '../value';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     GfValueComponent,
+    IonIcon,
     MatButtonModule,
     MatDatepickerModule,
     MatFormFieldModule,
@@ -86,7 +94,9 @@ export class GfAccountBalancesComponent
   public constructor(
     private dateAdapter: DateAdapter<any>,
     private notificationService: NotificationService
-  ) {}
+  ) {
+    addIcons({ calendarClearOutline, ellipsisHorizontal, trashOutline });
+  }
 
   public ngOnInit() {
     this.dateAdapter.setLocale(this.locale);

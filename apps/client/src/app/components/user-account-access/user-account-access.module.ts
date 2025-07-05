@@ -9,6 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { IonIcon } from '@ionic/angular/standalone';
 
 import { GfCreateOrUpdateAccessDialogModule } from './create-or-update-access-dialog/create-or-update-access-dialog.module';
 import { UserAccountAccessComponent } from './user-account-access.component';
@@ -21,6 +22,7 @@ import { UserAccountAccessComponent } from './user-account-access.component';
     GfCreateOrUpdateAccessDialogModule,
     GfPortfolioAccessTableModule,
     GfPremiumIndicatorComponent,
+    IonIcon,
     MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,

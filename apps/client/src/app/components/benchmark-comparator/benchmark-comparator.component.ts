@@ -40,6 +40,8 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'gf-benchmark-comparator',
@@ -80,6 +82,8 @@ export class BenchmarkComparatorComponent implements OnChanges, OnDestroy {
 
     Tooltip.positioners['top'] = (_elements, position: TooltipPosition) =>
       getTooltipPositionerMapTop(this.chart, position);
+
+    addIcons({ arrowForwardOutline });
   }
 
   public ngOnChanges() {

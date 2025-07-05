@@ -22,7 +22,10 @@ import {
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { IonIcon } from '@ionic/angular/standalone';
 import { Tag } from '@prisma/client';
+import { addIcons } from 'ionicons';
+import { addCircleOutline, closeOutline } from 'ionicons/icons';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -30,6 +33,7 @@ import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
+    IonIcon,
     MatAutocompleteModule,
     MatChipsModule,
     MatFormFieldModule,
@@ -64,6 +68,8 @@ export class GfTagsSelectorComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe((value) => {
         this.filteredOptions.next(this.filterTags(value));
       });
+
+    addIcons({ addCircleOutline, closeOutline });
   }
 
   public ngOnInit() {

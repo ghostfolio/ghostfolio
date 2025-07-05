@@ -27,6 +27,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Big } from 'big.js';
 import { format, parseISO } from 'date-fns';
+import { addIcons } from 'ionicons';
+import {
+  cashOutline,
+  swapVerticalOutline,
+  walletOutline
+} from 'ionicons/icons';
 import { isNumber } from 'lodash';
 import { forkJoin, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -86,6 +92,8 @@ export class AccountDetailDialog implements OnDestroy, OnInit {
           this.changeDetectorRef.markForCheck();
         }
       });
+
+    addIcons({ cashOutline, swapVerticalOutline, walletOutline });
   }
 
   public ngOnInit() {
