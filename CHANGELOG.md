@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `Access` to `accessesGet` in the `User` database schema
 - Improved the language localization for Italian (`it`)
 - Upgraded `prisma` from version `6.10.1` to `6.11.1`
 
